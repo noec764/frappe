@@ -10,4 +10,3 @@ Printing
 Contacts
 Data Migration
 Chat
-Social

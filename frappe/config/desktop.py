@@ -72,16 +72,6 @@ def get_data():
 			"hidden": 1,
 		},
 		{
-			"module_name": 'Social',
-			"label": _('Social'),
-			"icon": "octicon octicon-heart",
-			"type": 'link',
-			"link": 'social/home',
-			"color": '#FF4136',
-			'standard': 1,
-			'idx': 15
-		},
-		{
 			"module_name": 'Settings',
 			"color": "#bdc3c7",
 			"reverse": 1,

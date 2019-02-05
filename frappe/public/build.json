@@ -378,8 +378,5 @@
 	],
 	"frappe/css/email.css": [
 		"public/less/email.less"
-	],
-	"js/social.min.js": [
-		"public/js/frappe/social/social_home.js"
 	]
 }

@@ -49,6 +49,7 @@ def get_setup_stages(args):
 
 @frappe.whitelist()
 def setup_complete(args):
+	print(args)
 	"""Calls hooks for `setup_wizard_complete`, sets home page as `desktop`
 	and clears cache. If wizard breaks, calls `setup_wizard_exception` hook"""
 
@@ -63,6 +64,7 @@ def setup_complete(args):
 	try:
 		current_task = None
 		for idx, stage in enumerate(stages):
+			print(stage)
 			frappe.publish_realtime('setup_task', {"progress": [idx, len(stages)],
 				"stage_status": stage.get('status')}, user=frappe.session.user)
 
@@ -118,6 +120,8 @@ def get_setup_complete_hooks(args):
 	return stages
 
 def handle_setup_exception(args):
+	print(args)
+	print(frappe.get_traceback())
 	frappe.db.rollback()
 	if args:
 		traceback = frappe.get_traceback()
