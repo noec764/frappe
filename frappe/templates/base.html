@@ -31,6 +31,12 @@
 		<link type="text/css" rel="stylesheet" href="/assets/css/frappe-web-b4.css">
 		{% endif %}
 
+		{% if meta_tags %}
+			{% for key in meta_tags %}
+			{% if meta_tags[key] %}<meta name="{{ key }}" content="{{ meta_tags[key] }}" />{% endif %}
+			{% endfor %}
+		{% endif %}
+
 		{%- for link in web_include_css %}
 		<link type="text/css" rel="stylesheet" href="{{ link|abs_url }}">
 		{%- endfor -%}
