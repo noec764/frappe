@@ -38,47 +38,45 @@ def new_language(context, lang_code, app):
 @click.argument('lang')
 @click.argument('untranslated_file')
 @click.option('--all', default=False, is_flag=True, help='Get all message strings')
+@click.option('--app', default=None, help='Selected application')
 @pass_context
-def get_untranslated(context, lang, untranslated_file, all=None):
+def get_untranslated(context, lang, untranslated_file, all=None, app=None):
 	"Get untranslated strings for language"
 	import frappe.translate
 	site = get_site(context)
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.get_untranslated(lang, untranslated_file, get_all=all)
+		frappe.translate.get_untranslated(lang, untranslated_file, get_all=all, app=app)
 	finally:
 		frappe.destroy()
 
 @click.command('update-translations')
 @click.argument('lang')
 @click.argument('translated-file')
+@click.argument('app')
 @pass_context
-def update_translations(context, lang, translated_file):
+def update_translations(context, lang, translated_file, app):
 	"Update translated strings"
 	import frappe.translate
 	site = get_site(context)
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.update_translations(lang, translated_file)
+		frappe.translate.update_translations(lang, translated_file, app)
 	finally:
 		frappe.destroy()
 
 @click.command('import-translations')
-@click.argument('lang')
-@click.argument('path')
 @pass_context
-def import_translations(context, lang, path):
-	"Update translated strings"
-	import frappe.translate
-	site = get_site(context)
-	try:
-		frappe.init(site=site)
-		frappe.connect()
-		frappe.translate.import_translations(lang, path)
-	finally:
-		frappe.destroy()
+def import_translations():
+	"""
+		Deprecated
+	"""
+	click.echo("""
+		import-translations is deprecated.
+		You can use update-translations instead.
+		""")
 
 commands = [
 	build_message_files,
