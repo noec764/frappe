@@ -52,17 +52,16 @@ def get_untranslated(context, lang, untranslated_file, all=None):
 
 @click.command('update-translations')
 @click.argument('lang')
-@click.argument('untranslated_file')
 @click.argument('translated-file')
 @pass_context
-def update_translations(context, lang, untranslated_file, translated_file):
+def update_translations(context, lang, translated_file):
 	"Update translated strings"
 	import frappe.translate
 	site = get_site(context)
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.update_translations(lang, untranslated_file, translated_file)
+		frappe.translate.update_translations(lang, translated_file)
 	finally:
 		frappe.destroy()
 
