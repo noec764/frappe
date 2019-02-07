@@ -480,7 +480,7 @@ def get_all_messages_from_js_files(app_name=None):
 	messages = []
 	for app in ([app_name] if app_name else frappe.get_installed_apps()):
 		if os.path.exists(frappe.get_app_path(app, "public")):
-			for basepath, folders, files in os.walk(frappe.get_app_path(app, "public")):
+			for basepath, dummy, files in os.walk(frappe.get_app_path(app, "public")):
 				if "frappe/public/js/lib" in basepath:
 					continue
 
@@ -648,7 +648,7 @@ def update_translations(lang, translated_data, app, is_file=True):
 		translation_dict = defaultdict(dict)
 		for k in full_dict:
 			for m in full_dict[k]:
-				translation_dict[k][m] = full_dict[k][m]
+				translation_dict[k][restore_newlines(m)] = full_dict[k][restore_newlines(m)]
 
 		if is_file:
 			new_translations = frappe._dict(frappe.get_file_json(translated_data))
@@ -657,7 +657,7 @@ def update_translations(lang, translated_data, app, is_file=True):
 		for k in new_translations:
 			for m in new_translations[k]:
 				if new_translations[k][m] != "":
-					translation_dict[k][m] = new_translations[k][m]
+					translation_dict[k][restore_newlines(m)] = new_translations[k][restore_newlines(m)]
 
 		write_translations_file(app, lang, translation_dict)
 

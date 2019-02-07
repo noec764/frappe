@@ -10,7 +10,7 @@
 					:key="section.label + item.label"
 					:data-youtube-id="item.type==='help' ? item.youtube_id : false"
 					v-bind="item"
-					:open_count="frappe.boot.notification_info.open_count_doctype[item.doctype]"
+					:open_count="item.type==='doctype' ? frappe.boot.notification_info.open_count_doctype[item.doctype] : false"
 				>
 				</module-link-item>
 			</div>
@@ -30,20 +30,6 @@ export default {
 		ModuleLinkItem
 	},
 	props: ['module_name', 'sections'],
-	data() {
-		return {
-			popover_present: false
-		}
-	},
-	methods: {
-		popover_appeared() {
-			this.popover_present = true;
-		},
-
-		popover_disappeared() {
-			this.popover_present = false;
-		}
-	}
 }
 </script>
 <style lang="less" scoped>
