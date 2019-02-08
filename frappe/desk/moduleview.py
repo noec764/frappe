@@ -118,7 +118,7 @@ def filter_by_restrict_to_domain(data):
 def build_standard_config(module, doctype_info):
 	"""Build standard module data from DocTypes."""
 	if not frappe.db.get_value("Module Def", module):
-		frappe.throw(_("Module Not Found"))
+		frappe.throw(_("Module {0} Not Found").format(module))
 
 	data = []
 
