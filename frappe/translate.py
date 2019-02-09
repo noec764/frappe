@@ -101,7 +101,6 @@ def get_dict(fortype, name=None):
 	asset_key = fortype + ":" + (name or "-")
 	translation_assets = cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
 
-	print(asset_key)
 	if not asset_key in translation_assets:
 		if fortype=="doctype":
 			messages = get_messages_from_doctype(name)
@@ -120,6 +119,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('DocType: ', name), name from tabDocType")
 			messages += frappe.db.sql("select concat('Role: ', name), name from tabRole")
 			messages += frappe.db.sql("select concat('Module: ', name), name from `tabModule Def`")
+			messages += "null"
 
 		message_dict = make_dict_from_messages(messages)
 		message_dict.update(get_dict_from_hooks(fortype, name))
@@ -155,10 +155,6 @@ def make_dict_from_messages(messages, full_dict=None):
 		if m[0] in full_dict:
 			if m[1] in full_dict[m[0]]:
 				out[m[1]] = full_dict[m[0]][m[1]]
-		
-		if "null" in full_dict:
-			for d in full_dict["null"]:
-				out[full_dict["null"][d]] = full_dict["null"][d]
 
 	return dict(out)
 
@@ -192,7 +188,7 @@ def get_full_dict(lang):
 	if getattr(frappe.local, 'lang_full_dict', None) and frappe.local.lang_full_dict.get(lang, None):
 		return frappe.local.lang_full_dict
 
-	frappe.local.lang_full_dict = load_lang(lang)
+	frappe.local.lang_full_dict = reduce(lambda a,b: a.update(b) or a, list(load_lang(lang).values()), {})
 
 	try:
 		# get user specific transaltion data
