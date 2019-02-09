@@ -124,6 +124,15 @@ def get_dict(fortype, name=None):
 		message_dict = make_dict_from_messages(messages)
 		message_dict.update(get_dict_from_hooks(fortype, name))
 
+		try:
+			# get user specific translation data
+			user_translations = get_user_translations(frappe.local.lang)
+		except Exception:
+			user_translations = None
+
+		if user_translations:
+			message_dict.update(user_translations)
+
 		translation_assets[asset_key] = message_dict
 
 		cache.hset("translation_assets", frappe.local.lang, translation_assets, shared=True)
@@ -178,9 +187,8 @@ def get_lang_js(fortype, name):
 	return "\n\n$.extend(frappe._messages, %s)" % json.dumps(get_dict(fortype, name))
 
 def get_full_dict(lang):
-	"""Load and return the entire translations dictionary for a language from :meth:`frape.cache`
-
-	:param lang: Language Code, e.g. `hi`
+	"""Load and return the entire translations dictionary for a language
+	:param lang: Language Code, e.g. `fr`
 	"""
 	if not lang:
 		return {}
@@ -188,18 +196,33 @@ def get_full_dict(lang):
 	if getattr(frappe.local, 'lang_full_dict', None) and frappe.local.lang_full_dict.get(lang, None):
 		return frappe.local.lang_full_dict
 
-	frappe.local.lang_full_dict = reduce(lambda a,b: a.update(b) or a, list(load_lang(lang).values()), {})
+	frappe.local.lang_full_dict = load_lang(lang)
+
+	return frappe.local.lang_full_dict
+
+# TODO: Find a more elegant way combined with `get_full_dict`
+def get_reduced_dict(lang):
+	"""Load and return the entire translations dictionary, reduced for a language
+	:param lang: Language Code, e.g. `fr`
+	"""
+	if not lang:
+		return {}
+	# found in local, return!
+	if getattr(frappe.local, 'lang_reduced_dict', None) and frappe.local.lang_reduced_dict.get(lang, None):
+		return frappe.local.lang_reduced_dict
+
+	frappe.local.lang_reduced_dict = reduce(lambda a,b: a.update(b) or a, list(load_lang(lang).values()), {})
 
 	try:
-		# get user specific transaltion data
+		# get user specific translation data
 		user_translations = get_user_translations(lang)
 	except Exception:
 		user_translations = None
 
 	if user_translations:
-		frappe.local.lang_full_dict.update(user_translations)
+		frappe.local.lang_reduced_dict.update(user_translations)
 
-	return frappe.local.lang_full_dict
+	return frappe.local.lang_reduced_dict
 
 def load_lang(lang, apps=None):
 	"""Combine all translations from `.json` files in all `apps`.

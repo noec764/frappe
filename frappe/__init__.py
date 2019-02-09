@@ -50,14 +50,13 @@ class _dict(dict):
 
 def _(msg, lang=None):
 	"""Returns translated string in current lang, if exists."""
-	from frappe.translate import get_full_dict
+	from frappe.translate import get_reduced_dict
 	from frappe.utils import strip_html_tags, is_html
 
 	if not hasattr(local, 'lang'):
 		local.lang = lang or 'en'
 
 	if not lang:
-		#print(local.lang)
 		lang = local.lang
 
 	non_translated_msg = msg
@@ -67,10 +66,9 @@ def _(msg, lang=None):
 
 	# msg should always be unicode
 	msg = as_unicode(msg).strip()
-	print(lang)
-	print(msg)
+
 	# return lang_full_dict according to lang passed parameter
-	return get_full_dict(lang).get(non_translated_msg) or non_translated_msg
+	return get_reduced_dict(lang).get(non_translated_msg) or non_translated_msg
 
 def as_unicode(text, encoding='utf-8'):
 	'''Convert to unicode if required'''
