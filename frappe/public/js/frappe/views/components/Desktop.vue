@@ -105,7 +105,8 @@ export default {
 
 .modules-container {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+	grid-auto-rows: minmax(72px, 1fr);
 	column-gap: 15px;
 	row-gap: 15px;
 }
@@ -124,9 +125,6 @@ export default {
 }
 
 .module-box-content {
-	padding-right: 15px;
-	flex: 1;
-
 	h4 {
 		margin-bottom: 5px
 	}
