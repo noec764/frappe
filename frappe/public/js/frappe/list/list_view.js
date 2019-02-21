@@ -526,7 +526,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			} else if (df.fieldtype === 'Link') {
 				html = `<a class="filterable text-muted ellipsis"
 					data-filter="${fieldname},=,${value}">
-					${_value}
+					${__(_value)}
 				</a>`;
 			} else if (df.fieldtype === 'Text Editor') {
 				html = `<span class="text-muted ellipsis">
@@ -642,7 +642,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	get_subject_html(doc) {
 		let user = frappe.session.user;
 		let subject_field = this.columns[0].df;
-		let value = doc[subject_field.fieldname] || doc.name;
+		let value = __(doc[subject_field.fieldname]) || __(doc.name);
 		let subject = strip_html(value);
 		let escaped_subject = frappe.utils.escape_html(subject);
 
