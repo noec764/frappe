@@ -29,17 +29,11 @@
 		<link type="text/css" rel="stylesheet" href="{{ theme.custom_theme_url }}">
 		{% else %}
 		<link type="text/css" rel="stylesheet" href="/assets/css/frappe-web-b4.css">
-		{% endif %}
-
-		{% if meta_tags %}
-			{% for key in meta_tags %}
-			{% if meta_tags[key] %}<meta name="{{ key }}" content="{{ meta_tags[key] }}" />{% endif %}
-			{% endfor %}
-		{% endif %}
 
 		{%- for link in web_include_css %}
 		<link type="text/css" rel="stylesheet" href="{{ link|abs_url }}">
 		{%- endfor -%}
+		{% endif %}
 	{%- endblock -%}
 
 	{%- block head_include %}
@@ -58,7 +52,7 @@
 		window.socketio_port = {{ frappe.socketio_port }};
     </script>
 </head>
-<body data-path="{{ path }}">
+<body data-path="{{ path | e }}">
 	{%- block banner -%}
 		{% include "templates/includes/banner_extension.html" ignore missing %}
 
