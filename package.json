@@ -5,7 +5,9 @@
     "production": "FRAPPE_ENV=production node rollup/build.js",
     "watch": "node rollup/watch.js",
     "cypress:run": "cypress run --record --key 14ddd919-b01f-4d5f-b9d1-5af54d34c7f3",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
   },
   "repository": {
     "type": "git",
@@ -36,7 +38,7 @@
     "socket.io": "^2.0.4",
     "superagent": "^3.8.2",
     "touch": "^3.1.0",
-    "vue": "^2.5.17",
+    "vue": "^2.6.7",
     "vue-router": "^2.0.0"
   },
   "devDependencies": {
@@ -53,6 +55,7 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-uglify": "^3.0.0",
     "rollup-plugin-vue": "4.2.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.6.7",
+    "vuepress": "^0.14.9"
   }
 }
