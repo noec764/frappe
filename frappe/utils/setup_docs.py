@@ -13,22 +13,28 @@ import os
 from frappe.build import get_node_pacman, check_yarn
 
 APP_PATHS = None
-def setup():
+def setup(app=None):
 	global APP_PATHS
 	pymodules = []
-	for app in frappe.get_all_apps(True):
-		try:
-			pymodules.append(frappe.get_module(app))
-		except ImportError: pass
-	APP_PATHS = [os.path.dirname(pymodule.__file__) for pymodule in pymodules]
+	apps = []
+	if app:
+		apps.append(app)
 
-def setup_docs(app, version, development=False):
-	setup()
+	for app in (apps or frappe.get_all_apps(True)):
+		if app != 'frappe':
+			try:
+				pymodules.append(frappe.get_module(app))
+			except ImportError: pass
+		APP_PATHS = [os.path.dirname(pymodule.__file__) for pymodule in pymodules]
+
+def setup_docs(app=None, development=False):
+	setup(app)
 
 	pacman = get_node_pacman()
 	mode = 'docs:dev' if development else 'docs:build'
 	command = '{pacman} run {mode}'.format(pacman=pacman, mode=mode)
 
 	frappe_app_path = os.path.abspath(os.path.join(APP_PATHS[0], '..'))
+	print(frappe_app_path)
 	check_yarn()
 	frappe.commands.popen(command, cwd=frappe_app_path)

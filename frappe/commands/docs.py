@@ -4,16 +4,15 @@ from frappe.commands import pass_context
 
 @click.command('build-docs')
 @pass_context
-@click.argument('app')
-@click.option('--version', default='current')
-def build_docs(context, app, version="current"):
+@click.option('--app', default=None, help='The target app')
+@click.option('--development', is_flag=True, default=False, help='Serve the docs locally')
+def build_docs(context, app=None, development=False):
 	"Setup docs in target folder of target app"
 	from frappe.utils.setup_docs import setup_docs
 	frappe.init('')
 
-	development = frappe.local.conf.developer_mode or False
-	setup_docs(app, version, development)
+	setup_docs(app, development)
 
 commands = [
-	build_docs,
+	build_docs
 ]
