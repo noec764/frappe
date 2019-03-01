@@ -333,6 +333,7 @@ class User(Document):
 			set `user`=null
 			where `user`=%s""", (self.name))
 
+
 	def before_rename(self, old_name, new_name, merge=False):
 		self.check_demo()
 		frappe.clear_cache(user=old_name)
