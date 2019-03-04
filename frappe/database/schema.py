@@ -84,6 +84,13 @@ class DBTable:
 					'fieldtype': 'Text'
 				})
 
+			# add _printed column if track_print
+			if getattr(self.meta, 'track_print', False):
+				fl.append({
+					'fieldname': '_printed',
+					'fieldtype': 'Datetime'
+				})
+
 		if (not frappe.flags.in_install_db
 			and (frappe.flags.in_install != "frappe"
 			or frappe.flags.ignore_in_install)):

@@ -1349,6 +1349,13 @@ def get_print(doctype=None, name=None, print_format=None, style=None, html=None,
 	if not html:
 		html = build_page("printview")
 
+	doc = frappe.get_doc(doctype, name)
+	if hasattr(doc, "after_preview"):
+		if hasattr(doc, "_printed") and doc._printed is None:
+			doc.set("_printed", now())
+
+		doc.after_preview()
+
 	if as_pdf:
 		return get_pdf(html, output = output)
 	else:
@@ -1526,7 +1533,7 @@ def get_version(doctype, name, limit = None, head = False, raise_err = True):
 	[
 		{
 			 "version": [version.data], 	 # Refer Version DocType get_diff method and data attribute
-			    "user": "admin@gmail.com"    # User that created this version
+				"user": "admin@gmail.com"    # User that created this version
 			"creation": <datetime.datetime>  # Creation timestamp of that object.
 		}
 	]
