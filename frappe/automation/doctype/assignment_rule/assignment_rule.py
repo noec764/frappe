@@ -16,7 +16,7 @@ class AssignmentRule(Document):
 		frappe.cache().delete_value('assignment_rule')
 
 	def apply(self, doc):
-		if self.safe_eval('assign_condition', doc):
+		if not assign_to.get(doc) and self.safe_eval('assign_condition', doc):
 			self.do_assignment(doc)
 			return True
 
@@ -69,6 +69,9 @@ class AssignmentRule(Document):
 		for i, d in enumerate(self.users):
 			if self.last_user == d.user:
 				return self.users[i+1].user
+
+		# bad last user, assign to the first one
+		return self.users[0].user
 
 	def get_user_load_balancing(self):
 		'''Assign to the user with least number of open assignments'''
