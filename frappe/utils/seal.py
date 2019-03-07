@@ -6,7 +6,8 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _, scrub
 from frappe.model.document import Document
-from frappe.utils import now, format_datetime
+from frappe.utils import now
+from frappe.utils.data import DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT
 import datetime
 import hashlib
 import uuid
@@ -44,10 +45,15 @@ def get_sealed_doc(doc, modules, version, report=False):
 	if current_mapping:
 		current_mapping = current_mapping[0]
 
+		if isinstance(doc.creation, datetime.date):
+			timestamp = datetime.datetime.strftime(doc.creation, DATETIME_FORMAT)
+		else:
+			timestamp = doc.creation
+
 		sealed_doc = {
 			"version": version,
 			"doctype": doc.doctype,
-			"timestamp": format_datetime(doc.creation, "YYYYMMDDHHmmss")
+			"timestamp": timestamp
 		}
 		for k, v in doc.as_dict().items():
 			if k in current_mapping["fields"]:
@@ -77,7 +83,6 @@ def sanitize_value(value, meta):
 	if meta and isinstance(meta, list):
 		meta = meta[0]
 
-	from frappe.utils.data import DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT
 	if meta.fieldtype == "Datetime":
 		value = value.strftime(DATETIME_FORMAT)
 
@@ -96,14 +101,14 @@ def get_chained_seal(doc, calculated=False):
 
 	if calculated:
 		previous_seal = frappe.db.sql("""
-			SELECT _seal, max(creation)
+			SELECT name, _seal, max(creation)
 			FROM `tab%s`
-			WHERE creation < '%s' and _seal!=NULL""" % (doc["doctype"], doc["timestamp"]), as_dict=True)[0]
+			WHERE creation < '%s' AND _seal IS NOT NULL""" % (doc["doctype"], datetime.datetime.strptime(doc["timestamp"], DATETIME_FORMAT)), as_dict=True)[0]
 	else:
 		previous_seal = frappe.db.sql("""
-			SELECT _seal, max(creation)
+			SELECT name, _seal, max(creation)
 			FROM `tab%s`
-			WHERE _seal!=NULL""" % doc["doctype"], as_dict=True)[0]
+			WHERE _seal IS NOT NULL""" % doc["doctype"], as_dict=True)[0]
 
 	if not previous_seal._seal:
 		if frappe.db.get_global("initial_hash"):
