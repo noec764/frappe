@@ -202,3 +202,4 @@ class Report(Document):
 def is_prepared_report_disabled(report):
 	return frappe.db.get_value('Report',
 		report, 'disable_prepared_report') or 0
+

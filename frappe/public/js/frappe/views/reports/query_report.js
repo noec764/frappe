@@ -171,6 +171,11 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	setup_progress_bar() {
 		let seconds_elapsed = 0;
+
+		if (this.report_settings.execution_time < 5) {
+			return;
+		}
+
 		const execution_time = this.report_settings.execution_time < 10
 			? 10 : this.report_settings.execution_time;
 
@@ -178,6 +183,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			seconds_elapsed += 1;
 			frappe.show_progress(__('Preparing Report'), seconds_elapsed, execution_time);
 		}, 1000);
+
 	}
 
 	setup_filters() {
@@ -699,6 +705,10 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		if (raise && missing_mandatory.length > 0) {
 			let message = __('Please set filters');
 			this.toggle_message(raise, message);
+
+			clearInterval(this.interval);
+			frappe.hide_progress();
+
 			throw "Filter missing";
 		}
 

@@ -64,7 +64,6 @@ def setup_complete(args):
 	try:
 		current_task = None
 		for idx, stage in enumerate(stages):
-			print(stage)
 			frappe.publish_realtime('setup_task', {"progress": [idx, len(stages)],
 				"stage_status": stage.get('status')}, user=frappe.session.user)
 
@@ -85,7 +84,8 @@ def update_global_settings(args):
 	frappe.clear_cache()
 
 	update_system_settings(args)
-	update_user_name(args)
+	if (frappe.conf.get('developer_mode') or 0) != 1:
+		update_user_name(args)
 
 def run_post_setup_complete(args):
 	disable_future_access()
@@ -120,8 +120,6 @@ def get_setup_complete_hooks(args):
 	return stages
 
 def handle_setup_exception(args):
-	print(args)
-	print(frappe.get_traceback())
 	frappe.db.rollback()
 	if args:
 		traceback = frappe.get_traceback()
