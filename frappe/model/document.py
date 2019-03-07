@@ -223,8 +223,6 @@ class Document(BaseDocument):
 		self.set_docstatus()
 		self.flags.in_insert = False
 
-		# run validate, on update etc.
-
 		# parent
 		if getattr(self.meta, "issingle", 0):
 			self.update_single(self.get_valid_dict())
@@ -238,6 +236,9 @@ class Document(BaseDocument):
 		# children
 		for d in self.get_all_children():
 			d.db_insert()
+
+		# Add a seal
+		self.add_seal()
 
 		self.run_method("after_insert")
 		self.flags.in_insert = True
@@ -378,7 +379,7 @@ class Document(BaseDocument):
 		return self._doc_before_save
 
 	def set_new_name(self, force=False):
-		"""Calls `frappe.naming.se_new_name` for parent and child docs."""
+		"""Calls `frappe.naming.set_new_name` for parent and child docs."""
 		if self.flags.name_set and not force:
 			return
 
@@ -388,6 +389,25 @@ class Document(BaseDocument):
 			set_new_name(d)
 
 		self.flags.name_set = True
+
+	def add_seal(self):
+		if hasattr(self.meta, 'is_sealed') and self.meta.is_sealed:
+			from frappe.utils.seal import get_seal_doc_and_version, get_chained_seal
+			doc = get_seal_doc_and_version(self)
+			if doc:
+				seal = get_chained_seal(doc)
+				if seal:
+					self.register_seal(doc, seal)
+
+	def register_seal(self, doc, seal):
+		if not "version" in doc:
+			version = "0.0.0"
+		else:
+			version = doc["version"]
+
+		self.db_set('_seal', seal, update_modified=False)
+		self.db_set('_seal_version', version, update_modified=False)
+		frappe.local.flags.commit = True
 
 	def get_title(self):
 		'''Get the document title based on title_field or `title` or `name`'''

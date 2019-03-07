@@ -244,6 +244,17 @@ class DbTable:
 					'fieldtype': 'Datetime'
 				})
 
+			# add _seal column if is_sealed
+			if getattr(self.meta, 'is_sealed', False):
+				fl.append({
+					'fieldname': '_seal',
+					'fieldtype': 'Data'
+				})
+				fl.append({
+					'fieldname': '_seal_version',
+					'fieldtype': 'Data'
+				})
+
 		if not frappe.flags.in_install_db and (frappe.flags.in_install != "frappe" or frappe.flags.ignore_in_install):
 			custom_fl = frappe.db.sql("""\
 				SELECT * FROM `tabCustom Field`

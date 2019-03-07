@@ -429,6 +429,9 @@ class DocType(Document):
 			make_boilerplate('templates/controller.html', self.as_dict())
 			make_boilerplate('templates/controller_row.html', self.as_dict())
 
+		if self.is_sealed:
+			make_boilerplate("controller_version._py", self.as_dict())
+
 	def make_amendable(self):
 		"""If is_submittable is set, add amended_from docfields."""
 		if self.is_submittable:

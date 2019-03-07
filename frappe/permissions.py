@@ -69,6 +69,10 @@ def has_permission(doctype, ptype="read", doc=None, verbose=False, user=None):
 			push_perm_check_log("Doctype is not importable")
 			return False
 
+		if ptype=="delete" and cint(meta.is_sealed):
+			push_perm_check_log("Doctype cannot be deleted")
+			return False
+
 		role_permissions = get_role_permissions(meta, user=user)
 		perm = role_permissions.get(ptype)
 		if not perm: push_perm_check_log('User do not have doctype access via role permission')
@@ -115,6 +119,9 @@ def get_doc_permissions(doc, user=None, ptype=None):
 
 	if not cint(meta.allow_import):
 		permissions["import"] = 0
+
+	if cint(meta.is_sealed):
+		permissions["delete"] = 0
 
 	def is_user_owner():
 		doc_owner = doc.get('owner') or ''
