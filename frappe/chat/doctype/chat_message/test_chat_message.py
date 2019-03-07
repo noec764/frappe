@@ -10,9 +10,6 @@ import frappe
 from frappe.chat.doctype.chat_message import chat_message
 from frappe.chat.util import create_test_user
 
-session   = frappe.session
-test_user = create_test_user(__name__)
-
 class TestChatMessage(unittest.TestCase):
 	def test_send(self):
 		# TODO - Write the case once you're done with Chat Room
