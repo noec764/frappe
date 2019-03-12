@@ -35,6 +35,5 @@ def setup_docs(app=None, development=False):
 	command = '{pacman} run {mode}'.format(pacman=pacman, mode=mode)
 
 	frappe_app_path = os.path.abspath(os.path.join(APP_PATHS[0], '..'))
-	print(frappe_app_path)
 	check_yarn()
 	frappe.commands.popen(command, cwd=frappe_app_path)

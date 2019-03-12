@@ -13,7 +13,6 @@ branch = 'develop'
 
 def reset_all():
 	for doctype in frappe.db.get_all('DocType', dict(custom=0)):
-		print(doctype.name)
 		reset_doc(doctype.name)
 
 def reset_doc(doctype):

@@ -113,7 +113,6 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 
 	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1})]
 
-	print(sealed_doctypes)
 	out = []
 	for dt in can_read:
 		if txt.lower().replace("%", "") in dt.lower() and dt in sealed_doctypes:

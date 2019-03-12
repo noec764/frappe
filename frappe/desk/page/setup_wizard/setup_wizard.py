@@ -49,7 +49,6 @@ def get_setup_stages(args):
 
 @frappe.whitelist()
 def setup_complete(args):
-	print(args)
 	"""Calls hooks for `setup_wizard_complete`, sets home page as `desktop`
 	and clears cache. If wizard breaks, calls `setup_wizard_exception` hook"""
 

@@ -50,7 +50,6 @@ def automodule(name):
 
 installed = None
 def get_version(name):
-	print(name)
 	global installed
 
 	if not installed:

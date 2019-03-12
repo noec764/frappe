@@ -66,9 +66,6 @@ def rebuild_for_doctype(doctype):
 	if frappe.local.conf.get('disable_global_search'):
 		return
 
-	if frappe.local.conf.get('disable_global_search'):
-		return
-
 	def _get_filters():
 		filters = frappe._dict({ "docstatus": ["!=", 2] })
 		if meta.has_field("enabled"):
@@ -361,7 +358,7 @@ def search(text, start=0, limit=20, doctype=""):
 		mariadb_conditions = ''
 		postgres_conditions = ''
 		if doctype:
-			mariadb_conditions = postgres_conditions = '`doctype` = {} AND '.format(doctype)
+			mariadb_conditions = postgres_conditions = '`doctype` = "{}" AND '.format(doctype)
 
 		mariadb_conditions += 'MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)'.format(frappe.db.escape('+' + text + '*'))
 		postgres_conditions += 'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({})'.format(frappe.db.escape(text))
