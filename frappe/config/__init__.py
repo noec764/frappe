@@ -22,9 +22,6 @@ def get_modules_from_all_apps_for_user(user=None):
 		if module_name in empty_tables_by_module:
 			module["onboard_present"] = 1
 
-
-
-
 		# Set defaults links
 		module["links"] =  get_onboard_items(module["app"], frappe.scrub(module_name))[:5]
 
@@ -87,6 +84,7 @@ def get_all_empty_tables_by_module():
 		JOIN tabDocType as d
 			ON i.table_name = CONCAT('tab', d.name)
 		WHERE table_rows = 0;
+
 	""")
 
 	empty_tables_by_module = {}
