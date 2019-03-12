@@ -30,7 +30,7 @@ def get_seal_doc_and_version(doc):
 			module=module,
 			doctype=doctype
 		))
-	except ImportError:
+	except (ImportError, AttributeError):
 		"""
 			If the versionning has not been configured, no seal will be recorded.
 		"""
