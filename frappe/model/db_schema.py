@@ -255,6 +255,13 @@ class DbTable:
 					'fieldtype': 'Data'
 				})
 
+			# add _draft_name column if name_after_submit
+			if getattr(self.meta, 'name_after_submit', False):
+				fl.append({
+					'fieldname': '_draft_name',
+					'fieldtype': 'Data'
+				})
+
 		if not frappe.flags.in_install_db and (frappe.flags.in_install != "frappe" or frappe.flags.ignore_in_install):
 			custom_fl = frappe.db.sql("""\
 				SELECT * FROM `tabCustom Field`

@@ -42,7 +42,8 @@ display_fieldtypes = ('Section Break', 'Column Break', 'HTML', 'Button', 'Image'
 numeric_fieldtypes = ('Currency', 'Int', 'Long Int', 'Float', 'Percent', 'Check')
 default_fields = ('doctype','name','owner','creation','modified','modified_by',
 	'parent','parentfield','parenttype','idx','docstatus')
-optional_fields = ("_user_tags", "_comments", "_assign", "_liked_by", "_seen", "_printed")
+optional_fields = ("_user_tags", "_comments", "_assign", "_liked_by", "_seen", "_printed", "_seal",
+	"_seal_version")
 table_fields = ('Table', 'Table MultiSelect')
 core_doctypes_list = ('DocType', 'DocField', 'DocPerm', 'User', 'Role', 'Has Role',
 	'Page', 'Module Def', 'Print Format', 'Report', 'Customize Form',

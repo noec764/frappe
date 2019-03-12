@@ -16,6 +16,7 @@ from frappe.model import optional_fields, table_fields
 from frappe.model.workflow import validate_workflow
 from frappe.utils.global_search import update_global_search
 from frappe.integrations.doctype.webhook import run_webhooks
+from frappe.model.rename_doc import rename_doc
 
 # once_only validation
 # methods
@@ -85,7 +86,7 @@ class Document(BaseDocument):
 		self.flags = frappe._dict()
 
 		if args and args[0] and isinstance(args[0], string_types):
-			# first arugment is doctype
+			# first argument is doctype
 			if len(args)==1:
 				# single
 				self.doctype = self.name = args[0]
@@ -136,6 +137,9 @@ class Document(BaseDocument):
 
 		else:
 			d = frappe.db.get_value(self.doctype, self.name, "*", as_dict=1)
+			if not d and self.meta.name_after_submit:
+				d = frappe.db.get_value(self.doctype, {"_draft_name": self.name}, "*", as_dict=1)
+
 			if not d:
 				frappe.throw(_("{0} {1} not found").format(_(self.doctype), self.name), frappe.DoesNotExistError)
 
@@ -212,7 +216,7 @@ class Document(BaseDocument):
 		self.set_docstatus()
 		self.check_if_latest()
 		self.run_method("before_insert")
-		self.set_new_name()
+		self.set_new_name(draft_name=self.meta.name_after_submit)
 		self.set_parent_in_children()
 		self.validate_higher_perm_levels()
 
@@ -312,6 +316,11 @@ class Document(BaseDocument):
 		self.update_children()
 		self.run_post_save_methods()
 
+		if self._action == "submit" and self.meta.name_after_submit:
+			self._draft_name = self.name
+			self.set_new_name()
+			rename_doc(self.doctype, self._draft_name, self.name, force=True)
+
 		return self
 
 	def copy_attachments_from_amended_from(self):
@@ -378,12 +387,16 @@ class Document(BaseDocument):
 				frappe.clear_last_message()
 		return self._doc_before_save
 
-	def set_new_name(self, force=False):
+	def set_new_name(self, draft_name=False, force=False):
 		"""Calls `frappe.naming.set_new_name` for parent and child docs."""
 		if self.flags.name_set and not force:
 			return
 
-		set_new_name(self)
+		set_new_name(self, draft_name=draft_name)
+
+		if draft_name:
+			self._draft_name = self.name
+
 		# set name for children
 		for d in self.get_all_children():
 			set_new_name(d)
@@ -757,7 +770,6 @@ class Document(BaseDocument):
 			return
 
 		invalid_links, cancelled_links = self.get_invalid_links()
-
 		for d in self.get_all_children():
 			result = d.get_invalid_links(is_submittable=self.meta.is_submittable)
 			invalid_links.extend(result[0])

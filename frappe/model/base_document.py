@@ -199,6 +199,7 @@ class BaseDocument(object):
 
 	def get_valid_dict(self, sanitize=True, convert_dates_to_str=False):
 		d = frappe._dict()
+
 		for fieldname in self.meta.get_valid_columns():
 			d[fieldname] = self.get(fieldname)
 
@@ -307,6 +308,9 @@ class BaseDocument(object):
 			self.created_by = self.modified_by = frappe.session.user
 
 		d = self.get_valid_dict(convert_dates_to_str=True)
+
+		if self.meta.name_after_submit and self._draft_name:
+			d["_draft_name"] = self._draft_name
 
 		columns = list(d)
 		try:
