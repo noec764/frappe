@@ -360,7 +360,7 @@ def search(text, start=0, limit=20, doctype=""):
 		if doctype:
 			mariadb_conditions = postgres_conditions = '`doctype` = "{}" AND '.format(doctype)
 
-		mariadb_conditions += 'MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)'.format(frappe.db.escape('+' + text + '*'))
+		mariadb_conditions += 'MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)'.format(frappe.db.escape('+"' + text + '"*'))
 		postgres_conditions += 'TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({})'.format(frappe.db.escape(text))
 
 		common_query = '''SELECT `doctype`, `name`, `content`
