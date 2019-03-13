@@ -32,7 +32,7 @@ def set_new_name(doc, draft_name=False):
 		if autoname.lower() != "prompt" and not frappe.flags.in_import:
 			doc.name = None
 
-		if getattr(doc, "amended_from", None):
+		if getattr(doc, "amended_from", None) and not frappe.get_meta(doc.doctype).is_sealed:
 			_set_amended_name(doc)
 			return
 

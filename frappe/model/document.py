@@ -389,7 +389,11 @@ class Document(BaseDocument):
 
 	def set_new_name(self, draft_name=False, force=False):
 		"""Calls `frappe.naming.set_new_name` for parent and child docs."""
-		if self.flags.name_set and not force:
+
+		if draft_name and self.flags.draft_name_set and not force:
+			return
+
+		if not draft_name and self.flags.name_set and not force:
 			return
 
 		set_new_name(self, draft_name=draft_name)
@@ -401,7 +405,10 @@ class Document(BaseDocument):
 		for d in self.get_all_children():
 			set_new_name(d)
 
-		self.flags.name_set = True
+		if draft_name:
+			self.flags.draft_name_set = True
+		else:
+			self.flags.name_set = True
 
 	def add_seal(self):
 		if hasattr(self.meta, 'is_sealed') and self.meta.is_sealed:
