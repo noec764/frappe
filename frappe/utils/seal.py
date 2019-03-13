@@ -38,7 +38,7 @@ def get_seal_doc_and_version(doc):
 
 	return get_sealed_doc(doc, modules, version)
 
-def get_sealed_doc(doc, modules, version, report=False):
+def get_sealed_doc(doc, modules, version, sanitize=False):
 	current_mapping = [d for d in modules if d["version"] == version]
 	meta_fields = frappe.get_meta(doc.doctype).fields
 
@@ -55,6 +55,9 @@ def get_sealed_doc(doc, modules, version, report=False):
 			"doctype": doc.doctype,
 			"timestamp": timestamp
 		}
+
+		sanitize = True if "sanitize" in current_mapping else False
+
 		for k, v in doc.as_dict().items():
 			if k in current_mapping["fields"]:
 				if k in current_mapping["tables"].keys():
@@ -63,21 +66,21 @@ def get_sealed_doc(doc, modules, version, report=False):
 						table_item = {}
 						for j in i:
 							if j in current_mapping["tables"][k]:
-								table_item[j] = sanitize_value(i[j], [m for m in meta_fields if m.fieldname == j]) if report else i[j]
+								table_item[j] = sanitize_value(i[j], [m for m in meta_fields if m.fieldname == j]) if sanitize else i[j]
 
 						child_table.append(table_item)
 
 					sealed_doc[k] = child_table
 
 				else:
-					sealed_doc[k] = sanitize_value(doc.as_dict()[k], [m for m in meta_fields if m.fieldname == k]) if report else doc.as_dict()[k]
+					sealed_doc[k] = sanitize_value(doc.as_dict()[k], [m for m in meta_fields if m.fieldname == k]) if sanitize else doc.as_dict()[k]
 
 		return sealed_doc
 	else:
 		return None
 
 def sanitize_value(value, meta):
-	if not meta:
+	if not meta or not value:
 		return value
 
 	if meta and isinstance(meta, list):
@@ -95,7 +98,6 @@ def sanitize_value(value, meta):
 	return value
 
 def get_chained_seal(doc, calculated=False):
-
 	if not isinstance(doc, dict):
 		doc = doc.as_dict()
 
