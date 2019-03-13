@@ -8,6 +8,7 @@ from frappe import _, scrub
 from frappe.model.document import Document
 from frappe.utils import now
 from frappe.utils.data import DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT
+from six import string_types
 import datetime
 import hashlib
 import uuid
@@ -86,13 +87,13 @@ def sanitize_value(value, meta):
 	if meta and isinstance(meta, list):
 		meta = meta[0]
 
-	if meta.fieldtype == "Datetime":
+	if meta.fieldtype == "Datetime" and not isinstance(value, string_types):
 		value = value.strftime(DATETIME_FORMAT)
 
-	elif meta.fieldtype == "Date":
+	elif meta.fieldtype == "Date" and not isinstance(value, string_types):
 		value = value.strftime(DATE_FORMAT)
 
-	elif meta.fieldtype == "Time":
+	elif meta.fieldtype == "Time" and not isinstance(value, string_types):
 		value = value.strftime(TIME_FORMAT)
 
 	return value

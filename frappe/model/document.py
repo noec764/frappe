@@ -314,12 +314,13 @@ class Document(BaseDocument):
 			self.db_update()
 
 		self.update_children()
-		self.run_post_save_methods()
 
 		if self._action == "submit" and self.meta.name_after_submit:
 			self._draft_name = self.name
 			self.set_new_name()
 			rename_doc(self.doctype, self._draft_name, self.name, force=True)
+
+		self.run_post_save_methods()
 
 		return self
 
