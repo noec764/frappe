@@ -13,31 +13,25 @@ import datetime
 import hashlib
 import uuid
 import os
+from frappe.modules import load_doctype_module
 
 def get_seal_doc_and_version(doc):
 	try:
-		module = scrub(doc.meta.module)
-		app = frappe.local.module_app[module]
-		doctype = scrub(doc.doctype)
+		data = []
+		version = None
 
-		modules = frappe.get_attr("{app}.{module}.doctype.{doctype}.{doctype}_version.get_data".format(
-			app=app,
-			module=module,
-			doctype=doctype
-		))() or []
+		module = load_doctype_module(doc.doctype, suffix='_version')
+		if hasattr(module, 'get_data'):
+				data = module.get_data()
+				version = module.DOCTYPE_VERSION
 
-		version = frappe.get_attr("{app}.{module}.doctype.{doctype}.{doctype}_version.DOCTYPE_VERSION".format(
-			app=app,
-			module=module,
-			doctype=doctype
-		))
 	except (ImportError, AttributeError):
 		"""
 			If the versionning has not been configured, no seal will be recorded.
 		"""
 		return None
 
-	return get_sealed_doc(doc, modules, version)
+	return get_sealed_doc(doc, data, version)
 
 def get_sealed_doc(doc, modules, version, sanitize=False):
 	current_mapping = [d for d in modules if d["version"] == version]

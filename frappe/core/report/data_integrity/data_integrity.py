@@ -7,6 +7,7 @@ import hashlib
 from frappe import _, scrub
 from frappe.utils import format_datetime
 from frappe.utils.seal import get_sealed_doc, get_chained_seal
+from frappe.modules import load_doctype_module
 
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
@@ -40,22 +41,17 @@ def get_data(filters=None):
 	return result
 
 def get_versions_data(doctype):
-	meta = frappe.get_meta(doctype)
 	try:
-		module = scrub(meta.module)
-		app = frappe.local.module_app[module]
-		doctype = scrub(doctype)
+		data = []
 
-		modules = frappe.get_attr("{app}.{module}.doctype.{doctype}.{doctype}_version.get_data".format(
-			app=app,
-			module=module,
-			doctype=doctype
-		))() or []
+		module = load_doctype_module(doctype, suffix='_version')
+		if hasattr(module, 'get_data'):
+				data = module.get_data()
 
 	except ImportError:
 		return []
 
-	return modules
+	return data
 
 
 def get_columns(filters=None):
