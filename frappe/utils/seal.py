@@ -88,6 +88,9 @@ def sanitize_value(value, meta):
 		value = value.strftime(DATE_FORMAT)
 
 	elif meta.fieldtype == "Time" and not isinstance(value, string_types):
+		if isinstance(value, datetime.timedelta):
+			value = (datetime.datetime.min + value).time()
+
 		value = value.strftime(TIME_FORMAT)
 
 	return value
