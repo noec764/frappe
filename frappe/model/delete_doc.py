@@ -228,6 +228,9 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 			continue
 
 		meta = frappe.get_meta(df.parent)
+		if meta.valid_on_cancel:
+			continue
+
 		if meta.issingle:
 			# dynamic link in single doc
 			refdoc = frappe.db.get_singles_dict(df.parent)
@@ -252,6 +255,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					# or linked to a submitted doc when cancelling
 
 					reference_doctype = refdoc.parenttype if meta.istable else df.parent
+
 					reference_docname = refdoc.parent if meta.istable else refdoc.name
 					at_position = "at Row: {0}".format(refdoc.idx) if meta.istable else ""
 

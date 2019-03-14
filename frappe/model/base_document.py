@@ -434,6 +434,11 @@ class BaseDocument(object):
 
 	def get_invalid_links(self, is_submittable=False):
 		'''Returns list of invalid links and also updates fetch values if not set'''
+
+		# Exclude doctypes valid on cancel
+		if self.meta.valid_on_cancel:
+			return [], []
+
 		def get_msg(df, docname):
 			if self.parentfield:
 				return "{} #{}: {}: {}".format(_("Row"), self.idx, _(df.label), docname)
@@ -459,7 +464,7 @@ class BaseDocument(object):
 
 				# MySQL is case insensitive. Preserve case of the original docname in the Link Field.
 
-				# get a map of values ot fetch along with this link query
+				# get a map of values to fetch along with this link query
 				# that are mapped as link_fieldname.source_fieldname in Options of
 				# Readonly or Data or Text type fields
 
