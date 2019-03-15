@@ -47,6 +47,16 @@ frappe.ui.form.QuickEntryForm = Class.extend({
 			this.mandatory = $.map(fields,
 				function(d) { return ((d.reqd || d.bold || d.allow_in_quick_entry) && !d.read_only) ? $.extend({}, d) : null; });
 		}
+		this.mandatory.map(m => {
+			m.get_query = function() {
+				return {
+					filters: {
+						is_group: 0
+					}
+				};
+			}
+			return m;
+		})
 		this.meta = frappe.get_meta(this.doctype);
 		if (!this.doc) {
 			this.doc = frappe.model.get_new_doc(this.doctype, null, null, true);
