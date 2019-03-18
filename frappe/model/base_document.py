@@ -309,8 +309,9 @@ class BaseDocument(object):
 
 		d = self.get_valid_dict(convert_dates_to_str=True)
 
-		if self.meta.name_after_submit and self._draft_name:
-			d["_draft_name"] = self._draft_name
+		if hasattr(self.meta, "name_after_submit") and hasattr(self, "_draft_name"):
+			if self.meta.name_after_submit and self._draft_name:
+				d["_draft_name"] = self._draft_name
 
 		columns = list(d)
 		try:
@@ -436,7 +437,7 @@ class BaseDocument(object):
 		'''Returns list of invalid links and also updates fetch values if not set'''
 
 		# Exclude doctypes valid on cancel
-		if self.meta.valid_on_cancel:
+		if hasattr(self.meta, "valid_on_cancel") and self.meta.valid_on_cancel:
 			return [], []
 
 		def get_msg(df, docname):

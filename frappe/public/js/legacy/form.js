@@ -340,7 +340,9 @@ _f.Frm.prototype.refresh_header = function(is_a_different_doc) {
 	}
 
 	this.document_flow.refresh();
-	this.dashboard.refresh();
+	if (is_a_different_doc||is_a_different_doc===undefined) {
+		this.dashboard.refresh();
+	}
 
 	if(this.meta.is_submittable
 		&& this.perm[0] && this.perm[0].submit

@@ -137,11 +137,10 @@ class Document(BaseDocument):
 
 		else:
 			d = frappe.db.get_value(self.doctype, self.name, "*", as_dict=1)
-			if not d and self.meta.name_after_submit:
-				d = frappe.db.get_value(self.doctype, {"_draft_name": self.name}, "*", as_dict=1)
 
 			if not d:
-				frappe.throw(_("{0} {1} not found").format(_(self.doctype), self.name), frappe.DoesNotExistError)
+				frappe.throw(_("{0} {1} not found").format(_(self.doctype), self.name),\
+					 frappe.DoesNotExistError)
 
 			super(Document, self).__init__(d)
 
@@ -216,7 +215,7 @@ class Document(BaseDocument):
 		self.set_docstatus()
 		self.check_if_latest()
 		self.run_method("before_insert")
-		self.set_new_name(draft_name=self.meta.name_after_submit)
+		self.set_new_name(draft_name=self.meta.name_after_submit if hasattr(self.meta, "name_after_submit") else False)
 		self.set_parent_in_children()
 		self.validate_higher_perm_levels()
 
