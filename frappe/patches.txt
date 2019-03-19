@@ -237,3 +237,4 @@ frappe.patches.v12_0.setup_comments_from_communications
 frappe.patches.v12_0.init_desk_settings #11-03-2019
 execute:frappe.delete_doc('DocType', 'Transaction Log', ignore_missing=True)
 execute:frappe.delete_doc('Report', 'Transaction Log Report', ignore_missing=True)
+frappe.patches.v12_0.replace_null_values_in_tables
