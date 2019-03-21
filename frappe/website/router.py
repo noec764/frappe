@@ -215,7 +215,7 @@ def get_page_info(path, app, start, basepath=None, app_path=None, fname=None):
 	setup_source(page_info)
 
 	# extract properties from HTML comments
-	load_properties(page_info)
+	load_properties_from_source(page_info)
 
 	# extract properties from controller attributes
 	load_properties_from_controller(page_info)
