@@ -19,7 +19,7 @@ def get_data(filters=None):
 	if filters is None:
 		return []
 
-	documents = frappe.get_all(filters.get("doctype"))
+	documents = frappe.get_all(filters.get("doctype"), filters={"docstatus": [">", 0]})
 	modules = get_versions_data(filters.get("doctype"))
 	doc_meta = frappe.get_meta(filters.get("doctype"))
 
