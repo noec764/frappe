@@ -65,7 +65,7 @@ export default {
 			this.dialog = new frappe.ui.Dialog({
 				title: __("Customize " + this.category),
 				fields: fields,
-				primary_action_label: __("Update"),
+				primary_action_label: __("Save"),
 				primary_action: (values) => {
 					this.update_settings(values);
 				}
@@ -120,7 +120,7 @@ export default {
 					},
 					callback: (r) => {
 						let new_settings_with_link_objects = r.message;
-						let home_settings = JSON.parse(frappe.boot.home_settings);
+						let home_settings = JSON.parse(frappe.boot.home_settings) || {};
 						home_settings[this.category] = new_settings_with_link_objects;
 						frappe.boot.home_settings = JSON.stringify(home_settings);
 						this.modules = this.get_customized_modules(this.default_modules, new_settings_with_link_objects);
