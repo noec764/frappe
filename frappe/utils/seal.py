@@ -48,6 +48,7 @@ def get_sealed_doc(doc, modules, version, sanitize=False):
 		sealed_doc = {
 			"version": version,
 			"doctype": doc.doctype,
+			"docname": doc.name,
 			"timestamp": timestamp
 		}
 

@@ -240,9 +240,6 @@ class Document(BaseDocument):
 		for d in self.get_all_children():
 			d.db_insert()
 
-		# Add a seal
-		self.add_seal()
-
 		self.run_method("after_insert")
 		self.flags.in_insert = True
 
@@ -320,6 +317,10 @@ class Document(BaseDocument):
 			rename_doc(self.doctype, self._draft_name, self.name, force=True)
 
 		self.run_post_save_methods()
+
+		if self._action == "submit":
+			# Add a seal
+			self.add_seal()
 
 		return self
 

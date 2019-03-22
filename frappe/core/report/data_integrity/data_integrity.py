@@ -5,9 +5,10 @@ from __future__ import unicode_literals
 import frappe
 import hashlib
 from frappe import _, scrub
-from frappe.utils import format_datetime
+from frappe.utils import format_datetime, get_datetime, now_datetime
 from frappe.utils.seal import get_sealed_doc, get_chained_seal
 from frappe.modules import load_doctype_module
+import json
 
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
@@ -20,6 +21,7 @@ def get_data(filters=None):
 
 	documents = frappe.get_all(filters.get("doctype"))
 	modules = get_versions_data(filters.get("doctype"))
+	doc_meta = frappe.get_meta(filters.get("doctype"))
 
 	if not modules:
 		frappe.throw(_("The versioning document for this doctype could not be found"))
@@ -29,16 +31,56 @@ def get_data(filters=None):
 		doc = frappe.get_doc(filters.get("doctype"), document.name)
 
 		if doc._seal is None:
+			comment = _("This document is not sealed")
+			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
+				"Out", comment, "", "", "", ""])
 			continue
 
 		sealed_doc = get_sealed_doc(doc, modules, doc._seal_version, True)
+
+		# Check for renamed links
+		link_fields = get_link_fields(sealed_doc, doc_meta)
+		sealed_doc = revise_renamed_links(sealed_doc, link_fields)
+
 		if sealed_doc:
 			seal = get_chained_seal(sealed_doc, True)
-			integrity = True if seal == doc._seal else False
+			integrity = "Yes" if seal == doc._seal else "No"
+			comment = ""
 
-			result.append([doc.name, format_datetime(doc.creation), doc.owner, integrity, seal, doc._seal, doc._seal_version])
+			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
+				integrity, comment, seal, doc._seal, doc._seal_version])
 
 	return result
+
+def get_link_fields(doc, meta):
+	links = []
+	for field in doc:
+		links.extend([f for f in meta.fields if f.fieldname == field and f.fieldtype == "Link"])
+
+	return links
+
+def revise_renamed_links(doc, fields):
+	submission_date = get_datetime(doc["timestamp"])
+	for field in fields:
+		versions = frappe.get_all("Version",\
+			filters={
+				"ref_doctype": field.options,\
+				"docname": doc[field.fieldname],\
+				"creation": ["between", [submission_date, now_datetime()]]
+			},
+			fields=["data"])
+
+		if versions:
+			for version in versions:
+				data = json.loads(version.data)
+				if data["changed"] and data["changed"][0][2] == doc[field.fieldname]:
+					continue
+				else:
+					doc[field.fieldname] = data["changed"][0][1]
+					break
+
+	return doc
+
 
 def get_versions_data(doctype):
 	try:
@@ -46,7 +88,7 @@ def get_versions_data(doctype):
 
 		module = load_doctype_module(doctype, suffix='_version')
 		if hasattr(module, 'get_data'):
-				data = module.get_data()
+			data = module.get_data()
 
 	except ImportError:
 		return []
@@ -78,7 +120,13 @@ def get_columns(filters=None):
 			"label": _("Integrity"),
 			"fieldname": "integrity",
 			"fieldtype": "Data",
-			"width": 100
+			"width": 50
+		},
+		{
+			"label": _("Comments"),
+			"fieldname": "comments",
+			"fieldtype": "Data",
+			"width": 280
 		},
 		{
 			"label": _("Calculated Seal"),

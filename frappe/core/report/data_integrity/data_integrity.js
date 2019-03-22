@@ -18,16 +18,12 @@ frappe.query_reports["Data Integrity"] = {
 		}
 	],
 	"formatter": function(value, row, column, data, default_formatter) {
-		if(!value){
-			value = __("Error")
-		}
 
 		if (column.fieldname == "integrity") {
 
-			if (isNaN(value)) value = '';
 			return repl('<div class="text-center"><i class="fa %(icon)s" style="color: %(color)s;"></i></div>', {
-				icon: (value==true) ? "fa-check": "fa-exclamation",
-				color: (value==true) ? "green": "red"
+				icon: (value=="Yes") ? "fa-check": (value=="Out") ? "fa-bell" : "fa-exclamation",
+				color: (value=="Yes") ? "green": (value=="Out") ? "orange" : "red"
 			});
 
 		}
