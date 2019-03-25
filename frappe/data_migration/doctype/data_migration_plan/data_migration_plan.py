@@ -33,6 +33,8 @@ class DataMigrationPlan(Document):
 		frappe.flags.ignore_in_install = True
 		label = self.name + ' ID'
 		fieldname = frappe.scrub(label)
+		deletion_label = self.name + ' Deletion'
+		deletion_fieldname = frappe.scrub(deletion_label)
 
 		df = {
 			'label': label,
@@ -44,10 +46,21 @@ class DataMigrationPlan(Document):
 			'no_copy': 1
 		}
 
+		deletion_df = {
+			'label': deletion_label,
+			'fieldname': deletion_fieldname,
+			'fieldtype': 'Check',
+			'hidden': 1,
+			'read_only': 1,
+			'no_copy': 1
+		}
+
 		for m in self.mappings:
 			mapping = frappe.get_doc('Data Migration Mapping', m.mapping)
 			create_custom_field(mapping.local_doctype, df)
+			create_custom_field('Deleted Document', deletion_df)
 			mapping.migration_id_field = fieldname
+			mapping.migration_deletion_field = deletion_fieldname
 			mapping.save()
 
 		# Create custom field in Deleted Document

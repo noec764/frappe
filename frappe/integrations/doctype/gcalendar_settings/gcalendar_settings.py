@@ -37,8 +37,8 @@ class GCalendarSettings(Document):
 		if not self.refresh_token:
 			raise frappe.ValidationError(_("GCalendar is not configured."))
 		data = {
-			'client_id': self.client_id,
-			'client_secret': self.get_password(fieldname='client_secret',raise_exception=False),
+			'client_id': self.client_id or frappe.conf.get("gcloud_client_id"),
+			'client_secret': self.get_password(fieldname='client_secret',raise_exception=False) or frappe.conf.get("gcloud_client_secret"),
 			'refresh_token': self.get_password(fieldname='refresh_token',raise_exception=False),
 			'grant_type': "refresh_token",
 			'scope': SCOPES
@@ -53,7 +53,7 @@ class GCalendarSettings(Document):
 def sync():
 	try:
 		gcalendar_settings = frappe.get_doc('GCalendar Settings')
-		if gcalendar_settings.enable == 1:
+		if gcalendar_settings.enable == 1 or frappe.conf.get("gcalendar_enabled"):
 			gcalendar_settings.sync()
 	except Exception:
 		frappe.log_error(frappe.get_traceback())
@@ -95,8 +95,8 @@ def google_callback(code=None, state=None, account=None):
 		try:
 			account = frappe.get_doc("GCalendar Account", frappe.cache().hget("gcalendar_account", "GCalendar Account"))
 			data = {'code': code,
-				'client_id': doc.client_id,
-				'client_secret': doc.get_password(fieldname='client_secret',raise_exception=False),
+				'client_id': doc.client_id or frappe.conf.get("gcloud_client_id"),
+				'client_secret': doc.get_password(fieldname='client_secret',raise_exception=False) or frappe.conf.get("gcloud_client_secret"),
 				'redirect_uri': redirect_uri,
 				'grant_type': 'authorization_code'}
 			r = requests.post('https://www.googleapis.com/oauth2/v4/token', data=data).json()

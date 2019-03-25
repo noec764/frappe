@@ -211,29 +211,14 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 
 				remove_events.append(e)
 
-			if e.repeat_on=="Every Week":
-				weekday = getdate(event_start).weekday()
-				# monday is 0
-				start_weekday = getdate(start).weekday()
-
-				# start from nearest weeday after last monday
-				date = add_days(start, weekday - start_weekday)
-
-				for cnt in range(int(date_diff(end, start) / 7) + 3):
-					if getdate(date) >= getdate(start) and getdate(date) <= getdate(end) \
-						and getdate(date) <= getdate(repeat) and getdate(date) >= getdate(event_start):
-						add_event(e, date)
-
-					date = add_days(date, 7)
-
-				remove_events.append(e)
-
-			if e.repeat_on=="Every Day":
+			if e.repeat_on in ["Every Day", "Every Week"]:
 				for cnt in range(date_diff(end, start) + 1):
 					date = add_days(start, cnt)
 					if getdate(date) >= getdate(event_start) and getdate(date) <= getdate(end) \
-						and getdate(date) <= getdate(repeat) and e[weekdays[getdate(date).weekday()]]:
-						add_event(e, date)
+						and getdate(date) <= getdate(repeat):
+						if (e.repeat_on == "Every Week" and e[weekdays[getdate(date).weekday()]]) \
+							or (e.repeat_on == "Every Day"):
+							add_event(e, date)
 				remove_events.append(e)
 
 	for e in remove_events:

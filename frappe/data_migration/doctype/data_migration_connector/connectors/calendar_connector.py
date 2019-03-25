@@ -7,6 +7,7 @@ from googleapiclient.errors import HttpError
 import time
 from datetime import datetime
 from frappe.utils import add_days, add_years
+from frappe.desk.doctype.event.event import has_permission
 
 class CalendarConnector(BaseConnection):
 	def __init__(self, connector):
@@ -19,8 +20,8 @@ class CalendarConnector(BaseConnection):
 			'token': self.account.get_password(fieldname='session_token', raise_exception=False),
 			'refresh_token': self.account.get_password(fieldname='refresh_token', raise_exception=False),
 			'token_uri': 'https://www.googleapis.com/oauth2/v4/token',
-			'client_id': settings.client_id,
-			'client_secret': settings.get_password(fieldname='client_secret', raise_exception=False),
+			'client_id': settings.client_id or frappe.conf.get("gcloud_client_id"),
+			'client_secret': settings.get_password(fieldname='client_secret', raise_exception=False) or frappe.conf.get("gcloud_client_secret"),
 			'scopes':'https://www.googleapis.com/auth/calendar'
 			}
 
@@ -46,10 +47,13 @@ class CalendarConnector(BaseConnection):
 		try:
 			if self.account.gcalendar_id is not None:
 				try:
-					self.gcalendar.calendars().get(calendarId=self.account.gcalendar_id).execute()
+					calendar = self.gcalendar.calendars().get(calendarId=self.account.gcalendar_id).execute()
+					if calendar["summary"] != self.account.calendar_name:
+						frappe.db.set_value("GCalendar Account", self.account.name, "calendar_name", calendar["summary"])
+						frappe.db.commit()
 				except Exception:
 					frappe.log_error(frappe.get_traceback())
-			else:
+			elif self.account.new_calendar:
 				_create_calendar()
 		except HttpError as err:
 			if err.resp.status in [403, 500, 503]:
@@ -64,24 +68,21 @@ class CalendarConnector(BaseConnection):
 
 	def insert(self, doctype, doc):
 		if doctype == 'Events':
-			from frappe.desk.doctype.event.event import has_permission
 			d = frappe.get_doc("Event", doc["name"])
 			if has_permission(d, self.account.name):
-				if doc["start_datetime"] >= datetime.now():
-					try:
-						doctype = "Event"
-						e = self.insert_events(doctype, doc)
-						return e
-					except Exception:
-						frappe.log_error(frappe.get_traceback(), "GCalendar Synchronization Error")
+				try:
+					doctype = "Event"
+					e = self.insert_events(doctype, doc)
+					return e
+				except Exception:
+					frappe.log_error(frappe.get_traceback(), "GCalendar Synchronization Error")
 
 
 	def update(self, doctype, doc, migration_id):
 		if doctype == 'Events':
-			from frappe.desk.doctype.event.event import has_permission
 			d = frappe.get_doc("Event", doc["name"])
 			if has_permission(d, self.account.name):
-				if doc["start_datetime"] >= datetime.now() and migration_id is not None:
+				if migration_id is not None:
 					try:
 						doctype = "Event"
 						return self.update_events(doctype, doc, migration_id)
@@ -119,6 +120,7 @@ class CalendarConnector(BaseConnection):
 				if events.get('nextSyncToken'):
 					frappe.db.set_value("GCalendar Account", self.connector.username, "next_sync_token", events.get('nextSyncToken'))
 				break
+
 		return list(results)
 
 	def insert_events(self, doctype, doc, migration_id=None):
@@ -216,7 +218,7 @@ class CalendarConnector(BaseConnection):
 			end_date = None
 
 		day = []
-		if e.repeat_on == "Every Day":
+		if e.repeat_on == "Every Week":
 			if e.monday is not None:
 				day.append("MO")
 			if e.tuesday is not None:
@@ -233,10 +235,10 @@ class CalendarConnector(BaseConnection):
 				day.append("SU")
 
 			day = "BYDAY=" + ",".join(str(d) for d in day)
-			frequency = "FREQ=DAILY"
-
-		elif e.repeat_on == "Every Week":
 			frequency = "FREQ=WEEKLY"
+
+		elif e.repeat_on == "Every Day":
+			frequency = "FREQ=DAILY"
 		elif e.repeat_on == "Every Month":
 			frequency = "FREQ=MONTHLY;BYDAY=SU,MO,TU,WE,TH,FR,SA;BYSETPOS=-1"
 			end_date = datetime.combine(add_days(e.repeat_till, 1), datetime.min.time()).strftime('UNTIL=%Y%m%dT%H%M%SZ')

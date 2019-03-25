@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe, json, math
 from frappe.model.document import Document
 from frappe import _
-from frappe.utils import get_source_value
+from frappe.utils import get_source_value, cstr
 
 class DataMigrationRun(Document):
 	def run(self):
@@ -213,19 +213,19 @@ class DataMigrationRun(Document):
 	def get_deleted_local_data(self):
 		'''Fetch local deleted data using `frappe.get_all`. Used during Push'''
 		mapping = self.get_mapping(self.current_mapping)
-		or_filters = self.get_or_filters(mapping)
-		filters = dict(
-			deleted_doctype=mapping.local_doctype
-		)
+		filters = {
+			"deleted_doctype": mapping.local_doctype,
+			mapping.migration_deletion_field: 0
+		}
 
-		data = frappe.get_all('Deleted Document', fields=['data'],
-			filters=filters, or_filters=or_filters)
+		data = frappe.get_all('Deleted Document', fields=['name', 'data'],
+			filters=filters)
 
 		_data = []
 		for d in data:
 			doc = json.loads(d.data)
 			if doc.get(mapping.migration_id_field):
-				doc['_deleted_document_name'] = d.name
+				doc['_deleted_document_name'] = d['name']
 				_data.append(doc)
 
 		return _data
@@ -306,8 +306,8 @@ class DataMigrationRun(Document):
 				self.update_log('push_insert', 1)
 				# post process after insert
 				self.post_process_doc(local_doc=d, remote_doc=response_doc)
-			except Exception:
-				self.update_log('push_failed', d.name)
+			except Exception as e:
+				self.update_log('push_failed', {d.name: cstr(e)})
 
 		# update page_start
 		self.db_set('current_mapping_start',
@@ -338,8 +338,8 @@ class DataMigrationRun(Document):
 				self.update_log('push_update', 1)
 				# post process after update
 				self.post_process_doc(local_doc=d, remote_doc=response_doc)
-			except Exception:
-				self.update_log('push_failed', d.name)
+			except Exception as e:
+				self.update_log('push_failed', {d.name: cstr(e)})
 
 		# update page_start
 		self.db_set('current_mapping_start',
@@ -367,11 +367,15 @@ class DataMigrationRun(Document):
 			self.pre_process_doc(d)
 			try:
 				response_doc = connection.delete(mapping.remote_objectname, migration_id_value)
+				frappe.db.set_value('Deleted Document', d['_deleted_document_name'],
+					mapping.migration_deletion_field, 1, update_modified=False)
+				frappe.db.commit()
+
 				self.update_log('push_delete', 1)
 				# post process only when action is success
 				self.post_process_doc(local_doc=d, remote_doc=response_doc)
-			except Exception:
-				self.update_log('push_failed', d.name)
+			except Exception as e:
+				self.update_log('push_failed', {d['name']: cstr(e)})
 
 		# update page_start
 		self.db_set('current_mapping_start',
@@ -392,29 +396,30 @@ class DataMigrationRun(Document):
 		for d in data:
 			migration_id_value = get_source_value(d, connection.name_field)
 			doc = self.pre_process_doc(d)
-			doc = mapping.get_mapped_record(doc)
+			if doc:
+				doc = mapping.get_mapped_record(doc)
 
-			if migration_id_value:
-				try:
-					if not local_doc_exists(mapping, migration_id_value):
-						# insert new local doc
-						local_doc = insert_local_doc(mapping, doc)
+				if migration_id_value:
+					try:
+						if not local_doc_exists(mapping, migration_id_value):
+							# insert new local doc
+							local_doc = ninsert_local_doc(mapping, doc)
 
-						self.update_log('pull_insert', 1)
-						# set migration id
-						frappe.db.set_value(mapping.local_doctype, local_doc.name,
-							mapping.migration_id_field, migration_id_value,
-							update_modified=False)
-						frappe.db.commit()
-					else:
-						# update doc
-						local_doc = update_local_doc(mapping, doc, migration_id_value)
-						self.update_log('pull_update', 1)
-					# post process doc after success
-					self.post_process_doc(remote_doc=d, local_doc=local_doc)
-				except Exception:
-					# failed, append to log
-					self.update_log('pull_failed', migration_id_value)
+							self.update_log('pull_insert', 1)
+							# set migration id
+							frappe.db.set_value(mapping.local_doctype, local_doc.name,
+								mapping.migration_id_field, migration_id_value,
+								update_modified=False)
+							frappe.db.commit()
+						else:
+							# update doc
+							local_doc = update_local_doc(mapping, doc, migration_id_value)
+							self.update_log('pull_update', 1)
+						# post process doc after success
+						self.post_process_doc(remote_doc=d, local_doc=local_doc)
+					except Exception as e:
+						# failed, append to log
+						self.update_log('pull_failed', {migration_id_value: cstr(e)})
 
 		if len(data) < mapping.page_length:
 			# last page, done with pull
