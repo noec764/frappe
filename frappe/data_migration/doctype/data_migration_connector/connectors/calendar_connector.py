@@ -219,19 +219,19 @@ class CalendarConnector(BaseConnection):
 
 		day = []
 		if e.repeat_on == "Every Week":
-			if e.monday is not None:
+			if e.monday == 1:
 				day.append("MO")
-			if e.tuesday is not None:
+			if e.tuesday == 1:
 				day.append("TU")
-			if e.wednesday is not None:
+			if e.wednesday == 1:
 				day.append("WE")
-			if e.thursday is not None:
+			if e.thursday == 1:
 				day.append("TH")
-			if e.friday is not None:
+			if e.friday == 1:
 				day.append("FR")
-			if e.saturday is not None:
+			if e.saturday == 1:
 				day.append("SA")
-			if e.sunday is not None:
+			if e.sunday == 1:
 				day.append("SU")
 
 			day = "BYDAY=" + ",".join(str(d) for d in day)
