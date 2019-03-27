@@ -59,10 +59,10 @@ class FormMeta(Meta):
 	def as_dict(self, no_nulls=False):
 		d = super(FormMeta, self).as_dict(no_nulls=no_nulls)
 
-		for k in ("__js", "__css", "__list_js", "__calendar_js", "__map_js",
-			"__linked_with", "__messages", "__print_formats", "__workflow_docs",
-			"__form_grid_templates", "__listview_template", "__tree_js",
-			"__dashboard", "__kanban_column_fields", '__templates',
+		for k in ("__js", "__css", "__list_js", "__calendar_js", "__map_js", \
+			"__linked_with", "__messages", "__print_formats", "__workflow_docs", \
+			"__form_grid_templates", "__listview_template", "__tree_js", \
+			"__dashboard", "__kanban_column_fields", '__templates', \
 			'__custom_js'):
 			d[k] = self.get(k)
 
