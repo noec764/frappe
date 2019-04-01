@@ -129,7 +129,7 @@ doc_events = {
 			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions"
 		],
 		"on_change": [
-			"frappe.core.doctype.feedback_trigger.feedback_trigger.trigger_feedback_request",
+			"frappe.core.doctype.feedback_trigger.feedback_trigger.trigger_feedback_request"
 		]
 	},
 	"Email Group Member": {
