@@ -365,6 +365,7 @@ frappe.views.BaseList = class BaseList {
 			this.toggle_result_area();
 			this.before_render();
 			this.render();
+			this.after_render();
 			this.freeze(false);
 			if (this.settings.refresh) {
 				this.settings.refresh(this);
@@ -395,6 +396,10 @@ frappe.views.BaseList = class BaseList {
 
 	render() {
 		// for child classes
+	}
+
+	after_render() {
+
 	}
 
 	on_filter_change() {
