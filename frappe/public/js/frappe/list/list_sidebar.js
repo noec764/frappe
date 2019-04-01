@@ -26,7 +26,6 @@ frappe.views.ListSidebar = class ListSidebar {
 
 		this.setup_reports();
 		this.setup_list_filter();
-		this.setup_assigned_to_me();
 		this.setup_views();
 		this.setup_kanban_boards();
 		this.setup_calendar_view();
@@ -45,6 +44,7 @@ frappe.views.ListSidebar = class ListSidebar {
 			$('.assigned').remove();
 			this.setup_assigned_to();
 		});
+
 	}
 
 	setup_views() {
@@ -293,6 +293,9 @@ frappe.views.ListSidebar = class ListSidebar {
 
 	get_stats() {
 		var me = this;
+		if (this.list_view.list_view_settings && this.list_view.list_view_settings.disable_sidebar_stats) {
+			return;
+		}
 		frappe.call({
 			method: 'frappe.desk.reportview.get_sidebar_stats',
 			type: 'GET',
