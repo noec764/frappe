@@ -88,15 +88,9 @@
   integrity sha512-k2tWTQU8G4+iSMvqKi0Q9IIsWAp/n8xzdZS4Q4YVIltApoMA00wFBFdlJnmoaK1/z7B0Cy0yPe6GgXteSmdUNw==
 
 "@types/node@^11.9.5":
-<<<<<<< HEAD
-  version "11.9.6"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-11.9.6.tgz#c632bbcc780a1349673a6e2e9b9dfa8c369d3c74"
-  integrity sha512-4hS2K4gwo9/aXIcoYxCtHpdgd8XUeDmo1siRCAH3RziXB65JlPqUFMtfy9VPj+og7dp3w1TFjGwYga4e0m9GwA==
-=======
   version "11.10.4"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-11.10.4.tgz#3f5fc4f0f322805f009e00ab35a2ff3d6b778e42"
   integrity sha512-wa09itaLE8L705aXd8F80jnFpxz3Y1/KRHfKsYL2bPc0XF+wEWu8sR9n5bmeu8Ba1N9z2GRNzm/YdHcghLkLKg==
->>>>>>> develop
 
 "@types/q@^1.5.1":
   version "1.5.1"
@@ -1728,10 +1722,10 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-frappe-datatable@^1.8.0:
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/frappe-datatable/-/frappe-datatable-1.9.0.tgz#63d6f2af0b6ea00f9b66bb3e55606f5d82b5644b"
-  integrity sha512-dEKUc8svDH2AoAlcHT4q3DA8Zo0kU3ihrpe9I2VqYKmmygltLXCH5iw3k3IZBVBy17hH49JtzAKGky0OazINHA==
+frappe-datatable@^1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/frappe-datatable/-/frappe-datatable-1.10.0.tgz#915a7a6754cf6b66dbf7b07323a381e760a74221"
+  integrity sha512-xuiFvDUSgKIaG0vZZvQsKLs5LUqFfo5nSE+wzBwEzE5iytBaJfKXzqud71AtqteQ0CCrEe9P/tMD+hZfcnbh/Q==
   dependencies:
     hyperlist "^1.0.0-beta"
     lodash "^4.17.5"
