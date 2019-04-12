@@ -17,8 +17,6 @@ from frappe.utils.user import get_users_with_role
 class WorkflowAction(Document):
 	pass
 
-def on_doctype_update():
-	frappe.db.add_index("Workflow Action", ["status", "user"])
 
 def on_doctype_update():
 	frappe.db.add_index("Workflow Action", ["status", "user"])
@@ -190,6 +188,8 @@ def send_workflow_action_email(users_data, doc):
 				'actions': d.get('possible_actions'),
 				'message': message
 			},
+			'reference_name': doc.name,
+			'reference_doctype': doc.doctype
 		}
 		email_args.update(common_args)
 		enqueue(method=frappe.sendmail, queue='short', **email_args)
@@ -286,4 +286,3 @@ def get_email_template(doc):
 
 	if not template_name: return
 	return frappe.get_doc('Email Template', template_name)
-
