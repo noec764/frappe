@@ -117,11 +117,17 @@ frappe.views.Page = Class.extend({
 	}
 });
 
+const notFoundIcons = ["not_found.svg", "404.svg", "empty.svg", "taken.svg", "no_data.svg"]
+const notPermittedIcons = ["security.svg", "safe.svg", "vault.svg", "secure.svg"]
+
+let notFound = notFoundIcons[Math.floor(Math.random() * notFoundIcons.length)];
+let notPermitted = notPermittedIcons[Math.floor(Math.random() * notPermittedIcons.length)];
+
 frappe.show_not_found = function(page_name) {
 	frappe.show_message_page({
 		page_name: page_name,
 		message: __("Sorry! I could not find what you were looking for."),
-		img: "/assets/frappe/images/ui/bubble-tea-sorry.svg"
+		img: `/assets/frappe/images/ui/${notFound}`
 	});
 };
 
@@ -129,7 +135,7 @@ frappe.show_not_permitted = function(page_name) {
 	frappe.show_message_page({
 		page_name: page_name,
 		message: __("Sorry! You are not permitted to view this page."),
-		img: "/assets/frappe/images/ui/bubble-tea-sorry.svg",
+		img: `/assets/frappe/images/ui/${notPermitted}`,
 		// icon: "octicon octicon-circle-slash"
 	});
 };

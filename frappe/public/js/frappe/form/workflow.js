@@ -68,8 +68,8 @@ frappe.ui.form.States = Class.extend({
 	},
 
 	show_actions: function() {
-		var added = false,
-			me = this;
+		let added = false
+		const me = this;
 
 		this.frm.page.clear_actions_menu();
 
@@ -103,9 +103,12 @@ frappe.ui.form.States = Class.extend({
 					});
 				}
 			});
+			this.setup_btn(added);
 		});
+	},
 
-		if(added) {
+	setup_btn: function(action_added) {
+		if(action_added) {
 			this.frm.page.btn_primary.addClass("hide");
 			this.frm.toolbar.current_status = "";
 			this.setup_help();

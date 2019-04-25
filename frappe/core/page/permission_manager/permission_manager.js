@@ -217,7 +217,6 @@ frappe.PermissionEngine = Class.extend({
 
 			me.rights.forEach(r => {
 				if (!d.is_submittable && ['submit', 'cancel', 'amend'].includes(r)) return;
-				if (d.sealed && r==='delete') return;
 				me.add_check(perm_container, d, r);
 			});
 
