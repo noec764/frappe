@@ -123,7 +123,7 @@ def get_doc_permissions(doc, user=None, ptype=None):
 	if not cint(meta.allow_import):
 		permissions["import"] = 0
 
-	if cint(meta.is_sealed):
+	if cint(meta.is_sealed) and doc.docstatus > 0:
 		permissions["delete"] = 0
 
 	def is_user_owner():

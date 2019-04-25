@@ -26,9 +26,6 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 		doctype = frappe.form_dict.get('dt')
 		name = frappe.form_dict.get('dn')
 
-	if hasattr(frappe.get_meta(doctype), "is_sealed") and frappe.get_meta(doctype).is_sealed:
-		frappe.throw(_("Sealed documents cannot be deleted"))
-
 	names = name
 	if isinstance(name, string_types) or isinstance(name, integer_types):
 		names = [name]
@@ -58,6 +55,10 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 
 			else:
 				doc = frappe.get_doc(doctype, name)
+
+				if hasattr(frappe.get_meta(doctype), "is_sealed") and frappe.get_meta(doctype).is_sealed \
+					and doc.docstatus != 0:
+					frappe.throw(_("Sealed documents cannot be deleted"))
 
 				update_flags(doc, flags, ignore_permissions)
 				check_permission_and_not_submitted(doc)
