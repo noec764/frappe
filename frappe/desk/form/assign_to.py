@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 import frappe
 from frappe import _
+from frappe.utils import cint
 import frappe.share
 
 class DuplicateToDoError(frappe.ValidationError): pass
@@ -173,7 +174,7 @@ def notify_assignment(assigned_by, owner, doc_type, doc_name, action='CLOSE',
 			'notify': notify
 		}
 
-	if arg and arg.get("notify"):
+	if arg and cint(arg.get("notify")):
 		_notify(arg)
 
 def _notify(args):
