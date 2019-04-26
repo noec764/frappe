@@ -84,7 +84,7 @@ class MariaDBDatabase(Database):
 				conv = conversions, local_infile = frappe.conf.local_infile)
 		else:
 			conn = pymysql.connect(self.host, self.user or '', self.password or '',
-				cport=self.port, charset='utf8mb4', use_unicode = True, conv = conversions,
+				port=self.port, charset='utf8mb4', use_unicode = True, conv = conversions,
 				local_infile = frappe.conf.local_infile)
 
 		# MYSQL_OPTION_MULTI_STATEMENTS_OFF = 1
