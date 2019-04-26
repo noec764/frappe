@@ -14,6 +14,9 @@ from frappe.model.naming import revert_series_if_last
 from frappe.utils.global_search import delete_for_document
 from six import string_types, integer_types
 
+DOCTYPES_TO_SKIP = ["Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", \
+	"File", "Version", "Document Follow", "Comment" , "View Log"]
+
 def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reload=False,
 	ignore_permissions=False, flags=None, ignore_on_trash=False, ignore_missing=True):
 	"""
@@ -199,7 +202,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 			for item in frappe.db.get_values(link_dt, {link_field:doc.name},
 				["name", "parent", "parenttype", "docstatus"], as_dict=True):
 				linked_doctype = item.parenttype if item.parent else link_dt
-				if linked_doctype in ("Communication", "ToDo", "DocShare", "Email Unsubscribe", 'File', 'Version', "Activity Log", 'Comment'):
+				if linked_doctype in DOCTYPES_TO_SKIP:
 					# don't check for communication and todo!
 					continue
 
@@ -224,7 +227,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 	'''Raise `frappe.LinkExistsError` if the document is dynamically linked'''
 	for df in get_dynamic_link_map().get(doc.doctype, []):
-		if df.parent in ("Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", 'File', 'Version', 'View Log', 'Comment'):
+		if df.parent in DOCTYPES_TO_SKIP:
 			# don't check for communication and todo!
 			continue
 
