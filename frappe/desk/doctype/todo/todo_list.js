@@ -1,4 +1,7 @@
 frappe.listview_settings['ToDo'] = {
+	hide_name_column: true,
+	add_fields: ["reference_type", "reference_name"],
+
 	onload: function(me) {
 		if (!frappe.route_options) {
 			frappe.route_options = {
@@ -8,23 +11,30 @@ frappe.listview_settings['ToDo'] = {
 		}
 		me.page.set_title(__("To Do"));
 	},
-	hide_name_column: true,
-	refresh: function(me) {
-		// override assigned to me by owner
-		if (me.todo_sidebar_setup) return;
 
-		me.page.sidebar.find(".assigned-to-me a").off("click").on("click", function() {
-			me.filter_area.remove("assigned_by");
-			me.filter_area.add([[me.doctype, "owner", '=', frappe.session.user]]);
-		});
+	button: {
+		show: function(doc) {
+			return doc.reference_name;
+		},
+		get_label: function() {
+			return __('Open');
+		},
+		get_description: function(doc) {
+			return __('Open {0}', [`${doc.reference_type} ${doc.reference_name}`])
+		},
+		action: function(doc) {
+			frappe.set_route('Form', doc.reference_type, doc.reference_name);
+		}
+	},
+
+	refresh: function(me) {
+		if (me.todo_sidebar_setup) return;
 
 		// add assigned by me
 		me.page.add_sidebar_item(__("Assigned By Me"), function() {
-			me.filter_area.remove("owner");
 			me.filter_area.add([[me.doctype, "assigned_by", '=', frappe.session.user]]);
-		}, ".assigned-to-me");
+		}, ('.list-link[data-view="Kanban"]'));
 
 		me.todo_sidebar_setup = true;
 	},
-	add_fields: ["reference_type", "reference_name"],
 }

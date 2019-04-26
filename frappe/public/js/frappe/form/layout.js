@@ -51,12 +51,18 @@ frappe.ui.form.Layout = Class.extend({
 		return fields;
 	},
 	show_message: function(html) {
+		if (this.message_color) {
+			// remove previous color
+			this.message.removeClass(this.message_color);
+		}
+		this.message_color = (color && ['yellow', 'blue'].includes(color)) ? color : 'blue';
 		if(html) {
 			if(html.substr(0, 1)!=='<') {
 				// wrap in a block
 				html = '<div>' + html + '</div>';
 			}
-			$(html).appendTo(this.message.removeClass('hidden'));
+			this.message.removeClass('hidden').addClass(this.message_color);
+			$(html).appendTo(this.message);
 		} else {
 			this.message.empty().addClass('hidden');
 		}
@@ -500,7 +506,7 @@ frappe.ui.form.Layout = Class.extend({
 
 		} else if(typeof(expression) === 'function') {
 			out = expression(doc);
-			
+
 		} else if(expression.substr(0,5)=='eval:') {
 			try {
 				out = eval(expression.substr(5));
