@@ -1124,6 +1124,11 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
+cypress-file-upload@^3.1.0:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-3.1.1.tgz#ae389367e5a041857fafa96de89dce18fdeb6827"
+  integrity sha512-ACGgYksZsk7Hq+S5LUq9+F+1uFzh4sVBnSfVn+1GzS5e4Ti249CrMlaA53QO3ksHYcyJr3h3kbioVDW0b3LeZQ==
+
 cypress@^3.1.1:
   version "3.1.5"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-3.1.5.tgz#5227b2ce9306c47236d29e703bad9055d7218042"

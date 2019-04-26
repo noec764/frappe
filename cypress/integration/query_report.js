@@ -4,10 +4,10 @@ context('Form', () => {
 		cy.visit('/desk');
 	});
 
- 	it('add custom column in report', () => {
+	it('add custom column in report', () => {
 		cy.visit('/desk#query-report/Permitted Documents For User');
 
- 		cy.get('#page-query-report input[data-fieldname="user"]').as('input');
+		cy.get('#page-query-report input[data-fieldname="user"]').as('input');
 		cy.get('@input').focus().type('test@erpnext.com', { delay: 100 });
 		cy.get('#page-query-report input[data-fieldname="doctype"]').as('input-test');
 		cy.get('@input-test').focus().type('Role', { delay: 100 }).blur();
@@ -25,4 +25,4 @@ context('Form', () => {
 		cy.get('input[data-fieldname="report_name"]').type("Test Report", {force: true});
 		cy.get('button').contains('Submit').click({force: true});
 	});
-}); 
+});

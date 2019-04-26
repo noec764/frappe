@@ -530,7 +530,7 @@ frappe.Application = Class.extend({
 				console.log(data);
 			});
 		}
-	}
+	},
 });
 
 frappe.get_module = function(m, default_module) {
