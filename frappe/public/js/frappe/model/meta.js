@@ -203,7 +203,6 @@ $.extend(frappe.meta, {
 			if (
 				!in_list(print_format_list, d.name)
 				&& d.print_format_type !== 'JS'
-				&& (cint(enable_raw_printing) || !d.raw_printing)
 			) {
 				print_format_list.push(d.name);
 			}

@@ -50,7 +50,7 @@ frappe.ui.form.Layout = Class.extend({
 		fields = fields.concat(frappe.meta.sort_docfields(frappe.meta.docfield_map[this.doctype]));
 		return fields;
 	},
-	show_message: function(html) {
+	show_message: function(html, color) {
 		if (this.message_color) {
 			// remove previous color
 			this.message.removeClass(this.message_color);
