@@ -8,6 +8,7 @@ from __future__ import unicode_literals, print_function
 import frappe, os, json
 import frappe.utils
 from frappe import _
+from frappe.utils import cint
 
 def export_module_json(doc, is_standard, module):
 	"""Make a folder for the given doc and add its json file (make it a standard
@@ -43,7 +44,7 @@ def export_customizations(module, doctype, sync_on_migrate=0, with_permissions=0
 		raise Exception('Not developer mode')
 
 	custom = {'custom_fields': [], 'property_setters': [], 'custom_perms': [],
-		'doctype': doctype, 'sync_on_migrate': 1}
+		'doctype': doctype, 'sync_on_migrate': cint(sync_on_migrate)}
 
 	def add(_doctype):
 		custom['custom_fields'] += frappe.get_all('Custom Field',
@@ -53,7 +54,7 @@ def export_customizations(module, doctype, sync_on_migrate=0, with_permissions=0
 
 	add(doctype)
 
-	if with_permissions:
+	if cint(with_permissions):
 		custom['custom_perms'] = frappe.get_all('Custom DocPerm',
 			fields='*', filters={'parent': doctype})
 

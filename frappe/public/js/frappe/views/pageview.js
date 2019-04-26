@@ -57,6 +57,7 @@ frappe.views.pageview = {
 				}
 
 				frappe.container.change_to('desktop');
+				frappe.utils.set_title(__('Home'));
 				return;
 			}
 		}
