@@ -44,11 +44,11 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 				search_modal.find('#modal-search').focus();
 			}, 300);
 		});
-	},
 
-	$('.navbar-toggle-full-width').click(() => {
-		frappe.ui.toolbar.toggle_full_width();
-	});
+		$('.navbar-toggle-full-width').click(() => {
+			frappe.ui.toolbar.toggle_full_width();
+		});
+	},
 
 	setup_sidebar: function() {
 		var header = $('header');
