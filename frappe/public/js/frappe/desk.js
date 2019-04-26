@@ -44,6 +44,8 @@ frappe.Application = Class.extend({
 		this.make_nav_bar();
 		this.set_favicon();
 		this.setup_analytics();
+		this.set_fullwidth_if_enabled();
+
 		frappe.ui.keys.setup();
 		this.set_rtl();
 
@@ -495,6 +497,10 @@ frappe.Application = Class.extend({
 		}
 	},
 
+	set_fullwidth_if_enabled() {
+		frappe.ui.toolbar.set_fullwidth_if_enabled();
+	},
+
 	show_notes: function() {
 		var me = this;
 		if(frappe.boot.notes.length) {
@@ -527,7 +533,7 @@ frappe.Application = Class.extend({
 	setup_build_error_listener() {
 		if (frappe.boot.developer_mode) {
 			frappe.realtime.on('build_error', (data) => {
-				console.log(data);
+				console.warn(data);
 			});
 		}
 	},

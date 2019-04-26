@@ -716,4 +716,9 @@ if (!Array.prototype.uniqBy) {
 			});
 		}
 	});
+	Object.defineProperty(Array.prototype, 'move', {
+		value: function(from, to) {
+			this.splice(to, 0, this.splice(from, 1)[0]);
+		}
+	});
 }
