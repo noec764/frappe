@@ -1,6 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 from __future__ import unicode_literals
+from bs4 import BeautifulSoup
+from frappe.utils import cint
 
 def get_jenv():
 	import frappe
@@ -60,7 +62,6 @@ def render_template(template, context, is_path=None, safe_render=True):
 	'''
 
 	from frappe import get_traceback, throw
-	from frappe.utils import escape_html
 	from jinja2 import TemplateError
 
 	if not template:
@@ -75,6 +76,8 @@ def render_template(template, context, is_path=None, safe_render=True):
 		if safe_render and ".__" in template:
 			throw("Illegal template")
 		try:
+			template = transform_template_blot(template, context)
+
 			return get_jenv().from_string(template).render(context)
 		except TemplateError:
 			throw(title="Jinja Template Error", msg="<pre>{template}</pre><pre>{tb}</pre>".format(template=template, tb=get_traceback()))
@@ -237,3 +240,56 @@ def get_jenv_customization(customizable_type):
 					for data in jenv_customizable_definition:
 						split_data = data.split(":")
 						yield split_data[0], split_data[1]
+
+def transform_template_blot(template, context):
+	import frappe
+	soup = BeautifulSoup(template, "html.parser")
+	fields = soup.find_all('template-blot')
+
+	if not fields:
+		return template
+
+	doctypes = []
+
+	for f in fields:
+		new_tag = soup.new_tag("span")
+
+		if f['data-doctype'] == "null" and f['data-function'] != "null":
+			new_tag.string = "{{" + "{0}".format(f['data-function']) + "}}"
+		
+		else:
+			if {f['data-doctype']: f['data-reference']} not in doctypes and f['data-reference'] != "name":
+				doctypes.append({f['data-doctype']: f['data-reference']})
+
+			new_tag.string = "{{ " + "{0}".format(get_newtag_string(f, context)) + " }}"
+
+		f.replace_with(new_tag)
+
+	for doctype in doctypes:
+		for key in doctype:
+			get_doc = "{% " + " set {0} = frappe.get_doc('{1}', {2}) ".format(key.replace(" ", "").lower(), key, \
+				'doc.{0}'.format(doctype[key]) if 'doc' in context else doctype[key]) + " %}"
+			soup.insert(0, get_doc)
+
+	for method in frappe.get_hooks('jinja_template_extensions'):
+		soup = frappe.get_attr(method)(soup)
+
+	return str(soup)
+
+def get_newtag_string(field, context):
+	docname = None
+
+	if field['data-reference'] == "name" and "doc" in context:
+		docname = field['data-doctype'].replace(" ", "").lower()
+	elif field['data-reference'] != "name":
+		docname = field['data-doctype'].replace(" ", "").lower()
+
+	if docname:
+		value = "{0}.{1} or ''".format(docname, field['data-value'])
+	else:
+		value = "{0} or ''".format(field['data-value'])
+
+	if field['data-function'] != "null":
+		value = "{0}({1})".format(field['data-function'], value)
+
+	return value

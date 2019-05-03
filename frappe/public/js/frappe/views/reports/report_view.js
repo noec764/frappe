@@ -41,6 +41,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	setup_view() {
 		this.setup_columns();
 		this.bind_charts_button();
+		super.setup_new_doc_event();
 	}
 
 	setup_result_area() {
@@ -73,22 +74,23 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	get_args() {
 		const args = super.get_args();
-		this.field_type = args.fields[0].substring(0,args.fields[0].indexOf('.'));
-		if (this.group_by_control.aggregate_function && this.group_by_control.group_by && this.group_by_control.aggregate_on) {
-			if(this.group_by_control.aggregate_function !== 'count') {
-				args.fields.push(`${this.group_by_control.aggregate_function}(${this.group_by_control.aggregate_on}) as ${this.group_by_control.aggregate_on}`);
+
+		if (this.group_by_control.aggregate_function) {
+			this.field_type = args.fields[0].substring(0,args.fields[0].indexOf('.'));
+			if (this.group_by_control.aggregate_function && this.group_by_control.group_by && this.group_by_control.aggregate_on) {
+				if(this.group_by_control.aggregate_function !== 'count') {
+					args.fields.push(`${this.group_by_control.aggregate_function}(${this.group_by_control.aggregate_on}) as ${this.group_by_control.aggregate_on}`);
+				}
 			}
+
+			Object.assign(args, {
+				with_comment_count: false,
+				group_by: this.group_by_control.group_by || null,
+				order_by: this.group_by_control.order_by || null,
+			});
 		}
-
-		return Object.assign(args, {
-			with_comment_count: false,
-			start: 0,
-			page_length: null,
-			group_by: this.group_by_control.group_by || null,
-			order_by: this.group_by_control.order_by || null,
-		});
+		return args;
 	}
-
 
 	before_refresh() {
 		if (this.report_doc) {
@@ -742,9 +744,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		let out = {};
 
 		const standard_fields_filter = df =>
-			!in_list(frappe.model.no_value_type, df.fieldtype) &&
-			!df.report_hide && df.fieldname !== 'naming_series' &&
-			!df.hidden;
+			!in_list(frappe.model.no_value_type, df.fieldtype) && !df.report_hide;
 
 		let doctype_fields = frappe.meta.get_docfields(this.doctype).filter(standard_fields_filter);
 
@@ -820,10 +820,24 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	setup_columns() {
 		const hide_columns = ['docstatus'];
 		const fields = this.fields.filter(f => !hide_columns.includes(f[0]));
+
+		// apply previous column width
+		let column_widths = null;
+		if (this.columns) {
+			column_widths = this.get_column_widths();
+		}
 		this.columns = fields.map(f => this.build_column(f)).filter(Boolean);
+
+		if (column_widths) {
+			this.columns = this.columns.map(column => {
+				column.width = column_widths[column.id] || column.width;
+				return column;
+			});
+		}
 	}
 
 	build_column(c) {
+
 		let [fieldname, doctype] = c;
 		let docfield = frappe.meta.docfield_map[doctype || this.doctype][fieldname];
 

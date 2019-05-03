@@ -187,44 +187,47 @@ frappe.views.CommunicationComposer = Class.extend({
 		var me = this;
 
 		this.dialog.fields_dict["email_template"].df.onchange = () => {
-			var email_template = me.dialog.fields_dict.email_template.get_value();
+			const email_template = me.dialog.fields_dict.email_template.get_value();
 
-			var prepend_reply = function(reply) {
-				if(me.reply_added===email_template) {
-					return;
+			if (email_template) {
+				var prepend_reply = function(reply) {
+					if(me.reply_added===email_template) {
+						return;
+					}
+					var content_field = me.dialog.fields_dict.content;
+					var subject_field = me.dialog.fields_dict.subject;
+					var content = content_field.get_value() || "";
+					var subject = subject_field.get_value() || "";
+	
+					var parts = content.split('<!-- salutation-ends -->');
+	
+					if(parts.length===2) {
+						content = [reply.message, "<br>", parts[1]];
+					} else {
+						content = [reply.message, "<br>", content];
+					}
+	
+					content_field.set_value(content.join(''));
+					if(subject === "") {
+						subject_field.set_value(reply.subject);
+					}
+	
+					me.reply_added = email_template;
 				}
-				var content_field = me.dialog.fields_dict.content;
-				var subject_field = me.dialog.fields_dict.subject;
-				var content = content_field.get_value() || "";
-				var subject = subject_field.get_value() || "";
-
-				var parts = content.split('<!-- salutation-ends -->');
-
-				if(parts.length===2) {
-					content = [reply.message, "<br>", parts[1]];
-				} else {
-					content = [reply.message, "<br>", content];
-				}
-
-				content_field.set_value(content.join(''));
-				if(subject === "") {
-					subject_field.set_value(reply.subject);
-				}
-
-				me.reply_added = email_template;
+	
+				frappe.call({
+					method: 'frappe.email.doctype.email_template.email_template.get_email_template',
+					args: {
+						template_name: email_template,
+						doc: me.frm.doc,
+						_lang: me.dialog.get_value("language_sel")
+					},
+					callback: function(r) {
+						prepend_reply(r.message);
+					},
+				});
 			}
 
-			frappe.call({
-				method: 'frappe.email.doctype.email_template.email_template.get_email_template',
-				args: {
-					template_name: email_template,
-					doc: me.frm.doc,
-					_lang: me.dialog.get_value("language_sel")
-				},
-				callback: function(r) {
-					prepend_reply(r.message);
-				},
-			});
 		}
 	},
 
@@ -359,33 +362,25 @@ frappe.views.CommunicationComposer = Class.extend({
 		var fields = this.dialog.fields_dict;
 		var attach = $(fields.select_attachments.wrapper);
 
-		var me = this
-		if (!me.attachments){
-			me.attachments = []
+		if (!this.attachments) {
+			this.attachments = [];
 		}
 
-		var args = {
-			args: {
-				from_form: 1,
-				folder:"Home/Attachments"
-			},
-			callback: function(attachment, r) { me.attachments.push(attachment); },
-			max_width: null,
-			max_height: null
+		let args = {
+			folder: 'Home/Attachments',
+			on_success: attachment => this.attachments.push(attachment)
 		};
 
-		if(me.frm) {
+		if(this.frm) {
 			args = {
-				args: (me.frm.attachments.get_args
-					? me.frm.attachments.get_args()
-					: { from_form: 1,folder:"Home/Attachments" }),
-				callback: function (attachment, r) {
-					me.frm.attachments.attachment_uploaded(attachment, r)
-				},
-				max_width: me.frm.cscript ? me.frm.cscript.attachment_max_width : null,
-				max_height: me.frm.cscript ? me.frm.cscript.attachment_max_height : null
+				doctype: this.frm.doctype,
+				docname: this.frm.docname,
+				folder: 'Home/Attachments',
+				on_success: attachment => {
+					this.frm.attachments.attachment_uploaded(attachment);
+					this.render_attach();
+				}
 			}
-
 		}
 
 		$("<h6 class='text-muted add-attachment' style='margin-top: 12px; cursor:pointer;'>"
@@ -393,11 +388,10 @@ frappe.views.CommunicationComposer = Class.extend({
 			<p class='add-more-attachments'>\
 			<a class='text-muted small'><i class='octicon octicon-plus' style='font-size: 12px'></i> "
 			+__("Add Attachment")+"</a></p>").appendTo(attach.empty())
-		attach.find(".add-more-attachments a").on('click',this,function() {
-			me.upload = frappe.ui.get_upload_dialog(args);
-		})
-		me.render_attach()
-
+		attach
+			.find(".add-more-attachments a")
+			.on('click',() => new frappe.ui.FileUploader(args));
+		this.render_attach();
 	},
 	render_attach:function(){
 		var fields = this.dialog.fields_dict;

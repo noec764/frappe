@@ -218,7 +218,7 @@ select.input-sm {
   font-size: 10px;
 }
 .setup-wizard-slide .fa-fw.active {
-  color: #5e64ff;
+  color: #6195FF;
 }
 .setup-wizard-slide .icon-circle-blank {
   font-size: 7px;
@@ -284,7 +284,7 @@ select.input-sm {
   cursor: pointer;
 }
 .setup-wizard-slide .progress-bar {
-  background-color: #5e64ff;
+  background-color: #6195FF;
 }
 .page-card-container {
   padding: 70px;

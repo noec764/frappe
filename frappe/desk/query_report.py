@@ -329,11 +329,11 @@ def add_total_row(result, columns, meta = None):
 
 			if fieldtype == "Time" and cell:
 				if not total_row[i]:
-					total_row[i]=timedelta(hours=0,minutes=0,seconds=0)
-				total_row[i] =  total_row[i] + cell
+					total_row[i] = timedelta(hours=0,minutes=0,seconds=0)
+				total_row[i] = total_row[i] + cell
 
 
-		if fieldtype=="Link" and options == "Currency":
+		if fieldtype == "Link" and options == "Currency":
 			total_row[i] = result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
 
 	for i in has_percent:

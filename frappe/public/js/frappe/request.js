@@ -30,7 +30,8 @@ frappe.call = function(opts) {
 			indicator: 'orange',
 			message: __('You are not connected to Internet. Retry after sometime.')
 		}, 3);
-		return;
+		opts.always && opts.always();
+		return $.ajax();
 	}
 	if (typeof arguments[0]==='string') {
 		opts = {
@@ -419,7 +420,7 @@ frappe.request.report_error = function(xhr, request_opts) {
 				name: frappe.session.user
 			}
 		});
-		communication_composer.dialog.$wrapper.css("z-index", cint(msg_dialog.$wrapper.css("z-index")) + 1);
+		communication_composer.dialog.$wrapper.css("z-index", cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1);
 	}
 
 	if (exc) {

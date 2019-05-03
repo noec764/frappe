@@ -28,7 +28,7 @@
 .stripe button {
   float: right;
   display: block;
-  background: #5e64ff;
+  background: #6195FF;
   color: white;
   box-shadow: 0 7px 14px 0 rgba(49, 49, 93, 0.10), 0 3px 6px 0 rgba(0, 0, 0, 0.08);
   border-radius: 4px;
@@ -43,12 +43,12 @@
 }
 
 .stripe button:hover, .stripe button:focus {
-  background: #2b33ff;
-  border-color: #0711ff;
+  background: #2e73ff;
+  border-color: #1562ff;
 }
 
 .stripe button:active {
-  background: #5e64ff;
+  background: #6195FF;
 }
 
 .stripe button:disabled {

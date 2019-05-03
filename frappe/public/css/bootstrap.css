@@ -1324,10 +1324,10 @@ mark,
   color: #8d99a6;
 }
 .text-primary {
-  color: #5e64ff;
+  color: #6195FF;
 }
 a.text-primary:hover {
-  color: #2b33ff;
+  color: #2e73ff;
 }
 .text-success {
   color: #98d85b;
@@ -1355,10 +1355,10 @@ a.text-danger:hover {
 }
 .bg-primary {
   color: #fff;
-  background-color: #5e64ff;
+  background-color: #6195FF;
 }
 a.bg-primary:hover {
-  background-color: #2b33ff;
+  background-color: #2e73ff;
 }
 .bg-success {
   background-color: transparent;
@@ -3056,8 +3056,8 @@ fieldset[disabled] .btn-default.active {
 }
 .btn-primary {
   color: #fff;
-  background-color: #5e64ff;
-  border-color: #444bff;
+  background-color: #6195FF;
+  border-color: #4884ff;
 }
 .btn-primary:hover,
 .btn-primary:focus,
@@ -3066,8 +3066,8 @@ fieldset[disabled] .btn-default.active {
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
   color: #fff;
-  background-color: #2b33ff;
-  border-color: #0711ff;
+  background-color: #2e73ff;
+  border-color: #1562ff;
 }
 .btn-primary:active,
 .btn-primary.active,
@@ -3092,11 +3092,11 @@ fieldset[disabled] .btn-primary:active,
 .btn-primary.disabled.active,
 .btn-primary[disabled].active,
 fieldset[disabled] .btn-primary.active {
-  background-color: #5e64ff;
-  border-color: #444bff;
+  background-color: #6195FF;
+  border-color: #4884ff;
 }
 .btn-primary .badge {
-  color: #5e64ff;
+  color: #6195FF;
   background-color: #fff;
 }
 .btn-success {
@@ -4633,8 +4633,8 @@ fieldset[disabled] .navbar-inverse .btn-link:focus {
   z-index: 2;
   color: #fff;
   cursor: default;
-  background-color: #5e64ff;
-  border-color: #5e64ff;
+  background-color: #6195FF;
+  border-color: #6195FF;
 }
 .pagination > .disabled > span,
 .pagination > .disabled > span:hover,
@@ -5522,22 +5522,22 @@ a.list-group-item-danger.active:focus {
   border-bottom-color: #ced5db;
 }
 .panel-primary {
-  border-color: #5e64ff;
+  border-color: #6195FF;
 }
 .panel-primary > .panel-heading {
   color: #fff;
-  background-color: #5e64ff;
-  border-color: #5e64ff;
+  background-color: #6195FF;
+  border-color: #6195FF;
 }
 .panel-primary > .panel-heading + .panel-collapse > .panel-body {
-  border-top-color: #5e64ff;
+  border-top-color: #6195FF;
 }
 .panel-primary > .panel-heading .badge {
-  color: #5e64ff;
+  color: #6195FF;
   background-color: #fff;
 }
 .panel-primary > .panel-footer + .panel-collapse > .panel-body {
-  border-bottom-color: #5e64ff;
+  border-bottom-color: #6195FF;
 }
 .panel-success {
   border-color: rgba(0, 0, 0, 0);

@@ -25,6 +25,7 @@
 <script>
 import DeskSection from './DeskSection.vue';
 import { generate_route } from './utils';
+
 export default {
 	components: {
 		DeskSection
@@ -39,6 +40,7 @@ export default {
 				});
 				return d;
 			});
+
 		return {
 			module_categories: ['Modules', 'Domains', 'Places', 'Administration'],
 			modules: modules_list,
@@ -61,9 +63,12 @@ export default {
 			this.modules = this.modules.map(m => {
 				let hidden_modules = home_settings.hidden_modules || [];
 				m.hidden = hidden_modules.includes(m.module_name);
+
 				let links = home_settings.links && home_settings.links[m.module_name];
+
 				if (links) {
 					links = JSON.parse(links);
+
 					let default_links = m.links.map(link => link.name);
 					m.links = m.links.map(link => {
 						link.hidden = !links.includes(link.name);
@@ -79,6 +84,7 @@ export default {
 						});
 					m.links = m.links.concat(new_links);
 				}
+
 				return m;
 			});
 		},
@@ -101,13 +107,14 @@ export default {
 			});
 			const d = new frappe.ui.Dialog({
 				title: __('Show / Hide Cards'),
-				fields,
+				fields: fields.filter(f => f.options.length > 0),
 				primary_action_label: __('Save'),
 				primary_action: (values) => {
 					let all_modules = this.modules.map(m => m.module_name);
 					let modules_to_show = Object.keys(values).map(k => values[k]).flatMap(m => m);
 					let modules_to_hide = all_modules.filter(m => !modules_to_show.includes(m));
 					d.hide();
+
 					frappe.call('frappe.desk.moduleview.hide_modules_from_desktop', {
 						modules: modules_to_hide
 					})
@@ -115,6 +122,7 @@ export default {
 					.then(hs => this.update_modules_with_home_settings(hs));
 				}
 			});
+
 			d.show();
 		}
 	}
@@ -126,15 +134,18 @@ export default {
 	margin-top: 40px;
 	margin-bottom: 30px;
 }
+
 .modules-section {
 	position: relative;
 	padding-top: 30px;
 }
+
 .btn-show-hide {
 	position: absolute;
 	right: 0;
 	top: 36px;
 }
+
 .toolbar-underlay {
 	margin: 70px;
 }

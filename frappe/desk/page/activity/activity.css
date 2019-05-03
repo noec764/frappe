@@ -33,11 +33,11 @@
 }
 
 .date-indicator.blue {
-	color: #5e64ff;
+	color: #6195FF;
 }
 
 .date-indicator.blue::after {
-	background: #5e64ff;
+	background: #6195FF;
 }
 
 .activity-message {

@@ -116,7 +116,7 @@ acceptable_elements = [
 	'p', 'pre', 'progress', 'q', 's', 'samp', 'section', 'select',
 	'small', 'sound', 'source', 'spacer', 'span', 'strike', 'strong',
 	'sub', 'sup', 'table', 'tbody', 'td', 'textarea', 'time', 'tfoot',
-	'th', 'thead', 'tr', 'tt', 'u', 'ul', 'var', 'video'
+	'th', 'thead', 'tr', 'tt', 'u', 'ul', 'var', 'video', 'template-blot'
 ]
 
 mathml_elements = [
@@ -161,7 +161,8 @@ acceptable_attributes = [
 	'urn', 'valign', 'value', 'variable', 'volume', 'vspace', 'vrml',
 	'width', 'wrap', 'xml:lang', 'data-row', 'data-list', 'data-language',
 	'data-value', 'role', 'frameborder', 'allowfullscreen', 'spellcheck',
-	'data-mode', 'data-gramm', 'data-placeholder', 'data-comment'
+	'data-mode', 'data-gramm', 'data-placeholder', 'data-comment', 'data-doctype',
+	'data-reference', 'data-label', 'data-function'
 ]
 
 mathml_attributes = [
