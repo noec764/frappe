@@ -1,4 +1,5 @@
 import Quill from 'quill';
+import TemplateFieldSelector from './template_field_selector';
 
 // replace <p> tag with <div>
 const Block = Quill.import('blots/block');
@@ -20,22 +21,46 @@ Table.create = (value) => {
 }
 Quill.register(Table, true);
 
-// hidden blot
-class HiddenBlock extends Block {
+// Template blot
+const ATTRS = {
+	PARENT: 'data-doctype',
+	FIELDNAME: 'data-value',
+	REFERENCE: 'data-reference',
+	LABEL: 'data-label',
+	FUNCTION: 'data-function'
+};
+
+const Embed = Quill.import('blots/embed');
+
+class TemplateBlot extends Embed {
 	static create(value) {
-		const node = super.create(value);
-		node.setAttribute('data-comment', value);
-		node.classList.add('hidden');
+		let node = super.create(value);
+		node.setAttribute('class', 'badge');
+		node.setAttribute(ATTRS.PARENT, value.parent);
+		node.setAttribute(ATTRS.FIELDNAME, value.fieldname);
+		node.setAttribute(ATTRS.REFERENCE, value.reference);
+		node.setAttribute(ATTRS.LABEL, value.label);
+		node.setAttribute(ATTRS.FUNCTION, value.function);
+		node.innerHTML = value.label;
 		return node;
 	}
 
-	static formats(node) {
-		return node.getAttribute('data-comment');
+	static value(node) {
+		return {
+			parent: node.getAttribute(ATTRS.PARENT),
+			fieldname: node.getAttribute(ATTRS.FIELDNAME),
+			reference: node.getAttribute(ATTRS.REFERENCE),
+			label: node.getAttribute(ATTRS.LABEL),
+			function: node.getAttribute(ATTRS.FUNCTION)
+		};
 	}
 }
-HiddenBlock.blotName = 'hiddenblot';
-HiddenBlock.tagName = 'SPAN';
-Quill.register(HiddenBlock, true);
+TemplateBlot.blotName = 'template-blot';
+TemplateBlot.tagName = 'template-blot';
+
+Quill.register({
+	'formats/template-blot': TemplateBlot
+});
 
 // image uploader
 const Uploader = Quill.import('modules/uploader');
@@ -58,14 +83,32 @@ Quill.register(DirectionStyle, true);
 frappe.ui.form.ControlTextEditor = frappe.ui.form.ControlCode.extend({
 	make_input() {
 		this.has_input = true;
+		this.Quill = Quill;
 		this.make_quill_editor();
 	},
 
 	make_quill_editor() {
 		if (this.quill) return;
-		this.quill_container = $('<div>').appendTo(this.input_area);
-		this.quill = new Quill(this.quill_container[0], this.get_quill_options());
+		this.quill_container = $(frappe.render_template("text_editor", this.get_tooltips())).appendTo(this.input_area);
+		this.quill = new Quill(this.quill_container[2], this.get_quill_options());
+
+		this.make_template_editor()
+
 		this.bind_events();
+	},
+
+	make_template_editor() {
+		const me = this;
+		if (["Email Template"].includes(this.doctype)) {
+			const toolbar = this.quill.getModule('toolbar');
+			toolbar.addHandler('template-blot', function() {
+				if(!me.field_selector) {
+					me.field_selector = new TemplateFieldSelector(me);
+				} else {
+					me.field_selector.make_dialog();
+				}
+			});
+		}
 	},
 
 	bind_events() {
@@ -129,34 +172,31 @@ frappe.ui.form.ControlTextEditor = frappe.ui.form.ControlCode.extend({
 	get_quill_options() {
 		return {
 			modules: {
-				toolbar: this.get_toolbar_options(),
+				toolbar: this.quill_container[0],
 				table: true
 			},
 			theme: 'snow'
 		};
 	},
 
-	get_toolbar_options() {
-		return [
-			[{ 'header': [1, 2, 3, false] }],
-			['bold', 'italic', 'underline'],
-			['blockquote', 'code-block'],
-			['link', 'image'],
-			[{ 'list': 'ordered' }, { 'list': 'bullet' }],
-			[{ 'align': [] }],
-			[{ 'indent': '-1'}, { 'indent': '+1' }],
-			[{'table': [
-				'insert-table',
-				'insert-row-above',
-				'insert-row-below',
-				'insert-column-right',
-				'insert-column-left',
-				'delete-row',
-				'delete-column',
-				'delete-table',
-			]}],
-			['clean']
-		];
+	get_tooltips() {
+		return {
+			"header": __("Text Size"),
+			"bold": __("Bold"),
+			"italic": __("Add italic text <cmd+i>"),
+			"underline": __("Underline"),
+			"blockquote": __("Quote"),
+			"codeblock": __("Code"),
+			"link": __("Link"),
+			"image": __("Image"),
+			"orderedlist": __("Ordered list"),
+			"bulletlist": __("Bullet list"),
+			"align": __("Align"),
+			"indent": __("Indent"),
+			"table": __("Add a table"),
+			"clean": __("Remove formatting"),
+			"templateblot": __("Add a variable")
+		}
 	},
 
 	parse(value) {

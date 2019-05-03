@@ -1205,7 +1205,7 @@ var updateOverlay = {
 
 var PRESET_COLOR_MAP = {
 	'light-blue': '#7cd6fd',
-	'blue': '#5e64ff',
+	'blue': '#6195FF',
 	'violet': '#743ee2',
 	'red': '#ff5858',
 	'orange': '#ffa00a',

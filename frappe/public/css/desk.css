@@ -278,11 +278,11 @@ a[disabled="disabled"]:hover {
   z-index: 3;
 }
 .link-primary {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .link-primary:hover,
 .link-primary:focus {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .scroll-to-top {
   background-color: #fafbfc;
@@ -376,10 +376,10 @@ fieldset[disabled] .form-control {
   color: #36414C;
 }
 .datepicker--cell.-current- {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .datepicker--cell.-current-.-in-range- {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .datepicker--cell.-range-from-,
 .datepicker--cell.-range-to- {
@@ -388,7 +388,7 @@ fieldset[disabled] .form-control {
 }
 .datepicker--cell.-selected-,
 .datepicker--cell.-current-.-selected- {
-  background: #5E64FF;
+  background: #6195FF;
 }
 .datepicker--cell.-in-range- {
   background: rgba(94, 100, 255, 0.05);
@@ -400,7 +400,7 @@ fieldset[disabled] .form-control {
   background: rgba(94, 100, 255, 0.9);
 }
 .datepicker--button {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .hidden-xs-inline,
 .hidden-xs-inline-block {
@@ -692,7 +692,7 @@ li.user-progress .progress-bar {
   max-width: 100%;
 }
 .help-modal a {
-  color: #5E64FF;
+  color: #6195FF;
 }
 .help-modal .modal-dialog {
   width: 768px;
@@ -1110,7 +1110,7 @@ input[type="checkbox"]:focus {
   margin: 0px 2px;
 }
 .slides-wrapper .fa-circle.active {
-  color: #5e64ff;
+  color: #6195FF;
 }
 .slides-wrapper .fa-circle.link {
   cursor: pointer;

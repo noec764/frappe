@@ -293,7 +293,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	get_message(title, message="") {
 		const loading_html = `<div class="progress-chart" style ="width: 150px;">
 			<div class="progress" style="margin-top: 70px; margin-bottom: 0px">
-				<div class="progress-bar" style="width: 2%; background-color: #5e64ff;"></div>
+				<div class="progress-bar" style="width: 2%; background-color: #6195FF;"></div>
 			</div>
 		</div>`;
 
