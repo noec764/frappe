@@ -99,19 +99,24 @@ def report_to_pdf(html, orientation="Landscape"):
 	frappe.local.response.type = "pdf"
 
 @frappe.whitelist()
-def letter_to_pdf(html, title):
-	html = get_formatted_letter(title, html)
+def letter_to_pdf(html, title, letterhead=None):
+	html = get_formatted_letter(title, html, letterhead)
 	frappe.local.response.filename = "{0}.pdf".format(title.replace(" ", "-").replace("/", "-"))
 	frappe.local.response.filecontent = get_pdf(html)
 	frappe.local.response.type = "pdf"
 
-def get_formatted_letter(title, message):
+def get_formatted_letter(title, message, letterhead=None):
+	no_letterhead = True
+
+	if letterhead:
+		letter_head = frappe.db.get_value("Letter Head", letterhead, "content")
+		no_letterhead = False
 
 	rendered_letter = frappe.get_template("templates/letters/standard.html").render({
 		"content": message,
 		"title": title,
-		"letter_head": "Hello",
-		"no_letterhead": False
+		"letter_head": letter_head,
+		"no_letterhead": no_letterhead
 	})
 
 	html = scrub_urls(rendered_letter)

@@ -28,7 +28,6 @@ frappe.views.LetterComposer = class LetterComposer {
 	}
 
 	get_fields() {
-		let contactList = [];
 		const fields= [
 			{label:__("Email Template"), fieldtype:"Link", options:"Email Template",
 				fieldname:"email_template"},
@@ -38,14 +37,16 @@ frappe.views.LetterComposer = class LetterComposer {
 				fieldtype:"Text Editor", reqd: 1,
 				fieldname:"content",
 				onchange: frappe.utils.debounce(this.save_as_draft.bind(this), 300)
-			}
+			},
+			{fieldtype: "Section Break"},
+			{label:__("Letterhead"), fieldtype:"Link", options:"Letter Head",
+				fieldname:"letter_head", default: this.frm.doc.letter_head},
 		];
 
 		return fields;
 	}
 
 	prepare() {
-		this.setup_last_edited_letter();
 		this.setup_email_template();
 	}
 
@@ -92,51 +93,6 @@ frappe.views.LetterComposer = class LetterComposer {
 		}
 	}
 
-	setup_last_edited_letter() {
-		const me = this;
-		if (!this.doc){
-			if (cur_frm){
-				this.doc = cur_frm.doctype;
-			}
-		}
-		if (cur_frm && cur_frm.docname) {
-			this.key = cur_frm.docname;
-		}
-
-		if(this.last_email) {
-			this.key = this.key + ":" + this.last_email.name;
-		}
-		this.dialog.onhide = function() {
-			const last_edited_letter = me.get_last_edited_letter();
-			$.extend(last_edited_letter, {
-				content: me.dialog.get_value("content"),
-			});
-		}
-
-		this.dialog.on_page_show = function() {
-			if (!me.txt) {
-				const last_edited_letter = me.get_last_edited_letter();
-				if(last_edited_letter.content) {
-					me.dialog.set_value("content", last_edited_letter.content || "");
-				}
-			}
-
-		}
-
-	}
-
-	get_last_edited_letter() {
-		if (!frappe.last_edited_letter[this.doc]) {
-			frappe.last_edited_letter[this.doc] = {};
-		}
-
-		if(!frappe.last_edited_letter[this.doc][this.key]) {
-			frappe.last_edited_letter[this.doc][this.key] = {};
-		}
-
-		return frappe.last_edited_letter[this.doc][this.key];
-	}
-
 	save_as_draft() {
 		if (this.dialog) {
 			try {
@@ -164,12 +120,12 @@ frappe.views.LetterComposer = class LetterComposer {
 
 	print_action() {
 		const content = this.dialog.fields_dict.content.get_value();
-
-		frappe.xcall()
+		const letter_head = this.dialog.fields_dict.letter_head.get_value();
 
 		let formData = new FormData();
 		formData.append("html", content);
 		formData.append("title", this.title || __("Letter"));
+		formData.append("letterhead", letter_head || null);
 
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", '/api/method/frappe.utils.print_format.letter_to_pdf');
@@ -182,7 +138,11 @@ frappe.views.LetterComposer = class LetterComposer {
 				let objectUrl = URL.createObjectURL(blob);
 	
 				//Open report in a new window
-				window.open(objectUrl);
+				let w = window.open(objectUrl);
+
+				if(!w) {
+					frappe.msgprint(__("Please enable pop-ups in your browser"))
+				}
 			}
 		};
 		xhr.send(formData);
