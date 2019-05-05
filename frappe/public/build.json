@@ -244,6 +244,7 @@
 		"public/js/frappe/ui/toolbar/toolbar.js",
 		"public/js/frappe/ui/toolbar/notifications.js",
 		"public/js/frappe/views/communication.js",
+		"public/js/frappe/views/letter.js",
 		"public/js/frappe/views/translation_manager.js",
 
 		"public/js/frappe/ui/sort_selector.html",

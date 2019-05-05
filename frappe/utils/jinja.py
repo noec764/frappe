@@ -254,14 +254,20 @@ def transform_template_blot(template, context):
 	for f in fields:
 		new_tag = soup.new_tag("span")
 
-		if f['data-doctype'] == "null" and f['data-function'] != "null":
-			new_tag.string = "{{" + "{0}".format(f['data-function']) + "}}"
+		if f['data-doctype'] == "Custom Functions" and f['data-function'] != "null":
+			content = "{{" + "{0}|safe".format(f['data-function'].split('#', 1)[-1]) + "}}"
+			if f['data-function'].startswith("Signature"):
+				content = soup.new_tag("img", src=content, height=200, width=200)
+				new_tag.append(content)
+			else:
+				new_tag.string = content
 		
 		else:
-			if {f['data-doctype']: f['data-reference']} not in doctypes and f['data-reference'] != "name":
+			if f['data-doctype'] != "Custom Functions" and {f['data-doctype']: f['data-reference']} not in doctypes \
+				and f['data-reference'] != "name":
 				doctypes.append({f['data-doctype']: f['data-reference']})
 
-			new_tag.string = "{{ " + "{0}".format(get_newtag_string(f, context)) + " }}"
+			new_tag.string = "{{ " + "{0}|safe".format(get_newtag_string(f, context)) + " }}"
 
 		f.replace_with(new_tag)
 
@@ -274,7 +280,7 @@ def transform_template_blot(template, context):
 	for method in frappe.get_hooks('jinja_template_extensions'):
 		soup = frappe.get_attr(method)(soup)
 
-	return str(soup)
+	return soup.prettify()
 
 def get_newtag_string(field, context):
 	docname = None

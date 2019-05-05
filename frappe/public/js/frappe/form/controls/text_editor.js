@@ -89,7 +89,8 @@ frappe.ui.form.ControlTextEditor = frappe.ui.form.ControlCode.extend({
 
 	make_quill_editor() {
 		if (this.quill) return;
-		this.quill_container = $(frappe.render_template("text_editor", this.get_tooltips())).appendTo(this.input_area);
+		const show_template = this.df.options == "Template" ? true : false;
+		this.quill_container = $(frappe.render_template("text_editor", {...this.get_tooltips(), showtemplate: show_template})).appendTo(this.input_area);
 		this.quill = new Quill(this.quill_container[2], this.get_quill_options());
 
 		this.make_template_editor()

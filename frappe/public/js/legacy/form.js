@@ -276,6 +276,14 @@ _f.Frm.prototype.email_doc = function(message) {
 	});
 };
 
+// create a new letter
+_f.Frm.prototype.create_letter = function(message) {
+	new frappe.views.LetterComposer({
+		doc: this.doc,
+		frm: this
+	});
+};
+
 // rename the form
 _f.Frm.prototype.rename_doc = function() {
 	frappe.model.rename_doc(this.doctype, this.docname);

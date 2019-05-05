@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 import frappe, os
 from frappe import _
+from frappe.utils import scrub_urls
 
 from frappe.utils.pdf import get_pdf,cleanup
 from PyPDF2 import PdfFileWriter
@@ -96,6 +97,27 @@ def report_to_pdf(html, orientation="Landscape"):
 	frappe.local.response.filename = "report.pdf"
 	frappe.local.response.filecontent = get_pdf(html, {"orientation": orientation})
 	frappe.local.response.type = "pdf"
+
+@frappe.whitelist()
+def letter_to_pdf(html, title):
+	html = get_formatted_letter(title, html)
+	frappe.local.response.filename = "{0}.pdf".format(title.replace(" ", "-").replace("/", "-"))
+	frappe.local.response.filecontent = get_pdf(html)
+	frappe.local.response.type = "pdf"
+
+def get_formatted_letter(title, message):
+
+	rendered_letter = frappe.get_template("templates/letters/standard.html").render({
+		"content": message,
+		"title": title,
+		"letter_head": "Hello",
+		"no_letterhead": False
+	})
+
+	html = scrub_urls(rendered_letter)
+
+	return html
+
 
 @frappe.whitelist()
 def print_by_server(doctype, name, print_format=None, doc=None, no_letterhead=0):
