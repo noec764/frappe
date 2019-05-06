@@ -378,7 +378,7 @@ a.no-decoration:active {
 }
 .indicator.green::before,
 .indicator-right.green::after {
-  background: #8befac;
+  background: #69eb94;
 }
 .indicator.orange::before,
 .indicator-right.orange::after {
