@@ -78,7 +78,7 @@ def get_modules_from_app(app):
 	return active_modules_list
 
 def get_all_empty_tables_by_module():
-		results = frappe.db.multisql({
+	results = frappe.db.multisql({
 		'mariadb': '''
 			SELECT `name`, `module`
 			FROM information_schema.tables AS i

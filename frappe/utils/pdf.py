@@ -55,13 +55,13 @@ def get_pdf(html, options=None, output=None):
 			output.encrypt(password)
 		return get_file_data_from_writer(output)
 
- 	writer = PdfFileWriter()
+	writer = PdfFileWriter()
 	writer.appendPagesFromReader(reader)
 
- 	if "password" in options:
+	if "password" in options:
 		writer.encrypt(password)
 
- 	filedata = get_file_data_from_writer(writer)
+	filedata = get_file_data_from_writer(writer)
 
 	return filedata
 
