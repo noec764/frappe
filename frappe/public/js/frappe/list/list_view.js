@@ -303,6 +303,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	before_refresh() {
 		if (frappe.route_options) {
 			this.filters = this.parse_filters_from_route_options();
+			frappe.route_options = null;
 
 			if (this.filters.length > 0) {
 				return this.filter_area.clear(false)
@@ -509,6 +510,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				return formatters[fieldname](value, df, doc);
 			} else if (df.fieldtype === 'Code') {
 				return value;
+			} else if (df.fieldtype === 'Percent') {
+				return `<div class="progress level" style="margin: 0px;">
+					<div class="progress-bar progress-bar-success" role="progressbar"
+						aria-valuenow="${value}"
+						aria-valuemin="0" aria-valuemax="100" style="width: ${Math.round(value)}%;">
+					</div>
+				</div>`;
 			} else {
 				return frappe.format(value, df, null, doc);
 			}

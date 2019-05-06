@@ -31,7 +31,7 @@ Object.assign(frappe.utils, {
 		if (!txt) return false;
 
 		if(txt.indexOf("<br>")==-1 && txt.indexOf("<p")==-1
-			&& txt.indexOf("<img")==-1 && txt.indexOf("<div")==-1) {
+			&& txt.indexOf("<img")==-1 && txt.indexOf("<div")==-1 && !txt.includes('<span')) {
 			return false;
 		}
 		return true;
@@ -648,11 +648,20 @@ Object.assign(frappe.utils, {
 	},
 	get_route_label(route_str) {
 		let route = route_str.split('/');
-		if (['List', 'modules'].includes(route[0])){
-			return `${route[1]} ${route[2] || route[0]}`;
-		} else {
-			return `${route[0]} ${route[1]}`;
+
+		if (route[2] === 'Report' || route[0] === 'query-report') {
+			return __('{0} Report', [route[3] || route[1]]);
 		}
+		if (route[0] === 'List') {
+			return __('{0} List', [route[1]]);
+		}
+		if (route[0] === 'modules') {
+			return __('{0} Modules', [route[1]]);
+		}
+		if (route[0] === 'dashboard') {
+			return __('{0} Dashboard', [route[1]]);
+		}
+		return __(frappe.utils.to_title_case(route[0], true));
 	},
 	report_column_total: function(values, column, type) {
 		if (column.column.fieldtype == "Percent" || type === "mean") {
@@ -684,7 +693,6 @@ Object.assign(frappe.utils, {
 			return filename;
 		}
 	},
-
 	get_decoded_string(dataURI) {
 		// decodes base64 to string
 		let parts = dataURI.split(',');
