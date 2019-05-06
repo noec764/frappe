@@ -90,7 +90,7 @@ class MariaDBDatabase(Database):
 		# MYSQL_OPTION_MULTI_STATEMENTS_OFF = 1
 		# # self._conn.set_server_option(MYSQL_OPTION_MULTI_STATEMENTS_OFF)
 
-		if self.user != 'root':
+		if self.user != 'root' and self.user != 'dokos_bdd':
 			conn.select_db(self.user)
 
 		return conn
@@ -162,6 +162,10 @@ class MariaDBDatabase(Database):
 	@staticmethod
 	def cant_drop_field_or_key(e):
 		return e.args[0] == ER.CANT_DROP_FIELD_OR_KEY
+
+	@staticmethod
+	def is_syntax_error(e):
+		return e.args[0] == ER.PARSE_ERROR
 
 	def is_primary_key_violation(self, e):
 		return self.is_duplicate_entry(e) and 'PRIMARY' in cstr(e.args[1])
