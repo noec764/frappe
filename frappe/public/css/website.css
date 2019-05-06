@@ -374,11 +374,11 @@ a.no-decoration:active {
 }
 .indicator.red::before,
 .indicator-right.red::after {
-  background: #ff5858;
+  background: #ff4444;
 }
 .indicator.green::before,
 .indicator-right.green::after {
-  background: #98d85b;
+  background: #8befac;
 }
 .indicator.orange::before,
 .indicator-right.orange::after {

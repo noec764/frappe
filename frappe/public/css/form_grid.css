@@ -4,7 +4,7 @@
   border-radius: 3px;
 }
 .form-grid.error {
-  border-color: #ff5858;
+  border-color: #ff4444;
 }
 .grid-heading-row {
   border-bottom: 1px solid #d1d8dd;
@@ -111,7 +111,7 @@
   z-index: 1;
 }
 .grid-body .editable-row .has-error .form-control:focus {
-  border-color: #ff5858;
+  border-color: #ff4444;
 }
 .grid-body .editable-row input[data-fieldtype="Int"],
 .grid-body .editable-row input[data-fieldtype="Float"],

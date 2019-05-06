@@ -523,7 +523,7 @@ fieldset[disabled] .form-control {
   position: relative;
   left: 2px;
   display: inline-block;
-  background: #ff5858;
+  background: #ff4444;
   font-size: 12px;
   line-height: 20px;
   padding: 0 8px;
@@ -542,7 +542,7 @@ a.progress-small .progress {
 }
 a.progress-small .progress-bar {
   transition: unset;
-  background-color: #98d85b;
+  background-color: #8befac;
 }
 li.user-progress .progress-chart {
   width: 50px;
@@ -555,7 +555,7 @@ li.user-progress .progress {
 }
 li.user-progress .progress-bar {
   transition: unset;
-  background-color: #98d85b;
+  background-color: #8befac;
 }
 /* on small screens, show only icons on top */
 @media (max-width: 767px) {
