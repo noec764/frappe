@@ -285,6 +285,7 @@ $dropDownBg: #e3e3e3;
 	}
 	& .vsm-mobile-bg {
 		background-color: $mobileItemBg;
+		border-radius: 16px;
 	}
 	& .vsm-header {
 		color: rgba($itemColor, 0.7);
