@@ -17,7 +17,7 @@ frappe.ui.color_map = {
 	purple: ["#dac7ff", "#b592ff", "#8e58ff", "#5e3aa8"],
 	pink: ["#f8d4f8", "#f3aaf0", "#ec7dea", "#934f92"],
 	white: ["#d1d8dd", "#fafbfc", "#ffffff", ""],
-	black: ["#8D99A6", "#6c7680", "#36414c", "#212a33"]
+	black: ["#778595", "#6c7680", "#36414c", "#212a33"]
 };
 
 frappe.ui.color = {

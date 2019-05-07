@@ -104,7 +104,7 @@
   top: 8px;
 }
 .grid-body .editable-row .form-control:focus {
-  border-color: #8D99A6;
+  border-color: #778595;
   z-index: 2;
 }
 .grid-body .editable-row .has-error .form-control {

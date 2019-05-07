@@ -25,7 +25,7 @@ p {
   color: #36414C !important;
 }
 .text-muted {
-  color: #8D99A6 !important;
+  color: #778595 !important;
 }
 .text-extra-muted {
   color: #d1d8dd !important;
@@ -242,7 +242,7 @@ a.no-decoration:active {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.4px;
-  color: #8D99A6;
+  color: #778595;
 }
 .ellipsis {
   white-space: nowrap;
@@ -261,7 +261,7 @@ a.form-link {
   font-size: 102%;
 }
 a[disabled="disabled"] {
-  color: #8D99A6;
+  color: #778595;
   text-decoration: none;
   cursor: default;
 }
@@ -577,7 +577,7 @@ li.user-progress .progress-bar {
 .msg-box {
   padding: 30px 15px;
   text-align: center;
-  color: #8D99A6;
+  color: #778595;
 }
 .no-border {
   border: none !important;
@@ -606,7 +606,7 @@ li.user-progress .progress-bar {
   padding: 15px 30px;
 }
 .file-upload .input-group-addon {
-  color: #8D99A6;
+  color: #778595;
   font-size: 12px;
 }
 .file-upload .file-upload-or {
@@ -1019,7 +1019,7 @@ input[type="checkbox"]:before {
   left: 999999px;
 }
 input[type="checkbox"]:focus:before {
-  color: #8D99A6;
+  color: #778595;
 }
 input[type="checkbox"]:checked:before {
   content: '\f14a';
@@ -1140,7 +1140,7 @@ input[type="checkbox"]:focus {
 }
 .slides-wrapper .next-steps-links .title {
   text-transform: uppercase;
-  color: #8D99A6;
+  color: #778595;
   font-size: 11px;
 }
 .slides-wrapper .btn-primary {

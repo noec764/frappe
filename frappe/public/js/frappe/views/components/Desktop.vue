@@ -52,7 +52,7 @@ export default {
 	},
 	methods: {
 		fetch_home_settings() {
-			return frappe.db.get_value('User', user, 'home_settings')
+			return frappe.db.get_value('User', frappe.session.user, 'home_settings')
 				.then(r => {
 					let home_settings = JSON.parse(r.message.home_settings || '{}');
 					this.update_modules_with_home_settings(home_settings);

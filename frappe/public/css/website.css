@@ -25,7 +25,7 @@ p {
   color: #36414C !important;
 }
 .text-muted {
-  color: #8D99A6 !important;
+  color: #778595 !important;
 }
 .text-extra-muted {
   color: #d1d8dd !important;
@@ -242,7 +242,7 @@ a.no-decoration:active {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.4px;
-  color: #8D99A6;
+  color: #778595;
 }
 .ellipsis {
   white-space: nowrap;
@@ -628,13 +628,13 @@ fieldset {
   margin: 0px;
   padding-bottom: 12px;
   border: none;
-  color: #8D99A6;
+  color: #778595;
 }
 .web-sidebar .sidebar-item:not(:last-child) .badge {
   font-weight: normal;
 }
 .web-sidebar .sidebar-item a {
-  color: #8D99A6;
+  color: #778595;
 }
 .web-sidebar .sidebar-item a.active {
   color: #36414C;
@@ -754,7 +754,7 @@ a.active {
   color: inherit;
 }
 .breadcrumb > .active {
-  color: #8D99A6;
+  color: #778595;
 }
 .post:last-child {
   border-bottom: none;

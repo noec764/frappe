@@ -1,8 +1,12 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
+import SidebarMenu from './components/SidebarMenu.vue'
+
 frappe.provide("frappe.ui.toolbar");
 frappe.provide('frappe.search');
+frappe.provide('frappe.sidebar_update')
+frappe.utils.make_event_emitter(frappe.sidebar_update);
 
 frappe.ui.toolbar.Toolbar = Class.extend({
 	init: function() {
@@ -19,6 +23,7 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 	},
 
 	make: function() {
+		this.setup_modules_menu();
 		this.setup_sidebar();
 		this.setup_help();
 
@@ -50,8 +55,25 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 		});
 	},
 
+	setup_modules_menu() {
+		this.menu_sidebar = new Vue({
+			el: '#modules-menu',
+			render: h => h(SidebarMenu)
+		});
+
+		frappe.sidebar_update.on('collapse', (width) => {
+			const sidebarWidth = (parseInt(width) - 50) + "px"
+			document.getElementById("body_div").style.paddingLeft = sidebarWidth;
+			const pages = document.getElementsByClassName("page-head");
+			Array.from(pages).forEach(page => {
+				page.style.paddingLeft = sidebarWidth;
+			})
+		})
+	},
+
 	setup_sidebar: function() {
 		var header = $('header');
+
 		header.find(".toggle-sidebar").on("click", function() {
 			var layout_side_section = $('.layout-side-section');
 			var overlay_sidebar = layout_side_section.find('.overlay-sidebar');
@@ -206,7 +228,7 @@ $.extend(frappe.ui.toolbar, {
 	set_fullwidth_if_enabled() {
 		let fullwidth = JSON.parse(localStorage.container_fullwidth || 'false');
 		$(document.body).toggleClass('full-width', fullwidth);
-	},
+	}
 });
 
 frappe.ui.toolbar.clear_cache = function() {

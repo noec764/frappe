@@ -55,7 +55,7 @@ frappe.ui.scroll = function(element, animate, additional_offset) {
 
 frappe.get_palette = function(txt) {
 	return '#fafbfc';
-	// //return '#8D99A6';
+	// //return '#778595';
 	// if(txt==='Administrator') return '#36414C';
 	// // get color palette selection from md5 hash
 	// var idx = cint((parseInt(md5(txt).substr(4,2), 16) + 1) / 5.33);

@@ -1,0 +1,118 @@
+<template>
+	<div
+		class="v-sidebar-menu"
+		:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
+		:style="{'width': sidebarWidth}"
+		@mouseleave="mouseLeave"
+	>
+		<div class="vsm-list">
+			<template v-for="(item, index) in modules">
+				<item
+					:key="index"
+					:item="item"
+					:first-item="true"
+					:is-collapsed="isCollapsed"
+				/>
+			</template>
+		</div>
+		<div
+		v-if="isCollapsed"
+		:style="[{'position' : 'absolute'}, {'top' : `${mobileItemPos}px`}, {'left' : '0px'}, {'z-index' : 30}, {'width' : width}]"
+		>
+		<mobile-item :item="mobileItem" />
+		<transition name="slide-animation">
+			<div
+			v-if="mobileItem"
+			class="vsm-mobile-bg"
+			:style="[{'position' : 'absolute'}, {'left' : '0px'}, {'right' : '0px'}, {'top' : '0px'}, {'height' : `${mobileItemHeight}px`}]"
+			/>
+		</transition>
+		</div>
+		<button
+			class="collapse-btn"
+			@click="toggleCollapse"
+		/>
+	</div>
+	
+</template>
+
+<script>
+import Item from './Item.vue'
+import MobileItem from './MobileItem.vue'
+import { animationMixin } from './mixin'
+export default {
+	name: 'SidebarMenu',
+	components: {
+		Item,
+		MobileItem
+	},
+	mixins: [animationMixin],
+	props: {
+		widthCollapsed: {
+			type: String,
+			default: '50px'
+		}
+	},
+	data () {
+		return {
+			isCollapsed: true,
+			closeTimeout: null,
+			activeShow: null,
+			modules: [],
+			mobileItem: null,
+			mobileItemPos: null,
+			mobileItemHeight: null,
+			width: '250px'
+		}
+	},
+	computed: {
+		sidebarWidth () {
+			return this.isCollapsed ? this.widthCollapsed : this.width
+		}
+	},
+	watch: {
+		collapsed (val) {
+			this.isCollapsed = val
+		}
+	},
+	created () {
+		this.$on('mouseEnterItem', (val) => {
+			this.mobileItem = null
+			this.$nextTick(() => {
+				this.mobileItem = val.item
+				this.mobileItemPos = val.pos
+				this.mobileItemHeight = val.height
+			})
+		})
+	},
+	mounted() {
+		this.getModules();
+	},
+	methods: {
+		mouseLeave () {
+			this.mobileItem = null
+		},
+		toggleCollapse () {
+			this.isCollapsed = !this.isCollapsed
+			frappe.sidebar_update.trigger('collapse', this.sidebarWidth);
+		},
+		onItemClick (event, item) {
+			this.$emit('itemClick', event, item)
+		},
+		getModules() {
+			this.modules = frappe.boot.allowed_modules;
+
+			let maxLength = 0
+			this.modules.forEach(item => {
+				maxLength = item.label.length > maxLength ? item.label.length : maxLength;
+			})
+
+			this.width = (maxLength * 10) + "px";
+		}
+	}
+}
+</script>
+
+<style lang="scss">
+@import './sidebar.scss';
+</style>
