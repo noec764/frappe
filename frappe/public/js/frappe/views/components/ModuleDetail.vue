@@ -29,7 +29,7 @@ export default {
 	components: {
 		ModuleLinkItem
 	},
-	props: ['module_name', 'sections'],
+	props: ['module_name', 'sections']
 }
 </script>
 <style lang="less" scoped>
@@ -38,11 +38,15 @@ export default {
 	grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 	column-gap: 15px;
 	row-gap: 15px;
+	padding-top: 20px;
+    border-top: 1px solid #e6ebf1;
 }
 
 .section-box {
 	padding: 5px 20px;
 	border-radius: 4px;
+	background-color: #fff;
+	box-shadow: 0 1px 3px 0 #e6ebf1;
 }
 
 .skeleton-section-box {
@@ -52,6 +56,7 @@ export default {
 }
 
 .h4 {
+	font-size: 18px;
 	margin-bottom: 15px;
 }
 

@@ -340,7 +340,7 @@ h6.uppercase,
   display: none;
 }
 .timeline-item.user-content .comment-header .octicon-heart {
-  color: #ff4444;
+  color: #ff5b3a;
   cursor: pointer;
 }
 .timeline-item.user-content .reply {
@@ -422,7 +422,7 @@ h6.uppercase,
   margin-left: 0px;
 }
 .timeline-item.notification-content .octicon-heart {
-  color: #ff4444 !important;
+  color: #ff5b3a !important;
 }
 .timeline-item.notification-content::before {
   content: " ";

@@ -39,7 +39,7 @@ frappe.ui.form.on("Event", {
 
 frappe.ui.form.on("Event Participants", {
 	event_participants_remove: function(frm, cdt, cdn) {
-		if (cdt&&!cdn.includes("New Event Participants")){
+		if (frm.doc.event_participants.length){
 			frappe.call({
 				type: "POST",
 				method: "frappe.desk.doctype.event.event.delete_communication",

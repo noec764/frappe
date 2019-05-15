@@ -271,7 +271,10 @@ def get_ancestors_of(doctype, name, order_by="lft desc", limit=None):
 
 	return result or []
 
-def get_descendants_of(doctype, name, order_by="lft desc", limit=None, ignore_permissions=False):
+def get_descendants_of(doctype, name, order_by="lft desc", limit=None,
+	ignore_permissions=False):
+	print(doctype)
+	print(name)
 	'''Return descendants of the current record'''
 	lft, rgt = frappe.db.get_value(doctype, name, ['lft', 'rgt'])
 

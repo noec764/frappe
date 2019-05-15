@@ -11,6 +11,7 @@ const buble = require('rollup-plugin-buble');
 const { terser } = require('rollup-plugin-terser');
 const vue = require('rollup-plugin-vue');
 const frappe_html = require('./frappe-html-plugin');
+const visualizer = require('rollup-plugin-visualizer');
 
 const production = process.env.FRAPPE_ENV === 'production';
 
@@ -48,22 +49,32 @@ function get_rollup_options_for_js(output_file, input_files) {
 		frappe_html(),
 		// ignore css imports
 		ignore_css(),
-		// .vue -> .js
-		vue.default(),
+		// .vue -> .js,
+		vue({
+			exclude: ['node_modules/**']
+		}),
 		// ES6 -> ES5
 		buble({
 			objectAssign: 'Object.assign',
 			transforms: {
 				dangerousForOf: true,
-				classes: false
+				classes: false,
+				modules: true
 			},
 			exclude: [path.resolve(bench_path, '**/*.css'), path.resolve(bench_path, '**/*.less')]
 		}),
-		commonjs(),
+		commonjs({
+			namedExports: {
+				'node_modules/@fullcalendar/core/main.js': ['Calendar']
+			}
+		}),
 		node_resolve({
 			customResolveOptions: {
 				paths: node_resolve_paths
 			}
+		}),
+		!production && visualizer({
+			filename: path.resolve(bench_path, 'stats', output_file + ".html"),
 		}),
 		production && terser()
 	];

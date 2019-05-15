@@ -291,11 +291,11 @@ frappe.get_modal = function(title, content) {
 			<div class="modal-content">
 				<div class="modal-header">
 	                <div class="row">
-	                    <div class="col-xs-7">
+	                    <div class="col-xs-6">
 							<span class="indicator hidden"></span>
 	                        <h4 class="modal-title" style="font-weight: bold;">${title}</h4>
 	                    </div>
-	                    <div class="col-xs-5">
+	                    <div class="col-xs-6">
 	                        <div class="text-right buttons">
 	            				<button type="button" class="btn btn-default btn-sm btn-modal-close"
 	                                data-dismiss="modal">

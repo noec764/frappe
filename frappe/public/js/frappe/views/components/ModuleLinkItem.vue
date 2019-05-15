@@ -1,9 +1,8 @@
 <template>
 	<div class="link-item flush-top small"
-		:class="{'onboard-spotlight': onboard, 'disabled-link': disabled_dependent}"
+		:class="{'disabled-link': disabled_dependent}"
 		@mouseover="mouseover" @mouseleave="mouseleave"
 	>
-		<span :class="['indicator', indicator_color]"></span>
 
 		<span v-if="disabled_dependent" class="link-content text-muted">{{ label || __(name) }}</span>
 		<a v-else class="link-content" :href="route">{{ label || __(name) }}</a>
@@ -24,7 +23,7 @@
 
 <script>
 export default {
-	props: ['label', 'name', 'dependencies', 'incomplete_dependencies', 'onboard', 'count', 'route', 'doctype', 'open_count'],
+	props: ['label', 'name', 'dependencies', 'incomplete_dependencies', 'count', 'route', 'doctype', 'open_count'],
 	data() {
 		return {
 			hover: false,
@@ -34,16 +33,6 @@ export default {
 	computed: {
 		disabled_dependent() {
 			return this.dependencies && this.incomplete_dependencies;
-		},
-
-		indicator_color() {
-			if(this.open_count) {
-				return 'red';
-			}
-			if(this.onboard) {
-				return this.count ? 'blue' : 'orange';
-			};
-			return 'grey';
 		},
 
 		popover_active() {

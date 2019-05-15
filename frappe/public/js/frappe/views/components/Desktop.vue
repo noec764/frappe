@@ -1,152 +1,141 @@
 <template>
-	<div class="modules-page-container" v-if="home_settings_fetched">
-		<div
-			class="modules-section"
-			v-for="(category, i) in module_categories" :key="category"
-		>
+	<div class="desktop-page-container">
+		<div class="desktop-section">
 			<a
-				v-if="i === 0"
 				class="btn-show-hide text-muted text-medium"
-				@click="show_hide_cards_dialog"
+				@click="edit_desktop"
 			>
-				{{ __('Show / Hide Cards') }}
+			<i class="octicon octicon-pencil"></i>
+				{{ __('Edit Desktop') }}
 			</a>
-			<desk-section
-				v-if="get_modules_for_category(category).length"
-				:category="category"
-				:modules="get_modules_for_category(category)"
-				@update_home_settings="hs => update_modules_with_home_settings(hs)"
-			>
-			</desk-section>
 		</div>
+		<grid-view
+			:showGrid="showGrid"
+			:items="items"
+			@removeCard="remove_card"
+		/>
 	</div>
 </template>
 
 <script>
-import DeskSection from './DeskSection.vue';
-import { generate_route } from './utils';
+import GridView from './desktop_grid/GridView.vue'
 
 export default {
+	name: "Desktop",
 	components: {
-		DeskSection
+		GridView
 	},
 	data() {
-		let modules_list = frappe.boot.allowed_modules
-			.filter(d => (d.type==='module' || d.category==='Places') && !d.blocked)
-			.map(d => {
-				d.links = (d.links || []).map(link => {
-					link.route = generate_route(link);
-					return link;
-				});
-				return d;
-			});
-
 		return {
-			module_categories: ['Modules', 'Domains', 'Places', 'Administration'],
-			modules: modules_list,
-			home_settings_fetched: false
+			showGrid: false,
+			items: []
 		};
 	},
 	created() {
-		this.fetch_home_settings();
+		this.get_desk();
 	},
 	methods: {
-		fetch_home_settings() {
-			return frappe.db.get_value('User', frappe.session.user, 'home_settings')
-				.then(r => {
-					let home_settings = JSON.parse(r.message.home_settings || '{}');
-					this.update_modules_with_home_settings(home_settings);
-					this.home_settings_fetched = true;
-				});
-		},
-		update_modules_with_home_settings(home_settings) {
-			this.modules = this.modules.map(m => {
-				let hidden_modules = home_settings.hidden_modules || [];
-				m.hidden = hidden_modules.includes(m.module_name);
-
-				let links = home_settings.links && home_settings.links[m.module_name];
-
-				if (links) {
-					links = JSON.parse(links);
-
-					let default_links = m.links.map(link => link.name);
-					m.links = m.links.map(link => {
-						link.hidden = !links.includes(link.name);
-						return link;
-					});
-					let new_links = links
-						.filter(link => !default_links.includes(link))
-						.filter(Boolean)
-						.map(link => {
-							let new_link = { name: link, label: link, type: 'doctype' };
-							new_link.route = generate_route(new_link);
-							return new_link;
-						});
-					m.links = m.links.concat(new_links);
+		get_desk() {
+			frappe.db.exists("Desk", frappe.session.user)
+			.then(e => {
+				if (e === false) {
+					this.create_desk();
+				} else {
+					this.get_desk_dashboard();
 				}
-
-				return m;
-			});
+			}).then(() => {
+				this.showGrid = true;
+			})
 		},
-		get_modules_for_category(category) {
-			return this.modules.filter(m => m.category === category && !m.hidden);
+		get_desk_dashboard() {
+			frappe.xcall("frappe.desk.doctype.desk.desk.get_desk", {user: frappe.session.user})
+			.then(d => { this.items = d })
+			.catch(error => console.warn(error))
 		},
-		show_hide_cards_dialog() {
-			let fields = this.module_categories.map(category => {
-				let modules = this.modules.filter(m => m.category === category);
-				let options = modules.map(
-					m => ({ label: m.label, value: m.module_name, checked: !m.hidden })
-				);
-				return {
-					label: category,
-					fieldname: category,
-					fieldtype: 'MultiCheck',
-					options,
-					columns: 2
-				}
-			});
+		create_desk() {
+			frappe.xcall("frappe.desk.doctype.desk.desk.create_user_desk", {user: frappe.session.user})
+			.then(d => { this.items = d.desk_items })
+			.catch(error => console.warn(error))
+		},
+		edit_desktop() {
+			//TODO: Commonify with modules
+			const fields = get_fields()
 			const d = new frappe.ui.Dialog({
-				title: __('Show / Hide Cards'),
-				fields: fields.filter(f => f.options.length > 0),
-				primary_action_label: __('Save'),
+				title: __('Add a widget'),
+				fields: fields,
+				primary_action_label: __('Add'),
 				primary_action: (values) => {
-					let all_modules = this.modules.map(m => m.module_name);
-					let modules_to_show = Object.keys(values).map(k => values[k]).flatMap(m => m);
-					let modules_to_hide = all_modules.filter(m => !modules_to_show.includes(m));
+					const { widget_type, ...args } = values;
+					frappe.xcall('frappe.desk.doctype.desk.desk.add_widget', {origin: "Desk", widget_type: values.widget_type, args})
+					.then(() => this.get_desk())
 					d.hide();
-
-					frappe.call('frappe.desk.moduleview.hide_modules_from_desktop', {
-						modules: modules_to_hide
-					})
-					.then(r => r.message)
-					.then(hs => this.update_modules_with_home_settings(hs));
 				}
 			});
 
 			d.show();
+
+			function get_fields() {
+				return [
+					{
+						label: __("Widget type"),
+						fieldname: "widget_type",
+						fieldtype: 'MultiCheck',
+						options: [
+							{ label: __("Calendar"), value: "Dashboard Calendar" },
+							{ label: __("Chart"), value: "Dashboard Chart" },
+							{ label: __("Statistics"), value: "Dashboard Stats" }
+						],
+						columns: 3,
+						reqd: 1,
+						on_change: function(value) {
+							const widget_type = d.fields_dict.widget_type
+							const checked = widget_type.get_checked_options()
+							if (checked && checked.length > 1) {
+								const index = widget_type.selected_options.indexOf(checked[0]);
+								if(index > -1) {
+									widget_type.selected_options.splice(index, 1);
+								}
+								widget_type.refresh_input();
+							}
+						}
+					},
+					{
+						label: __("User"),
+						fieldname: "user",
+						fieldtype: 'Link',
+						options: "User",
+						depends_on: "eval:doc.widget_type=='Dashboard Calendar'"
+					},
+					{
+						label: __("Chart"),
+						fieldname: "chart",
+						fieldtype: 'Link',
+						options: "Dashboard Chart",
+						depends_on: "eval:doc.widget_type=='Dashboard Chart'"
+					}
+				]
+			}
+		},
+		remove_card(e) {
+			const removed = this.items.filter(f => `card-${f.name}` == e)
+			frappe.xcall('frappe.desk.doctype.desk.desk.remove_widget', {origin: "Desk", widget: removed})
+			.then(() => { this.items = this.items.filter(f => `card-${f.name}` != e) })
 		}
 	}
 }
 </script>
 
 <style lang="less" scoped>
-.modules-page-container {
+.desktop-page-container {
 	margin-top: 40px;
 	margin-bottom: 30px;
+	@media (max-width: 767px) {
+		padding-left: 50px;
+	}
 }
-
-.modules-section {
+.desktop-section {
 	position: relative;
-	padding-top: 30px;
-}
-
-.btn-show-hide {
-	position: absolute;
-	right: 0;
-	top: 36px;
-}
-
-.toolbar-underlay {
-	margin: 70px;
+	padding: 25px 0;
+	text-align: right;
 }
 </style>

@@ -45,6 +45,7 @@ $dropDownBg: #e3e3e3;
 			text-align: right;
 		}
 		& > .vsm-list {
+			padding-top: 45px;
 			width: 100%;
 			height: 100%;
 			overflow: hidden scroll;
@@ -285,7 +286,7 @@ $dropDownBg: #e3e3e3;
 	}
 	& .vsm-mobile-bg {
 		background-color: $mobileItemBg;
-		border-radius: 16px;
+		border-radius: 0 32px 32px 0;
 	}
 	& .vsm-header {
 		color: rgba($itemColor, 0.7);
