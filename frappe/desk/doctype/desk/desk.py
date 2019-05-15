@@ -159,14 +159,14 @@ class WidgetCreator:
 		return self.widgets_map[widget_type][self.target]
 
 	def _add_calendar(self, **kwargs):
-		if frappe.db.exists("Dashboard Calendar", {"source_document": "Event", "user": kwargs["user"]}):
+		if frappe.db.exists("Dashboard Calendar", {"source_document": kwargs["reference"], "user": kwargs["user"]}):
 			widget_name = frappe.db.get_value("Dashboard Calendar", \
-				{"source_document": "Event", "user": kwargs["user"]}, "name")
+				{"source_document": kwargs["reference"], "user": kwargs["user"]}, "name")
 
 		else:
 			new_desk_calendar = frappe.get_doc({
 				"doctype": "Dashboard Calendar",
-				"source_document": "Event",
+				"source_document": kwargs["reference"],
 				"user": kwargs["user"]
 			}).insert()
 			widget_name = new_desk_calendar.name

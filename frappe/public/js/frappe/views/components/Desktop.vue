@@ -71,7 +71,7 @@ export default {
 					d.hide();
 				}
 			});
-
+			console.log(frappe.boot.calendars)
 			d.show();
 
 			function get_fields() {
@@ -105,6 +105,14 @@ export default {
 						fieldtype: 'Link',
 						options: "User",
 						depends_on: "eval:doc.widget_type=='Dashboard Calendar'"
+					},
+					{
+						label: __("Reference Document"),
+						fieldname: "reference",
+						fieldtype: 'Link',
+						options: "DocType",
+						depends_on: "eval:doc.widget_type=='Dashboard Calendar'",
+						filters: { name: ["in", frappe.boot.calendars] }
 					},
 					{
 						label: __("Chart"),

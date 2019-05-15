@@ -73,7 +73,8 @@ export default {
 			buttonText: {
 				today: __("Today")
 			},
-			noEventsMessage: __("No events to display")
+			noEventsMessage: __("No events to display"),
+			events_method: null
 		}
 	},
 	computed: {
@@ -81,10 +82,15 @@ export default {
 			return {'width': '100%', 'max-width': this.width, 'min-width': '400px', 'height': this.cardHeight};
 		}
 	},
+	created() {
+		frappe.model.with_doctype(this.reference, () => {
+			const meta = frappe.get_meta(this.reference);
+			this.events_method = eval(meta.__calendar_js).get_events_method || 'frappe.desk.doctype.event.event.get_events';
+		})
+	},
 	methods: {
 		getCalendarEvents(parameters, callback) {
-			//Extend method for other doctypes
-			frappe.xcall('frappe.desk.doctype.event.event.get_events', {
+			this.events_method&&frappe.xcall(this.events_method, {
 				start: parameters.start,
 				end: parameters.end,
 				user: this.user
