@@ -60,14 +60,6 @@ th.fc-day-header {
 .fc-left h2 {
   font-size: 14px;
 }
-.fc button {
-  height: auto !important;
-  font-size: 12px !important;
-  outline: none !important;
-}
-.fc button .fc-icon {
-  top: -1px !important;
-}
 .fc-state-active {
   box-shadow: none !important;
   background: #cfdce5 !important;

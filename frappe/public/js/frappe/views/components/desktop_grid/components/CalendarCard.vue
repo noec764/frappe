@@ -74,7 +74,8 @@ export default {
 				today: __("Today")
 			},
 			noEventsMessage: __("No events to display"),
-			events_method: null
+			events_method: null,
+			fields_map: {}
 		}
 	},
 	computed: {
@@ -85,21 +86,30 @@ export default {
 	created() {
 		frappe.model.with_doctype(this.reference, () => {
 			const meta = frappe.get_meta(this.reference);
-			this.events_method = eval(meta.__calendar_js).get_events_method || 'frappe.desk.doctype.event.event.get_events';
+			const calendar_options = eval(meta.__calendar_js)
+			this.events_method = calendar_options.get_events_method || 'frappe.desk.doctype.event.event.get_events';
+			this.fields_map = calendar_options.field_map
+			this.$refs.fullCalendar.getApi().refetchEvents();
 		})
 	},
 	methods: {
 		getCalendarEvents(parameters, callback) {
 			this.events_method&&frappe.xcall(this.events_method, {
-				start: parameters.start,
-				end: parameters.end,
+				start: moment(parameters.start).format("YYYY-MM-DD"),
+				end: moment(parameters.end).format("YYYY-MM-DD"),
 				user: this.user
 			})
 			.then(result => {
+				let events = []
 				result.forEach(value => {
-					value.url = `/desk#Form/${this.reference}/${value.name}`;
+					let ev = {}
+					Object.keys(this.fields_map).forEach(key => {
+						ev[key] = value[this.fields_map[key]]
+					})
+					ev.url = `/desk#Form/${this.reference}/${value.name}`;
+					events.push(ev)
 				})
-				callback(result);
+				callback(events);
 			})
 		},
 		remove_card() {
@@ -110,7 +120,6 @@ export default {
 </script>
 
 <style lang='scss'>
-@import 'node_modules/@fullcalendar/core/main';
 @import 'node_modules/@fullcalendar/list/main';
 @import 'frappe/public/scss/calendar';
 

@@ -71,7 +71,7 @@ export default {
 					d.hide();
 				}
 			});
-			console.log(frappe.boot.calendars)
+
 			d.show();
 
 			function get_fields() {
@@ -104,6 +104,7 @@ export default {
 						fieldname: "user",
 						fieldtype: 'Link',
 						options: "User",
+						default: frappe.session.user,
 						depends_on: "eval:doc.widget_type=='Dashboard Calendar'"
 					},
 					{
