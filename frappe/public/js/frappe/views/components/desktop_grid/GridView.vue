@@ -19,6 +19,7 @@
 				:color="item.color"
 				@removeCard="remove_card"
 				:width="item.widget_width"
+				:type="item.type"
 				height="340"
 			/>
 		</muuri-grid>

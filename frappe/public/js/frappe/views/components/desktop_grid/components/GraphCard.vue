@@ -11,7 +11,7 @@
 					:dataSets="data.datasets"
 					:labels="data.labels"
 					:title="title"
-					:type="type"
+					:type="chartType"
 					:colors="colors"
 					:height="chartHeight"
 					:axisOptions="axisOptions"
@@ -55,6 +55,10 @@ export default {
 		color: {
 			type: String,
 			default: null
+		},
+		type: {
+			type: String,
+			default: 'Line'
 		}
 	},
 	data() {
@@ -63,7 +67,6 @@ export default {
 			colors: [this.color],
 			data: {},
 			title: `<b>${this.label}</b>`,
-			type: "line",
 			cardHeight: this.height + "px",
 			chartHeight: parseInt(this.height) * 60/100,
 			settings: null
@@ -75,6 +78,10 @@ export default {
 		},
 		cardStyle() {
 			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '350px', 'height': this.cardHeight};
+		},
+		chartType() {
+			const map = {"Line": 'line', "Bar": 'bar'}
+			return map[this.type]
 		}
 	},
 	mounted() {
