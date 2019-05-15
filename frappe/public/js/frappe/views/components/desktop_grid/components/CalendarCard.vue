@@ -30,7 +30,6 @@
 <script>
 import FullCalendar from '@fullcalendar/vue';
 import listPlugin from '@fullcalendar/list';
-import interactionPlugin from '@fullcalendar/interaction';
 
 export default {
 	components: {
@@ -62,16 +61,18 @@ export default {
 		return {
 			locale: frappe.boot.lang || 'en',
 			calendarPlugins: [
-				listPlugin,
-				interactionPlugin
+				listPlugin
 			],
-			defaultView: 'listWeek',
+			defaultView: 'listDay',
 			calendarWeekends: true,
 			calendarEvents: [],
 			calendarHeight: parseInt(this.height),
 			cardHeight: parseInt(this.height) + 25 + "px",
 			buttonText: {
-				today: __("Today")
+				today: __("Today"),
+				listWeek: __("Week"),
+				listDay: __("Day")
+
 			},
 			noEventsMessage: __("No events to display"),
 			events_method: null,
@@ -120,6 +121,7 @@ export default {
 </script>
 
 <style lang='scss'>
+@import 'node_modules/@fullcalendar/core/main';
 @import 'node_modules/@fullcalendar/list/main';
 @import 'frappe/public/scss/calendar';
 

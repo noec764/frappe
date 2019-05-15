@@ -1,5 +1,4 @@
 @import "variables";
-@import 'node_modules/@fullcalendar/core/main';
 
 body .fc {
     font-size: $text-medium;
@@ -8,6 +7,9 @@ body .fc {
 .fc-toolbar {
 	padding: 15px;
 	margin-bottom: 0px !important;
+	h2 {
+		font-size: 12pt !important;
+	}
 }
 
 .fc-list-view {
@@ -93,15 +95,17 @@ th.fc-day-header {
 	height: auto !important;
 	font-size: $text-small !important;
 	outline: none !important;
+	line-height: 10pt !important;
 	.fc-icon {
 		top: -1px !important;
+		font-size: $text-small !important;
 	}
 }
 
 .fc-button-primary {
-	color: #fff;
-	background-color: #6195FF;
-	border-color: #4884ff;
+	color: #fff !important;
+	background-color: #6195FF !important;
+	border-color: #4884ff !important;
 }
 
 .fc-button-primary:hover:enabled {
