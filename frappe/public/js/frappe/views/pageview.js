@@ -50,6 +50,7 @@ frappe.views.pageview = {
 
 					Vue.prototype.__ = window.__;
 					Vue.prototype.frappe = window.frappe;
+
 					new Vue({
 						el: container[0],
 						render: h => h(Desktop)
@@ -173,6 +174,7 @@ frappe.show_message_page = function(opts) {
 
 frappe.views.ModulesFactory = class ModulesFactory extends frappe.views.Factory {
 	show() {
+		console.log(this)
 		if (frappe.pages.modules) {
 			frappe.container.change_to('modules');
 		} else {

@@ -4,7 +4,7 @@ $gray-200: #ebecf1;
 $gray-300: #d1d8dd;
 $gray-400: #ced4da;
 $gray-500: #adb5bd;
-$gray-600: #8d99a6;
+$gray-600: #778595;
 $gray-700: #495057;
 $gray-800: #36414c;
 $gray-900: #2e3338;
@@ -15,6 +15,14 @@ $black: #000;
 $body-color: $gray-800;
 $text-muted: $gray-600;
 $border-color: $gray-200;
+$panel-bg: #f7fafc;
+$brand-primary: #6195FF;
+$light-yellow: #fffce7;
 
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
+$text-large: 18px;
+$text-regular: 16px;
+$text-medium: 14px;
+$text-small: 12px;
+$text-dark: #2e3338;
+
+$screen-xs: 767px;

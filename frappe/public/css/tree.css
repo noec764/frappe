@@ -14,7 +14,7 @@ ul.tree-children {
   padding: 1px;
 }
 .tree-link .node-parent {
-  color: #8D99A6;
+  color: #778595;
   font-size: 14px;
   width: 10px;
   text-align: center;
@@ -30,7 +30,7 @@ ul.tree-children {
   color: #6195FF;
 }
 .tree-link.active a {
-  color: #8D99A6;
+  color: #778595;
 }
 .tree-hover {
   background-color: #F7FAFC;

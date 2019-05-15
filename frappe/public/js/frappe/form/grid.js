@@ -566,7 +566,7 @@ export default class Grid {
 					df.colsize=df.columns;
 				}
 				else {
-					var colsize = 2;
+					let colsize = 2;
 					switch(df.fieldtype) {
 						case "Text":
 						case "Small Text": colsize = 3; break;

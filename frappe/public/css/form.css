@@ -178,7 +178,7 @@ h6.uppercase,
   font-weight: normal;
   letter-spacing: 0.4px;
   text-transform: uppercase;
-  color: #8D99A6;
+  color: #778595;
 }
 .form-section {
   margin: 0px;
@@ -318,7 +318,7 @@ h6.uppercase,
   background-color: #fafbfc;
   padding: 10px 15px 8px 13px;
   margin: 0px;
-  color: #8D99A6;
+  color: #778595;
   border-bottom: 1px solid #EBEFF2;
 }
 .timeline-item.user-content .comment-header.links-active {
@@ -340,7 +340,7 @@ h6.uppercase,
   display: none;
 }
 .timeline-item.user-content .comment-header .octicon-heart {
-  color: #ff5858;
+  color: #ff5b3a;
   cursor: pointer;
 }
 .timeline-item.user-content .reply {
@@ -407,10 +407,10 @@ h6.uppercase,
   padding-left: 30px;
   margin: 30px 0px;
   position: relative;
-  color: #8D99A6;
+  color: #778595;
 }
 .timeline-item.notification-content * {
-  color: #8D99A6;
+  color: #778595;
 }
 .timeline-item.notification-content .fa-fw {
   margin-left: 36px;
@@ -422,7 +422,7 @@ h6.uppercase,
   margin-left: 0px;
 }
 .timeline-item.notification-content .octicon-heart {
-  color: #ff5858 !important;
+  color: #ff5b3a !important;
 }
 .timeline-item.notification-content::before {
   content: " ";
@@ -520,7 +520,7 @@ h6.uppercase,
 }
 .control-label,
 .grid-heading-row {
-  color: #8D99A6;
+  color: #647181;
   font-size: 12px;
 }
 .control-label {
@@ -610,7 +610,7 @@ select.form-control {
   margin-top: -3px;
   margin-left: 1px;
   font-weight: 500;
-  color: #8D99A6;
+  color: #778595;
 }
 .attach-btn {
   margin-top: 10px;

@@ -39,7 +39,7 @@ frappe.ui.form.ControlDate = frappe.ui.form.ControlData.extend({
 		// webformTODO:
 		let sysdefaults = frappe.boot.sysdefaults;
 
-		let lang = frappe.boot.user.language || 'en';
+		let lang = frappe.boot.lang || 'en';
 		if(!$.fn.datepicker.language[lang]) {
 			lang = 'en';
 		}

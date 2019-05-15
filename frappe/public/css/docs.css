@@ -133,7 +133,7 @@
   background-color: #b8c2cc;
 }
 .navbar-new-comments-true {
-  background-color: #ff5858;
+  background-color: #ff5b3a;
 }
 .navbar-form .awesomplete {
   margin-left: -15px;
@@ -221,7 +221,7 @@
 }
 .navbar-default .navbar-nav > li > a,
 .navbar-default .navbar-brand {
-  color: #8D99A6;
+  color: #778595;
 }
 body {
   font-size: 16px;
@@ -252,7 +252,7 @@ img {
 }
 .splash .jumbotron p {
   font-size: 24px;
-  font-color: #8D99A6 !important;
+  font-color: #778595 !important;
   letter-spacing: 0px;
   opacity: 0.7;
   margin-bottom: 90px;
@@ -413,7 +413,7 @@ pre {
 }
 .breadcrumb {
   line-height: 1em;
-  color: #8D99A6;
+  color: #778595;
   background-color: transparent;
   margin-bottom: 32px;
   padding: 0px;
@@ -499,7 +499,7 @@ p {
   padding: 5px;
 }
 .docs-footer a {
-  color: #8D99A6;
+  color: #778595;
 }
 .docs-footer li {
   display: inline-block;
@@ -567,14 +567,14 @@ hr {
   margin: 48px 0px 30px;
 }
 .edit {
-  color: #8d99a6;
+  color: #778595;
 }
 a.edit,
 a.edit:hover,
 a.edit:focus,
 a.edit:visited,
 .edit-container .icon {
-  color: #8d99a6;
+  color: #778595;
 }
 .btn-next {
   margin-top: 30px;

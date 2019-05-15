@@ -138,6 +138,7 @@ class DashboardChart {
 
 	prepare_container() {
 		const column_width_map = {
+			"Third": "4",
 			"Half": "6",
 			"Full": "12",
 		};
@@ -207,6 +208,7 @@ class DashboardChart {
 
 	fetch(filters, refresh=false) {
 		this.chart_container.find('.chart-loading-state').removeClass('hide');
+
 		let method = this.settings ? this.settings.method
 			: 'frappe.desk.doctype.dashboard_chart.dashboard_chart.get';
 

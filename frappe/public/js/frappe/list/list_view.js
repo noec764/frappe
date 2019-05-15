@@ -273,7 +273,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		);
 
 		// limit to 4 columns
-		this.columns = this.columns.slice(0, 4);
+		this.columns = this.columns.slice(0, 6);
 	}
 
 	get_no_result_message() {

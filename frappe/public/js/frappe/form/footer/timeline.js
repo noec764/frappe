@@ -470,7 +470,7 @@ frappe.ui.form.Timeline = class Timeline {
 				"Attachment": "#7f8c8d",
 				"Attachment Removed": "#eee",
 				"Relinked": "#16a085",
-				"Reply": "#8d99a6"
+				"Reply": "#778595"
 			}[c.comment_type || c.communication_medium];
 
 			c.icon_fg = {

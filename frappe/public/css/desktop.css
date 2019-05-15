@@ -11,6 +11,7 @@ body[data-route="desktop"] .navbar-default {
   top: 0;
   bottom: 0;
   overflow: auto;
+  background-color: #f8faff;
 }
 .case-wrapper {
   position: relative;
@@ -105,7 +106,7 @@ body[data-route="desktop"] .navbar-default {
   right: 20px;
   top: -10px;
   color: #fff;
-  background-color: #ff5858;
+  background-color: #ff5b3a;
   padding: 6px;
   font-size: 12px;
   line-height: 1;
@@ -243,7 +244,7 @@ body[data-route="desktop"] .navbar-set-desktop-icons {
   font-size: 12px;
 }
 .help-message-wrapper .octicon {
-  color: #8D99A6;
+  color: #778595;
   cursor: pointer;
   width: 20px;
 }

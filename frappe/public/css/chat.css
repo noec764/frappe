@@ -25,7 +25,7 @@ p {
   color: #36414C !important;
 }
 .text-muted {
-  color: #8D99A6 !important;
+  color: #778595 !important;
 }
 .text-extra-muted {
   color: #d1d8dd !important;
@@ -242,7 +242,7 @@ a.no-decoration:active {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 0.4px;
-  color: #8D99A6;
+  color: #778595;
 }
 .ellipsis {
   white-space: nowrap;
@@ -461,7 +461,7 @@ a.no-decoration:active {
 }
 .chat-list-notification-content {
   color: white;
-  background-color: #8D99A6;
+  background-color: #778595;
   display: inline-block;
   /* padding: 5px; */
   border-radius: 20px;

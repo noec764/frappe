@@ -78,6 +78,7 @@ def get_bootinfo():
 	bootinfo.gsuite_enabled = get_gsuite_status()
 	bootinfo.success_action = get_success_action()
 	bootinfo.update(get_email_accounts(user=frappe.session.user))
+	bootinfo.frequently_visited_links = frequently_visited_links()
 
 	return bootinfo
 
@@ -258,3 +259,9 @@ def get_gsuite_status():
 
 def get_success_action():
 	return frappe.get_all("Success Action", fields=["*"])
+
+@frappe.whitelist()
+def frequently_visited_links():
+	return frappe.get_all('Route History', fields=['route', 'count(name) as count'], filters={
+		'user': frappe.session.user
+	}, group_by="route", order_by="count desc", limit=5)

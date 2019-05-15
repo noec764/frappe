@@ -4,7 +4,7 @@
   border-radius: 3px;
 }
 .form-grid.error {
-  border-color: #ff5858;
+  border-color: #ff5b3a;
 }
 .grid-heading-row {
   border-bottom: 1px solid #d1d8dd;
@@ -104,14 +104,14 @@
   top: 8px;
 }
 .grid-body .editable-row .form-control:focus {
-  border-color: #8D99A6;
+  border-color: #778595;
   z-index: 2;
 }
 .grid-body .editable-row .has-error .form-control {
   z-index: 1;
 }
 .grid-body .editable-row .has-error .form-control:focus {
-  border-color: #ff5858;
+  border-color: #ff5b3a;
 }
 .grid-body .editable-row input[data-fieldtype="Int"],
 .grid-body .editable-row input[data-fieldtype="Float"],

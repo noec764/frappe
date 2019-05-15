@@ -23,12 +23,13 @@
 	<link type="text/css" rel="stylesheet" href="{{ include }}?ver={{ build_version }}">
 	{%- endfor -%}
 </head>
-<body>
+<body class="full-width">
 	<div class="centered splash" style="width: 100px; height: 100px;">
         <img src="{{ splash_image or "/assets/frappe/images/frappe-framework-logo.png" }}">
     </div>
 	<div class="main-section">
 		<header></header>
+		<div id="modules-menu"></div>
 		<div id="body_div"></div>
 		<footer></footer>
 	</div>
