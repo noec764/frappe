@@ -15,18 +15,5 @@
  "ref_doctype": "Address", 
  "report_name": "Addresses And Contacts", 
  "report_type": "Script Report", 
- "roles": [
-  {
-   "role": "Sales User"
-  }, 
-  {
-   "role": "Purchase User"
-  }, 
-  {
-   "role": "Maintenance User"
-  }, 
-  {
-   "role": "Accounts User"
-  }
- ]
+ "roles": []
 }
