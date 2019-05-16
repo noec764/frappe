@@ -51,8 +51,9 @@ export default {
 	mounted() {
 		frappe.module_links = {}
 		frappe.route.on('change', () => {
-			this.update_current_module()
-			this.get_module_dashboard();
+			frappe.modules_dashboard.on("widget_added", () => {
+				this.get_module_dashboard();
+			})
 		})
 	},
 	methods: {

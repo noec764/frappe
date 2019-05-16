@@ -485,7 +485,7 @@ class User(Document):
 			# no limits defined
 			return
 
-		total_users = get_total_users()
+		total_users = get_total_users() or 0
 		if self.is_new():
 			# get_total_users gets existing users in database
 			# a new record isn't inserted yet, so adding 1
