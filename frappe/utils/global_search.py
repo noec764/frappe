@@ -271,14 +271,16 @@ def update_global_search(doc):
 		sync_value_in_queue(value)
 
 def update_global_search_for_all_web_pages():
-	files_to_index = get_web_pages_to_index()
-	add_web_pages_to_global_search(files_to_index)
+	routes_to_index = get_routes_to_index()
+	for route in routes_to_index:
+		add_route_to_global_search(route)
+	sync_global_search()
 
 
-def get_web_pages_to_index():
+def get_routes_to_index():
 	apps = frappe.get_installed_apps()
 
-	files_to_index = {}
+	routes_to_index = []
 	for app in apps:
 		base = frappe.get_app_path(app, 'www')
 		path_to_index = frappe.get_app_path(app, 'www')
@@ -289,14 +291,42 @@ def get_web_pages_to_index():
 					filepath = os.path.join(dirpath, f)
 
 					route = os.path.relpath(filepath, base)
-					route = '/' + route.split('.')[0]
+					route = route.split('.')[0]
 
 					if route.endswith('index'):
 						route = route.rsplit('index', 1)[0]
 
-					files_to_index[route] = filepath
+					routes_to_index.append(route)
 
-	return files_to_index
+	return routes_to_index
+
+def add_route_to_global_search(route):
+	from frappe.website.render import render_page
+	from frappe.tests.test_website import set_request
+	frappe.set_user('Guest')
+	frappe.local.no_cache = True
+
+	try:
+		set_request(method='GET', path=route)
+		content = render_page(route)
+		soup = BeautifulSoup(content, 'html.parser')
+		page_content = soup.find(class_='page_content')
+		text_content = page_content.text if page_content else ''
+		title = soup.title.text.strip() if soup.title else route
+
+		value = dict(
+			doctype='Static Web Page',
+			name=route,
+			content=text_content,
+			published=1,
+			title=title,
+			route=route
+		)
+		sync_value_in_queue(value)
+	except (frappe.PermissionError, frappe.DoesNotExistError, frappe.ValidationError, Exception):
+		pass
+
+	frappe.set_user('Administrator')
 
 
 def add_web_pages_to_global_search(files_to_index):
@@ -488,4 +518,19 @@ def web_search(text, scope=None, start=0, limit=20):
 				tmp_result.append(i)
 		results += tmp_result
 
+	# chart of accounts -> {chart, of, accounts}
+	# titles that match the most of these words will have high relevance
+	words = set(get_distinct_words(text))
+	for r in results:
+		title_words = set(get_distinct_words(r.title))
+		words_match = len(words.intersection(title_words))
+		r.relevance = words_match
+
+	results = sorted(results, key=lambda x: x.relevance, reverse=True)
+
 	return results
+
+def get_distinct_words(text):
+	text = text.replace('"', '')
+	text = text.replace("'", '')
+	return [w.strip().lower() for w in text.split(' ')]

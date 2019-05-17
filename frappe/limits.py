@@ -5,6 +5,8 @@ from frappe.utils import now_datetime, getdate, flt, cint, get_fullname
 from frappe.installer import update_site_config
 from frappe.utils.data import formatdate
 from frappe.utils.user import get_enabled_system_users, disable_users
+from frappe.utils import get_site_info
+import os, subprocess, json
 import os, subprocess
 from six.moves.urllib.parse import parse_qsl, urlsplit, urlunsplit, urlencode
 from six import string_types
@@ -225,3 +227,8 @@ def get_folder_size(path):
 	if os.path.exists(path):
 		return flt(subprocess.check_output(['du', '-ms', path]).split()[0], 2)
 
+def update_site_usage():
+	data = get_site_info()
+	with open(os.path.join(frappe.get_site_path(), 'site_data.json'), 'w') as outfile:
+		json.dump(data, outfile)
+		outfile.close()

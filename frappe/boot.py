@@ -16,7 +16,6 @@ from frappe.desk.form.load import get_meta_bundle
 from frappe.utils.change_log import get_versions
 from frappe.translate import get_lang_dict
 from frappe.email.inbox import get_email_accounts
-from frappe.core.doctype.feedback_trigger.feedback_trigger import get_enabled_feedback_trigger
 
 def get_bootinfo():
 	"""build and return boot info"""
@@ -74,7 +73,6 @@ def get_bootinfo():
 	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
 	bootinfo.treeviews = frappe.get_hooks("treeviews") or []
 	bootinfo.lang_dict = get_lang_dict()
-	bootinfo.feedback_triggers = get_enabled_feedback_trigger()
 	bootinfo.gsuite_enabled = get_gsuite_status()
 	bootinfo.success_action = get_success_action()
 	bootinfo.update(get_email_accounts(user=frappe.session.user))

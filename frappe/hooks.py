@@ -127,9 +127,6 @@ doc_events = {
 		"on_trash": [
 			"frappe.desk.notifications.clear_doctype_notifications",
 			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions"
-		],
-		"on_change": [
-			"frappe.core.doctype.feedback_trigger.feedback_trigger.trigger_feedback_request"
 		]
 	},
 	"Email Group Member": {
@@ -156,6 +153,7 @@ scheduler_events = {
 		"frappe.utils.error.collect_error_snapshots",
 		"frappe.desk.page.backups.backups.delete_downloadable_backups",
 		"frappe.limits.update_space_usage",
+		"frappe.limits.update_site_usage",
 		"frappe.desk.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
 		"frappe.deferred_insert.save_to_db"
 	],
@@ -170,7 +168,6 @@ scheduler_events = {
 		"frappe.utils.scheduler.disable_scheduler_on_expiry",
 		"frappe.utils.scheduler.restrict_scheduler_events_if_dormant",
 		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
-		"frappe.core.doctype.feedback_request.feedback_request.delete_feedback_request",
 		"frappe.core.doctype.activity_log.activity_log.clear_authentication_logs",
 	],
 	"daily_long": [

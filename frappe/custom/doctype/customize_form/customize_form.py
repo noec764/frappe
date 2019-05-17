@@ -28,6 +28,7 @@ doctype_properties = {
 	'editable_grid': 'Check',
 	'max_attachments': 'Int',
 	'track_changes': 'Check',
+	'track_views': 'Check'
 }
 
 docfield_properties = {
@@ -62,7 +63,7 @@ docfield_properties = {
 	'length': 'Int',
 	'columns': 'Int',
 	'remember_last_selected_value': 'Check',
-	'allow_bulk_edit': 'Check',
+	'allow_bulk_edit': 'Check'
 }
 
 allowed_fieldtype_change = (('Currency', 'Float', 'Percent'), ('Small Text', 'Data'),
@@ -85,6 +86,9 @@ class CustomizeForm(Document):
 
 		if self.doc_type in core_doctypes_list:
 			return frappe.msgprint(_("Core DocTypes cannot be customized."))
+
+		if meta.issingle:
+			return frappe.msgprint(_("Single DocTypes cannot be customized."))
 
 		if meta.custom:
 			return frappe.msgprint(_("Only standard DocTypes are allowed to be customized from Customize Form."))
