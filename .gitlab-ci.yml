@@ -1,0 +1,6 @@
+before_script:
+  - wget https://raw.githubusercontent.com/frappe/bench/master/playbooks/install.py
+  - python install.py --develop --user gitlab
+
+test:
+  script: bench run-tests
