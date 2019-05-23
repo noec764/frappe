@@ -32,7 +32,7 @@ class Report(Document):
 		if self.is_standard == "Yes" and frappe.session.user!="Administrator":
 			frappe.throw(_("Only Administrator can save a standard report. Please rename and save."))
 
-		if self.report_type in ("Query Report", "Script Report") \
+		if self.report_type in ("Query Report", "Script Report", "Custom Report") \
 			and frappe.session.user!="Administrator":
 			frappe.throw(_("Only Administrator allowed to create Query / Script Reports"))
 

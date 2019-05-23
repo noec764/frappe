@@ -43,10 +43,17 @@ class Event(Document):
 	def sync_communication(self):
 		if self.event_participants:
 			for participant in self.event_participants:
-				communication_name = frappe.db.get_value("Communication", dict(reference_doctype=self.doctype, reference_name=self.name, timeline_doctype=participant.reference_doctype, timeline_name=participant.reference_docname), "name")
-				if communication_name:
-					communication = frappe.get_doc("Communication", communication_name)
-					self.update_communication(participant, communication)
+				comms = frappe.get_list("Communication", filters=[
+					["Communication", "reference_doctype", "=", self.doctype],
+					["Communication", "reference_name", "=", self.name],
+					["Communication Link", "link_doctype", "=", participant.reference_doctype],
+					["Communication Link", "link_name", "=", participant.reference_docname]
+				], fields=["name"])
+
+				if comms:
+					for comm in comms:
+						communication = frappe.get_doc("Communication", comm.name)
+						self.update_communication(participant, communication)
 				else:
 					meta = frappe.get_meta(participant.reference_doctype)
 					if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline==1:
@@ -62,12 +69,11 @@ class Event(Document):
 		communication.subject = self.subject
 		communication.content = self.description if self.description else self.subject
 		communication.communication_date = self.starts_on
-		communication.timeline_doctype = participant.reference_doctype
-		communication.timeline_name = participant.reference_docname
 		communication.reference_doctype = self.doctype
 		communication.reference_name = self.name
 		communication.communication_medium = communication_mapping[self.event_category] if self.event_category else ""
 		communication.status = "Linked"
+		communication.add_link(participant.reference_doctype, participant.reference_docname)
 		communication.save(ignore_permissions=True)
 
 @frappe.whitelist()
@@ -76,9 +82,18 @@ def delete_communication(event, reference_doctype, reference_docname):
 	if isinstance(event, string_types):
 		event = json.loads(event)
 
-	communication_name = frappe.db.get_value("Communication", dict(reference_doctype=event["doctype"], reference_name=event["name"], timeline_doctype=deleted_participant.reference_doctype, timeline_name=deleted_participant.reference_docname), "name")
-	if communication_name:
-		deletion = frappe.get_doc("Communication", communication_name).delete()
+	comms = frappe.get_list("Communication", filters=[
+		["Communication", "reference_doctype", "=", event.get("doctype")],
+		["Communication", "reference_name", "=", event.get("name")],
+		["Communication Link", "link_doctype", "=", deleted_participant.reference_doctype],
+		["Communication Link", "link_name", "=", deleted_participant.reference_docname]
+	], fields=["name"])
+
+	if comms:
+		deletion = []
+		for comm in comms:
+			delete = frappe.get_doc("Communication", comm.name).delete()
+			deletion.append(delete)
 
 		return deletion
 
@@ -211,14 +226,29 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 
 				remove_events.append(e)
 
-			if e.repeat_on in ["Every Day", "Every Week"]:
+			if e.repeat_on=="Every Week":
+				weekday = getdate(event_start).weekday()
+				# monday is 0
+				start_weekday = getdate(start).weekday()
+
+				# start from nearest weeday after last monday
+				date = add_days(start, weekday - start_weekday)
+
+				for cnt in range(int(date_diff(end, start) / 7) + 3):
+					if getdate(date) >= getdate(start) and getdate(date) <= getdate(end) \
+						and getdate(date) <= getdate(repeat) and getdate(date) >= getdate(event_start):
+						add_event(e, date)
+
+					date = add_days(date, 7)
+
+				remove_events.append(e)
+
+			if e.repeat_on=="Every Day":
 				for cnt in range(date_diff(end, start) + 1):
 					date = add_days(start, cnt)
 					if getdate(date) >= getdate(event_start) and getdate(date) <= getdate(end) \
-						and getdate(date) <= getdate(repeat):
-						if (e.repeat_on == "Every Week" and e[weekdays[getdate(date).weekday()]]) \
-							or (e.repeat_on == "Every Day"):
-							add_event(e, date)
+						and getdate(date) <= getdate(repeat) and e[weekdays[getdate(date).weekday()]]:
+						add_event(e, date)
 				remove_events.append(e)
 
 	for e in remove_events:

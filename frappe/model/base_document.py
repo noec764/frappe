@@ -197,7 +197,7 @@ class BaseDocument(object):
 
 		return value
 
-	def get_valid_dict(self, sanitize=True, convert_dates_to_str=False):
+	def get_valid_dict(self, sanitize=True, convert_dates_to_str=False, ignore_nulls = False):
 		d = frappe._dict()
 
 		for fieldname in self.meta.get_valid_columns():
@@ -234,6 +234,9 @@ class BaseDocument(object):
 
 				if convert_dates_to_str and isinstance(d[fieldname], (datetime.datetime, datetime.time, datetime.timedelta)):
 					d[fieldname] = str(d[fieldname])
+
+			if d[fieldname] == None and ignore_nulls:
+				del d[fieldname]
 
 		return d
 
@@ -307,7 +310,8 @@ class BaseDocument(object):
 			self.creation = self.modified = now()
 			self.created_by = self.modified_by = frappe.session.user
 
-		d = self.get_valid_dict(convert_dates_to_str=True)
+		# if doctype is "DocType", don't insert null values as we don't know if it is valid yet
+		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in ('DocType', 'DocField', 'DocPerm'))
 
 		if hasattr(self.meta, "name_after_submit") and hasattr(self, "_draft_name"):
 			if self.meta.name_after_submit and self._draft_name:
@@ -346,7 +350,7 @@ class BaseDocument(object):
 			self.db_insert()
 			return
 
-		d = self.get_valid_dict(convert_dates_to_str=True)
+		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in ('DocType', 'DocField', 'DocPerm'))
 
 		# don't update name, as case might've been changed
 		name = d['name']

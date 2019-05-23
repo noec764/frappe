@@ -71,6 +71,7 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 				frappe.db.sql("delete from `tabProperty Setter` where doc_type = %s", name)
 				frappe.db.sql("delete from `tabReport` where ref_doctype=%s", name)
 				frappe.db.sql("delete from `tabCustom DocPerm` where parent=%s", name)
+				frappe.db.sql("delete from `__global_search` where doctype=%s", name)
 
 			delete_from_table(doctype, name, ignore_doctypes, None)
 
@@ -285,9 +286,8 @@ def delete_dynamic_links(doctype, name):
 	delete_references('View Log', doctype, name)
 
 	# unlink communications
+	clear_timeline_references(doctype, name)
 	clear_references('Communication', doctype, name)
-	clear_references('Communication', doctype, name, 'link_doctype', 'link_name')
-	clear_references('Communication', doctype, name, 'timeline_doctype', 'timeline_name')
 
 	clear_references('Activity Log', doctype, name)
 	clear_references('Activity Log', doctype, name, 'timeline_doctype', 'timeline_name')
@@ -308,6 +308,9 @@ def clear_references(doctype, reference_doctype, reference_name,
 			{1}=%s and {2}=%s'''.format(doctype, reference_doctype_field, reference_name_field), # nosec
 		(reference_doctype, reference_name))
 
+def clear_timeline_references(link_doctype, link_name):
+	frappe.db.sql("""delete from `tabCommunication Link`
+		where `tabCommunication Link`.link_doctype='{0}' and `tabCommunication Link`.link_name='{1}'""".format(link_doctype, link_name))
 
 def insert_feed(doc):
 	from frappe.utils import get_fullname

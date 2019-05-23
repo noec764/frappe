@@ -31,7 +31,7 @@ def get_data():
 			"label": _("Users and Permissions"),
 			"color": "#bdc3c7",
 			"reverse": 1,
-			"icon": "octicon octicon-settings",
+			"icon": "octicon octicon-organization",
 			"type": "module",
 			"description": "Setup roles and permissions for users on documents."
 		},
@@ -41,7 +41,7 @@ def get_data():
 			"label": _("Customization"),
 			"color": "#bdc3c7",
 			"reverse": 1,
-			"icon": "octicon octicon-settings",
+			"icon": "octicon octicon-paintcan",
 			"type": "module",
 			"description": "Customize forms, custom fields, scripts and translations."
 		},

@@ -1,3 +1,6 @@
+// Copyright (c) 2019, Dokos and Contributors
+// See license.txt
+
 frappe.provide("frappe.ui.form");
 frappe.ui.form.Sidebar = Class.extend({
 	init: function(opts) {
@@ -11,7 +14,6 @@ frappe.ui.form.Sidebar = Class.extend({
 			.html(sidebar_content)
 			.appendTo(this.page.sidebar.empty());
 
-		this.ratings = this.sidebar.find(".sidebar-rating");
 		this.comments = this.sidebar.find(".sidebar-comments");
 		this.user_actions = this.sidebar.find(".user-actions");
 		this.image_section = this.sidebar.find(".sidebar-image-section");
@@ -64,7 +66,6 @@ frappe.ui.form.Sidebar = Class.extend({
 					"<br>" + comment_when(this.frm.doc.creation)]));
 
 			this.refresh_like();
-			this.setup_ratings();
 			frappe.ui.form.set_user_image(this.frm);
 		}
 	},
@@ -148,15 +149,5 @@ frappe.ui.form.Sidebar = Class.extend({
 	},
 
 	refresh_image: function() {
-	},
-
-	setup_ratings: function() {
-		var _ratings = this.frm.get_docinfo().rating || 0;
-
-		if(_ratings) {
-			this.ratings.removeClass("hide");
-			var rating_icons = frappe.render_template("rating_icons", {rating: _ratings, show_label: false});
-			this.ratings.find(".rating-icons").html(rating_icons);
-		}
 	}
 });

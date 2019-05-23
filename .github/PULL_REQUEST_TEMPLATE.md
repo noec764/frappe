@@ -1,1 +1,0 @@
-Please read the [Pull Request Checklist](https://github.com/frappe/erpnext/wiki/Pull-Request-Checklist) to ensure you have everything that is needed to get your contribution merged.

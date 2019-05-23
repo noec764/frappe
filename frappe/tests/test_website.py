@@ -39,6 +39,14 @@ class TestWebsite(unittest.TestCase):
 			dict(source=r'/testfromregex.*', target=r'://testto2'),
 			dict(source=r'/testsub/(.*)', target=r'://testto3/\1')
 		]
+
+		website_settings = frappe.get_doc('Website Settings')
+		website_settings.append('route_redirects', {
+			'source': '/testsource',
+			'target': '/testtarget'
+		})
+		website_settings.save()
+
 		frappe.cache().delete_key('app_hooks')
 		frappe.cache().delete_key('website_redirects')
 
@@ -61,6 +69,10 @@ class TestWebsite(unittest.TestCase):
 		response = render.render()
 		self.assertEquals(response.status_code, 404)
 
+		set_request(method='GET', path='/testsource')
+		response = render.render()
+		self.assertEquals(response.status_code, 301)
+		self.assertEquals(response.headers.get('Location'), '/testtarget')
+
 		delattr(frappe.hooks, 'website_redirects')
 		frappe.cache().delete_key('app_hooks')
-
