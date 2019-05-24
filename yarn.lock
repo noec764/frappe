@@ -1914,10 +1914,10 @@ fragment-cache@^0.2.1:
   dependencies:
     map-cache "^0.2.2"
 
-frappe-datatable@^1.12.3:
-  version "1.12.3"
-  resolved "https://registry.yarnpkg.com/frappe-datatable/-/frappe-datatable-1.12.3.tgz#c225d08f52eb63fde3b4b3960653610c3faca098"
-  integrity sha512-H05yWAmj00M0Cg5iYv7Zat5zheBIWvxvd5mqVyxxuEbVU/4hdeYz9XdF4y1z0vNnHr7q7ZsMacShuHjPXR3//A==
+frappe-datatable@^1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/frappe-datatable/-/frappe-datatable-1.13.1.tgz#dbfa27fe735832cea54a0b35e3d3bfb839778c8d"
+  integrity sha512-FOC8dpsOSI+KnF5sBrYja9b2Y+3qUvYy/H6108QchKSvXYvuWVr/uuLk2N5xlz38PWU3d7n5lK0dkx+zXTKJ0w==
   dependencies:
     hyperlist "^1.0.0-beta"
     lodash "^4.17.5"

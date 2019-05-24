@@ -145,16 +145,17 @@ def get_context(context):
 		sender = None
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
-		frappe.sendmail(recipients = recipients,
-			subject = subject,
-			sender = sender,
-			cc = cc,
-			bcc = bcc,
-			message = frappe.render_template(self.message, context),
-			reference_doctype = doc.doctype,
-			reference_name = doc.name,
-			attachments = attachments,
-			print_letterhead = ((attachments
+		frappe.sendmail(recipients=recipients,
+			subject=subject,
+			sender=sender,
+			cc=cc,
+			bcc=bcc,
+			message=frappe.render_template(self.message, context),
+			reference_doctype=doc.doctype,
+			reference_name=doc.name,
+			attachments=attachments,
+			expose_recipients="header",
+			print_letterhead=((attachments
 				and attachments[0].get('print_letterhead')) or False))
 
 	def send_a_slack_msg(self, doc, context):

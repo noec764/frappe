@@ -263,8 +263,8 @@ class DashboardChart {
 	}
 
 	get_settings() {
-		if (this.chart_doc.chart_type == 'Custom') {
-			// custom source
+		if (this.chart_doc.chart_type == 'Preregistered') {
+			// preregistered source
 			if (frappe.dashboards.chart_sources[this.chart_doc.source]) {
 				this.settings = frappe.dashboards.chart_sources[this.chart_doc.source];
 				return Promise.resolve();

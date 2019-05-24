@@ -1,6 +1,18 @@
 <template>
 	<div class="grid" v-if="showGrid">
 		<muuri-grid id="frappe-grid" :options="options" @gridCreated="on_grid_created">
+			<stats-card
+				:id="'card-' + item.name"
+				v-for="item in filteredItems('Dashboard Card')"
+				:key="item.name"
+				:label="item.card_name"
+				:cardSource="item.card_source"
+				:color="item.card_color"
+				:icon="item.icon"
+				@removeCard="remove_card"
+				:width="item.widget_width"
+				height="170"
+			/>
 			<calendar-card
 				:id="'card-' + item.name"
 				v-for="item in filteredItems('Dashboard Calendar')"
@@ -14,9 +26,9 @@
 				v-for="item in filteredItems('Dashboard Chart')"
 				:key="item.name"
 				:label="item.chart_name"
-				:chartSource="item.source"
+				:chartSource="item.chart_source"
 				:filters="item.filters_json"
-				:color="item.color"
+				:color="item.chart_color"
 				@removeCard="remove_card"
 				:width="item.widget_width"
 				:type="item.type"
@@ -32,6 +44,7 @@
 
 import MuuriGrid from "./grid/MuuriGrid.vue";
 import GraphCard from './components/GraphCard.vue';
+import StatsCard from './components/StatsCard.vue';
 import CalendarCard from './components/CalendarCard.vue';
 
 export default {
@@ -39,6 +52,7 @@ export default {
 	components: {
 		MuuriGrid,
 		GraphCard,
+		StatsCard,
 		CalendarCard
 	},
 	props: {

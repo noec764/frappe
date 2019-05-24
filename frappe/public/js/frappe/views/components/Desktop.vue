@@ -121,6 +121,13 @@ export default {
 						fieldtype: 'Link',
 						options: "Dashboard Chart",
 						depends_on: "eval:doc.widget_type=='Dashboard Chart'"
+					},
+					{
+						label: __("Card"),
+						fieldname: "card",
+						fieldtype: 'Link',
+						options: "Dashboard Card",
+						depends_on: "eval:doc.widget_type=='Dashboard Stats'"
 					}
 				]
 			}

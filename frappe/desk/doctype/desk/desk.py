@@ -21,10 +21,11 @@ def get_desk(user):
 	return frappe.db.sql("""
 		SELECT
 			di.name, di.widget_height, di.widget_width, di.widget_type,
-			dca.source_document, dca.user, dch.chart_name, 
-			dch.type, dch.source, dch.chart_type, dch.width, 
-			dch.timeseries, dch.time_interval, dch.timespan,
-			dch.color, dch.filters_json
+			dca.source_document, dca.user,
+			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, dch.width, 
+			dch.timeseries, dch.time_interval, dch.timespan as chart_timespan,
+			dch.color as chart_color, dch.filters_json,
+			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan, dcc.color as card_color, dcc.icon
 		FROM
 			`tabDesk Items` di
 		LEFT JOIN
@@ -35,6 +36,10 @@ def get_desk(user):
 			`tabDashboard Chart` dch
 		ON
 			di.widget_type='Dashboard Chart' AND di.widget_name=dch.name
+		LEFT JOIN
+			`tabDashboard Card` dcc
+		ON
+			di.widget_type='Dashboard Card' AND di.widget_name=dcc.name
 		WHERE
 			di.parent = %s
 		ORDER BY
@@ -48,15 +53,21 @@ def get_module_dashboard(user, module):
 	return frappe.db.sql("""
 		SELECT
 			mdi.name, mdi.widget_width, mdi.widget_type,
-			dch.chart_name, dch.type, dch.source, dch.chart_type, 
+			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, 
 			dch.width, dch.timeseries, dch.time_interval, 
-			dch.timespan, dch.color, dch.filters_json
+			dch.timespan as chart_timespan, dch.color as chart_color, dch.filters_json,
+			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan,
+			dcc.color as card_color, dcc.icon
 		FROM
 			`tabModule Dashboard Items` mdi
 		LEFT JOIN
 			`tabDashboard Chart` dch
 		ON
 			mdi.widget_type='Dashboard Chart' AND mdi.widget_name=dch.name
+		LEFT JOIN
+			`tabDashboard Card` dcc
+		ON
+			mdi.widget_type='Dashboard Card' AND mdi.widget_name=dcc.name
 		WHERE
 			mdi.parent = %s
 		ORDER BY
@@ -134,6 +145,10 @@ class WidgetCreator:
 			'Dashboard Chart': {
 				"Desk": self._add_chart,
 				"Module": self._add_module_chart,
+			},
+			'Dashboard Stats': {
+				"Desk": self._add_stats,
+				"Module": self._add_module_stats,
 			}
 		}
 
@@ -177,9 +192,15 @@ class WidgetCreator:
 		chart_width = get_chart_width(kwargs["chart"])
 		self.__add_to_desk("Dashboard Chart", kwargs["chart"], chart_width, 340)
 
+	def _add_stats(self, **kwargs):
+		self.__add_to_desk("Dashboard Card", kwargs["card"], 20, 175)
+
 	def _add_module_chart(self, **kwargs):
 		chart_width = get_chart_width(kwargs["chart"])
 		self.__add_to_module_dashboard("Dashboard Chart", kwargs["chart"], chart_width)
+
+	def _add_module_stats(self, **kwargs):
+		self.__add_to_module_dashboard("Dashboard Card", kwargs["card"], 20)
 
 	def __add_to_desk(self, widget_type, widget_name, width=50, height=400):
 		self.doc.append("desk_items", {

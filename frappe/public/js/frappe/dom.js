@@ -68,7 +68,7 @@ frappe.dom = {
 			return txt;
 		}
 	},
-	is_element_in_viewport: function (el) {
+	is_element_in_viewport: function (el, tolerance=0) {
 
 		//special bonus for those using jQuery
 		if (typeof jQuery === "function" && el instanceof jQuery) {
@@ -78,10 +78,10 @@ frappe.dom = {
 		var rect = el.getBoundingClientRect();
 
 		return (
-			rect.top >= 0
-			&& rect.left >= 0
-			// && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) && /*or $(window).height() */
-			// && rect.right <= (window.innerWidth || document.documentElement.clientWidth) /*or $(window).width() */
+			rect.top + tolerance >= 0
+			&& rect.left + tolerance >= 0
+			&& rect.bottom - tolerance <= $(window).height()
+			&& rect.right - tolerance <= $(window).width()
 		);
 	},
 
@@ -291,11 +291,11 @@ frappe.get_modal = function(title, content) {
 			<div class="modal-content">
 				<div class="modal-header">
 	                <div class="row">
-	                    <div class="col-xs-6">
+	                    <div class="col-xs-7">
 							<span class="indicator hidden"></span>
 	                        <h4 class="modal-title" style="font-weight: bold;">${title}</h4>
 	                    </div>
-	                    <div class="col-xs-6">
+	                    <div class="col-xs-5">
 	                        <div class="text-right buttons">
 	            				<button type="button" class="btn btn-default btn-sm btn-modal-close"
 	                                data-dismiss="modal">
@@ -339,90 +339,3 @@ $(window).on('offline', function() {
 		message: __('Connection lost. Some features might not work.')
 	});
 });
-
-
-// add <option> list to <select>
-(function($) {
-	$.fn.add_options = function(options_list) {
-		// create options
-		for(var i=0, j=options_list.length; i<j; i++) {
-			var v = options_list[i];
-			if (is_null(v)) {
-				var value = null;
-				var label = null;
-			} else {
-				var is_value_null = is_null(v.value);
-				var is_label_null = is_null(v.label);
-				var is_disabled = Boolean(v.disabled);
-
-				if (is_value_null && is_label_null) {
-					var value = v;
-					var label = __(v);
-				} else {
-					var value = is_value_null ? "" : v.value;
-					var label = is_label_null ? __(value) : __(v.label);
-				}
-			}
-			$('<option>').html(cstr(label))
-				.attr('value', value)
-				.prop('disabled', is_disabled)
-				.appendTo(this);
-		}
-		// select the first option
-		this.selectedIndex = 0;
-		return $(this);
-	}
-	$.fn.set_working = function() {
-		this.prop('disabled', true);
-	}
-	$.fn.done_working = function() {
-		this.prop('disabled', false);
-	}
-})(jQuery);
-
-(function($) {
-	function pasteIntoInput(el, text) {
-		el.focus();
-		if (typeof el.selectionStart == "number") {
-			var val = el.value;
-			var selStart = el.selectionStart;
-			el.value = val.slice(0, selStart) + text + val.slice(el.selectionEnd);
-			el.selectionEnd = el.selectionStart = selStart + text.length;
-		} else if (typeof document.selection != "undefined") {
-			var textRange = document.selection.createRange();
-			textRange.text = text;
-			textRange.collapse(false);
-			textRange.select();
-		}
-	}
-
-	function allowTabChar(el) {
-		$(el).keydown(function(e) {
-			if (e.which == 9) {
-				pasteIntoInput(this, "\t");
-				return false;
-			}
-		});
-
-		// For Opera, which only allows suppression of keypress events, not keydown
-		$(el).keypress(function(e) {
-			if (e.which == 9) {
-				return false;
-			}
-		});
-	}
-
-	$.fn.allowTabs = function() {
-		if (this.jquery) {
-			this.each(function() {
-				if (this.nodeType == 1) {
-					var nodeName = this.nodeName.toLowerCase();
-					if (nodeName == "textarea" || (nodeName == "input" && this.type == "text")) {
-						allowTabChar(this);
-					}
-				}
-			})
-		}
-		return this;
-	}
-})(jQuery);

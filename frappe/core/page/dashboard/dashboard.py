@@ -21,6 +21,21 @@ def cache_source(function):
 		return results
 	return wrapper
 
+def cache_card_source(function):
+	def wrapper(*args, **kwargs):
+		chart_name = kwargs.get("card_name")
+		cache_key = 'card-data:{}'.format(chart_name)
+		if int(kwargs.get("refresh") or 0):
+			results = generate_and_cache_results(chart_name, function, cache_key)
+		else:
+			cached_results = frappe.cache().get_value(cache_key)
+			if cached_results:
+				results = json.loads(frappe.safe_decode(cached_results))
+			else:
+				results = generate_and_cache_results(chart_name, function, cache_key)
+		return results
+	return wrapper
+
 def generate_and_cache_results(chart_name, function, cache_key):
 	results = function(chart_name)
 	frappe.cache().set_value(cache_key, json.dumps(results, default=str))
