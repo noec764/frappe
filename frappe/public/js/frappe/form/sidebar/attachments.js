@@ -1,8 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
-frappe.provide("frappe.ui.form");
-
 frappe.ui.form.Attachments = Class.extend({
 	init: function(opts) {
 		$.extend(this, opts);
@@ -134,7 +132,7 @@ frappe.ui.form.Attachments = Class.extend({
 					return;
 				}
 				me.remove_fileid(fileid);
-				me.frm.reload_docinfo();
+				me.frm.sidebar.reload_docinfo();
 				if (callback) callback();
 			}
 		});
@@ -165,7 +163,7 @@ frappe.ui.form.Attachments = Class.extend({
 	attachment_uploaded:  function(attachment) {
 		this.dialog && this.dialog.hide();
 		this.update_attachment(attachment);
-		this.frm.reload_docinfo();
+		this.frm.sidebar.reload_docinfo();
 
 		if(this.fieldname) {
 			this.frm.set_value(this.fieldname, attachment.file_url);

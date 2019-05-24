@@ -174,7 +174,6 @@ frappe.show_message_page = function(opts) {
 
 frappe.views.ModulesFactory = class ModulesFactory extends frappe.views.Factory {
 	show() {
-		console.log(this)
 		if (frappe.pages.modules) {
 			frappe.container.change_to('modules');
 		} else {

@@ -1,5 +1,3 @@
-frappe.provide("frappe.ui.form");
-
 frappe.ui.form.Viewers = Class.extend({
 	init: function(opts) {
 		$.extend(this, opts);

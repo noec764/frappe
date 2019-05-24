@@ -101,19 +101,26 @@ def delete_fields(args_dict, delete=0):
 					"mariadb": "DESC `tab%s`" % dt,
 					"postgres": """
 						SELECT
- 							COLUMN_NAME
+							COLUMN_NAME
 						FROM
- 							information_schema.COLUMNS
+							information_schema.COLUMNS
 						WHERE
- 							TABLE_NAME = 'tab%s';
+							TABLE_NAME = 'tab%s';
 					""" % dt,
 				})
 			existing_fields = existing_fields and [e[0] for e in existing_fields] or []
 			fields_need_to_delete = set(fields) & set(existing_fields)
 			if not fields_need_to_delete:
 				continue
+
+			if frappe.conf.db_type == 'mariadb':
+				# mariadb implicitly commits before DDL, make it explicit
+				frappe.db.commit()
+
 			query = "ALTER TABLE `tab%s` " % dt + \
 				", ".join(["DROP COLUMN `%s`" % f for f in fields_need_to_delete])
 			frappe.db.sql(query)
-		# commit the results to db
-		frappe.db.commit()
+
+		if frappe.conf.db_type == 'postgres':
+			# commit the results to db
+			frappe.db.commit()

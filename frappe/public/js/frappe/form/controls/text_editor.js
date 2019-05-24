@@ -83,7 +83,7 @@ Quill.register(DirectionStyle, true);
 frappe.ui.form.ControlTextEditor = frappe.ui.form.ControlCode.extend({
 	make_wrapper() {
 		this._super();
-		his.$wrapper.find(".like-disabled-input").addClass('text-editor-print');
+		this.$wrapper.find(".like-disabled-input").addClass('text-editor-print');
 	},
 
 	make_input() {

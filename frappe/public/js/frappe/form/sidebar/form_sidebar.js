@@ -1,7 +1,11 @@
-// Copyright (c) 2019, Dokos and Contributors
-// See license.txt
 
-frappe.provide("frappe.ui.form");
+
+import './assign_to';
+import './attachments';
+import './share';
+import './user_image';
+import './form_viewers';
+
 frappe.ui.form.Sidebar = Class.extend({
 	init: function(opts) {
 		$.extend(this, opts);
@@ -18,7 +22,6 @@ frappe.ui.form.Sidebar = Class.extend({
 		this.user_actions = this.sidebar.find(".user-actions");
 		this.image_section = this.sidebar.find(".sidebar-image-section");
 		this.image_wrapper = this.image_section.find('.sidebar-image-wrapper');
-
 		this.make_assignments();
 		this.make_attachments();
 		this.make_shared();
@@ -45,7 +48,7 @@ frappe.ui.form.Sidebar = Class.extend({
 			frappe.ui.toggle_like(me.like_icon, me.frm.doctype, me.frm.doc.name, function() {
 				me.refresh_like();
 			});
-		})
+		});
 	},
 
 	refresh: function() {
@@ -132,7 +135,6 @@ frappe.ui.form.Sidebar = Class.extend({
 		this.like_count = this.sidebar.find(".liked-by .likes-count");
 		frappe.ui.setup_like_popover(this.sidebar.find(".liked-by-parent"), ".liked-by");
 	},
-
 	refresh_like: function() {
 		if (!this.like_icon) {
 			return;
@@ -149,5 +151,23 @@ frappe.ui.form.Sidebar = Class.extend({
 	},
 
 	refresh_image: function() {
+	},
+
+	reload_docinfo: function(callback) {
+		frappe.call({
+			method: "frappe.desk.form.load.get_docinfo",
+			args: {
+				doctype: this.doctype,
+				name: this.doc.name
+			},
+			callback: (r) => {
+				// docinfo will be synced
+				if(callback) callback(r.docinfo);
+				this.frm.timeline.refresh();
+				this.frm.assign_to.refresh();
+				this.frm.attachments.refresh();
+			}
+		});
 	}
+
 });

@@ -226,7 +226,7 @@ class User(Document):
 		if password_expired:
 			url = "/update-password?key=" + key + '&password_expired=true'
 
- 		link = get_url(url)
+		link = get_url(url)
 
 		if send_email:
 			self.password_reset_mail(link)
