@@ -1,5 +1,8 @@
 
 
+// Copyright (c) 2019, DOKOS and contributors
+// For license information, please see license.txt
+
 import './assign_to';
 import './attachments';
 import './share';
