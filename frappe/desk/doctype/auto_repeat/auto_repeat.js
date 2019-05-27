@@ -58,7 +58,9 @@ frappe.ui.form.on('Auto Repeat', {
 				);
 			}
 
-			if(frm.doc.docstatus!= 0 && !frm.doc.status.includes('Stopped', 'Cancelled') && frm.doc.next_schedule_date >= frappe.datetime.get_today()){
+			frm.toggle_display('auto_repeat_schedule', !in_list(['Stopped', 'Cancelled'], frm.doc.status));
+
+			if(frm.doc.start_date && !in_list(['Stopped', 'Cancelled'], frm.doc.status)){
 				frappe.auto_repeat.render_schedule(frm);
 			}
 		}
@@ -137,7 +139,7 @@ frappe.auto_repeat.render_schedule = function(frm) {
 		doc: frm.doc
 	}).done((r) => {
 		var wrapper = $(frm.fields_dict["auto_repeat_schedule"].wrapper);
-		wrapper.html(frappe.render_template ("auto_repeat_schedule", {"schedule_details" : r.message || []}  ));
+		wrapper.html(frappe.render_template ("auto_repeat_schedule", {"schedule_details" : r.message || []} ));
+		frm.refresh_fields() ;
 	});
-	frm.refresh_fields() ;
 };
