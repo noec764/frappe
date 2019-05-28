@@ -153,8 +153,8 @@
 				<!-- save/next button -->
 				{% if (loop.index == layout|len or frappe.form_dict.new) %}
 					{% if not read_only %}
-				    <button type="submit" class="btn btn-primary btn-sm btn-form-submit">
-				    	{{ _(button_label or "Save") }}</button>
+				    <button type="submit" class="btn btn-primary btn-sm btn-form-submit footer-button">
+				    	{{ _("Save") }}</button>
 					{% endif %}
 				{% elif layout|len > 1 %}
 				    <button class="btn btn-primary btn-sm btn-change-section"
@@ -226,11 +226,13 @@ frappe.boot = {
 		date_format: "{{ frappe.get_system_settings('date_format') or 'yyyy-mm-dd' }}",
 	}
 };
+
 {% if show_attachments and not frappe.form_dict.new -%}
 $(".file-size").each(function() {
 	$(this).text(frappe.form.formatters.FileSize($(this).text()));
 });
 {%- endif %}
+
 // for backward compatibility of some libs
 frappe.sys_defaults = frappe.boot.sysdefaults;
 {% if row_template %}web_form_settings.web_form_row_template = "{{ row_template }}";{% endif %}
@@ -241,6 +243,7 @@ frappe.sys_defaults = frappe.boot.sysdefaults;
 {% if script is defined %}
 {{ script }}
 {% endif %}
+
 {% if client_script %}
 frappe.init_client_script = () => {
 	{{ client_script }}

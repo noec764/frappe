@@ -7,9 +7,8 @@ import frappe
 from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 from frappe.website.render import clear_cache
-from frappe.utils import today, cint, global_date_format, get_fullname, strip_html_tags, \
-	markdown, sanitize_html
-from frappe.website.utils import (find_first_image, get_html_content_based_on_type, \
+from frappe.utils import today, cint, global_date_format, get_fullname, strip_html_tags, markdown, sanitize_html
+from frappe.website.utils import (find_first_image, get_html_content_based_on_type,
 	get_comment_list)
 
 class BlogPost(WebsiteGenerator):
@@ -59,6 +58,7 @@ class BlogPost(WebsiteGenerator):
 		if self.blogger:
 			context.blogger_info = frappe.get_doc("Blogger", self.blogger).as_dict()
 			context.author = self.blogger
+
 
 		context.content = get_html_content_based_on_type(self, 'content', self.content_type)
 		context.description = self.blog_intro or context.content[:140]
@@ -185,10 +185,12 @@ def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_len
 	posts = frappe.db.sql(query, as_dict=1)
 
 	for post in posts:
+
 		post.content = get_html_content_based_on_type(post, 'content', post.content_type)
 		post.cover_image = find_first_image(post.content)
 		post.published = global_date_format(post.creation)
 		post.content = strip_html_tags(post.content)
+
 		if not post.comments:
 			post.comment_text = _('No comments yet')
 		elif post.comments==1:

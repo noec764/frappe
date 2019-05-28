@@ -33,21 +33,18 @@ class BraintreeSettings(Document):
 		call_hook_method('payment_gateway_enabled', gateway='Braintree-' + self.gateway_name)
 
 	def configure_braintree(self):
-		if self.use_sandbox:
-			environment = 'sandbox'
-		else:
-			environment = 'production'
-
-		braintree.Configuration.configure(
-			environment=environment,
-			merchant_id=self.merchant_id,
-			public_key=self.public_key,
-			private_key=self.get_password(fieldname='private_key',raise_exception=False)
+		self.braintree_gateway = braintree.BraintreeGateway(
+			braintree.Configuration(
+				environment=braintree.Environment.Sandbox if self.use_sandbox else braintree.Environment.Production,
+				merchant_id=self.merchant_id,
+				public_key=self.public_key,
+				private_key=self.get_password(fieldname='private_key',raise_exception=False)
+			)
 		)
 
 	def validate_transaction_currency(self, currency):
 		if currency not in self.supported_currencies:
-			frappe.throw(_("Please select another payment method. Stripe does not support transactions in currency '{0}'").format(currency))
+			frappe.throw(_("Please select another payment method. Braintree does not support transactions in currency '{0}'").format(currency))
 
 	def get_payment_url(self, **kwargs):
 		return get_url("./integrations/braintree_checkout?{0}".format(urlencode(kwargs)))
@@ -66,15 +63,27 @@ class BraintreeSettings(Document):
 				"status": 401
 			}
 
+	def get_merchant_id(self):
+		merchant_accounts = self.braintree_gateway.merchant_account.all()
+
+		filtered = [x for x in merchant_accounts.merchant_accounts if x.currency_iso_code == self.data.currency]
+
+		for f in filtered:
+			if f.default:
+				return f.id
+
+		return filtered[0].id if filtered else None
+
 	def create_charge_on_braintree(self):
 		self.configure_braintree()
 
 		redirect_to = self.data.get('redirect_to') or None
 		redirect_message = self.data.get('redirect_message') or None
 
-		result = braintree.Transaction.sale({
+		result = self.braintree_gateway.transaction.sale({
 			"amount": self.data.amount,
 			"payment_method_nonce": self.data.payload_nonce,
+			"merchant_account_id": self.get_merchant_id(),
 			"options": {
 				"submit_for_settlement": True
 			}
@@ -136,4 +145,4 @@ def get_client_token(doc):
 	settings = frappe.get_doc("Braintree Settings", gateway_controller)
 	settings.configure_braintree()
 
-	return braintree.ClientToken.generate()
+	return settings.braintree_gateway.client_token.generate()
