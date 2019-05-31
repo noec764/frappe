@@ -80,7 +80,11 @@ frappe.ui.form.on('Dashboard Chart', {
 					frappe.xcall('frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config', {name: frm.doc.source})
 						.then(config => {
 							frappe.dom.eval(config);
-							frm.filters = frappe.dashboards.chart_sources[frm.doc.source].filters;
+							Object.keys(frappe.dashboards.chart_sources[frm.doc.source]).forEach(value => {
+								if (Object.keys(frm.fields_dict).includes(value)) {
+									frm.set_value(value, frappe.dashboards.chart_sources[frm.doc.source][value]);
+								}
+							})
 							frm.trigger('render_filters_table');
 						});
 				} else {

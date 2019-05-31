@@ -29,6 +29,7 @@
 				:chartSource="item.chart_source"
 				:filters="item.filters_json"
 				:color="item.chart_color"
+				:unit="item.unit"
 				@removeCard="remove_card"
 				:width="item.widget_width"
 				:type="item.type"

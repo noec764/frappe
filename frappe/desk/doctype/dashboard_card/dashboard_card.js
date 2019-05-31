@@ -12,9 +12,11 @@ frappe.ui.form.on('Dashboard Card', {
 			frappe.xcall('frappe.desk.doctype.dashboard_card_source.dashboard_card_source.get_config', {name: frm.doc.source})
 				.then(config => {
 					frappe.dom.eval(config);
-					frm.set_value("icon", frappe.dashboards.card_sources[frm.doc.source].icon);
-					frm.set_value("color", frappe.dashboards.card_sources[frm.doc.source].color);
-					frm.set_value("timespan", frappe.dashboards.card_sources[frm.doc.source].timespan);
+					Object.keys(frappe.dashboards.card_sources[frm.doc.source]).forEach(value => {
+						if (Object.keys(frm.fields_dict).includes(value)) {
+							frm.set_value(value, frappe.dashboards.card_sources[frm.doc.source][value]);
+						}
+					});
 				});
 		}
 	}

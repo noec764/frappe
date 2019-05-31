@@ -143,6 +143,7 @@ export default {
 
 .stats-item {
 	padding: 15px 15px 0;
+	min-height: 185px !important;
 }
 
 .card-text {

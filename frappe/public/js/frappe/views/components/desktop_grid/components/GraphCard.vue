@@ -15,6 +15,7 @@
 					:colors="colors"
 					:height="chartHeight"
 					:axisOptions="axisOptions"
+					:tooltipOptions="tooltipOptions"
 				/>
 				<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
 			</div>
@@ -59,6 +60,10 @@ export default {
 		type: {
 			type: String,
 			default: 'Line'
+		},
+		unit: {
+			type: String,
+			default: ''
 		}
 	},
 	data() {
@@ -69,7 +74,11 @@ export default {
 			title: `<b>${this.label}</b>`,
 			cardHeight: this.height + "px",
 			chartHeight: parseInt(this.height) * 60/100,
-			settings: null
+			settings: null,
+			tooltipOptions: {
+				formatTooltipX: d => (d + ''),
+				formatTooltipY: d => d + ' ' + this.unit,
+			}
 		}
 	},
 	computed: {
@@ -80,7 +89,7 @@ export default {
 			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '350px', 'height': this.cardHeight};
 		},
 		chartType() {
-			const map = {"Line": 'line', "Bar": 'bar'}
+			const map = {"Line": "line", "Bar": "bar", "Pie": "pie", "Percentage": "percentage"}
 			return map[this.type]
 		}
 	},
@@ -108,7 +117,7 @@ export default {
 				{
 					chart_name: this.label,
 					filters: this.filters,
-					refresh: 0,
+					refresh: 1,
 				}
 			).then(r => this.data = r)
 		},

@@ -226,6 +226,8 @@ class DashboardChart {
 		const chart_type_map = {
 			"Line": "line",
 			"Bar": "bar",
+			"Pie": "pie",
+			"Percentage": "percentage"
 		};
 		let chart_args = {
 			title: this.chart_doc.chart_name.bold(),
@@ -235,6 +237,10 @@ class DashboardChart {
 			axisOptions: {
 				xIsSeries: this.chart_doc.timeseries
 			},
+			tooltipOptions: {
+				formatTooltipX: d => (d + ''),
+				formatTooltipY: d => d + ' ' + this.chart_doc.unit,
+			}
 		};
 		this.chart_container.find('.chart-loading-state').addClass('hide');
 

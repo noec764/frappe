@@ -23,7 +23,7 @@ def get_desk(user):
 			di.name, di.widget_height, di.widget_width, di.widget_type,
 			dca.source_document, dca.user,
 			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, dch.width, 
-			dch.timeseries, dch.time_interval, dch.timespan as chart_timespan,
+			dch.timeseries, dch.time_interval, dch.timespan as chart_timespan, dch.unit,
 			dch.color as chart_color, dch.filters_json,
 			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan, dcc.color as card_color, dcc.icon
 		FROM
@@ -54,7 +54,7 @@ def get_module_dashboard(user, module):
 		SELECT
 			mdi.name, mdi.widget_width, mdi.widget_type,
 			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, 
-			dch.width, dch.timeseries, dch.time_interval, 
+			dch.width, dch.timeseries, dch.time_interval, dch.unit,
 			dch.timespan as chart_timespan, dch.color as chart_color, dch.filters_json,
 			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan,
 			dcc.color as card_color, dcc.icon
