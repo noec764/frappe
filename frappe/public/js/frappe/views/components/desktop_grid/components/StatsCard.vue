@@ -123,6 +123,11 @@ export default {
 	h2 {
 		font-weight: 600;
 	}
+	p {
+		text-overflow: ellipsis;
+    	white-space: nowrap;
+    	overflow: hidden;
+	}
 }
 
 .icon-big {
