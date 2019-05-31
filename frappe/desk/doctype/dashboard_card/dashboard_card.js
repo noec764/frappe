@@ -14,6 +14,7 @@ frappe.ui.form.on('Dashboard Card', {
 					frappe.dom.eval(config);
 					frm.set_value("icon", frappe.dashboards.card_sources[frm.doc.source].icon);
 					frm.set_value("color", frappe.dashboards.card_sources[frm.doc.source].color);
+					frm.set_value("timespan", frappe.dashboards.card_sources[frm.doc.source].timespan);
 				});
 		}
 	}

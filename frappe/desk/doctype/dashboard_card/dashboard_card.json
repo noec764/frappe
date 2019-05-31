@@ -61,7 +61,7 @@
    "fieldname": "timespan",
    "fieldtype": "Select",
    "label": "Timespan",
-   "options": "Last Year\nLast Quarter\nLast Month\nLast Week"
+   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nPreregistered"
   },
   {
    "fieldname": "section_break_7",

@@ -81,7 +81,7 @@ frappe.ui.form.on('Website Theme', {
 						fieldtype: 'Check',
 						fieldname: 'enable_rounded',
 						default: 1
-					},
+					}
 				],
 				primary_action: (values) => {
 					const {

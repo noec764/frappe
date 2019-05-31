@@ -20,6 +20,7 @@ frappe.views.LetterComposer = class LetterComposer {
 			primary_action: function() {
 				me.delete_saved_draft();
 				me.print_action();
+				me.dialog.hide();
 			}
 		});
 
@@ -32,6 +33,7 @@ frappe.views.LetterComposer = class LetterComposer {
 			{label:__("Email Template"), fieldtype:"Link", options:"Email Template",
 				fieldname:"email_template"},
 			{fieldtype: "Section Break"},
+			{label:__("Title"), fieldtype:"Data", fieldname:"title"},
 			{
 				label:__("Message"),
 				fieldtype:"Text Editor", reqd: 1,
@@ -39,6 +41,9 @@ frappe.views.LetterComposer = class LetterComposer {
 				onchange: frappe.utils.debounce(this.save_as_draft.bind(this), 300)
 			},
 			{fieldtype: "Section Break"},
+			{label:__("Attach to document"), fieldtype:"Check",
+				fieldname:"attach_to_document", default: 1},
+			{fieldtype: "Column Break"},
 			{label:__("Letterhead"), fieldtype:"Link", options:"Letter Head",
 				fieldname:"letter_head", default: this.frm.doc.letter_head},
 		];
@@ -61,19 +66,17 @@ frappe.views.LetterComposer = class LetterComposer {
 					if(me.reply_added===email_template) {
 						return;
 					}
+					const subject_field = me.dialog.fields_dict.title;
 					const content_field = me.dialog.fields_dict.content;
+					let subject = subject_field.get_value() || "";
 					let content = content_field.get_value() || "";
-	
-					const parts = content.split('<!-- salutation-ends -->');
-	
-					if(parts.length===2) {
-						content = [reply.message, "<br>", parts[1]];
-					} else {
-						content = [reply.message, "<br>", content];
-					}
-	
+
+					content = [reply.message, "<br>", content];
 					content_field.set_value(content.join(''));
-	
+					if(subject === "") {
+						subject_field.set_value(reply.subject);
+					}
+
 					me.reply_added = email_template;
 					me.title = reply.subject;
 				}
@@ -119,13 +122,19 @@ frappe.views.LetterComposer = class LetterComposer {
 	}
 
 	print_action() {
+		const me = this;
 		const content = this.dialog.fields_dict.content.get_value();
 		const letter_head = this.dialog.fields_dict.letter_head.get_value();
+		const title = this.dialog.fields_dict.title.get_value() || this.title;
+		const attach = this.dialog.fields_dict.attach_to_document.get_value();
 
 		let formData = new FormData();
 		formData.append("html", content);
-		formData.append("title", this.title || __("Letter"));
+		formData.append("title", title || __("Letter"));
 		formData.append("letterhead", letter_head || null);
+		formData.append("attach", attach);
+		formData.append("doctype", this.frm.doctype);
+		formData.append("docname", this.frm.docname);
 
 		let xhr = new XMLHttpRequest();
 		xhr.open("POST", '/api/method/frappe.utils.print_format.letter_to_pdf');
@@ -139,6 +148,7 @@ frappe.views.LetterComposer = class LetterComposer {
 	
 				//Open report in a new window
 				let w = window.open(objectUrl);
+				me.frm.sidebar.reload_docinfo();
 
 				if(!w) {
 					frappe.msgprint(__("Please enable pop-ups in your browser"))
@@ -149,4 +159,3 @@ frappe.views.LetterComposer = class LetterComposer {
 
 	}
 };
-

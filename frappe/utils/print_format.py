@@ -61,18 +61,18 @@ def download_multi_pdf(doctype, name, format=None):
 
 		# Concatenating pdf files
 		for i, ss in enumerate(result):
-			print_output = frappe.get_print(doctype, ss, format, as_pdf = True, output = output)
+			output = frappe.get_print(doctype, ss, format, as_pdf = True, output = output)
 		frappe.local.response.filename = "{doctype}.pdf".format(doctype=doctype.replace(" ", "-").replace("/", "-"))
 	else:
 		for doctype_name in doctype:
 			for doc_name in doctype[doctype_name]:
 				try:
-					print_output = frappe.get_print(doctype_name, doc_name, format, as_pdf = True, output = output)
+					output = frappe.get_print(doctype_name, doc_name, format, as_pdf = True, output = output)
 				except Exception:
 					frappe.log_error("Permission Error on doc {} of doctype {}".format(doc_name, doctype_name))
 		frappe.local.response.filename = "{}.pdf".format(name)
 
-	frappe.local.response.filecontent = read_multi_pdf(print_output)
+	frappe.local.response.filecontent = read_multi_pdf(output)
 	frappe.local.response.type = "download"
 
 def read_multi_pdf(output):
@@ -100,10 +100,30 @@ def report_to_pdf(html, orientation="Landscape"):
 	frappe.local.response.type = "pdf"
 
 @frappe.whitelist()
-def letter_to_pdf(html, title, letterhead=None):
+def letter_to_pdf(html, title, letterhead=None, attach=False, doctype=None, docname=None):
 	html = get_formatted_letter(title, html, letterhead)
+	pdf = get_pdf(html)
+
+	if attach:
+		try:
+			private_files = frappe.get_site_path('private', 'files')
+			fname = os.path.join(private_files, "{0}-{1}.pdf".format(title, frappe.generate_hash(length=6)))
+			with open(fname, "wb") as f:
+				f.write(pdf)
+
+			new_file = frappe.get_doc({
+				"doctype": "File",
+				"file_name": title,
+				"attached_to_doctype": doctype,
+				"attached_to_name": docname,
+				"file_url": "/private/files/" + fname.split('/private/files/')[1]
+			})
+			new_file.insert()
+		except Exception:
+			frappe.log_error("Letter error", frappe.get_traceback())
+
 	frappe.local.response.filename = "{0}.pdf".format(title.replace(" ", "-").replace("/", "-"))
-	frappe.local.response.filecontent = get_pdf(html)
+	frappe.local.response.filecontent = pdf
 	frappe.local.response.type = "pdf"
 
 def get_formatted_letter(title, message, letterhead=None):

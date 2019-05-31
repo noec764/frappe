@@ -6,19 +6,22 @@
 	>
 		<div class="item-content">
 			<div class="row">
-				<div class="col-xs-4">
-					<div class="icon-big text-center">
-						<i :class="icon" :style="iconStyle"></i>
+				<div class="panel panel--styled">
+					<div class="panel-body">
+						<div class="col-xs-3">
+								<div class="icon-big text-center">
+									<i :class="icon" :style="iconStyle"></i>
+								</div>
+							</div>
+						<div class="col-xs-9 card-text">
+							<p>{{label}}</p>
+							<h2>{{data}}</h2>
+						</div>
 					</div>
 				</div>
-				<div class="col-xs-8 card-text">
-					<p>{{label}}</p>
-					<h4>{{data}}</h4>
+				<div class="card-footer">
+					<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
 				</div>
-			</div>
-			<hr>
-			<div class="row">
-				<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
 			</div>
 		</div>
   </div>
@@ -108,7 +111,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
 .remove-icon {
 	float: right;
@@ -116,9 +119,21 @@ export default {
 	cursor:pointer;
 }
 
+.card-text {
+	h2 {
+		font-weight: 600;
+	}
+}
+
 .icon-big {
-	font-size: 3em;
-	min-height: 64px;
+	i {
+		font-size: 64px;
+	}
+}
+
+.card-footer {
+	padding: 0 5px 5px 0;
+	height: 25px;
 }
 
 .stats-item {

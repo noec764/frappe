@@ -393,12 +393,12 @@ frappe.views.BaseList = class BaseList {
 
 	}
 
-	render() {
-		// for child classes
-	}
-
 	after_render() {
 
+	}
+
+	render() {
+		// for child classes
 	}
 
 	on_filter_change() {
