@@ -8,7 +8,9 @@ frappe.breadcrumbs = {
 		"File": "",
 		"Dashboard": "Customization",
 		"Dashboard Chart": "Customization",
-		"Dashboard Chart Source": "Customization"
+		"Dashboard Chart Source": "Customization",
+		"Dashboard Card": "Customization",
+		"Dashboard Card Source": "Customization"
 	},
 
 	set_doctype_module: function(doctype, module) {

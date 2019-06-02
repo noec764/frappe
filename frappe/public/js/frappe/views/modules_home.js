@@ -75,7 +75,9 @@ frappe.modules.Home = class {
 					depends_on: "eval:doc.widget_type=='Dashboard Chart'",
 					onchange: () => {
 						const value = d.fields_dict.chart.value;
-						check_total_width(value);
+						if (value) {
+							check_total_width(value);
+						}
 					}
 				}
 			]

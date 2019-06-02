@@ -1,3 +1,6 @@
+// Dokos and contributors
+// See license.txt
+
 frappe.provide('frappe.ui.form');
 
 frappe.quick_edit = function(doctype, name) {

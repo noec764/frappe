@@ -84,12 +84,11 @@ def create_user_desk(user):
 
 @frappe.whitelist()
 def add_widget(origin, widget_type, **kwargs):
-	if widget_type:
-		widget_type = json.loads(widget_type)[0]
-		options = json.loads(kwargs['args'])
+	widget_type = json.loads(widget_type)[0]
+	options = json.loads(kwargs['args'])
 
-		widget_creator = WidgetCreator(origin)
-		widget_creator.add_widget(widget_type, **options)
+	widget_creator = WidgetCreator(origin)
+	widget_creator.add_widget(widget_type, **options)
 
 @frappe.whitelist()
 def remove_widget(origin, widget):
@@ -127,8 +126,6 @@ def check_widget_width(module, widget_type, value):
 	for item in module_dashboard.module_dashboard_items:
 		current_width += float(item.widget_width)
 
-	print(current_width)
-	print(value_width)
 	return False if current_width + value_width > 100 else True
 
 class WidgetCreator:
