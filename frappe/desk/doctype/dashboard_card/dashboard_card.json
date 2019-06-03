@@ -1,5 +1,4 @@
 {
- "allow_rename": 1,
  "autoname": "field:card_name",
  "creation": "2019-05-24 16:22:50.230269",
  "doctype": "DocType",
@@ -61,7 +60,7 @@
    "fieldname": "timespan",
    "fieldtype": "Select",
    "label": "Timespan",
-   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nPreregistered"
+   "options": "Last Year\nLast Quarter\nLast Month\nLast Week"
   },
   {
    "fieldname": "section_break_7",
@@ -72,7 +71,7 @@
    "fieldtype": "Column Break"
   }
  ],
- "modified": "2019-05-24 17:22:13.819351",
+ "modified": "2019-06-03 19:36:13.702827",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",
@@ -88,6 +87,14 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "if_owner": 1,
+   "read": 1,
+   "role": "All",
    "write": 1
   }
  ],
