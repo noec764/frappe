@@ -24,8 +24,9 @@ def get_desk(user):
 			dca.source_document, dca.user,
 			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, dch.width, 
 			dch.timeseries, dch.time_interval, dch.timespan as chart_timespan, dch.unit,
-			dch.color as chart_color, dch.filters_json,
-			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan, dcc.color as card_color, dcc.icon
+			dch.color as chart_color, dch.filters_json, dch.last_synced_on as chart_last_synced,
+			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan, dcc.color as card_color,
+			dcc.icon, dcc.last_synced_on as card_last_synced
 		FROM
 			`tabDesk Items` di
 		LEFT JOIN
@@ -54,10 +55,10 @@ def get_module_dashboard(user, module):
 		SELECT
 			mdi.name, mdi.widget_width, mdi.widget_type,
 			dch.chart_name, dch.type, dch.source as chart_source, dch.chart_type, 
-			dch.width, dch.timeseries, dch.time_interval, dch.unit,
+			dch.width, dch.timeseries, dch.time_interval, dch.unit, dch.last_synced_on as chart_last_synced,
 			dch.timespan as chart_timespan, dch.color as chart_color, dch.filters_json,
 			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan,
-			dcc.color as card_color, dcc.icon
+			dcc.color as card_color, dcc.icon, dcc.last_synced_on as card_last_synced
 		FROM
 			`tabModule Dashboard Items` mdi
 		LEFT JOIN

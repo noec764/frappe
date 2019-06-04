@@ -20,7 +20,15 @@
 					</div>
 				</div>
 				<div class="card-footer">
-					<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
+					<div class="row">
+					<div class="col-xs-10 card-link">
+						<span class="card-link-header text-muted" v-if="timespan && timespan!='Preregistered'">{{ __(timespan) }}</span><br>
+						<span class="card-link-body text-muted" v-if="last_synced">{{ __("Last synced:") }} {{ frappe.datetime.str_to_user(last_synced) }}</span>
+					</div>
+					<div class="col-xs-2">
+						<span><i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i></span>
+					</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -61,6 +69,14 @@ export default {
 			default: null
 		},
 		text: {
+			type: String,
+			default: null
+		},
+		timespan: {
+			type: String,
+			default: null
+		},
+		last_synced: {
 			type: String,
 			default: null
 		}
@@ -138,16 +154,29 @@ export default {
 
 .card-footer {
 	padding: 0 5px 5px 0;
-	height: 25px;
+	height: 40px;
 }
 
 .stats-item {
 	padding: 15px 15px 0;
-	min-height: 185px !important;
+	min-height: 200px !important;
 }
 
 .card-text {
 	text-align: right;
+}
+
+.card-footer {
+	.card-link {
+		padding-left: 22px;
+		line-height: 10pt;
+	}
+	.card-link-header {
+		font-size: 8pt;
+	}
+	.card-link-body {
+		font-size: 8pt;
+	}
 }
 
 </style>

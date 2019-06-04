@@ -64,6 +64,10 @@ export default {
 		unit: {
 			type: String,
 			default: ''
+		},
+		last_synced: {
+			type: String,
+			default: null
 		}
 	},
 	data() {

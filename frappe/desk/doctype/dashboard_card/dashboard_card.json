@@ -13,7 +13,9 @@
   "section_break_7",
   "icon",
   "column_break_8",
-  "color"
+  "color",
+  "section_break_10",
+  "last_synced_on"
  ],
  "fields": [
   {
@@ -69,9 +71,19 @@
   {
    "fieldname": "column_break_8",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_10",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "last_synced_on",
+   "fieldtype": "Datetime",
+   "label": "Last Synced On",
+   "read_only": 1
   }
  ],
- "modified": "2019-06-03 19:36:13.702827",
+ "modified": "2019-06-04 09:42:16.435734",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",
