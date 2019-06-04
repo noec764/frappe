@@ -37,7 +37,7 @@
 			/>
 		</muuri-grid>
 		<div class="empty-grid text-center" v-if="showEmptyGrid">
-			<p class="text-muted">{{__("This dashboard is empty")}}</p>
+			<p class="text-muted">{{ __("This dashboard is empty") }}</p>
 		</div>
 	</div>
 </template>
