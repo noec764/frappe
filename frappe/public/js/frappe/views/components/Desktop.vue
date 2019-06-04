@@ -145,9 +145,6 @@ export default {
 .desktop-page-container {
 	margin-top: 40px;
 	margin-bottom: 30px;
-	@media (max-width: 767px) {
-		padding-left: 50px;
-	}
 }
 .desktop-section {
 	position: relative;
