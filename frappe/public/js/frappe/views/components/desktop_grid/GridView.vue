@@ -11,6 +11,8 @@
 				:icon="item.icon"
 				@removeCard="remove_card"
 				:width="item.widget_width"
+				:timespan="item.card_timespan"
+				:last_synced="item.card_last_synced"
 				height="170"
 			/>
 			<calendar-card
@@ -33,6 +35,7 @@
 				@removeCard="remove_card"
 				:width="item.widget_width"
 				:type="item.type"
+				:last_synced="item.chart_last_synced"
 				height="340"
 			/>
 		</muuri-grid>

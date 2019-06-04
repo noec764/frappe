@@ -7,6 +7,7 @@ import frappe, json
 import frappe.defaults
 from frappe.desk.notifications import (delete_notification_count_for,
 	clear_notifications)
+from frappe.core.page.dashboard.dashboard import clear_dashboard_cache
 
 common_default_keys = ["__default", "__global"]
 
