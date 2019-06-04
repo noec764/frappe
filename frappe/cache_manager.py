@@ -7,6 +7,7 @@ import frappe, json
 import frappe.defaults
 from frappe.desk.notifications import (delete_notification_count_for,
 	clear_notifications)
+from frappe.core.page.dashboard.dashboard import clear_dashboard_cache
 
 common_default_keys = ["__default", "__global"]
 
@@ -35,11 +36,13 @@ def clear_user_cache(user=None):
 			cache.hdel(name, user)
 		cache.delete_keys("user:" + user)
 		clear_defaults_cache(user)
+		clear_dashboard_cache(user)
 	else:
 		for name in user_cache_keys:
 			cache.delete_key(name)
 		clear_defaults_cache()
 		clear_global_cache()
+		clear_dashboard_cache()
 
 def clear_global_cache():
 	from frappe.website.render import clear_cache as clear_website_cache
