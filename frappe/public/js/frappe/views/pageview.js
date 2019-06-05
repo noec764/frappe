@@ -120,7 +120,7 @@ frappe.views.Page = Class.extend({
 });
 
 const notFoundIcons = ["not_found.svg", "404.svg", "empty.svg", "taken.svg", "no_data.svg"]
-const notPermittedIcons = ["security.svg", "safe.svg", "vault.svg", "secure.svg"]
+const notPermittedIcons = ["security.svg", "safe.svg", "vault.svg", "secure_data.svg"]
 
 let notFound = notFoundIcons[Math.floor(Math.random() * notFoundIcons.length)];
 let notPermitted = notPermittedIcons[Math.floor(Math.random() * notPermittedIcons.length)];
