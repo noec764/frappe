@@ -100,7 +100,8 @@ has_permission = {
 	"Address": "frappe.contacts.address_and_contact.has_permission",
 	"Communication": "frappe.core.doctype.communication.communication.has_permission",
 	"Workflow Action": "frappe.workflow.doctype.workflow_action.workflow_action.has_permission",
-	"File": "frappe.core.doctype.file.file.has_permission"
+	"File": "frappe.core.doctype.file.file.has_permission",
+	"Desk": "frappe.desk.doctype.desk.desk.has_permission"
 }
 
 has_website_permission = {

@@ -81,22 +81,22 @@ export default {
 		get_module_sections(module_name) {
 			let cache = this.modules_data_cache[module_name]
 			if (cache) {
-			this.current_module_sections = cache
+				this.current_module_sections = cache
 			} else {
-			this.current_module_sections = []
-			return frappe.call({
-				method: 'frappe.desk.moduleview.get',
-				args: {
-				module: module_name,
-				},
-				callback: r => {
-				var m = frappe.get_module(module_name)
-				this.current_module_sections = r.message.data
-				this.process_data(module_name, this.current_module_sections)
-				this.modules_data_cache[module_name] = this.current_module_sections
-				},
-				freeze: true,
-			})
+				this.current_module_sections = []
+				return frappe.call({
+					method: 'frappe.desk.moduleview.get',
+					args: {
+						module: module_name,
+					},
+					callback: r => {
+						var m = frappe.get_module(module_name)
+						this.current_module_sections = r.message.data
+						this.process_data(module_name, this.current_module_sections)
+						this.modules_data_cache[module_name] = this.current_module_sections
+					},
+					freeze: true,
+				})
 			}
 		},
 		process_data(module_name, data) {

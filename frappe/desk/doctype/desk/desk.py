@@ -14,11 +14,13 @@ WIDTH_MAP = {
 		}
 
 class Desk(Document):
-	def has_permission(doc, user):
-		if "System Manager" in frappe.get_roles(user):
-			return True
-		else:
-			return doc.owner==user
+	pass
+
+def has_permission(doc, ptype, user):
+	if "System Manager" in frappe.get_roles(user):
+		return True
+	else:
+		return doc.owner==user
 
 @frappe.whitelist()
 def get_desk(user):

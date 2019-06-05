@@ -52,7 +52,7 @@ frappe.RoleEditor = Class.extend({
 				data-user-role="%(role_value)s">\
 				<input type="checkbox" style="margin-top:0px;" class="box"> \
 				<a href="#" class="grey role">%(role_display)s</a>\
-			</div>', {role_value: role,role_display:__(role)}));
+			</div>', {role_value: role, role_display:__(role)}));
 		});
 
 		$(this.wrapper).find('input[type="checkbox"]').change(function() {

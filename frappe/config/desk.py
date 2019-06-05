@@ -63,5 +63,25 @@ def get_data():
 					"description": _("Email Group List"),
 				},
 			]
+		},
+		{
+			'label': _('Dashboard'),
+			'items': [
+				{
+					"type": "doctype",
+					"name": "Dashboard Chart",
+					"description": _("Setup new dashboard charts")
+				},
+				{
+					"type": "doctype",
+					"name": "Dashboard Chart",
+					"description": _("Setup new dashboard charts"),
+				},
+				{
+					"type": "doctype",
+					"name": "Dashboard Calendar",
+					"description": _("Setup new dashboard calendars"),
+				}
+			]
 		}
 	]
