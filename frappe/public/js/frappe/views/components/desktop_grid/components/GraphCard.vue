@@ -17,10 +17,18 @@
 					:axisOptions="axisOptions"
 					:tooltipOptions="tooltipOptions"
 				/>
-				<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
+				<div class="card-footer">
+					<div class="row">
+						<div class="col-xs-10 card-link">
+						</div>
+						<div class="col-xs-2">
+							<span><i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i></span>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
-  </div>
+	</div>
 </template>
 
 <script>
@@ -132,13 +140,13 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 
-.remove-icon {
-	float: right;
-	color: #6c7680;
-	cursor:pointer;
-	padding-right: 5px;
+.card-footer {
+	.card-link {
+		padding-left: 22px;
+		line-height: 10pt;
+	}
 }
 
 </style>

@@ -14,7 +14,11 @@ WIDTH_MAP = {
 		}
 
 class Desk(Document):
-	pass
+	def has_permission(doc, user):
+		if "System Manager" in frappe.get_roles(user):
+			return True
+		else:
+			return doc.owner==user
 
 @frappe.whitelist()
 def get_desk(user):
@@ -119,9 +123,8 @@ def register_positions(items):
 
 @frappe.whitelist()
 def check_widget_width(module, widget_type, value):
-	value_width = float(WIDTH_MAP[frappe.db.get_value(widget_type, value, "width")])
-	module_dashboard = frappe.get_doc("Module Dashboard", \
-		{"user": frappe.session.user, "module": module})
+	value_width = float(WIDTH_MAP[frappe.db.get_value(widget_type, value, "width")]) if widget_type == "Dashboard Chart" else 20
+	module_dashboard = get_module_dashboard_doc(frappe.session.user, module)
 
 	current_width = 0
 	for item in module_dashboard.module_dashboard_items:
@@ -129,13 +132,25 @@ def check_widget_width(module, widget_type, value):
 
 	return False if current_width + value_width > 100 else True
 
+def get_module_dashboard_doc(user, module):
+	if frappe.db.exists("Module Dashboard", dict(user=user, module=module)):
+		return frappe.get_doc("Module Dashboard", dict(user=user, module=module))
+
+	else:
+		new_dashboard = frappe.new_doc("Module Dashboard")
+		new_dashboard.user = user
+		new_dashboard.module = module
+		new_dashboard.insert(ignore_permissions=True)
+
+		return new_dashboard
+
 class WidgetCreator:
 	def __init__(self, origin, user=None):
 		self.origin = origin
 		self.target = origin if origin == "Desk" else "Module"
 		self.user = user if user else frappe.session.user
 		self.doc = frappe.get_doc("Desk", self.user) if self.origin == "Desk" \
-			else self.get_module_dashboard()
+			else get_module_dashboard_doc(self.user, self.origin)
 
 		self.widgets_map = {
 			'Dashboard Calendar': {
@@ -145,23 +160,11 @@ class WidgetCreator:
 				"Desk": self._add_chart,
 				"Module": self._add_module_chart,
 			},
-			'Dashboard Stats': {
+			'Dashboard Card': {
 				"Desk": self._add_stats,
 				"Module": self._add_module_stats,
 			}
 		}
-
-	def get_module_dashboard(self):
-		if frappe.db.exists("Module Dashboard", dict(user=self.user, module=self.origin)):
-			return frappe.get_doc("Module Dashboard", dict(user=self.user, module=self.origin))
-
-		else:
-			new_dashboard = frappe.new_doc("Module Dashboard")
-			new_dashboard.user = self.user
-			new_dashboard.module = self.origin
-			new_dashboard.insert(ignore_permissions=True)
-
-			return new_dashboard
 
 	def add_widget(self, widget_type, **kwargs):
 		creator = self._get_creator(widget_type)

@@ -51,7 +51,7 @@ frappe.modules.Home = class {
 					fieldtype: 'MultiCheck',
 					options: [
 						{ label: __("Chart"), value: "Dashboard Chart" },
-						{ label: __("Statistics"), value: "Dashboard Stats" }
+						{ label: __("Statistics"), value: "Dashboard Card" }
 					],
 					columns: 2,
 					reqd: 1,
@@ -76,16 +76,29 @@ frappe.modules.Home = class {
 					onchange: () => {
 						const value = d.fields_dict.chart.value;
 						if (value) {
-							check_total_width(value);
+							check_total_width("Dashboard Chart", value);
+						}
+					}
+				},
+				{
+					label: __("Card"),
+					fieldname: "card",
+					fieldtype: 'Link',
+					options: "Dashboard Card",
+					depends_on: "eval:doc.widget_type=='Dashboard Card'",
+					onchange: () => {
+						const value = d.fields_dict.card.value;
+						if (value) {
+							check_total_width("Dashboard Card", value);
 						}
 					}
 				}
 			]
 		}
 
-		function check_total_width(value) {
+		function check_total_width(widget_type, value) {
 			frappe.xcall('frappe.desk.doctype.desk.desk.check_widget_width', 
-				{module: frappe.get_route()[1], widget_type: "Dashboard Chart", value: value})
+				{module: frappe.get_route()[1], widget_type: widget_type, value: value})
 			.then((result) => { 
 				result ? d.enable_primary_action() : d.disable_primary_action() 
 			})

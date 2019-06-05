@@ -163,4 +163,11 @@ export default {
 		transform: translateY(-50%);
 	}
 }
+
+.remove-icon {
+	float: right;
+	padding: 5px;
+	color: #6c7680;
+	cursor:pointer;
+}
 </style>

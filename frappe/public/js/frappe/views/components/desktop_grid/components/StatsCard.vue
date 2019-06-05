@@ -21,13 +21,13 @@
 				</div>
 				<div class="card-footer">
 					<div class="row">
-					<div class="col-xs-10 card-link">
-						<span class="card-link-header text-muted" v-if="timespan && timespan!='Preregistered'">{{ __(timespan) }}</span><br>
-						<span class="card-link-body text-muted" v-if="last_synced">{{ __("Last synced:") }} {{ frappe.datetime.str_to_user(last_synced) }}</span>
-					</div>
-					<div class="col-xs-2">
-						<span><i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i></span>
-					</div>
+						<div class="col-xs-10 card-link">
+							<span class="card-link-header text-muted" v-if="timespan && timespan!='Preregistered'">{{ __(timespan) }}</span><br>
+							<span class="card-link-body text-muted" v-if="last_synced">{{ __("Last synced:") }} {{ frappe.datetime.str_to_user(last_synced) }}</span>
+						</div>
+						<div class="col-xs-2">
+							<span><i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i></span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -128,12 +128,6 @@ export default {
 </script>
 
 <style lang="scss">
-
-.remove-icon {
-	float: right;
-	color: #6c7680;
-	cursor:pointer;
-}
 
 .card-text {
 	h2 {

@@ -83,7 +83,7 @@ export default {
 						options: [
 							{ label: __("Calendar"), value: "Dashboard Calendar" },
 							{ label: __("Chart"), value: "Dashboard Chart" },
-							{ label: __("Statistics"), value: "Dashboard Stats" }
+							{ label: __("Statistics"), value: "Dashboard Card" }
 						],
 						columns: 3,
 						reqd: 1,
@@ -127,7 +127,7 @@ export default {
 						fieldname: "card",
 						fieldtype: 'Link',
 						options: "Dashboard Card",
-						depends_on: "eval:doc.widget_type=='Dashboard Stats'"
+						depends_on: "eval:doc.widget_type=='Dashboard Card'"
 					}
 				]
 			}

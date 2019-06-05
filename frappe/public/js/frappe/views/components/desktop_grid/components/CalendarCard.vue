@@ -128,15 +128,10 @@ export default {
 .desk-calendar-top {
 	margin: 0 0 3em;
 }
+
 .desk-calendar {
 	margin: 0 auto;
 	max-width: 900px;
-}
-.remove-icon {
-	float: right;
-	padding: 5px;
-	color: #6c7680;
-	cursor:pointer;
 }
 
 </style>
