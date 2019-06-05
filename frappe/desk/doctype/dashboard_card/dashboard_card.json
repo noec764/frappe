@@ -62,7 +62,7 @@
    "fieldname": "timespan",
    "fieldtype": "Select",
    "label": "Timespan",
-   "options": "Last Year\nLast Quarter\nLast Month\nLast Week"
+   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nPreregistered"
   },
   {
    "fieldname": "section_break_7",
@@ -83,7 +83,7 @@
    "read_only": 1
   }
  ],
- "modified": "2019-06-04 19:54:51.894080",
+ "modified": "2019-06-05 12:47:45.595442",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",

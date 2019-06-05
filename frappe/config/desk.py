@@ -74,8 +74,8 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Dashboard Chart",
-					"description": _("Setup new dashboard charts"),
+					"name": "Dashboard Card",
+					"description": _("Setup new dashboard cards"),
 				},
 				{
 					"type": "doctype",
