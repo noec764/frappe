@@ -77,7 +77,7 @@ export default {
 		return {
 			options: {
 				items: ".grid-item",
-				dragEnabled: true,
+				dragEnabled: frappe.is_mobile ? false : true,
 				layoutOnInit: true,
 				layout: {
 					fillGaps: true,

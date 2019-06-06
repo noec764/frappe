@@ -6,7 +6,7 @@
 				@click="edit_desktop"
 			>
 			<i class="octicon octicon-pencil"></i>
-				{{ __('Edit Desktop') }}
+				<span class="hidden-xs hidden-sm">{{ __('Edit Desktop') }}</span>
 			</a>
 		</div>
 		<grid-view
@@ -148,7 +148,7 @@ export default {
 }
 .desktop-section {
 	position: relative;
-	padding: 25px 0;
+	padding: 25px 50px;
 	text-align: right;
 }
 </style>
