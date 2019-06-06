@@ -90,7 +90,7 @@ export default {
 	},
 	computed: {
 		cardStyle() {
-			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '320px', 'min-height': this.cardHeight};
+			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '280px', 'min-height': this.cardHeight};
 		}
 	},
 	mounted() {

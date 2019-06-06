@@ -98,7 +98,7 @@ export default {
 			return Object.keys(this.data).length
 		},
 		cardStyle() {
-			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '320px', 'height': this.cardHeight};
+			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '280px', 'height': this.cardHeight};
 		},
 		chartType() {
 			const map = {"Line": "line", "Bar": "bar", "Pie": "pie", "Percentage": "percentage"}

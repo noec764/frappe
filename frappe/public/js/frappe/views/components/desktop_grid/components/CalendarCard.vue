@@ -81,7 +81,7 @@ export default {
 	},
 	computed: {
 		cardStyle() {
-			return {'width': '100%', 'max-width': this.width, 'min-width': '320px', 'height': this.cardHeight};
+			return {'width': '100%', 'max-width': this.width, 'min-width': '280px', 'height': this.cardHeight};
 		}
 	},
 	created() {
