@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 import json
+from frappe import _
 
 WIDTH_MAP = {
 			"Third": 33,
@@ -24,7 +25,7 @@ def has_permission(doc, ptype, user):
 
 @frappe.whitelist()
 def get_desk(user):
-	return frappe.db.sql("""
+	desk_data = frappe.db.sql("""
 		SELECT
 			di.name, di.widget_height, di.widget_width, di.widget_type,
 			dca.source_document, dca.user,
@@ -52,6 +53,12 @@ def get_desk(user):
 		ORDER BY
 			di.idx ASC
 	""", (user), as_dict=True)
+
+	for data in desk_data:
+		for item in ["chart_timespan", "card_timespan"]:
+			data[item] = _(data[item])
+
+	return desk_data
 
 @frappe.whitelist()
 def get_module_dashboard(user, module):

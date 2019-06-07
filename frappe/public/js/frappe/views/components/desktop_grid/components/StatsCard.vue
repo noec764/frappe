@@ -22,7 +22,7 @@
 				<div class="card-footer">
 					<div class="row">
 						<div class="col-xs-10 card-link">
-							<span class="card-link-header text-muted" v-if="timespan && timespan!='Preregistered'">{{ __(timespan) }}</span><br>
+							<span class="card-link-header text-muted" v-if="timespan && timespan!=__('Preregistered')">{{ timespan }}</span><br>
 							<span class="card-link-body text-muted" v-if="last_synced">{{ __("Last synced:") }} {{ frappe.datetime.str_to_user(last_synced) }}</span>
 						</div>
 						<div class="col-xs-2">
