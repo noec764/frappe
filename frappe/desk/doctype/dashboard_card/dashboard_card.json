@@ -83,7 +83,7 @@
    "read_only": 1
   }
  ],
- "modified": "2019-06-05 12:47:45.595442",
+ "modified": "2019-06-12 10:41:11.244419",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",
@@ -102,11 +102,8 @@
    "write": 1
   },
   {
-   "create": 1,
-   "delete": 1,
    "read": 1,
-   "role": "All",
-   "write": 1
+   "role": "All"
   }
  ],
  "route": "/desk#Form/DocType/Dashboard Card",

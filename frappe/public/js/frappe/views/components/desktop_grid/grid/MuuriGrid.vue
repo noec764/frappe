@@ -128,6 +128,9 @@ export default {
 </script>
 
 <style scoped>
+	#frappe-grid {
+		min-width: 100%;
+	}
 	.grid {
 		position: relative;
 	}

@@ -3,12 +3,12 @@
 		<div class="field-pill-section-wrapper" v-for="field in Object.keys(fields)" :key="field">
 			<div class="field-pill-title">
 				<h4>
-				<span v-if="showReference(field)" class="text-muted">{{ __("Reference Document : ") }}</span>
-				<span v-else-if="field!=='Custom Functions'" class="text-muted">{{ __("Linked Document : ") }}</span>
-				{{ __(fields[field][0]["parent"]) }}
-				<span v-if="'reference_label' in fields[field][0] && field!=='Custom Functions'" class="text-muted">({{ __("Field") }}
-					<i>{{ __(fields[field][0]["reference_label"]) }})</i>
-				</span>
+					<span v-if="showReference(field)" class="text-muted">{{ __("Reference Document : ") }}</span>
+					<span v-else-if="field!=='Custom Functions'" class="text-muted">{{ __("Linked Document : ") }}</span>
+					{{ __('Custom Functions') }}
+					<span v-if="'reference_label' in fields[field][0] && field!=='Custom Functions'" class="text-muted">({{ __("Field") }}
+						<i>{{ __(fields[field][0]["reference_label"]) }})</i>
+					</span>
 				</h4>
 			</div>
 			<div class="flex flex-wrap border rounded field-pill-section">

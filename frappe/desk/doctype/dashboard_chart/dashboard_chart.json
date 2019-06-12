@@ -147,7 +147,7 @@
    "label": "Tooltip Unit"
   }
  ],
- "modified": "2019-06-04 19:55:18.848987",
+ "modified": "2019-06-12 10:41:21.434191",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",
@@ -166,11 +166,8 @@
    "write": 1
   },
   {
-   "create": 1,
-   "delete": 1,
    "read": 1,
-   "role": "All",
-   "write": 1
+   "role": "All"
   }
  ],
  "sort_field": "modified",

@@ -31,7 +31,7 @@ def get_template_fields(reference):
 
 	result["name"] = [{
 		"fieldname": "name",
-		"label": "Name",
+		"label": _("Name"),
 		"fieldtype": "Data",
 		"parent": meta.name,
 		"reference": "name",
@@ -53,7 +53,7 @@ def get_template_fields(reference):
 		link_meta = frappe.get_meta(link["doctype"])
 		result[link["reference_name"]] = [{
 			"fieldname": "name",
-			"label": "Name",
+			"label": _("Name"),
 			"fieldtype": "Data",
 			"parent": link_meta.name,
 			"reference": link["reference_name"],
@@ -66,10 +66,10 @@ def get_template_fields(reference):
 	return result
 
 def add_field_to_results(result, field, reference):
-	if field.fieldtype not in ["Column Break", "Section Break", "Button"] and field.print_hide != 1:
+	if field.fieldtype not in ["Column Break", "Section Break", "Button"] and field.print_hide != 1 and field.label:
 		result[reference].append({
 			"fieldname": field.fieldname,
-			"label": field.label,
+			"label": _(field.label),
 			"fieldtype": field.fieldtype,
 			"parent": field.parent,
 			"reference": reference,
