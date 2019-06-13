@@ -95,7 +95,8 @@
 		"public/less/kanban.less",
 		"public/less/controls.less",
 		"public/less/chat.less",
-		"public/less/filters.less"
+		"public/less/filters.less",
+		"node_modules/frappe-charts/dist/frappe-charts.min.css"
 	],
 	"css/frappe-rtl.css": [
 		"public/css/bootstrap-rtl.css",
@@ -120,7 +121,6 @@
 		"public/js/frappe/translate.js",
 		"public/js/lib/datepicker/datepicker.min.js",
 		"public/js/lib/datepicker/locale-all.js",
-		"public/js/lib/frappe-charts/frappe-charts.min.iife.js",
 		"public/js/lib/leaflet/leaflet.js",
 		"public/js/lib/leaflet/leaflet.draw.js",
 		"public/js/lib/leaflet/L.Control.Locate.js",
@@ -180,7 +180,6 @@
 		"public/js/frappe/utils/pretty_date.js",
 		"public/js/frappe/utils/test_utils.js",
 		"public/js/frappe/utils/tools.js",
-		"public/js/frappe/utils/jquery_plugins.js",
 		"public/js/frappe/utils/datetime.js",
 		"public/js/frappe/utils/number_format.js",
 		"public/js/frappe/utils/help.js",
@@ -223,7 +222,9 @@
 		"public/js/frappe/ui/comment.js",
 		"public/js/frappe/utils/rating_icons.html",
 
-		"public/js/frappe/chat.js"
+		"public/js/frappe/chat.js",
+
+		"public/js/lib/chart.js"
 	],
 	"css/module.min.css": [
 		"public/less/module.less"
@@ -239,6 +240,7 @@
 		"public/js/frappe/form/templates/form_dashboard.html",
 		"public/js/frappe/form/templates/form_document_flow.html",
 		"public/js/frappe/form/templates/form_links.html",
+		"public/js/frappe/form/templates/report_links.html",
 		"public/js/frappe/form/templates/attachment.html",
 		"public/js/frappe/form/templates/form_footer.html",
 		"public/js/frappe/form/templates/timeline.html",

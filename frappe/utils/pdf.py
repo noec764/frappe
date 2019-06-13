@@ -50,11 +50,8 @@ def get_pdf(html, options=None, output=None):
 			password = frappe.safe_encode(password)
 
 	if output:
-		# Encrypt if required
-		if "password" in options:
-			output.encrypt(password)
 		output.appendPagesFromReader(reader)
-		return get_file_data_from_writer(output)
+		return output
 
 	writer = PdfFileWriter()
 	writer.appendPagesFromReader(reader)

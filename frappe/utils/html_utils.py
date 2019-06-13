@@ -162,7 +162,7 @@ acceptable_attributes = [
 	'width', 'wrap', 'xml:lang', 'data-row', 'data-list', 'data-language',
 	'data-value', 'role', 'frameborder', 'allowfullscreen', 'spellcheck',
 	'data-mode', 'data-gramm', 'data-placeholder', 'data-comment', 'data-doctype',
-	'data-reference', 'data-label', 'data-function'
+	'data-reference', 'data-label', 'data-function', 'data-id', 'data-denotation-char'
 ]
 
 mathml_attributes = [

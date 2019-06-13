@@ -167,14 +167,35 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 						return;
 					}
 
+					if (args.filters) {
+						let filter_string = [];
+						for (let [key, value] of Object.entries(args.filters)) {
+
+							if (Array.isArray(value)){
+								filter_string.push(frappe.model.unscrub(key) + " "+value[0]+" "+value[1]);
+							} else {
+								filter_string.push(frappe.model.unscrub(key) + " as " + value);
+							}
+						}
+
+						filter_string = "Filters applied for " + filter_string.join(", ");
+
+						r.results.push({
+							label: "<span class='text-muted disable-select' style='line-height: 15px;'>"
+								+ __("{0}", [filter_string])
+								+ "</span>",
+							value: "",
+							action: undefined
+						});
+					}
+
 					if(!me.df.only_select) {
-						if(frappe.model.can_create(doctype)
-							&& me.df.fieldtype !== "Dynamic Link") {
+						if(frappe.model.can_create(doctype)) {
 							// new item
 							r.results.push({
 								label: "<span class='text-primary link-option'>"
 									+ "<i class='fa fa-plus' style='margin-right: 5px;'></i> "
-									+ __("Create a new {0}", [__(me.df.options)])
+									+ __("Create a new {0}", [__(me.get_options())])
 									+ "</span>",
 								value: "create_new__link_option",
 								action: me.new_doc
@@ -214,6 +235,7 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 		this.$input.on("awesomplete-open", function() {
 			me.$wrapper.css({"z-index": 100});
 			me.$wrapper.find('ul').css({"z-index": 100});
+			me.$wrapper.find('.disable-select').parents('li').css({"pointer-events": "none"});
 			me.autocomplete_open = true;
 		});
 
@@ -386,4 +408,3 @@ if(Awesomplete) {
 		});
 	};
 }
-

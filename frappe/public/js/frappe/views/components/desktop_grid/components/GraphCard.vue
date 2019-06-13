@@ -33,7 +33,7 @@
 
 <script>
 
-import FrappeCharts from '../../../../../lib/frappe-charts/FrappeCharts.vue';
+import FrappeCharts from '../../../../../lib/FrappeCharts.vue';
 
 export default {
 	name: 'GraphCard',
@@ -51,7 +51,7 @@ export default {
 		},
 		height: {
 			type: String,
-			default: '400'
+			default: '340'
 		},
 		label: {
 			type: String,
@@ -83,9 +83,9 @@ export default {
 			axisOptions: {xIsSeries: 1},
 			colors: [this.color],
 			data: {},
-			title: `<b>${this.label}</b>`,
+			title: `${this.label}`,
 			cardHeight: this.height + "px",
-			chartHeight: parseInt(this.height) * 60/100,
+			chartHeight: parseInt(this.height) * 90/100,
 			settings: null,
 			tooltipOptions: {
 				formatTooltipX: d => (d + ''),
@@ -147,6 +147,14 @@ export default {
 		padding-left: 22px;
 		line-height: 10pt;
 	}
+}
+
+.line-graph-path {
+	stroke-width: 2px !important;
+}
+
+.title {
+	font-weight: 600;
 }
 
 </style>
