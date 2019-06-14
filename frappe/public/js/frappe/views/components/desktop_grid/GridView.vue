@@ -157,6 +157,7 @@ export default {
 	border-radius: 4px;
 	border: 1px dashed #e6ebf1;
 	height: 350px;
+	width: 100%;
 	p {
 		position: relative;
 		top: 50%;
