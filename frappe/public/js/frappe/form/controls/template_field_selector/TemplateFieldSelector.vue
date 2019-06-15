@@ -4,9 +4,9 @@
 			<div class="field-pill-title">
 				<h4>
 					<span v-if="showReference(field)" class="text-muted">{{ __("Reference Document : ") }}</span>
-					<span v-else-if="field!=='Custom Functions'" class="text-muted">{{ __("Linked Document : ") }}</span>
-					{{ __('Custom Functions') }}
-					<span v-if="'reference_label' in fields[field][0] && field!=='Custom Functions'" class="text-muted">({{ __("Field") }}
+					<span v-else-if="field!==__('Custom Functions')" class="text-muted">{{ __("Linked Document : ") }}</span>
+					{{ __(fields[field][0]["parent"]) }}
+					<span v-if="'reference_label' in fields[field][0] && field!==__('Custom Functions')" class="text-muted">({{ __("Field") }}
 						<i>{{ __(fields[field][0]["reference_label"]) }})</i>
 					</span>
 				</h4>
