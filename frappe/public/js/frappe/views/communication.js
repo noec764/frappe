@@ -684,4 +684,3 @@ frappe.views.CommunicationComposer = Class.extend({
 		return text.replace(/\n{3,}/g, '\n\n');
 	}
 });
-
