@@ -149,10 +149,6 @@ export default {
 	}
 }
 
-.line-graph-path {
-	stroke-width: 2px !important;
-}
-
 .title {
 	font-weight: 600;
 }
