@@ -315,7 +315,7 @@ def disable_users(limits=None):
 
 		active_users = frappe.get_all("User", filters={"user_type":"System User", "enabled":1, "name": ["not in", excluded_users_list]}, fields=["name"])
 
-		user_limit = cint(limits.get('users')) - 1
+		user_limit = cint(limits.get('users'))
 
 		if len(active_users) > user_limit:
 
