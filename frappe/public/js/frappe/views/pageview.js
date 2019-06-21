@@ -5,6 +5,8 @@ import Desktop from './components/Desktop.vue';
 
 frappe.provide('frappe.views.pageview');
 frappe.provide("frappe.standard_pages");
+frappe.provide("frappe.desk_view");
+frappe.utils.make_event_emitter(frappe.desk_view);
 
 frappe.views.pageview = {
 	with_page: function(name, callback) {
@@ -55,6 +57,9 @@ frappe.views.pageview = {
 						el: container[0],
 						render: h => h(Desktop)
 					});
+				} else {
+					//Hack for vue
+					frappe.desk_view.trigger("update");
 				}
 
 				frappe.container.change_to('desktop');

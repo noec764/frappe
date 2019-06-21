@@ -39,6 +39,11 @@ export default {
 	},
 	created () {
 		self = this
+		frappe.desk_view.on('update', () => {
+			if (this.grid&&this.grid._width===0) {
+				this.createGrid();
+			}
+		})
 	},
 	mounted () {
 		this.createGrid()

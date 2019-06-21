@@ -340,6 +340,10 @@ def msgprint(msg, title=None, raise_exception=0, as_table=False, indicator=None,
 		out.alert = 1
 
 	message_log.append(json.dumps(out))
+
+	if raise_exception:
+		local.response['exc_type'] = raise_exception.__name__
+
 	_raise_exception()
 
 def clear_messages():
@@ -721,7 +725,7 @@ def get_doc(*args, **kwargs):
 
 		# insert a new document
 		todo = frappe.get_doc({"doctype":"ToDo", "description": "test"})
-		tood.insert()
+		todo.insert()
 
 		# open an existing document
 		todo = frappe.get_doc("ToDo", "TD0001")

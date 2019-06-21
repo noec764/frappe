@@ -224,7 +224,7 @@
 
 		"public/js/frappe/chat.js",
 
-		"public/js/lib/chart.js"
+		"public/js/frappe/ui/chart.js"
 	],
 	"css/module.min.css": [
 		"public/less/module.less"
