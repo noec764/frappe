@@ -12,14 +12,14 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 def get_pdf(html, options=None, output=None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
-	fname = os.path.join("/tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
 
 	options.update({
 		"disable-javascript": "",
-		"disable-local-file-access": "",
+		"disable-local-file-access": ""
 	})
 
 	filedata = ''
+
 	try:
 		# Set filename property to false, so no file is actually created
 		filedata = pdfkit.from_string(html, False, options=options or {})
@@ -29,6 +29,7 @@ def get_pdf(html, options=None, output=None):
 		reader = PdfFileReader(io.BytesIO(filedata))
 
 	except IOError as e:
+		print(e)
 		if ("ContentNotFoundError" in e.message
 			or "ContentOperationNotPermittedError" in e.message
 			or "UnknownContentError" in e.message
@@ -50,11 +51,8 @@ def get_pdf(html, options=None, output=None):
 			password = frappe.safe_encode(password)
 
 	if output:
-		# Encrypt if required
-		if "password" in options:
-			output.encrypt(password)
 		output.appendPagesFromReader(reader)
-		return get_file_data_from_writer(output)
+		return output
 
 	writer = PdfFileWriter()
 	writer.appendPagesFromReader(reader)
@@ -67,15 +65,17 @@ def get_pdf(html, options=None, output=None):
 	return filedata
 
 def get_file_data_from_writer(writer_obj):
+
 	# https://docs.python.org/3/library/io.html
 	stream = io.BytesIO()
 	writer_obj.write(stream)
 
- 	# Change the stream position to start of the stream
+	# Change the stream position to start of the stream
 	stream.seek(0)
 
- 	# Read up to size bytes from the object and return them
+	# Read up to size bytes from the object and return them
 	return stream.read()
+
 
 def prepare_options(html, options):
 	if not options:
