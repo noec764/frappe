@@ -144,12 +144,6 @@ frappe.msgprint = function(msg, title) {
 		msg = frappe.utils.replace_newlines(data.message);
 	}
 
-	if (data.primary_action) {
-		frappe.msg_dialog.get_primary_btn().show();
-	} else {
-		frappe.msg_dialog.get_primary_btn().hide();
-	}
-
 	var msg_exists = false;
 	if(data.clear) {
 		frappe.msg_dialog.msg_area.empty();

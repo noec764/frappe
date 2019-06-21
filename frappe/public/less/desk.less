@@ -469,6 +469,13 @@ li.user-progress {
 	border-radius: 0px;
 }
 
+.screenshot {
+	border: 1px solid @border-color;
+	box-shadow: 1px 1px 7px rgba(0,0,0,0.15);
+	margin: 8px 0px;
+	max-width: 100%;
+}
+
 // like pop-over
 .liked-by-popover {
 	.popover-content {
@@ -488,14 +495,7 @@ li.user-progress {
 		}
 	}
 
-}
-
-.screenshot {
-	border: 1px solid @border-color;
-	box-shadow: 1px 1px 7px rgba(0,0,0,0.15);
-	margin: 8px 0px;
-	max-width: 100%;
-}
+ }
 
 .help-modal {
 	a {
@@ -1090,6 +1090,24 @@ body.full-width {
 
 .whitespace-nowrap {
 	white-space: nowrap;
+}
+
+.modal-minimize {
+	position: initial;
+	.modal-backdrop {
+		display: none;
+	}
+	.modal-dialog {
+		z-index: 101;
+		position: fixed;
+		right: 15px;
+		bottom: 0;
+		margin: 0;
+		max-width: 500px;
+	}
+	.modal-body {
+		display: none;
+	}
 }
 
 // modules menu

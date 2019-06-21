@@ -7,8 +7,13 @@ frappe.ui.form.ControlDateRange = frappe.ui.form.ControlData.extend({
 	},
 	set_date_options: function() {
 		var me = this;
+		let lang = frappe.boot.lang || 'en';
+		if(!$.fn.datepicker.language[lang]) {
+			lang = 'en';
+		}
+
 		this.datepicker_options = {
-			language: "en",
+			language: lang,
 			range: true,
 			autoClose: true,
 			toggleSelected: false
