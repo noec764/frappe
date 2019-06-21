@@ -245,7 +245,7 @@ class DashboardChart {
 		this.chart_container.find('.chart-loading-state').addClass('hide');
 
 		if(!this.chart) {
-			this.chart = new Chart(this.chart_container.find(".chart-wrapper")[0], chart_args);
+			this.chart = new frappe.Chart(this.chart_container.find(".chart-wrapper")[0], chart_args);
 		} else {
 			this.chart.update(this.data);
 		}
