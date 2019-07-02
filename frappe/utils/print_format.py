@@ -78,8 +78,7 @@ def download_multi_pdf(doctype, name, format=None):
 def read_multi_pdf(output):
 	# Get the content of the merged pdf files
 	fname = os.path.join("/tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
-	with open(fname,"wb") as f:
-		f.write(output)
+	output.write(open(fname,"wb"))
 
 	with open(fname, "rb") as fileobj:
 		filedata = fileobj.read()
