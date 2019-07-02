@@ -3,6 +3,7 @@ frappe.ui.form.PrintPreview = Class.extend({
 		$.extend(this, opts);
 		this.make();
 		this.bind_events();
+		this.setup_keyboard_shortcuts();
 	},
 	make: function () {
 		this.wrapper = this.frm.page.add_view("print", frappe.render_template("print_layout", {}));
@@ -119,6 +120,11 @@ frappe.ui.form.PrintPreview = Class.extend({
 			if (e.print_format) {
 				this.print_sel.val(e.print_format);
 			}
+		});
+	},
+	setup_keyboard_shortcuts() {
+		this.wrapper.find('.print-toolbar a.btn-default').each((i, el) => {
+			frappe.ui.keys.get_shortcut_group(this.frm.page).add($(el));
 		});
 	},
 	set_user_lang: function () {
@@ -446,7 +452,10 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head) {
 		fieldtype: "Select",
 		fieldname: "orientation",
 		label: __("Orientation"),
-		options: "Landscape\nPortrait",
+		options: [
+			{ "value": "Landscape", "label": __("Landscape") },
+			{ "value": "Portrait", "label": __("Portrait") }
+		],
 		default: "Landscape"
 	}];
 

@@ -181,8 +181,9 @@ select.input-sm {
 
 @media(max-width: @screen-xs) {
 	.page-actions {
-		max-width: 150px;
+		position: absolute;
 		float: right;
+		padding-right: 0px;
 	}
 
 	.page-title {
@@ -390,4 +391,12 @@ select.input-sm {
 	align-items: center;
 }
 
+.menu-btn-group {
+	.dropdown-menu {
+		width: max-content;
+	}
 
+	.menu-item-label {
+		margin-right: 15px;
+	}
+} 

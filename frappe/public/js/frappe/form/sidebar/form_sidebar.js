@@ -33,6 +33,7 @@ frappe.ui.form.Sidebar = Class.extend({
 		this.make_like();
 
 		this.bind_events();
+		this.setup_keyboard_shortcuts();
 		frappe.ui.form.setup_user_image_event(this.frm);
 
 		this.refresh();
@@ -52,6 +53,14 @@ frappe.ui.form.Sidebar = Class.extend({
 				me.refresh_like();
 			});
 		});
+	},
+
+	setup_keyboard_shortcuts() {
+		// add assignment shortcut
+		let assignment_link = this.sidebar.find('.add-assignment');
+		frappe.ui.keys
+			.get_shortcut_group(this.page)
+			.add(assignment_link);
 	},
 
 	refresh: function() {
