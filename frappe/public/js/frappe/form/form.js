@@ -947,6 +947,7 @@ frappe.ui.form.Form = class FrappeForm {
 		// To set the currency in the label
 		// For example Total Cost(INR), Total Cost(USD)
 
+		if (!currency) return;
 		var me = this;
 		var doctype = parentfield ? this.fields_dict[parentfield].grid.doctype : this.doc.doctype;
 		var field_label_map = {};

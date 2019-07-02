@@ -2,6 +2,7 @@
 // MIT License. See license.txt
 
 frappe.provide('frappe.timeline');
+frappe.provide('frappe.email');
 frappe.separator_element = '<div>---</div>';
 
 frappe.ui.form.Timeline = class Timeline {
@@ -12,10 +13,11 @@ frappe.ui.form.Timeline = class Timeline {
 
 	make() {
 		var me = this;
-		this.wrapper = $(frappe.render_template("timeline",
-			{doctype: me.frm.doctype, allow_events_in_timeline: me.frm.meta.allow_events_in_timeline})).appendTo(me.parent);
+		this.wrapper = $(frappe.render_template("timeline",{doctype: me.frm.doctype,allow_events_in_timeline: me.frm.meta.allow_events_in_timeline})).appendTo(me.parent);
 
+		this.set_automatic_link_email();
 		this.list = this.wrapper.find(".timeline-items");
+		this.email_link = this.wrapper.find(".timeline-email-import");
 
 		this.comment_area = frappe.ui.form.make_control({
 			parent: this.wrapper.find('.timeline-head'),
@@ -72,6 +74,10 @@ frappe.ui.form.Timeline = class Timeline {
 			});
 		});
 
+		this.email_link.on("click", ".copy-to-clipboard", function() {
+			let text = $(".copy-to-clipboard").text();
+			frappe.utils.copy_to_clipboard(text);
+		});
 	}
 
 	setup_email_button() {
@@ -107,6 +113,34 @@ frappe.ui.form.Timeline = class Timeline {
 				}
 				new frappe.views.CommunicationComposer(args)
 			});
+	}
+
+	set_automatic_link_email() {
+		if (!frappe.email.automatic_link_email){
+			frappe.call("frappe.email.doctype.email_account.email_account.get_automatic_email_link").then((r) => {
+				if (r && r.message) {
+					frappe.email.automatic_link_email = r.message;
+				} else {
+					frappe.email.automatic_link_email = null;
+				}
+				this.display_automatic_link_email();
+			});
+		} else {
+			this.display_automatic_link_email();
+		}
+	}
+
+	display_automatic_link_email() {
+		var me = this;
+		if (frappe.email.automatic_link_email){
+			let email_id = frappe.email.automatic_link_email;
+			email_id =  email_id.split("@")[0] +"+"+ encodeURIComponent(me.frm.doctype) +"+"+ encodeURIComponent(me.frm.docname)
+				+"@"+ email_id.split("@")[1];
+
+			$(".timeline-email-import-link").text(email_id);
+		} else {
+			$('.timeline-email-import').addClass("hide");
+		}
 	}
 
 	setup_interaction_button() {
@@ -159,6 +193,13 @@ frappe.ui.form.Timeline = class Timeline {
 
 		// append comments
 		timeline = timeline.concat(this.get_comments());
+
+		// append energy point logs
+		timeline = timeline.concat(this.get_energy_point_logs());
+
+		// append milestones
+		timeline = timeline.concat(this.get_milestones());
+
 		// sort
 		timeline
 			.filter(a => a.content)
@@ -282,28 +323,38 @@ frappe.ui.form.Timeline = class Timeline {
 	}
 
 	add_reply_btn_event($timeline_item, c) {
-		var me = this;
-		$timeline_item.find(".reply-link").on("click", function() {
-			var name = $(this).attr("data-name");
+		$timeline_item.on('click', '.reply-link, .reply-link-all', (e) => {
 			var last_email = null;
 
-			// find the email tor reply to
-			me.get_communications().forEach(function(c) {
-				if(c.name==name) {
+			const $target = $(e.currentTarget);
+			const name = $target.data().name;
+
+			// find the email to reply to
+			this.get_communications().forEach(function(c) {
+				if(c.name == name) {
 					last_email = c;
 					return false;
 				}
 			});
 
-			// make the composer
-			new frappe.views.CommunicationComposer({
-				doc: me.frm.doc,
+			const opts = {
+				doc: this.frm.doc,
 				txt: "",
 				title: __('Reply'),
-				frm: me.frm,
-				last_email: last_email,
+				frm: this.frm,
+				last_email,
 				is_a_reply: true
-			});
+			};
+
+			if ($target.is('.reply-link-all')) {
+				if (last_email) {
+					opts.cc = last_email.cc;
+					opts.bcc = last_email.bcc;
+				}
+			}
+
+			// make the composer
+			new frappe.views.CommunicationComposer(opts);
 		});
 	}
 
@@ -368,7 +419,6 @@ frappe.ui.form.Timeline = class Timeline {
 			} else {
 				c.content_html = c.content;
 				c.content_html = frappe.utils.strip_whitespace(c.content_html);
-				c.content_html = c.content_html.replace(/&lt;/g,"<").replace(/&gt;/g,">");
 			}
 
 			if (this.is_communication_or_comment(c)) {
@@ -407,7 +457,6 @@ frappe.ui.form.Timeline = class Timeline {
 	set_icon_and_color(c) {
 		if(c.communication_type == "Feedback"){
 			c.icon = "octicon octicon-comment-discussion"
-			c.color = "#f39c12"
 		} else {
 			c.icon = {
 				"Email": "octicon octicon-mail",
@@ -417,12 +466,12 @@ frappe.ui.form.Timeline = class Timeline {
 				"Event": "fa fa-calendar",
 				"Meeting": "octicon octicon-briefcase",
 				"ToDo": "fa fa-check",
-				"Created": "octicon octicon-plus",
 				"Submitted": "octicon octicon-lock",
 				"Cancelled": "octicon octicon-x",
 				"Assigned": "octicon octicon-person",
 				"Assignment Completed": "octicon octicon-check",
 				"Comment": "octicon octicon-comment-discussion",
+				"Milestone": "octicon octicon-milestone",
 				"Workflow": "octicon octicon-git-branch",
 				"Label": "octicon octicon-tag",
 				"Attachment": "octicon octicon-cloud-upload",
@@ -434,25 +483,6 @@ frappe.ui.form.Timeline = class Timeline {
 				"Relinked": "octicon octicon-check",
 				"Reply": "octicon octicon-mail-reply"
 			}[c.comment_type || c.communication_medium]
-
-			c.color = {
-				"Email": "#3498db",
-				"Chat": "#3498db",
-				"Phone": "#3498db",
-				"SMS": "#3498db",
-				"Created": "#1abc9c",
-				"Submitted": "#1abc9c",
-				"Cancelled": "#c0392b",
-				"Assigned": "#f39c12",
-				"Assignment Completed": "#16a085",
-				"Comment": "#f39c12",
-				"Workflow": "#2c3e50",
-				"Label": "#2c3e50",
-				"Attachment": "#7f8c8d",
-				"Attachment Removed": "#eee",
-				"Relinked": "#16a085",
-				"Reply": "#778595"
-			}[c.comment_type || c.communication_medium];
 
 			c.icon_fg = {
 				"Attachment Removed": "#333",
@@ -494,6 +524,31 @@ frappe.ui.form.Timeline = class Timeline {
 		}
 
 		return docinfo.comments;
+	}
+
+	get_energy_point_logs() {
+		let energy_point_logs = this.frm.get_docinfo().energy_point_logs;
+		energy_point_logs.map(log => {
+			log.comment_type = 'Energy Points';
+			log.content = frappe.energy_points.format_form_log(log);
+			return log;
+		});
+		return energy_point_logs;
+	}
+
+	get_milestones() {
+		let milestones = this.frm.get_docinfo().milestones;
+		milestones.map(log => {
+			log.color = 'dark';
+			log.sender = log.owner;
+			log.comment_type = 'Milestone';
+			log.content = __('{0} changed {1} to {2}', [
+				frappe.user.full_name(log.owner).bold(),
+				frappe.meta.get_label(this.frm.doctype, log.track_field),
+				log.value.bold()]);
+			return log;
+		});
+		return milestones;
 	}
 
 	cast_comment_as_communication(c) {
@@ -809,4 +864,4 @@ $.extend(frappe.timeline, {
 
 		return index;
 	}
-})
+});
