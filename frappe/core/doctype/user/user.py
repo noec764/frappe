@@ -39,7 +39,8 @@ class User(Document):
 	def onload(self):
 		from frappe.config import get_modules_from_all_apps
 		self.set_onload('all_modules',
-			[m.get("module_name") for m in get_modules_from_all_apps()])
+			[{"name": m.get("module_name"), "label": _(m.get("module_name"))} \
+			for m in get_modules_from_all_apps()])
 
 	def before_insert(self):
 		self.flags.in_insert = True
@@ -556,7 +557,7 @@ def get_all_roles(arg=None):
 		"restrict_to_domain": ("in", active_domains)
 	}, order_by="name")
 
-	return [ role.get("name") for role in roles ]
+	return [ {"name": role.get("name"), "label":_(role.get("name"))} for role in roles ]
 
 @frappe.whitelist()
 def get_roles(arg=None):

@@ -253,6 +253,7 @@ export default class Grid {
 
 		// toolbar
 		this.setup_toolbar();
+		this.toggle_checkboxes(this.display_status !== 'Read');
 
 		// sortable
 		if(this.frm && this.is_sortable() && !this.sortable_setup_done) {
@@ -286,7 +287,7 @@ export default class Grid {
 				this.wrapper.find(".grid-add-row").removeClass('hidden');
 
 				if(this.multiple_set) {
-					this.wrapper.find(".grid-add-multiple-rows").removeClass('hidden')
+					this.wrapper.find(".grid-add-multiple-rows").removeClass('hidden');
 				}
 			}
 
@@ -445,6 +446,9 @@ export default class Grid {
 		this.get_docfield(fieldname).hidden = show ? 0 : 1;
 		this.refresh();
 	}
+	toggle_checkboxes(enable) {
+		this.wrapper.find(".grid-row-check").prop('disabled', !enable)
+	}
 	get_docfield(fieldname) {
 		return frappe.meta.get_docfield(this.doctype, fieldname, this.frm ? this.frm.docname : null);
 	}
@@ -575,7 +579,7 @@ export default class Grid {
 					df.colsize=df.columns;
 				}
 				else {
-					let colsize = 2;
+					var colsize = 2;
 					switch(df.fieldtype) {
 						case "Text":
 						case "Small Text": colsize = 3; break;
@@ -667,7 +671,7 @@ export default class Grid {
 
 			// upload
 			frappe.flags.no_socketio = true;
-			$(this.wrapper).find(".grid-upload").removeClass("hidden").on("click", function() {
+			$(this.wrapper).find(".grid-upload").removeClass('hidden').on("click", function() {
 				new frappe.ui.FileUploader({
 					as_dataurl: true,
 					allow_multiple: false,
@@ -719,7 +723,7 @@ export default class Grid {
 	setup_download() {
 		var me = this;
 		let title = me.df.label || frappe.model.unscrub(me.df.fieldname);
-		$(this.wrapper).find(".grid-download").removeClass("hidden").on("click", function() {
+		$(this.wrapper).find(".grid-download").removeClass('hidden').on("click", function() {
 			var data = [];
 			var docfields = [];
 			data.push([__("Bulk Edit {0}", [title])]);
@@ -780,4 +784,4 @@ export default class Grid {
 		// hide all custom buttons
 		this.grid_buttons.find('.btn-custom').addClass('hidden');
 	}
-};
+}

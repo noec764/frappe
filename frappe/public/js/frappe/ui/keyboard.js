@@ -206,7 +206,9 @@ frappe.ui.keys.key_map = {
 	114: 'f3',
 	115: 'f4',
 	116: 'f5',
-	191: '/'
+	191: '/',
+	188: '<',
+	190: '>'
 }
 
 'abcdefghijklmnopqrstuvwxyz'.split('').forEach((letter, i) => {
