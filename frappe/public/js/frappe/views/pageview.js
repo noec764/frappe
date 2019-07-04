@@ -57,9 +57,6 @@ frappe.views.pageview = {
 						el: container[0],
 						render: h => h(Desktop)
 					});
-				} else {
-					//Hack for vue
-					frappe.desk_view.trigger("update");
 				}
 
 				frappe.container.change_to('desktop');

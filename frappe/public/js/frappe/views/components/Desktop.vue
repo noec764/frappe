@@ -10,6 +10,7 @@
 			</a>
 		</div>
 		<grid-view
+			:gridKey="'Desktop'"
 			:showGrid="showGrid"
 			:items="items"
 			@removeCard="remove_card"

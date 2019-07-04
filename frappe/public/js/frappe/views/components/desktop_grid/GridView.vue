@@ -1,9 +1,9 @@
 <template>
-	<div class="grid" v-if="showGrid">
+	<div class="grid" v-if="showGrid" :key=gridKey>
 		<muuri-grid id="frappe-grid" :options="options" @gridCreated="on_grid_created">
 			<stats-card
 				:id="'card-' + item.name"
-				v-for="item in filteredItems('Dashboard Card')"
+				v-for="item in stats_items"
 				:key="item.name"
 				:label="item.card_name"
 				:cardSource="item.card_source"
@@ -17,7 +17,7 @@
 			/>
 			<calendar-card
 				:id="'card-' + item.name"
-				v-for="item in filteredItems('Dashboard Calendar')"
+				v-for="item in calendar_items"
 				:key="item.name"
 				:reference="item.source_document"
 				:user="item.user"
@@ -25,7 +25,7 @@
 			/>
 			<graph-card
 				:id="'card-' + item.name"
-				v-for="item in filteredItems('Dashboard Chart')"
+				v-for="item in chart_items"
 				:key="item.name"
 				:label="item.chart_name"
 				:chartSource="item.chart_source"
@@ -71,6 +71,10 @@ export default {
 		showGrid: {
 			type: Boolean,
 			default: false
+		},
+		gridKey: {
+			type: String,
+			default: null
 		}
 	},
 	data() {
@@ -82,22 +86,26 @@ export default {
 				layout: {
 					fillGaps: true,
 					rounding: false,
-					horizontal: this.horizontal
+					horizontal: this.horizontal,
+					alignRight: false
 				}
 			},
-			grid: null
+			grid: null,
+			chart_items: [],
+			stats_items: [],
+			calendar_items: []
 		}
 	},
 	computed: {
-		filteredItems() {
-			return widgetType => this.items.filter(f => f.widget_type==widgetType);
-		},
 		showEmptyGrid() {
 			return this.items.length == 0
 		}
 	},
 	watch: {
 		items(newValue, oldValue) {
+			this.chart_items = this.items.filter(f => f.widget_type=="Dashboard Chart");
+			this.stats_items = this.items.filter(f => f.widget_type=="Dashboard Card");
+			this.calendar_items = this.items.filter(f => f.widget_type=="Dashboard Calendar");
 			this.add_remove_cards(newValue, oldValue);
 		}
 	},
@@ -158,6 +166,7 @@ export default {
 	border: 1px dashed #e6ebf1;
 	height: 350px;
 	width: 100%;
+	min-width: 300px;
 	p {
 		position: relative;
 		top: 50%;

@@ -16,17 +16,17 @@
 			</template>
 		</div>
 		<div
-		v-if="isCollapsed"
-		:style="[{'position' : 'absolute'}, {'top' : `${mobileItemPos}px`}, {'left' : '0px'}, {'z-index' : 30}, {'width' : width}]"
+			v-if="isCollapsed"
+			:style="[{'position' : 'absolute'}, {'top' : `${mobileItemPos}px`}, {'left' : '0px'}, {'z-index' : 30}, {'width' : width}]"
 		>
-		<mobile-item :item="mobileItem" />
-		<transition name="slide-animation">
-			<div
-			v-if="mobileItem"
-			class="vsm-mobile-bg"
-			:style="[{'position' : 'absolute'}, {'left' : '0px'}, {'right' : '0px'}, {'top' : '0px'}, {'height' : `${mobileItemHeight}px`}]"
-			/>
-		</transition>
+			<mobile-item :item="mobileItem" />
+			<transition name="slide-animation">
+				<div
+				v-if="mobileItem"
+				class="vsm-mobile-bg"
+				:style="[{'position' : 'absolute'}, {'left' : '0px'}, {'right' : '0px'}, {'top' : '0px'}, {'height' : `${mobileItemHeight}px`}]"
+				/>
+			</transition>
 		</div>
 		<button
 			class="collapse-btn"
@@ -79,10 +79,16 @@ export default {
 		this.$on('mouseEnterItem', (val) => {
 			this.mobileItem = null
 			this.$nextTick(() => {
-				this.mobileItem = val.item
-				this.mobileItemPos = val.pos
-				this.mobileItemHeight = val.height
+				this.mobileItem = val.item;
+				this.mobileItemPos = val.pos;
+				this.mobileItemHeight = val.height;
 			})
+		})
+
+		this.$on('touchEndItem', () => {
+			setTimeout(() => {
+				this.mobileItem=null
+			}, 1000);
 		})
 	},
 	mounted() {

@@ -66,8 +66,7 @@ frappe.ui.Page = Class.extend({
 	},
 
 	add_main_section: function() {
-		const leftPadding = (parseInt(frappe.frappe_toolbar.menu_sidebar.$el.clientWidth) - 50) + "px"
-		$(frappe.render_template("page", {leftPadding: leftPadding})).appendTo(this.wrapper);
+		$(frappe.render_template("page")).appendTo(this.wrapper);
 		if(this.single_column) {
 			// nesting under col-sm-12 for consistency
 			this.add_view("main", '<div class="row layout-main">\
