@@ -175,20 +175,20 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 							let filters = args.filters;
 
 							filters.forEach((filter) => {
-								filter_string.push(`<b>${frappe.model.unscrub(filter[1])}</b> ${filter[2]} <b>${filter[3]}</b>`);
+								filter_string.push(`<b>${__(frappe.model.unscrub(filter[1]))}</b> ${__(filter[2])} <b>${__(filter[3])}</b>`);
 							});
 						} else {
 							for (let [key, value] of Object.entries(args.filters)) {
 								if (Array.isArray(value) && value[1]) {
-									filter_string.push(`<b>${frappe.model.unscrub(key)}</b> ${value[0]} <b>${value[1]}</b>`);
+									filter_string.push(`<b>${__(frappe.model.unscrub(key))}</b> ${__(value[0])} <b>${__(value[1])}</b>`);
 								} else if (value) {
-									filter_string.push(`<b>${frappe.model.unscrub(key)}</b> as <b>${value}</b>`);
+									filter_string.push(`<b>${__(frappe.model.unscrub(key))}</b> as <b>${__(value)}</b>`);
 								}
 							}
 						}
 
 						if (filter_string.length > 0) {
-							filter_string = "Filters applied for " + filter_string.join(", ");
+							filter_string = __("Filters applied for") + " " + filter_string.join(", ");
 
 							r.results.push({
 								label: "<span class='text-muted disable-select' style='line-height: 20px;'>"
