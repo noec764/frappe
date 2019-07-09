@@ -181,13 +181,18 @@ def get_doctype_module(doctype):
 	"""Returns **Module Def** name of given doctype."""
 	def make_modules_dict():
 		return dict(frappe.db.sql("select name, module from tabDocType"))
-	return frappe.cache().get_value("doctype_modules", make_modules_dict)[doctype]
+	try:
+		return frappe.cache().get_value("doctype_modules", make_modules_dict)[doctype]
+	except KeyError:
+		return {}
 
 doctype_python_modules = {}
 def load_doctype_module(doctype, module=None, prefix="", suffix=""):
 	"""Returns the module object for given doctype."""
 	if not module:
 		module = get_doctype_module(doctype)
+		if not module:
+			raise ImportError('Module import failed for {0}'.format(doctype))
 
 	app = get_module_app(module)
 
