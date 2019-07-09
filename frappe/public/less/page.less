@@ -1,3 +1,5 @@
+// Copyright (c) 2019, Dokos and contributors
+// See license.txt
 @import "variables.less";
 @import "mixins.less";
 
@@ -97,6 +99,12 @@ body[data-route^="modules/"] {
 	a {
 		margin-right: 7px;
 	}
+	.prev-doc {
+		margin-left: 15px;
+	}
+	.next-doc {
+		margin-right: 8px;
+	}
 }
 
 .page-content {
@@ -147,6 +155,27 @@ body[data-route^="modules/"] {
 			display: none;
 		}
 	}
+	.sort-selector {
+		position: absolute;
+		top: 0px;
+		right: 15px;
+		margin: 10px;
+		display: flex;
+
+ 		.dropdown:hover {
+			text-decoration: underline;
+		}
+
+ 		.dropdown-menu {
+			max-height: 300px;
+			overflow-y: scroll;
+			right: 0;
+			left: auto;
+		}
+		button {
+			margin-left: 10px;
+		}
+	}
 }
 
 select.input-sm {
@@ -181,12 +210,13 @@ select.input-sm {
 
 @media(max-width: @screen-xs) {
 	.page-actions {
-		max-width: 150px;
+		position: absolute;
 		float: right;
+		padding-right: 0px;
 	}
 
 	.page-title {
-		position: relative;
+		position: absolute;
 		left: 0;
 		right: 101px;
 		width: 100%;
@@ -358,11 +388,11 @@ select.input-sm {
 .page-card {
 	max-width: 360px;
 	margin: 70px auto;
-    padding: 15px;
-    border: 1px solid #d1d8dd;
-    border-radius: 4px;
-    background-color: #fff;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	padding: 15px;
+	border: 1px solid #d1d8dd;
+	border-radius: 4px;
+	background-color: #fff;
+	box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
 
 	.page-card-head {
 		padding: 10px 15px;
@@ -390,4 +420,12 @@ select.input-sm {
 	align-items: center;
 }
 
+.menu-btn-group {
+	.dropdown-menu {
+		width: max-content;
+	}
 
+	.menu-item-label {
+		margin-right: 15px;
+	}
+} 

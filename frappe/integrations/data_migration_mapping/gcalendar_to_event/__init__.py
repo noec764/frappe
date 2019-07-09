@@ -51,6 +51,7 @@ def pre_process(events):
 
 		if "recurrence" in events:
 			recurrence = get_recurrence_event_fields_value(events['recurrence'][0], events["start"][datevar])
+
 			event.update(recurrence)
 
 		if 'description' in events:
@@ -76,15 +77,15 @@ def get_recurrence_event_fields_value(recur_rule, starts_on):
 			elif repeat_every == "WEEKLY": repeat_on = "Every Week"
 			elif repeat_every == "MONTHLY": repeat_on = "Every Month"
 			else: repeat_on = "Every Year"
-		if "UNTIL" in _str:
+		elif "UNTIL" in _str:
 			# get repeat till
 			date = parse(_str.split("=")[1])
 			repeat_till = get_repeat_till_date(date)
-		if "COUNT" in _str:
+		elif "COUNT" in _str:
 			# get repeat till
 			date = parse(starts_on)
 			repeat_till = get_repeat_till_date(date, count=_str.split("=")[1], repeat_on=repeat_on)
-		if "BYDAY" in _str:
+		elif "BYDAY" in _str:
 			days = _str.split("=")[1]
 			repeat_days.update({
 				"sunday": 1 if "SU" in days else 0,
@@ -95,17 +96,19 @@ def get_recurrence_event_fields_value(recur_rule, starts_on):
 				"friday": 1 if "FR" in days else 0,
 				"saturday": 1 if "SA" in days else 0,
 			})
+			repeat_on = "Every Day"
 
 	recurrence = {
 		"repeat_on": repeat_on,
 		"repeat_till": repeat_till,
-		"repeat_this_event": 1,
+		"repeat_this_event": 1
 	}
 
 	if repeat_days:
 		recurrence.update(repeat_days)
 
 	return recurrence
+
 
 def get_repeat_till_date(date, count=None, repeat_on=None):
 	if count:

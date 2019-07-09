@@ -321,6 +321,10 @@ body[data-route^="Module"] .main-menu {
 					height: 0;
 				}
 			}
+
+			.sidebar-menu {
+				padding: 2px 0px 5px 0px;
+			}
 		}
 
 		@media (max-width: 767px) {
@@ -353,6 +357,19 @@ body[data-route^="Module"] .main-menu {
 			.module-link {
 				padding: 15px 15px 15px 25px;
 			}
+		}
+	}
+}
+
+.overlay-sidebar {
+	ul.dropdown-menu {
+		li {
+			padding:0 !important;
+		}
+
+ 		.badge {
+			top: 0;
+			right: 0;
 		}
 	}
 }
@@ -429,3 +446,10 @@ body[data-route^="Module"] .main-menu {
 		padding: 12px;
 	}
 }
+
+@media screen and (min-width: @screen-md) {
+	.reports-dropdown {
+		max-height: 300px;
+		overflow-y: auto;
+	}
+} 

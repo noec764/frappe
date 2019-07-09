@@ -3,6 +3,7 @@ frappe.ui.form.PrintPreview = Class.extend({
 		$.extend(this, opts);
 		this.make();
 		this.bind_events();
+		this.setup_keyboard_shortcuts();
 	},
 	make: function () {
 		this.wrapper = this.frm.page.add_view("print", frappe.render_template("print_layout", {}));
@@ -121,6 +122,11 @@ frappe.ui.form.PrintPreview = Class.extend({
 			}
 		});
 	},
+	setup_keyboard_shortcuts() {
+		this.wrapper.find('.print-toolbar a.btn-default').each((i, el) => {
+			frappe.ui.keys.get_shortcut_group(this.frm.page).add($(el));
+		});
+	},
 	set_user_lang: function () {
 		this.lang_code = this.frm.doc.language;
 		// Load all languages in the field
@@ -131,9 +137,9 @@ frappe.ui.form.PrintPreview = Class.extend({
 		this.preview();
 	},
 	set_default_print_language: function () {
- 		var print_format = this.get_print_format();
-		 this.lang_code = print_format.default_print_language || frappe.boot.lang;
-		 this.language_sel.val(this.lang_code);
+		var print_format = this.get_print_format();
+		this.lang_code = print_format.default_print_language || this.frm.doc.language || frappe.boot.lang;
+		this.language_sel.val(this.lang_code);
  	},
 	multilingual_preview: function () {
 		var me = this;
@@ -446,7 +452,10 @@ frappe.ui.get_print_settings = function (pdf, callback, letter_head) {
 		fieldtype: "Select",
 		fieldname: "orientation",
 		label: __("Orientation"),
-		options: "Landscape\nPortrait",
+		options: [
+			{ "value": "Landscape", "label": __("Landscape") },
+			{ "value": "Portrait", "label": __("Portrait") }
+		],
 		default: "Landscape"
 	}];
 

@@ -88,7 +88,7 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 			scroll_container.css("overflow-y", "hidden");
 
 			layout_side_section.find(".close-sidebar").on('click', close_sidebar);
-			layout_side_section.on("click", "a", close_sidebar);
+			layout_side_section.on("click", "a:not(.dropdown-toggle)", close_sidebar);
 
 			function close_sidebar(e) {
 				scroll_container.css("overflow-y", "");
@@ -214,6 +214,11 @@ $.extend(frappe.ui.toolbar, {
 		</li>`).get(0);
 
 		parent_element.insertBefore(new_element, parent_element.children[index]);
+	},
+	show_shortcuts (e) {
+		e.preventDefault();
+		frappe.ui.keys.show_keyboard_shortcut_dialog();
+		return false;
 	}
 });
 

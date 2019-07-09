@@ -1,7 +1,8 @@
 <template>
 	<div class="modules-page-container">
-		<div class="modules-dashboard">
+		<div class="modules-dashboard" :key="moduleKey">
 			<grid-view
+				:gridKey="gridKey"
 				:showGrid="showGrid"
 				:items="items"
 				:horizontal="true"
@@ -9,9 +10,7 @@
 			/>
 		</div>
 		<module-detail
-			v-if="
-			this.route && modules_list.map(m => m.module_name).includes(route[1])
-			"
+			v-if="this.route && modules_list.map(m => m.module_name).includes(route[1])"
 			:module_name="route[1]"
 			:sections="current_module_sections">
 		</module-detail>
@@ -31,14 +30,16 @@ export default {
 	data() {
 		return {
 			route: frappe.get_route(),
-			showGrid: true,
+			showGrid: false,
+			gridKey: '',
+			moduleKey: '',
 			items: [],
 			current_module_label: '',
 			current_module_sections: [],
 			modules_data_cache: {},
 			modules_list: frappe.boot.allowed_modules.filter(
-			d => (d.type === 'module' || d.category === 'Places') && !d.blocked
-			),
+				d => (d.type === 'module' || d.category === 'Places') && !d.blocked
+			)
 		}
 	},
 	created() {
@@ -52,7 +53,7 @@ export default {
 		frappe.module_links = {}
 		frappe.route.on('change', () => {
 			if (frappe.get_route()[0]==='modules') {
-				this.update_current_module()
+				this.update_current_module();
 				this.get_module_dashboard();
 			}
 		})
@@ -108,8 +109,15 @@ export default {
 			})
 		},
 		get_module_dashboard() {
+			this.showGrid = false;
 			frappe.xcall("frappe.desk.doctype.desk.desk.get_module_dashboard", {user: frappe.session.user, module: this.route[1]})
-			.then(d => { this.items = d })
+			.then(d => {
+				this.moduleKey = frappe.scrub(this.route[1])+'-module';
+				return d;
+			})
+			.then(d => this.items = d)
+			.then(() => this.gridKey = this.route[1] )
+			.then(() => this.showGrid = true )
 			.catch(error => console.warn(error))
 		},
 		remove_card(e) {

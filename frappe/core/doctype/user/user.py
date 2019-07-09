@@ -39,7 +39,8 @@ class User(Document):
 	def onload(self):
 		from frappe.config import get_modules_from_all_apps
 		self.set_onload('all_modules',
-			[m.get("module_name") for m in get_modules_from_all_apps()])
+			[{"name": m.get("module_name"), "label": _(m.get("module_name"))} \
+			for m in get_modules_from_all_apps()])
 
 	def before_insert(self):
 		self.flags.in_insert = True
@@ -94,7 +95,7 @@ class User(Document):
 		clear_notifications(user=self.name)
 		frappe.clear_cache(user=self.name)
 		self.send_password_notification(self.__new_password)
-		create_contact(self)
+		create_contact(self, ignore_mandatory=True)
 		if self.name not in ('Administrator', 'Guest') and not self.user_image:
 			frappe.enqueue('frappe.core.doctype.user.user.update_gravatar', name=self.name)
 
@@ -153,7 +154,7 @@ class User(Document):
 		if new_password and not self.flags.in_insert:
 			_update_password(user=self.name, pwd=new_password, logout_all_sessions=self.logout_all_sessions)
 
-			if self.send_password_update_notification:
+			if self.send_password_update_notification and self.enabled:
 				self.password_update_mail(new_password)
 				frappe.msgprint(_("New password emailed"))
 
@@ -556,7 +557,7 @@ def get_all_roles(arg=None):
 		"restrict_to_domain": ("in", active_domains)
 	}, order_by="name")
 
-	return [ role.get("name") for role in roles ]
+	return [ {"name": role.get("name"), "label":_(role.get("name"))} for role in roles ]
 
 @frappe.whitelist()
 def get_roles(arg=None):

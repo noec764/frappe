@@ -87,6 +87,9 @@ frappe.ui.form.Form = class FrappeForm {
 			page: this.page
 		});
 
+		// navigate records keyboard shortcuts
+		this.add_nav_keyboard_shortcuts();
+
 		// print layout
 		this.setup_print_layout();
 
@@ -110,6 +113,22 @@ frappe.ui.form.Form = class FrappeForm {
 		this.setup_file_drop();
 
 		this.setup_done = true;
+	}
+
+	add_nav_keyboard_shortcuts() {
+		frappe.ui.keys.add_shortcut({
+			shortcut: 'shift+>',
+			action: () => this.navigate_records(0),
+			page: this.page,
+			description: __('Go to next record')
+		});
+
+ 		frappe.ui.keys.add_shortcut({
+			shortcut: 'shift+<',
+			action: () => this.navigate_records(1),
+			page: this.page,
+			description: __('Go to previous record')
+		});
 	}
 
 	setup_print_layout() {
@@ -518,6 +537,8 @@ frappe.ui.form.Form = class FrappeForm {
 				}
 
 				me.script_manager.trigger("after_save");
+				// submit comment if entered
+				me.timeline.comment_area.submit();
 				me.refresh();
 			} else {
 				if(on_error) {
@@ -793,6 +814,24 @@ frappe.ui.form.Form = class FrappeForm {
 		this.print_preview.toggle();
 	}
 
+	navigate_records(prev) {
+		let list_settings = frappe.get_user_settings(this.doctype)['List'];
+		let args = {
+			doctype: this.doctype,
+			value: this.docname,
+			filters: list_settings.filters,
+			sort_order: list_settings.sort_order,
+			sort_field: list_settings.sort_by,
+			prev,
+		};
+
+ 		frappe.call('frappe.desk.form.utils.get_next', args).then(r => {
+			if (r.message) {
+				frappe.set_route('Form', this.doctype, r.message);
+			}
+		});
+	}
+
 	rename_doc() {
 		frappe.model.rename_doc(this.doctype, this.docname);
 	}
@@ -945,6 +984,7 @@ frappe.ui.form.Form = class FrappeForm {
 		// To set the currency in the label
 		// For example Total Cost(INR), Total Cost(USD)
 
+		if (!currency) return;
 		var me = this;
 		var doctype = parentfield ? this.fields_dict[parentfield].grid.doctype : this.doc.doctype;
 		var field_label_map = {};

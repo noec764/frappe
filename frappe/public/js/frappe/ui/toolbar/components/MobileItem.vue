@@ -9,9 +9,9 @@
 		:href="item.type === 'module' ? '#modules/' + item.module_name : item.link"
 	  >
 		<i
-		  v-if="item.icon"
-		  class="vsm-icon"
-		  :class="item.icon"
+			v-if="item.icon"
+			class="vsm-icon"
+			:class="item.icon"
 		/>
 		{{ item.label }}
 	  </a>
@@ -20,21 +20,21 @@
 
 <script>
 export default {
-  props: {
-	item: {
-	  type: Object,
-	  default: null
+	props: {
+		item: {
+			type: Object,
+			default: null
+		}
+	},
+	data() {
+		return {
+			active: false
+		}
+	},
+	watch: {
+		item () {
+			this.active = true
+		}
 	}
-  },
-  data() {
-	  return {
-		  active: false
-	  }
-  },
-  watch: {
-	item () {
-	  this.active = true
-	}
-  }
 }
 </script>

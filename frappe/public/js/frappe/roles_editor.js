@@ -49,10 +49,10 @@ frappe.RoleEditor = Class.extend({
 
 		$.each(this.roles, function(i, role) {
 			$(me.wrapper).append(repl('<div class="user-role" \
-				data-user-role="%(role_value)s">\
+				data-user-role="%(role_value)s" data-role-label="%(role_display)s">\
 				<input type="checkbox" style="margin-top:0px;" class="box"> \
 				<a href="#" class="grey role">%(role_display)s</a>\
-			</div>', {role_value: role, role_display:__(role)}));
+			</div>', {role_value: role.name, role_display: role.label}));
 		});
 
 		$(this.wrapper).find('input[type="checkbox"]').change(function() {
@@ -60,7 +60,7 @@ frappe.RoleEditor = Class.extend({
 			me.frm.dirty();
 		});
 		$(this.wrapper).find('.user-role a').click(function() {
-			me.show_permissions($(this).parent().attr('data-user-role'));
+			me.show_permissions($(this).parent().attr('data-user-role'), $(this).parent().attr('data-role-label'));
 			return false;
 		});
 	},
@@ -130,7 +130,7 @@ frappe.RoleEditor = Class.extend({
 			unchecked_roles: unchecked_roles
 		};
 	},
-	show_permissions: function(role) {
+	show_permissions: function(role, label) {
 		// show permissions for a role
 		var me = this;
 		if(!this.perm_dialog)
@@ -185,7 +185,7 @@ frappe.RoleEditor = Class.extend({
 						<td>%(set_user_permissions)s</td>\
 						</tr>', perm));
 				}
-				me.perm_dialog.set_title(role);
+				me.perm_dialog.set_title(label);
 				me.perm_dialog.show();
 			}
 		});
