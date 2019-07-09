@@ -33,13 +33,13 @@ frappe.ui.form.on("Communication", {
 
 		if(frm.doc.status==="Open") {
 			frm.add_custom_button(__("Close"), function() {
-				frm.set_value("status", "Closed");
-				frm.save();
+				frappe.xcall("frappe.core.doctype.communication.communication.close_or_open_communication", {communication: frm.doc.name, status: "Closed"})
+				.then(() => frm.reload_doc());
 			});
 		} else if (frm.doc.status !== "Linked") {
 			frm.add_custom_button(__("Reopen"), function() {
-				frm.set_value("status", "Open");
-				frm.save();
+				frappe.xcall("frappe.core.doctype.communication.communication.close_or_open_communication", {communication: frm.doc.name, status: "Open"})
+				.then(() => frm.reload_doc());
 			});
 		}
 

@@ -388,3 +388,7 @@ def get_email_without_link(email):
 	email_host = email.split("@")[1]
 
 	return "{0}@{1}".format(email_id, email_host)
+
+@frappe.whitelist()
+def close_or_open_communication(communication, status):
+	frappe.db.set_value("Communication", communication, "status", status)
