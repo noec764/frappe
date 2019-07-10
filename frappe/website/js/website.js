@@ -71,7 +71,7 @@ $.extend(frappe, {
 					frappe.msgprint(__("Not found"));
 				},
 				403: function() {
-					frappe.msgprint(__("Not permitted"));
+					frappe.msgprint(__("Access not permitted.<br>Please login."));
 				},
 				200: function(data) {
 					if(opts.callback)

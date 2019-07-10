@@ -302,7 +302,7 @@ def clear_cache(path=None):
 		frappe.get_attr(method)(path)
 
 def render_403(e, pathname):
-	frappe.local.message = cstr(e.message if six.PY2 else e)
+	frappe.local.message = _("Please login to access this page.")
 	frappe.local.message_title = _("Not Permitted")
 	frappe.local.response['context'] = dict(
 		indicator_color = 'red',

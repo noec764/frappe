@@ -26,7 +26,7 @@ frappe.ready(function() {
 				window.location.replace('/login?redirect-to=' + window.location.pathname);
 			}
 		});
-		login_required.set_message(__("You are not permitted to access this page."));
+		login_required.set_message(__("Please login before trying to access this page."));
 		login_required.show();
 	}
 
