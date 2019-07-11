@@ -134,4 +134,8 @@ export default {
 	max-width: 900px;
 }
 
+.item-content {
+	padding: 0 1px;
+}
+
 </style>

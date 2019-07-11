@@ -5,8 +5,8 @@
 		:style="cardStyle"
 	>
 		<div class="item-content">
-			<div v-if="showChart">
 				<frappe-charts
+					v-if="showChart"
 					:id="id + '-chart'"
 					:dataSets="data.datasets"
 					:labels="data.labels"
@@ -17,6 +17,9 @@
 					:axisOptions="axisOptions"
 					:tooltipOptions="tooltipOptions"
 				/>
+				<div v-else class="empty-chart text-center">
+					<p class="text-muted">{{ __("No data to display") }}</p>
+				</div>
 				<div class="card-footer">
 					<div class="row">
 						<div class="col-xs-10 card-link">
@@ -26,7 +29,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -80,7 +82,7 @@ export default {
 	},
 	data() {
 		return {
-			axisOptions: {xIsSeries: 1},
+			axisOptions: {},
 			colors: [this.color],
 			data: {},
 			title: `${this.label}`,
@@ -98,7 +100,7 @@ export default {
 			return Object.keys(this.data).length
 		},
 		cardStyle() {
-			return {'width': '100%', 'max-width': (this.width + "%").toString(), 'min-width': '280px', 'height': this.cardHeight};
+			return {'width': (this.width + "%").toString(), 'min-width': '280px', 'height': this.cardHeight};
 		},
 		chartType() {
 			const map = {"Line": "line", "Bar": "bar", "Pie": "pie", "Percentage": "percentage"}
@@ -115,6 +117,7 @@ export default {
 				.then(config => {
 					const evaluated_config = frappe.dom.eval(config);
 					this.settings = frappe.dashboards.chart_sources[this.chartSource]
+					this.axisOptions = {xIsSeries: parseInt(this.settings.timeseries, 10) || 0}
 				})
 				.then(() => this.fetch_data());
 			} else {
@@ -143,6 +146,7 @@ export default {
 <style lang="scss">
 
 .card-footer {
+	height: 10%;
 	.card-link {
 		padding-left: 22px;
 		line-height: 10pt;
@@ -151,6 +155,20 @@ export default {
 
 .title {
 	font-weight: 600;
+}
+
+.item-content {
+	height: 100%;
+}
+
+.empty-chart {
+	height: 90%;
+	width: 100%;
+	p {
+		position: relative;
+		top: 50%;
+		transform: translateY(-50%);
+	}
 }
 
 </style>

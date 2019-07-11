@@ -56,29 +56,12 @@
 			yMarkers: {
 				required: false,
 				type: Array,
-				default: () => [
-					{
-						label: 'Marker',
-						value: 70,
-						options: {
-							labelPos: 'left'
-						}
-					}
-				]
+				default: () => null
 			},
 			yRegions: {
 				required: false,
 				type: Array,
-				default: () => [
-					{
-						label: 'Region',
-						start: -10,
-						end: 50,
-						options: {
-							labelPos: 'right'
-						}
-					}
-				]
+				default: () => null
 			},
 			colors: {
 				required: false,
@@ -166,7 +149,9 @@
 				chart: null,
 				data: {
 					labels: this.labels,
-					datasets: this.dataSets
+					datasets: this.dataSets,
+					yMarkers: this.yMarkers,
+					yRegions: this.yRegions
 				},
 				heatmapData: {
 					dataPoints: this.dataPoints,
