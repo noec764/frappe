@@ -146,6 +146,7 @@ export default {
 .desktop-page-container {
 	margin-top: 40px;
 	margin-bottom: 30px;
+	height: 350px;
 }
 .desktop-section {
 	position: relative;

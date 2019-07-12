@@ -154,6 +154,7 @@ export default {
 	width: 100%;
 	position: relative;
 	margin: 0 auto;
+	height: 100%;
 	.grid-item {
 		background-color: #fff;
 		border-radius: 4px;
@@ -164,9 +165,8 @@ export default {
 .empty-grid {
 	border-radius: 4px;
 	border: 1px dashed #e6ebf1;
-	height: 350px;
+	height: 100%;
 	width: 100%;
-	min-width: 300px;
 	p {
 		position: relative;
 		top: 50%;
