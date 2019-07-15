@@ -85,6 +85,8 @@ frappe.ui.Page = Class.extend({
 			</div>');
 		}
 
+		const side_width = $('.v-sidebar-menu').css('width')
+		this.wrapper.find(".page-head").css("padding-left", side_width);
 		this.setup_page();
 	},
 

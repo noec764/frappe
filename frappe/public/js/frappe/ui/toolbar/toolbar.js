@@ -58,7 +58,7 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 		});
 
 		frappe.sidebar_update.on('collapse', (width) => {
-			const sidebarWidth = (parseInt(width) - 50) + "px"
+			const sidebarWidth = parseInt(width) + "px"
 			document.getElementById("body_div").style.paddingLeft = sidebarWidth;
 			const pages = document.getElementsByClassName("page-head");
 			Array.from(pages).forEach(page => {

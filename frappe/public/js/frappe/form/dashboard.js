@@ -493,10 +493,7 @@ frappe.ui.form.Dashboard = Class.extend({
 	render_graph: function(args) {
 		var me = this;
 		this.chart_area.empty().removeClass('hidden');
-		$.extend(args, {
-			type: 'line',
-			colors: ['green']
-		});
+		args = Object.assign({type: 'line', colors: ['green']}, args);
 		this.show();
 
 		this.chart = new frappe.Chart('.form-graph', args);
