@@ -183,17 +183,29 @@ frappe.ui.form.QuickEntryForm = Class.extend({
 					doc: me.dialog.doc
 				},
 				callback: function(r) {
-					me.dialog.hide();
-					// delete the old doc
-					frappe.model.clear_doc(me.dialog.doc.doctype, me.dialog.doc.name);
-					me.dialog.doc = r.message;
-					if(frappe._from_link) {
-						frappe.ui.form.update_calling_link(me.dialog.doc);
+
+					if (frappe.model.is_submittable(me.doctype)) {
+						frappe.run_serially([
+							() => me.dialog.working = true,
+							() => {
+								me.dialog.set_primary_action(__('Submit'), function() {
+									me.submit(r.message);
+								});
+							}
+						]);
 					} else {
-						if(me.after_insert) {
-							me.after_insert(me.dialog.doc);
+						me.dialog.hide();
+						// delete the old doc
+						frappe.model.clear_doc(me.dialog.doc.doctype, me.dialog.doc.name);
+						me.dialog.doc = r.message;
+						if(frappe._from_link) {
+							frappe.ui.form.update_calling_link(me.dialog.doc);
 						} else {
-							me.open_form_if_not_list();
+							if(me.after_insert) {
+								me.after_insert(me.dialog.doc);
+							} else {
+								me.open_form_if_not_list();
+							}
 						}
 					}
 				},
@@ -206,6 +218,25 @@ frappe.ui.form.QuickEntryForm = Class.extend({
 				},
 				freeze: true
 			});
+		});
+	},
+
+	submit: function() {
+		var me = this;
+		frappe.call({
+			method: "frappe.client.submit",
+			args : {
+				doc: me.dialog.doc
+			},
+			callback: function(r) {
+				me.dialog.hide();
+				// delete the old doc
+				frappe.model.clear_doc(me.dialog.doc.doctype, me.dialog.doc.name);
+				me.dialog.doc = r.message;
+				if (frappe._from_link) {
+					frappe.ui.form.update_calling_link(me.dialog.doc);
+				}
+			}
 		});
 	},
 
