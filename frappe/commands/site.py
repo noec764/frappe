@@ -2,6 +2,7 @@ from __future__ import unicode_literals, absolute_import, print_function
 import click
 import hashlib, os, sys, compileall, re
 import frappe
+import frappe.recorder
 from frappe import _
 from frappe.commands import pass_context, get_site
 from frappe.commands.scheduler import _is_scheduler_enabled

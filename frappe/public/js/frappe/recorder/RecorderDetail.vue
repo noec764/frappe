@@ -1,28 +1,24 @@
 <template>
 	<div>
-		<div class="row form-section visible-section shaded-section">
-			<div class="section-body">
-				<div class="form-column col-sm-12">
-					<form>
-						<div class="frappe-control" :data-fieldtype="column.type" v-for="(column, index) in columns" :key="index" :class="column.class">
-							<div class="form-group">
-								<div class="clearfix"><label class="control-label">{{ column.label }}</label></div>
-								<div class="control-value like-disabled-input" v-html="column.formatter ? column.formatter(request[column.slug]) : request[column.slug]"></div>
-							</div>
-						</div>
-					</form>
+		<div class="frappe-list">
+			<div class="list-filters"></div>
+			<div style="margin-bottom:9px" class="list-toolbar-wrapper hide">
+				<div class="list-toolbar btn-group" style="display:inline-block; margin-right: 10px;"></div>
+			</div>
+			<div style="clear:both"></div>
+			<div class="filter-list">
+				<div class="tag-filters-area">
+					<div class="active-tag-filters">
+						<button class="btn btn-default btn-xs add-filter text-muted">
+							Add Filter
+						</button>
+					</div>
 				</div>
-			</div>
-		</div>
-		<div class="row form-section visible-section">
-			<div class="col-sm-10">
-				<h6 class="form-section-heading uppercase">SQL Queries</h6>
-			</div>
-			<div class="col-sm-2 filter-list">
+				<div class="filter-edit-area"></div>
 				<div class="sort-selector">
-					<div class="dropdown"><a class="text-muted dropdown-toggle small" data-toggle="dropdown"><span class="dropdown-text">{{ table_columns.filter(c => c.slug == query.sort)[0].label }}</span></a>
+					<div class="dropdown"><a class="text-muted dropdown-toggle small" data-toggle="dropdown"><span class="dropdown-text">{{ columns.filter(c => c.slug == query.sort)[0].label }}</span></a>
 						<ul class="dropdown-menu">
-							<li v-for="(column, index) in table_columns.filter(c => c.sortable)" :key="index" @click="query.sort = column.slug"><a class="option">{{ column.label }}</a></li>
+							<li v-for="(column, index) in columns.filter(c => c.sortable)" :key="index" @click="query.sort = column.slug"><a class="option">{{ column.label }}</a></li>
 						</ul>
 					</div>
 					<button class="btn btn-default btn-xs btn-order">
@@ -30,172 +26,62 @@
 					</button>
 				</div>
 			</div>
-			<div class="section-body">
-				<div class="form-column col-sm-12">
-					<form>
-						<div class="form-group frappe-control input-max-width" data-fieldtype="Check">
-							<div class="checkbox">
-								<label>
-									<span class="input-area"><input type="checkbox" class="input-with-feedback bold" data-fieldtype="Check" v-model="group_duplicates"></span>
-									<span class="label-area small">Group Duplicate Queries</span>
-								</label>
+			<div  v-if="requests.length != 0" class="result">
+				<div class="list-headers">
+					<header class="level list-row list-row-head text-muted small">
+						<div class="level-left list-header-subject">
+							<div class="list-row-col ellipsis list-subject level ">
+								<span class="level-item">{{ columns[0].label }}</span>
+							</div>
+							<div class="list-row-col ellipsis hidden-xs"  v-for="(column, index) in columns.slice(1)" :key="index" :class="{'text-right': column.number}">
+								<span>{{ column.label }}</span>
 							</div>
 						</div>
-						<div class="frappe-control" data-fieldtype="Table">
-							<div>
-								<div class="form-grid">
-									<div class="grid-heading-row">
-										<div class="grid-row">
-											<div class="data-row row">
-												<div class="row-index col col-xs-1">
-													<span>Index</span></div>
-												<div class="col grid-static-col col-xs-6">
-													<div class="static-area ellipsis">Query</div>
-												</div>
-												<div class="col grid-static-col col-xs-2">
-													<div class="static-area ellipsis text-right">Duration (ms)</div>
-												</div>
-												<div class="col grid-static-col col-xs-2">
-													<div class="static-area ellipsis text-right">Exact Copies</div>
-												</div>
-											</div>
-										</div>
-									</div>
-									<div class="grid-body">
-										<div class="rows">
-											<div class="grid-row" :class="showing == call.index ? 'grid-row-open' : ''"  v-for="call in paginated(sorted(grouped(request.calls)))" :key="call.index">
-												<div class="data-row row" v-if="showing != call.index" style="display: block;" @click="showing = call.index" >
-													<div class="row-index col col-xs-1"><span>{{ call.index }}</span></div>
-													<div class="col grid-static-col col-xs-6" data-fieldtype="Code">
-														<div class="static-area"><span>{{ call.query }}</span></div>
-													</div>
-													<div class="col grid-static-col col-xs-2">
-														<div class="static-area ellipsis text-right">{{ call.duration }}</div>
-													</div>
-													<div class="col grid-static-col col-xs-2">
-														<div class="static-area ellipsis text-right">{{ call.exact_copies }}</div>
-													</div>
-													<div class="col col-xs-1"><a class="close btn-open-row">
-														<span class="octicon octicon-triangle-down"></span></a>
-													</div>
-												</div>
-												<div class="form-in-grid" v-if="showing == call.index">
-													<div class="grid-form-heading" @click="showing = null">
-														<div class="toolbar grid-header-toolbar">
-															<span class="panel-title">SQL Query #<span class="grid-form-row-index">{{ call.index }}</span></span>
-															<div class="btn btn-default btn-xs pull-right" style="margin-left: 7px;">
-																<span class="hidden-xs octicon octicon-triangle-up"></span>
-															</div>
-														</div>
-													</div>
-													<div class="grid-form-body">
-														<div class="form-area">
-															<div class="form-layout">
-																<div class="form-page">
-																	<div class="row form-section visible-section">
-																		<div class="section-body">
-																			<div class="form-column col-sm-12">
-																				<form>
-																					<div class="frappe-control">
-																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Query</label></div>
-																							<div class="control-value like-disabled-input for-description"><pre>{{ call.query }}</pre></div>
-																						</div>
-																					</div>
-																					<div class="frappe-control input-max-width">
-																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Duration (ms)</label></div>
-																							<div class="control-value like-disabled-input">{{ call.duration }}</div>
-																						</div>
-																					</div>
-																					<div class="frappe-control input-max-width">
-																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Exact Copies</label></div>
-																							<div class="control-value like-disabled-input">{{ call.exact_copies }}</div>
-																						</div>
-																					</div>
-																					<div class="frappe-control">
-																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Stack Trace</label></div>
-																							<div class="control-value like-disabled-input for-description" style="overflow:auto">
-																								<table class="table table-striped">
-																									<thead>
-																										<tr>
-																											<th v-for="key in ['filename', 'lineno', 'function']" :key="key">{{ key }}</th>
-																										</tr>
-																									</thead>
-																									<tbody>
-																										<template v-for="(row, index) in call.stack">
-																											<tr :key="index" @click="showing_traceback = showing_traceback == index ? null : index">
-																												<td v-for="key in ['filename', 'lineno', 'function']" :key="key">{{ row[key] }}</td>
-																											</tr>
-																											<tr v-if="showing_traceback == index">
-																												<td colspan="4" v-html="row.context"></td>
-																											</tr>
-																											<tr v-if="showing_traceback == index">
-																												<td colspan="4">
-																													<table class="table table-striped">
-																														<thead>
-																															<tr><th>Variable</th><th>Value</th></tr>
-																														</thead>
-																														<tbody>
-																															<tr v-for="(variable, index) in Object.entries(JSON.parse(row.locals))" :key="index">
-																																<td>{{ variable[0] }}</td>
-																																<td>{{ variable[1] }}</td>
-																															</tr>
-																														</tbody>
-																													</table>
-																												</td>
-																											</tr>
-																										</template>
-																									</tbody>
-																								</table>
-																							</div>
-																						</div>
-																					</div>
-																					<div class="frappe-control" v-if="call.explain_result[0]">
-																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">SQL Explain</label></div>
-																							<div class="control-value like-disabled-input for-description" style="overflow:auto">
-																								<table class="table table-striped">
-																									<thead>
-																										<tr>
-																											<th v-for="key in Object.keys(call.explain_result[0])" :key="key">{{ key }}</th>
-																										</tr>
-																									</thead>
-																									<tbody>
-																										<tr v-for="(row, index) in call.explain_result" :key="index">
-																											<td v-for="key in Object.keys(call.explain_result[0])" :key="key">{{ row[key] }}</td>
-																										</tr>
-																									</tbody>
-																								</table>
-																							</div>
-																						</div>
-																					</div>
-																				</form>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div v-if="request.calls.length == 0" class="grid-empty text-center">No Data</div>
-									</div>
+						<div class="level-right">
+							<span class="list-count"><span>{{ (query.pagination.page - 1) * (query.pagination.limit) + 1 }} - {{ Math.min(query.pagination.page * query.pagination.limit, requests.length) }} of {{ requests.length }}</span></span>
+						</div>
+					</header>
+
+				</div>
+				<div class="result-list">
+					<div class="list-row-container" v-for="(request, index) in paginated(sorted(filtered(requests)))" :key="index" @click="route_to_request_detail(request.uuid)">
+						<div class="level list-row small">
+							<div class="level-left ellipsis">
+								<div class="list-row-col ellipsis list-subject level ">
+									<span class="level-item bold" :title="request[columns[0].slug]">
+										{{ request[columns[0].slug] }}
+									</span>
+								</div>
+								<div class="list-row-col ellipsis" v-for="(column, index) in columns.slice(1)" :key="index" :class="{'text-right': column.number}">
+									<span class="ellipsis text-muted">{{ request[column.slug] }}</span>
+								</div>
+							</div>
+							<div class="level-right ellipsis">
+								<div class="list-row-col ellipsis list-subject level ">
+									<span class="level-item ellipsis text-muted">
+
+									</span>
 								</div>
 							</div>
 						</div>
-					</form>
+					</div>
 				</div>
 			</div>
-			<div v-if="request.calls.length != 0" class="list-paging-area" style="border-top: none">
+			<div v-if="requests.length == 0" class="no-result text-muted flex justify-center align-center" style="">
+				<div class="msg-box no-border" v-if="status.status == 'Inactive'" >
+					<p>Recorder is Inactive</p>
+					<p><button class="btn btn-primary btn-sm btn-new-doc" @click="start()">Start Recording</button></p>
+				</div>
+				<div class="msg-box no-border" v-if="status.status == 'Active'" >
+					<p>No Requests found</p>
+					<p>Go make some noise</p>
+				</div>
+			</div>
+			<div v-if="requests.length != 0" class="list-paging-area">
 				<div class="row">
 					<div class="col-xs-6">
 						<div class="btn-group btn-group-paging">
-							<button type="button" class="btn btn-default btn-sm" v-for="(limit, index) in [20, 50, 100]" :key="index" :class="query.pagination.limit == limit ? 'btn-info' : ''" @click="query.pagination.limit = limit">
+							<button type="button" class="btn btn-default btn-sm" v-for="(limit, index) in [20, 100, 500]" :key="index" :class="query.pagination.limit == limit ? 'btn-info' : ''" @click="query.pagination.limit = limit">
 								{{ limit }}
 							</button>
 						</div>
@@ -215,40 +101,48 @@
 
 <script>
 export default {
-	name: "RequestDetail",
- 	data() {
+	name: "RecorderDetail",
+	data() {
 		return {
+			requests: [],
 			columns: [
-				{label: "Path", slug: "path", type: "Data", class: "col-sm-6"},
-				{label: "CMD", slug: "cmd", type: "Data", class: "col-sm-6"},
-				{label: "Time", slug: "time", type: "Time", class: "col-sm-6"},
-				{label: "Duration (ms)", slug: "duration", type: "Float", class: "col-sm-6"},
-				{label: "Number of Queries", slug: "queries", type: "Int", class: "col-sm-6"},
-				{label: "Time in Queries (ms)", slug: "time_queries", type: "Float", class: "col-sm-6"},
-				{label: "Request Headers", slug: "headers", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
-				{label: "Form Dict", slug: "form_dict", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
-			],
-			table_columns: [
-				{label: "Execution Order", slug: "index", sortable: true},
-				{label: "Duration (ms)", slug: "duration", sortable: true},
-				{label: "Exact Copies", slug: "exact_copies", sortable: true},
+				{label: "Path", slug: "path"},
+				{label: "Duration (ms)", slug: "duration", sortable: true, number: true},
+				{label: "Time in Queries (ms)", slug: "time_queries", sortable: true, number: true},
+				{label: "Queries", slug: "queries", sortable: true, number: true},
+				{label: "Method", slug: "method"},
+				{label: "Time", slug: "time", sortable: true},
 			],
 			query: {
-				sort: "index",
+				sort: "time",
 				order: "asc",
+				filters: {},
 				pagination: {
 					limit: 20,
 					page: 1,
 					total: 0,
 				}
 			},
-			group_duplicates: false,
-			showing: null,
-			showing_traceback: null,
-			request: {
-				calls: [],
+			status: {
+				color: "grey",
+				status: "Unknown",
 			},
 		};
+	},
+	created() {
+		let route = frappe.get_route();
+		if (route[2]) {
+			this.$router.push({name: 'request-detail', params: {id: route[2]}});
+		}
+	},
+	mounted() {
+		this.fetch_status();
+		this.refresh();
+		this.$root.page.set_secondary_action("Clear", () => {
+			frappe.set_route("recorder");
+			this.clear();
+		});
+
 	},
 	computed: {
 		pages: function() {
@@ -278,41 +172,80 @@ export default {
 		}
 	},
 	methods: {
-		paginated: function(calls) {
-			calls = calls.slice();
-			this.query.pagination.total = Math.ceil(calls.length / this.query.pagination.limit);
+		filtered: function(requests) {
+			requests = requests.slice();
+			const filters = Object.entries(this.query.filters);
+			requests = requests.filter(
+				(r) => filters.map((f) => (r[f[0]] || "").match(f[1])).every(Boolean)
+			);
+			this.query.pagination.total = Math.ceil(requests.length / this.query.pagination.limit);
+			return requests;
+		},
+		paginated: function(requests) {
+			requests = requests.slice();
 			const begin = (this.query.pagination.page - 1) * (this.query.pagination.limit);
 			const end = begin + this.query.pagination.limit;
-			return calls.slice(begin, end);
+			return requests.slice(begin, end);
 		},
-		sorted: function(calls) {
-			calls = calls.slice();
+		sorted: function(requests) {
+			requests = requests.slice();
 			const order = (this.query.order == "asc") ? 1 : -1;
 			const sort = this.query.sort;
-			return calls.sort((a,b) => (a[sort] > b[sort]) ? order : -order);
+			return requests.sort((a,b) => (a[sort] > b[sort]) ? order : -order);
 		},
-		grouped: function(calls) {
-			if(this.group_duplicates) {
-				calls = calls.slice();
-				return calls.uniqBy(call => call["query"]);
-			}
-			return calls
+		refresh: function() {
+			frappe.call("frappe.recorder.get").then( r => this.requests = r.message);
 		},
-	},
-	mounted() {
-		frappe.breadcrumbs.add({
-			type: 'Custom',
-			label: __('Recorder'),
-			route: '#recorder'
-		});
-		frappe.call({
-			method: "frappe.recorder.get",
-			args: {
-				uuid: this.$route.params.id
+		update: function(message) {
+			this.requests.push(JSON.parse(message));
+		},
+		clear: function() {
+			frappe.call("frappe.recorder.delete").then(r => this.refresh());
+		},
+		start: function() {
+			frappe.call("frappe.recorder.start").then(r => this.fetch_status());
+		},
+		stop: function() {
+			frappe.call("frappe.recorder.stop").then(r => this.fetch_status());
+		},
+		fetch_status: function() {
+			frappe.call("frappe.recorder.status").then(r => this.update_status(r.message));
+		},
+		update_status: function(result) {
+			if(result) {
+				this.status = {status: "Active", color: "green"}
+			} else {
+				this.status = {status: "Inactive", color: "red"}
 			}
-		}).then( r => {
-			this.request = r.message
-		});
+			this.$root.page.set_indicator(this.status.status, this.status.color);
+			if(this.status.status == "Active") {
+				frappe.realtime.on("recorder-dump-event", this.update);
+			} else {
+				frappe.realtime.off("recorder-dump-event", this.update);
+			}
+
+			this.update_buttons();
+		},
+		update_buttons: function() {
+			if(this.status.status == "Active") {
+				this.$root.page.set_primary_action("Stop", () => {
+					this.stop();
+				});
+			} else {
+				this.$root.page.set_primary_action("Start", () => {
+					this.start();
+				});
+			}
+		},
+		route_to_request_detail(id) {
+			this.$router.push({name: 'request-detail', params: {id}});
+		}
 	}
 };
 </script>
+<style>
+.list-row .level-left {
+	flex: 8;
+	width: 100%;
+}
+</style>
