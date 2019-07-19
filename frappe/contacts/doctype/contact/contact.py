@@ -162,6 +162,7 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 			'link_doctype': link_doctype
 		})
 
+
 def get_contact_with_phone_number(number):
 	if not number: return
 

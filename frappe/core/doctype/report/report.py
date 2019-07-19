@@ -12,6 +12,7 @@ from frappe.modules.export_file import export_to_files
 from frappe.modules import make_boilerplate
 from frappe.core.doctype.page.page import delete_custom_role
 from frappe.core.doctype.custom_role.custom_role import get_custom_allowed_roles
+from frappe.desk.reportview import append_totals_row
 from six import iteritems
 
 
@@ -32,7 +33,7 @@ class Report(Document):
 		if self.is_standard == "Yes" and frappe.session.user!="Administrator":
 			frappe.throw(_("Only Administrator can save a standard report. Please rename and save."))
 
-		if self.report_type in ("Query Report", "Script Report", "Custom Report") \
+		if self.report_type in ("Query Report", "Script Report") \
 			and frappe.session.user!="Administrator":
 			frappe.throw(_("Only Administrator allowed to create Query / Script Reports"))
 
@@ -76,11 +77,6 @@ class Report(Document):
 		if not self.json:
 			self.json = '{}'
 
-		if self.json:
-			data = json.loads(self.json)
-			data["add_total_row"] = self.add_total_row
-			self.json = json.dumps(data)
-
 	def export_doc(self):
 		if frappe.flags.in_import:
 			return
@@ -100,7 +96,7 @@ class Report(Document):
 		columns = []
 		out = []
 
-		if self.report_type in ('Query Report', 'Script Report'):
+		if self.report_type in ('Query Report', 'Script Report', 'Custom Report'):
 			# query and script reports
 			data = frappe.desk.query_report.run(self.name, filters=filters, user=user)
 			for d in data.get('columns'):
@@ -178,6 +174,9 @@ class Report(Document):
 
 			out = out + [list(d) for d in result]
 
+			if params.get('add_totals_row'):
+				out = append_totals_row(out)
+
 		if as_dict:
 			data = []
 			for row in out:
@@ -202,4 +201,3 @@ class Report(Document):
 def is_prepared_report_disabled(report):
 	return frappe.db.get_value('Report',
 		report, 'disable_prepared_report') or 0
-
