@@ -44,6 +44,7 @@
   "allow_copy",
   "allow_rename",
   "allow_import",
+  "allow_auto_repeat",
   "allow_events_in_timeline",
   "view_settings",
   "title_field",
@@ -336,6 +337,12 @@
   },
   {
    "default": "0",
+   "fieldname": "allow_auto_repeat",
+   "fieldtype": "Check",
+   "label": "Allow Auto Repeat"
+  },
+  {
+   "default": "0",
    "fieldname": "allow_events_in_timeline",
    "fieldtype": "Check",
    "label": "Allow events in timeline"
@@ -500,7 +507,7 @@
  ],
  "icon": "fa fa-bolt",
  "idx": 6,
- "modified": "2019-05-17 11:48:08.617330",
+ "modified": "2019-07-19 17:59:05.775307",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
