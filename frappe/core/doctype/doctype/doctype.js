@@ -1,4 +1,4 @@
-// Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+// Copyright (c) 2019, Dokos and Contributors
 // MIT License. See license.txt
 
 // -------------
@@ -22,9 +22,15 @@ frappe.ui.form.on('DocType', {
 		}
 
 		if (!frm.is_new() && !frm.doc.istable) {
-			frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
-				frappe.set_route('List', frm.doc.name, 'List');
-			});
+			if (frm.doc.issingle) {
+				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
+					frappe.set_route('Form', frm.doc.name);
+				});
+			} else {
+				frm.add_custom_button(__('Go to {0} List', [_(frm.doc.name)]), () => {
+					frappe.set_route('List', frm.doc.name, 'List');
+				});
+			}
 		}
 
 		if(!frappe.boot.developer_mode && !frm.doc.custom) {

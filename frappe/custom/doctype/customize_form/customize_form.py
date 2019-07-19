@@ -13,6 +13,7 @@ from frappe.utils import cint
 from frappe.model.document import Document
 from frappe.model import no_value_fields, core_doctypes_list
 from frappe.core.doctype.doctype.doctype import validate_fields_for_doctype
+from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.model.docfield import supports_translation
 
 doctype_properties = {
@@ -28,7 +29,8 @@ doctype_properties = {
 	'editable_grid': 'Check',
 	'max_attachments': 'Int',
 	'track_changes': 'Check',
-	'track_views': 'Check'
+	'track_views': 'Check',
+	'allow_auto_repeat': 'Check'
 }
 
 docfield_properties = {
@@ -37,6 +39,7 @@ docfield_properties = {
 	'fieldtype': 'Select',
 	'options': 'Text',
 	'fetch_from': 'Small Text',
+	'fetch_if_empty': 'Check',
 	'permlevel': 'Int',
 	'width': 'Data',
 	'print_width': 'Data',
@@ -63,7 +66,8 @@ docfield_properties = {
 	'length': 'Int',
 	'columns': 'Int',
 	'remember_last_selected_value': 'Check',
-	'allow_bulk_edit': 'Check'
+	'allow_bulk_edit': 'Check',
+	'auto_repeat': 'Link'
 }
 
 allowed_fieldtype_change = (('Currency', 'Float', 'Percent'), ('Small Text', 'Data'),
@@ -106,6 +110,13 @@ class CustomizeForm(Document):
 		# load custom translation
 		translation = self.get_name_translation()
 		self.label = translation.target_name if translation else ''
+
+		#If allow_auto_repeat is set, add auto_repeat custom field.
+		if self.allow_auto_repeat:
+			if not frappe.db.exists('Custom Field', {'fieldname': 'auto_repeat', 'dt': self.doc_type}):
+				insert_after = self.fields[len(self.fields) - 1].fieldname
+				df = dict(fieldname='auto_repeat', label='Auto Repeat', fieldtype='Link', options='Auto Repeat', insert_after=insert_after, read_only=1, no_copy=1, print_hide=1)
+				create_custom_field(self.doc_type, df)
 
 		# NOTE doc is sent to clientside by run_method
 
@@ -229,7 +240,8 @@ class CustomizeForm(Document):
 						frappe.msgprint(_("You can't set 'Translatable' for field {0}").format(df.label))
 						continue
 
-					elif (property == 'in_global_search' and df.in_global_search != meta_df[0].get("in_global_search")):
+					elif (property == 'in_global_search' and
+						df.in_global_search != meta_df[0].get("in_global_search")):
 						self.flags.rebuild_doctype_for_global_search = True
 
 					self.make_property_setter(property=property, value=df.get(property),

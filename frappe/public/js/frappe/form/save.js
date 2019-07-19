@@ -140,6 +140,10 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 				}
 			});
 
+			if (frm.is_new() && frm.meta.autoname === 'Prompt' && !frm.doc.__newname) {
+				error_fields = [__('Name'), ...error_fields];
+			}
+
 			if (error_fields.length) {
 				if (doc.parenttype) {
 					var message = __('Mandatory fields required in table {0}, Row {1}',

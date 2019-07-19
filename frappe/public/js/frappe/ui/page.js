@@ -66,7 +66,7 @@ frappe.ui.Page = Class.extend({
 	},
 
 	add_main_section: function() {
-		$(frappe.render_template("page")).appendTo(this.wrapper);
+		$(frappe.render_template("page", {})).appendTo(this.wrapper);
 		if(this.single_column) {
 			// nesting under col-sm-12 for consistency
 			this.add_view("main", '<div class="row layout-main">\
@@ -85,8 +85,6 @@ frappe.ui.Page = Class.extend({
 			</div>');
 		}
 
-		const side_width = $('.v-sidebar-menu').css('width')
-		this.wrapper.find(".page-head").css("padding-left", side_width);
 		this.setup_page();
 	},
 
@@ -134,7 +132,7 @@ frappe.ui.Page = Class.extend({
 			.get_shortcut_group(this.page_actions[0])
 			.add(menu_btn, menu_btn.find('.menu-btn-group-label'));
 
- 		let action_btn = this.actions_btn_group.find('button');
+		let action_btn = this.actions_btn_group.find('button');
 		frappe.ui.keys
 			.get_shortcut_group(this.page_actions[0])
 			.add(action_btn, action_btn.find('.actions-btn-group-label'));
@@ -192,7 +190,6 @@ frappe.ui.Page = Class.extend({
 			icon: icon,
 			working_label: working_label
 		});
-
 		return this.btn_primary;
 
 	},
@@ -310,26 +307,18 @@ frappe.ui.Page = Class.extend({
 	* @param {Boolean} show_parent - Whether to show the dropdown button if dropdown item is added
 	*/
 	add_dropdown_item: function({label, click, standard, parent, shortcut, show_parent=true}) {
-		if(show_parent) {
+		if (show_parent) {
 			parent.parent().removeClass("hide");
 		}
+
 		let $li;
 		if (shortcut) {
-			let shortcut_label = shortcut;
-			if (frappe.utils.is_mac()) {
-				shortcut_label = shortcut.replace('Ctrl', '⌘');
-			}
+			let shortcut_obj = this.prepare_shortcut_obj(shortcut, click, label);
 			$li = $(`<li><a class="grey-link dropdown-item" href="#" onClick="return false;">
 				<span class="menu-item-label">${label}</span>
-				<span class="text-muted pull-right">${shortcut_label}</span>
+				<span class="text-muted pull-right">${shortcut_obj.shortcut_label}</span>
 			</a><li>`);
-			shortcut = shortcut.toLowerCase();
-			frappe.ui.keys.add_shortcut({
-				shortcut,
-				target: $li.find('a'),
-				description: label,
-				page: this
-			});
+			frappe.ui.keys.add_shortcut(shortcut_obj);
 		} else {
 			$li = $(`<li><a class="grey-link dropdown-item" href="#" onClick="return false;">
 				<span class="menu-item-label">${label}</span></a><li>`);
@@ -354,6 +343,35 @@ frappe.ui.Page = Class.extend({
 			.add($link, $link.find('.menu-item-label'));
 
 		return $link;
+	},
+
+	prepare_shortcut_obj(shortcut, click, label) {
+		let shortcut_obj;
+		// convert to object, if shortcut string passed
+		if (typeof shortcut === 'string') {
+			shortcut_obj = { shortcut };
+		} else {
+			shortcut_obj = shortcut;
+		}
+		// label
+		if (frappe.utils.is_mac()) {
+			shortcut_obj.shortcut_label = shortcut_obj.shortcut.replace('Ctrl', '⌘');
+		} else {
+			shortcut_obj.shortcut_label = shortcut_obj.shortcut;
+		}
+		// actual shortcut string
+		shortcut_obj.shortcut = shortcut_obj.shortcut.toLowerCase();
+		// action is button click
+		if (!shortcut_obj.action) {
+			shortcut_obj.action = click;
+		}
+		// shortcut description can be button label
+		if (!shortcut_obj.description) {
+			shortcut_obj.description = label;
+		}
+		// page
+		shortcut_obj.page = this;
+		return shortcut_obj;
 	},
 
 	/*
