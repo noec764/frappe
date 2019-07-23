@@ -12,7 +12,6 @@
   "is_submittable",
   "name_after_submit",
   "is_sealed",
-  "valid_on_cancel",
   "istable",
   "editable_grid",
   "issingle",
@@ -111,13 +110,6 @@
    "fieldname": "is_sealed",
    "fieldtype": "Check",
    "label": "Is Sealed"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:!doc.issingle&&doc.is_submittable",
-   "fieldname": "valid_on_cancel",
-   "fieldtype": "Check",
-   "label": "Valid on cancel"
   },
   {
    "default": "0",
@@ -507,7 +499,7 @@
  ],
  "icon": "fa fa-bolt",
  "idx": 6,
- "modified": "2019-07-19 17:59:05.775307",
+ "modified": "2019-07-19 18:59:05.775307",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",

@@ -440,10 +440,6 @@ class BaseDocument(object):
 	def get_invalid_links(self, is_submittable=False):
 		'''Returns list of invalid links and also updates fetch values if not set'''
 
-		# Exclude doctypes valid on cancel
-		if hasattr(self.meta, "valid_on_cancel") and self.meta.valid_on_cancel:
-			return [], []
-
 		def get_msg(df, docname):
 			if self.parentfield:
 				return "{} #{}: {}: {}".format(_("Row"), self.idx, _(df.label), docname)

@@ -156,6 +156,8 @@ def get_list_context(context, doctype, web_form_name=None):
 			if out:
 				list_context = out
 
+			return list_context
+
 	# get context from the doctype module
 	if not meta.custom:
 		# custom doctypes don't have modules
