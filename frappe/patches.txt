@@ -251,4 +251,3 @@ execute:frappe.reload_doc('core', 'doctype', 'communication_link')
 execute:frappe.reload_doc('core', 'doctype', 'communication')
 frappe.patches.v12_0.move_timeline_links_to_dynamic_links
 frappe.patches.v12_0.delete_feedback_request_if_exists
-frappe.patches.v12_0.website_meta_tag_parent
