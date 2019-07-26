@@ -17,6 +17,7 @@ from frappe.database.mariadb.schema import MariaDBTable
 
 class MariaDBDatabase(Database):
 	ProgrammingError = pymysql.err.ProgrammingError
+	TableMissingError = pymysql.err.ProgrammingError
 	OperationalError = pymysql.err.OperationalError
 	InternalError = pymysql.err.InternalError
 	SQLError = pymysql.err.ProgrammingError
@@ -91,7 +92,7 @@ class MariaDBDatabase(Database):
 		# MYSQL_OPTION_MULTI_STATEMENTS_OFF = 1
 		# # self._conn.set_server_option(MYSQL_OPTION_MULTI_STATEMENTS_OFF)
 
-		if self.user != 'root' and self.user != 'dokos_bdd':
+		if self.user != 'root':
 			conn.select_db(self.user)
 
 		return conn
