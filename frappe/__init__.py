@@ -18,7 +18,7 @@ from .exceptions import *
 from .utils.jinja import (get_jenv, get_template, render_template, get_email_from_template, get_jloader)
 from .utils.data import now
 
-# Hamless for Python 3
+# Harmless for Python 3
 # For Python 2 set default encoding to utf-8
 if sys.version[0] == '2':
 	reload(sys)

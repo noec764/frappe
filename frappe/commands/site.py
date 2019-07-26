@@ -2,7 +2,6 @@ from __future__ import unicode_literals, absolute_import, print_function
 import click
 import hashlib, os, sys, compileall, re
 import frappe
-import frappe.recorder
 from frappe import _
 from frappe.commands import pass_context, get_site
 from frappe.commands.scheduler import _is_scheduler_enabled
@@ -40,6 +39,10 @@ def _new_site(db_name, site, mariadb_root_username=None, mariadb_root_password=N
 	admin_password=None, verbose=False, install_apps=None, source_sql=None,force=False,
 	reinstall=False, db_type=None):
 	"""Install a new Frappe site"""
+
+	if not force and os.path.exists(site):
+		print('Site {0} already exists'.format(site))
+		sys.exit(1)
 
 	if not db_name:
 		db_name = '_' + hashlib.sha1(site.encode()).hexdigest()[:16]
@@ -278,6 +281,12 @@ def reload_doctype(context, doctype):
 		finally:
 			frappe.destroy()
 
+@click.command('add-to-hosts')
+@pass_context
+def add_to_hosts(context):
+	"Add site to hosts"
+	for site in context.sites:
+		frappe.commands.popen('echo 127.0.0.1\t{0} | sudo tee -a /etc/hosts'.format(site))
 
 @click.command('use')
 @click.argument('site')
@@ -349,12 +358,13 @@ def uninstall(context, app, dry_run=False, yes=False):
 @click.option('--root-login', default='root')
 @click.option('--root-password')
 @click.option('--archived-sites-path')
+@click.option('--no-backup', is_flag=True, default=False)
 @click.option('--force', help='Force drop-site even if an error is encountered', is_flag=True, default=False)
-def drop_site(site, root_login='root', root_password=None, archived_sites_path=None, force=False):
-	_drop_site(site, root_login, root_password, archived_sites_path, force)
+def drop_site(site, root_login='root', root_password=None, archived_sites_path=None, force=False, no_backup=False):
+	_drop_site(site, root_login, root_password, archived_sites_path, force, no_backup)
 
 
-def _drop_site(site, root_login='root', root_password=None, archived_sites_path=None, force=False):
+def _drop_site(site, root_login='root', root_password=None, archived_sites_path=None, force=False, no_backup=False):
 	"Remove site from database and filesystem"
 	from frappe.database import drop_user_and_database
 	from frappe.utils.backups import scheduled_backup
@@ -363,7 +373,8 @@ def _drop_site(site, root_login='root', root_password=None, archived_sites_path=
 	frappe.connect()
 
 	try:
-		scheduled_backup(ignore_files=False, force=True)
+		if not no_backup:
+			scheduled_backup(ignore_files=False, force=True)
 	except Exception as err:
 		if force:
 			pass
@@ -565,10 +576,7 @@ def browse(context, site):
 	site = site.lower()
 
 	if site in frappe.utils.get_sites():
-		webbrowser.open('http://{site}:{port}'.format(
-			site=site,
-			port=frappe.get_conf(site).webserver_port
-		), new=2)
+		webbrowser.open(frappe.utils.get_site_url(site), new=2)
 	else:
 		click.echo("\nSite named \033[1m{}\033[0m doesn't exist\n".format(site))
 
@@ -615,4 +623,5 @@ commands = [
 	browse,
 	start_recording,
 	stop_recording,
+	add_to_hosts
 ]
