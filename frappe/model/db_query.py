@@ -117,7 +117,7 @@ class DatabaseQuery(object):
 
 		query = """select %(fields)s from %(tables)s %(conditions)s
 			%(group_by)s %(order_by)s %(limit)s""" % args
-		
+
 		if self.return_query:
 			return query
 		else:
@@ -179,6 +179,9 @@ class DatabaseQuery(object):
 				except ValueError:
 					self.fields = [f.strip() for f in self.fields.split(",")]
 
+		# remove empty strings / nulls in fields
+		self.fields = [f for f in self.fields if f]
+
 		for filter_name in ["filters", "or_filters"]:
 			filters = getattr(self, filter_name)
 			if isinstance(filters, string_types):
@@ -198,7 +201,6 @@ class DatabaseQuery(object):
 					field which may leads to sql injection.
 			example :
 				field = "`DocType`.`issingle`, version()"
-
 			As field contains `,` and mysql function `version()`, with the help of regex
 			the system will filter out this field.
 		'''
@@ -241,7 +243,6 @@ class DatabaseQuery(object):
 			invalid_characters_regex = r".*[^a-zA-Z0-9-_ ,`'\"\*\.\(\)].*"
 			if re.match(invalid_characters_regex, field):
 				frappe.throw(_("Illegal characters in SQL query"))
-
 
 	def extract_tables(self):
 		"""extract tables from fields"""
@@ -336,7 +337,6 @@ class DatabaseQuery(object):
 
 	def prepare_filter_condition(self, f):
 		"""Returns a filter condition in the format:
-
 				ifnull(`tabDocType`.`fieldname`, fallback) operator "value"
 		"""
 
@@ -691,11 +691,9 @@ class DatabaseQuery(object):
 		if 'select' in _lower and ' from ' in _lower:
 			frappe.throw(_('Cannot use sub-query in order by'))
 
-		invalid_characters_regex = r".*[^a-zA-Z0-9-_ ,`'\"\*\.\(\)].*"
-		if re.match(invalid_characters_regex, field):
+		invalid_characters_regex = r".*[^a-z0-9-_ ,`'\"\.\(\)].*"
+		if re.match(invalid_characters_regex, _lower):
 			frappe.throw(_("Illegal characters in SQL query"))
-
-
 
 		for field in parameters.split(","):
 			if "." in field and field.strip().startswith("`tab"):
