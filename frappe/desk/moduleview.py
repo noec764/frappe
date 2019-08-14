@@ -226,10 +226,11 @@ def get_config(app, module):
 	for section in sections:
 		for item in section["items"]:
 			if item["type"]=="report" and frappe.db.get_value("Report", item["name"], "disabled")==1:
-				section["items"].remove(item)
 				continue
-			if not "label" in item:
+			if not item.get("label"):
 				item["label"] = _(item["name"])
+			items.append(item)
+		section['items'] = items
 
 	return sections
 
