@@ -33,9 +33,9 @@ class StripeSettings(Document):
 		create_payment_gateway('Stripe-' + self.gateway_name, settings='Stripe Settings', controller=self.gateway_name)
 		call_hook_method('payment_gateway_enabled', gateway='Stripe-' + self.gateway_name)
 		if not self.flags.ignore_mandatory:
-			self.validate_stripe_credentails()
+			self.validate_stripe_credentials()
 
-	def validate_stripe_credentails(self):
+	def validate_stripe_credentials(self):
 		if self.publishable_key and self.secret_key:
 			header = {"Authorization": "Bearer {0}".format(self.get_password(fieldname="secret_key", raise_exception=False))}
 			try:

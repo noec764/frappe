@@ -77,6 +77,7 @@ def get_bootinfo():
 	bootinfo.success_action = get_success_action()
 	bootinfo.update(get_email_accounts(user=frappe.session.user))
 	bootinfo.frequently_visited_links = frequently_visited_links()
+	bootinfo.link_preview_doctypes = get_link_preview_doctypes()
 
 	return bootinfo
 
@@ -263,3 +264,6 @@ def frequently_visited_links():
 	return frappe.get_all('Route History', fields=['route', 'count(name) as count'], filters={
 		'user': frappe.session.user
 	}, group_by="route", order_by="count desc", limit=5)
+
+def get_link_preview_doctypes():
+	return [d.name for d in frappe.db.get_all('DocType', {'show_preview_popup': 1})]

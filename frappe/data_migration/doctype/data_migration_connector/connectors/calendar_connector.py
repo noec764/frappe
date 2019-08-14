@@ -20,8 +20,8 @@ class CalendarConnector(BaseConnection):
 			'token': self.account.get_password(fieldname='session_token', raise_exception=False),
 			'refresh_token': self.account.get_password(fieldname='refresh_token', raise_exception=False),
 			'token_uri': 'https://www.googleapis.com/oauth2/v4/token',
-			'client_id': settings.client_id or frappe.conf.get("gcloud_client_id"),
-			'client_secret': settings.get_password(fieldname='client_secret', raise_exception=False) or frappe.conf.get("gcloud_client_secret"),
+			'client_id': settings.client_id,
+			'client_secret': settings.get_password(fieldname='client_secret', raise_exception=False),
 			'scopes':'https://www.googleapis.com/auth/calendar'
 			}
 
@@ -47,13 +47,10 @@ class CalendarConnector(BaseConnection):
 		try:
 			if self.account.gcalendar_id is not None:
 				try:
-					calendar = self.gcalendar.calendars().get(calendarId=self.account.gcalendar_id).execute()
-					if calendar["summary"] != self.account.calendar_name:
-						frappe.db.set_value("GCalendar Account", self.account.name, "calendar_name", calendar["summary"])
-						frappe.db.commit()
+					self.gcalendar.calendars().get(calendarId=self.account.gcalendar_id).execute()
 				except Exception:
 					frappe.log_error(frappe.get_traceback())
-			elif self.account.new_calendar:
+			else:
 				_create_calendar()
 		except HttpError as err:
 			if err.resp.status in [403, 500, 503]:
@@ -120,7 +117,6 @@ class CalendarConnector(BaseConnection):
 				if events.get('nextSyncToken'):
 					frappe.db.set_value("GCalendar Account", self.connector.username, "next_sync_token", events.get('nextSyncToken'))
 				break
-
 		return list(results)
 
 	def insert_events(self, doctype, doc, migration_id=None):
@@ -218,7 +214,9 @@ class CalendarConnector(BaseConnection):
 			end_date = None
 
 		day = []
-		if e.repeat_on == "Every Week":
+		if e.repeat_on == "Daily":
+			frequency = "FREQ=DAILY"
+		elif e.repeat_on == "Weekly":
 			if e.monday == 1:
 				day.append("MO")
 			if e.tuesday == 1:
@@ -236,13 +234,10 @@ class CalendarConnector(BaseConnection):
 
 			day = "BYDAY=" + ",".join(str(d) for d in day)
 			frequency = "FREQ=WEEKLY"
-
-		elif e.repeat_on == "Every Day":
-			frequency = "FREQ=DAILY"
-		elif e.repeat_on == "Every Month":
+		elif e.repeat_on == "Monthly":
 			frequency = "FREQ=MONTHLY;BYDAY=SU,MO,TU,WE,TH,FR,SA;BYSETPOS=-1"
 			end_date = datetime.combine(add_days(e.repeat_till, 1), datetime.min.time()).strftime('UNTIL=%Y%m%dT%H%M%SZ')
-		elif e.repeat_on == "Every Year":
+		elif e.repeat_on == "Yearly":
 			frequency = "FREQ=YEARLY"
 		else:
 			return None

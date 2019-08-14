@@ -8,10 +8,11 @@ def get_jenv():
 	import frappe
 
 	if not getattr(frappe.local, 'jenv', None):
-		from jinja2 import Environment, DebugUndefined
+		from jinja2 import DebugUndefined
+		from jinja2.sandbox import SandboxedEnvironment
 
 		# frappe will be loaded last, so app templates will get precedence
-		jenv = Environment(loader = get_jloader(),
+		jenv = SandboxedEnvironment(loader = get_jloader(),
 			undefined=DebugUndefined)
 		set_filters(jenv)
 
@@ -73,7 +74,7 @@ def render_template(template, context, is_path=None, safe_render=True):
 		or (template.endswith('.html') and '\n' not in template)):
 		return get_jenv().get_template(template).render(context)
 	else:
-		if safe_render and "__" in template:
+		if safe_render and ".__" in template:
 			throw("Illegal template")
 		try:
 			template = transform_template_blot(template, context)
