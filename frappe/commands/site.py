@@ -473,7 +473,7 @@ def _set_limits(context, site, limits):
 		frappe.connect()
 		new_limits = {}
 		for limit, value in limits:
-			if limit not in ('daily_emails', 'emails', 'space', 'users', 'email_group', 'currency',
+			if limit not in ('emails', 'space', 'users', 'email_group', 'currency',
 				'expiry', 'support_email', 'support_chat', 'upgrade_url', 'subscription_id',
 				'subscription_type', 'current_plan', 'subscription_base_price', 'upgrade_plan',
 				'upgrade_base_price', 'cancellation_url'):
@@ -488,7 +488,7 @@ def _set_limits(context, site, limits):
 			elif limit in ('space', 'subscription_base_price', 'upgrade_base_price'):
 				value = float(value)
 
-			elif limit in ('users', 'emails', 'email_group', 'daily_emails'):
+			elif limit in ('users', 'emails', 'email_group'):
 				value = int(value)
 
 			new_limits[limit] = value
@@ -498,7 +498,7 @@ def _set_limits(context, site, limits):
 @click.command('clear-limits')
 @click.option('--site', help='site name')
 @click.argument('limits', nargs=-1, type=click.Choice(['emails', 'space', 'users', 'email_group',
-	'expiry', 'support_email', 'support_chat', 'upgrade_url', 'daily_emails', 'cancellation_url']))
+	'expiry', 'support_email', 'support_chat', 'upgrade_url', 'cancellation_url']))
 @pass_context
 def clear_limits(context, site, limits):
 	"""Clears given limit from the site config, and removes limit from site config if its empty"""

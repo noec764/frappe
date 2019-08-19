@@ -224,6 +224,7 @@ def get_config(app, module):
 	sections = [s for s in config if s.get("condition", True)]
 
 	for section in sections:
+		items = []
 		for item in section["items"]:
 			if item["type"]=="report" and frappe.db.get_value("Report", item["name"], "disabled")==1:
 				continue
