@@ -1,12 +1,12 @@
 <div align="center">
-    <h1>
-        <a href="https://dokie.io">
-            dokidock
-        </a>
-    </h1>
-    <h3>
-        a web framework for business applications
-    </h3>
+	<h1>
+		<a href="https://dokie.io">
+			dodock
+		</a>
+	</h1>
+	<h3>
+		a web framework for business applications
+	</h3>
 </div>
 
 <div align="center">
