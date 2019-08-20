@@ -26,12 +26,6 @@ def get_context(context):
 
 		context['amount'] = fmt_money(amount=context['amount'], currency=context['currency'])
 
-		if frappe.db.get_value(context.reference_doctype, context.reference_docname, "is_a_subscription"):
-			payment_plan = frappe.db.get_value(context.reference_doctype, context.reference_docname, "payment_plan")
-			recurrence = frappe.db.get_value("Payment Plan", payment_plan, "recurrence")
-
-			context['amount'] = context['amount'] + " " + _(recurrence)
-
 	else:
 		frappe.redirect_to_message(_('Some information is missing'),
 			_('Looks like someone sent you to an incomplete URL. Please ask them to look into it.'))
@@ -58,13 +52,9 @@ def make_payment(stripe_token_id, data, reference_doctype=None, reference_docnam
 		"stripe_token_id": stripe_token_id
 	})
 
-	gateway_controller = get_gateway_controller(reference_doctype,reference_docname)
+	gateway_controller = get_gateway_controller(reference_doctype, reference_docname)
 
-	if frappe.db.get_value(reference_doctype, reference_docname, 'is_a_subscription'):
-		reference = frappe.get_doc(reference_doctype, reference_docname)
-		data =  reference.create_subscription("stripe", gateway_controller, data)
-	else:
-		data =  frappe.get_doc("Stripe Settings", gateway_controller).create_request(data)
+	data = frappe.get_doc("Stripe Settings", gateway_controller).create_request(data)
 
 	frappe.db.commit()
 	return data
