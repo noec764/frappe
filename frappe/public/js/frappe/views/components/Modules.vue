@@ -1,6 +1,6 @@
 <template>
 	<div class="modules-page-container">
-		<div class="modules-dashboard" :key="moduleKey">
+		<div v-show="items.length" class="modules-dashboard" :key="moduleKey">
 			<grid-view
 				:gridKey="gridKey"
 				:showGrid="showGrid"
@@ -12,7 +12,8 @@
 		<module-detail
 			v-if="this.route && modules_list.map(m => m.module_name).includes(route[1])"
 			:module_name="route[1]"
-			:sections="current_module_sections">
+			:sections="current_module_sections"
+			:dashboard="items.length">
 		</module-detail>
 	</div>
 </template>

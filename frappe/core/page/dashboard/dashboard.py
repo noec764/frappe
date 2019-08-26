@@ -5,41 +5,32 @@ import json
 import frappe
 from frappe.utils import add_to_date
 
-
 def cache_source(function):
 	def wrapper(*args, **kwargs):
-		chart_name = kwargs.get("chart_name")
-		cache_key = 'chart-data:{}:{}'.format(frappe.session.user, chart_name)
+		chart = kwargs.get("chart")
+		if isinstance(chart, str):
+			chart = frappe.get_doc("Dashboard Chart", chart)
+		no_cache = kwargs.get("no_cache")
+		if no_cache:
+			return function(chart, no_cache)
+
+		chart_name = frappe.parse_json(chart).name
+		cache_key = "chart-data:{}".format(chart_name)
 		if int(kwargs.get("refresh") or 0):
-			results = generate_and_cache_results("Dashboard Chart", chart_name, function, cache_key)
+			results = generate_and_cache_results(chart, chart_name, function, cache_key)
 		else:
 			cached_results = frappe.cache().get_value(cache_key)
 			if cached_results:
-				results = json.loads(frappe.safe_decode(cached_results))
+				results = frappe.parse_json(frappe.safe_decode(cached_results))
 			else:
-				results = generate_and_cache_results("Dashboard Chart", chart_name, function, cache_key)
+				results = generate_and_cache_results(chart, chart_name, function, cache_key)
 		return results
 	return wrapper
 
-def cache_card_source(function):
-	def wrapper(*args, **kwargs):
-		card_name = kwargs.get("card_name")
-		cache_key = 'card-data:{}:{}'.format(frappe.session.user, card_name)
-		if int(kwargs.get("refresh") or 0):
-			results = generate_and_cache_results("Dashboard Card", card_name, function, cache_key)
-		else:
-			cached_results = frappe.cache().get_value(cache_key)
-			if cached_results:
-				results = json.loads(frappe.safe_decode(cached_results))
-			else:
-				results = generate_and_cache_results("Dashboard Card", card_name, function, cache_key)
-		return results
-	return wrapper
-
-def generate_and_cache_results(widget_type, widget_name, function, cache_key):
-	results = function(widget_name)
+def generate_and_cache_results(chart, chart_name, function, cache_key):
+	results = function(chart)
 	frappe.cache().set_value(cache_key, json.dumps(results, default=str))
-	frappe.db.set_value(widget_type, widget_name, "last_synced_on", frappe.utils.now(), update_modified = False)
+	frappe.db.set_value("Dashboard Chart", chart_name, "last_synced_on", frappe.utils.now(), update_modified = False)
 	return results
 
 def clear_dashboard_cache(user=None):

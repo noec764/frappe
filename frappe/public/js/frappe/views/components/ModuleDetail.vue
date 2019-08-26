@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div v-if="sections.length" class="sections-container">
+		<div v-if="sections.length" class="sections-container" :class="dashboard ? 'top-border': ''">
 			<div v-for="section in sections"
 				:key="section.label"
 				class="border section-box"
@@ -29,7 +29,7 @@ export default {
 	components: {
 		ModuleLinkItem
 	},
-	props: ['module_name', 'sections']
+	props: ['module_name', 'sections', 'dashboard']
 }
 </script>
 <style lang="less" scoped>
@@ -39,7 +39,10 @@ export default {
 	column-gap: 15px;
 	row-gap: 15px;
 	padding-top: 20px;
-    border-top: 1px solid #e6ebf1;
+}
+
+.top-border {
+	border-top: 1px solid #e6ebf1;
 }
 
 .section-box {

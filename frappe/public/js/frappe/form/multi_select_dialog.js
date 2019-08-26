@@ -40,13 +40,13 @@ frappe.ui.form.MultiSelectDialog = Class.extend({
 		// setters define the additional filters that get applied
 		// for selection
 
- 		// CASE 1: DocType name and fieldname is the same, example "customer" and "customer"
+		// CASE 1: DocType name and fieldname is the same, example "customer" and "customer"
 		// setters define the filters applied in the modal
 		// if the fieldnames and doctypes are consistently named,
 		// pass a dict with the setter key and value, for example
 		// {customer: [customer_name]}
 
- 		// CASE 2: if the fieldname of the target is different,
+		// CASE 2: if the fieldname of the target is different,
 		// then pass a list of fields with appropriate fieldname
 
 		if($.isArray(this.setters)) {
@@ -201,10 +201,11 @@ frappe.ui.form.MultiSelectDialog = Class.extend({
 
 		let $row = $(`<div class="list-item">
 			<div class="list-item__content" style="flex: 0 0 10px;">
-				<input type="checkbox" class="list-row-check" ${result.checked ? 'checked' : ''}>
+				<input type="checkbox" class="list-row-check" data-item-name="${result.name}" ${result.checked ? 'checked' : ''}>
 			</div>
 			${contents}
 		</div>`);
+
 
 		head ? $row.addClass('list-item--head')
 			: $row = $(`<div class="list-item-container" data-item-name="${result.name}"></div>`).append($row);
@@ -213,21 +214,16 @@ frappe.ui.form.MultiSelectDialog = Class.extend({
 
 	render_result_list: function(results, more = 0) {
 		var me = this;
-
 		var more_btn = me.dialog.fields_dict.more_btn.$wrapper;
 
 		// Make empty result set if filter is set
 		if (!frappe.flags.auto_scroll) {
 			this.empty_list();
 		}
+		more_btn.hide();
 
-		if(results.length === 0) {
-			this.empty_list();
-			more_btn.hide();
-			return;
-		} else if(more) {
-			more_btn.show();
-		}
+		if (results.length === 0) return;
+		if (more) more_btn.show();
 
 		results.forEach((result) => {
 			me.$results.append(me.make_list_row(result));
