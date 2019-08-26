@@ -60,7 +60,7 @@ class BraintreeSettings(Document):
 		self.data = frappe._dict(data)
 
 		try:
-			self.integration_request = create_request_log(self.data, "Host", "Braintree")
+			self.integration_request = create_request_log(self.data, "Payment", "Braintree")
 			return self.create_charge_on_braintree()
 
 		except Exception:

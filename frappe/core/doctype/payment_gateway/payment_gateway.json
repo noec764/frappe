@@ -8,7 +8,15 @@
   "gateway_settings",
   "gateway_controller",
   "column_break_4",
-  "mode_of_payment"
+  "mode_of_payment",
+  "fees_section",
+  "fee_account",
+  "column_break_8",
+  "cost_center",
+  "portal_section",
+  "title",
+  "column_break_9",
+  "icon"
  ],
  "fields": [
   {
@@ -40,10 +48,53 @@
    "fieldtype": "Link",
    "label": "Mode of payment",
    "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Credit Card",
+   "fieldname": "icon",
+   "fieldtype": "Select",
+   "label": "Portal Icon",
+   "options": "Credit Card\nWire Transfer\nPaypal"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Portal Title",
+   "translatable": 1
+  },
+  {
+   "fieldname": "fees_section",
+   "fieldtype": "Section Break",
+   "label": "Fees"
+  },
+  {
+   "fieldname": "fee_account",
+   "fieldtype": "Link",
+   "label": "Fee Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "portal_section",
+   "fieldtype": "Section Break",
+   "label": "Portal"
+  },
+  {
+   "fieldname": "column_break_9",
+   "fieldtype": "Column Break"
   }
  ],
  "in_create": 1,
- "modified": "2019-08-20 14:56:52.020096",
+ "modified": "2019-08-23 10:35:41.641266",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Payment Gateway",

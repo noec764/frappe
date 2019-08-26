@@ -12,14 +12,16 @@
 
 {%- block page_content -%}
 
-<div class="row stripe" style="min-height: 400px; padding-bottom: 50px; margin-top:100px;">
+<div class="row stripe">
+	{% if image %}
+	<div class="col-12 text-center">
+		<img class="mx-auto h-75" src={{image}}>
+	</div>
+	{% endif %}
 	<div class="col-12">
-		{% if image %}
-			<img src={{image}}>
-		{% endif %}
 		<h2 class="text-center">{{description}}</h2>
 		<form id="payment-form">
-				<div class="form-group>
+				<div class="form-group">
 					<label>
 						<span>{{ _("Name") }}</span>
 						<input id="cardholder-name" name="cardholder-name" class="field" placeholder="{{ _('John Doe') }}" value="{{payer_name}}"/>
@@ -28,23 +30,25 @@
 				<div class="form-group">
 					<label>
 						<span>{{ _("Email") }}</span>
-					<input id="cardholder-email" name="cardholder-email" class="field" placeholder="{{ _('john@doe.com') }}" value="{{payer_email}}"/>
+						<input id="cardholder-email" name="cardholder-email" class="field" placeholder="{{ _('john@doe.com') }}" value="{{payer_email}}"/>
 					</label>
 				</div>
 				<div class="form-group">
 					<label>
-					<span>{{ _("Card Details") }}</span>
+						<span>{{ _("Card Details") }}</span>
 						<div id="card-element" name="card-element" class="field"></div>
-						<div id="card-errors" role="alert"></div>
 					</label>
 				</div>
 
-			<button type="submit" class="submit" id="submit">{{_('Pay')}} {{amount}}</button>
-			<div class="outcome text-center">
-				<div class="error" hidden>{{ _("An error occured during the payment process. Please contact us.") }}</div>
-				<div class="success" hidden>{{ _("Your payment has been successfully registered.") }}</div>
-			</div>
+			<div class="text-right" id="card-errors" role="alert" style="color: #fa755a;"></div>
+			<button type="submit" class="submit" id="submit">{{_('Pay')}} {{ amount }}</button>
 		</form>
+	</div>
+	<div class="col-12 mt-5">
+		<div class="text-right font-weight-bold">
+			<div class="error" style="color: #fa755a;" hidden>{{ _("An error occured during the payment process.<br>Please contact us.") }}</div>
+			<div class="success" hidden>{{ _("Your payment has been successfully registered.") }}</div>
+		</div>
 	</div>
 </div>
 

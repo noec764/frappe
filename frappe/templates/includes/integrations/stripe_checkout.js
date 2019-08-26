@@ -1,4 +1,4 @@
-var stripe = Stripe("{{ publishable_key }}");
+var stripe = Stripe("{{ publishable_key }}", { locale: "{{ lang }}" });
 
 var elements = stripe.elements();
 
@@ -37,24 +37,21 @@ function setOutcome(result) {
 			headers: {"X-Requested-With": "XMLHttpRequest"},
 			args: {
 				"stripe_token_id": result.token.id,
-				"data": JSON.stringify({{ frappe.form_dict|json }}),
-				"reference_doctype": "{{ reference_doctype }}",
-				"reference_docname": "{{ reference_docname }}"
-			},
-			callback: function(r) {
-				if (r.message.status == "Completed") {
-					$('#submit').hide()
-					$('.success').show()
-					setTimeout(function() {
-						window.location.href = r.message.redirect_to
-					}, 2000);
-				} else {
-					$('#submit').hide()
-					$('.error').show()
-					setTimeout(function() {
-						window.location.href = r.message.redirect_to
-					}, 2000);
-				}
+				"data": JSON.stringify({{ frappe.form_dict|json }})
+			}
+		}).then(r => {
+			if (r.message.status == "Completed") {
+				$('#submit').hide()
+				$('.success').show()
+				setTimeout(function() {
+					window.location.href = r.message.redirect_to
+				}, 2000);
+			} else {
+				$('#submit').hide()
+				$('.error').show()
+				setTimeout(function() {
+					window.location.href = r.message.redirect_to
+				}, 2000);
 			}
 		});
 

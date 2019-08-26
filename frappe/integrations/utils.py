@@ -5,7 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 import json,datetime
-from six.moves.urllib.parse import parse_qs
+from urllib.parse import urlencode, parse_qs
 from six import string_types, text_type
 from frappe.utils import get_request_session
 from frappe import _
@@ -113,3 +113,38 @@ def create_payment_gateway(gateway, settings=None, controller=None):
 def json_handler(obj):
 	if isinstance(obj, (datetime.date, datetime.timedelta, datetime.datetime)):
 		return text_type(obj)
+
+def finalize_request(gateway_settings):
+	redirect_to = gateway_settings.data.get('redirect_to') or 'payment-success'
+	redirect_message = gateway_settings.data.get('redirect_message') or None
+
+	if gateway_settings.flags.status_changed_to in ["Completed", "Autorized", "Pending"]:
+		if gateway_settings.data.reference_doctype and gateway_settings.data.reference_docname:
+			custom_redirect_to = None
+			try:
+				custom_redirect_to = frappe.get_doc(gateway_settings.data.get("reference_doctype"),\
+					gateway_settings.data.get("reference_docname"))\
+					.run_method("on_payment_authorized", gateway_settings.flags.status_changed_to)
+			except Exception:
+				frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
+
+			if custom_redirect_to:
+				redirect_to = custom_redirect_to
+
+			redirect_url = redirect_to
+
+		if gateway_settings.get("redirect_url"):
+			redirect_url = gateway_settings.redirect_url
+			redirect_to = None
+	else:
+		redirect_url = 'payment-failed'
+
+	if redirect_to:
+		redirect_url += '?' + urlencode({'redirect_to': redirect_to})
+	if redirect_message:
+		redirect_url += '&' + urlencode({'redirect_message': redirect_message})
+
+	return {
+		"redirect_to": redirect_url,
+		"status": gateway_settings.integration_request.status
+	}

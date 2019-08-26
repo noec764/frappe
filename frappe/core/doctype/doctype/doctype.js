@@ -27,7 +27,7 @@ frappe.ui.form.on('DocType', {
 					frappe.set_route('Form', frm.doc.name);
 				});
 			} else {
-				frm.add_custom_button(__('Go to {0} List', [_(frm.doc.name)]), () => {
+				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
 					frappe.set_route('List', frm.doc.name, 'List');
 				});
 			}
