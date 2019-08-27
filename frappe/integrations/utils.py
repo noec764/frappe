@@ -133,7 +133,7 @@ def finalize_request(gateway_settings):
 			if custom_redirect_to and custom_redirect_to != "no-redirection":
 				redirect_to = custom_redirect_to
 
-			redirect_url = redirect_to
+			redirect_url = redirect_to if redirect_to != "no-redirection" else 'payment-success'
 	else:
 		redirect_url = 'payment-failed'
 
