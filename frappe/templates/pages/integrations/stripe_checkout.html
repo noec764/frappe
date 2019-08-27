@@ -1,6 +1,6 @@
 {% extends "templates/web.html" %}
 
-{% block title %} Payment {% endblock %}
+{% block title %} {{ _("Payment") }} {% endblock %}
 
 {%- block header -%}
 {% endblock %}
@@ -41,13 +41,14 @@
 				</div>
 
 			<div class="text-right" id="card-errors" role="alert" style="color: #fa755a;"></div>
-			<button type="submit" class="submit" id="submit">{{_('Pay')}} {{ amount }}</button>
+			<button type="submit" class="submit" id="card-button" data-secret="{{ client_secret }}">{{_('Pay')}} {{ amount }}</button>
 		</form>
 	</div>
 	<div class="col-12 mt-5">
 		<div class="text-right font-weight-bold">
-			<div class="error" style="color: #fa755a;" hidden>{{ _("An error occured during the payment process.<br>Please contact us.") }}</div>
-			<div class="success" hidden>{{ _("Your payment has been successfully registered.") }}</div>
+			<div class="error" id="error-msg" style="color: #fa755a; display: none"></div>
+			<button class="btn btn-primary error" style="display: none;" id="card-reload">{{_('Try Again')}}</button>
+			<div class="success" style="display: none;">{{ _("Your payment has been successfully registered.") }}</div>
 		</div>
 	</div>
 </div>

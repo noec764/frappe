@@ -9,7 +9,7 @@ import braintree
 from frappe import _
 from six.moves.urllib.parse import urlencode
 from frappe.utils import get_url, call_hook_method
-from frappe.integrations.utils import create_request_log, create_payment_gateway
+from frappe.integrations.utils import create_request_log, create_payment_gateway, change_integration_request_status
 
 class BraintreeSettings(Document):
 	supported_currencies = [
@@ -23,6 +23,10 @@ class BraintreeSettings(Document):
 		"SOS","SRD","STD","SVC","SYP","SZL","THB","TJS","TOP","TRY","TTD","TWD","TZS","UAH","UGX",
 		"USD","UYU","UZS","VEF","VND","VUV","WST","XAF","XCD","XOF","XPF","YER","ZAR","ZMK","ZWD"
 	]
+
+	def __init__(self, *args, **kwargs):
+		super(BraintreeSettings, self).__init__(*args, **kwargs)
+		self.configure_braintree()
 
 	def validate(self):
 		if not self.flags.ignore_mandatory:
@@ -42,10 +46,15 @@ class BraintreeSettings(Document):
 			)
 		)
 
-	def generate_token(self):
+	def generate_token(self, data=None):
+		if data:
+			self.data = frappe._dict(data)
+
 		try:
-			self.configure_braintree()
-			return self.gateway.client_token.generate()
+			self.get_merchant_account()
+			return self.gateway.client_token.generate({
+				"merchant_account_id": self.merchant_account.id
+			})
 		except Exception as e:
 			frappe.log_error(e, _("Client token generation issue"))
 
@@ -72,15 +81,18 @@ class BraintreeSettings(Document):
 
 	def get_merchant_account(self):
 		result = self.gateway.merchant_account.all()
-		for merchant_account in result.merchant_accounts:
-  			if merchant_account.currency_iso_code == self.data.currency:
-				  self.merchant_account = merchant_account
+		matching_merchants = [x for x in result.merchant_accounts if x.currency_iso_code == self.data.currency]
+		default_merchant = [y for y in matching_merchants if y.default] if matching_merchants else []
+
+		if default_merchant:
+			self.merchant_account = default_merchant[0]
+		elif matching_merchants:
+			self.merchant_account = matching_merchants[0]
 
 		if not hasattr(self, "merchant_account"):
 			frappe.log_error(_("Merchant account for currency {} missing".format(self.data.currency)))
 
 	def create_charge_on_braintree(self):
-		self.configure_braintree()
 		self.get_merchant_account()
 
 		if not hasattr(self, "merchant_account"):
@@ -146,13 +158,3 @@ class BraintreeSettings(Document):
 			"redirect_to": redirect_url,
 			"status": status
 		}
-
-def get_gateway_controller(doc):
-	payment_request = frappe.get_doc("Payment Request", doc)
-	gateway_controller = frappe.db.get_value("Payment Gateway", payment_request.payment_gateway, "gateway_controller")
-	return gateway_controller
-
-def get_client_token(doc):
-	gateway_controller = get_gateway_controller(doc)
-	settings = frappe.get_doc("Braintree Settings", gateway_controller)
-	return settings.generate_token()

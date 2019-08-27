@@ -118,28 +118,26 @@ def finalize_request(gateway_settings):
 	redirect_to = gateway_settings.data.get('redirect_to') or 'payment-success'
 	redirect_message = gateway_settings.data.get('redirect_message') or None
 
-	if gateway_settings.flags.status_changed_to in ["Completed", "Autorized", "Pending"]:
-		if gateway_settings.data.reference_doctype and gateway_settings.data.reference_docname:
+	if gateway_settings.flags.status_changed_to in ["Completed", "Autorized", "Pending"] and gateway_settings.reference_document:
+		if gateway_settings.get("redirect_url"):
+			redirect_url = gateway_settings.redirect_url
+			redirect_to = None
+		elif gateway_settings.reference_document:
 			custom_redirect_to = None
 			try:
-				custom_redirect_to = frappe.get_doc(gateway_settings.data.get("reference_doctype"),\
-					gateway_settings.data.get("reference_docname"))\
+				custom_redirect_to = gateway_settings.reference_document\
 					.run_method("on_payment_authorized", gateway_settings.flags.status_changed_to)
 			except Exception:
 				frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
 
-			if custom_redirect_to:
+			if custom_redirect_to and custom_redirect_to != "no-redirection":
 				redirect_to = custom_redirect_to
 
 			redirect_url = redirect_to
-
-		if gateway_settings.get("redirect_url"):
-			redirect_url = gateway_settings.redirect_url
-			redirect_to = None
 	else:
 		redirect_url = 'payment-failed'
 
-	if redirect_to:
+	if redirect_to and redirect_to != "no-redirection":
 		redirect_url += '?' + urlencode({'redirect_to': redirect_to})
 	if redirect_message:
 		redirect_url += '&' + urlencode({'redirect_message': redirect_message})
@@ -148,3 +146,14 @@ def finalize_request(gateway_settings):
 		"redirect_to": redirect_url,
 		"status": gateway_settings.integration_request.status
 	}
+
+def get_gateway_controller(doctype, docname):
+	reference_doc = frappe.get_doc(doctype, docname)
+	gateway_controller = frappe.db.get_value("Payment Gateway",\
+		reference_doc.payment_gateway, "gateway_controller")
+	return gateway_controller
+
+def change_integration_request_status(self, status, type, error):
+	self.flags.status_changed_to = status
+	self.integration_request.db_set('status', status, update_modified=True)
+	self.integration_request.db_set(type, error, update_modified=True)

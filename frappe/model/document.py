@@ -314,7 +314,7 @@ class Document(BaseDocument):
 		if self._action == "submit" and self.meta.name_after_submit:
 			self._draft_name = self.name
 			self.set_new_name()
-			rename_doc(self.doctype, self._draft_name, self.name, force=True)
+			rename_doc(self.doctype, self._draft_name, self.name, ignore_permissions=True, force=True)
 
 		self.run_post_save_methods()
 
