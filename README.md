@@ -1,6 +1,6 @@
 <div align="center">
 	<h1>
-		<a href="https://dokie.io">
+		<a href="https://dokos.io">
 			dodock
 		</a>
 	</h1>
@@ -14,7 +14,7 @@
 
 
 
-Full-stack web application framework that uses Python and MariaDB on the server side and a tightly integrated client side library. Built for [Dokie], based on [Frappe](https://frappe.io)
+Full-stack web application framework that uses Python and MariaDB on the server side and a tightly integrated client side library. Built for [dokos], based on [Frappe](https://frappe.io)
 
 ### Table of Contents
 * [License](#license)
@@ -22,7 +22,7 @@ Full-stack web application framework that uses Python and MariaDB on the server 
 ### Website
 
 For details and documentation, see the website
-[https://dokie.io](https://dokie.io)
+[https://dokos.io](https://dokos.io)
 
 ### License
 This repository has been released under the [MIT License](LICENSE).
