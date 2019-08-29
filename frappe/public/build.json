@@ -58,6 +58,7 @@
 	],
 	"js/control.min.js": [
 		"public/js/frappe/ui/capture.js",
+		"public/js/frappe/event_emitter.js",
 		"public/js/frappe/form/controls/text_editor.html",
 		"public/js/frappe/form/controls/control.js"
 	],
