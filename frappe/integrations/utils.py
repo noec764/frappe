@@ -9,6 +9,7 @@ from urllib.parse import urlencode, parse_qs
 from six import string_types, text_type
 from frappe.utils import get_request_session
 from frappe import _
+from frappe.model.document import Document
 
 def make_get_request(url, auth=None, headers=None, data=None):
 	if not auth:
@@ -114,46 +115,59 @@ def json_handler(obj):
 	if isinstance(obj, (datetime.date, datetime.timedelta, datetime.datetime)):
 		return text_type(obj)
 
-def finalize_request(gateway_settings):
-	redirect_to = gateway_settings.data.get('redirect_to') or 'payment-success'
-	redirect_message = gateway_settings.data.get('redirect_message') or None
-
-	if gateway_settings.flags.status_changed_to in ["Completed", "Autorized", "Pending"] and gateway_settings.reference_document:
-		if gateway_settings.get("redirect_url"):
-			redirect_url = gateway_settings.redirect_url
-			redirect_to = None
-		elif gateway_settings.reference_document:
-			custom_redirect_to = None
-			try:
-				custom_redirect_to = gateway_settings.reference_document\
-					.run_method("on_payment_authorized", gateway_settings.flags.status_changed_to)
-			except Exception:
-				frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
-
-			if custom_redirect_to and custom_redirect_to != "no-redirection":
-				redirect_to = custom_redirect_to
-
-			redirect_url = redirect_to if redirect_to != "no-redirection" else 'payment-success'
-	else:
-		redirect_url = 'payment-failed'
-
-	if redirect_to and redirect_to != "no-redirection":
-		redirect_url += '?' + urlencode({'redirect_to': redirect_to})
-	if redirect_message:
-		redirect_url += '&' + urlencode({'redirect_message': redirect_message})
-
-	return {
-		"redirect_to": redirect_url,
-		"status": gateway_settings.integration_request.status
-	}
-
 def get_gateway_controller(doctype, docname):
 	reference_doc = frappe.get_doc(doctype, docname)
 	gateway_controller = frappe.db.get_value("Payment Gateway",\
 		reference_doc.payment_gateway, "gateway_controller")
 	return gateway_controller
 
-def change_integration_request_status(self, status, type, error):
-	self.flags.status_changed_to = status
-	self.integration_request.db_set('status', status, update_modified=True)
-	self.integration_request.db_set(type, error, update_modified=True)
+class PaymentGatewayController(Document):
+	def finalize_request(self):
+		redirect_to = self.data.get('redirect_to') or 'payment-success'
+		redirect_message = self.data.get('redirect_message') or None
+
+		if self.flags.status_changed_to in ["Completed", "Autorized", "Pending"]\
+			and self.reference_document:
+			if self.get("redirect_url"):
+				redirect_url = self.redirect_url
+				redirect_to = None
+			elif self.reference_document:
+				custom_redirect_to = None
+				try:
+					custom_redirect_to = self.reference_document\
+						.run_method("on_payment_authorized", self.flags.status_changed_to)
+				except Exception:
+					frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
+
+				if custom_redirect_to and custom_redirect_to != "no-redirection":
+					redirect_to = custom_redirect_to
+
+				redirect_url = redirect_to if redirect_to != "no-redirection" else 'payment-success'
+		else:
+			redirect_url = 'payment-failed'
+
+		if redirect_to and redirect_to != "no-redirection":
+			redirect_url += '?' + urlencode({'redirect_to': redirect_to})
+		if redirect_message:
+			redirect_url += '&' + urlencode({'redirect_message': redirect_message})
+
+		return {
+			"redirect_to": redirect_url,
+			"status": self.integration_request.status
+		}
+
+	def change_integration_request_status(self, status, type, error):
+		self.flags.status_changed_to = status
+		self.integration_request.db_set('status', status, update_modified=True)
+		self.integration_request.db_set(type, error, update_modified=True)
+
+	def change_linked_integration_requests_status(self, status):
+		try:
+			linked_docs = frappe.get_all("Integration Request",\
+				filters={"reference_doctype": self.reference_document.doctype,\
+					"reference_docname": self.reference_document.name})
+
+			for linked_doc in linked_docs:
+				frappe.db.set_value("Integration Request", linked_doc.name, "status", status)
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), _("Integration request status update error"))

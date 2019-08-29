@@ -4,14 +4,14 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe.model.document import Document
 import braintree
 from frappe import _
 from six.moves.urllib.parse import urlencode
 from frappe.utils import get_url, call_hook_method
-from frappe.integrations.utils import create_request_log, create_payment_gateway, change_integration_request_status
+from frappe.integrations.utils import PaymentGatewayController,\
+	create_request_log, create_payment_gateway
 
-class BraintreeSettings(Document):
+class BraintreeSettings(PaymentGatewayController):
 	supported_currencies = [
 		"AED","AMD","AOA","ARS","AUD","AWG","AZN","BAM","BBD","BDT","BGN","BIF","BMD","BND","BOB",
 		"BRL","BSD","BWP","BYN","BZD","CAD","CHF","CLP","CNY","COP","CRC","CVE","CZK","DJF","DKK",
@@ -26,7 +26,8 @@ class BraintreeSettings(Document):
 
 	def __init__(self, *args, **kwargs):
 		super(BraintreeSettings, self).__init__(*args, **kwargs)
-		self.configure_braintree()
+		if not self.is_new():
+			self.configure_braintree()
 
 	def validate(self):
 		if not self.flags.ignore_mandatory:

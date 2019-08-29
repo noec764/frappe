@@ -4,16 +4,15 @@
 
 from __future__ import unicode_literals
 import frappe
-from frappe.model.document import Document
 from frappe import _
 from urllib.parse import urlencode
 from frappe.utils import get_url, call_hook_method, cint, flt
-from frappe.integrations.utils import create_request_log, create_payment_gateway, finalize_request, change_integration_request_status
+from frappe.integrations.utils import PaymentGatewayController, create_request_log, create_payment_gateway
 import stripe
 import json
 import erpnext
 
-class StripeSettings(Document):
+class StripeSettings(PaymentGatewayController):
 	supported_currencies = [
 		"AED", "ALL", "ANG", "ARS", "AUD", "AWG", "BBD", "BDT", "BIF", "BMD", "BND",
 		"BOB", "BRL", "BSD", "BWP", "BZD", "CAD", "CHF", "CLP", "CNY", "COP", "CRC", "CVE", "CZK", "DJF",
@@ -34,7 +33,8 @@ class StripeSettings(Document):
 
 	def __init__(self, *args, **kwargs):
 		super(StripeSettings, self).__init__(*args, **kwargs)
-		self.configure_stripe()
+		if not self.is_new():
+			self.configure_stripe()
 
 	def configure_stripe(self):
 		self.stripe = stripe
@@ -91,13 +91,13 @@ class StripeSettings(Document):
 			self.origin_transaction = frappe.get_doc(self.reference_document.reference_doctype,\
 				self.reference_document.reference_name)
 
-			self.integration_request = create_request_log(data, "Payment", "Stripe")
+			self.integration_request = create_request_log(self.data, "Payment", "Stripe")
 			self.link_integration_request("PaymentIntent",\
 				self.intent.get("paymentIntent").get("id"), self.intent.get("paymentIntent").get("status"))
 			self.change_integration_request_status("Pending", "output", str(intent))
 
 			self.fetch_charges_after_intent(payment_intent=self.intent.get("paymentIntent").get("id"))
-			return finalize_request(self)
+			return self.finalize_request()
 
 		except Exception as e:
 			self.change_integration_request_status("Failed", "error", str(e))
@@ -130,11 +130,11 @@ class StripeSettings(Document):
 			self.change_integration_request_status("Failed", "error",\
 				_("Reference document doesn't have the 'get_subscription_plans_details' method to process subscriptions"))
 
-		return finalize_request(self)
+		return self.finalize_request()
 
 	def create_new_charge(self):
 		self.create_charge_on_stripe()
-		return finalize_request(self)
+		return self.finalize_request()
 
 	def create_customer_on_stripe(self):
 		try:
@@ -146,7 +146,6 @@ class StripeSettings(Document):
 					email=self.data.payer_email,
 					source=self.data.stripe_token_id
 				)
-
 				self.register_new_stripe_customer()
 
 			return self.customer
@@ -157,7 +156,10 @@ class StripeSettings(Document):
 	def get_existing_customer(self):
 		if self.origin_transaction.get("customer") and frappe.db.exists("Integration References",\
 			dict(customer=self.origin_transaction.get("customer"))):
-			customer_id = frappe.db.get_value("Integration References", dict(customer=self.origin_transaction.get("customer")), "stripe_customer_id")
+			customer_id = frappe.db.get_value("Integration References",\
+				dict(customer=self.origin_transaction.get("customer")), "stripe_customer_id")
+			if not customer_id:
+				return
 
 			try:
 				return self.stripe.Customer.modify(
@@ -171,7 +173,7 @@ class StripeSettings(Document):
 		if self.origin_transaction.get("customer"):
 			if frappe.db.exists("Integration References", dict(customer=self.origin_transaction.get("customer"))):
 				doc = frappe.get_doc("Integration References", dict(customer=self.origin_transaction.get("customer")))
-				doc.stripe_customer_id = self.customer_id
+				doc.stripe_customer_id = self.customer.id
 				doc.save(ignore_permissions=True)
 
 			else:
@@ -186,7 +188,8 @@ class StripeSettings(Document):
 		try:
 			self.subscription = self.stripe.Subscription.create(
 				customer=self.customer,
-				items=self.payment_plans
+				items=self.payment_plans,
+				idempotency_key=self.origin_transaction.name
 			)
 			self.invoice_id = self.subscription.latest_invoice
 			return self.process_subscription_output()
@@ -215,7 +218,8 @@ class StripeSettings(Document):
 				description=self.data.description,
 				expand=[
 					"balance_transaction"
-				]
+				],
+				idempotency_key=self.data.get("reference_docname")
 			)
 			return self.process_charge_output()
 		except Exception as e:
@@ -277,7 +281,7 @@ class StripeSettings(Document):
 			self.reference_document.db_set('fee_amount', fee_amount, update_modified=True)
 
 		self.change_integration_request_status("Completed", "output", json.dumps(self.charge))
-		self.change_linked_integration_requests_status("Completed")
+		return self.charge
 
 	def get_fee_amount(self, balance):
 		return flt(balance["fee"]) / 100
@@ -336,16 +340,6 @@ class StripeSettings(Document):
 		self.integration_request.db_set("service_document", service_document)
 		self.integration_request.db_set("service_id", service_id)
 		self.integration_request.db_set("service_status", service_status)
-
-	def change_linked_integration_requests_status(self, status):
-		try:
-			linked_docs = frappe.get_all("Integration Request",\
-				filters={"reference_doctype": self.reference_document.doctype, "reference_docname": self.reference_document.name})
-
-			for doc in linked_docs:
-				frappe.db.set_value("Integration Request", doc.name, "status", status)
-		except Exception:
-			frappe.log_error(frappe.get_traceback(), _("Stripe integration request status update error"))
 
 	def error_message(self, error_number=500, title=None, error=None):
 		if error is None:
