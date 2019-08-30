@@ -52,7 +52,7 @@
       "label": "Landing Page"
      },
      {
-      "description": "Link that is the website home page. Standard Links (index, login, products, blog, about, contact)",
+      "description": "Link that is the website home page. Standard Links examples: index, login, products, blog, about, contact",
       "fieldname": "home_page",
       "fieldtype": "Data",
       "in_list_view": 1,
@@ -293,7 +293,7 @@
     "idx": 1,
     "issingle": 1,
     "max_attachments": 10,
-    "modified": "2019-06-12 17:16:37.452872",
+    "modified": "2019-07-12 17:16:37.452872",
     "modified_by": "Administrator",
     "module": "Website",
     "name": "Website Settings",

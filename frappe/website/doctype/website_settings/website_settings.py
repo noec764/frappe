@@ -20,7 +20,7 @@ class WebsiteSettings(Document):
 		if frappe.flags.in_install:
 			return
 		if self.home_page and not resolve_route(self.home_page):
-			frappe.msgprint(_("Invalid Home Page <br> Standard pages: index, login, products, blog, about, contact"))
+			frappe.msgprint(_("Invalid Home Page <br> Standard pages examples: index, login, products, blog, about, contact"))
 			self.home_page = ''
 
 	def validate_top_bar_items(self):
