@@ -15,11 +15,11 @@ def get_context(context, **dict_params):
 	Will also update `get_list_context` from the doctype module file"""
 	frappe.local.form_dict.update(dict_params)
 	doctype = frappe.local.form_dict.doctype
-	context.title = None	
 	context.parents = [{"route":"me", "title":_("My Account")}]
 	context.meta = frappe.get_meta(doctype)
 	context.update(get_list_context(context, doctype) or {})
 	context.doctype = doctype
+	context.title = context.doctype
 	context.txt = frappe.local.form_dict.txt
 	context.update(get(**frappe.local.form_dict))
 
@@ -155,8 +155,7 @@ def get_list_context(context, doctype, web_form_name=None):
 			out = frappe._dict(module.get_list_context(list_context) or {})
 			if out:
 				list_context = out
-
-			return list_context
+		return list_context
 
 	# get context from the doctype module
 	if not meta.custom:

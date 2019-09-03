@@ -48,7 +48,7 @@
 }
 
 .slide-progress {
-    /*border-top: 1px solid #d1d8dd;*/
+	/*border-top: 1px solid #d1d8dd;*/
 	margin-top: -10px;
 }
 .slide-progress .fa-fw {
@@ -88,7 +88,7 @@ body {
 }
 
 .table > tbody > tr > td {
-     vertical-align: middle;
+	 vertical-align: middle;
 }
 
 table {
@@ -100,5 +100,5 @@ table {
 }
 
 .grid-body .data-row {
-    font-size: inherit;
+	font-size: inherit;
 }

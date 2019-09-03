@@ -581,3 +581,4 @@ def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=Fals
 
 	else:
 		raise frappe.PermissionError('Not Allowed, {0}'.format(doctype))
+
