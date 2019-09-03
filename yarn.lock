@@ -36,27 +36,40 @@
     debug "^3.1.0"
     lodash.once "^4.1.1"
 
-"@fullcalendar/core@^4.1.0", "@fullcalendar/core@~4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.1.0.tgz#9f09c4c35e308a81a97e4d62c05f64548d0e5666"
-  integrity sha512-pyBRbNnppQH5iPnhENrNIkvOxjPdR46o7HMuSx3M+OlGVZLygbb97sKg5XuJx6Bn3hFP0EJXKmA9/GCfeP9PPQ==
+"@fullcalendar/core@^4.3.1", "@fullcalendar/core@~4.3.0":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-4.3.1.tgz#a061c6d2e998d4155439dbc8aefdfe01cdf648d8"
+  integrity sha512-Eh+p/wpMkWGu26f8NpfQK9ecQMoZxX/aopv+0+4/CH+Ip0paP6iEc40JYgTz7RFl0bFqV1dvwyGyUZ4+9ZeySA==
 
-"@fullcalendar/interaction@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.1.0.tgz#5d0c4c2c407934ff8bd45071ff76fb6736937da3"
-  integrity sha512-s9679mbLnBqvQJpIqj4CJi36yGCOXKYshasW7PL5a/BgNXYEScHtdSNZubJx26zHlgGOh8S0wIvBlYQUihMcLQ==
+"@fullcalendar/daygrid@^4.3.0", "@fullcalendar/daygrid@~4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-4.3.0.tgz#1b4ab9fdc238dba77921cb7c5bd2d813c834e905"
+  integrity sha512-OrGaRIGbELESOXOCXtoQVY4cOxnxmN7OrjDGbMoVITdoXWuIZ6sFNO84WcBQoRaIbkmqVM0SAU2MENwy+eEwqQ==
 
-"@fullcalendar/list@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-4.1.0.tgz#290274fc4e4616bea9238a31f49f53e295d11d3f"
-  integrity sha512-NSCiD3I8HVioq7M1jzyovZDTjBq1L8QRqUZDiYZXq14lAKYwYUdZL3MUlH7MNjL/xU/dKJWD+rTKGno7FXmT9g==
+"@fullcalendar/interaction@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-4.3.0.tgz#a52d22e4fa2666d5032c77afde75ecfad95c0f3b"
+  integrity sha512-kaKV+tdgH/oIrwTSMGYFec989L5r+KMYJ9ybwLc8G3LbMVcebo8fAlN9VizmGQAuopKfyvOw8yzJdjfmVCCRYQ==
 
-"@fullcalendar/vue@^4.1.0":
-  version "4.1.0"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/vue/-/vue-4.1.0.tgz#4dcdc4d8c0971f01d649e607dee4c0dc40f658cb"
-  integrity sha512-D1QB30mblVZhe4tu/8DaW/X4INDENLd9scXvdQ5/8UFuFuUFQWXF166KnXqrt0Zip9mi4ZnwcIMsxOZBnrlxSw==
+"@fullcalendar/list@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/list/-/list-4.3.0.tgz#b2523e54db0fd4cd44f7e93d72353d649c529dd7"
+  integrity sha512-Al+XaKynC4RsJpXyWOWJgrVQXFOSC+fg8DI4HGAt/mrrwazZ1L0pTQwCLeU8auZp53VFazCiNxV+jkAbuDdbDQ==
+
+"@fullcalendar/timegrid@^4.3.0":
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-4.3.0.tgz#bf003499319e5e66135bb7b8d8ed274b1a62ca91"
+  integrity sha512-9JCSZbzw2Hi+X893l5X9ViZaWjxh+sDy59o6nKx0gYKwSfs/vKpmk73GBQfKyUv8orkjpnTdPFfeLDZqlzBP4Q==
   dependencies:
-    "@fullcalendar/core" "~4.1.0"
+    "@fullcalendar/daygrid" "~4.3.0"
+
+"@fullcalendar/vue@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/vue/-/vue-4.3.1.tgz#7a2fab995c46aefb27394eadc24afb23d56edf42"
+  integrity sha512-yrQfYJErh/K5+Ud0rsUjMHxZz6iWuYcJvpE9QgjfQOdzUhN4CKjrqO8ivNuawGD3+mQSV4jPlJ+HJ5Qy/nfSYA==
+  dependencies:
+    "@fullcalendar/core" "~4.3.0"
+    fast-deep-equal "^2.0.1"
 
 "@types/babel-types@*", "@types/babel-types@^7.0.0":
   version "7.0.7"
