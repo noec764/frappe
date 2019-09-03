@@ -172,6 +172,7 @@ scheduler_events = {
 		"frappe.utils.scheduler.restrict_scheduler_events_if_dormant",
 		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
 		"frappe.core.doctype.activity_log.activity_log.clear_authentication_logs",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
 		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed"
@@ -234,3 +235,60 @@ after_migrate = ['frappe.website.doctype.website_theme.website_theme.generate_th
 before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
 
 otp_methods = ['OTP App','Email','SMS']
+
+user_privacy_documents = [
+	{
+		'doctype': 'File',
+		'match_field': 'attached_to_name',
+		'personal_fields': ['file_name', 'file_url'],
+		'applies_to_website_user': 1
+	},
+	{
+		'doctype': 'Email Group Member',
+		'match_field': 'email',
+	},
+	{
+		'doctype': 'Email Unsubscribe',
+		'match_field': 'email',
+	},
+	{
+		'doctype': 'Email Queue',
+		'match_field': 'sender',
+	},
+	{
+		'doctype': 'Email Queue Recipient',
+		'match_field': 'recipient',
+	},
+	{
+		'doctype': 'Contact',
+		'match_field': 'email_id',
+		'personal_fields': ['first_name', 'last_name', 'phone'],
+	},
+	{
+		'doctype': 'Contact Email',
+		'match_field': 'email_id',
+	},
+	{
+		'doctype': 'Address',
+		'match_field': 'email_id',
+		'personal_fields': ['address_title', 'address_line1', 'address_line2', 'city', 'county', 'state', 'pincode',
+			'phone', 'fax'],
+	},
+	{
+		'doctype': 'Communication',
+		'match_field': 'sender',
+		'personal_fields': ['sender_full_name', 'phone_no', 'content'],
+	},
+	{
+		'doctype': 'Communication',
+		'match_field': 'recipients',
+	},
+	{
+		'doctype': 'User',
+		'match_field': 'name',
+		'personal_fields': ['email', 'username', 'first_name', 'middle_name', 'last_name', 'full_name', 'birth_date',
+			'user_image', 'phone', 'mobile_no', 'location', 'banner_image', 'interest', 'bio', 'email_signature'],
+		'applies_to_website_user': 1
+	},
+
+]
