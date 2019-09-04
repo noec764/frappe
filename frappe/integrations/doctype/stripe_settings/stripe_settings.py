@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017, Frappe Technologies and contributors
+# Copyright (c) 2019, Dokos SAS and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
@@ -8,6 +8,7 @@ from frappe import _
 from urllib.parse import urlencode
 from frappe.utils import get_url, call_hook_method, cint, flt
 from frappe.integrations.utils import PaymentGatewayController, create_request_log, create_payment_gateway
+from frappe.integrations.doctype.stripe_settings.webhooks.invoice import StripeInvoiceWebhookHandler
 import stripe
 import json
 import erpnext
@@ -91,7 +92,7 @@ class StripeSettings(PaymentGatewayController):
 			self.origin_transaction = frappe.get_doc(self.reference_document.reference_doctype,\
 				self.reference_document.reference_name)
 
-			self.integration_request = create_request_log(self.data, "Payment", "Stripe")
+			self.integration_request = create_request_log(self.data, "Request", "Stripe")
 			self.link_integration_request("PaymentIntent",\
 				self.intent.get("paymentIntent").get("id"), self.intent.get("paymentIntent").get("status"))
 			self.change_integration_request_status("Pending", "output", str(intent))
@@ -110,7 +111,7 @@ class StripeSettings(PaymentGatewayController):
 			self.origin_transaction = frappe.get_doc(self.reference_document.reference_doctype,\
 				self.reference_document.reference_name)
 
-			self.integration_request = create_request_log(self.data, "Payment", "Stripe")
+			self.integration_request = create_request_log(self.data, "Request", "Stripe")
 
 			return self.create_new_subscription()
 
@@ -272,8 +273,10 @@ class StripeSettings(PaymentGatewayController):
 	def add_base_amount(self):
 		if self.charge.balance_transaction.get("currency").casefold()\
 			== erpnext.get_company_currency(self.origin_transaction.get("company")).casefold():
-			self.reference_document.db_set('base_amount', self.charge.balance_transaction.get("amount") / 100, update_modified=True)
-			self.reference_document.db_set('exchange_rate', self.charge.balance_transaction.get("exchange_rate") or 1, update_modified=True)
+			self.reference_document.db_set('base_amount',\
+				self.charge.balance_transaction.get("amount") / 100, update_modified=True)
+			self.reference_document.db_set('exchange_rate',\
+				self.charge.balance_transaction.get("exchange_rate") or 1, update_modified=True)
 
 	def add_stripe_charge_fee(self):
 		if not self.reference_document.get("fee_amount"):
@@ -304,6 +307,10 @@ class StripeSettings(PaymentGatewayController):
 		try:
 			self.link_integration_request("Subscription", self.subscription.id, self.subscription.status)
 			if self.subscription.status != "canceled":
+				linked_subscription = self.reference_document.is_linked_to_a_subscription()
+				if linked_subscription:
+					frappe.db.set_value("Subscription", linked_subscription,\
+						"payment_gateway_reference", self.subscription.id)
 				return self.retrieve_subscription_latest_invoice()
 			else:
 				self.change_integration_request_status("Failed", "error", json.dumps(self.subscription))
@@ -329,8 +336,7 @@ class StripeSettings(PaymentGatewayController):
 			else:
 				self.change_integration_request_status("Failed", "error", json.dumps(self.invoice))
 				return self.error_message(402, _("Stripe invoice processing error"),\
-					json.dumps(self.invoice)
-				)
+					json.dumps(self.invoice))
 
 		except Exception:
 			self.change_integration_request_status("Failed", "error", str(e))
@@ -347,24 +353,36 @@ class StripeSettings(PaymentGatewayController):
 		frappe.log_error(error, title)
 		if error_number == 201:
 			return {
-					"redirect_to": frappe.redirect_to_message(_('Payment error'),\
-						_("It seems that your payment has not been fully accepted by your bank.<br>We will get in touch with you as soon as possible.")),
-					"status": 201,
-					"error": error
-				}
+				"redirect_to": frappe.redirect_to_message(_('Payment error'),\
+					_("It seems that your payment has not been fully accepted by your bank.\
+						<br>We will get in touch with you as soon as possible.")),
+				"status": 201,
+				"error": error
+			}
 		elif error_number == 402:
 			return {
-					"redirect_to": frappe.redirect_to_message(_('Server Error'),\
-						_("It seems that there is an issue with our Stripe integration.\
-						<br>In case of failure, the amount will get refunded to your account.")),
-					"status": 402,
-					"error": error
-				}
+				"redirect_to": frappe.redirect_to_message(_('Server Error'),\
+					_("It seems that there is an issue with our Stripe integration.\
+					<br>In case of failure, the amount will get refunded to your account.")),
+				"status": 402,
+				"error": error
+			}
 		else:
 			return {
-					"redirect_to": frappe.redirect_to_message(_('Server Error'),\
-						_("It seems that there is an issue with our Stripe integration.\
-						<br>In case of failure, the amount will get refunded to your account.")),
-					"status": 500,
-					"error": error
-				}
+				"redirect_to": frappe.redirect_to_message(_('Server Error'),\
+					_("It seems that there is an issue with our Stripe integration.\
+					<br>In case of failure, the amount will get refunded to your account.")),
+				"status": 500,
+				"error": error
+			}
+
+
+def handle_webhooks(**kwargs):
+	print(kwargs)
+	integration_request = frappe.get_doc(kwargs.get("doctype"), kwargs.get("docname"))
+
+	if integration_request.get("service_document") == "invoice":
+		StripeInvoiceWebhookHandler(**kwargs)
+	else:
+		integration_request.db_set("error", _("This type of event is not handled by ERPNext"))
+		integration_request.update_status({}, "Completed")

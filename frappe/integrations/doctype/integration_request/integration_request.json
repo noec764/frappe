@@ -25,12 +25,13 @@
    "fieldname": "integration_type",
    "fieldtype": "Select",
    "label": "Integration Type",
-   "options": "Payment\nSubscription notification",
+   "options": "Request\nWebhook",
    "read_only": 1
   },
   {
    "fieldname": "integration_request_service",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Integration Request Service",
    "read_only": 1
   },
@@ -110,12 +111,13 @@
   {
    "fieldname": "service_status",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Service Status",
    "read_only": 1
   }
  ],
  "in_create": 1,
- "modified": "2019-08-26 10:46:20.107241",
+ "modified": "2019-09-04 13:08:09.231047",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integration Request",

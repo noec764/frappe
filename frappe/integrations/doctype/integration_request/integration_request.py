@@ -20,3 +20,11 @@ class IntegrationRequest(Document):
 		self.status = status
 		self.save(ignore_permissions=True)
 		frappe.db.commit()
+
+	@frappe.whitelist()
+	def retry_webhook(self):
+		if self.integration_request_service == "Stripe":
+			from frappe.integrations.doctype.stripe_settings.stripe_settings import handle_webhooks
+			handle_webhooks(**{"doctype": "Integration Request", "docname":  self.name})
+
+		return

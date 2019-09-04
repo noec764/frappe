@@ -177,7 +177,7 @@ class RazorpaySettings(Document):
 		return kwargs
 
 	def get_payment_url(self, **kwargs):
-		integration_request = create_request_log(kwargs, "Payment", "Razorpay")
+		integration_request = create_request_log(kwargs, "Request", "Razorpay")
 		return get_url("./integrations/razorpay_checkout?token={0}".format(integration_request.name))
 
 	def create_request(self, data):
@@ -350,7 +350,7 @@ def razorpay_subscription_callback():
 		doc = frappe.get_doc({
 			"data": json.dumps(frappe.local.form_dict),
 			"doctype": "Integration Request",
-			"integration_type": "Subscription notification",
+			"integration_type": "Webhook",
 			"status": "Queued"
 		}).insert(ignore_permissions=True)
 		frappe.db.commit()
