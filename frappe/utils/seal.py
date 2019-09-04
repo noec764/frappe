@@ -96,32 +96,32 @@ def sanitize_value(value, meta):
 
 	return value
 
-def get_chained_seal(doc, calculated=False):
+def get_chained_seal(doc):
 	if not isinstance(doc, dict):
 		doc = doc.as_dict()
 
-	if calculated:
-		previous_seal = frappe.db.sql("""
-			SELECT name, _seal, max(creation)
-			FROM `tab%s`
-			WHERE creation < '%s' AND _seal IS NOT NULL""" % (doc["doctype"], datetime.datetime.strptime(doc["timestamp"], DATETIME_FORMAT)), as_dict=True)[0]
-	else:
-		previous_seal = frappe.db.sql("""
-			SELECT name, _seal, max(creation)
-			FROM `tab%s`
-			WHERE _seal IS NOT NULL""" % doc["doctype"], as_dict=True)[0]
+	previous_seal = dict()
+	previous_entry = frappe.db.sql("""
+		SELECT name, _seal, creation
+		FROM `tab%s`
+		WHERE creation < '%s' AND _seal IS NOT NULL
+		ORDER BY creation DESC LIMIT 1""" % (doc["doctype"],\
+		datetime.datetime.strptime(doc["timestamp"], DATETIME_FORMAT)), as_dict=True)
 
-	if not previous_seal._seal:
+	if previous_entry:
+		previous_seal = previous_entry[0]
+
+	if not previous_seal:
 		if frappe.db.get_global("initial_hash"):
-			previous_seal._seal = frappe.db.get_global("initial_hash")
+			previous_seal['_seal'] = frappe.db.get_global("initial_hash")
 		else:
-			previous_seal._seal = hash_line(uuid.uuid4().hex)
+			previous_seal['_seal'] = hash_line(uuid.uuid4().hex)
 			frappe.db.set_global("initial_hash", previous_seal._seal)
 			frappe.db.commit()
 
 	current_seal = hash_line(doc)
 
-	return hash_chain(previous_seal._seal, current_seal)
+	return hash_chain(previous_seal['_seal'], current_seal)
 
 def hash_line(data):
 	sha = hashlib.sha256()

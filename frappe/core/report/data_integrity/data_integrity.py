@@ -43,7 +43,7 @@ def get_data(filters=None):
 		sealed_doc = revise_renamed_links(sealed_doc, link_fields)
 
 		if sealed_doc:
-			seal = get_chained_seal(sealed_doc, True)
+			seal = get_chained_seal(sealed_doc)
 			integrity = "Yes" if seal == doc._seal else "No"
 			comment = ""
 
