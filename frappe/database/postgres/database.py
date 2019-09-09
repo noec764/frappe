@@ -169,6 +169,10 @@ class PostgresDatabase(Database):
 	def is_duplicate_fieldname(e):
 		return e.pgcode == '42701'
 
+	@staticmethod
+	def is_data_too_long(e):
+		return e.pgcode == '22001'
+
 	def create_auth_table(self):
 		self.sql_ddl("""create table if not exists "__Auth" (
 				"doctype" VARCHAR(140) NOT NULL,
@@ -263,9 +267,9 @@ class PostgresDatabase(Database):
 			AND constraint_type='UNIQUE'
 			AND CONSTRAINT_NAME=%s""",
 			('tab' + doctype, constraint_name)):
-				self.commit()
-				self.sql("""ALTER TABLE `tab%s`
-					ADD CONSTRAINT %s UNIQUE (%s)""" % (doctype, constraint_name, ", ".join(fields)))
+			self.commit()
+			self.sql("""ALTER TABLE `tab%s`
+				ADD CONSTRAINT %s UNIQUE (%s)""" % (doctype, constraint_name, ", ".join(fields)))
 
 	def get_table_columns_description(self, table_name):
 		"""Returns list of column and its description"""
