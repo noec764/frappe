@@ -183,6 +183,10 @@ def validate_loop(doctype, name, lft, rgt):
 		frappe.throw(_("Item cannot be added to its own descendents"), NestedSetRecursionError)
 
 class NestedSet(Document):
+	def __setup__(self):
+		if self.meta.get("nsm_parent_field"):
+			self.nsm_parent_field = self.meta.nsm_parent_field
+
 	def on_update(self):
 		update_nsm(self)
 		self.validate_ledger()
@@ -273,8 +277,6 @@ def get_ancestors_of(doctype, name, order_by="lft desc", limit=None):
 
 def get_descendants_of(doctype, name, order_by="lft desc", limit=None,
 	ignore_permissions=False):
-	print(doctype)
-	print(name)
 	'''Return descendants of the current record'''
 	lft, rgt = frappe.db.get_value(doctype, name, ['lft', 'rgt'])
 

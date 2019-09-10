@@ -1,34 +1,19 @@
 <template>
-	<div 
-		:id="id" 
-		class="grid-item border" 
-		:style="cardStyle"
-	>
-		<div class="item-content">
-				<frappe-charts
-					v-if="showChart"
-					:id="id + '-chart'"
-					:dataSets="data.datasets"
-					:labels="data.labels"
-					:title="title"
-					:type="chartType"
-					:colors="colors"
-					:height="chartHeight"
-					:axisOptions="axisOptions"
-					:tooltipOptions="tooltipOptions"
-				/>
-				<div v-else class="empty-chart text-center">
-					<p class="text-muted">{{ __("No data to display") }}</p>
-				</div>
-				<div class="card-footer">
-					<div class="row">
-						<div class="col-xs-10 card-link">
-						</div>
-						<div class="col-xs-2">
-							<span><i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i></span>
-						</div>
-					</div>
-				</div>
+	<div>
+		<frappe-charts
+			v-if="showChart"
+			:id="'element-' + item.name"
+			:dataSets="data.datasets"
+			:labels="data.labels"
+			:title="title"
+			:type="chartType"
+			:colors="colors"
+			:height="chartHeight"
+			:axisOptions="axisOptions"
+			:tooltipOptions="tooltipOptions"
+		/>
+		<div v-else class="empty-chart text-center">
+			<p class="text-muted">{{ __("No data to display") }}</p>
 		</div>
 	</div>
 </template>
@@ -43,55 +28,22 @@ export default {
 		FrappeCharts
 	},
 	props: {
-	  	id: {
-			type: [Number, String],
-			default: 'desk-graph'
-		},
-		width: {
-			type: Number,
-			default: '30'
-		},
-		height: {
-			type: String,
-			default: '340'
-		},
-		label: {
-			type: String,
-			default: null
-		},
-		chartSource: {
-			type: String,
-			default: null
-		},
-		color: {
-			type: String,
-			default: null
-		},
-		type: {
-			type: String,
-			default: 'Line'
-		},
-		unit: {
-			type: String,
-			default: ''
-		},
-		last_synced: {
-			type: String,
-			default: null
+		item: {
+			type: Object,
+			default: {}
 		}
 	},
 	data() {
 		return {
 			axisOptions: {},
-			colors: [this.color],
+			colors: [this.item.chart_color],
 			data: {},
-			title: `${this.label}`,
-			cardHeight: this.height + "px",
-			chartHeight: parseInt(this.height) * 90/100,
+			title: `${this.item.chart_name}`,
+			chartHeight: parseInt(this.item.widget_height) - 50,
 			settings: null,
 			tooltipOptions: {
 				formatTooltipX: d => (d + ''),
-				formatTooltipY: d => d + ' ' + this.unit,
+				formatTooltipY: d => d + ' ' + (this.item.unit || ''),
 			}
 		}
 	},
@@ -99,12 +51,9 @@ export default {
 		showChart() {
 			return Object.keys(this.data).length
 		},
-		cardStyle() {
-			return {'width': (this.width + "%").toString(), 'min-width': '280px', 'height': this.cardHeight};
-		},
 		chartType() {
 			const map = {"Line": "line", "Bar": "bar", "Pie": "pie", "Percentage": "percentage"}
-			return map[this.type]
+			return map[this.item.type]
 		}
 	},
 	mounted() {
@@ -112,11 +61,11 @@ export default {
 	},
 	methods: {
 		get_settings() {
-			if(this.chartSource!="") {
-				frappe.xcall('frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config', {name: this.chartSource})
+			if(this.item.chart_type!="Custom" && (this.item.chart_source!="" && this.item.chart_source!=null)) {
+				frappe.xcall('frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config', {name: this.item.chart_source})
 				.then(config => {
 					const evaluated_config = frappe.dom.eval(config);
-					this.settings = frappe.dashboards.chart_sources[this.chartSource]
+					this.settings = frappe.dashboards.chart_sources[this.item.chart_source]
 					this.axisOptions = {xIsSeries: parseInt(this.settings.timeseries, 10) || 0}
 				})
 				.then(() => this.fetch_data());
@@ -130,21 +79,17 @@ export default {
 
 			frappe.xcall(method,
 				{
-					chart: this.label,
-					filters: this.filters,
+					chart: this.item.chart_name,
+					filters: this.item.filters,
 					refresh: 1,
 				}
 			).then(r => this.data = r)
-		},
-		remove_card() {
-			this.$emit("removeCard", this.id)
 		}
 	}
 }
 </script>
 
-<style lang="scss">
-
+<style lang="scss" scoped>
 .card-footer {
 	height: 10%;
 	.card-link {
@@ -153,17 +98,9 @@ export default {
 	}
 }
 
-.title {
-	font-weight: 600;
-}
-
-.item-content {
-	height: 100%;
-}
-
 .empty-chart {
-	height: 90%;
 	width: 100%;
+	min-height: 
 	p {
 		position: relative;
 		top: 50%;

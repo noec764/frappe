@@ -169,12 +169,14 @@ frappe.ui.form.Toolbar = Class.extend({
 		// delete
 		if((cint(me.frm.doc.docstatus) != 1) && !me.frm.doc.__islocal
 			&& frappe.model.can_delete(me.frm.doctype)) {
-			this.page.add_menu_item(__("Delete"), function() {
-				me.frm.savetrash();
-			}, true, {
-				shortcut: 'Shift+Ctrl+D',
-				condition: () => !this.frm.is_new()
-			});
+				if (!(cint(me.frm.doc.docstatus) === 2 && me.frm.meta.is_sealed === 1)) {
+					this.page.add_menu_item(__("Delete"), function() {
+						me.frm.savetrash();
+					}, true, {
+						shortcut: 'Shift+Ctrl+D',
+						condition: () => !this.frm.is_new()
+					});
+				}
 		}
 
 		if(frappe.user_roles.includes("System Manager") && me.frm.meta.issingle === 0) {
@@ -275,7 +277,18 @@ frappe.ui.form.Toolbar = Class.extend({
 		var status = this.get_action_status();
 		if (status) {
 			if (status !== this.current_status) {
-				this.set_page_actions(status);
+				if (status === 'Amend') {
+					let doc = this.frm.doc;
+					frappe.xcall('frappe.client.is_document_amended', {
+						'doctype': doc.doctype,
+						'docname': doc.name
+					}).then(is_amended => {
+						if (is_amended) return;
+						this.set_page_actions(status);
+					});
+				} else {
+					this.set_page_actions(status);
+				}
 			}
 		} else {
 			this.page.clear_actions();
@@ -350,24 +363,6 @@ frappe.ui.form.Toolbar = Class.extend({
 		}
 
 		this.current_status = status;
-	},
-	make_cancel_amend_button: function() {
-		var me = this;
-		var docstatus = cint(this.frm.doc.docstatus);
-		var p = this.frm.perm[0];
-		var has_workflow = this.has_workflow();
-
-		if (docstatus === 2 && p[AMEND]) {
-			this.page.set_secondary_action(__('Amend'), function () {
-				me.frm.amend_doc();
-			}, 'fa fa-pencil', true);
-		} else if (has_workflow) {
-			return;
-		} else if (docstatus === 1 && p[CANCEL]) {
-			this.page.set_secondary_action(__('Cancel'), function () {
-				me.frm.savecancel(this);
-			}, 'fa fa-ban-circle');
-		}
 	},
 	add_update_button_on_dirty: function() {
 		var me = this;

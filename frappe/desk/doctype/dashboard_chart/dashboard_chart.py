@@ -12,7 +12,11 @@ from frappe.model.document import Document
 
 @frappe.whitelist()
 @cache_source
-def get(chart, no_cache=None, from_date=None, to_date=None, refresh = None):
+def get(chart_name = None, chart = None, no_cache = None, from_date=None, to_date=None, refresh = None):
+	if chart_name:
+		chart = frappe.get_doc('Dashboard Chart', chart_name)
+	else:
+		chart = frappe._dict(frappe.parse_json(chart))
 
 	chart = frappe.parse_json(chart)
 	timespan = chart.timespan
@@ -207,7 +211,7 @@ class DashboardChart(Document):
 			self.check_required_field()
 
 	def check_required_field(self):
-		if not self.chart_type=="Preregistered":
+		if not self.chart_type=="Custom":
 			if not self.based_on:
 				frappe.throw(_("Time series based on is required to create a dashboard chart"))
 			if not self.document_type:

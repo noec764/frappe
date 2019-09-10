@@ -27,4 +27,8 @@ class IntegrationRequest(Document):
 			from frappe.integrations.doctype.stripe_settings.stripe_settings import handle_webhooks
 			handle_webhooks(**{"doctype": "Integration Request", "docname":  self.name})
 
+		elif self.integration_request_service == "GoCardless":
+			from erpnext.erpnext_integrations.doctype.gocardless_settings.gocardless_settings import handle_webhooks
+			handle_webhooks(**{"doctype": "Integration Request", "docname":  self.name})
+
 		return

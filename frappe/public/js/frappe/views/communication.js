@@ -208,9 +208,7 @@ frappe.views.CommunicationComposer = Class.extend({
 					}
 	
 					content_field.set_value(content.join(''));
-					if(subject === "") {
-						subject_field.set_value(reply.subject);
-					}
+					subject_field.set_value(reply.subject);
 	
 					me.reply_added = email_template;
 				}

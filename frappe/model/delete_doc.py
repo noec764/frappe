@@ -13,6 +13,7 @@ from frappe import _
 from frappe.model.naming import revert_series_if_last
 from frappe.utils.global_search import delete_for_document
 from six import string_types, integer_types
+from frappe.exceptions import FileNotFoundError
 
 DOCTYPES_TO_SKIP = ["Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", \
 	"File", "Version", "Document Follow", "Comment" , "View Log"]
@@ -59,10 +60,6 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 			else:
 				doc = frappe.get_doc(doctype, name)
 
-				if hasattr(frappe.get_meta(doctype), "is_sealed") and frappe.get_meta(doctype).is_sealed \
-					and doc.docstatus != 0:
-					frappe.throw(_("Sealed documents cannot be deleted"))
-
 				update_flags(doc, flags, ignore_permissions)
 				check_permission_and_not_submitted(doc)
 
@@ -75,10 +72,22 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 
 			delete_from_table(doctype, name, ignore_doctypes, None)
 
+			if not (frappe.flags.in_migrate or frappe.flags.in_install or frappe.flags.in_test):
+				try:
+					delete_controllers(name, doc.module)
+				except (FileNotFoundError, OSError):
+					# in case a doctype doesnt have any controller code
+					pass
+
 		else:
 			doc = frappe.get_doc(doctype, name)
 
+			if hasattr(frappe.get_meta(doctype), "is_sealed") and frappe.get_meta(doctype).is_sealed \
+				and doc.docstatus != 0:
+				frappe.throw(_("Sealed documents cannot be deleted"))
+
 			if not for_reload:
+
 				update_flags(doc, flags, ignore_permissions)
 				check_permission_and_not_submitted(doc)
 
@@ -86,9 +95,6 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 					doc.run_method("on_trash")
 					doc.flags.in_delete = True
 					doc.run_method('on_change')
-
-				frappe.enqueue('frappe.model.delete_doc.delete_dynamic_links', doctype=doc.doctype, name=doc.name,
-					is_async=False if frappe.flags.in_test else True)
 
 				# check if links exist
 				if not force:
@@ -101,6 +107,13 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 
 			# delete attachments
 			remove_all(doctype, name, from_delete=True)
+
+			if not for_reload:
+				# Enqueued at the end, because it gets committed
+				# All the linked docs should be checked beforehand
+				frappe.enqueue('frappe.model.delete_doc.delete_dynamic_links',
+					doctype=doc.doctype, name=doc.name,
+					is_async=False if frappe.flags.in_test else True)
 
 		# delete global search entry
 		delete_for_document(doc)
@@ -325,3 +338,12 @@ def insert_feed(doc):
 		"subject": "{0} {1}".format(_(doc.doctype), doc.name),
 		"full_name": get_fullname(doc.owner)
 	}).insert(ignore_permissions=True)
+
+def delete_controllers(doctype, module):
+	"""
+	Delete controller code in the doctype folder
+	"""
+	module_path = get_module_path(module)
+	dir_path = os.path.join(module_path, 'doctype', frappe.scrub(doctype))
+
+	shutil.rmtree(dir_path)

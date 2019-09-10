@@ -39,10 +39,10 @@
    "fieldname": "chart_type",
    "fieldtype": "Select",
    "label": "Chart Type",
-   "options": "Count\nSum\nAverage\nPreregistered"
+   "options": "Count\nSum\nAverage\nCustom"
   },
   {
-   "depends_on": "eval:doc.chart_type === 'Preregistered'",
+   "depends_on": "eval:doc.chart_type === 'Custom'",
    "fieldname": "source",
    "fieldtype": "Link",
    "label": "Chart Source",
@@ -147,7 +147,7 @@
    "label": "Tooltip Unit"
   }
  ],
- "modified": "2019-06-12 10:41:21.434191",
+ "modified": "2019-09-10 10:36:56.514212",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",

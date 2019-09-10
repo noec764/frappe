@@ -9,10 +9,10 @@ import json
 from frappe import _
 
 WIDTH_MAP = {
-			"Third": 33,
-			"Half": 50,
-			"Full": 100
-		}
+	"Third": 33,
+	"Half": 50,
+	"Full": 100
+}
 
 class Desk(Document):
 	pass
@@ -21,7 +21,7 @@ def has_permission(doc, ptype, user):
 	if "System Manager" in frappe.get_roles(user):
 		return True
 	else:
-		return doc.owner==user
+		return doc.owner == user
 
 @frappe.whitelist()
 def get_desk(user):
@@ -197,14 +197,14 @@ class WidgetCreator:
 			}).insert()
 			widget_name = new_desk_calendar.name
 		
-		self.__add_to_desk("Dashboard Calendar", widget_name, 30, 400)
+		self.__add_to_desk("Dashboard Calendar", widget_name, 33, 400)
 
 	def _add_chart(self, **kwargs):
 		chart_width = get_chart_width(kwargs["chart"])
 		self.__add_to_desk("Dashboard Chart", kwargs["chart"], chart_width, 340)
 
 	def _add_stats(self, **kwargs):
-		self.__add_to_desk("Dashboard Card", kwargs["card"], 20, 175)
+		self.__add_to_desk("Dashboard Card", kwargs["card"], 33, 175)
 
 	def _add_module_chart(self, **kwargs):
 		chart_width = get_chart_width(kwargs["chart"])

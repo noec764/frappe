@@ -185,7 +185,6 @@ class UserPermissions:
 			self.build_permissions()
 
 		d.name = self.name
-
 		d.roles = self.get_roles()
 		d.defaults = self.get_defaults()
 
@@ -311,11 +310,16 @@ def disable_users(limits=None):
 		return
 
 	if limits.get('users'):
-		excluded_users_list = ['Administrator', 'Guest']
-
-		active_users = frappe.get_all("User", filters={"user_type":"System User", "enabled":1, "name": ["not in", excluded_users_list]}, fields=["name"])
-
-		user_limit = cint(limits.get('users'))
+		system_manager = get_system_managers(only_name=True)
+		user_list = ['Administrator', 'Guest']
+		if system_manager:
+			user_list.append(system_manager[-1])
+		#exclude system manager from active user list
+		# active_users =  frappe.db.sql_list("""select name from tabUser
+		# 	where name not in ('Administrator', 'Guest', %s) and user_type = 'System User' and enabled=1
+		# 	order by creation desc""", system_manager)
+		active_users = frappe.get_all("User", filters={"user_type":"System User", "enabled":1, "name": ["not in", user_list]}, fields=["name"])
+		user_limit = cint(limits.get('users')) - 1
 
 		if len(active_users) > user_limit:
 
@@ -329,7 +333,7 @@ def disable_users(limits=None):
 
 		from frappe.core.doctype.user.user import get_total_users
 
-		if cint(get_total_users()) > cint(limits.get('users')):
+		if get_total_users() > cint(limits.get('users')):
 			reset_simultaneous_sessions(cint(limits.get('users')))
 
 	frappe.db.commit()
@@ -362,4 +366,4 @@ def get_users_with_role(role):
 		WHERE `tabHas Role`.`role`=%s
 		AND `tabUser`.`name`!='Administrator'
 		AND `tabHas Role`.`parent`=`tabUser`.`name`
-		AND `tabUser`.`enabled`=1""", role)] 
+		AND `tabUser`.`enabled`=1""", role)]

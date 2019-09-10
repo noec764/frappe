@@ -388,3 +388,15 @@ def get_safe_filters(filters):
 		pass
 
 	return filters
+
+@frappe.whitelist()
+def is_document_amended(doctype, docname):
+	if frappe.permissions.has_permission(doctype):
+		try:
+			return frappe.db.exists(doctype, {
+				'amended_from': docname
+			})
+		except frappe.db.InternalError:
+			pass
+
+	return False

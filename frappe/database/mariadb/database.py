@@ -169,6 +169,10 @@ class MariaDBDatabase(Database):
 	def is_syntax_error(e):
 		return e.args[0] == ER.PARSE_ERROR
 
+	@staticmethod
+	def is_data_too_long(e):
+		return e.args[0] == ER.DATA_TOO_LONG
+
 	def is_primary_key_violation(self, e):
 		return self.is_duplicate_entry(e) and 'PRIMARY' in cstr(e.args[1])
 
@@ -264,9 +268,9 @@ class MariaDBDatabase(Database):
 		if not self.sql("""select CONSTRAINT_NAME from information_schema.TABLE_CONSTRAINTS
 			where table_name=%s and constraint_type='UNIQUE' and CONSTRAINT_NAME=%s""",
 			('tab' + doctype, constraint_name)):
-				self.commit()
-				self.sql("""alter table `tab%s`
-					add unique `%s`(%s)""" % (doctype, constraint_name, ", ".join(fields)))
+			self.commit()
+			self.sql("""alter table `tab%s`
+				add unique `%s`(%s)""" % (doctype, constraint_name, ", ".join(fields)))
 
 	def updatedb(self, doctype, meta=None):
 		"""

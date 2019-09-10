@@ -376,9 +376,7 @@ class StripeSettings(PaymentGatewayController):
 				"error": error
 			}
 
-
 def handle_webhooks(**kwargs):
-	print(kwargs)
 	integration_request = frappe.get_doc(kwargs.get("doctype"), kwargs.get("docname"))
 
 	if integration_request.get("service_document") == "invoice":

@@ -28,7 +28,7 @@ class StripeInvoiceWebhookHandler():
 			self.get_linked_subscription()
 			self.get_subscription_invoice()
 		else:
-			self.integration_request.db_set("error", _("This type of event is not handled by ERPNext"))
+			self.integration_request.db_set("error", _("This type of event is not handled by dokos"))
 			self.integration_request.update_status({}, "Completed")
 
 		self.handle_invoice_update()
@@ -59,10 +59,9 @@ class StripeInvoiceWebhookHandler():
 		self.integration_request.db_set("reference_docname", self.invoice.name if self.invoice else None)
 
 	def handle_invoice_update(self):
-		frappe.log_error(self.data)
 		target = EVENT_MAP.get(self.data.get("type"))
 		if not target:
-			self.integration_request.db_set("error", _("This type of event is not handled by ERPNext"))
+			self.integration_request.db_set("error", _("This type of event is not handled by dokos"))
 			self.integration_request.update_status({}, "Completed")
 
 		else:
@@ -86,7 +85,7 @@ class StripeInvoiceWebhookHandler():
 
 	def delete_invoice(self):
 		try:
-			self.invoice.delete()
+			self.invoice.cancel()
 			self.integration_request.update_status({}, "Completed")
 		except Exception as e:
 			self.integration_request.db_set("error", e)
@@ -115,7 +114,7 @@ class StripeInvoiceWebhookHandler():
 			pe = get_payment_entry("Sales Invoice", self.invoice.name)
 			pe.reference_no = self.subscription.name
 			pe.reference_date = nowdate()
-			pr.ignore_permissions = True
+			pe.flags.ignore_permissions = True
 			pe.insert()
 			pe.submit()
 			self.integration_request.update_status({}, "Completed")
@@ -130,7 +129,3 @@ class StripeInvoiceWebhookHandler():
 		except Exception as e:
 			self.integration_request.db_set("error", e)
 			self.integration_request.update_status({}, "Failed")
-
-
-#self.integration_request.db_set("error", _("No invoice could be found for this event"))
-#self.integration_request.update_status({}, "Completed")

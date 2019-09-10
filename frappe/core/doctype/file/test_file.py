@@ -79,9 +79,7 @@ class TestBase64File(unittest.TestCase):
 
 
 class TestSameFileName(unittest.TestCase):
-
-
-	def setUp(self):
+	def test_saved_content(self):
 		self.attached_to_doctype, self.attached_to_docname = make_test_doc()
 		self.test_content1 = test_content1
 		self.test_content2 = test_content2
@@ -103,7 +101,6 @@ class TestSameFileName(unittest.TestCase):
 		self.saved_file_url2 = _file2.file_url
 
 
-	def test_saved_content(self):
 		_file = frappe.get_doc("File", {"file_url": self.saved_file_url1})
 		content1 = _file.get_content()
 		self.assertEqual(content1, self.test_content1)
@@ -111,10 +108,25 @@ class TestSameFileName(unittest.TestCase):
 		content2 = _file.get_content()
 		self.assertEqual(content2, self.test_content2)
 
+	def test_saved_content_private(self):
+		_file1 = frappe.get_doc({
+			"doctype": "File",
+			"file_name": "testing-private.txt",
+			"content": test_content1,
+			"is_private": 1
+		}).insert()
+		_file2 = frappe.get_doc({
+			"doctype": "File",
+			"file_name": "testing-private.txt",
+			"content": test_content2,
+			"is_private": 1
+		}).insert()
 
-	def tearDown(self):
-		# File gets deleted on rollback, so blank
-		pass
+		_file = frappe.get_doc("File", {"file_url": _file1.file_url})
+		self.assertEqual(_file.get_content(), test_content1)
+
+		_file = frappe.get_doc("File", {"file_url": _file2.file_url})
+		self.assertEqual(_file.get_content(), test_content2)
 
 
 class TestSameContent(unittest.TestCase):
@@ -272,35 +284,3 @@ class TestFile(unittest.TestCase):
 		folder = frappe.get_doc("File", "Home/Test Folder 1/Test Folder 3")
 		self.assertRaises(frappe.ValidationError, folder.delete)
 
-
-	def test_file_upload_limit(self):
-		from frappe.core.doctype.file.file import MaxFileSizeReachedError
-		from frappe.limits import update_limits, clear_limit
-		from frappe import _dict
-
-		update_limits({
-			'space': 1,
-			'space_usage': {
-				'files_size': (1024 ** 2),
-				'database_size': 0,
-				'backup_size': 0,
-				'total': (1024 ** 2)
-			}
-		})
-
-		# Rebuild the frappe.local.conf to take up the changes from site_config
-		frappe.local.conf = _dict(frappe.get_site_config())
-
-		_file = frappe.get_doc({
-			"doctype": "File",
-			"file_name": "_test_max_space.txt",
-			"attached_to_name": "",
-			"attached_to_doctype": "",
-			"folder": self.get_folder("Test Folder 2", "Home").name,
-			"content": "This file tests for max space usage"})
-		self.assertRaises(MaxFileSizeReachedError,
-			_file.save)
-
-		# Scrub the site_config and rebuild frappe.local.conf
-		clear_limit("space")
-		frappe.local.conf = _dict(frappe.get_site_config())

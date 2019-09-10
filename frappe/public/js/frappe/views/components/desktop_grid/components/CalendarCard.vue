@@ -1,10 +1,5 @@
 <template>
-	<div
-		:id="id"
-		class="grid-item desk-calendar-top border"
-		:style="cardStyle"
-	>
-	<div class="item-content">
+	<div>
 		<FullCalendar
 			class='desk-calendar'
 			ref="fullCalendar"
@@ -17,13 +12,11 @@
 			:plugins="calendarPlugins"
 			:weekends="calendarWeekends"
 			:events="getCalendarEvents"
-			:height="calendarHeight"
 			:locale="locale"
 			:buttonText="buttonText"
 			:noEventsMessage="noEventsMessage"
-			/>
-			<i class="octicon octicon-trashcan remove-icon" @click="remove_card"></i>
-		</div>
+			:height="calendarHeight"
+		/>
   </div>
 </template>
 
@@ -36,25 +29,9 @@ export default {
 		FullCalendar
 	},
 	props: {
-		id: {
-			type: [Number, String],
-			default: 'desk-graph'
-		},
-		width: {
-			type: String,
-			default: '33%'
-		},
-		height: {
-			type: String,
-			default: '400'
-		},
-		reference: {
-			type: String,
-			default: 'Event'
-		},
-		user: {
-			type: String,
-			default: null
+		item: {
+			type: Object,
+			default: {}
 		}
 	},
 	data() {
@@ -66,8 +43,7 @@ export default {
 			defaultView: 'listDay',
 			calendarWeekends: true,
 			calendarEvents: [],
-			calendarHeight: parseInt(this.height),
-			cardHeight: parseInt(this.height) + 25 + "px",
+			calendarHeight: parseInt(this.item.widget_height) - 50,
 			buttonText: {
 				today: __("Today"),
 				listWeek: __("Week"),
@@ -80,13 +56,10 @@ export default {
 		}
 	},
 	computed: {
-		cardStyle() {
-			return {'width': '100%', 'max-width': this.width, 'min-width': '280px', 'height': this.cardHeight};
-		}
 	},
 	created() {
-		frappe.model.with_doctype(this.reference, () => {
-			const meta = frappe.get_meta(this.reference);
+		frappe.model.with_doctype(this.item.source_document, () => {
+			const meta = frappe.get_meta(this.item.source_document);
 			const calendar_options = eval(meta.__calendar_js)
 			this.events_method = calendar_options.get_events_method || 'frappe.desk.doctype.event.event.get_events';
 			this.fields_map = calendar_options.field_map
@@ -107,14 +80,11 @@ export default {
 					Object.keys(this.fields_map).forEach(key => {
 						ev[key] = value[this.fields_map[key]]
 					})
-					ev.url = `/desk#Form/${this.reference}/${value.name}`;
+					ev.url = `/desk#Form/${this.item.source_document}/${value.name}`;
 					events.push(ev)
 				})
 				callback(events);
 			})
-		},
-		remove_card() {
-			this.$emit("removeCard", this.id)
 		}
   }
 }
@@ -124,7 +94,6 @@ export default {
 @import 'node_modules/@fullcalendar/core/main';
 @import 'node_modules/@fullcalendar/list/main';
 @import 'frappe/public/scss/calendar';
-
 .desk-calendar-top {
 	margin: 0 0 3em;
 }
@@ -133,9 +102,4 @@ export default {
 	margin: 0 auto;
 	max-width: 900px;
 }
-
-.item-content {
-	padding: 0 1px;
-}
-
 </style>
