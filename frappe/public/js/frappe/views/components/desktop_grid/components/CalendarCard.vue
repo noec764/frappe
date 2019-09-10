@@ -15,6 +15,7 @@
 			:locale="locale"
 			:buttonText="buttonText"
 			:noEventsMessage="noEventsMessage"
+			:height="calendarHeight"
 		/>
   </div>
 </template>
@@ -42,6 +43,7 @@ export default {
 			defaultView: 'listDay',
 			calendarWeekends: true,
 			calendarEvents: [],
+			calendarHeight: parseInt(this.item.widget_height) - 50,
 			buttonText: {
 				today: __("Today"),
 				listWeek: __("Week"),
