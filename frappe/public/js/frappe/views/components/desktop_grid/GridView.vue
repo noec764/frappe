@@ -1,42 +1,12 @@
 <template>
 	<div class="grid" v-if="showGrid" :key=gridKey>
 		<muuri-grid id="frappe-grid" :options="options" @gridCreated="on_grid_created">
-			<stats-card
-				:id="'card-' + item.name"
-				v-for="item in stats_items"
-				:key="item.name"
-				:label="item.card_name"
-				:cardSource="item.card_source"
-				:color="item.card_color"
-				:icon="item.icon"
+			<grid-card
+				:id="'item-' + item.name"
+				v-for="(item, index) in items"
+				:key="index"
+				:item="item"
 				@removeCard="remove_card"
-				:width="item.widget_width"
-				:timespan="item.card_timespan"
-				:last_synced="item.card_last_synced"
-				height="170"
-			/>
-			<calendar-card
-				:id="'card-' + item.name"
-				v-for="item in calendar_items"
-				:key="item.name"
-				:reference="item.source_document"
-				:user="item.user"
-				@removeCard="remove_card"
-			/>
-			<graph-card
-				:id="'card-' + item.name"
-				v-for="item in chart_items"
-				:key="item.name"
-				:label="item.chart_name"
-				:chartSource="item.chart_source"
-				:filters="item.filters_json"
-				:color="item.chart_color"
-				:unit="item.unit"
-				@removeCard="remove_card"
-				:width="item.widget_width"
-				:type="item.type"
-				:last_synced="item.chart_last_synced"
-				height="340"
 			/>
 		</muuri-grid>
 		<div class="empty-grid text-center" v-if="showEmptyGrid">
@@ -46,18 +16,14 @@
 </template>
 <script>
 
-import MuuriGrid from "./grid/MuuriGrid.vue";
-import GraphCard from './components/GraphCard.vue';
-import StatsCard from './components/StatsCard.vue';
-import CalendarCard from './components/CalendarCard.vue';
+import MuuriGrid from "./MuuriGrid.vue";
+import GridCard from './GridCard.vue';
 
 export default {
 	name: 'GridView',
 	components: {
 		MuuriGrid,
-		GraphCard,
-		StatsCard,
-		CalendarCard
+		GridCard
 	},
 	props: {
 		items: {
@@ -90,10 +56,7 @@ export default {
 					alignRight: false
 				}
 			},
-			grid: null,
-			chart_items: [],
-			stats_items: [],
-			calendar_items: []
+			grid: null
 		}
 	},
 	computed: {
@@ -103,9 +66,6 @@ export default {
 	},
 	watch: {
 		items(newValue, oldValue) {
-			this.chart_items = this.items.filter(f => f.widget_type=="Dashboard Chart");
-			this.stats_items = this.items.filter(f => f.widget_type=="Dashboard Card");
-			this.calendar_items = this.items.filter(f => f.widget_type=="Dashboard Calendar");
 			this.add_remove_cards(newValue, oldValue);
 		}
 	},
@@ -127,20 +87,20 @@ export default {
 			const added = newValue.length ? newValue.filter(f => !oldValuesNames.includes(f.name)) : []
 
 			removed.length&&removed.forEach(value => {
-				const elem = document.getElementById('card-' + value.name);
+				const elem = document.getElementById('item-' + value.name);
 				elem&&this.grid.remove(elem, {removeElements: true});
 			})
 
 			this.$nextTick()
 			.then(() => {
 				added.length&&added.forEach(value => {
-					const elem = document.getElementById('card-' + value.name);
+					const elem = document.getElementById('item-' + value.name);
 					elem&&this.grid.add(elem);
 				})
 			})
 		},
 		registerItemsPositions(gridItems) {
-			const itemsList = gridItems.length ? gridItems.map(({_element}) => { return _element.id.replace("card-", "")}) : []
+			const itemsList = gridItems.length ? gridItems.map(({_element}) => { return _element.id.replace("item-", "")}) : []
 
 			if (itemsList.length) {
 				frappe.xcall("frappe.desk.doctype.desk.desk.register_positions", {items: itemsList})
@@ -156,9 +116,12 @@ export default {
 	margin: 0 auto;
 	height: 100%;
 	.grid-item {
-		background-color: #fff;
-		border-radius: 4px;
-		box-shadow: 0 1px 3px 0 #e6ebf1;
+		padding: 5px;
+		.item-content {
+			background-color: #fff;
+			border-radius: 4px;
+			box-shadow: 0 1px 3px 0 #e6ebf1;
+		}
 	}
 }
 

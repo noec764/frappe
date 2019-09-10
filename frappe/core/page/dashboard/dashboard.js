@@ -230,7 +230,7 @@ class DashboardChart {
 			"Percentage": "percentage"
 		};
 		let chart_args = {
-			title: this.chart_doc.chart_name.bold(),
+			title: this.chart_doc.chart_name,
 			data: this.data,
 			type: chart_type_map[this.chart_doc.type],
 			colors: [this.chart_doc.color || "light-blue"],
@@ -240,7 +240,7 @@ class DashboardChart {
 			},
 			tooltipOptions: {
 				formatTooltipX: d => (d + ''),
-				formatTooltipY: d => d + ' ' + this.chart_doc.unit,
+				formatTooltipY: d => d + ' ' + (this.chart_doc.unit || ''),
 			}
 		};
 		this.chart_container.find('.chart-loading-state').addClass('hide');
@@ -270,8 +270,8 @@ class DashboardChart {
 	}
 
 	get_settings() {
-		if (this.chart_doc.chart_type == 'Preregistered') {
-			// preregistered source
+		if (this.chart_doc.chart_type == 'Custom') {
+			// custom source
 			if (frappe.dashboards.chart_sources[this.chart_doc.source]) {
 				this.settings = frappe.dashboards.chart_sources[this.chart_doc.source];
 				return Promise.resolve();

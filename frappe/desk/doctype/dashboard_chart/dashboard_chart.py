@@ -211,7 +211,7 @@ class DashboardChart(Document):
 			self.check_required_field()
 
 	def check_required_field(self):
-		if not self.chart_type=="Preregistered":
+		if not self.chart_type=="Custom":
 			if not self.based_on:
 				frappe.throw(_("Time series based on is required to create a dashboard chart"))
 			if not self.document_type:

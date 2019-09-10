@@ -3,7 +3,7 @@
 from __future__ import unicode_literals
 import json
 import frappe
-from frappe.utils import add_to_date
+from frappe.utils import add_to_date, get_datetime
 
 def cache_source(function):
 	def wrapper(*args, **kwargs):
@@ -60,5 +60,7 @@ def get_from_date_from_timespan(to_date, timespan):
 		months = -3
 	elif "Last Year" == timespan:
 		years = -1
+	elif "No Timespan" == timespan:
+		return get_datetime("1900-01-01")
 	return add_to_date(to_date, years=years, months=months, days=days,
 		as_datetime=True)
