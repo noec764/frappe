@@ -169,12 +169,14 @@ frappe.ui.form.Toolbar = Class.extend({
 		// delete
 		if((cint(me.frm.doc.docstatus) != 1) && !me.frm.doc.__islocal
 			&& frappe.model.can_delete(me.frm.doctype)) {
-			this.page.add_menu_item(__("Delete"), function() {
-				me.frm.savetrash();
-			}, true, {
-				shortcut: 'Shift+Ctrl+D',
-				condition: () => !this.frm.is_new()
-			});
+				if (!(cint(me.frm.doc.docstatus) === 2 && me.frm.meta.is_sealed === 1)) {
+					this.page.add_menu_item(__("Delete"), function() {
+						me.frm.savetrash();
+					}, true, {
+						shortcut: 'Shift+Ctrl+D',
+						condition: () => !this.frm.is_new()
+					});
+				}
 		}
 
 		if(frappe.user_roles.includes("System Manager") && me.frm.meta.issingle === 0) {
