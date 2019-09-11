@@ -509,7 +509,7 @@ def get_all_messages_from_js_files(app_name=None):
 						built_files = reduce(lambda a,b: a.extend(b) or a, list(built_files.values()), [])
 
 				for fname in files:
-					if fname not in built_files and (fname.endswith(".js") or fname.endswith(".html")):
+					if fname not in built_files and (fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue")):
 						messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
 
 	return messages
