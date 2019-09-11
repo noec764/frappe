@@ -11,7 +11,6 @@ from frappe.integrations.utils import PaymentGatewayController, create_request_l
 from frappe.integrations.doctype.stripe_settings.webhooks.invoice import StripeInvoiceWebhookHandler
 import stripe
 import json
-import erpnext
 
 class StripeSettings(PaymentGatewayController):
 	supported_currencies = [
@@ -265,14 +264,14 @@ class StripeSettings(PaymentGatewayController):
 			return self.error_message(402, _("Stripe charge fetching error"))
 
 	def add_stripe_base_amount_and_fee(self):
-		if self.reference_document.currency\
-			!= erpnext.get_company_currency(self.reference_document.get("company")):
+		if self.origin_transaction.get("company") and self.reference_document.currency\
+			!= frappe.db.get_value('Company', self.origin_transaction.get("company"), 'default_currency', cache=True):
 			self.add_base_amount()
 		return self.add_stripe_charge_fee()
 
 	def add_base_amount(self):
 		if self.charge.balance_transaction.get("currency").casefold()\
-			== erpnext.get_company_currency(self.origin_transaction.get("company")).casefold():
+			== frappe.db.get_value('Company', self.origin_transaction.get("company"), 'default_currency', cache=True).casefold():
 			self.reference_document.db_set('base_amount',\
 				self.charge.balance_transaction.get("amount") / 100, update_modified=True)
 			self.reference_document.db_set('exchange_rate',\
@@ -382,5 +381,5 @@ def handle_webhooks(**kwargs):
 	if integration_request.get("service_document") == "invoice":
 		StripeInvoiceWebhookHandler(**kwargs)
 	else:
-		integration_request.db_set("error", _("This type of event is not handled by ERPNext"))
+		integration_request.db_set("error", _("This type of event is not handled by dokos"))
 		integration_request.update_status({}, "Completed")
