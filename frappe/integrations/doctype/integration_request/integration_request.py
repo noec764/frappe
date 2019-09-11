@@ -23,12 +23,7 @@ class IntegrationRequest(Document):
 
 	@frappe.whitelist()
 	def retry_webhook(self):
-		if self.integration_request_service == "Stripe":
-			from frappe.integrations.doctype.stripe_settings.stripe_settings import handle_webhooks
-			handle_webhooks(**{"doctype": "Integration Request", "docname":  self.name})
-
-		elif self.integration_request_service == "GoCardless":
-			from erpnext.erpnext_integrations.doctype.gocardless_settings.gocardless_settings import handle_webhooks
-			handle_webhooks(**{"doctype": "Integration Request", "docname":  self.name})
-
-		return
+		handlers = frappe.get_hooks("webhooks_handler")
+		method = handlers.get(self.integration_request_service, [])
+		if method:
+			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname":  self.name})

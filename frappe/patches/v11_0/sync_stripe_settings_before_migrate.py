@@ -8,7 +8,7 @@ def execute():
 		secret_key = get_decrypted_password('Stripe Settings', 'Stripe Settings',
 			fieldname='secret_key', raise_exception=False)
 		if secret_key:
-			frappe.reload_doc('integrations', 'doctype', 'stripe_settings')
+			frappe.reload_doc('erpnext_integrations', 'doctype', 'stripe_settings')
 			frappe.db.commit()
 
 			settings = frappe.new_doc("Stripe Settings")
