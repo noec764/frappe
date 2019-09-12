@@ -3,20 +3,18 @@ from . import __version__ as app_version
 
 
 app_name = "frappe"
-app_title = "Frappe Framework"
-app_publisher = "Frappe Technologies"
+app_title = "dodock"
+app_publisher = "Dokos SAS"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_icon = "octicon octicon-circuit-board"
 app_color = "orange"
-source_link = "https://github.com/frappe/frappe"
+source_link = "https://gitlab.com/dokos/dodock"
 app_license = "MIT"
 app_logo_url = '/assets/frappe/images/frappe-framework-logo.png'
 
-develop_version = '12.x.x-develop'
+develop_version = '1.x.x-develop'
 
-app_email = "info@frappe.io"
-
-docs_app = "frappe_io"
+app_email = "hello@dokos.io"
 
 before_install = "frappe.utils.install.before_install"
 after_install = "frappe.utils.install.after_install"
