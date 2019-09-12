@@ -61,7 +61,7 @@ export default {
 	},
 	methods: {
 		get_settings() {
-			if(this.item.chart_type!="Custom" && (this.item.chart_source!="" && this.item.chart_source!=null)) {
+			if(this.item.chart_type==="Custom" && (this.item.chart_source!="" && this.item.chart_source!=null)) {
 				frappe.xcall('frappe.desk.doctype.dashboard_chart_source.dashboard_chart_source.get_config', {name: this.item.chart_source})
 				.then(config => {
 					const evaluated_config = frappe.dom.eval(config);

@@ -49,7 +49,7 @@ export default {
 	},
 	methods: {
 		get_settings() {
-			if(this.item.card_type!="Custom" && (this.item.card_source!="" && this.item.card_source!=null)) {
+			if(this.item.card_type==="Custom" && (this.item.card_source!="" && this.item.card_source!=null)) {
 				frappe.xcall('frappe.desk.doctype.dashboard_card_source.dashboard_card_source.get_config', {name: this.item.card_source})
 				.then(config => {
 					const evaluated_config = frappe.dom.eval(config);
