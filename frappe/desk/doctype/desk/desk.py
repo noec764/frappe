@@ -204,7 +204,7 @@ class WidgetCreator:
 		self.__add_to_desk("Dashboard Chart", kwargs["chart"], chart_width, 340)
 
 	def _add_stats(self, **kwargs):
-		self.__add_to_desk("Dashboard Card", kwargs["card"], 33, 175)
+		self.__add_to_desk("Dashboard Card", kwargs["card"], 25, 175)
 
 	def _add_module_chart(self, **kwargs):
 		chart_width = get_chart_width(kwargs["chart"])

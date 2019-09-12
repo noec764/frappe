@@ -5,19 +5,9 @@
 					<i :class="item.icon" :style="iconStyle"></i>
 				</div>
 			</div>
-		<div class="col-xs-12 col-sm-9 card-text" @mouseover="mouseover" @mouseleave="mouseleave">
+		<div class="col-xs-12 col-sm-9 card-text">
 			<p>{{item.card_name}}</p>
 			<h2>{{data}}</h2>
-		</div>
-		<div v-show="popover_active"
-			class="stats-card-popover popover fade top in"
-			role="tooltip"
-		>
-			<div class="arrow"></div>
-			<h3 class="popover-title" style="display: none;"></h3>
-			<div class="popover-content" style="padding: 12px;">
-				<div class="small">{{item.card_name}}</div>
-			</div>
 		</div>
 	</div>
 </template>
@@ -41,11 +31,6 @@ export default {
 	},
 	mounted() {
 		this.get_settings();
-	},
-	computed: {
-		popover_active() {
-			return this.hover;
-		}
 	},
 	methods: {
 		get_settings() {
@@ -71,16 +56,6 @@ export default {
 			).then(r => {
 				this.data = r
 			})
-		},
-		mouseover() {
-			$('.stats-card-popover').show();
-			this.hover = true;
-		},
-
-		mouseleave() {
-			setTimeout(() => {
-				this.hover = false;
-			}, 300);
 		}
 	}
 }
