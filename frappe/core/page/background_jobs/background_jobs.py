@@ -25,10 +25,16 @@ def get_info(show_failed=False):
 	jobs = []
 
 	def add_job(j, name):
-		if j.kwargs.get('site')==frappe.local.site:
+		if j.kwargs.get('site') == frappe.local.site:
+			if str(j.kwargs.get('job_name')) == 'frappe.utils.background_jobs.run_doc_method':
+				job_name = "{0}: [{1} | {2} | {3}]".format(str(j.kwargs.get('job_name')),\
+					j.kwargs.get('kwargs', {}).get('doctype'), j.kwargs.get('kwargs', {}).get('name'),\
+					j.kwargs.get('kwargs', {}).get('doc_method'))
+			else:
+				job_name = j.kwargs.get('kwargs', {}).get('playbook_method') or str(j.kwargs.get('job_name'))
+
 			jobs.append({
-				'job_name': j.kwargs.get('kwargs', {}).get('playbook_method') \
-					or str(j.kwargs.get('job_name')),
+				'job_name': job_name,
 				'status': j.status, 'queue': name,
 				'creation': format_datetime(convert_utc_to_user_timezone(j.created_at)),
 				'color': colors[j.status]

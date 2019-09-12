@@ -116,7 +116,7 @@ def get_chained_seal(doc):
 			previous_seal['_seal'] = frappe.db.get_global("initial_hash")
 		else:
 			previous_seal['_seal'] = hash_line(uuid.uuid4().hex)
-			frappe.db.set_global("initial_hash", previous_seal._seal)
+			frappe.db.set_global("initial_hash", previous_seal['_seal'])
 			frappe.db.commit()
 
 	current_seal = hash_line(doc)
