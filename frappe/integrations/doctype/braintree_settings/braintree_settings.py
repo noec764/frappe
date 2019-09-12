@@ -142,7 +142,7 @@ class BraintreeSettings(PaymentGatewayController):
 				except Exception:
 					frappe.log_error(frappe.get_traceback())
 
-				if custom_redirect_to:
+				if custom_redirect_to and custom_redirect_to != "no-redirection":
 					redirect_to = custom_redirect_to
 
 			redirect_url = 'payment-success'
@@ -150,7 +150,7 @@ class BraintreeSettings(PaymentGatewayController):
 			status = 'Error'
 			redirect_url = 'payment-failed'
 
-		if redirect_to:
+		if redirect_to and redirect_to != "no-redirection":
 			redirect_url += '?' + urlencode({'redirect_to': redirect_to})
 		if redirect_message:
 			redirect_url += '&' + urlencode({'redirect_message': redirect_message})

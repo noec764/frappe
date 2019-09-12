@@ -1,34 +1,36 @@
 const submitButton = document.querySelector('#submit-button');
 const data = {{ frappe.form_dict | json }};
 
+const threeDSecureParameters = {
+	amount: "{{ amount }}",
+	email: "{{ payer_email }}"
+}
+
 braintree.dropin.create({
 	authorization: "{{ client_token }}",
 	selector: '#dropin-container',
-	threeDSecure: {
-		amount: "{{ amount }}",
-	},
+	threeDSecure: true,
 	paypal: {
 		flow: 'vault'
 	},
 	locale: "{{ locale }}"
-}, function(err, instance) {
-	if (err) {
-		// Handle any errors that might've occurred when creating Drop-in
-		processError(err)
-		return;
-	}
-	submitButton.addEventListener('click', function() {
-		instance.requestPaymentMethod(function(err, payload) {
-			if (err) {
-				console.log('Error', err);
-				return;
-			}
-
-			if (payload.liabilityShifted || payload.type !== 'CreditCard') {
+}).then(function(instance) {
+	submitButton.addEventListener('click', function(e) {
+		e.preventDefault();
+		instance.requestPaymentMethod({
+			threeDSecure: threeDSecureParameters
+		}).then(function (payload) {
+			if (payload.liabilityShifted) {
+				submitPayment(payload);
+			} else if (payload.liabilityShiftPossible) {
 				submitPayment(payload);
 			} else {
-				dropinInstance.clearSelectedPaymentMethod();
+				$('#warning-msg').html(__("The bank could not authenticate this card. Please try again or contact your bank."));
+				$('.warning').show();
+				instance.clearSelectedPaymentMethod();
 			}
+		}).catch(function (error) {
+			processError(error)
 		});
 	});
 
@@ -37,8 +39,10 @@ braintree.dropin.create({
 	});
 
 	instance.on('noPaymentMethodRequestable', function () {
-		submitButton.setAttribute('disabled', true);
+		submitButton.setAttribute('disabled', 'disabled');
 	});
+}).catch(function (error) {
+	processError(error)
 });
 
 const submitPayment = payload => {

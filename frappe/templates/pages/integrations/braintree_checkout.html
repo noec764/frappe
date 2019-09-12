@@ -5,7 +5,7 @@
 {%- block header -%}{% endblock %}
 
 {% block script %}
-<script src="https://js.braintreegateway.com/web/dropin/1.20.0/js/dropin.min.js"></script>
+<script src="https://js.braintreegateway.com/web/dropin/1.20.1/js/dropin.min.js"></script>
 <script>{% include "templates/includes/integrations/braintree_checkout.js" %}</script>
 {% endblock %}
 
@@ -18,12 +18,15 @@
 	{% endif %}
 	<div class="col-12 col-lg-8 offset-lg-2">
 		<div id="dropin-container"></div>
-   		<button class="btn btn-primary" type="submit" id="submit-button" disabled><span>{{ _("Pay") }} {{ formatted_amount }}</span></button>
+		<div style="margin-top: 5px;">
+			<button class="btn btn-primary" type="submit" id="submit-button" disabled><span>{{ _("Pay") }} {{ formatted_amount }}</span></button>
+		</div>
 	</div>
 
-	<div class="col-12 mt-5">
+	<div class="col-12 col-lg-8 offset-lg-2 mt-5">
 		<div class="text-right font-weight-bold">
 			<div class="error" id="error-msg" style="color: #fa755a; display: none"></div>
+			<div class="warning" id="warning-msg" style="color: #fac55a; display: none"></div>
 			<button class="btn btn-primary error" style="display: none;" id="card-reload">{{_('Try Again')}}</button>
 			<div class="success" style="display: none;">{{ _("Your payment has been successfully registered.") }}</div>
 		</div>

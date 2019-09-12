@@ -142,7 +142,7 @@ class PaymentGatewayController(Document):
 				if custom_redirect_to and custom_redirect_to != "no-redirection":
 					redirect_to = custom_redirect_to
 
-				redirect_url = redirect_to if redirect_to != "no-redirection" else 'payment-success'
+				redirect_url = 'payment-success'
 		else:
 			redirect_url = 'payment-failed'
 
