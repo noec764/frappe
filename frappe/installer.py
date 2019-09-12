@@ -145,7 +145,7 @@ def remove_app(app_name, dry_run=False, yes=False):
 					drop_doctypes.append(doctype.name)
 
 		# remove reports, pages and web forms
-		for doctype in ("Report", "Page", "Web Form"):
+		for doctype in ("Report", "Page", "Web Form", "Print Format"):
 			for record in frappe.get_list(doctype, filters={"module": module_name}):
 				print("removing {0} {1}...".format(doctype, record.name))
 				if not dry_run:
