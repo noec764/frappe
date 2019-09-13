@@ -56,7 +56,7 @@ class Newsletter(WebsiteGenerator):
 			frappe.db.set(self, "email_sent", 1)
 			frappe.db.set(self, 'scheduled_to_send', len(self.recipients))
 		else:
-			frappe.msgprint(_("Newsletter should have atleast one recipient"))
+			frappe.msgprint(_("Newsletter should have at least one recipient"))
 
 	def queue_all(self):
 		if not self.get("recipients"):
