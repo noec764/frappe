@@ -137,6 +137,7 @@ export default {
 	.grid-item {
 		display: block;
 		position: absolute;
+		width: 100px;
 		height: auto;
 		z-index: 1;
 	}

@@ -136,7 +136,9 @@ export default {
 		remove_card(e) {
 			const removed = this.items.filter(f => `item-${f.name}` == e)
 			frappe.xcall('frappe.desk.doctype.desk.desk.remove_widget', {origin: "Desk", widget: removed})
-			.then(() => { this.items = this.items.filter(f => `item-${f.name}` != e) })
+			.then(() => { 
+				this.items = this.items.filter(f => `item-${f.name}` != e)
+			})
 		}
 	}
 }

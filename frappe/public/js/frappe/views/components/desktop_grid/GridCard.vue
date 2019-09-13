@@ -2,18 +2,7 @@
 	<div :id="id" class="grid-item" :style="cardStyle">
 		<div class="item-content border">
 			<div class="item-body">
-				<graph-card
-					v-if="item.widget_type === 'Dashboard Chart'"
-					:item="item"
-				/>
-				<calendar-card
-					v-if="item.widget_type === 'Dashboard Calendar'"
-					:item="item"
-				/>
-				<stats-card
-					v-if="item.widget_type === 'Dashboard Card'"
-					:item="item"
-				/>
+				<slot></slot>
 			</div>
 			<div class="item-footer">
 				<div class="row">
@@ -30,17 +19,8 @@
 
 <script>
 
-import GraphCard from './components/GraphCard.vue';
-import StatsCard from './components/StatsCard.vue';
-import CalendarCard from './components/CalendarCard.vue';
-
 export default {
 	name: 'GridCard',
-	components: {
-		GraphCard,
-		StatsCard,
-		CalendarCard
-	},
 	props: {
 		id: {
 			type: [Number, String],

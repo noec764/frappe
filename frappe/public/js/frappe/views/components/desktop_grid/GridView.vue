@@ -7,7 +7,20 @@
 				:key="index"
 				:item="item"
 				@removeCard="remove_card"
-			/>
+			>
+				<graph-card
+					v-if="item.widget_type === 'Dashboard Chart'"
+					:item="item"
+				/>
+				<calendar-card
+					v-if="item.widget_type === 'Dashboard Calendar'"
+					:item="item"
+				/>
+				<stats-card
+					v-if="item.widget_type === 'Dashboard Card'"
+					:item="item"
+				/>
+			</grid-card>
 		</muuri-grid>
 		<div class="empty-grid text-center" v-if="showEmptyGrid">
 			<p class="text-muted">{{ __("This dashboard is empty") }}</p>
@@ -18,12 +31,18 @@
 
 import MuuriGrid from "./MuuriGrid.vue";
 import GridCard from './GridCard.vue';
+import GraphCard from './components/GraphCard.vue';
+import StatsCard from './components/StatsCard.vue';
+import CalendarCard from './components/CalendarCard.vue';
 
 export default {
 	name: 'GridView',
 	components: {
 		MuuriGrid,
-		GridCard
+		GridCard,
+		GraphCard,
+		StatsCard,
+		CalendarCard
 	},
 	props: {
 		items: {

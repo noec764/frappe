@@ -17,7 +17,7 @@
 export default {
 	name: 'StatsCard',
 	props: {
-	  	item: {
+		item: {
 			type: Object,
 			default: {}
 		}
@@ -25,8 +25,7 @@ export default {
 	data() {
 		return {
 			data: null,
-			iconStyle: this.item.card_color ? `color: ${this.item.card_color}` : "",
-			hover: false
+			iconStyle: this.item.card_color ? `color: ${this.item.card_color}` : ""
 		}
 	},
 	mounted() {
