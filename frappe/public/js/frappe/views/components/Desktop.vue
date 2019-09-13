@@ -10,8 +10,7 @@
 			</a>
 		</div>
 		<grid-view
-			:gridKey="'Desktop'"
-			:showGrid="showGrid"
+			gridKey="Desktop"
 			:items="items"
 			@removeCard="remove_card"
 		/>
@@ -28,7 +27,6 @@ export default {
 	},
 	data() {
 		return {
-			showGrid: false,
 			items: []
 		};
 	},
@@ -44,8 +42,6 @@ export default {
 				} else {
 					this.get_desk_dashboard();
 				}
-			}).then(() => {
-				this.showGrid = true;
 			})
 		},
 		get_desk_dashboard() {

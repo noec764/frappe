@@ -1,10 +1,10 @@
 <template>
-	<div class="grid" v-if="showGrid" :key=gridKey>
-		<muuri-grid id="frappe-grid" :options="options" @gridCreated="on_grid_created">
+	<div class="grid" :key=gridKey>
+		<muuri-grid id="frappe-grid" v-if="items.length" :key="muuriKey" :options="options" @gridCreated="on_grid_created">
 			<grid-card
 				:id="'item-' + item.name"
-				v-for="(item, index) in items"
-				:key="index"
+				v-for="item in items"
+				:key="item.name"
 				:item="item"
 				@removeCard="remove_card"
 			>
@@ -53,10 +53,6 @@ export default {
 			type: Boolean,
 			default: false
 		},
-		showGrid: {
-			type: Boolean,
-			default: false
-		},
 		gridKey: {
 			type: String,
 			default: null
@@ -75,7 +71,8 @@ export default {
 					alignRight: false
 				}
 			},
-			grid: null
+			grid: null,
+			muuriKey: null
 		}
 	},
 	computed: {
@@ -85,7 +82,7 @@ export default {
 	},
 	watch: {
 		items(newValue, oldValue) {
-			this.add_remove_cards(newValue, oldValue);
+			this.muuriKey = Math.floor(Math.random() * 1000000000);
 		}
 	},
 	methods: {
@@ -97,26 +94,6 @@ export default {
 		},
 		remove_card(e) {
 			this.$emit("removeCard", e);
-		},
-		add_remove_cards(newValue, oldValue) {
-			const newValueNames = newValue.length ? newValue.map(({name}) => { return name}) : []
-			const oldValuesNames = oldValue.length ? oldValue.map(({name}) => { return name}) : []
-
-			const removed = oldValue.length ? oldValue.filter(f => !newValueNames.includes(f.name)) : []
-			const added = newValue.length ? newValue.filter(f => !oldValuesNames.includes(f.name)) : []
-
-			removed.length&&removed.forEach(value => {
-				const elem = document.getElementById('item-' + value.name);
-				elem&&this.grid.remove(elem, {removeElements: true});
-			})
-
-			this.$nextTick()
-			.then(() => {
-				added.length&&added.forEach(value => {
-					const elem = document.getElementById('item-' + value.name);
-					elem&&this.grid.add(elem);
-				})
-			})
 		},
 		registerItemsPositions(gridItems) {
 			const itemsList = gridItems.length ? gridItems.map(({_element}) => { return _element.id.replace("item-", "")}) : []

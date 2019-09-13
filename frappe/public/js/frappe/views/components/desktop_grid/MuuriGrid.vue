@@ -138,7 +138,6 @@ export default {
 		display: block;
 		position: absolute;
 		width: 100px;
-		height: auto;
 		z-index: 1;
 	}
 	.grid-item.muuri-dragging {

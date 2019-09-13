@@ -36,7 +36,8 @@ export default {
 			return {
 				'width': '100%',
 				'max-width': (this.item.widget_width + '%').toString(),
-				'min-width': '280px', 'height': this.item.widget_height + "px"
+				'min-width': '280px',
+				'min-height': (this.item.widget_height || 100) + "px"
 			};
 		}
 	},

@@ -1,9 +1,8 @@
 <template>
 	<div class="modules-page-container">
-		<div v-show="items.length" class="modules-dashboard" :key="moduleKey">
+		<div v-show="items.length" class="modules-dashboard" :key="moduleKey" :style="'min-height:' + computedHeight + 'px;'">
 			<grid-view
 				:gridKey="gridKey"
-				:showGrid="showGrid"
 				:items="items"
 				:horizontal="true"
 				@removeCard="remove_card"
@@ -31,7 +30,6 @@ export default {
 	data() {
 		return {
 			route: frappe.get_route(),
-			showGrid: false,
 			gridKey: '',
 			moduleKey: '',
 			items: [],
@@ -41,6 +39,11 @@ export default {
 			modules_list: frappe.boot.allowed_modules.filter(
 				d => (d.type === 'module' || d.category === 'Places') && !d.blocked
 			)
+		}
+	},
+	computed: {
+		computedHeight() {
+			return this.items.filter(f => f.widget_type == "Dashboard Chart").length ? 350 : 180;
 		}
 	},
 	created() {
@@ -110,21 +113,19 @@ export default {
 			})
 		},
 		get_module_dashboard() {
-			this.showGrid = false;
 			frappe.xcall("frappe.desk.doctype.desk.desk.get_module_dashboard", {user: frappe.session.user, module: this.route[1]})
 			.then(d => {
-				this.moduleKey = frappe.scrub(this.route[1])+'-module';
+				this.moduleKey = frappe.scrub(this.route[1]) + '-module';
 				return d;
 			})
 			.then(d => this.items = d)
 			.then(() => this.gridKey = this.route[1] )
-			.then(() => this.showGrid = true )
 			.catch(error => console.warn(error))
 		},
 		remove_card(e) {
-			const removed = this.items.filter(f => `card-${f.name}` == e)
+			const removed = this.items.filter(f => `item-${f.name}` == e)
 			frappe.xcall('frappe.desk.doctype.desk.desk.remove_widget', {origin: this.route[1], widget: removed})
-			.then(() => { this.items = this.items.filter(f => `card-${f.name}` != e) })
+			.then(() => { this.items = this.items.filter(f => `item-${f.name}` != e) })
 		}
 	},
 }
@@ -143,6 +144,5 @@ export default {
 
 .modules-dashboard {
 	margin-bottom: 20px;
-	height: 350px;
 }
 </style>
