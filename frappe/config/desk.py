@@ -76,11 +76,6 @@ def get_data():
 					"type": "doctype",
 					"name": "Dashboard Card",
 					"description": _("Setup new dashboard cards"),
-				},
-				{
-					"type": "doctype",
-					"name": "Dashboard Calendar",
-					"description": _("Setup new dashboard calendars"),
 				}
 			]
 		}

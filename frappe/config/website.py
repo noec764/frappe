@@ -46,8 +46,8 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"name": "Blogger",
-					"description": _("A user who posts blogs."),
+					"name": "Blog Settings",
+					"description": _("Write titles and introductions to your blog."),
 				},
 				{
 					"type": "doctype",
@@ -76,6 +76,7 @@ def get_data():
 					"type": "doctype",
 					"name": "Website Script",
 					"description": _("Javascript to append to the head section of the page."),
+					"onboard": 1,
 				},
 				{
 					"type": "doctype",

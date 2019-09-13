@@ -4,7 +4,7 @@ from frappe import _
 def get_data():
 	return [
 		{
-			"label": _("Customize"),
+			"label": _("Form Customization"),
 			"icon": "fa fa-glass",
 			"items": [
 				{
@@ -19,12 +19,6 @@ def get_data():
 				},
 				{
 					"type": "doctype",
-					"label": _("Custom Translations"),
-					"name": "Translation",
-					"description": _("Add your own translations")
-				},
-				{
-					"type": "doctype",
 					"name": "Custom Script",
 					"description": _("Add custom javascript to forms.")
 				},
@@ -33,6 +27,17 @@ def get_data():
 					"name": "DocType",
 					"description": _("Add custom forms.")
 				},
+			]
+		},
+		{
+			"label": _("Other"),
+			"items": [
+				{
+					"type": "doctype",
+					"label": _("Custom Translations"),
+					"name": "Translation",
+					"description": _("Add your own translations")
+				},
 				{
 					"type": "doctype",
 					"label": _("Custom Tags"),
@@ -40,5 +45,5 @@ def get_data():
 					"description": _("Add your own Tag Categories")
 				}
 			]
-		},
+		}
 	]

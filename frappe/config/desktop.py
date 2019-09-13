@@ -4,7 +4,6 @@ from frappe import _
 
 def get_data():
 	return [
-		# Administration
 		{
 			"module_name": "Desk",
 			"category": "Administration",
@@ -90,5 +89,16 @@ def get_data():
 			"type": "module",
 			"hidden": 1,
 			"description": "Webpages, webforms, blogs and website theme."
-		}
+		},
+		{
+			"module_name": 'dashboard',
+			"category": "Places",
+			"label": _('Dashboard'),
+			"icon": "octicon octicon-graph",
+			"type": "link",
+			"link": "#dashboard",
+			"color": '#FF4136',
+			'standard': 1,
+			'idx': 10
+		},
 	]
