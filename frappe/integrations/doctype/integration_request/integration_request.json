@@ -5,10 +5,13 @@
  "engine": "InnoDB",
  "field_order": [
   "integration_type",
-  "reference_doctype",
   "status",
   "column_break_3",
   "integration_request_service",
+  "payment_gateway_controller",
+  "section_break_6",
+  "reference_doctype",
+  "column_break_8",
   "reference_docname",
   "section_break_5",
   "service_document",
@@ -114,10 +117,24 @@
    "in_list_view": 1,
    "label": "Service Status",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "payment_gateway_controller",
+   "fieldtype": "Data",
+   "label": "Payment Gateway Controller",
+   "read_only": 1
   }
  ],
  "in_create": 1,
- "modified": "2019-09-05 13:08:09.231047",
+ "modified": "2019-09-16 18:12:17.279375",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integration Request",

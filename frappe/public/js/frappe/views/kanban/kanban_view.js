@@ -1,3 +1,5 @@
+// Copyright (c) 2019, Dokos SAS and contributors
+// For license information, please see license.txt
 frappe.provide('frappe.views');
 
 frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
@@ -175,8 +177,7 @@ frappe.views.KanbanView.setup_dropdown_in_sidebar = function(doctype, $dropdown)
 	// get kanban boards and append to dropdown
 	get_kanban_boards()
 		.then((kanban_boards) => {
-			if (!kanban_boards) return;
-
+			if (!kanban_boards.length) return;
 			$('<li role="separator" class="divider"></li>').appendTo($dropdown);
 
 			kanban_boards.forEach(board => {
