@@ -239,6 +239,8 @@ def get_jenv_customization(customizable_type):
 def transform_template_blot(template, context):
 	import frappe
 	soup = BeautifulSoup(template, "html.parser")
+	soup.insert(0, '{%- from "templates/letters/standard_macros.html" import render_table -%}')
+	soup.insert(0, "{% " + " set doc_values = frappe.get_doc('{0}', '{1}') ".format(context.get('doctype'), context.get('name')) + " %}")
 	fields = soup.find_all('template-blot')
 
 	if not fields:
@@ -280,17 +282,18 @@ def transform_template_blot(template, context):
 def get_newtag_string(field, context):
 	docname = None
 
-	if field['data-reference'] == "name" and "doc" in context:
-		docname = field['data-doctype'].replace(" ", "").lower()
-	elif field['data-reference'] != "name":
+	if (field['data-reference'] == "name" and "doc" in context) or field['data-reference'] != "name":
 		docname = field['data-doctype'].replace(" ", "").lower()
 
-	if docname:
-		value = "{0}.{1} or ''".format(docname, field['data-value'])
+	if field['data-fieldtype'] == "Table":
+		value = "render_table({0}.meta.get_field('{1}').as_dict(), {0})".format(docname or 'doc_values', field['data-value'])
 	else:
-		value = "{0} or ''".format(field['data-value'])
+		if docname:
+			value = "{0}.{1} or ''".format(docname, field['data-value'])
+		else:
+			value = "{0} or ''".format(field['data-value'])
 
-	if field['data-function'] != "null":
-		value = "{0}({1})".format(field['data-function'], value)
+		if field['data-function'] != "null":
+			value = "{0}({1})".format(field['data-function'], value)
 
 	return value

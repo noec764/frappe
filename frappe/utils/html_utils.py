@@ -164,7 +164,7 @@ acceptable_attributes = [
 	'data-value', 'role', 'frameborder', 'allowfullscreen', 'spellcheck',
 	'data-mode', 'data-gramm', 'data-placeholder', 'data-comment',
 	'data-doctype', 'data-reference', 'data-label', 'data-function',
-	'data-id', 'data-denotation-char'
+	'data-id', 'data-denotation-char', 'data-fieldtype'
 ]
 
 mathml_attributes = [

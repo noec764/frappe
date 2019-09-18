@@ -94,7 +94,8 @@ export default {
 						label: value.label,
 						reference: value.reference,
 						label: value.label,
-						function: value.function
+						function: value.function,
+						fieldtype: value.fieldtype
 					}
 				);
 

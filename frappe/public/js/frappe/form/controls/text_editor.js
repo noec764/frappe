@@ -27,7 +27,8 @@ const ATTRS = {
 	FIELDNAME: 'data-value',
 	REFERENCE: 'data-reference',
 	LABEL: 'data-label',
-	FUNCTION: 'data-function'
+	FUNCTION: 'data-function',
+	FIELDTYPE: 'data-fieldtype'
 };
 
 const Embed = Quill.import('blots/embed');
@@ -41,6 +42,7 @@ class TemplateBlot extends Embed {
 		node.setAttribute(ATTRS.REFERENCE, value.reference);
 		node.setAttribute(ATTRS.LABEL, value.label);
 		node.setAttribute(ATTRS.FUNCTION, value.function);
+		node.setAttribute(ATTRS.FIELDTYPE, value.fieldtype);
 		node.innerHTML = value.label;
 		return node;
 	}
