@@ -92,7 +92,7 @@ class MariaDBDatabase(Database):
 		# MYSQL_OPTION_MULTI_STATEMENTS_OFF = 1
 		# # self._conn.set_server_option(MYSQL_OPTION_MULTI_STATEMENTS_OFF)
 
-		if self.user != 'root':
+		if self.user != 'root' and self.user != 'dokos_bdd':
 			conn.select_db(self.user)
 
 		return conn

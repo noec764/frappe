@@ -98,7 +98,6 @@ def get_data():
 			"type": "link",
 			"link": "#dashboard",
 			"color": '#FF4136',
-			'standard': 1,
 			'idx': 10
 		},
 	]
