@@ -82,7 +82,7 @@ class AutoRepeat(Document):
 	def update_auto_repeat_id(self):
 		#check if document is already on auto repeat
 		auto_repeat = frappe.db.get_value(self.reference_doctype, self.reference_document, "auto_repeat")
-		if auto_repeat and auto_repeat != self.name:
+		if auto_repeat and auto_repeat != self.name and not self.disabled:
 			frappe.throw(_("The {0} is already on auto repeat {1}").format(self.reference_document, auto_repeat))
 		else:
 			frappe.db.set_value(self.reference_doctype, self.reference_document, "auto_repeat", self.name)
@@ -321,7 +321,7 @@ def get_auto_repeat_entries(date=None):
 
 #called through hooks
 def set_auto_repeat_as_completed():
-	auto_repeat = frappe.get_all("Auto Repeat", filters = {'status': ['!=', 'Disabled']})
+	auto_repeat = frappe.get_all("Auto Repeat", filters = {'status': ['!=', 'Disabled'], 'docstatus': ['!=', 2]})
 	for entry in auto_repeat:
 		doc = frappe.get_doc("Auto Repeat", entry.name)
 		if doc.is_completed():

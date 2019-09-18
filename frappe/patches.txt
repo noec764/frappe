@@ -257,3 +257,5 @@ frappe.patches.v12_0.move_email_and_phone_to_child_table
 frappe.patches.v12_0.delete_duplicate_indexes
 frappe.patches.v12_0.remove_gcalendar_gmaps
 frappe.patches.v12_0.delete_gsuite_if_exists
+
+frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
