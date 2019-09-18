@@ -12,10 +12,6 @@ def execute():
 		if auto_repeat["docstatus"] != 0:
 			frappe.db.set_value("Auto Repeat", auto_repeat["name"], "docstatus", 0)
 
-		doc = frappe.get_doc("Auto Repeat", auto_repeat["name"])
-		doc.update_status()
-		doc.save()
-
 		references.add(auto_repeat["reference_doctype"])
 
 	for reference in references:
@@ -33,3 +29,7 @@ def execute():
 				insert_after=insert_after, read_only=1, no_copy=1, print_hide=1)
 			create_custom_field(reference, df)
 
+	for auto_repeat in auto_repeats:
+		doc = frappe.get_doc("Auto Repeat", auto_repeat["name"])
+		doc.update_status()
+		doc.save()
