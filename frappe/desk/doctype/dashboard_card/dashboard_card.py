@@ -20,7 +20,7 @@ def get(card_name=None, card=None, no_cache=None, from_date=None, to_date=None, 
 
 	card = frappe.parse_json(card)
 	timespan = card.timespan
-	filters = frappe.parse_json(card.filters_json)
+	filters = frappe.parse_json(card.filters_json) or {}
 
 	# don't include cancelled documents
 	filters['docstatus'] = ('<', 2)

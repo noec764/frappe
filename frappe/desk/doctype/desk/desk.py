@@ -33,7 +33,7 @@ def get_desk(user):
 			dch.timeseries, dch.time_interval, dch.timespan as chart_timespan, dch.unit,
 			dch.color as chart_color, dch.filters_json, dch.last_synced_on as chart_last_synced,
 			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan, dcc.color as card_color,
-			dcc.icon, dcc.last_synced_on as card_last_synced
+			dcc.icon, dcc.last_synced_on as card_last_synced, dcc.card_type
 		FROM
 			`tabDesk Items` di
 		LEFT JOIN
@@ -71,7 +71,7 @@ def get_module_dashboard(user, module):
 			dch.width, dch.timeseries, dch.time_interval, dch.unit, dch.last_synced_on as chart_last_synced,
 			dch.timespan as chart_timespan, dch.color as chart_color, dch.filters_json,
 			dcc.card_name, dcc.source as card_source, dcc.timespan as card_timespan,
-			dcc.color as card_color, dcc.icon, dcc.last_synced_on as card_last_synced
+			dcc.color as card_color, dcc.icon, dcc.last_synced_on as card_last_synced, dcc.card_type
 		FROM
 			`tabModule Dashboard Items` mdi
 		LEFT JOIN

@@ -21,7 +21,7 @@ def get(chart_name = None, chart = None, no_cache = None, from_date=None, to_dat
 	chart = frappe.parse_json(chart)
 	timespan = chart.timespan
 	timegrain = chart.time_interval
-	filters = frappe.parse_json(chart.filters_json)
+	filters = frappe.parse_json(chart.filters_json) or {}
 
 	# don't include cancelled documents
 	filters['docstatus'] = ('<', 2)
