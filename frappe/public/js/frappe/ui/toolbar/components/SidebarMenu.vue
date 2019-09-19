@@ -4,8 +4,9 @@
 		:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
 		:style="{'width': sidebarWidth}"
 		@mouseleave="mouseLeave"
+		@wheel="onWheel"
 	>
-		<div class="vsm-list">
+		<div class="vsm-list" id="sidebard-modules-list">
 			<template v-for="(item, index) in modules">
 				<item
 					:key="index"
@@ -114,6 +115,10 @@ export default {
 			})
 
 			this.width = (maxLength * 10) + "px";
+		},
+		onWheel(e) {
+			const list = this.$el.querySelector("#sidebard-modules-list")
+			list.scrollBy(0, e.deltaY)
 		}
 	}
 }
