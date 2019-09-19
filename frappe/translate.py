@@ -119,6 +119,8 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('DocType: ', name), name from tabDocType")
 			messages += frappe.db.sql("select concat('Role: ', name), name from tabRole")
 			messages += frappe.db.sql("select concat('Module: ', name), name from `tabModule Def`")
+			messages += frappe.db.sql("select concat('Page: ', name), name from `tabPage`")
+			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
 			messages += "null"
 
 		message_dict = make_dict_from_messages(messages)
@@ -296,7 +298,7 @@ def get_messages_for_app(app):
 		# pages
 		for name, title in frappe.db.sql("""select name, title from tabPage
 			where module in ({})""".format(modules)):
-			messages.append((None, title or name))
+			messages.append(('Page: ' + title or name, title or name))
 			messages.extend(get_messages_from_page(name))
 
 
@@ -304,7 +306,7 @@ def get_messages_for_app(app):
 		for name in frappe.db.sql_list("""select tabReport.name from tabDocType, tabReport
 			where tabReport.ref_doctype = tabDocType.name
 				and tabDocType.module in ({})""".format(modules)):
-			messages.append((None, name))
+			messages.append(('Report: ' + name, name))
 			messages.extend(get_messages_from_report(name))
 			for i in messages:
 				if not isinstance(i, tuple):
@@ -806,19 +808,23 @@ def cleanup_translation_files(apps=None, langs=None):
 		messages.extend(get_messages_for_app(app))
 
 		for lang in langs if langs else get_all_languages():
+			print("Language: ", lang)
 			existing_translations = {}
 			cleaned_translations = defaultdict(lambda: defaultdict(dict))
 			path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".json")
 			existing_translations.update(get_translation_dict_from_file(path, lang, app) or {})
 
+			count = 0
 			if existing_translations:
 				for key in existing_translations:
 					if key in set([x[0] for x in messages]):
 						for t in existing_translations[key]:
 							if t in set([x[1] for x in messages]):
-								
+								count += 1
+
 								cleaned_translations[key][t] = existing_translations[key][t]
 
+				print(str(count) + " clean messages")
 				write_translations_file(app, lang, app_messages=dict(cleaned_translations))
 
 def read_csv_file(path):

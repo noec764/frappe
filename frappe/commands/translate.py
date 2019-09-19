@@ -67,6 +67,21 @@ def update_translations(context, lang, translated_file, app):
 	finally:
 		frappe.destroy()
 
+@click.command('cleanup-translations')
+@click.option('--app', 'apps', type=(str), multiple=True)
+@click.option('--lang', 'langs', type=(str), multiple=True)
+@pass_context
+def cleanup_translations(context, apps=None, langs=None):
+	"Cleanup translation files"
+	import frappe.translate
+	site = get_site(context)
+	try:
+		frappe.init(site=site)
+		frappe.connect()
+		frappe.translate.cleanup_translation_files(apps, langs)
+	finally:
+		frappe.destroy()
+
 @click.command('import-translations')
 @pass_context
 def import_translations():
@@ -84,4 +99,5 @@ commands = [
 	import_translations,
 	new_language,
 	update_translations,
+	cleanup_translations
 ]
