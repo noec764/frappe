@@ -53,7 +53,8 @@ class TemplateBlot extends Embed {
 			fieldname: node.getAttribute(ATTRS.FIELDNAME),
 			reference: node.getAttribute(ATTRS.REFERENCE),
 			label: node.getAttribute(ATTRS.LABEL),
-			function: node.getAttribute(ATTRS.FUNCTION)
+			function: node.getAttribute(ATTRS.FUNCTION),
+			fieldtype: node.getAttribute(ATTRS.FIELDTYPE)
 		};
 	}
 }
