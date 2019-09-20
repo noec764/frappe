@@ -157,9 +157,10 @@ class PaymentGatewayController(Document):
 		}
 
 	def change_integration_request_status(self, status, type, error):
-		self.flags.status_changed_to = status
-		self.integration_request.db_set('status', status, update_modified=True)
-		self.integration_request.db_set(type, error, update_modified=True)
+		if hasattr(self, "integration_request"):
+			self.flags.status_changed_to = status
+			self.integration_request.db_set('status', status, update_modified=True)
+			self.integration_request.db_set(type, error, update_modified=True)
 
 	def change_linked_integration_requests_status(self, status):
 		try:
