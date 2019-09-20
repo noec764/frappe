@@ -251,18 +251,18 @@ def transform_template_blot(template, context):
 	for f in fields:
 		new_tag = soup.new_tag("span")
 
-		if f['data-doctype'] == "Custom Functions" and f['data-function'] != "null":
-			content = "{{" + "{0}|safe".format(f['data-function'].split('#', 1)[-1]) + "}}"
-			if f['data-function'].startswith("Signature"):
+		if f.get('data-doctype') == "Custom Functions" and f.get('data-function') != "null":
+			content = "{{" + "{0}|safe".format(f.get('data-function').split('#', 1)[-1]) + "}}"
+			if f.get('data-function').startswith("Signature"):
 				content = soup.new_tag("img", src=content, height=200, width=200)
 				new_tag.append(content)
 			else:
 				new_tag.string = content
 		
 		else:
-			if f['data-doctype'] != "Custom Functions" and {f['data-doctype']: f['data-reference']} not in doctypes \
-				and f['data-reference'] != "name":
-				doctypes.append({f['data-doctype']: f['data-reference']})
+			if f.get('data-doctype') != "Custom Functions" and {f.get('data-doctype'): f.get('data-reference')} not in doctypes \
+				and f.get('data-reference') != "name":
+				doctypes.append({f.get('data-doctype'): f.get('data-reference')})
 
 			new_tag.string = "{{ " + "{0}|safe".format(get_newtag_string(f, context)) + " }}"
 
@@ -282,18 +282,18 @@ def transform_template_blot(template, context):
 def get_newtag_string(field, context):
 	docname = None
 
-	if (field['data-reference'] == "name" and "doc" in context) or field['data-reference'] != "name":
+	if (field.get('data-reference') == "name" and "doc" in context) or field.get('data-reference') != "name":
 		docname = field['data-doctype'].replace(" ", "").lower()
 
-	if field['data-fieldtype'] == "Table":
-		value = "render_table({0}.meta.get_field('{1}').as_dict(), {0})".format(docname or 'doc_values', field['data-value'])
+	if field.get('data-fieldtype') == "Table":
+		value = "render_table({0}.meta.get_field('{1}').as_dict(), {0})".format(docname or 'doc_values', field.get('data-value'))
 	else:
 		if docname:
-			value = "{0}.{1} or ''".format(docname, field['data-value'])
+			value = "{0}.{1} or ''".format(docname, field.get('data-value'))
 		else:
-			value = "{0} or ''".format(field['data-value'])
+			value = "{0} or ''".format(field.get('data-value'))
 
 		if field['data-function'] != "null":
-			value = "{0}({1})".format(field['data-function'], value)
+			value = "{0}({1})".format(field.get('data-function'), value)
 
 	return value
