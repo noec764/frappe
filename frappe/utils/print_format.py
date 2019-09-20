@@ -164,10 +164,10 @@ def print_by_server(doctype, name, print_format=None, doc=None, no_letterhead=0)
 		output.write(open(file,"wb"))
 		conn.printFile(print_settings.printer_name,file , name, {})
 	except IOError as e:
-		if ("ContentNotFoundError" in e
-			or "ContentOperationNotPermittedError" in e
-			or "UnknownContentError" in e
-			or "RemoteHostClosedError" in e):
+		if ("ContentNotFoundError" in str(e)
+			or "ContentOperationNotPermittedError" in str(e)
+			or "UnknownContentError" in str(e)
+			or "RemoteHostClosedError" in str(e)):
 			frappe.throw(_("PDF generation failed"))
 	except cups.IPPError:
 		frappe.throw(_("Printing failed"))

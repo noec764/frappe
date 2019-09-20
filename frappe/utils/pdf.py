@@ -29,10 +29,10 @@ def get_pdf(html, options=None, output=None):
 		reader = PdfFileReader(io.BytesIO(filedata))
 
 	except IOError as e:
-		if ("ContentNotFoundError" in e
-			or "ContentOperationNotPermittedError" in e
-			or "UnknownContentError" in e
-			or "RemoteHostClosedError" in e):
+		if ("ContentNotFoundError" in str(e)
+			or "ContentOperationNotPermittedError" in str(e)
+			or "UnknownContentError" in str(e)
+			or "RemoteHostClosedError" in str(e)):
 
 			# allow pdfs with missing images if file got created
 			if filedata:
