@@ -41,6 +41,7 @@
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.21",
     "muuri": "^0.7.1",
+    "quagga": "^0.12.1",
     "quill": "2.0.0-dev.2",
     "redis": "^2.8.0",
     "showdown": "^1.8.6",

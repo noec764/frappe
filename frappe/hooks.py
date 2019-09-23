@@ -131,9 +131,15 @@ doc_events = {
 			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions"
 		]
 	},
-	"Email Group Member": {
-		"validate": "frappe.email.doctype.email_group.email_group.restrict_email_group"
+	"Event": {
+		"after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
+		"on_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_google_calendar",
+		"on_trash": "frappe.integrations.doctype.google_calendar.google_calendar.delete_event_from_google_calendar",
 	},
+	"Contact": {
+		"after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
+		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
+	}
 
 }
 

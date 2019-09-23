@@ -213,7 +213,8 @@
 
 		"public/js/frappe/chat.js",
 
-		"public/js/frappe/ui/chart.js"
+		"public/js/frappe/ui/chart.js",
+		"public/js/frappe/barcode_scanner/index.js"
 	],
 	"css/module.min.css": [
 		"public/less/module.less"
@@ -323,5 +324,8 @@
 	],
 	"js/modules.min.js": [
 		"public/js/frappe/views/modules_home.js"
+	],
+	"js/barcode_scanner.min.js": [
+		"public/js/frappe/barcode_scanner/quagga.js"
 	]
 }
