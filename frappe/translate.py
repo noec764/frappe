@@ -169,17 +169,6 @@ def make_dict_from_messages(messages, full_dict=None):
 
 	return dict(out)
 
-# Legacy: To be removed
-def add_lang_dict(code):
-	"""Extracts messages and returns Javascript code snippet to be appened at the end
-	of the given script
-
-	:param code: Javascript code snippet to which translations needs to be appended."""
-	messages = extract_messages_from_code(code)
-	messages = [message for pos, message in messages]
-	code += "\n\n$.extend(frappe._messages, %s)" % json.dumps(make_dict_from_messages(messages))
-	return code
-
 def get_lang_js(fortype, name):
 	"""Returns code snippet to be appended at the end of a JS script.
 
@@ -235,6 +224,7 @@ def load_lang(lang, apps=None):
 		return {}
 
 	out = frappe.cache().hget("lang_full_dict", lang, shared=True)
+
 	if not out:
 		out = {}
 		for app in (apps or frappe.get_all_apps(True)):
@@ -669,7 +659,7 @@ def update_translations(lang, translated_data, app, is_file=True):
 		translation_dict = defaultdict(dict)
 		for k in full_dict:
 			for m in full_dict[k]:
-				translation_dict[k][restore_newlines(m)] = full_dict[k][restore_newlines(m)]
+				translation_dict[k][m] = full_dict[restore_newlines(k)][restore_newlines(m)]
 
 		if is_file:
 			new_translations = frappe._dict(frappe.get_file_json(translated_data))
@@ -678,7 +668,7 @@ def update_translations(lang, translated_data, app, is_file=True):
 		for k in new_translations:
 			for m in new_translations[k]:
 				if new_translations[k][m] != "":
-					translation_dict[k][restore_newlines(m)] = new_translations[k][restore_newlines(m)]
+					translation_dict[k][m] = new_translations[restore_newlines(k)][restore_newlines(m)]
 
 		write_translations_file(app, lang, translation_dict)
 
