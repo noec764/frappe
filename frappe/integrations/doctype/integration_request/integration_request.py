@@ -26,4 +26,4 @@ class IntegrationRequest(Document):
 		handlers = frappe.get_hooks("webhooks_handler")
 		method = handlers.get(self.integration_request_service, [])
 		if method:
-			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname":  self.name})
+			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname": self.name})
