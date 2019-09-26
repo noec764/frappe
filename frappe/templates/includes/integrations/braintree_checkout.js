@@ -20,7 +20,7 @@ braintree.dropin.create({
 		instance.requestPaymentMethod({
 			threeDSecure: threeDSecureParameters
 		}).then(function (payload) {
-			if (payload.liabilityShifted) {
+			if (payload.liabilityShifted || payload.type=="PayPalAccount") {
 				submitPayment(payload);
 			} else if (payload.liabilityShiftPossible) {
 				submitPayment(payload);
