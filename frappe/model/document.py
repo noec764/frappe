@@ -384,13 +384,7 @@ class Document(BaseDocument):
 				(self.name, self.doctype, fieldname))
 
 	def get_doc_before_save(self):
-		if not getattr(self, '_doc_before_save', None):
-			try:
-				self._doc_before_save = frappe.get_doc(self.doctype, self.name)
-			except frappe.DoesNotExistError:
-				self._doc_before_save = None
-				frappe.clear_last_message()
-		return self._doc_before_save
+		return getattr(self, '_doc_before_save', None)
 
 	def set_new_name(self, draft_name=False, force=False):
 		"""Calls `frappe.naming.set_new_name` for parent and child docs."""

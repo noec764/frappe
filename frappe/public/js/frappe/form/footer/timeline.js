@@ -196,6 +196,12 @@ frappe.ui.form.Timeline = class Timeline {
 		// append comments
 		timeline = timeline.concat(this.get_comments());
 
+		// append energy point logs
+		timeline = timeline.concat(this.get_energy_point_logs());
+
+		// append milestones
+		timeline = timeline.concat(this.get_milestones());
+
 		// sort
 		timeline
 			.filter(a => a.content)
@@ -520,6 +526,31 @@ frappe.ui.form.Timeline = class Timeline {
 		}
 
 		return docinfo.comments;
+	}
+
+	get_energy_point_logs() {
+		let energy_point_logs = this.frm.get_docinfo().energy_point_logs;
+		energy_point_logs.map(log => {
+			log.comment_type = 'Energy Points';
+			log.content = frappe.energy_points.format_form_log(log);
+			return log;
+		});
+		return energy_point_logs;
+	}
+
+	get_milestones() {
+		let milestones = this.frm.get_docinfo().milestones;
+		milestones.map(log => {
+			log.color = 'dark';
+			log.sender = log.owner;
+			log.comment_type = 'Milestone';
+			log.content = __('{0} changed {1} to {2}', [
+				frappe.user.full_name(log.owner).bold(),
+				frappe.meta.get_label(this.frm.doctype, log.track_field),
+				log.value.bold()]);
+			return log;
+		});
+		return milestones;
 	}
 
 	cast_comment_as_communication(c) {
