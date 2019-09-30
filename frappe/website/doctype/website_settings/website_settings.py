@@ -103,6 +103,12 @@ def get_website_settings():
 
 	context.web_include_js = hooks.web_include_js or []
 
+	translated_messages = {}
+	for file in context.web_include_js:
+		translated_messages.update(frappe.translate.get_dict('jsfile', file))
+
+	context.translated_messages = frappe.as_json(translated_messages)
+
 	context.web_include_css = hooks.web_include_css or []
 
 	via_hooks = frappe.get_hooks("website_context")

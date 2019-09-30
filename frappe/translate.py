@@ -665,10 +665,11 @@ def update_translations(lang, translated_data, app, is_file=True):
 			new_translations = frappe._dict(frappe.get_file_json(translated_data))
 		else:
 			new_translations = translated_data
+
 		for k in new_translations:
 			for m in new_translations[k]:
 				if new_translations[k][m] != "":
-					translation_dict[k][m] = new_translations[restore_newlines(k)][restore_newlines(m)]
+					translation_dict[k][restore_newlines(m)] = restore_newlines(new_translations[k][m])
 
 		write_translations_file(app, lang, translation_dict)
 

@@ -87,5 +87,9 @@
 	{%- block script %}{%- endblock %}
 	<!-- csrf_token -->
 	{%- block body_include %}{{ body_include or "" }}{% endblock -%}
+
+	<script>
+		window.frappe._messages = {{ translated_messages }};
+	</script>
 </body>
 </html>

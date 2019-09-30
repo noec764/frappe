@@ -252,6 +252,11 @@ class User(Document):
 		from frappe.utils import get_url
 		link = self.reset_password()
 		subject = None
+
+		email_template = frappe.db.get_value("System Settings", None, "template_for_welcome_email")
+		if email_template:
+			subject = frappe.db.get_value("Email Template", email_template, "subject")
+
 		method = frappe.get_hooks("welcome_email")
 		if method:
 			subject = frappe.get_attr(method[-1])()
@@ -266,19 +271,23 @@ class User(Document):
 				dict(
 					link=link,
 					site_url=get_url(),
-				))
+				),
+				None,
+				email_template)
 
-	def send_login_mail(self, subject, template, add_args, now=None):
+	def send_login_mail(self, subject, template, add_args, now=None, email_template=None):
 		"""send mail with login details"""
 		from frappe.utils.user import get_user_fullname
 		from frappe.utils import get_url
+		content = None
 
 		full_name = get_user_fullname(frappe.session['user'])
 		if full_name == "Guest":
 			full_name = "Administrator"
 
 		args = {
-			'first_name': self.first_name or self.last_name or "user",
+			'first_name': self.first_name or self.last_name or _("user"),
+			'last_name': self.last_name,
 			'user': self.name,
 			'title': subject,
 			'login_url': get_url(),
@@ -287,10 +296,15 @@ class User(Document):
 
 		args.update(add_args)
 
+		if email_template:
+			template = None
+			subject = frappe.render_template(subject, args)
+			content = frappe.render_template(frappe.db.get_value("Email Template", email_template, "response"), args)
+
 		sender = frappe.session.user not in STANDARD_USERS and get_formatted_email(frappe.session.user) or None
 
 		frappe.sendmail(recipients=self.email, sender=sender, subject=subject,
-			template=template, args=args, header=[subject, "green"],
+			template=template, args=args, content=content, header=[subject, "green"],
 			delayed=(not now) if now!=None else self.flags.delay_emails, retry=3)
 
 	def a_system_manager_should_exist(self):
