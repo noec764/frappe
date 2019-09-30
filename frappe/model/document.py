@@ -17,6 +17,7 @@ from frappe.model.workflow import validate_workflow
 from frappe.utils.global_search import update_global_search
 from frappe.integrations.doctype.webhook import run_webhooks
 from frappe.model.rename_doc import rename_doc
+from frappe.desk.form.document_follow import follow_document
 
 # once_only validation
 # methods
@@ -252,6 +253,9 @@ class Document(BaseDocument):
 		# delete __islocal
 		if hasattr(self, "__islocal"):
 			delattr(self, "__islocal")
+
+		if not (frappe.flags.in_migrate or frappe.local.flags.in_install):
+			follow_document(self.doctype, self.name, frappe.session.user)
 
 		return self
 
@@ -1054,6 +1058,8 @@ class Document(BaseDocument):
 		version = frappe.new_doc('Version')
 		if version.set_diff(self._doc_before_save, self):
 			version.insert(ignore_permissions=True)
+			if not frappe.flags.in_migrate:
+				follow_document(self.doctype, self.name, frappe.session.user)
 
 	@staticmethod
 	def whitelist(f):
@@ -1273,6 +1279,18 @@ class Document(BaseDocument):
 				frappe.bold(self.meta.get_label(to_date_field)),
 				frappe.bold(self.meta.get_label(from_date_field)),
 			), frappe.exceptions.InvalidDates)
+
+	def get_assigned_users(self):
+		assignments = frappe.get_all('ToDo', \
+			fields=['owner'], \
+			filters={
+				'reference_type': self.doctype,
+				'reference_name': self.name,
+				'status': ('!=', 'Cancelled'),
+			})
+
+		users = set([assignment.owner for assignment in assignments])
+		return users
 
 def execute_action(doctype, name, action, **kwargs):
 	'''Execute an action on a document (called by background worker)'''

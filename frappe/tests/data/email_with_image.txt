@@ -162,7 +162,7 @@ sans-serif; font-size: 11px;
     margin-bottom: 15px; border-top: 1px solid #d1d8dd;" =
 data-email-footer=3D"true" class=3D"">
 	<div style=3D"margin: 15px auto; padding: 0px 7px; text-align: =
-center; color: #778595;" class=3D"">
+center; color: #8d99a6;" class=3D"">
 			This email was sent to <a =
 href=3D"mailto:sukh@example.com" class=3D"">sukh@example.com</a>
 			<p style=3D"margin: 15px auto;" class=3D"">
@@ -170,17 +170,17 @@ href=3D"mailto:sukh@example.com" class=3D"">sukh@example.com</a>
 href=3D"http://frappe.example.com/api/method/frappe.email.bulk.unsubscribe=
 ?email=3Dsukh%40example.com&amp;name=3DWN-SUP17470&amp;doctype=3DIssue=
 &amp;_signature=3Dbbabf063b4f3aad9ba1af915aa66df23" style=3D"color: =
-#778595; text-decoration: underline;
+#8d99a6; text-decoration: underline;
 					target=3D" _blank"=3D"" =
 class=3D"">Leave this conversation
 				</a>
 			</p>
 		</div><div style=3D"margin: 15px auto; text-align: =
-center; color: #778595" class=3D"">Frappe Technologies Private =
+center; color: #8d99a6" class=3D"">Frappe Technologies Private =
 Limited</div><div style=3D"margin: 15px auto;" class=3D""><div =
 style=3D"text-align: center;" class=3D"">
 	<a href=3D"https://example.com/?source=3Dvia_email_footer" =
-target=3D"_blank" style=3D"color: #778595;" class=3D"">
+target=3D"_blank" style=3D"color: #8d99a6;" class=3D"">
 		Sent via ERPNext
 	</a>
 </div></div>

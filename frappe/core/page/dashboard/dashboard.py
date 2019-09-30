@@ -11,8 +11,7 @@ def cache_source(function):
 			chart = frappe.get_doc('Dashboard Chart', kwargs.get("chart_name"))
 		else:
 			chart = kwargs.get("chart")
-		if isinstance(chart, str):
-			chart = frappe.get_doc("Dashboard Chart", chart)
+
 		no_cache = kwargs.get("no_cache")
 		if no_cache:
 			return function(chart = chart, no_cache = no_cache)

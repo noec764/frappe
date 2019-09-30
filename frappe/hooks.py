@@ -66,6 +66,8 @@ get_rooms = 'frappe.chat.doctype.chat_room.chat_room.get_rooms'
 
 calendars = ["Event"]
 
+leaderboards = "frappe.desk.leaderboard.get_leaderboards"
+
 # login
 
 on_session_creation = [
@@ -162,6 +164,7 @@ scheduler_events = {
 		"frappe.limits.update_space_usage",
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
+		"frappe.desk.form.document_follow.send_hourly_updates",
 		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
 	],
 	"daily": [
@@ -177,6 +180,8 @@ scheduler_events = {
 		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
 		"frappe.core.doctype.activity_log.activity_log.clear_authentication_logs",
 		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
+		"frappe.desk.form.document_follow.send_daily_updates",
+		"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
 		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed"
@@ -191,10 +196,13 @@ scheduler_events = {
 		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_weekly",
 		"frappe.utils.change_log.check_for_update",
 		"frappe.desk.doctype.route_history.route_history.flush_old_route_records",
+		"frappe.desk.form.document_follow.send_weekly_updates",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary",
 		"frappe.integrations.doctype.google_drive.google_drive.weekly_backup"
 	],
 	"monthly": [
-		"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly"
+		"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
+		"frappe.social.doctype.energy_point_log.energy_point_log.send_monthly_summary"
 	],
 	"monthly_long": [
 		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_monthly"
@@ -266,7 +274,7 @@ user_privacy_documents = [
 	{
 		'doctype': 'Contact',
 		'match_field': 'email_id',
-		'personal_fields': ['first_name', 'last_name', 'phone'],
+		'personal_fields': ['first_name', 'last_name', 'phone', 'mobile_no'],
 	},
 	{
 		'doctype': 'Contact Email',
@@ -295,4 +303,21 @@ user_privacy_documents = [
 		'applies_to_website_user': 1
 	},
 
+]
+
+global_search_doctypes = [
+	{"doctype": "Contact"},
+	{"doctype": "Address"},
+	{"doctype": "ToDo"},
+	{"doctype": "Note"},
+	{"doctype": "Event"},
+	{"doctype": "Blog Post"},
+	{"doctype": "Dashboard"},
+	{"doctype": "Country"},
+	{"doctype": "Currency"},
+	{"doctype": "Newsletter"},
+	{"doctype": "Letter Head"},
+	{"doctype": "Workflow"},
+	{"doctype": "Web Page"},
+	{"doctype": "Web Form"}
 ]

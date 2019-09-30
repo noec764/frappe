@@ -53,6 +53,7 @@ class TestEmailAccount(unittest.TestCase):
 
 	def test_incoming_with_attach(self):
 		cleanup("test_sender@example.com")
+
 		existing_file = frappe.get_doc({'doctype': 'File', 'file_name': 'erpnext-conf-14.png'})
 		frappe.delete_doc("File", existing_file.name)
 

@@ -7,6 +7,7 @@ from frappe import _
 import frappe.model
 import frappe.utils
 import json, os
+from frappe.utils import get_safe_filters
 
 from six import iteritems, string_types, integer_types
 

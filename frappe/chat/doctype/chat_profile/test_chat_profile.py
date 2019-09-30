@@ -10,6 +10,7 @@ import frappe
 from frappe.chat.doctype.chat_profile import chat_profile
 from frappe.chat.util import get_user_doc, create_test_user
 
+
 class TestChatProfile(unittest.TestCase):
 	pass
 	# def test_create(self):

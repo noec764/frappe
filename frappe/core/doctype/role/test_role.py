@@ -23,4 +23,3 @@ class TestUser(unittest.TestCase):
 
 		frappe.get_doc("User", "test@example.com").add_roles("_Test Role 3")
 		self.assertTrue("_Test Role 3" in frappe.get_roles("test@example.com"))
-		

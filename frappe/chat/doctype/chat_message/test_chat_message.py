@@ -10,6 +10,7 @@ import frappe
 from frappe.chat.doctype.chat_message import chat_message
 from frappe.chat.util import create_test_user
 
+
 class TestChatMessage(unittest.TestCase):
 	def test_send(self):
 		# TODO - Write the case once you're done with Chat Room

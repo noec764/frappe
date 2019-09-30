@@ -76,3 +76,4 @@ class TestWebsite(unittest.TestCase):
 
 		delattr(frappe.hooks, 'website_redirects')
 		frappe.cache().delete_key('app_hooks')
+
