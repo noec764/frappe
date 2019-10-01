@@ -201,5 +201,5 @@ frappe.customize_form.clear_locals_and_refresh = function(frm) {
 	frappe.model.clear_doc("DocType", frm.doc.doc_type);
 	delete frappe.meta.docfield_copy[frm.doc.doc_type];
 
-	frm.refresh();
+	frappe.ui.toolbar.clear_cache();
 }
