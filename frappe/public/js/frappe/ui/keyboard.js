@@ -88,7 +88,7 @@ frappe.ui.keys.show_keyboard_shortcut_dialog = () => {
 				}
 				return `<tr>
 					<td width="40%"><kbd>${shortcut_label}</kbd></td>
-					<td width="60%">${shortcut.description || ''}</td>
+					<td width="60%">${ __(shortcut.description) || ''}</td>
 				</tr>`;
 			}).join('');
 		html = `<h5 style="margin: 0;">${heading}</h5>
