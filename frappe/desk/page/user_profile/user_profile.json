@@ -4,7 +4,7 @@
  "docstatus": 0,
  "doctype": "Page",
  "idx": 0,
- "modified": "2019-07-22 12:23:38.425877",
+ "modified": "2019-09-30 18:47:44.861542",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "user-profile",
@@ -18,5 +18,6 @@
  "script": null,
  "standard": "Yes",
  "style": null,
- "system_page": 0
+ "system_page": 0,
+ "title": "User Profile"
 }
