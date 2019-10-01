@@ -27,3 +27,5 @@ class IntegrationRequest(Document):
 		method = handlers.get(self.integration_request_service, [])
 		if method:
 			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname": self.name})
+
+		return {"status": "executed"}
