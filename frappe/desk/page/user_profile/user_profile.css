@@ -119,3 +119,7 @@
 		margin: 0;
 	}
 }
+
+.user-energy-points .rank {
+	margin-left: 10px;
+}
