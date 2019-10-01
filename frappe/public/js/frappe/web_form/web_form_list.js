@@ -188,7 +188,7 @@ export default class WebFormList {
 		const actions = document.querySelector(".list-view-actions");
 		const footer = document.querySelector(".list-view-footer");
 
-		addButton(actions, "delete-rows", "danger", true, "Delete", () =>
+		addButton(actions, "delete-rows", "danger", true, __("Delete"), () =>
 			this.delete_rows()
 		);
 
@@ -197,12 +197,12 @@ export default class WebFormList {
 			"new",
 			"primary",
 			false,
-			"New",
+			__("New"),
 			() => (window.location.href = window.location.pathname + "?new=1")
 		);
 
 		if (this.rows.length <= this.page_length) {
-			addButton(footer, "more", "secondary", false, "More", () =>  this.more());
+			addButton(footer, "more", "secondary", false, __("More"), () =>  this.more());
 		}
 
 		function addButton(wrapper, id, type, hidden, name, action) {
@@ -230,7 +230,7 @@ export default class WebFormList {
 			}
 
 			button.id = id;
-			button.innerText = __(name);
+			button.innerText = name;
 			button.hidden = hidden;
 
 			button.onclick = action;

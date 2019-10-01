@@ -179,6 +179,8 @@ def get_context(context):
 		translated_messages = frappe.translate.get_dict('doctype', self.doc_type)
 		# Sr is not added by default, had to be added manually
 		translated_messages['Sr'] = _('Sr')
+		translated_messages.update(frappe.translate.get_dict('include'))
+
 		context.translated_messages = frappe.as_json(translated_messages)
 
 	def load_document(self, context):
