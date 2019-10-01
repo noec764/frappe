@@ -13,3 +13,8 @@ def get_context(context):
 		frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
 
 	context.show_sidebar=True
+
+	active_tokens = frappe.get_all("OAuth Bearer Token",\
+		filters=[["user", "=", frappe.session.user]],\
+		fields=["client"], distinct=True, order_by="creation")
+	context.third_party_apps = True if active_tokens else False

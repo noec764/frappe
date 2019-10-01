@@ -230,7 +230,7 @@ export default class WebFormList {
 			}
 
 			button.id = id;
-			button.innerText = name;
+			button.innerText = __(name);
 			button.hidden = hidden;
 
 			button.onclick = action;

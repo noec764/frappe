@@ -102,3 +102,18 @@ table {
 .grid-body .data-row {
 	font-size: inherit;
 }
+
+.like-disabled-input {
+	margin-bottom: 7px;
+	border-radius: 3px;
+	min-height: 30px;
+	font-weight: bold;
+	background-color: #f5f7fa;
+	padding: 5px 10px;
+	border-radius: 3px;
+}
+
+.like-disabled-input.for-description {
+	font-weight: normal;
+	font-size: 12px;
+}

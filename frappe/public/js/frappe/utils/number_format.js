@@ -123,7 +123,7 @@ function format_currency(v, currency, decimals) {
 	}
 
 	if (symbol) {
-		if (frappe.boot.sysdefaults.currency_symbol_position === "Left") {
+		if (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.currency_symbol_position === "Left") {
 			return symbol + " " + format_number(v, format, decimals);
 		} else {
 			return format_number(v, format, decimals) + " " + symbol;
@@ -135,7 +135,7 @@ function format_currency(v, currency, decimals) {
 
 function get_currency_symbol(currency) {
 	if (frappe.boot) {
-		if (frappe.boot.sysdefaults.hide_currency_symbol == "Yes")
+		if (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.hide_currency_symbol == "Yes")
 			return null;
 
 		if (!currency)

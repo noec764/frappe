@@ -7,14 +7,14 @@
 					<input
 						class="form-control"
 						type="search"
-						placeholder="Search User"
+						:placeholder="__('Search user')"
 						v-model="filter_users_by"
 					>
 				</span>
 				<span class="flex-40"></span>
 				<span class="flex-20 text-muted">
-					<select class="form-control" data-toggle="tooltip" title="Period" v-model="period">
-						<option v-for="value in period_options" :key="value" :value="value">{{ value }}</option>
+					<select class="form-control" data-toggle="tooltip" :title="__('Period')" v-model="period">
+						<option v-for="value in period_options" :key="value" :value="value">{{ __(value) }}</option>
 					</select>
 				</span>
 			</li>
@@ -23,7 +23,7 @@
 				<span class="user-details text-muted">{{ __('User') }}</span>
 				<span
 					class="flex-20 text-muted"
-					v-for="title in ['Energy Points', 'Review Points', 'Points Given']"
+					v-for="title in [__('Energy Points'), __('Review Points'), __('Points Given')]"
 					:key="title"
 				>{{ __(title) }}</span>
 			</li>
@@ -68,19 +68,19 @@ export default {
 			sort_users_by: 'energy_points',
 			sort_order: 'desc',
 			show_log_for: null,
-			period_options: ['Lifetime', 'This Month', 'This Week', 'Today'],
-			period: 'This Month'
+			period_options: [__('Lifetime'), __('This Month'), __('This Week'), __('Today')],
+			period: __('This Month')
 		};
 	},
 	computed: {
 		from_date() {
-			if (this.period === 'This Month') {
+			if (this.period === __('This Month')) {
 				return frappe.datetime.month_start();
 			}
-			if (this.period === 'This Week') {
+			if (this.period === __('This Week')) {
 				return frappe.datetime.week_start();
 			}
-			if (this.period === 'Today') {
+			if (this.period === __('Today')) {
 				return frappe.datetime.get_today();
 			}
 			return null;
