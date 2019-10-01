@@ -331,6 +331,7 @@ def get_context(context):
 @frappe.whitelist(allow_guest=True)
 def accept(web_form, data, docname=None, for_payment=False):
 	'''Save the web form'''
+	print(web_form, data, docname)
 	data = frappe._dict(json.loads(data))
 	for_payment = frappe.parse_json(for_payment)
 

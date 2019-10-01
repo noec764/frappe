@@ -56,7 +56,6 @@ frappe.ready(function() {
 				window.location.replace(window.location.pathname + "?new=1");
 				return;
 			}
-
 			let doc = r.message.doc || build_doc(r.message);
 			web_form.prepare(web_form_doc, doc);
 			web_form.make();
