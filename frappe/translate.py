@@ -112,6 +112,8 @@ def get_dict(fortype, name=None):
 			messages = get_messages_from_include_files()
 		elif fortype=="jsfile":
 			messages = get_messages_from_file(name)
+		elif fortype=="template":
+			messages = get_all_messages_from_template_files()
 		elif fortype=="boot":
 			messages = get_messages_from_include_files()
 			messages += get_all_messages_from_js_files()
@@ -502,6 +504,18 @@ def get_all_messages_from_js_files(app_name=None):
 
 				for fname in files:
 					if fname not in built_files and (fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue")):
+						messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
+
+	return messages
+
+def get_all_messages_from_template_files(app_name=None):
+	"""Extracts all translatable strings from app templates files"""
+	messages = []
+	for app in ([app_name] if app_name else frappe.get_installed_apps()):
+		if os.path.exists(frappe.get_app_path(app, "templates")):
+			for basepath, dummy, files in os.walk(frappe.get_app_path(app, "templates")):
+				for fname in files:
+					if fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue"):
 						messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
 
 	return messages
