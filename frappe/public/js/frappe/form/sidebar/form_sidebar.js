@@ -6,6 +6,8 @@
 import './assign_to';
 import './attachments';
 import './share';
+import './review';
+import './document_follow';
 import './user_image';
 import './form_viewers';
 
@@ -27,10 +29,13 @@ frappe.ui.form.Sidebar = Class.extend({
 		this.image_wrapper = this.image_section.find('.sidebar-image-wrapper');
 		this.make_assignments();
 		this.make_attachments();
+		this.make_review();
 		this.make_shared();
 		this.make_viewers();
+
 		this.make_tags();
 		this.make_like();
+		this.make_follow();
 
 		this.bind_events();
 		this.setup_keyboard_shortcuts();
@@ -170,6 +175,12 @@ frappe.ui.form.Sidebar = Class.extend({
 		this.like_count = this.sidebar.find(".liked-by .likes-count");
 		frappe.ui.setup_like_popover(this.sidebar.find(".liked-by-parent"), ".liked-by");
 	},
+	make_follow: function(){
+		this.frm.follow = new frappe.ui.form.DocumentFollow({
+			frm: this.frm,
+			parent: this.sidebar.find(".followed-by-section")
+		});
+	},
 	refresh_like: function() {
 		if (!this.like_icon) {
 			return;
@@ -186,6 +197,15 @@ frappe.ui.form.Sidebar = Class.extend({
 	},
 
 	refresh_image: function() {
+	},
+
+	make_review: function() {
+		if (frappe.boot.energy_points_enabled && !this.frm.is_new()) {
+			this.frm.reviews = new frappe.ui.form.Review({
+				parent: this.sidebar.find(".form-reviews"),
+				frm: this.frm
+			});
+		}
 	},
 
 	reload_docinfo: function(callback) {

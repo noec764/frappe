@@ -17,6 +17,7 @@ from frappe.model.workflow import validate_workflow
 from frappe.utils.global_search import update_global_search
 from frappe.integrations.doctype.webhook import run_webhooks
 from frappe.model.rename_doc import rename_doc
+from frappe.desk.form.document_follow import follow_document
 
 # once_only validation
 # methods
@@ -253,6 +254,9 @@ class Document(BaseDocument):
 		if hasattr(self, "__islocal"):
 			delattr(self, "__islocal")
 
+		if not (frappe.flags.in_migrate or frappe.local.flags.in_install):
+			follow_document(self.doctype, self.name, frappe.session.user)
+
 		return self
 
 	def save(self, *args, **kwargs):
@@ -380,13 +384,7 @@ class Document(BaseDocument):
 				(self.name, self.doctype, fieldname))
 
 	def get_doc_before_save(self):
-		if not getattr(self, '_doc_before_save', None):
-			try:
-				self._doc_before_save = frappe.get_doc(self.doctype, self.name)
-			except frappe.DoesNotExistError:
-				self._doc_before_save = None
-				frappe.clear_last_message()
-		return self._doc_before_save
+		return getattr(self, '_doc_before_save', None)
 
 	def set_new_name(self, draft_name=False, force=False):
 		"""Calls `frappe.naming.set_new_name` for parent and child docs."""
@@ -1054,6 +1052,8 @@ class Document(BaseDocument):
 		version = frappe.new_doc('Version')
 		if version.set_diff(self._doc_before_save, self):
 			version.insert(ignore_permissions=True)
+			if not frappe.flags.in_migrate:
+				follow_document(self.doctype, self.name, frappe.session.user)
 
 	@staticmethod
 	def whitelist(f):
@@ -1273,6 +1273,18 @@ class Document(BaseDocument):
 				frappe.bold(self.meta.get_label(to_date_field)),
 				frappe.bold(self.meta.get_label(from_date_field)),
 			), frappe.exceptions.InvalidDates)
+
+	def get_assigned_users(self):
+		assignments = frappe.get_all('ToDo', \
+			fields=['owner'], \
+			filters={
+				'reference_type': self.doctype,
+				'reference_name': self.name,
+				'status': ('!=', 'Cancelled'),
+			})
+
+		users = set([assignment.owner for assignment in assignments])
+		return users
 
 def execute_action(doctype, name, action, **kwargs):
 	'''Execute an action on a document (called by background worker)'''

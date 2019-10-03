@@ -24,6 +24,8 @@
 					{%= __("Settings") %}</span>
 				<b class="caret hidden-xs hidden-sm"></b></a>
 				<ul class="dropdown-menu" id="toolbar-user" role="menu">
+					<li><a href="#user-profile">
+						{%= __("My Profile") %}</a></li>
 					<li><a href="#Form/User/{%= encodeURIComponent(frappe.session.user) %}">
 						{%= __("My Settings") %}</a></li>
 					<li><a href="/index" target="_blank" rel="noopener noreferrer">
@@ -65,16 +67,41 @@
 						<i class="fa fa-refresh"></i>
 					</div>
 				</a>
-				
 			</li>
 
-			<li class="dropdown dropdown-navbar-new-comments dropdown-mobile">
-				<a class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true" href="#" onclick="return false;">
-					<span class="navbar-new-comments">0</span>
-				</a>
-				<ul class="dropdown-menu" id="dropdown-notification" role="menu" style="max-height: 480px; overflow-y: auto;">
-				</ul>
-			</li>
+			<li class="dropdown dropdown-energy-points dropdown-mobile">
+					<span class="energy-points-notification"><i class="fa fa-circle"></i></span>
+					<a
+						class="dropdown-toggle energy-points-icon"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="true"
+						href="#"
+						onclick="return false;">
+						<span><i class="fa fa-trophy"></i></span>
+					</a>
+					<ul
+						class="dropdown-menu recent-points-list"
+						role="menu">
+					</ul>
+				</li>
+	
+				<li class="dropdown dropdown-navbar-new-comments dropdown-mobile">
+					<a
+						class="btn dropdown-toggle"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="true"
+						href="#"
+						onclick="return false;">
+						<span class="navbar-new-comments">0</span>
+					</a>
+					<ul
+						class="dropdown-menu"
+						id="dropdown-notification"
+						role="menu">
+					</ul>
+				</li>
 		</ul>
 
 		<div id="search-modal" class="modal fade" role="dialog">

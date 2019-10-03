@@ -179,6 +179,8 @@ def get_context(context):
 		translated_messages = frappe.translate.get_dict('doctype', self.doc_type)
 		# Sr is not added by default, had to be added manually
 		translated_messages['Sr'] = _('Sr')
+		translated_messages.update(frappe.translate.get_dict('include'))
+
 		context.translated_messages = frappe.as_json(translated_messages)
 
 	def load_document(self, context):
@@ -331,6 +333,7 @@ def get_context(context):
 @frappe.whitelist(allow_guest=True)
 def accept(web_form, data, docname=None, for_payment=False):
 	'''Save the web form'''
+	print(web_form, data, docname)
 	data = frappe._dict(json.loads(data))
 	for_payment = frappe.parse_json(for_payment)
 
@@ -526,6 +529,14 @@ def get_form_data(doctype, docname=None, web_form_name=None):
 		if field.fieldtype == "Table":
 			field.fields = get_in_list_view_fields(field.options)
 			out.update({field.fieldname: field.fields})
+
+		if field.fieldtype == "Link":
+			field.fieldtype = "Autocomplete"
+			field.options = get_link_options(
+				web_form_name,
+				field.options,
+				field.allow_read_on_all_link_options
+			)
 
 	return out
 

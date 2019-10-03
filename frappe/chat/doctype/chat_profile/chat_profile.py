@@ -44,8 +44,9 @@ def authenticate(user):
 @frappe.whitelist()
 def get(user, fields = None):
 	duser   = frappe.get_doc('User', user)
+
 	if frappe.db.exists('Chat Profile', user):
-		dprof   = frappe.get_doc('Chat Profile', user)
+		dprof = frappe.get_doc('Chat Profile', user)
 
 		# If you're adding something here, make sure the client recieves it.
 		profile = dict(

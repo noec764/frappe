@@ -1,20 +1,20 @@
 frappe.provide('frappe.ui.misc');
 frappe.ui.misc.about = function() {
 	if(!frappe.ui.misc.about_dialog) {
-		var d = new frappe.ui.Dialog({title: __('Frappe Framework')});
+		var d = new frappe.ui.Dialog({title: __("Your application") });
 
-		$(d.body).html(repl("<div>\
-		<p>"+__("Open Source Applications for the Web")+"</p>  \
-		<p><i class='fa fa-globe fa-fw'></i>\
-			Website: <a href='https://frappe.io' target='_blank'>https://frappe.io</a></p>\
-		<p><i class='fa fa-github fa-fw'></i>\
-			Source: <a href='https://github.com/frappe' target='_blank'>https://github.com/frappe</a></p>\
+		$(d.body).html(`<div>\
+		<p>${__("Open Source Applications for the Web")}</p>
+		<p><i class='fa fa-globe fa-fw'></i>
+			${ __("Website:") } <a href='https://dokos.io' target='_blank'>https://dokos.io</a></p>
+		<p><i class='fa fa-github fa-fw'></i>
+			${ __("Source:") } <a href='https://gitlab.com/dokos' target='_blank'>https://gitlab.com/dokos</a></p>
+		<hr>
+		<h4>${ __("Installed Apps") }</h4>
+		<div id='about-app-versions'>${ __("Loading versions...") }</div>
 		<hr>\
-		<h4>Installed Apps</h4>\
-		<div id='about-app-versions'>Loading versions...</div>\
-		<hr>\
-		<p class='text-muted'>&copy; Frappe Technologies Pvt. Ltd and contributors </p> \
-		</div>", frappe.app));
+		<p class='text-muted'>&copy; Dokos SAS and contributors </p>
+		</div>`);
 
 		frappe.ui.misc.about_dialog = d;
 

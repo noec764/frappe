@@ -40,10 +40,14 @@ frappe.views.ListSidebar = class ListSidebar {
 			this.setup_upgrade_box();
 		}
 
-		this.sidebar.find('.list-stats').on('click', (e) => {
-			$(e.currentTarget).find('.stat-link').remove();
-			this.get_stats();
-		});
+		if (this.list_view.list_view_settings && this.list_view.list_view_settings.disable_sidebar_stats) {
+			this.sidebar.find('.sidebar-stat').remove();
+		} else {
+			this.sidebar.find('.list-stats').on('click', (e) => {
+				$(e.currentTarget).find('.stat-link').remove();
+				this.get_stats();
+			});
+		}
 
 	}
 
@@ -308,6 +312,9 @@ frappe.views.ListSidebar = class ListSidebar {
 
 	get_stats() {
 		var me = this;
+		if (this.list_view.list_view_settings.disable_sidebar_stats) {
+			return;
+		}
 		frappe.call({
 			method: 'frappe.desk.reportview.get_sidebar_stats',
 			type: 'GET',

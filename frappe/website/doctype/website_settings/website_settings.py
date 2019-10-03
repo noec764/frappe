@@ -104,6 +104,7 @@ def get_website_settings():
 	context.web_include_js = hooks.web_include_js or []
 
 	translated_messages = {}
+	translated_messages.update(frappe.translate.get_dict('template'))
 	for file in context.web_include_js:
 		translated_messages.update(frappe.translate.get_dict('jsfile', file))
 

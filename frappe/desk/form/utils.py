@@ -1,10 +1,11 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe, json
 import frappe.desk.form.meta
 import frappe.desk.form.load
+from frappe.desk.form.document_follow import follow_document
 from frappe.utils.file_manager import extract_images_from_html
 
 from frappe import _
@@ -68,6 +69,7 @@ def add_comment(reference_doctype, reference_name, content, comment_email):
 	doc.content = extract_images_from_html(doc, content)
 	doc.insert(ignore_permissions = True)
 
+	follow_document(doc.reference_doctype, doc.reference_name, frappe.session.user)
 	return doc.as_dict()
 
 @frappe.whitelist()

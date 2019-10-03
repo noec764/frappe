@@ -86,6 +86,7 @@
 		"public/less/controls.less",
 		"public/less/chat.less",
 		"public/less/filters.less",
+		"public/less/social.less",
 		"node_modules/frappe-charts/dist/frappe-charts.min.css"
 	],
 	"css/frappe-rtl.css": [
@@ -188,6 +189,7 @@
 		"public/js/frappe/views/pageview.js",
 
 		"public/js/frappe/ui/toolbar/modules_menu.js",
+		"public/js/frappe/ui/toolbar/energy_points_notifications.js",
 		"public/js/frappe/ui/toolbar/awesome_bar.js",
 		"public/js/frappe/ui/toolbar/search.js",
 		"public/js/frappe/ui/toolbar/search.html",
@@ -212,8 +214,10 @@
 		"public/js/frappe/utils/rating_icons.html",
 
 		"public/js/frappe/chat.js",
-
-		"public/js/frappe/ui/chart.js"
+		"public/js/frappe/social/social_factory.js",
+		"public/js/frappe/utils/energy_point_utils.js",
+		"public/js/frappe/ui/chart.js",
+		"public/js/frappe/barcode_scanner/index.js"
 	],
 	"css/module.min.css": [
 		"public/less/module.less"
@@ -321,7 +325,13 @@
 	"frappe/css/email.css": [
 		"public/less/email.less"
 	],
+	"js/social.min.js": [
+		"public/js/frappe/social/social_home.js"
+	],
 	"js/modules.min.js": [
 		"public/js/frappe/views/modules_home.js"
+	],
+	"js/barcode_scanner.min.js": [
+		"public/js/frappe/barcode_scanner/quagga.js"
 	]
 }

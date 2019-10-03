@@ -30,7 +30,7 @@ frappe.ui.form.Timeline = class Timeline {
 			render_input: true,
 			only_input: true,
 			on_submit: (val) => {
-				if(strip_html(val)) {
+				if(strip_html(val).trim() != "") {
 					this.insert_comment(val, this.comment_area.button);
 				}
 			}
@@ -195,6 +195,12 @@ frappe.ui.form.Timeline = class Timeline {
 
 		// append comments
 		timeline = timeline.concat(this.get_comments());
+
+		// append energy point logs
+		timeline = timeline.concat(this.get_energy_point_logs());
+
+		// append milestones
+		timeline = timeline.concat(this.get_milestones());
 
 		// sort
 		timeline
@@ -522,6 +528,31 @@ frappe.ui.form.Timeline = class Timeline {
 		return docinfo.comments;
 	}
 
+	get_energy_point_logs() {
+		let energy_point_logs = this.frm.get_docinfo().energy_point_logs;
+		energy_point_logs.map(log => {
+			log.comment_type = 'Energy Points';
+			log.content = frappe.energy_points.format_form_log(log);
+			return log;
+		});
+		return energy_point_logs;
+	}
+
+	get_milestones() {
+		let milestones = this.frm.get_docinfo().milestones;
+		milestones.map(log => {
+			log.color = 'dark';
+			log.sender = log.owner;
+			log.comment_type = 'Milestone';
+			log.content = __('{0} changed {1} to {2}', [
+				frappe.user.full_name(log.owner).bold(),
+				frappe.meta.get_label(this.frm.doctype, log.track_field),
+				log.value.bold()]);
+			return log;
+		});
+		return milestones;
+	}
+
 	cast_comment_as_communication(c) {
 		c.sender = c.comment_email;
 		c.sender_full_name = c.comment_by;
@@ -531,33 +562,33 @@ frappe.ui.form.Timeline = class Timeline {
 	build_version_comments(docinfo, out) {
 		var me = this;
 		docinfo.versions.forEach(function(version) {
-			if(!version.data) return;
+			if (!version.data) return;
 			var data = JSON.parse(version.data);
 
 			// comment
-			if(data.comment) {
+			if (data.comment) {
 				out.push(me.get_version_comment(version, data.comment, data.comment_type));
 				return;
 			}
 
 			// value changed in parent
-			if(data.changed && data.changed.length) {
-				var parts = [];
-				data.changed.every(function(p) {
-					if(p[0]==='docstatus') {
-						if(p[2]==1) {
+			if (data.changed && data.changed.length) {
+				const parts = [];
+				data.changed.every(function (p) {
+					if (p[0] === 'docstatus') {
+						if (p[2] == 1) {
 							out.push(me.get_version_comment(version, __('submitted this document')));
-						} else if (p[2]==2) {
+						} else if (p[2] == 2) {
 							out.push(me.get_version_comment(version, __('cancelled this document')));
 						}
 					} else {
 
-						var df = frappe.meta.get_docfield(me.frm.doctype, p[0], me.frm.docname);
+						p = p.map(frappe.utils.escape_html);
+						const df = frappe.meta.get_docfield(me.frm.doctype, p[0], me.frm.docname);
 
 						if(df && !df.hidden) {
-							var field_display_status = frappe.perm.get_field_display_status(df, null,
-								me.frm.perm);
-							if(field_display_status === 'Read' || field_display_status === 'Write') {
+							const field_display_status = frappe.perm.get_field_display_status(df, null, me.frm.perm);
+							if (field_display_status === 'Read' || field_display_status === 'Write') {
 								parts.push(__('{0} from {1} to {2}', [
 									__(df.label),
 									(frappe.ellipsis(frappe.utils.html2text(p[1]), 40) || '""').bold(),
@@ -568,8 +599,8 @@ frappe.ui.form.Timeline = class Timeline {
 					}
 					return parts.length < 3;
 				});
-				if(parts.length) {
-					out.push(me.get_version_comment(version, __("changed value of {0}", [parts.join(', ').bold()])));
+				if (parts.length) {
+					out.push(me.get_version_comment(version, __('changed value of {0}', [parts.join(', ')])));
 				}
 			}
 

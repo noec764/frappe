@@ -72,21 +72,21 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	setup_primary_action() {
-		this.add_button_to_header(this.button_label || "Save", "primary", () =>
+		this.add_button_to_header(this.button_label || __("Save"), "primary", () =>
 			this.save()
 		);
 
-		this.add_button_to_footer(this.button_label || "Save", "primary", () =>
+		this.add_button_to_footer(this.button_label || __("Save"), "primary", () =>
 			this.save()
 		);
 	}
 
 	setup_cancel_button() {
-		this.add_button_to_header("Cancel", "light", () => this.cancel());
+		this.add_button_to_header(__("Cancel"), "light", () => this.cancel());
 	}
 
 	setup_delete_button() {
-		this.add_button_to_header("Delete", "danger", () => this.delete());
+		this.add_button_to_header(__("Delete"), "danger", () => this.delete());
 	}
 
 	setup_print_button() {
@@ -107,7 +107,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		let for_payment = Boolean(this.accept_payment && !this.doc.paid);
 
 		this.doc.doctype = this.doc_type;
-		this.doc.name = this.doc_name;
 		this.doc.web_form_name = this.name;
 
 		// Save

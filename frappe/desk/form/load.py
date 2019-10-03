@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe, json
@@ -9,6 +9,7 @@ import frappe.defaults
 import frappe.desk.form.meta
 from frappe.model.utils.user_settings import get_user_settings
 from frappe.permissions import get_doc_permissions
+from frappe.desk.form.document_follow import is_document_followed
 from frappe import _
 
 @frappe.whitelist()
@@ -87,7 +88,6 @@ def get_docinfo(doc=None, doctype=None, name=None):
 		doc = frappe.get_doc(doctype, name)
 		if not doc.has_permission("read"):
 			raise frappe.PermissionError
-
 	frappe.response["docinfo"] = {
 		"attachments": get_attachments(doc.doctype, doc.name),
 		"communications": _get_communications(doc.doctype, doc.name),
@@ -97,8 +97,15 @@ def get_docinfo(doc=None, doctype=None, name=None):
 		"assignments": get_assignments(doc.doctype, doc.name),
 		"permissions": get_doc_permissions(doc),
 		"shared": frappe.share.get_users(doc.doctype, doc.name),
-		"views": get_view_logs(doc.doctype, doc.name)
+		"views": get_view_logs(doc.doctype, doc.name),
+		"energy_point_logs": get_point_logs(doc.doctype, doc.name),
+		"milestones": get_milestones(doc.doctype, doc.name),
+		"is_document_followed": is_document_followed(doc.doctype, doc.name, frappe.session.user)
 	}
+
+def get_milestones(doctype, name):
+	return frappe.db.get_all('Milestone', fields = ['creation', 'owner', 'track_field', 'value'],
+		filters=dict(reference_type=doctype, reference_name=name))
 
 def get_attachments(dt, dn):
 	return frappe.get_all("File", fields=["name", "file_name", "file_url", "is_private"],
@@ -129,6 +136,13 @@ def get_comments(doctype, name):
 			c.content = frappe.utils.markdown(c.content)
 
 	return comments
+
+def get_point_logs(doctype, docname):
+	return frappe.db.get_all('Energy Point Log', filters={
+		'reference_doctype': doctype,
+		'reference_name': docname,
+		'type': ['!=', 'Review']
+	}, fields=['*'])
 
 def _get_communications(doctype, name, start=0, limit=20):
 	communications = get_communication_data(doctype, name, start, limit)
@@ -203,12 +217,14 @@ def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=
 	return communications
 
 def get_assignments(dt, dn):
-	cl = frappe.db.sql("""select `name`, owner, description from `tabToDo`
-		where reference_type=%(doctype)s and reference_name=%(name)s and status='Open'
-		order by modified desc limit 5""", {
-			"doctype": dt,
-			"name": dn
-		}, as_dict=True)
+	cl = frappe.get_all("ToDo",
+			fields=['name', 'owner', 'description', 'status'],
+			limit= 5,
+			filters={
+				'reference_type': dt,
+				'reference_name': dn,
+				'status': ('!=', 'Cancelled'),
+			})
 
 	return cl
 

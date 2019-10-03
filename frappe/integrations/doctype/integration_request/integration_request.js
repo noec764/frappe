@@ -20,8 +20,8 @@ frappe.ui.form.on('Integration Request', {
 					() => {
 						frappe.call({method: "retry_webhook", doc: frm.doc})
 						.then(r => {
-							frm.reload_doc()
 							frappe.show_alert({message:__("Processing in progress"), indicator:'green'});
+							frm.reload_doc()
 						})
 					}
 				);

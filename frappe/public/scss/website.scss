@@ -8,6 +8,15 @@ body {
 	font-size: 16px;
 }
 
+a:hover {
+	background-color: $gray-100;
+	text-decoration: None;
+}
+
+.nav-link:hover {
+	background-color: $gray-200;
+}
+
 .navbar.bg-dark {
 	.dropdown-menu {
 		font-size: .75rem;
@@ -64,7 +73,7 @@ img {
 }
 
 .hide-control {
-    @extend .d-none;
+	@extend .d-none;
 }
 
 .text-underline {

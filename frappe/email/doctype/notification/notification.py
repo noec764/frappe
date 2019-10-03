@@ -142,6 +142,8 @@ def get_context(context):
 
 		attachments = self.get_attachment(doc)
 		recipients, cc, bcc = self.get_list_of_recipients(doc, context)
+		if not recipients:
+			return
 		sender = None
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
@@ -308,9 +310,7 @@ def evaluate_alert(doc, alert, event):
 				else:
 					raise
 			db_value = parse_val(db_value)
-			if (doc.get(alert.value_changed) == db_value) or \
-				(not db_value and not doc.get(alert.value_changed)):
-
+			if (doc.get(alert.value_changed) == db_value) or (not db_value and not doc.get(alert.value_changed)):
 				return # value not changed
 
 		if event != "Value Change" and not doc.is_new():

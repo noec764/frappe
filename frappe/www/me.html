@@ -8,15 +8,38 @@
 <div class="row your-account-info d-none d-sm-block">
 	<div class="col-sm-4">
 		<ul class="list-unstyled">
-			<li><a href="/update-password">{{ _("Reset Password") }}</a></li>
-			<li><a href="/update-profile?name={{ user }}">{{ _("Edit Profile") }}</a></li>
-			<li><a href="/third_party_apps">{{ _("Manage Third Party Apps") }}</a></li>
+			<li>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ _("Reset your password") }}</h5>
+						<a href="/update-password" class="btn btn-primary">{{ _("Reset password") }}</a>
+					</div>
+				  </div>
+			</li>
+			<li>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ _("Edit your user profile") }}</h5>
+						<a href="/update-profile?name={{ user }}" class="btn btn-primary">{{ _("Edit profile") }}</a>
+					</div>
+				</div>
+			</li>
+			{% if third_party_apps %}
+			<li>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ _("Manage your third party applications") }}</h5>
+						<a href="/third_party_apps" class="btn btn-primary">{{ _("Manage applications") }}</a>
+					</div>
+				</div>
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 </div>
 <div class="row d-block d-sm-none">
 	<div class="col-12">
-		<ul class="list-group">
+		<ul class="list-group mobile-sidebar">
 			{% for item in sidebar_items -%}
 				<a class="list-group-item" href="{{ item.route }}"
 					{% if item.target %}target="{{ item.target }}"{% endif %}>
@@ -26,4 +49,28 @@
 		</ul>
 	</div>
 </div>
+{% endblock %}
+
+{% block style %}
+<style>
+.list-unstyled li {
+	margin: 15px 15px 15px 0px;
+}
+
+.list-unstyled .card {
+	min-width: 18rem;
+}
+
+.mobile-sidebar .list-group-item {
+	border-bottom: None;
+	border-left: None;
+	border-right: None;
+	border-top: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.mobile-sidebar .list-group-item:first-child {
+	border: None;
+}
+
+</style>
 {% endblock %}

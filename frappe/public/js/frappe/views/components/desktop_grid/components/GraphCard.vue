@@ -79,7 +79,7 @@ export default {
 
 			frappe.xcall(method,
 				{
-					chart: this.item.chart_name,
+					chart_name: this.item.chart_name,
 					filters: this.item.filters,
 					refresh: 1,
 				}
