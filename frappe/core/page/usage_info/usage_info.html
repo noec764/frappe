@@ -1,17 +1,4 @@
 <div>
-	{% if limits.upgrade_url %}
-	<div class="upgrade-message padding" style="border-bottom: 1px solid #d0d8dc;">
-		{% if limits.expiry %}
-			<h4>{{ __("You have {0} days left in your subscription", [days_to_expiry]) }}</h4>
-		{% else %}
-			<h4>{{ __("You have subscribed for one user free plan") }}</h4>
-		{% endif %}
-
-		<p>Upgrade to a premium plan with more users, storage and priority support.</p>
-		<button class="btn btn-primary btn-sm primary-action">Upgrade</button>
-	</div>
-	{% endif %}
-
 	{% if limits.users %}
 		{% var users_percent = ((enabled_users / limits.users) * 100); %}
 	<div class="usage-info-section" style="margin: 30px;">
@@ -22,7 +9,7 @@
 			</div>
 		</div>
 
-		<p>{%= enabled_users %} out of {%= limits.users %} enabled</p>
+		<p>{%= enabled_users %} {{ __("out of") }} {%= limits.users %} {{ __("enabled") }}</p>
 	</div>
 	{% endif %}
 
@@ -38,7 +25,7 @@
 			</div>
 		</div>
 
-		<p>{%= emails_sent %} out of {%= limits.emails %} sent this month</p>
+		<p>{%= emails_sent %} {{ __("out of") }} {%= limits.emails %} {{ __("sent this month") }}</p>
 	</div>
 	{% endif %}
 
