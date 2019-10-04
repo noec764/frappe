@@ -72,7 +72,7 @@ def get_data():
 					"type": "doctype",
 					"name": "Activity Log",
 					"label": _("Activity Log"),
-					"description": _("Activity Log by ")
+					"description": _("Activity Log")
 				},
 				{
 					"type": "doctype",
