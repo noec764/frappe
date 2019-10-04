@@ -571,23 +571,35 @@ frappe.ui.form.Timeline = class Timeline {
 				return;
 			}
 
+			let data_import_link = frappe.utils.get_form_link(
+				'Data Import Beta',
+				data.data_import,
+				true,
+				__('via Data Import')
+			);
+
 			// value changed in parent
 			if (data.changed && data.changed.length) {
-				const parts = [];
-				data.changed.every(function (p) {
-					if (p[0] === 'docstatus') {
-						if (p[2] == 1) {
-							out.push(me.get_version_comment(version, __('submitted this document')));
-						} else if (p[2] == 2) {
-							out.push(me.get_version_comment(version, __('cancelled this document')));
+				let parts = [];
+				data.changed.every(function(p) {
+					if (p[0]==='docstatus') {
+						if (p[2]==1) {
+							let message = data.data_import
+								? __('submitted this document {0}', [data_import_link])
+								: __('submitted this document');
+							out.push(me.get_version_comment(version, message));
+						} else if (p[2]==2) {
+							let message = data.data_import
+								? __('cancelled this document {0}', [data_import_link])
+								: __('cancelled this document');
+							out.push(me.get_version_comment(version, message));
 						}
 					} else {
-
 						p = p.map(frappe.utils.escape_html);
 						const df = frappe.meta.get_docfield(me.frm.doctype, p[0], me.frm.docname);
-
-						if(df && !df.hidden) {
-							const field_display_status = frappe.perm.get_field_display_status(df, null, me.frm.perm);
+						if (df && !df.hidden) {
+							const field_display_status = frappe.perm.get_field_display_status(df, null,
+								me.frm.perm);
 							if (field_display_status === 'Read' || field_display_status === 'Write') {
 								parts.push(__('{0} from {1} to {2}', [
 									__(df.label),
@@ -599,13 +611,19 @@ frappe.ui.form.Timeline = class Timeline {
 					}
 					return parts.length < 3;
 				});
-				if (parts.length) {
-					out.push(me.get_version_comment(version, __('changed value of {0}', [parts.join(', ')])));
+				if(parts.length) {
+					let message;
+					if (data.data_import) {
+						message = __("changed value of {0} {1}", [parts.join(', ').bold(), data_import_link]);
+					} else {
+						message = __("changed value of {0}", [parts.join(', ').bold()]);
+					}
+					out.push(me.get_version_comment(version, message));
 				}
 			}
 
 			// value changed in table field
-			if(data.row_changed && data.row_changed.length) {
+			if (data.row_changed && data.row_changed.length) {
 				var parts = [], count = 0;
 				data.row_changed.every(function(row) {
 					row[3].every(function(p) {
@@ -632,8 +650,13 @@ frappe.ui.form.Timeline = class Timeline {
 					return parts.length < 3;
 				});
 				if(parts.length) {
-					out.push(me.get_version_comment(version, __("changed values for {0}",
-						[parts.join(', ')])));
+					let message;
+					if (data.data_import) {
+						message = __("changed values for {0} {1}", [parts.join(', '), data_import_link]);
+					} else {
+						message = __("changed values for {0}", [parts.join(', ')]);
+					}
+					out.push(me.get_version_comment(version, message));
 				}
 			}
 
