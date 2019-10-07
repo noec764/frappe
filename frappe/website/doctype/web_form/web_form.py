@@ -333,7 +333,6 @@ def get_context(context):
 @frappe.whitelist(allow_guest=True)
 def accept(web_form, data, docname=None, for_payment=False):
 	'''Save the web form'''
-	print(web_form, data, docname)
 	data = frappe._dict(json.loads(data))
 	for_payment = frappe.parse_json(for_payment)
 
@@ -367,6 +366,12 @@ def accept(web_form, data, docname=None, for_payment=False):
 				if not doc.name:
 					doc.set(fieldname, '')
 				continue
+
+			elif value and frappe.db.exists("File", dict(file_url=value)):
+				uploaded_file = frappe.get_doc("File", dict(file_url=value))
+				uploaded_file.attached_to_doctype = doc.doctype
+				uploaded_file.attached_to_name = doc.name
+				uploaded_file.save(ignore_permissions=True)
 
 			elif not value and doc.get(fieldname):
 				files_to_delete.append(doc.get(fieldname))
