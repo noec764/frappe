@@ -845,16 +845,23 @@ class Database(object):
 
 	def get_db_table_columns(self, table):
 		"""Returns list of column names from given table."""
-		return [r[0] for r in self.sql('''
-			select column_name
-			from information_schema.columns
-			where table_name = %s ''', table)]
+		columns = frappe.cache().hget('table_columns', table)
+		if columns is None:
+			columns = [r[0] for r in self.sql('''
+				select column_name
+				from information_schema.columns
+				where table_name = %s ''', table)]
+
+			if columns:
+				frappe.cache().hset('table_columns', table, columns)
+
+		return columns
 
 	def get_table_columns(self, doctype):
 		"""Returns list of column names from given doctype."""
 		columns = self.get_db_table_columns('tab' + doctype)
 		if not columns:
-			raise self.TableMissingError
+			raise self.TableMissingError('DocType', doctype)
 		return columns
 
 	def has_column(self, doctype, column):
