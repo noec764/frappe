@@ -832,7 +832,7 @@
     "Bold": "En évidence",
     "Rating": "Évaluation",
     "Fetch If Empty": "Récupérer si vide",
-    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée si dessus.",
+    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
     "In Preview": "Prévisualisation"
   },
   "DocType: GSuite Settings": {
@@ -3390,7 +3390,7 @@
     "Bold": "En évidence",
     "Rating": "Évaluation",
     "Fetch If Empty": "Récupérer si vide",
-    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée si dessus.",
+    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
     "For Links, enter the DocType as range.\nFor Select, enter list of Options, each on a new line.": "Pour les liens, entrez le type de document correspondant.\nPour les sélections, entrez une liste d'options avec chaque option sur une nouvelle ligne"
   },
   "DocType: Dropbox Settings": {
@@ -3629,17 +3629,17 @@
     "Show Attachments": "Afficher les pièces jointes",
     "Sidebar Settings": "Paramètres de la barre latérale",
     "Message to be displayed on successful completion (only for Guest users)": "Message à afficher après un traitement réussi (uniquement pour les utilisateurs invités)",
-    "Success Message": "Message de réussite",
+    "Success Message": "Message de succès",
     "Allow Multiple": "Autoriser plusieurs documents",
     "Client Script": "Script client",
     "Allow Edit": "Autoriser les modifications",
     "Web Form Fields": "Champs de formulaire web",
     "Allow Delete": "Autoriser les suppressions",
     "Login Required": "Connexion obligatoire",
-    "Success URL": "URL de réussite",
+    "Success URL": "Lien de succès",
     "Accept Payment": "Accepter des paiements",
     "Button Label": "Etiquette du bouton",
-    "Route to Success Link": "Chemin du lien de succès",
+    "Route to Success Link": "Rediriger vers lien de succès",
     "Breadcrumbs": "Fil d’Ariane (Breadcrumbs)",
     "Show Sidebar": "Afficher la barre latérale",
     "Web Form": "Formulaire web",
@@ -4117,7 +4117,7 @@
     "Bold": "En évidence",
     "Rating": "Évaluation",
     "Fetch If Empty": "Récupérer si vide",
-    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée si dessus.",
+    "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
     "Length": "Longueur"
   },
   "apps/frappe/frappe/core/doctype/version/version.js": {
@@ -7766,7 +7766,8 @@
     "submitted this document {0}": "a soumis le document {0}",
     "cancelled this document {0}": "a annulé le document {0}",
     "changed value of {0} {1}": "a modifié la valeur de {0} {1}",
-    "changed values for {0} {1}": "a modifié les valeurs de {0} {1}"
+    "changed values for {0} {1}": "a modifié les valeurs de {0} {1}",
+    "See on Website": "Voir sur le site"
   },
   "sites/assets/js/control.min.js": {
     "Unable to load camera.": "Impossible de charger la caméra.",
@@ -8248,7 +8249,8 @@
     "Access not permitted.<br>Please login.": "Accès non autorisé.<br>Veuillez vous connecter."
   },
   "apps/frappe/frappe/public/js/frappe/toolbar.js": {
-    "Usage Info": "Informations d'usage"
+    "Usage Info": "Informations d'usage",
+    "used": "utilisés"
   },
   "apps/frappe/frappe/public/js/frappe/form/controls/datetime.js": {
     "Now": "Maintenant"
@@ -8257,7 +8259,8 @@
     "Now": "Maintenant"
   },
   "sites/assets/frappe/js/frappe/toolbar.js": {
-    "Usage Info": "Informations d'usage"
+    "Usage Info": "Informations d'usage",
+    "used": "utilisés"
   },
   "DocType: Assignment Rule": {
     "Assignment Rule": "Règle d'attribution",
@@ -8282,7 +8285,8 @@
     "Last User": "Dernier utilisateur",
     "System Manager": "Responsable Système",
     "Close Condition": "Condition de fermeture",
-    "Simple Python Expression, Example: Status in (\"Invalid\")": "Expression simple en python. Ex: status in (\"Invalid\")"
+    "Simple Python Expression, Example: Status in (\"Invalid\")": "Expression simple en python. Ex: status in (\"Invalid\")",
+    "Assignment Days": "Jours d'attribution"
   },
   "apps/frappe/frappe/automation/doctype/assignment_rule/assignment_rule.js": {
     "Assign one by one, in sequence": "Attribuer un à un, en séquence",
@@ -8541,7 +8545,8 @@
     "New Mention": "Nouvelle Mention"
   },
   "apps/frappe/frappe/automation/doctype/assignment_rule/assignment_rule.py": {
-    "Auto assignment failed: {0}": "L'attribution automatique a échoué"
+    "Auto assignment failed: {0}": "L'attribution automatique a échoué",
+    "Assignment Day {0} has been repeated.": "Le jour d'attribution {0} a été répété."
   },
   "apps/frappe/frappe/templates/includes/slideshow.html": {
     "Previous": "Précedent",
@@ -8725,7 +8730,8 @@
     "Field {0} not found.": "Champ {0} introuvable.",
     "Go to next record": "Voir le document suivant",
     "Go to previous record": "Voir le document précédent",
-    "\"amended_from\" field must be present to do an amendment.": "Le champs \"amended_from\" doit être présent pour faire une modification"
+    "\"amended_from\" field must be present to do an amendment.": "Le champs \"amended_from\" doit être présent pour faire une modification",
+    "See on Website": "Voir sur le site"
   },
   "apps/frappe/frappe/public/js/frappe/form/controls/text_editor.js": {
     "Bold": "En évidence",
@@ -9926,5 +9932,17 @@
   "apps/frappe/frappe/core/doctype/data_import_beta/data_import_beta.py": {
     "Scheduler is inactive. Cannot import data.": "Le planificateur est inactif. Le système ne peut pas importer les données.",
     "Scheduler Inactive": "Planificateur inactif"
+  },
+  "DocType: Assignment Rule Day": {
+    "Assignment Rule Day": "Jour des règles d'attribution",
+    "Automation": "Automatisation",
+    "Day": "Jour",
+    "Monday": "Lundi",
+    "Tuesday": "Mardi",
+    "Wednesday": "Mercredi",
+    "Thursday": "Jeudi",
+    "Friday": "Vendredi",
+    "Saturday": "Samedi",
+    "Sunday": "Dimanche"
   }
 }
