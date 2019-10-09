@@ -1,3 +1,6 @@
+// Copyright (c) 2019, Dokos SAS and Contributors
+// See license.txt
+
 frappe.provide('frappe.search');
 
 frappe.search.SearchDialog = Class.extend({
@@ -45,7 +48,7 @@ frappe.search.SearchDialog = Class.extend({
 				'<i class="fa fa-square cover twinkle-one hide" style="left:0px;"></i>'+
 				'<i class="fa fa-square cover twinkle-two hide" style="left:8px; top:5px;"></i>'+
 				'<i class="fa fa-square cover twinkle-three hide" style="left:13px; top:-3px;"></i></i>'+
-				'<p>' + status_text + '</p></span></div>' +
+				'<p>' + __(status_text) + '</p></span></div>' +
 			'</div>');
 		this.update($placeholder);
 	},
@@ -90,7 +93,7 @@ frappe.search.SearchDialog = Class.extend({
 
 		// Back-links (mobile-view)
 		this.$modal_body.on('click', '.all-results-link', function() {
-			me.$modal_body.find('.search-sidebar').find('*[data-category="All Results"]').trigger('click');
+			me.$modal_body.find('.search-sidebar').find('*[data-category="all-results"]').trigger('click');
 		});
 
 		// Full list more links
@@ -167,7 +170,7 @@ frappe.search.SearchDialog = Class.extend({
 	init_search: function(keywords, search_type) {
 		var me = this;
 		this.search = this.searches[search_type];
-		this.$input.attr("placeholder", this.search.input_placeholder);
+		this.$input.attr("placeholder", __(this.search.input_placeholder));
 		this.put_placeholder(this.search.empty_state_text);
 		this.get_results(keywords);
 		this.search_dialog.show();
@@ -212,22 +215,22 @@ frappe.search.SearchDialog = Class.extend({
 		var me = this;
 		var $search_results = $(frappe.render_template("search")).addClass('hide');
 		var $sidebar = $search_results.find(".search-sidebar").empty();
-		var sidebar_item_html = '<li class="module-sidebar-item list-link" data-category="{0}">' +
+		var sidebar_item_html = '<li class="module-sidebar-item list-link" data-category="{1}">' +
 			'<a><span class="ellipsis">{0}</span><i class="octicon octicon-chevron-right"' +
 			'></a></li>';
 
 		this.modal_state = 0;
-		this.full_lists = {	'All Results': $('<div class="module-body results-summary"></div>') };
+		this.full_lists = {	"all-results" : $('<div class="module-body results-summary"></div>') };
 		this.nav_lists = {};
 
 		result_sets.forEach(function(set) {
-			$sidebar.append($(__(sidebar_item_html, [set.title])));
+			$sidebar.append($(__(sidebar_item_html, [set.title, set.title])));
 			me.add_section_to_summary(set.title, set.results);
 			me.full_lists[set.title] = me.render_full_list(set.title, set.results, set.fetch_type);
 		});
 
 		if(result_sets.length > 1) {
-			$sidebar.prepend($(__(sidebar_item_html, ["All Results"])));
+			$sidebar.prepend($(__(sidebar_item_html, [__("All Results"), "all-results"])));
 		}
 
 		this.update($search_results.clone());
@@ -236,11 +239,18 @@ frappe.search.SearchDialog = Class.extend({
 
 	render_full_list: function(type, results, fetch_type) {
 		var me = this, max_length = 20;
-		var $results_list = $(' <div class="module-body"><div class="row module-section full-list '+
-			type+'-section">'+'<div class="col-sm-12 module-section-column">' +
-			'<div class="back-link"><a class="all-results-link small"> All Results</a></div>' +
-			'<div class="h4 section-head">'+type+'</div>' +
-			'<div class="section-body"></div></div></div></div>');
+		var $results_list = $(`
+			<div class="module-body">
+				<div class="row module-section full-list ${type}-section">
+					<div class="col-sm-12 module-section-column">
+						<div class="back-link">
+							<a class="all-results-link small">${__("All Results")}</a>
+						</div>
+						<div class="h4 section-head">${type}</div>
+						<div class="section-body"></div>
+					</div>
+				</div>
+			</div>`);
 
 		var $results_col = $results_list.find('.module-section-column');
 		for(var i = 0; i < max_length && results.length > 0; i++) {
@@ -269,9 +279,9 @@ frappe.search.SearchDialog = Class.extend({
 		var [section_length, col_width] = are_expansive ? [3, "12"] : [4, "6"];
 
 		// check state of last summary section
-		if(this.full_lists['All Results'].find('.module-section').last().find('.col-sm-6').length !== 1
+		if(this.full_lists["all-results"].find('.module-section').last().find('.col-sm-6').length !== 1
 			|| are_expansive) {
-			this.full_lists['All Results'].append($('<div class="row module-section"></div>'));
+			this.full_lists["all-results"].append($('<div class="row module-section"></div>'));
 		}
 		var $results_col = $(`<div class="col-sm-${col_width} module-section-column" data-type="${type}">
 			<div class="h4 section-head">${type}</div>
@@ -285,7 +295,7 @@ frappe.search.SearchDialog = Class.extend({
 				data-category="${type}">${__("More...")}</a></div>`);
 		}
 
-		this.full_lists['All Results'].find('.module-section').last().append($results_col);
+		this.full_lists["all-results"].find('.module-section').last().append($results_col);
 	},
 
 	render_result: function(type, result) {
@@ -400,23 +410,22 @@ frappe.search.SearchDialog = Class.extend({
 					});
 			}
 		},
-	},
 
-	tags: {
-		input_placeholder: __("Search"),
-		empty_state_text: __("Search for anything"),
-		no_results_status: (keyword) => "<p>" + __("No documents found tagged with {0}", [keyword]) + "</p>",
-
-		 get_results: function(keywords, callback) {
-			var results = frappe.search.utils.get_nav_results(keywords);
-			frappe.tags.utils.get_tag_results(keywords)
-				.then(function(global_results) {
-					results = results.concat(global_results);
-					callback(results, keywords);
-				}, function (err) {
-					console.error(err);
-				});
-		}
+		tags: {
+			input_placeholder: __("Search"),
+			empty_state_text: __("Search for anything"),
+			no_results_status: (keyword) => "<p>" + __("No documents found tagged with {0}", [keyword]) + "</p>",
+	
+			 get_results: function(keywords, callback) {
+				var results = frappe.search.utils.get_nav_results(keywords);
+				frappe.tags.utils.get_tag_results(keywords)
+					.then(function(global_results) {
+						results = results.concat(global_results);
+						callback(results, keywords);
+					}, function (err) {
+						console.error(err);
+					});
+			}
+		}	
 	}
-
 });
