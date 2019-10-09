@@ -141,6 +141,8 @@ frappe.Application = Class.extend({
 				});
 			}, 300000); // check every 5 minutes
 		}
+
+		this.fetch_tags();
 	},
 
 	setup_frappe_vue() {
@@ -575,6 +577,10 @@ frappe.Application = Class.extend({
 			});
 		}
 	},
+
+	fetch_tags() {
+		frappe.tags.utils.fetch_tags();
+	}
 });
 
 frappe.get_module = function(m, default_module) {
