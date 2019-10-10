@@ -7,6 +7,8 @@
 		<span v-if="disabled_dependent" class="link-content text-muted">{{ label || __(name) }}</span>
 		<a v-else class="link-content" :href="route">{{ label || __(name) }}</a>
 
+		<span v-if="open_count > 0" class="badge">{{ open_count }}</span>
+
 		<div v-if="disabled_dependent" v-show="popover_active"
 			@mouseover="popover_hover = true" @mouseleave="popover_hover = false"
 			class="module-link-popover popover fade top in" role="tooltip"
@@ -91,5 +93,10 @@ a:hover, a:focus {
 
 .popover.top > .arrow {
 	left: 20%;
+}
+
+.badge {
+	background-color: #6195FF;
+	color: #fff;
 }
 </style>

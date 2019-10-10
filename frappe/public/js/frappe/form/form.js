@@ -524,6 +524,7 @@ frappe.ui.form.Form = class FrappeForm {
 			}, 100);
 		}).then(() => {
 			me.show_success_action();
+			$(document).trigger("session_alive");
 		}).catch((e) => {
 			console.error(e); // eslint-disable-line
 		});
