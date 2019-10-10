@@ -76,7 +76,7 @@ class GoogleCalendar(Document):
 		data = {
 			"client_id": google_settings.client_id,
 			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
-			"refresh_token": self.get_password(fieldname="refresh_token", raise_exception=False),
+			"refresh_token": self.refresh_token,
 			"grant_type": "refresh_token",
 			"scope": SCOPES
 		}
@@ -162,7 +162,7 @@ def get_google_calendar_object(g_calendar):
 
 	credentials_dict = {
 		"token": account.get_access_token(),
-		"refresh_token": account.get_password(fieldname="refresh_token", raise_exception=False),
+		"refresh_token": account.refresh_token,
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id,
 		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
