@@ -116,6 +116,7 @@ def authorize_access(g_calendar, reauthorize=None):
 
 			if "refresh_token" in r:
 				frappe.db.set_value("Google Calendar", google_calendar.name, "refresh_token", r.get("refresh_token"))
+				frappe.db.set_value("Google Calendar", google_calendar.name, "next_sync_token", None)
 				frappe.db.commit()
 
 			frappe.local.response["type"] = "redirect"
@@ -214,7 +215,7 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 	while True:
 		try:
 			# API Response listed at EOF
-			sync_token = account.get_password(fieldname="next_sync_token", raise_exception=False) or None
+			sync_token = account.next_sync_token or None
 			events = google_calendar.events().list(calendarId=account.google_calendar_id, maxResults=page_length,
 				singleEvents=False, showDeleted=True, syncToken=sync_token).execute()
 		except HttpError as err:

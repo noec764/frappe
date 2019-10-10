@@ -69,7 +69,7 @@
   },
   {
    "fieldname": "next_sync_token",
-   "fieldtype": "Password",
+   "fieldtype": "Data",
    "hidden": 1,
    "label": "Next Sync Token"
   },
@@ -108,7 +108,7 @@
    "label": "Push to Google Calendar"
   }
  ],
- "modified": "2019-10-08 15:44:15.798362",
+ "modified": "2019-10-09 15:44:15.798362",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Google Calendar",
