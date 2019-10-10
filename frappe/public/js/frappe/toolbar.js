@@ -41,7 +41,7 @@ frappe.get_form_sidebar_extension = function() {
 
 			var template = '<ul class="list-unstyled sidebar-menu">\
 				<li class="usage-stats">\
-					<a href="#usage-info" class="text-muted">{{ usage.total }}MB ({{ usage.total_used_percent }}%) used</a></li>\
+					<a href="#usage-info" class="text-muted">{{ usage.total }}MB ({{ usage.total_used_percent }}%) {{ __("used") }}</a></li>\
 				</ul>';
 			usage.sidebar_usage_html = frappe.render(template, { 'usage': usage }, "form_sidebar_usage");
 

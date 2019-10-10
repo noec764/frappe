@@ -47,7 +47,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "\nQueued\nPending\nAuthorized\nCompleted\nCancelled\nFailed",
+   "options": "\nQueued\nPending\nAuthorized\nCompleted\nCancelled\nFailed\nNot Handled",
    "read_only": 1
   },
   {
@@ -138,7 +138,7 @@
   }
  ],
  "in_create": 1,
- "modified": "2019-10-01 19:13:47.461996",
+ "modified": "2019-10-09 11:56:28.059802",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integration Request",

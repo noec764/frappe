@@ -29,3 +29,18 @@ class IntegrationRequest(Document):
 			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname": self.name})
 
 		return {"status": "executed"}
+
+def retry_failed_webhooks(service=None):
+	filters = {
+		"status": "Failed",
+		"integration_type": "Webhook"
+	}
+
+	if service:
+		filters["integration_request_service"] = service
+
+	failed_webhooks = frappe.get_all("Integration Request", filters=filters)
+
+	for webhook in failed_webhooks:
+		w = frappe.get_doc("Integration Request", webhook.name)
+		w.retry_webhook()

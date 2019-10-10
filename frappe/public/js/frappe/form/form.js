@@ -190,8 +190,11 @@ frappe.ui.form.Form = class FrappeForm {
 				} else {
 					me.dirty();
 				}
-				me.fields_dict[fieldname]
-					&& me.fields_dict[fieldname].refresh(fieldname);
+				let field = me.fields_dict[fieldname];
+				field && field.refresh(fieldname);
+
+				// Validate value for link field explicitly
+				field && ["Link", "Dynamic Link"].includes(field.df.fieldtype) && field.validate && field.validate(value);
 
 				me.layout.refresh_dependency();
 				let object = me.script_manager.trigger(fieldname, doc.doctype, doc.name);
@@ -753,7 +756,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	add_web_link(path, label) {
-		label = label || "See on Website";
+		label = label || __("See on Website");
 		this.web_link = this.sidebar.add_user_action(__(label),
 			function() {}).attr("href", path || this.doc.route).attr("target", "_blank");
 	}

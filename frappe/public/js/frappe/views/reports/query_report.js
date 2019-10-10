@@ -857,19 +857,21 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		const base_url = frappe.urllib.get_base_url();
 		const print_css = frappe.boot.print_css;
 		const landscape = print_settings.orientation == 'Landscape';
-
+		const columns = this.get_columns_for_print(print_settings, custom_format);
 		const custom_format = this.report_settings.html_format || null;
 		const data = this.get_data_for_print();
 		const applied_filters = this.get_filter_values();
 
 		const filters_html = this.get_filters_html_for_print();
-		const content = frappe.render_template(print_settings.columns ? 'print_grid' : custom_format, {
+		const template =
+			print_settings.columns || !custom_format ? 'print_grid' : custom_format;
+		const content = frappe.render_template(template, {
 			title: __(this.report_name),
 			subtitle: filters_html,
 			filters: applied_filters,
 			data: data,
 			original_data: this.data,
-			columns: this.get_columns_for_print(print_settings, custom_format),
+			columns: columns,
 			report: this
 		});
 
