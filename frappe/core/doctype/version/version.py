@@ -40,6 +40,9 @@ def get_diff(old, new, for_child=False):
 			],
 
 		}'''
+	if not new:
+		return None
+
 	# capture data import if set
 	data_import = new.flags.via_data_import
 	out = frappe._dict(changed = [], added = [], removed = [], row_changed = [], data_import=data_import)
