@@ -274,7 +274,7 @@ def insert_event_to_calendar(account, event, recurrence=None):
 		"doctype": "Event",
 		"subject": event.get("summary"),
 		"description": event.get("description"),
-		"google_calendar_event": 1,
+		"sync_with_google_calendar": 1,
 		"google_calendar": account.name,
 		"google_calendar_id": account.google_calendar_id,
 		"google_calendar_event_id": event.get("id"),
@@ -309,7 +309,7 @@ def insert_event_in_google_calendar(doc, method=None):
 	event = {
 		"summary": doc.subject,
 		"description": doc.description,
-		"google_calendar_event": 1
+		"sync_with_google_calendar": 1
 	}
 	event.update(format_date_according_to_google_calendar(doc.all_day, get_datetime(doc.starts_on), get_datetime(doc.ends_on)))
 
