@@ -338,6 +338,7 @@ def accept(web_form, data, docname=None, for_payment=False):
 
 	files = []
 	files_to_delete = []
+	uploaded_files = []
 
 	web_form = frappe.get_doc("Web Form", web_form)
 
@@ -369,9 +370,8 @@ def accept(web_form, data, docname=None, for_payment=False):
 
 			elif value and frappe.db.exists("File", dict(file_url=value)):
 				uploaded_file = frappe.get_doc("File", dict(file_url=value))
-				uploaded_file.attached_to_doctype = doc.doctype
-				uploaded_file.attached_to_name = doc.name
 				uploaded_file.save(ignore_permissions=True)
+				uploaded_files.append(uploaded_file.name)
 
 			elif not value and doc.get(fieldname):
 				files_to_delete.append(doc.get(fieldname))
@@ -427,6 +427,12 @@ def accept(web_form, data, docname=None, for_payment=False):
 		for f in files_to_delete:
 			if f:
 				remove_file_by_url(doc.get(fieldname), doctype=doc.doctype, name=doc.name)
+
+	if uploaded_files:
+		for f in uploaded_files:
+			if f:
+				frappe.db.set_value("File", f, "attached_to_doctype", doc.doctype)
+				frappe.db.set_value("File", f, "attached_to_name", doc.name)
 
 
 	frappe.flags.web_form_doc = doc
