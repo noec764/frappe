@@ -28,6 +28,10 @@ class DataImport(Document):
 		if self.import_file and not self.total_rows:
 			upload(data_import_doc=self, from_data_import="Yes", validate_template=True)
 
+@frappe.whitelist()
+def get_importable_doc():
+	import_lst = frappe.cache().hget("can_import", frappe.session.user)
+	return import_lst
 
 @frappe.whitelist()
 def import_data(data_import):
