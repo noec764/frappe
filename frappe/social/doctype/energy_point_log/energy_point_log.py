@@ -251,8 +251,10 @@ def send_summary(timespan):
 	from frappe.utils.user import get_enabled_system_users
 	from frappe.social.doctype.energy_point_settings.energy_point_settings import is_energy_point_enabled
 
+
 	if not is_energy_point_enabled():
 		return
+
 	from_date = frappe.utils.add_to_date(None, weeks=-1)
 	if timespan == 'Monthly':
 		from_date = frappe.utils.add_to_date(None, months=-1)
@@ -262,9 +264,12 @@ def send_summary(timespan):
 	# do not send report if no activity found
 	if not user_points or not user_points[0].energy_points: return
 
+
 	from_date = getdate(from_date)
 	to_date = getdate()
-	all_users = [user.email for user in get_enabled_system_users()]
+	settings = {x["name"]: x["energy_points_summary"] for x in frappe.get_all("User", \
+		filters={"user_type": "System User", "enabled": 1}, fields=["name", "energy_points_summary"])}
+	all_users = [user.email for user in get_enabled_system_users() if settings.get(user["name"]) == 1]
 
 	frappe.sendmail(
 			subject='{} energy points summary'.format(timespan),

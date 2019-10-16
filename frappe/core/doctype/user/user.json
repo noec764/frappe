@@ -49,6 +49,7 @@
   "thread_notify",
   "send_me_a_copy",
   "allowed_in_mentions",
+  "energy_points_summary",
   "email_signature",
   "email_inbox",
   "user_emails",
@@ -378,7 +379,7 @@
   },
   {
    "fieldname": "email_signature",
-   "fieldtype": "HTML Editor",
+   "fieldtype": "Text Editor",
    "label": "Email Signature",
    "no_copy": 1
   },
@@ -600,13 +601,19 @@
    "fieldtype": "Password",
    "label": "API Secret",
    "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "energy_points_summary",
+   "fieldtype": "Check",
+   "label": "Send me an energy points summary"
   }
  ],
  "icon": "fa fa-user",
  "idx": 413,
  "image_field": "user_image",
  "max_attachments": 5,
- "modified": "2019-10-16 10:17:25.576047",
+ "modified": "2019-10-16 10:46:30.337223",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
