@@ -76,7 +76,7 @@ class GoogleCalendar(Document):
 		data = {
 			"client_id": google_settings.client_id,
 			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
-			"refresh_token": self.get_password(fieldname="refresh_token", raise_exception=False),
+			"refresh_token": self.refresh_token,
 			"grant_type": "refresh_token",
 			"scope": SCOPES
 		}
@@ -116,6 +116,7 @@ def authorize_access(g_calendar, reauthorize=None):
 
 			if "refresh_token" in r:
 				frappe.db.set_value("Google Calendar", google_calendar.name, "refresh_token", r.get("refresh_token"))
+				frappe.db.set_value("Google Calendar", google_calendar.name, "next_sync_token", None)
 				frappe.db.commit()
 
 			frappe.local.response["type"] = "redirect"
@@ -162,7 +163,7 @@ def get_google_calendar_object(g_calendar):
 
 	credentials_dict = {
 		"token": account.get_access_token(),
-		"refresh_token": account.get_password(fieldname="refresh_token", raise_exception=False),
+		"refresh_token": account.refresh_token,
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id,
 		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
@@ -214,13 +215,13 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 	while True:
 		try:
 			# API Response listed at EOF
-			sync_token = account.get_password(fieldname="next_sync_token", raise_exception=False) or None
+			sync_token = account.next_sync_token or None
 			events = google_calendar.events().list(calendarId=account.google_calendar_id, maxResults=page_length,
 				singleEvents=False, showDeleted=True, syncToken=sync_token).execute()
 		except HttpError as err:
 			frappe.throw(_("Google Calendar - Could not fetch event from Google Calendar, error code {0}.").format(err.resp.status))
 
-		for event in events.get("items"):
+		for event in events.get("items", []):
 			results.append(event)
 
 		if not events.get("nextPageToken"):
@@ -273,7 +274,7 @@ def insert_event_to_calendar(account, event, recurrence=None):
 		"doctype": "Event",
 		"subject": event.get("summary"),
 		"description": event.get("description"),
-		"google_calendar_event": 1,
+		"sync_with_google_calendar": 1,
 		"google_calendar": account.name,
 		"google_calendar_id": account.google_calendar_id,
 		"google_calendar_event_id": event.get("id"),
@@ -308,7 +309,7 @@ def insert_event_in_google_calendar(doc, method=None):
 	event = {
 		"summary": doc.subject,
 		"description": doc.description,
-		"google_calendar_event": 1
+		"sync_with_google_calendar": 1
 	}
 	event.update(format_date_according_to_google_calendar(doc.all_day, get_datetime(doc.starts_on), get_datetime(doc.ends_on)))
 

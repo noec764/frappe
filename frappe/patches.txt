@@ -260,6 +260,5 @@ frappe.patches.v12_0.remove_gcalendar_gmaps
 frappe.patches.v12_0.delete_gsuite_if_exists
 frappe.patches.v12_0.set_default_incoming_email_port
 frappe.patches.v12_0.update_global_search
-frappe.patches.v12_0.setup_tags
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable

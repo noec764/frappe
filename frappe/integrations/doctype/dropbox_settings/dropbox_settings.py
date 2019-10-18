@@ -74,20 +74,20 @@ def send_email(success, service_name, error_status=None):
 		if frappe.db.get_value("Dropbox Settings", None, "send_email_for_successful_backup") == '0':
 			return
 
-		subject = "Backup Upload Successful"
-		message ="""<h3>Backup Uploaded Successfully</h3><p>Hi there, this is just to inform you
-		that your backup was successfully uploaded to your %s account. So relax!</p>
-		""" % service_name
+		subject = _("Backup Upload Successful")
+		message ="""<h3>{0}</h3><p>{1}</p>
+		""".format(_("Backup Uploaded Successfully"), \
+			_("Hi there, this is just to inform you that your backup was successfully uploaded to your %s account. So relax!")) % service_name
 
 	else:
-		subject = "[Warning] Backup Upload Failed"
-		message ="""<h3>Backup Upload Failed</h3><p>Oops, your automated backup to %s
-		failed.</p>
-		<p>Error message: <br>
+		subject = _("[Warning] Backup Upload Failed")
+		message ="""<h3>{0}</h3><p>{1}</p>
+		<p>{2} <br>
 		<pre><code>%s</code></pre>
 		</p>
-		<p>Please contact your system manager for more information.</p>
-		""" % (service_name, error_status)
+		<p>{3}</p>
+		""".format(_("Backup Upload Failed"), _("Oops, your automated backup to %s failed."), _("Error message:"), \
+			_("Please contact your system manager for more information.")) % (service_name, error_status)
 
 	if not frappe.db:
 		frappe.connect()

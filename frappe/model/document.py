@@ -936,11 +936,12 @@ class Document(BaseDocument):
 	def load_doc_before_save(self):
 		'''Save load document from db before saving'''
 		self._doc_before_save = None
-		if not (self.is_new()
-			and (getattr(self.meta, 'track_changes', False)
-				or self.meta.get_set_only_once_fields()
-				or self.meta.get_workflow())):
-			self.get_doc_before_save()
+		if not self.is_new():
+			try:
+				self._doc_before_save = frappe.get_doc(self.doctype, self.name)
+			except frappe.DoesNotExistError:
+				self._doc_before_save = None
+				frappe.clear_last_message()
 
 	def run_post_save_methods(self):
 		"""Run standard methods after `INSERT` or `UPDATE`. Standard Methods are:

@@ -26,6 +26,19 @@ frappe.ui.form.on('Integration Request', {
 					}
 				);
 			}
+		} else {
+			if(frm.doc.integration_type === 'Webhook') {
+				frm.page.add_action_item(
+					__('Reset the webhook'),
+					() => {
+						frm.set_value("status", "Queued")
+						frm.set_value("reference_doctype", "")
+						frm.set_value("reference_docname", "")
+						frm.set_value("error", "")
+						frm.save()
+					}
+				);
+			}
 		}
 
 	}

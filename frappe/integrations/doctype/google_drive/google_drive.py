@@ -234,19 +234,18 @@ def send_email(success, error=None):
 		if not frappe.db.get_single_value("Google Drive", "send_email_for_successful_backup"):
 			return
 
-		subject = "Backup Upload Successful"
-		message = """<h3>Backup Uploaded Successfully</h3><p>Hi there, this is just to inform you
-		that your backup was successfully uploaded to Google Drive.</p>
-		"""
+		subject = _("Backup Upload Successful")
+		message = """<h3>{0}</h3><p>{1}</p>
+		""".format(_("Backup Uploaded Successfully"), _("Hi there, this is just to inform you that your backup was successfully uploaded to Google Drive."))
 	else:
-		subject = "[Warning] Backup Upload Failed"
-		message = """<h3>Backup Upload Failed</h3><p>Oops, your automated backup to Google Drive
-		failed.</p>
-		<p>Error message: <br>
-		<pre><code>{0}</code></pre>
+		subject = _("[Warning] Backup Upload Failed")
+		message = """<h3>{0}</h3><p>{1}</p>
+		<p>{2} <br>
+		<pre><code>{3}</code></pre>
 		</p>
-		<p>Please contact your system manager for more information.</p>
-		""".format(error)
+		<p>{4}</p>
+		""".format(_("Backup Upload Failed"), _("Oops, your automated backup to Google Drive failed."), \
+			_("Error message:"), error, _("Please contact your system manager for more information."))
 
 	frappe.sendmail(
 		recipients=frappe.db.get_single_value("Google Drive", "email"),

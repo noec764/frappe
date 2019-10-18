@@ -568,7 +568,7 @@ def money_in_words(number, main_currency = None, fraction_currency=None):
 		if cint(fraction):
 			out = out + ' ' + _('and') + ' ' + _(in_words(fraction, in_million).title()) + ' ' + fraction_currency
 
-	return out + ' ' + _('only.')
+	return out
 
 #
 # convert number to words
