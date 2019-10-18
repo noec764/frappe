@@ -145,11 +145,22 @@ def remove_app(app_name, dry_run=False, yes=False):
 					drop_doctypes.append(doctype.name)
 
 		# remove reports, pages and web forms
-		for doctype in ("Report", "Page", "Web Form", "Print Format", "Data Migration Plan"):
+		for doctype in ("Report", "Page", "Web Form", "Print Format"):
 			for record in frappe.get_list(doctype, filters={"module": module_name}):
 				print("removing {0} {1}...".format(doctype, record.name))
 				if not dry_run:
 					frappe.delete_doc(doctype, record.name)
+
+		# remove data migration plans and linked data migration runs
+		for plan in frappe.get_list("Data Migration Plan", filters={"module": module_name}):
+			print("removing Data Migration Runs for Data Migration Plan {0}...".format(plan.name))
+			for record in frappe.get_list("Data Migration Run", filters={"data_migration_plan": plan.name}):
+				if not dry_run:
+					frappe.delete_doc("Data Migration Run", record.name)
+
+			print("removing Data Migration Plan {0}...".format(plan.name))
+			if not dry_run:
+				frappe.delete_doc("Data Migration Plan", plan.name)
 
 		print("removing Module {0}...".format(module_name))
 		if not dry_run:
