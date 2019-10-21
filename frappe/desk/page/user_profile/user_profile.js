@@ -55,14 +55,14 @@ class UserProfile {
 		this.render_points_and_rank();
 		this.render_heatmap();
 		this.render_line_chart();
-		this.render_percentage_chart('type', 'Type Distribution');
+		this.render_percentage_chart('type', __('Type Distribution'));
 		this.create_percentage_chart_filters();
 		this.setup_show_more_activity();
 		this.render_user_activity();
 	}
 
 	setup_user_search() {
-		this.$user_search_button = this.page.set_secondary_action('Change User', () => {
+		this.$user_search_button = this.page.set_secondary_action(__('Change User'), () => {
 			this.show_user_search_dialog();
 		});
 	}
@@ -91,7 +91,7 @@ class UserProfile {
 	render_heatmap() {
 		this.heatmap = new frappe.Chart('.performance-heatmap', {
 			type: 'heatmap',
-			countLabel: 'Energy Points',
+			countLabel: __('Energy Points'),
 			data: {},
 			discreteDomains: 0,
 		});
@@ -139,7 +139,7 @@ class UserProfile {
 		};
 
 		this.line_chart = new frappe.Chart( '.performance-line-chart', {
-			title: 'Energy Points',
+			title: __('Energy Points'),
 			type: 'line',
 			height: 200,
 			data: {
@@ -197,8 +197,14 @@ class UserProfile {
 	create_line_chart_filters() {
 		let filters = [
 			{
-				label: 'All',
-				options: ['All', 'Auto', 'Criticism', 'Appreciation', 'Revert'],
+				label: __('All'),
+				options: [
+					{label: __('All'), value: 'All'},
+					{label: __('Auto'), value: 'Auto'},
+					{label: __('Criticism'), value: 'Criticism'},
+					{label: __('Appreciation'), value: 'Appreciation'},
+					{label: __('Revert'), value: 'Revert'}
+				],
 				action: (selected_item) => {
 					if (selected_item === 'All') delete this.line_chart_filters.type;
 					else this.line_chart_filters.type = selected_item;
@@ -206,16 +212,24 @@ class UserProfile {
 				}
 			},
 			{
-				label: 'Last Month',
-				options: ['Last Week', 'Last Month', 'Last Quarter'],
+				label: __('Last Month'),
+				options: [
+					{label: __('Last Week'), value: 'Last Week'},
+					{label: __('Last Month'), value: 'Last Month'},
+					{label: __('Last Quarter'), value: 'Last Quarter'}
+				],
 				action: (selected_item) => {
 					this.line_chart_config.timespan = selected_item;
 					this.update_line_chart_data();
 				}
 			},
 			{
-				label: 'Daily',
-				options: ['Daily', 'Weekly', 'Monthly'],
+				label: __('Daily'),
+				options: [
+					{label: __('Daily'), value: 'Daily'},
+					{label: __('Weekly'), value: 'Weekly'},
+					{label: __('Monthly'), value: 'Monthly'}
+				],
 				action: (selected_item) => {
 					this.line_chart_config.time_interval = selected_item;
 					this.update_line_chart_data();
@@ -228,7 +242,7 @@ class UserProfile {
 	create_percentage_chart_filters() {
 		let filters = [
 			{
-				label: 'Type',
+				label: __('Type'),
 				options: ['Type', 'Reference Doctype', 'Rule'],
 				fieldnames: ['type', 'reference_doctype', 'rule'],
 				action: (selected_item, fieldname) => {
@@ -266,9 +280,9 @@ class UserProfile {
 
 			if (filter.fieldnames) {
 				options_html = filter.options.map((option, i) =>
-					`<li><a data-fieldname = "${filter.fieldnames[i]}">${option}</a></li>`).join('');
+					`<li><a data-fieldname = "${filter.fieldnames[i]} data-value = "${option.value}">${option.label}</a></li>`).join('');
 			} else {
-				options_html = filter.options.map( option => `<li><a>${option}</a></li>`).join('');
+				options_html = filter.options.map( option => `<li><a data-value = "${option.value}">${option.label}</a></li>`).join('');
 			}
 
 			let dropdown_html = chart_filter_html + `<ul class="dropdown-menu">${options_html}</ul></div>`;
@@ -284,8 +298,9 @@ class UserProfile {
 				if ($el.attr('data-fieldname')) {
 					fieldname = $el.attr('data-fieldname');
 				}
-				let selected_item = $el.text();
-				$el.parents('.chart-filter').find('.filter-label').text(selected_item);
+				const selected_item = $el.attr('data-value');
+				const selected_label = $el.text();
+				$el.parents('.chart-filter').find('.filter-label').text(selected_label);
 				filter.action(selected_item, fieldname);
 			});
 		});
@@ -299,12 +314,12 @@ class UserProfile {
 				{
 					fieldtype: 'Attach Image',
 					fieldname: 'user_image',
-					label: 'Profile Image',
+					label: __('Profile Image'),
 				},
 				{
 					fieldtype: 'Data',
 					fieldname: 'interest',
-					label: 'Interests',
+					label: __('Interests'),
 				},
 				{
 					fieldtype: 'Column Break'
@@ -312,16 +327,16 @@ class UserProfile {
 				{
 					fieldtype: 'Data',
 					fieldname: 'location',
-					label: 'Location',
+					label: __('Location'),
 				},
 				{
 					fieldtype: 'Section Break',
-					fieldname: 'Interest',
+					fieldname: __('Interest'),
 				},
 				{
 					fieldtype: 'Small Text',
 					fieldname: 'bio',
-					label: 'Bio',
+					label: __('Bio'),
 				}
 			],
 			primary_action: values => {
