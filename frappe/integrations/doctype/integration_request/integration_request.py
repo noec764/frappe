@@ -32,7 +32,7 @@ class IntegrationRequest(Document):
 
 def retry_failed_webhooks(service=None):
 	filters = {
-		"status": "Failed",
+		"status": ["in", ["Failed", "Queued"]],
 		"integration_type": "Webhook"
 	}
 

@@ -113,7 +113,7 @@ def delete_fields(args_dict, delete=0):
 			if not fields_need_to_delete:
 				continue
 
-			if frappe.conf.db_type == 'mariadb':
+			if frappe.conf.db_type == 'mariadb' or frappe.conf.db_type is None:
 				# mariadb implicitly commits before DDL, make it explicit
 				frappe.db.commit()
 
