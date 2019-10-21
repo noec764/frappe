@@ -24,7 +24,7 @@ if sys.version[0] == '2':
 	reload(sys)
 	sys.setdefaultencoding("utf-8")
 
-__version__ = '1.0.0-beta.1'
+__version__ = '1.0.0-beta.2'
 __title__ = "Dodock Framework"
 
 local = Local()
