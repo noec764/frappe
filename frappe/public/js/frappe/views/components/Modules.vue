@@ -66,21 +66,21 @@ export default {
 		update_current_module() {
 			let route = frappe.get_route()
 			if (route[0] === 'modules') {
-			this.route = route
-			let module = this.modules_list.filter(m => m.module_name == route[1])[0]
-			let module_name = module && (module.label || module.module_name)
-			let title = this.current_module_label
-				? this.current_module_label
-				: module_name
-			frappe.modules.home && frappe.modules.home.page.set_title(title)
-			if (!frappe.modules.home) {
-				setTimeout(() => {
-				frappe.modules.home.page.set_title(title)
-				}, 200)
-			}
-			if (module_name) {
-				this.get_module_sections(module.module_name)
-			}
+				this.route = route
+				let module = this.modules_list.filter(m => m.module_name == route[1])[0]
+				let module_name = module && (module.label || module.module_name)
+				let title = this.current_module_label
+					? this.current_module_label
+					: module_name
+				frappe.modules.home && frappe.modules.home.page.set_title(title)
+				if (!frappe.modules.home) {
+					setTimeout(() => {
+					frappe.modules.home.page.set_title(title)
+					}, 200)
+				}
+				if (module_name) {
+					this.get_module_sections(module.module_name)
+				}
 			}
 		},
 		get_module_sections(module_name) {
@@ -89,19 +89,15 @@ export default {
 				this.current_module_sections = cache
 			} else {
 				this.current_module_sections = []
-				return frappe.call({
-					method: 'frappe.desk.moduleview.get',
-					args: {
+				frappe.xcall('frappe.desk.moduleview.get', {
 						module: module_name,
-					},
-					callback: r => {
+					})
+					.then(r => {
 						var m = frappe.get_module(module_name)
-						this.current_module_sections = r.message.data
+						this.current_module_sections = r.data
 						this.process_data(module_name, this.current_module_sections)
 						this.modules_data_cache[module_name] = this.current_module_sections
-					},
-					freeze: true,
-				})
+					})
 			}
 		},
 		process_data(module_name, data) {

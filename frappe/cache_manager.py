@@ -12,7 +12,7 @@ from frappe.core.page.dashboard.dashboard import clear_dashboard_cache
 common_default_keys = ["__default", "__global"]
 
 global_cache_keys = ("app_hooks", "installed_apps",
-		"app_modules", "module_app", "notification_config", 'system_settings',
+		"app_modules", "module_app", "system_settings",
 		'scheduler_events', 'time_zone', 'webhooks', 'active_domains',
 		'active_modules', 'assignment_rule', 'server_script_map')
 

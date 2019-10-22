@@ -14,10 +14,6 @@ def get_notification_config():
 			"Error Snapshot": {"seen": 0, "parent_error_snapshot": None},
 			"Workflow Action": {"status": 'Open'},
 			"Integration Request": {"status": "Failed"}
-		},
-		"for_other": {
-			"Likes": "frappe.core.notifications.get_unseen_likes",
-			"Email": "frappe.core.notifications.get_unread_emails",
 		}
 	}
 
