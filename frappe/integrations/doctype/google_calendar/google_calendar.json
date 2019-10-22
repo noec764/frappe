@@ -74,10 +74,10 @@
    "label": "Next Sync Token"
   },
   {
+   "depends_on": "eval:doc.refresh_token",
    "fieldname": "google_calendar_id",
    "fieldtype": "Data",
-   "label": "Google Calendar ID",
-   "read_only": 1
+   "label": "Google Calendar ID"
   },
   {
    "depends_on": "eval:!doc.__islocal",
@@ -108,7 +108,7 @@
    "label": "Push to Google Calendar"
   }
  ],
- "modified": "2019-10-09 15:44:15.798362",
+ "modified": "2019-10-22 15:30:26.435842",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Google Calendar",
