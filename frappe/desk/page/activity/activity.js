@@ -148,16 +148,16 @@ frappe.activity.render_heatmap = function(page) {
 		method: "frappe.desk.page.activity.activity.get_heatmap_data",
 		callback: function(r) {
 			if(r.message) {
-				var heatmap = new frappe.Chart(".heatmap", {
+				new frappe.Chart(".heatmap", {
 					type: 'heatmap',
 					height: 100,
 					start: new Date(moment().subtract(1, 'year').toDate()),
 					countLabel: "actions",
 					discreteDomains: 0,
-					data: {}
+					data: {
+						'dataPoints': r.message
+					}
 				});
-
-				heatmap.update(r.message);
 			}
 		}
 	})
