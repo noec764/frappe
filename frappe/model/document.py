@@ -18,6 +18,7 @@ from frappe.utils.global_search import update_global_search
 from frappe.integrations.doctype.webhook import run_webhooks
 from frappe.model.rename_doc import rename_doc
 from frappe.desk.form.document_follow import follow_document
+from frappe.core.doctype.server_script.server_script_utils import run_server_script_for_doc_event
 
 # once_only validation
 # methods
@@ -819,6 +820,7 @@ class Document(BaseDocument):
 
 		self.run_notifications(method)
 		run_webhooks(self, method)
+		run_server_script_for_doc_event(self, method)
 
 		return out
 
