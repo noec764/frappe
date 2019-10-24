@@ -251,7 +251,7 @@ frappe.PrintFormatBuilder = Class.extend({
 				// from format_data (designed format)
 				// print_hide should always be false
 				if(f.fieldname==="_custom_html") {
-					f.label = "Custom HTML";
+					f.label = __("Custom HTML");
 					f.fieldtype = "Custom HTML";
 
 					// set custom html id to map data properties later
@@ -265,6 +265,9 @@ frappe.PrintFormatBuilder = Class.extend({
 			}
 
 			if(f.fieldtype==="Section Break") {
+				if (f.doctype === "DocField") {
+					f.label = __(f.label)
+				}
 				set_section(f.label, f.pagebreak);
 
 			} else if(f.fieldtype==="Column Break") {
