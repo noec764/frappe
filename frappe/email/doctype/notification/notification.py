@@ -147,25 +147,59 @@ def get_context(context):
 		sender = None
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
+
+		message = frappe.render_template(self.message, context)
+
+		com_kwargs = {
+			"sender": sender,
+			"recipients": ', '.join(recipients) if isinstance(recipients, list) else recipients,
+			"cc": cc,
+			"bcc": bcc,
+			"subject": subject,
+			"message": message,
+			"doc": doc
+		}
+
 		frappe.sendmail(recipients=recipients,
 			subject=subject,
 			sender=sender,
 			cc=cc,
 			bcc=bcc,
-			message=frappe.render_template(self.message, context),
+			message=message,
 			reference_doctype=doc.doctype,
 			reference_name=doc.name,
 			attachments=attachments,
 			expose_recipients="header",
+			communication=self.make_communication_entry(**com_kwargs),
 			print_letterhead=((attachments
 				and attachments[0].get('print_letterhead')) or False))
 
+	def make_communication_entry(self, **kwargs):
+		"""Make communication entry"""
+		try:
+			comm = frappe.get_doc({
+				"doctype":"Communication",
+				"communication_medium": "Email",
+				"sender": kwargs.get("sender"),
+				"recipients": kwargs.get("recipients"),
+				"subject": kwargs.get("subject"),
+				"content": kwargs.get("message"),
+				"sent_or_received": "Sent",
+				"reference_doctype": kwargs.get("doc", {}).get("doctype"),
+				"reference_name": kwargs.get("doc", {}).get("name") if kwargs.get("doc", {}).get("doctype") else None
+			}).insert(ignore_permissions=True)
+
+			return comm.name
+		except Exception:
+			frappe.log_error(frappe.get_traceback(), _("Notification communication creation error"))
+			return
+
 	def send_a_slack_msg(self, doc, context):
-			send_slack_message(
-				webhook_url=self.slack_webhook_url,
-				message=frappe.render_template(self.message, context),
-				reference_doctype = doc.doctype,
-				reference_name = doc.name)
+		send_slack_message(
+			webhook_url=self.slack_webhook_url,
+			message=frappe.render_template(self.message, context),
+			reference_doctype = doc.doctype,
+			reference_name = doc.name)
 
 	def get_list_of_recipients(self, doc, context):
 		recipients = []
