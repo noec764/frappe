@@ -303,6 +303,9 @@ def make_layout(doc, meta, format_data=None):
 			if df.fieldtype=='Section Break' and df.label:
 				section['label'] = df.label
 
+			if df.fieldtype=='Section Break' and df.get('pagebreak'):
+				section['pagebreak'] = df.get('pagebreak')
+
 			page.append(section)
 
 		elif df.fieldtype=="Column Break":
