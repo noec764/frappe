@@ -51,7 +51,7 @@ def get_notification_message(doc):
 		frappe.db.get_value(doc.reference_doctype, doc.reference_name, title_field)
 
 	if doc.type == 'Auto':
-		owner_name = frappe.bold('You')
+		owner_name = frappe.bold(__('You'))
 		if points == 1:
 			message = _('{0} gained {1} point for {2} {3}')
 		else:
