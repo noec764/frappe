@@ -214,7 +214,7 @@ def get_open_count(doctype, name, items=[]):
 	:param transactions: List of transactions (json/dict)
 	:param filters: optional filters (json/list)'''
 
-	if frappe.flags.in_migrate or frappe.flags.in_install:
+	if frappe.flags.in_migrate or frappe.flags.in_install or not frappe.db.exists(doctype, name):
 		return {
 			"count": []
 		}
