@@ -11,7 +11,7 @@ from frappe.utils.password import rename_password
 from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
 
 @frappe.whitelist()
-def update_document_title(doctype, docname, title_field=None, old_title=None, new_title=None, old_name=None, new_name=None):
+def update_document_title(doctype, docname, title_field=None, old_title=None, new_title=None, new_name=None, merge=False):
 	"""
 		Update title from header in form view
 	"""
@@ -19,10 +19,10 @@ def update_document_title(doctype, docname, title_field=None, old_title=None, ne
 		frappe.db.set_value(doctype, docname, title_field, new_title)
 		frappe.msgprint(_('Saved'), alert=True, indicator='green')
 
-	if old_name and new_name and not old_name == new_name:
-		return rename_doc(doctype, old_name, new_name)
+	if docname and new_name and not docname == new_name:
+		return rename_doc(doctype=doctype, old=docname, new=new_name, merge=merge)
 
-	return old_name
+	return docname
 
 @frappe.whitelist()
 def rename_doc(doctype, old, new, force=False, merge=False, ignore_permissions=False, ignore_if_exists=False):
