@@ -233,7 +233,7 @@ frappe.ui.form.PrintPreview = Class.extend({
 			display: 'flex',
 			flexDirection: 'column'
 		});
-		this.wrapper.find('.page-break').css({
+		this.wrapper.find('.page-section').css({
 			'display': 'flex',
 			'flex-direction': 'column',
 			'flex': '1'
