@@ -86,7 +86,7 @@ def authorize(*args, **kwargs):
 					"details": scopes
 				})
 				resp_html = frappe.render_template("templates/includes/oauth_confirmation.html", response_html_params)
-				frappe.respond_as_web_page(_("Confirm Access"), resp_html, primary_action=None)
+				frappe.respond_as_web_page(_("Confirm Access"), resp_html, primary_action=False)
 
 		except FatalClientError as e:
 			return e
