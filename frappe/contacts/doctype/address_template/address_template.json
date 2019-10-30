@@ -30,14 +30,14 @@
    "label": "Is Default"
   },
   {
-   "description": "This document accepts <a href=\"http://jinja.pocoo.org/docs/templates/\">Jinja Templating</a> and any field in the address doctype (custom fields included).<br>Read more in the [documentation](https://doc.dokos.io/dokos/setting-up/configuration/address-templates.html)",
+   "description": "This document accepts <a href=\"http://jinja.pocoo.org/docs/templates/\">Jinja Templating</a> and any field in the address doctype (custom fields included).<br>Read more in the <a href=\"https://doc.dokos.io/dokos/setting-up/configuration/address-templates.html\">documentation</a>.",
    "fieldname": "template",
    "fieldtype": "Code",
    "label": "Template"
   }
  ],
  "icon": "fa fa-map-marker",
- "modified": "2019-10-29 16:59:53.863828",
+ "modified": "2019-10-29 17:33:21.786365",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address Template",
