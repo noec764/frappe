@@ -6102,7 +6102,7 @@
   "apps/frappe/frappe/desk/doctype/todo/todo_list.js": {
     "To Do": "ToDo",
     "Assigned By Me": "Assigné par moi",
-    "Open": "Ouvert",
+    "Open": "Ouvrir",
     "Open {0}": "Ouvrir {0}"
   },
   "apps/frappe/frappe/public/js/frappe/form/linked_with.js": {
