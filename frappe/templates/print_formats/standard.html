@@ -2,7 +2,7 @@
 	 render_field -%}
 
 {% for page in layout %}
-<div class="page-break">
+<div class="page-break page-section">
 	<div {% if print_settings.repeat_header_footer %} id="header-html" class="hidden-pdf" {% endif %}>
 		{{ add_header(loop.index, layout|len, doc, letter_head, no_letterhead, footer, print_settings) }}
 	</div>
@@ -21,7 +21,7 @@
 	{% endif %}
 
 	{% for section in page %}
-	<div class="row section-break">
+	<div class="row section-break {% if section.pagebreak %}page-break{% endif %}">
 		{%- if doc.print_line_breaks and loop.index != 1 -%}<hr>{%- endif -%}
 		{%- if doc.print_section_headings and section.label and section.has_data -%}
 		<h4 class='col-sm-12'>{{ _(section.label) }}</h4>

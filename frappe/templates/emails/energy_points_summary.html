@@ -2,7 +2,7 @@
 <h3>{{ _('Top Performer') }} 🏆 </h3>
 <p> {{ frappe.get_fullname(top_performer.user) }}
 	<span class="text-muted">
-		{{ frappe._('gained {0} points').format(frappe.utils.cint(top_performer.energy_points)) }}
+		{{ _('gained {0} points').format(frappe.utils.cint(top_performer.energy_points)) }}
 	</span>
 </p>
 {% endif %}
@@ -11,7 +11,7 @@
 <h3>{{ _('Top Reviewer') }} ❤️ </h3>
 <p> {{ frappe.get_fullname(top_reviewer.user) }}
 	<span class="text-muted">
-		{{ frappe._('gave {0} points').format(frappe.utils.cint(top_reviewer.given_points)) }}
+		{{ _('gave {0} points').format(frappe.utils.cint(top_reviewer.given_points)) }}
 	</span>
 </p>
 

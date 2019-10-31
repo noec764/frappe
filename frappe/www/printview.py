@@ -84,8 +84,7 @@ def get_rendered_template(doc, name=None, print_format=None, meta=None,
 		if doc.docstatus==2 and not cint(print_settings.allow_print_for_cancelled):
 			frappe.throw(_("Not allowed to print cancelled documents"), frappe.PermissionError)
 
-	if hasattr(doc, "before_print"):
-		doc.before_print()
+	doc.run_method("before_print")
 
 	if not hasattr(doc, "print_heading"): doc.print_heading = None
 	if not hasattr(doc, "sub_heading"): doc.sub_heading = None
@@ -302,6 +301,9 @@ def make_layout(doc, meta, format_data=None):
 			section = get_new_section()
 			if df.fieldtype=='Section Break' and df.label:
 				section['label'] = df.label
+
+			if df.fieldtype=='Section Break' and df.get('pagebreak'):
+				section['pagebreak'] = df.get('pagebreak')
 
 			page.append(section)
 

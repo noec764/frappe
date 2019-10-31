@@ -95,6 +95,12 @@ def cleanup_page_name(title):
 	name = re.sub('[~!@#$%^&*+()<>,."\'\?]', '', name)
 	name = re.sub('[:/]', '-', name)
 
+	special_characters = dict(zip("àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż", \
+		"aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnooooooooprrsssssttuuuuuuuuuwxyyzzz"))
+
+	for key in special_characters.keys():
+		name = re.sub(key, special_characters.get(key), name)
+
 	name = '-'.join(name.split())
 
 	# replace repeating hyphens

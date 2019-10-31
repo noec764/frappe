@@ -8,9 +8,8 @@
 				<h4 class="h4"> {{ section.label }} </h4>
 				<module-link-item v-for="(item, index) in section.items"
 					:key="index"
-					:data-youtube-id="item.type==='help' ? item.youtube_id : false"
 					v-bind="item"
-					:open_count="item.type==='doctype' ? frappe.boot.notification_info.open_count_doctype[item.doctype] : false"
+					:open_count="item.type==='doctype' && open_documents ? open_documents[item.doctype] : false"
 				>
 				</module-link-item>
 			</div>
@@ -29,7 +28,18 @@ export default {
 	components: {
 		ModuleLinkItem
 	},
-	props: ['module_name', 'sections', 'dashboard']
+	props: ['module_name', 'sections', 'dashboard'],
+	data() {
+		return {
+			open_documents: null
+		}
+	},
+	created() {
+		frappe.xcall('frappe.desk.notifications.get_notifications')
+		.then(r => {
+			this.open_documents = r.open_count_doctype
+		})
+	}
 }
 </script>
 <style lang="less" scoped>

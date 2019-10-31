@@ -235,9 +235,10 @@ frappe.PrintFormatBuilder = Class.extend({
 			section.no_of_columns += 1;
 		}
 
-		var set_section = function(label) {
+		var set_section = function(label, pagebreak) {
 			section = me.get_new_section();
 			if(label) section.label = label;
+			if(pagebreak) section.pagebreak = pagebreak;
 			column = null;
 			me.layout_data.push(section);
 		}
@@ -250,7 +251,7 @@ frappe.PrintFormatBuilder = Class.extend({
 				// from format_data (designed format)
 				// print_hide should always be false
 				if(f.fieldname==="_custom_html") {
-					f.label = "Custom HTML";
+					f.label = __("Custom HTML");
 					f.fieldtype = "Custom HTML";
 
 					// set custom html id to map data properties later
@@ -264,7 +265,10 @@ frappe.PrintFormatBuilder = Class.extend({
 			}
 
 			if(f.fieldtype==="Section Break") {
-				set_section(f.label);
+				if (f.doctype === "DocField") {
+					f.label = __(f.label)
+				}
+				set_section(f.label, f.pagebreak);
 
 			} else if(f.fieldtype==="Column Break") {
 				set_column();
@@ -290,7 +294,7 @@ frappe.PrintFormatBuilder = Class.extend({
 		});
 	},
 	get_new_section: function() {
-		return {columns: [], no_of_columns: 0, label:''};
+		return {columns: [], no_of_columns: 0, label:'', pagebreak: 0};
 	},
 	get_new_column: function() {
 		return {fields: []}
@@ -388,6 +392,7 @@ frappe.PrintFormatBuilder = Class.extend({
 			var section = $(this).parent().parent();
 			var no_of_columns = section.find(".section-column").length;
 			var label = section.attr('data-label');
+			const pagebreak = section.attr('data-page-break');
 
 			// new dialog
 			var d = new frappe.ui.Dialog({
@@ -404,6 +409,12 @@ frappe.PrintFormatBuilder = Class.extend({
 						fieldname:"label",
 						fieldtype:"Data",
 						description: __('Will only be shown if section headings are enabled')
+					},
+					{
+						label:__("Page Break"),
+						fieldname:"page_break",
+						fieldtype:"Check",
+						description: __('Will create a section break just below this section')
 					},
 					{
 						label: __("Remove Section"),
@@ -423,6 +434,7 @@ frappe.PrintFormatBuilder = Class.extend({
 
 			d.set_input("no_of_columns", no_of_columns + "");
 			d.set_input("label", label || "");
+			d.set_input("page_break", parseInt(pagebreak, 10) || 0);
 
 			d.set_primary_action(__("Update"), function() {
 				// resize number of columns
@@ -430,6 +442,7 @@ frappe.PrintFormatBuilder = Class.extend({
 					cint(d.get_value("no_of_columns")));
 
 				section.attr('data-label', d.get_value('label') || '');
+				section.attr('data-page-break', d.get_value('page_break') || '');
 				section.find('.section-label').html(d.get_value('label') || '');
 
 				d.hide();
@@ -738,7 +751,7 @@ frappe.PrintFormatBuilder = Class.extend({
 
 		// add pages
 		this.page.main.find(".print-format-builder-section").each(function() {
-			var section = {"fieldtype": "Section Break", 'label': $(this).attr('data-label') || '' };
+			var section = {"fieldtype": "Section Break", 'label': $(this).attr('data-label') || '' , 'pagebreak': parseInt($(this).attr('data-page-break'), 10) || 0};
 			data.push(section);
 			$(this).find(".print-format-builder-column").each(function() {
 				data.push({"fieldtype": "Column Break"});

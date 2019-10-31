@@ -5,6 +5,9 @@ import frappe
 def execute():
 	frappe.reload_doctype("Comment")
 
+	if frappe.db.count('Communication', filters = dict(communication_type = 'Comment')) > 20000:
+		frappe.db.auto_commit_on_many_writes = True
+
 	for comment in frappe.get_all('Communication', fields = ['*'],
 		filters = dict(communication_type = 'Comment')):
 
@@ -23,6 +26,9 @@ def execute():
 		new_comment.owner = comment.owner
 		new_comment.modified_by = comment.modified_by
 		new_comment.db_insert()
+
+	if frappe.db.auto_commit_on_many_writes:
+		frappe.db.auto_commit_on_many_writes = False
 
 	# clean up
 	frappe.db.sql("delete from `tabCommunication` where communication_type = 'Comment'")

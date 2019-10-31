@@ -106,7 +106,7 @@ class User(Document):
 
 	def check_demo(self):
 		if frappe.session.user == 'demo@erpnext.com':
-			frappe.throw(_('Cannot change user details in demo. Please signup for a new account at https://erpnext.com'), title=_('Not Allowed'))
+			frappe.throw(_('Cannot change user details in demo. Please signup for a new account at https://dokos.io'), title=_('Not Allowed'))
 
 	def set_full_name(self):
 		self.full_name = " ".join(filter(None, [self.first_name, self.last_name]))
@@ -198,7 +198,7 @@ class User(Document):
 						_update_password(user=self.name, pwd=new_password,
 							logout_all_sessions=self.logout_all_sessions)
 
-					if not self.flags.no_welcome_mail and self.send_welcome_email:
+					if not self.flags.no_welcome_mail and self.send_welcome_email and not self.flags.email_sent:
 						self.send_welcome_mail_to_user()
 						self.flags.email_sent = 1
 						if frappe.session.user != 'Guest':

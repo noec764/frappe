@@ -1,4 +1,3 @@
-
 frappe.ui.form.on('Report', {
 	refresh: function(frm) {
 		if(!frappe.boot.developer_mode && frappe.session.user !== 'Administrator') {
@@ -18,10 +17,13 @@ frappe.ui.form.on('Report', {
 				case "Script Report":
 					frappe.set_route("query-report", doc.name);
 					break;
+				case "Custom Report":
+					frappe.set_route("query-report", doc.name);
+					break;
 			}
 		}, "fa fa-table");
 
- 		if (doc.is_standard === "Yes") {
+		if (doc.is_standard === "Yes") {
 			frm.add_custom_button(doc.disabled ? __("Enable Report") : __("Disable Report"), function() {
 				frm.call('toggle_disable', {
 					disable: doc.disabled ? 0 : 1
@@ -31,12 +33,12 @@ frappe.ui.form.on('Report', {
 			}, doc.disabled ? "fa fa-check" : "fa fa-off");
 		}
 
- 		frm.events.report_type(frm);
+		frm.events.report_type(frm);
 	},
 
 	ref_doctype: function(frm) {
 		if(frm.doc.ref_doctype) {
-			frm.trigger("set_doctype_roles")
+			frm.trigger("set_doctype_roles");
 		}
 	},
 
