@@ -263,5 +263,6 @@ frappe.patches.v12_0.set_default_incoming_email_port
 frappe.patches.v12_0.update_global_search
 execute:frappe.reload_doc('desk', 'doctype', 'notification_settings')
 execute:frappe.delete_doc_if_exists("DocType", "Tag Doc Category")
+frappe.patches.v12_0.setup_tags
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
