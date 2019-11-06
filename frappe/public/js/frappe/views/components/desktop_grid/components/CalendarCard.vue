@@ -61,7 +61,7 @@ export default {
 		frappe.model.with_doctype(this.item.source_document, () => {
 			const meta = frappe.get_meta(this.item.source_document);
 			const calendar_options = eval(meta.__calendar_js)
-			this.events_method = calendar_options.get_events_method || 'frappe.desk.doctype.event.event.get_events';
+			this.events_method = calendar_options.get_events_method || 'frappe.desk.calendar.get_events';
 			this.fields_map = calendar_options.field_map
 			this.$refs.fullCalendar.getApi().refetchEvents();
 		})
@@ -69,9 +69,12 @@ export default {
 	methods: {
 		getCalendarEvents(parameters, callback) {
 			this.events_method&&frappe.xcall(this.events_method, {
+				doctype: this.item.source_document,
 				start: moment(parameters.start).format("YYYY-MM-DD"),
 				end: moment(parameters.end).format("YYYY-MM-DD"),
-				user: this.user
+				field_map: this.fields_map,
+				user: this.item.user,
+				filters: []
 			})
 			.then(result => {
 				let events = []
