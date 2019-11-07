@@ -133,7 +133,7 @@ def get_default_outgoing_email_account(raise_exception_not_set=True):
 			"always_use_account_name_as_sender_name": frappe.conf.get("always_use_account_name_as_sender_name", 0)
 		})
 		email_account.from_site_config = True
-		email_account.name = frappe.conf.get("email_sender_name") or "Frappe"
+		email_account.name = frappe.conf.get("email_sender_name") or "dokos"
 
 	if not email_account and not raise_exception_not_set:
 		return None
