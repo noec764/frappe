@@ -3080,7 +3080,7 @@
   },
   "DocType: Feedback Trigger": {
     "Example": "Exemple",
-    "Check Communication": "Vérifiez la Communication",
+    "Check Communication": "Vérifiez la communication",
     "To add dynamic subject, use jinja tags like\n\n<div><pre><code>{{ doc.name }} Delivered</code></pre></div>": "Pour ajouter l'objet dynamique, utiliser des balises comme Jinja <div><pre> <code>{{ doc.name }} Delivered</code> </pre> </div>",
     "Condition": "Conditions",
     "Email Field": "Champ Email",

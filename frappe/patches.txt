@@ -266,3 +266,4 @@ execute:frappe.delete_doc_if_exists("DocType", "Tag Doc Category")
 frappe.patches.v12_0.setup_tags
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
+frappe.patches.dokos.v1_2.reset_user_last_version
