@@ -16,7 +16,7 @@ from frappe.utils import get_request_site_address
 from frappe.utils.background_jobs import enqueue
 from six.moves.urllib.parse import quote
 from apiclient.http import MediaFileUpload
-from frappe.utils import get_backups_path, get_bench_path
+from frappe.utils import get_backups_path, get_bench_path, cint
 from frappe.utils.backups import new_backup
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 
@@ -215,11 +215,14 @@ def upload_system_backup_to_google_drive():
 	return _("Google Drive Backup Successful.")
 
 def daily_backup():
-	if frappe.db.get_single_value("Google Drive", "frequency") == "Daily":
-		upload_system_backup_to_google_drive()
+	take_backups_if("Daily")
 
 def weekly_backup():
-	if frappe.db.get_single_value("Google Drive", "frequency") == "Weekly":
+	take_backups_if("Weekly")
+
+def take_backups_if(freq):
+	enabled, frequency = frappe.db.get_value("Google Drive", ["enable", "frequency"])
+	if cint(enabled) and frequency == freq:
 		upload_system_backup_to_google_drive()
 
 def get_absolute_path(filename):
