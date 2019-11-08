@@ -337,7 +337,7 @@ def disable_users(limits=None):
 
 		from frappe.core.doctype.user.user import get_total_users
 
-		if get_total_users() > cint(limits.get('users')):
+		if get_total_users() or 0 > cint(limits.get('users')):
 			reset_simultaneous_sessions(cint(limits.get('users')))
 
 	frappe.db.commit()
