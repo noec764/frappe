@@ -221,7 +221,7 @@ def weekly_backup():
 	take_backups_if("Weekly")
 
 def take_backups_if(freq):
-	enabled, frequency = frappe.db.get_value("Google Drive", ["enable", "frequency"])
+	enabled, frequency = frappe.db.get_value("Google Drive", None, ["enable", "frequency"])
 	if cint(enabled) and frequency == freq:
 		upload_system_backup_to_google_drive()
 
