@@ -104,7 +104,7 @@ frappe.Application = Class.extend({
 				title: __('Version Updated'),
 				primary_action: {
 					action: () => {location.reload(true)},
-					title: __("Refresh")
+					label: __("Refresh")
 				}
 			});
 			dialog.get_close_btn().toggle(false);
