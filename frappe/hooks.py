@@ -66,6 +66,14 @@ get_rooms = 'frappe.chat.doctype.chat_room.chat_room.get_rooms'
 
 calendars = ["Event"]
 
+gcalendar_integrations = {
+	"Event": {
+		"pull_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_to_calendar",
+		"pull_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_calendar",
+		"pull_delete": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_to_calendar"
+	}
+}
+
 leaderboards = "frappe.desk.leaderboard.get_leaderboards"
 
 # login
@@ -160,7 +168,8 @@ scheduler_events = {
 		"frappe.integrations.doctype.razorpay_settings.razorpay_settings.capture_payment",
 		"frappe.twofactor.delete_all_barcodes_for_users",
 		"frappe.website.doctype.web_page.web_page.check_publish_status",
-		'frappe.utils.global_search.sync_global_search'
+		'frappe.utils.global_search.sync_global_search',
+		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
 	],
 	"hourly": [
 		"frappe.model.utils.link_count.update_link_count",
@@ -170,8 +179,7 @@ scheduler_events = {
 		"frappe.limits.update_space_usage",
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
-		"frappe.desk.form.document_follow.send_hourly_updates",
-		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
+		"frappe.desk.form.document_follow.send_hourly_updates"
 	],
 	"daily": [
 		"frappe.email.queue.clear_outbox",

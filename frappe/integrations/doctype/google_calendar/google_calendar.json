@@ -8,6 +8,7 @@
   "enable",
   "sb_00",
   "calendar_name",
+  "reference_document",
   "user",
   "authorize_google_calendar_access",
   "sb_01",
@@ -38,8 +39,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "User",
-   "options": "User",
-   "reqd": 1
+   "options": "User"
   },
   {
    "description": "The name that will appear in Google Calendar",
@@ -106,9 +106,17 @@
    "fieldname": "push_to_google_calendar",
    "fieldtype": "Check",
    "label": "Push to Google Calendar"
+  },
+  {
+   "default": "Event",
+   "fieldname": "reference_document",
+   "fieldtype": "Select",
+   "label": "Reference Document",
+   "options": "Event\nItem Booking",
+   "reqd": 1
   }
  ],
- "modified": "2019-10-22 15:30:26.435842",
+ "modified": "2019-11-12 11:34:22.247471",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Google Calendar",

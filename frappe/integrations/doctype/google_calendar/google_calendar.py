@@ -242,20 +242,12 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 				except IndexError:
 					pass
 
-			if not frappe.db.exists("Event", {"google_calendar_event_id": event.get("id")}):
-				insert_event_to_calendar(account, event, recurrence)
+			if not frappe.db.exists(account.reference_document, {"google_calendar_event_id": event.get("id")}):
+				call_calendar_hook("pull_insert", **{"account": account, "event": event, "recurrence": recurrence})
 			else:
-				update_event_in_calendar(account, event, recurrence)
+				call_calendar_hook("pull_update", **{"account": account, "event": event, "recurrence": recurrence})
 		elif event.get("status") == "cancelled":
-			# If any synced Google Calendar Event is cancelled, then close the Event
-			frappe.db.set_value("Event", {"google_calendar_id": account.google_calendar_id, "google_calendar_event_id": event.get("id")}, "status", "Closed")
-			frappe.get_doc({
-				"doctype": "Comment",
-				"comment_type": "Info",
-				"reference_doctype": "Event",
-				"reference_name": frappe.db.get_value("Event", {"google_calendar_id": account.google_calendar_id, "google_calendar_event_id": event.get("id")}, "name"),
-				"content": " - Event deleted from Google Calendar.",
-			}).insert(ignore_permissions=True)
+			call_calendar_hook("pull_delete", **{"account": account, "event": event})
 		else:
 			pass
 
@@ -265,6 +257,14 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 		return _("1 Google Calendar Event synced.")
 	else:
 		return _("{0} Google Calendar Events synced.").format(len(results))
+
+def call_calendar_hook(hook, **kwargs):
+	reference_document = kwargs.get("account", {}).get("reference_document")
+	if reference_document:
+		hook_method = frappe.get_hooks("gcalendar_integrations").get(reference_document, {}).get(hook, [])[-1]
+		if hook_method:
+			method = frappe.get_attr(hook_method)
+			frappe.call(method, **kwargs)
 
 def insert_event_to_calendar(account, event, recurrence=None):
 	"""
@@ -292,6 +292,17 @@ def update_event_in_calendar(account, event, recurrence=None):
 	calendar_event.description = event.get("description")
 	calendar_event.update(google_calendar_to_repeat_on(recurrence=recurrence, start=event.get("start"), end=event.get("end")))
 	calendar_event.save(ignore_permissions=True)
+
+def close_event_in_calendar(account, event):
+	# If any synced Google Calendar Event is cancelled, then close the Event
+	frappe.db.set_value("Event", {"google_calendar_id": account.google_calendar_id, "google_calendar_event_id": event.get("id")}, "status", "Closed")
+	frappe.get_doc({
+		"doctype": "Comment",
+		"comment_type": "Info",
+		"reference_doctype": "Event",
+		"reference_name": frappe.db.get_value("Event", {"google_calendar_id": account.google_calendar_id, "google_calendar_event_id": event.get("id")}, "name"),
+		"content": " - Event deleted from Google Calendar.",
+	}).insert(ignore_permissions=True)
 
 def insert_event_in_google_calendar(doc, method=None):
 	"""
@@ -386,8 +397,8 @@ def google_calendar_to_repeat_on(start, end, recurrence=None):
 		Both have been mapped in a dict for easier mapping.
 	"""
 	repeat_on = {
-		"starts_on": get_datetime(start.get("date")) if start.get("date") else parser.parse(start.get("dateTime")).utcnow(),
-		"ends_on": get_datetime(end.get("date")) if end.get("date") else parser.parse(end.get("dateTime")).utcnow(),
+		"starts_on": get_datetime(start.get("date")) if start.get("date") else parser.parse(start.get("dateTime")).replace(tzinfo=None),
+		"ends_on": get_datetime(end.get("date")) if end.get("date") else parser.parse(end.get("dateTime")).replace(tzinfo=None),
 		"all_day": 1 if start.get("date") else 0,
 		"repeat_this_event": 1 if recurrence else 0,
 		"repeat_on": None,
