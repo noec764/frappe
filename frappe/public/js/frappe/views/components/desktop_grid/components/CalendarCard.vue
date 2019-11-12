@@ -93,10 +93,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
-@import 'node_modules/@fullcalendar/core/main';
-@import 'node_modules/@fullcalendar/list/main';
-@import 'frappe/public/scss/calendar';
+<style>
 .desk-calendar-top {
 	margin: 0 0 3em;
 }

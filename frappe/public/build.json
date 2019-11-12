@@ -249,7 +249,7 @@
 	],
 	"css/list.min.css": [
 		"public/less/list.less",
-		"public/less/calendar.less",
+		"public/scss/calendar.scss",
 		"public/less/role_editor.less",
 		"public/less/gantt.less",
 		"public/less/tags.less"
