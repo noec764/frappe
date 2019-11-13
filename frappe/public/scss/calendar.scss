@@ -8,6 +8,11 @@ body .fc {
 	font-size: $text-medium;
 }
 
+.fc-title {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
 .fc-toolbar {
 	padding: 15px;
 	margin-bottom: 0px !important;
@@ -117,6 +122,10 @@ th.fc-day-header {
 
 .fc-center {
 	font-size: $text-small !important;
+}
+
+.fc-time-grid .fc-slats .fc-minor td {
+	border-top-style: unset;
 }
 
 .fc button {
