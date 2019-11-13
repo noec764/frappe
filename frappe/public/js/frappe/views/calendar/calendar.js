@@ -4,6 +4,7 @@ import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import rrulePlugin from '@fullcalendar/rrule';
 
 frappe.provide("frappe.views.calendar");
 frappe.provide("frappe.views.calendars");
