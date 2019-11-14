@@ -4,7 +4,6 @@ import { Calendar } from '@fullcalendar/core';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import rrulePlugin from '@fullcalendar/rrule';
 
 frappe.provide("frappe.views.calendar");
 frappe.provide("frappe.views.calendars");
@@ -106,7 +105,7 @@ frappe.views.Calendar = class {
 			let defaultView = localStorage.getItem('cal_defaultView');
 			let weekends = localStorage.getItem('cal_weekends');
 			let defaults = {
-				'defaultView': defaultView ? defaultView : "dayGridMonth",
+				'defaultView': defaultView && ["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(defaultView) ? defaultView : "dayGridMonth",
 				'weekends': weekends ? weekends : true
 			};
 			resolve(defaults);

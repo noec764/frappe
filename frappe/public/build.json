@@ -245,7 +245,8 @@
 		"public/js/frappe/form/controls/control.js",
 		"public/js/frappe/views/formview.js",
 		"public/js/frappe/form/form.js",
-		"public/js/frappe/meta_tag.js"
+		"public/js/frappe/meta_tag.js",
+		"public/js/frappe/calendar_recurrence.js"
 	],
 	"css/list.min.css": [
 		"public/less/list.less",

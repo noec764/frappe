@@ -23,7 +23,6 @@
     "@fullcalendar/daygrid": "^4.3.0",
     "@fullcalendar/interaction": "^4.3.0",
     "@fullcalendar/list": "^4.3.0",
-    "@fullcalendar/rrule": "^4.3.0",
     "@fullcalendar/timegrid": "^4.3.0",
     "@fullcalendar/vue": "^4.3.1",
     "ace-builds": "^1.4.1",
