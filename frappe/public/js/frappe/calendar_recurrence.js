@@ -1,9 +1,16 @@
 import { RRule } from '../lib/rrule/rrule-tz.min.js';
 
+// 'en' is implied, don't add it to this array
+const availableLanguages = ['de']
 frappe.CalendarRecurrence = class {
 	constructor(frm) {
 		this.frm = frm;
 		this.currentRule = {}
+		this.start_day = moment(this.frm.doc.start_on)
+
+		if (availableLanguages.includes(frappe.boot.lang)) {
+			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`)
+		} 
 		this.parse_rrule()
 		this.make()
 	}
@@ -13,6 +20,13 @@ frappe.CalendarRecurrence = class {
 			const rule = RRule.fromString(this.frm.doc.rrule)
 			this.currentRule = rule.origOptions
 		}
+	}
+
+	gettext(id) {
+		if (availableLanguages.includes(frappe.boot.lang) && RRULE_STRINGS){
+			return RRULE_STRINGS[id] || id;
+		}
+		return id
 	}
 
 	frequency_map() {
@@ -57,8 +71,26 @@ frappe.CalendarRecurrence = class {
 
 	get_default_by_weekday(day) {
 		const map = this.weekday_map()
-		const selectedDays = this.currentRule.byweekday.map(v => v.weekday)
-		return selectedDays.includes(map[day].weekday) ? 1 : 0
+		if (this.currentRule.byweekday && this.currentRule.byweekday.length) {
+			const selectedDays = this.currentRule.byweekday.map(v => v.weekday)
+			return selectedDays.includes(map[day].weekday) ? 1 : 0
+		}
+		return 0;
+	}
+
+	get_by_day_label() {
+		const date_day = this.start_day.date()
+		return __("Monthly on day {}", [date_day])
+	}
+
+	get_by_pos_label() {
+		const ordinals = ["", __("first"), __("second"), __("third"), __("fourth"), __("fifth")];
+		const occurence = ordinals[this.get_by_pos_count()]
+		return __("Monthly on the {0} {1}", [occurence, this.start_day.format("dddd")])
+	}
+
+	get_by_pos_count() {
+		return Math.ceil(this.start_day.date()/7)
 	}
 
 	make() {
@@ -91,6 +123,17 @@ frappe.CalendarRecurrence = class {
 				{
 					fieldname: "day_col",
 					fieldtype: "Column Break"
+				},
+				{
+					fieldname: "monthly_options",
+					label: __("Options"),
+					fieldtype: "Select",
+					depends_on: "eval:doc.freq=='monthly'",
+					options: [
+						{label: me.get_by_day_label(), value: 'by_day'},
+						{label: me.get_by_pos_label(), value: 'by_pos'},
+					],
+					default: 'by_day'
 				},
 				{
 					fieldname: "monday",
@@ -145,18 +188,39 @@ frappe.CalendarRecurrence = class {
 			primary_action_label: __('Save'),
 			primary_action:(values) => {
 				const rule_obj = {
-					freq: me.get_frequency(values.freq),
-					interval: values.interval,
-					byweekday: me.get_by_weekday(values)
+					freq: me.get_frequency(values.freq)
+				}
+
+				if (values.interval) {
+					Object.assign(rule_obj, {interval: values.interval})
+				}
+
+				const weekdays_values = me.get_by_weekday(values)
+				if (weekdays_values && weekdays_values.length) {
+					Object.assign(rule_obj, {byweekday: weekdays_values})
 				}
 
 				if (values.until) {
-					rule_obj.push({until: moment(values.until).toDate()})
+					Object.assign(rule_obj, {until: moment(values.until).toDate()})
+				}
+
+				if (values.freq == 'monthly' && values.monthly_options) {
+					if (values.monthly_options == "by_day") {
+						Object.assign(rule_obj, {bymonthday: [moment(me.frm.doc.starts_on).date()]})
+					} else {
+						const weekday_map = me.weekday_map()
+						Object.assign(rule_obj, {
+							byweekday: weekday_map[me.start_day.format("dddd").toLowerCase()],
+							bymonthday: [me.get_by_pos_count()]
+						})
+					}
 				}
 
 				const rule = new RRule(rule_obj)
 				this.frm.doc.rrule = rule.toString()
-				this.frm.doc.repeat = rule.toText()
+				this.frm.doc.repeat = rule.toText(id => {
+					return me.gettext(id);
+				}, (typeof RRULE_DATES === undefined) ? ENGLISH : RRULE_DATES)
 				this.dialog.hide()
 				this.frm.refresh_fields("repeat")
 			}
