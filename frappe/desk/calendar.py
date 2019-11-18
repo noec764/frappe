@@ -8,7 +8,6 @@ import json
 from frappe import _
 from frappe.utils import get_datetime, get_weekdays, formatdate
 from dateutil.rrule import rrulestr
-from frappe.utils.data import convert_utc_to_user_timezone
 
 RRULE_FREQUENCIES = {
 	"RRULE:FREQ=DAILY": "Daily",

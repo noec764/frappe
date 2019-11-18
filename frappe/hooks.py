@@ -68,9 +68,9 @@ calendars = ["Event"]
 
 gcalendar_integrations = {
 	"Event": {
-		"pull_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_to_calendar",
-		"pull_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_calendar",
-		"pull_delete": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_to_calendar"
+		"pull_insert": "frappe.desk.doctype.event.event.insert_event_to_calendar",
+		"pull_update": "frappe.desk.doctype.event.event.update_event_in_calendar",
+		"pull_delete": "frappe.desk.doctype.event.event.insert_event_to_calendar"
 	}
 }
 
@@ -148,9 +148,9 @@ doc_events = {
 		]
 	},
 	"Event": {
-		"after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
-		"on_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_google_calendar",
-		"on_trash": "frappe.integrations.doctype.google_calendar.google_calendar.delete_event_from_google_calendar",
+		"after_insert": "frappe.desk.doctype.event.event.insert_event_in_google_calendar",
+		"on_update": "frappe.desk.doctype.event.event.update_event_in_google_calendar",
+		"on_trash": "frappe.desk.doctype.event.event.delete_event_in_google_calendar",
 	},
 	"Contact": {
 		"after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
