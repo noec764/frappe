@@ -11,7 +11,7 @@ import google.oauth2.credentials
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_request_site_address
-from frappe.desk.calendar import get_repeat_on, get_rrule
+from frappe.desk.calendar import get_rrule
 from googleapiclient.errors import HttpError
 from frappe.utils import add_days, get_datetime, get_weekdays, now_datetime, add_to_date, get_time_zone
 from dateutil import parser
@@ -179,12 +179,13 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 		return
 
 	results = []
+	nextPageToken = None
 	while True:
 		try:
 			# API Response listed at EOF
 			sync_token = account.next_sync_token or None
 			events = google_calendar.events().list(calendarId=account.google_calendar_id, maxResults=page_length,
-				singleEvents=False, showDeleted=True, syncToken=sync_token).execute()
+				singleEvents=False, showDeleted=True, syncToken=sync_token, pageToken=nextPageToken).execute()
 		except HttpError as err:
 			frappe.throw(_("Google Calendar - Could not fetch event from Google Calendar, error code {0}.").format(err.resp.status))
 
@@ -196,6 +197,8 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 				frappe.db.set_value("Google Calendar", account.name, "next_sync_token", events.get("nextSyncToken"))
 				frappe.db.commit()
 			break
+		else:
+			nextPageToken = events.get("nextPageToken")
 
 	for idx, event in enumerate(results):
 		frappe.publish_realtime("import_google_calendar", dict(progress=idx+1, total=len(results)), user=frappe.session.user)
@@ -245,9 +248,9 @@ def insert_event_to_calendar(account, event, recurrence=None):
 		"google_calendar": account.name,
 		"google_calendar_id": account.google_calendar_id,
 		"google_calendar_event_id": event.get("id"),
-		"pulled_from_google_calendar": 1
+		"pulled_from_google_calendar": 1,
+		"rrule": recurrence
 	}
-	calendar_event.update(get_repeat_on(recurrence=recurrence, start=event.get("start"), end=event.get("end")))
 	frappe.get_doc(calendar_event).insert(ignore_permissions=True)
 
 def update_event_in_calendar(account, event, recurrence=None):
@@ -257,7 +260,7 @@ def update_event_in_calendar(account, event, recurrence=None):
 	calendar_event = frappe.get_doc("Event", {"google_calendar_event_id": event.get("id")})
 	calendar_event.subject = event.get("summary")
 	calendar_event.description = event.get("description")
-	calendar_event.update(get_repeat_on(recurrence=recurrence, start=event.get("start"), end=event.get("end")))
+	calendar_event.rrule = recurrence
 	calendar_event.save(ignore_permissions=True)
 
 def close_event_in_calendar(account, event):

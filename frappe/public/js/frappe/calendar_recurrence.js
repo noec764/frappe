@@ -1,16 +1,16 @@
-import { RRule } from '../lib/rrule/rrule-tz.min.js';
+import { RRule, ENGLISH } from '../lib/rrule/rrule-tz.min.js';
 
 // 'en' is implied, don't add it to this array
-const availableLanguages = ['de']
+const availableLanguages = ['fr']
 frappe.CalendarRecurrence = class {
 	constructor(frm) {
 		this.frm = frm;
 		this.currentRule = {}
-		this.start_day = moment(this.frm.doc.start_on)
+		this.start_day = moment(this.frm.doc.starts_on)
 
 		if (availableLanguages.includes(frappe.boot.lang)) {
 			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`)
-		} 
+		}
 		this.parse_rrule()
 		this.make()
 	}
@@ -86,7 +86,7 @@ frappe.CalendarRecurrence = class {
 	get_by_pos_label() {
 		const ordinals = ["", __("first"), __("second"), __("third"), __("fourth"), __("fifth")];
 		const occurence = ordinals[this.get_by_pos_count()]
-		return __("Monthly on the {0} {1}", [occurence, this.start_day.format("dddd")])
+		return __("Monthly on the {0} {1}", [occurence, __(this.start_day.format("dddd"))])
 	}
 
 	get_by_pos_count() {
@@ -96,7 +96,7 @@ frappe.CalendarRecurrence = class {
 	make() {
 		const me = this;
 		this.dialog = new frappe.ui.Dialog({
-			title: __('Custom recurrence'),
+			title: __('Recurrence'),
 			fields: [
 				{
 					fieldname: "freq",
@@ -187,12 +187,10 @@ frappe.CalendarRecurrence = class {
 			],
 			primary_action_label: __('Save'),
 			primary_action:(values) => {
+				this.frm.doc.repeat_till = null;
 				const rule_obj = {
-					freq: me.get_frequency(values.freq)
-				}
-
-				if (values.interval) {
-					Object.assign(rule_obj, {interval: values.interval})
+					freq: me.get_frequency(values.freq),
+					interval: values.interval || 1
 				}
 
 				const weekdays_values = me.get_by_weekday(values)
@@ -202,6 +200,7 @@ frappe.CalendarRecurrence = class {
 
 				if (values.until) {
 					Object.assign(rule_obj, {until: moment(values.until).toDate()})
+					this.frm.doc.repeat_till = moment(values.until).format('YYYY-MM-DD');
 				}
 
 				if (values.freq == 'monthly' && values.monthly_options) {
@@ -211,7 +210,7 @@ frappe.CalendarRecurrence = class {
 						const weekday_map = me.weekday_map()
 						Object.assign(rule_obj, {
 							byweekday: weekday_map[me.start_day.format("dddd").toLowerCase()],
-							bymonthday: [me.get_by_pos_count()]
+							bysetpos: [me.get_by_pos_count()]
 						})
 					}
 				}
@@ -220,7 +219,7 @@ frappe.CalendarRecurrence = class {
 				this.frm.doc.rrule = rule.toString()
 				this.frm.doc.repeat = rule.toText(id => {
 					return me.gettext(id);
-				}, (typeof RRULE_DATES === undefined) ? ENGLISH : RRULE_DATES)
+				}, (typeof RRULE_DATES === 'undefined') ? ENGLISH : RRULE_DATES)
 				this.dialog.hide()
 				this.frm.refresh_fields("repeat")
 			}
@@ -234,14 +233,15 @@ frappe.CalendarRecurrence = class {
 		const field_default_values = {
 			'freq': me.get_default_frequency(me.currentRule.freq),
 			'until': me.currentRule.until ? moment(me.currentRule.until).format('YYYY-MM-DD') : null,
-			'interval': me.currentRule.interval,
+			'interval': me.currentRule.interval || 1,
 			'monday': me.get_default_by_weekday("monday"),
 			'tuesday': me.get_default_by_weekday("tuesday"),
 			'wednesday': me.get_default_by_weekday("wednesday"),
 			'thursday': me.get_default_by_weekday("thursday"),
 			'friday': me.get_default_by_weekday("friday"),
 			'saturday': me.get_default_by_weekday("saturday"),
-			'sunday': me.get_default_by_weekday("sunday")
+			'sunday': me.get_default_by_weekday("sunday"),
+			'monthly_options': me.currentRule.bysetpos ? 'by_pos' : 'by_day'
 		}
 		this.dialog.set_values(field_default_values);
 	}

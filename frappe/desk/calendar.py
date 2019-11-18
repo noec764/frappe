@@ -8,6 +8,7 @@ import json
 from frappe import _
 from frappe.utils import get_datetime, get_weekdays, formatdate
 from dateutil.rrule import rrulestr
+from frappe.utils.data import convert_utc_to_user_timezone
 
 RRULE_FREQUENCIES = {
 	"RRULE:FREQ=DAILY": "Daily",
@@ -86,28 +87,36 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 
 	recurring_filters += [
 		[doctype, 'repeat_this_event', '!=', 0],
-		[doctype, "ifnull(repeat_till, '3000-01-01 00:00:00')", '>=', start],
+		[doctype, "ifnull(repeat_till, '3000-01-01 00:00:00')", '>=', start]
 	]
 	recurring_events = frappe.get_list(doctype, fields=fields, filters=recurring_filters)
 
-	result = events
-	for e in recurring_events:
-		result.append(e)
-		if field_map.rrule and e[field_map.rrule]:
-			rrule_r = list(rrulestr(e.get(field_map.rrule), dtstart=e.get(field_map.start), \
-				cache=True).between(after=get_datetime(start), before=get_datetime(end)))
-			for r in rrule_r:
-				if r == e[field_map.start]:
-					continue
+	if recurring_events:
+		events.extend(recurring_events)
+		for recurring_event in recurring_events:
+			events.extend(process_recurring_events(recurring_event, start, end, field_map.start, field_map.end, field_map.rrule))
 
-				new_e = dict(e)
-				new_e[field_map.start] = new_e[field_map.start].replace(year=r.year, month=r.month, day=r.day)
-				days_diff = new_e[field_map.start] - e[field_map.start]
-				new_e[field_map.end] = new_e[field_map.end] + days_diff
-				result.append(new_e)
+	return events
+
+def process_recurring_events(event, start, end, starts_on_field=None, ends_on_field=None, rrule_field=None):
+	result = []
+	if rrule_field and event.get(rrule_field):
+		rrule_r = list(rrulestr(event.get(rrule_field), dtstart=event.get(starts_on_field), \
+			ignoretz=True, cache=False).between(after=get_datetime(start), before=get_datetime(end)))
+
+		for r in rrule_r:
+			if r == event.get(starts_on_field):
+				continue
+
+			new_e = dict(event)
+			new_e[starts_on_field] = new_e.get(starts_on_field).replace(year=r.year, month=r.month, day=r.day)
+			days_diff = new_e.get(starts_on_field) - event.get(starts_on_field)
+			new_e[ends_on_field] = new_e.get(ends_on_field) + days_diff
+			result.append(new_e)
 
 	return result
 
+# Keep for legacy
 def get_rrule(doc):
 	"""
 		Transforms the following object into a RRULE:
@@ -145,109 +154,16 @@ def get_rrule(doc):
 	if doc.get("repeat_till"):
 		rrule += "UNTIL={}".format(formatdate(doc.get("repeat_till"), "YYYYMMdd"))
 
-	if rrule.endswith(";"):
+	if rrule and rrule.endswith(";"):
 		rrule = rrule[:-1]
 
 	return rrule
-
 
 def get_rrule_frequency(repeat_on):
 	"""
 		Frequency can be one of the following: YEARLY, MONTHLY, WEEKLY, DAILY, HOURLY, MINUTELY, SECONDLY
 	"""
 	return FRAMEWORK_FREQUENCIES.get(repeat_on)
-
-def get_repeat_on(start, end, recurrence=None):
-	"""
-		recurrence is in the form ['RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH']
-		has the frequency and then the days on which the event recurs
-		Both have been mapped in a dict for easier mapping.
-	"""
-	repeat_on = {
-		"starts_on": get_datetime(start.get("date")) if start.get("date") else parser.parse(start.get("dateTime")).replace(tzinfo=None),
-		"ends_on": get_datetime(end.get("date")) if end.get("date") else parser.parse(end.get("dateTime")).replace(tzinfo=None),
-		"all_day": 1 if start.get("date") else 0,
-		"repeat_this_event": 1 if recurrence else 0,
-		"repeat_on": None,
-		"repeat_till": None,
-		"sunday": 0,
-		"monday": 0,
-		"tuesday": 0,
-		"wednesday": 0,
-		"thursday": 0,
-		"friday": 0,
-		"saturday": 0
-	}
-
-	# recurrence rule "RRULE:FREQ=WEEKLY;BYDAY=MO,TU,TH"
-	if recurrence:
-		# rrule_frequency = RRULE:FREQ=WEEKLY, byday = BYDAY=MO,TU,TH, until = 20191028
-		rrule_frequency, until, byday = get_recurrence_parameters(recurrence)
-		repeat_on["repeat_on"] = RRULE_FREQUENCIES.get(rrule_frequency)
-
-		if repeat_on["repeat_on"] == "Daily":
-			repeat_on["ends_on"] = None
-			repeat_on["repeat_till"] = datetime.strptime(until, "%Y%m%d") if until else None
-
-		if byday and repeat_on["repeat_on"] == "Weekly":
-			repeat_on["repeat_till"] = datetime.strptime(until, "%Y%m%d") if until else None
-			byday = byday.split("=")[1].split(",")
-			for repeat_day in byday:
-				repeat_on[RRULE_DAYS[repeat_day]] = 1
-
-		if byday and repeat_on["repeat_on"] == "Monthly":
-			byday = byday.split("=")[1]
-			repeat_day_week_number, repeat_day_name = None, None
-
-			for num in ["-2", "-1", "1", "2", "3", "4", "5"]:
-				if num in byday:
-					repeat_day_week_number = num
-					break
-
-			for day in ["MO","TU","WE","TH","FR","SA","SU"]:
-				if day in byday:
-					repeat_day_name = RRULE_DAYS.get(day)
-					break
-
-			# Only Set starts_on for the event to repeat monthly
-			start_date = parse_rrule_recurrence_rule(int(repeat_day_week_number), repeat_day_name)
-			repeat_on["starts_on"] = start_date
-			repeat_on["ends_on"] = add_to_date(start_date, minutes=5)
-			repeat_on["repeat_till"] = datetime.strptime(until, "%Y%m%d") if until else None
-
-		if repeat_on["repeat_till"] == "Yearly":
-			repeat_on["ends_on"] = None
-			repeat_on["repeat_till"] = datetime.strptime(until, "%Y%m%d") if until else None
-
-	return repeat_on
-
-def parse_rrule_recurrence_rule(repeat_day_week_number, repeat_day_name):
-	"""
-		Returns (repeat_on) exact date for combination eg 4TH viz. 4th thursday of a month
-	"""
-	if repeat_day_week_number < 0:
-		# Consider a month with 5 weeks and event is to be repeated in last week of every month, rrule considers
-		# a month has 4 weeks and hence itll return -1 for a month with 5 weeks.
-		repeat_day_week_number = 4
-
-	weekdays = get_weekdays()
-	current_date = now_datetime()
-	isset_day_name, isset_day_number = False, False
-
-	# Set the proper day ie if recurrence is 4TH, then align the day to Thursday
-	while not isset_day_name:
-		isset_day_name = True if weekdays[current_date.weekday()].lower() == repeat_day_name else False
-		current_date = add_days(current_date, 1) if not isset_day_name else current_date
-
-	# One the day is set to Thursday, now set the week number ie 4
-	while not isset_day_number:
-		week_number = get_week_number(current_date)
-		isset_day_number = True if week_number == repeat_day_week_number else False
-		# check if  current_date week number is greater or smaller than repeat_day week number
-		weeks = 1 if week_number < repeat_day_week_number else -1
-		current_date = add_to_date(current_date, weeks=weeks) if not isset_day_number else current_date
-
-	return current_date
 
 def get_week_number(dt):
 	"""
@@ -261,19 +177,3 @@ def get_week_number(dt):
 	adjusted_dom = dom + first_day.weekday()
 
 	return int(ceil(adjusted_dom/7.0))
-
-def get_recurrence_parameters(recurrence):
-	recurrence = recurrence.split(";")
-	frequency, until, byday = None, None, None
-
-	for r in recurrence:
-		if "FREQ" in r:
-			frequency = r
-		elif "UNTIL" in r:
-			until = r
-		elif "BYDAY" in r:
-			byday = r
-		else:
-			pass
-
-	return frequency, until, byday

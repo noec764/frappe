@@ -71,7 +71,7 @@ function get_rollup_options_for_js(output_file, input_files) {
 		commonjs({
 			namedExports: {
 				'node_modules/@fullcalendar/core/main.js': ['Calendar'],
-				'frappe/public/js/lib/rrule/rrule-tz.min.js': ['RRule']
+				'frappe/public/js/lib/rrule/rrule-tz.min.js': ['RRule', 'ENGLISH']
 			}
 		}),
 		!production && visualizer({

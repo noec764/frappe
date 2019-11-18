@@ -6,7 +6,8 @@ frappe.views.calendar["Event"] = {
 		"allDay": "all_day",
 		"title": "subject",
 		"status": "event_type",
-		"color": "color"
+		"color": "color",
+		"rrule": "rrule"
 	},
 	style_map: {
 		"Public": "success",
