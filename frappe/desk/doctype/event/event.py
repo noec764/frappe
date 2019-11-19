@@ -56,30 +56,29 @@ class Event(Document):
 
 	def sync_communication(self):
 		if self.event_participants:
+			comms = []
 			for participant in self.event_participants:
 				filters = [
 					["Communication", "reference_doctype", "=", self.doctype],
 					["Communication", "reference_name", "=", self.name],
-					["Communication Link", "link_doctype", "=", participant.reference_doctype],
-					["Communication Link", "link_name", "=", participant.reference_docname]
+					["Communication Link", "link_doctype", "=", "Contact"],
+					["Communication Link", "link_name", "=", participant.contact]
 				]
-				comms = frappe.get_all("Communication", filters=filters, fields=["name"])
+				comms.extend(frappe.get_all("Communication", filters=filters, fields=["name"]))
 
-				if comms:
-					for comm in comms:
-						communication = frappe.get_doc("Communication", comm.name)
-						self.update_communication(participant, communication)
-				else:
-					meta = frappe.get_meta(participant.reference_doctype)
-					if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline==1:
-						self.create_communication(participant)
+			if comms:
+				for comm in comms:
+					communication = frappe.get_doc("Communication", comm.name)
+					self.update_communication(self.event_participants, communication)
+			else:
+				self.create_communication(self.event_participants)
 
-	def create_communication(self, participant):
+	def create_communication(self, participants):
 		communication = frappe.new_doc("Communication")
-		self.update_communication(participant, communication)
+		self.update_communication(participants, communication)
 		self.communication = communication.name
 
-	def update_communication(self, participant, communication):
+	def update_communication(self, participants, communication):
 		communication.communication_medium = "Event"
 		communication.subject = self.subject
 		communication.content = self.description if self.description else self.subject
@@ -87,8 +86,19 @@ class Event(Document):
 		communication.reference_doctype = self.doctype
 		communication.reference_name = self.name
 		communication.communication_medium = communication_mapping.get(self.event_category) if self.event_category else ""
+		communication.not_added_to_reference_timeline = 1
 		communication.status = "Linked"
-		communication.add_link(participant.reference_doctype, participant.reference_docname)
+		communication.timeline_links = []
+		for participant in participants:
+			communication.add_link("Contact", participant.contact)
+			contact = frappe.get_doc("Contact", participant.contact)
+			if contact.links:
+				for link in contact.links:
+					if link.link_doctype and link.link_name:
+						meta = frappe.get_meta(link.link_doctype)
+						if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
+							communication.add_link(link.link_doctype, link.link_name)
+
 		communication.save(ignore_permissions=True)
 
 @frappe.whitelist()

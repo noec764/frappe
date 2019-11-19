@@ -22,15 +22,15 @@
   "repeat_till",
   "rrule",
   "sync_with_google_calendar",
+  "participants",
+  "event_participants",
   "sb_00",
   "google_calendar",
   "cb_00",
   "google_calendar_id",
   "google_calendar_event_id",
   "section_break_8",
-  "description",
-  "participants",
-  "event_participants"
+  "description"
  ],
  "fields": [
   {
@@ -125,7 +125,7 @@
   },
   {
    "fieldname": "event_participants",
-   "fieldtype": "Table",
+   "fieldtype": "Table MultiSelect",
    "label": "Event Participants",
    "options": "Event Participants"
   },
@@ -198,7 +198,7 @@
  ],
  "icon": "fa fa-calendar",
  "idx": 1,
- "modified": "2019-11-19 22:55:19.159944",
+ "modified": "2019-11-20 07:48:49.949138",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
