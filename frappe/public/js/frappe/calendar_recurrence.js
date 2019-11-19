@@ -3,16 +3,29 @@ import { RRule, ENGLISH } from '../lib/rrule/rrule-tz.min.js';
 // 'en' is implied, don't add it to this array
 const availableLanguages = ['fr']
 frappe.CalendarRecurrence = class {
-	constructor(frm) {
+	constructor(frm, show) {
 		this.frm = frm;
+		this.show = show;
 		this.currentRule = {}
 		this.start_day = moment(this.frm.doc.starts_on)
 
 		if (availableLanguages.includes(frappe.boot.lang)) {
-			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`)
+			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`, () => {
+				this.recurrence_process()
+			})
+		} else {
+			this.recurrence_process()
 		}
+	}
+
+	recurrence_process() {
 		this.parse_rrule()
 		this.make()
+		if (this.show) {
+			this.dialog.show()
+		} else {
+			this.set_repeat_text(this.get_current_rrule())
+		}
 	}
 
 	parse_rrule() {
@@ -22,8 +35,12 @@ frappe.CalendarRecurrence = class {
 		}
 	}
 
+	get_current_rrule() {
+		return new RRule(this.currentRule)
+	}
+
 	gettext(id) {
-		if (availableLanguages.includes(frappe.boot.lang) && RRULE_STRINGS){
+		if (availableLanguages.includes(frappe.boot.lang) && (typeof RRULE_STRINGS !== 'undefined')){
 			return RRULE_STRINGS[id] || id;
 		}
 		return id
@@ -217,15 +234,23 @@ frappe.CalendarRecurrence = class {
 
 				const rule = new RRule(rule_obj)
 				this.frm.doc.rrule = rule.toString()
-				this.frm.doc.repeat = rule.toText(id => {
-					return me.gettext(id);
-				}, (typeof RRULE_DATES === 'undefined') ? ENGLISH : RRULE_DATES)
+				this.set_repeat_text(rule)
 				this.dialog.hide()
 				this.frm.refresh_fields("repeat")
 			}
 		})
 		this.init_dialog()
-		this.dialog.show()
+	}
+
+	set_repeat_text(rule) {
+		$(this.frm.fields_dict['repeat'].wrapper).html(`<p>${this.get_repeat_text(rule)}</p>`);
+	}
+
+	get_repeat_text(rule) {
+		const me = this;
+		return rule.toText(id => {
+			return me.gettext(id);
+		}, (typeof RRULE_DATES === 'undefined') ? ENGLISH : RRULE_DATES)
 	}
 
 	init_dialog() {
