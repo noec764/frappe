@@ -221,9 +221,9 @@ def weekly_backup():
 	take_backups_if("Weekly")
 
 def take_backups_if(freq):
-	enabled, frequency = frappe.db.get_value("Google Drive", None, ["enable", "frequency"])
-	if cint(enabled) and frequency == freq:
-		upload_system_backup_to_google_drive()
+	if cint(frappe.db.get_value("Google Drive", None, "enabled")):
+		if frappe.db.get_value("Google Drive", None, "frequency") == freq:
+			upload_system_backup_to_google_drive()
 
 def get_absolute_path(filename):
 	file_path = os.path.join(get_backups_path()[2:], filename)
