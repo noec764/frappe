@@ -369,12 +369,12 @@ frappe.views.Calendar = class {
 			color_name = this.color_map[this.get_css_class(d)];
 			color_name = frappe.ui.color.validate_hex(color_name) ?
 				color_name : 'blue';
-			d.backgroundColor = frappe.ui.color.get(color_name, 'extra-light');
+			d.backgroundColor = frappe.ui.color.get(color_name, 'default');
 			d.textColor = frappe.ui.color.get(color_name, 'dark');
 		} else {
 			color = d.color;
 			if (!frappe.ui.color.validate_hex(color) || !color) {
-				color = frappe.ui.color.get('blue', 'extra-light');
+				color = frappe.ui.color.get('blue', 'default');
 			}
 			d.backgroundColor = color;
 			d.textColor = frappe.ui.color.get_contrast_color(color);

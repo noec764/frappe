@@ -216,7 +216,7 @@ frappe.CalendarRecurrence = class {
 				}
 
 				if (values.until) {
-					Object.assign(rule_obj, {until: moment(values.until).toDate()})
+					Object.assign(rule_obj, {until: moment.utc(values.until).toDate()})
 					this.frm.doc.repeat_till = moment(values.until).format('YYYY-MM-DD');
 				}
 

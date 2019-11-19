@@ -33,11 +33,23 @@ frappe.ui.form.on("Event", {
 		frm.add_custom_button(__('Add Contacts'), function() {
 			new frappe.desk.eventParticipants(frm, "Contact");
 		}, __("Add Participants"));
+
+		frm.trigger('add_repeat_text')
 	},
 	repeat_this_event: function(frm) {
 		if(frm.doc.repeat_this_event === 1) {
-			new frappe.CalendarRecurrence(frm);
+			new frappe.CalendarRecurrence(frm, true);
 		}
+	},
+	add_repeat_text(frm) {
+		if (frm.doc.rrule) {
+			new frappe.CalendarRecurrence(frm, false);
+		}
+	},
+	sync_with_google_calendar(frm) {
+		frappe.db.get_value("Google Calendar", {user: frappe.session.user}, "name", r => {
+			r&&r.name&&frm.set_value("google_calendar", r.name)
+		})
 	}
 });
 

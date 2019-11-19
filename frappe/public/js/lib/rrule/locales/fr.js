@@ -11,7 +11,7 @@ const RRULE_DATES = {
 }
 
 const RRULE_STRINGS = {
-	every: 'tous les',
+	every: 'chaque',
 	until: 'jusqu\'au',
 	day: 'jour',
 	days: 'jours',
