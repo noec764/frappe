@@ -116,7 +116,7 @@ def get_permission_query_conditions(user):
 		}
 
 def has_permission(doc, user):
-	if doc.event_type=="Public" or doc.owner==user:
+	if doc.event_type == "Public" or doc.owner == user:
 		return True
 
 	return False
@@ -316,7 +316,7 @@ def insert_event_in_google_calendar(doc, method=None):
 
 	try:
 		event = google_calendar.events().insert(calendarId=doc.google_calendar_id, body=event).execute()
-		frappe.db.set_value("Event", doc.name, "google_calendar_event_id", event.get("id"), update_modified=False)
+		doc.db_set("google_calendar_event_id", event.get("id"), update_modified=False)
 		frappe.msgprint(_("Event Synced with Google Calendar."))
 	except HttpError as err:
 		frappe.throw(_("Google Calendar - Could not insert event in Google Calendar {0}, error code {1}.").format(account.name, err.resp.status))
