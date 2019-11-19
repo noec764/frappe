@@ -66,3 +66,4 @@ frontmatter
 PyYAML==3.13
 xlrd
 RestrictedPython==5.0
+arrow

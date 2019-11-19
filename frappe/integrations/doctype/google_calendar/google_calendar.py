@@ -7,6 +7,7 @@ import frappe
 import requests
 import googleapiclient.discovery
 import google.oauth2.credentials
+import arrow
 
 from frappe import _
 from frappe.model.document import Document
@@ -15,11 +16,9 @@ from frappe.desk.calendar import get_rrule
 from googleapiclient.errors import HttpError
 from frappe.utils import add_days, get_datetime, get_weekdays, now_datetime, add_to_date, get_time_zone, \
 	convert_utc_to_user_timezone
-from dateutil import parser
-from datetime import datetime, timedelta
+from datetime import timedelta
 from six.moves.urllib.parse import quote
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
-from pytz import timezone, utc
 
 SCOPES = "https://www.googleapis.com/auth/calendar"
 
@@ -264,14 +263,10 @@ def format_date_according_to_google_calendar(all_day, starts_on, ends_on=None):
 	return date_format
 
 def get_timezone_naive_datetime(gcalendar_date_object):
-	local = timezone(gcalendar_date_object.get('timeZone'))
-	naive = parser.parse(gcalendar_date_object.get("dateTime")).replace(tzinfo=None)
-	local_dt = local.localize(naive, is_dst=None)
-	utc_dt = local_dt.astimezone(utc)
-	print(local_dt, utc_dt)
-	print(gcalendar_date_object, convert_utc_to_user_timezone(utc_dt.replace(tzinfo=None)))
+	iso_date = arrow.get(gcalendar_date_object.get("dateTime"))
+	naive = iso_date.to("UTC").naive
 
-	return convert_utc_to_user_timezone(utc_dt.replace(tzinfo=None)).strftime('%Y-%m-%d %H:%M:%S')
+	return convert_utc_to_user_timezone(naive).strftime('%Y-%m-%d %H:%M:%S')
 
 """API Response
 	{
