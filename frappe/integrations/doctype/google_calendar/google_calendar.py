@@ -215,6 +215,8 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=10):
 
 			if not frappe.db.exists(account.reference_document, {"google_calendar_event_id": event.get("id")}):
 				call_calendar_hook("pull_insert", **{"account": account, "event": event, "recurrence": recurrence})
+			elif (get_datetime(event.get("updated")) - get_datetime(event.get("created"))) < timedelta(seconds=2):
+				return
 			else:
 				call_calendar_hook("pull_update", **{"account": account, "event": event, "recurrence": recurrence})
 		elif event.get("status") == "cancelled":

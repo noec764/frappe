@@ -38,7 +38,7 @@ const RRULE_STRINGS = {
 	month: 'mois',
 	years: 'années',
 	year: 'année',
-	rd: ' ',
+	rd: 'e',
 	the: 'le',
 	th: ' ',
 	st: ' ',
