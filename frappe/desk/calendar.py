@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe
 import json
 from frappe import _
-from frappe.utils import get_datetime, get_weekdays, formatdate
+from frappe.utils import get_datetime, get_weekdays, formatdate, getdate
 from dateutil.rrule import rrulestr
 
 RRULE_FREQUENCIES = {
@@ -97,12 +97,11 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 
 	return events
 
-def process_recurring_events(event, start, end, starts_on_field=None, ends_on_field=None, rrule_field=None):
+def process_recurring_events(event, start, end, starts_on_field, ends_on_field, rrule_field):
 	result = []
 	if rrule_field and event.get(rrule_field):
 		rrule_r = list(rrulestr(event.get(rrule_field), dtstart=event.get(starts_on_field), \
 			ignoretz=True, cache=False).between(after=get_datetime(start), before=get_datetime(end)))
-
 		for r in rrule_r:
 			if r == event.get(starts_on_field):
 				continue
