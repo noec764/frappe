@@ -52,10 +52,11 @@
   "otp_issuer_name",
   "email",
   "email_footer_address",
+  "template_for_welcome_email",
   "column_break_18",
   "disable_standard_email_footer",
   "hide_footer_in_auto_email_reports",
-  "template_for_welcome_email",
+  "create_contacts_from_incoming_emails",
   "chat",
   "enable_chat",
   "use_socketio_to_upload_file"
@@ -405,11 +406,17 @@
    "fieldtype": "Link",
    "label": "Template for welcome email",
    "options": "Email Template"
+  },
+  {
+   "default": "0",
+   "fieldname": "create_contacts_from_incoming_emails",
+   "fieldtype": "Check",
+   "label": "Create contacts from incoming emails"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
- "modified": "2019-09-26 11:10:24.934081",
+ "modified": "2019-11-21 13:59:26.664180",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",

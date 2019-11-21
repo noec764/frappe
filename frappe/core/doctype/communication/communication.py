@@ -351,7 +351,8 @@ def get_contacts(email_strings):
 		email = get_email_without_link(email)
 		contact_name = get_contact_name(email)
 
-		if not contact_name:
+		if not contact_name and cint(frappe.db.get_single_value("System Settings", \
+			"create_contacts_from_incoming_emails", True)):
 			contact = frappe.get_doc({
 				"doctype": "Contact",
 				"first_name": frappe.unscrub(email.split("@")[0]),
