@@ -22,8 +22,7 @@
    "fieldtype": "Link",
    "label": "User",
    "options": "User",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "Online",
@@ -74,7 +73,7 @@
   }
  ],
  "in_create": 1,
- "modified": "2019-11-07 13:21:36.414961",
+ "modified": "2019-11-07 13:23:36.414961",
  "modified_by": "Administrator",
  "module": "Chat",
  "name": "Chat Profile",
