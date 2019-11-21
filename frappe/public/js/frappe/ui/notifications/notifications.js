@@ -393,11 +393,14 @@ frappe.ui.Notifications = class Notifications {
 			.join('<li class="divider"></li>');
 		this.$dropdown_list.append(html);
 		this.$dropdown_list
-			.find('.category-list[data-category="Notifications"]')
+			.find('.category-list[data-category="Open Documents"]')
 			.collapse('show');
 		this.toggle_collapse_indicator(
-			this.$dropdown_list.find('.category-list[data-category="Notifications"]')
+			this.$dropdown_list.find('.category-list[data-category="Open Documents"]')
 		);
+		this.get_open_document_config(
+			this.$dropdown_list.find('.category-list[data-category="Open Documents"]')
+		)
 	}
 
 	go_to_settings(e) {
