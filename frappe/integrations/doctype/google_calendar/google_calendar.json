@@ -112,11 +112,11 @@
    "fieldname": "reference_document",
    "fieldtype": "Select",
    "label": "Reference Document",
-   "options": "Event\nItem Booking",
+   "options": "Event",
    "reqd": 1
   }
  ],
- "modified": "2019-11-12 11:34:22.247471",
+ "modified": "2019-11-12 11:35:22.247471",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Google Calendar",

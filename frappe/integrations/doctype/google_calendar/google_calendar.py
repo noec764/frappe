@@ -23,7 +23,6 @@ from frappe.integrations.doctype.google_settings.google_settings import get_auth
 SCOPES = "https://www.googleapis.com/auth/calendar"
 
 class GoogleCalendar(Document):
-
 	def validate(self):
 		google_settings = frappe.get_single("Google Settings")
 		if not google_settings.enable:
@@ -56,6 +55,10 @@ class GoogleCalendar(Document):
 			frappe.throw(_("Something went wrong during the token generation. Click on {0} to generate a new one.").format(button_label))
 
 		return r.get("access_token")
+
+@frappe.whitelist()
+def get_reference_options():
+	return [x for x in frappe.get_hooks('gcalendar_integrations')]
 
 @frappe.whitelist()
 def authorize_access(g_calendar, reauthorize=None):
