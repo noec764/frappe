@@ -12,7 +12,8 @@ frappe.ui.form.on("Event", {
 		frm.set_query('google_calendar', function() {
 			return {
 				filters: {
-					"owner": frappe.session.user
+					"user": ['in', [frappe.session.user, null]],
+					"reference_document": frm.doctype
 				}
 			};
 		});
