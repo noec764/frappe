@@ -21,6 +21,24 @@ Table.create = (value) => {
 }
 Quill.register(Table, true);
 
+// link without href
+var Link = Quill.import('formats/link');
+
+class MyLink extends Link {
+	static create(value) {
+		let node = super.create(value);
+		value = this.sanitize(value);
+		node.setAttribute('href', value);
+		if(value.startsWith('/') || value.indexOf(window.location.host)) {
+			// no href if internal link
+			node.removeAttribute('target');
+		}
+		return node;
+	}
+}
+
+Quill.register(MyLink, true);
+
 // Template blot
 const ATTRS = {
 	PARENT: 'data-doctype',
@@ -63,7 +81,7 @@ TemplateBlot.tagName = 'template-blot';
 
 Quill.register({
 	'formats/template-blot': TemplateBlot
-});
+}, true);
 
 // image uploader
 const Uploader = Quill.import('modules/uploader');
