@@ -71,6 +71,9 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	if field_map.rrule:
 		fields.append(field_map.rrule)
 
+	if field_map.allDay:
+		fields.append(field_map.allDay)
+
 	start_date = "ifnull(%s, '0001-01-01 00:00:00')" % field_map.start
 	end_date = "ifnull(%s, '2199-12-31 00:00:00')" % field_map.end
 
