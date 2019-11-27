@@ -32,17 +32,21 @@ def get_context(context):
 	context["disable_signup"] = frappe.utils.cint(frappe.db.get_value("Website Settings", "Website Settings", "disable_signup"))
 	providers = [i.name for i in frappe.get_all("Social Login Key", filters={"enable_social_login":1})]
 	for provider in providers:
-		client_id, base_url = frappe.get_value("Social Login Key", provider, ["client_id", "base_url"])
-		client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
-		icon = get_icon_html(frappe.get_value("Social Login Key", provider, "icon"), small=True)
-		if (get_oauth_keys(provider) and client_secret and client_id and base_url):
-			context.provider_logins.append({
-				"name": provider,
-				"provider_name": frappe.get_value("Social Login Key", provider, "provider_name"),
-				"auth_url": get_oauth2_authorize_url(provider, redirect_to),
-				"icon": icon
-			})
-			context["social_login"] = True
+		try:
+			client_id, base_url = frappe.get_value("Social Login Key", provider, ["client_id", "base_url"])
+			client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
+			icon = get_icon_html(frappe.get_value("Social Login Key", provider, "icon"), small=True)
+			if (get_oauth_keys(provider) and client_secret and client_id and base_url):
+				context.provider_logins.append({
+					"name": provider,
+					"provider_name": frappe.get_value("Social Login Key", provider, "provider_name"),
+					"auth_url": get_oauth2_authorize_url(provider, redirect_to),
+					"icon": icon
+				})
+				context["social_login"] = True
+		except frappe.ValidationError:
+			frappe.log_error(frappe.get_traceback(), _("Social login setup error"))
+
 	ldap_settings = LDAPSettings.get_ldap_client_settings()
 	context["ldap_settings"] = ldap_settings
 
