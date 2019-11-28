@@ -10,7 +10,7 @@ from frappe.core.doctype.communication.email import (validate_email,
 	notify, _notify, update_parent_mins_to_first_response)
 from frappe.core.utils import get_parent_doc
 from frappe.utils.bot import BotReply
-from frappe.utils import parse_addr
+from frappe.utils import parse_addr, cint
 from frappe.core.doctype.comment.comment import update_comment_in_doc
 from email.utils import parseaddr
 from six.moves.urllib.parse import unquote
