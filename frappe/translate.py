@@ -578,7 +578,7 @@ def write_json_file(path, app_messages):
 	:param app_messages: Translatable strings for this app.
 	"""
 	with open(path, 'w', encoding="utf8", newline=os.linesep) as msgfile:
-		json.dump(app_messages, msgfile, ensure_ascii=False)
+		json.dump(app_messages, msgfile, ensure_ascii=False, indent=4, sort_keys=True)
 		msgfile.write(os.linesep)
 
 def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, write=True):
