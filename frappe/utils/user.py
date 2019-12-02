@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 
+import warnings
 import frappe, json
 from frappe import _dict
 import frappe.share
@@ -311,6 +312,11 @@ def set_last_active_to_now(user):
 	frappe.db.set_value("User", user, "last_active", now_datetime())
 
 def disable_users(limits=None):
+	warnings.warn(
+		"disable_users will be deprecated. Please create a custom method for this functionality.",
+		FutureWarning
+	)
+
 	if not limits:
 		return
 
