@@ -83,9 +83,9 @@ def handle():
 
 				if frappe.local.request.method=="PUT":
 					if frappe.local.form_dict.data is None:
-						data = json.loads(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.local.request.get_data())
 					else:
-						data = json.loads(frappe.local.form_dict.data)
+						data = frappe.parse_json(frappe.local.form_dict.data)
 					doc = frappe.get_doc(doctype, name)
 
 					if "flags" in data:
@@ -110,7 +110,7 @@ def handle():
 			elif doctype:
 				if frappe.local.request.method=="GET":
 					if frappe.local.form_dict.get('fields'):
-						frappe.local.form_dict['fields'] = json.loads(frappe.local.form_dict['fields'])
+						frappe.local.form_dict['fields'] = frappe.parse_json(frappe.local.form_dict['fields'])
 					frappe.local.form_dict.setdefault('limit_page_length', 20)
 					frappe.local.response.update({
 						"data":  frappe.call(frappe.client.get_list,
@@ -118,9 +118,9 @@ def handle():
 
 				if frappe.local.request.method=="POST":
 					if frappe.local.form_dict.data is None:
-						data = json.loads(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.local.request.get_data())
 					else:
-						data = json.loads(frappe.local.form_dict.data)
+						data = frappe.parse_json(frappe.local.form_dict.data)
 					data.update({
 						"doctype": doctype
 					})
