@@ -206,7 +206,7 @@ h6.uppercase,
 .form-section .section-head.collapsed {
   margin-bottom: 0px;
 }
-.form-section:not(:last-child),
+.form-section:not(:last-child):not(.bottomless-section),
 .form-inner-toolbar {
   border-bottom: 1px solid #d1d8dd;
 }
