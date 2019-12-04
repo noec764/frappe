@@ -22,6 +22,8 @@ max_positive_value = {
 	'bigint': 2 ** 63
 }
 
+DOCTYPES_FOR_DOCTYPE = ('DocType', 'DocField', 'DocPerm', 'DocType Action', 'DocType Link')
+
 _classes = {}
 
 def get_controller(doctype):
@@ -255,7 +257,7 @@ class BaseDocument(object):
 
 	def get_valid_columns(self):
 		if self.doctype not in frappe.local.valid_columns:
-			if self.doctype in ("DocField", "DocPerm") and self.parent in ("DocType", "DocField", "DocPerm"):
+			if self.doctype in DOCTYPES_FOR_DOCTYPE:
 				from frappe.model.meta import get_table_columns
 				valid = get_table_columns(self.doctype)
 			else:
@@ -312,7 +314,7 @@ class BaseDocument(object):
 			self.created_by = self.modified_by = frappe.session.user
 
 		# if doctype is "DocType", don't insert null values as we don't know if it is valid yet
-		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in ('DocType', 'DocField', 'DocPerm'))
+		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in DOCTYPES_FOR_DOCTYPE)
 
 		if hasattr(self.meta, "name_after_submit") and hasattr(self, "_draft_name"):
 			if self.meta.name_after_submit and self._draft_name:
@@ -351,7 +353,7 @@ class BaseDocument(object):
 			self.db_insert()
 			return
 
-		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in ('DocType', 'DocField', 'DocPerm'))
+		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in DOCTYPES_FOR_DOCTYPE)
 
 		# don't update name, as case might've been changed
 		name = d['name']
