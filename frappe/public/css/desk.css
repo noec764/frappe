@@ -1025,21 +1025,22 @@ input[type="checkbox"]:before {
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
-  line-height: 14px;
+  line-height: 1em;
   display: inline-block;
-  font-size: 14px;
+  font-size: 1em;
   color: #d1d8dd;
   -webkit-transition: 150ms color;
   -o-transition: 150ms color;
   transition: 150ms color;
   left: 999999px;
+  cursor: pointer;
 }
 input[type="checkbox"]:focus:before {
   color: #778595;
 }
 input[type="checkbox"]:checked:before {
   content: '\e8d8';
-  font-size: 13px;
+  font-size: 1em;
   color: #3b99fc;
 }
 input[type="checkbox"]:focus {
