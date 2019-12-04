@@ -1,110 +1,81 @@
 <template>
-	<div
-		class="v-sidebar-menu"
-		:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
-		:style="{'width': sidebarWidth}"
-		@mouseleave="mouseLeave"
-		@wheel="onWheel"
-	>
-		<div class="vsm-list" id="sidebard-modules-list">
-			<template v-for="(item, index) in modules">
-				<item
-					:key="index"
-					:item="item"
-					:first-item="true"
-					:is-collapsed="isCollapsed"
-				/>
-			</template>
-		</div>
+	<div>
 		<div
-			v-if="isCollapsed"
-			:style="[{'position' : 'absolute'}, {'top' : `${mobileItemPos}px`}, {'left' : '0px'}, {'z-index' : 30}, {'width' : width}]"
+			class="v-sidebar-menu hidden-sm hidden-xs"
+			:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
+			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '']"
+			@mouseenter="mouseEnter"
+			@mouseleave="mouseLeave"
+			@wheel="onWheel"
+			@scroll="measureScroll"
 		>
-			<mobile-item :item="mobileItem" />
-			<transition name="slide-animation">
-				<div
-				v-if="mobileItem"
-				class="vsm-mobile-bg"
-				:style="[{'position' : 'absolute'}, {'left' : '0px'}, {'right' : '0px'}, {'top' : '0px'}, {'height' : `${mobileItemHeight}px`}]"
-				/>
-			</transition>
+			<div class="vsm-list" id="sidebard-modules-list">
+				<template v-for="(item, index) in modules">
+					<item
+						:key="index"
+						:item="item"
+						:first-item="true"
+						:is-collapsed="isCollapsed"
+					/>
+				</template>
+			</div>
+			<button
+				class="collapse-btn"
+				:class="goToTop ? 'up-btn' : 'down-btn'"
+				@click="scrollUpDown"
+			/>
 		</div>
-		<button
-			class="collapse-btn"
-			@click="toggleCollapse"
-		/>
+		<div v-if="mobileDisplay" class="vsm-list-overlay" @click="mobileCollapse"></div>
 	</div>
-	
 </template>
 
 <script>
 import Item from './Item.vue'
-import MobileItem from './MobileItem.vue'
-import { animationMixin } from './mixin'
 export default {
 	name: 'SidebarMenu',
 	components: {
-		Item,
-		MobileItem
-	},
-	mixins: [animationMixin],
-	props: {
-		widthCollapsed: {
-			type: String,
-			default: '50px'
-		}
+		Item
 	},
 	data () {
 		return {
 			isCollapsed: true,
-			closeTimeout: null,
-			activeShow: null,
 			modules: [],
-			mobileItem: null,
-			mobileItemPos: null,
-			mobileItemHeight: null,
-			width: '250px'
+			width: '250px',
+			widthCollapsed: '50px',
+			mobileDisplay: false,
+			goToTop: false
 		}
+	},
+	created() {
+		frappe.sidebar_update.on('toggle_mobile_menu', () => {
+			this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand()
+		})
+
+		frappe.sidebar_update.on('close_mobile_menu', () => {
+			this.mobileCollapse()
+		})
 	},
 	computed: {
 		sidebarWidth () {
 			return this.isCollapsed ? this.widthCollapsed : this.width
 		}
 	},
-	watch: {
-		collapsed (val) {
-			this.isCollapsed = val
-		}
-	},
-	created () {
-		this.$on('mouseEnterItem', (val) => {
-			this.mobileItem = null
-			this.$nextTick(() => {
-				this.mobileItem = val.item;
-				this.mobileItemPos = val.pos;
-				this.mobileItemHeight = val.height;
-			})
-		})
-
-		this.$on('touchEndItem', () => {
-			setTimeout(() => {
-				this.mobileItem=null
-			}, 1000);
-		})
-	},
 	mounted() {
 		this.getModules();
 	},
 	methods: {
 		mouseLeave () {
-			this.mobileItem = null
+			this.isCollapsed = this.mobileDisplay ? false : true;
 		},
-		toggleCollapse () {
-			this.isCollapsed = !this.isCollapsed
-			frappe.sidebar_update.trigger('collapse', this.sidebarWidth);
+		mouseEnter () {
+			this.isCollapsed = false;
 		},
-		onItemClick (event, item) {
-			this.$emit('itemClick', event, item)
+		mobileExpand () {
+			this.isCollapsed = false;
+			this.mobileDisplay = true;
+		},
+		mobileCollapse() {
+			this.mobileDisplay = false;
 		},
 		getModules() {
 			this.modules = frappe.boot.allowed_modules.sort(dynamicSort("label"));
@@ -116,9 +87,27 @@ export default {
 
 			this.width = (maxLength * 10) + "px";
 		},
-		onWheel(e) {
+		scrollUpDown() {
+			const scrollHeight = document.querySelector("#sidebard-modules-list").scrollHeight
+			this.onWheel({
+				deltaY: this.goToTop ? -scrollHeight : scrollHeight
+			}, true)
+			this.goToTop = !this.goToTop
+		},
+		onWheel(e, smooth=false) {
 			const list = this.$el.querySelector("#sidebard-modules-list")
-			list.scrollBy(0, e.deltaY)
+			smooth ? list.scrollBy({top: e.deltaY, left: 0, behavior: 'smooth'}) :
+				list.scrollBy(0, e.deltaY)
+
+			this.measureScroll()
+		},
+		measureScroll() {
+			const list = this.$el.querySelector("#sidebard-modules-list")
+			if (list.clientHeight + list.scrollTop >= list.scrollHeight) {
+				this.goToTop = true
+			} else {
+				this.goToTop = false
+			}
 		}
 	}
 }

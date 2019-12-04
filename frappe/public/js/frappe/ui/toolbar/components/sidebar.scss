@@ -69,9 +69,6 @@ $dropDownBg: #e3e3e3;
 	}
 	& .vsm-item {
 		position: relative;
-		display: block;
-	}
-	& .vsm-item.first-item {
 		& > .vsm-link {
 		& > .vsm-icon {
 			height: 30px;
@@ -85,22 +82,6 @@ $dropDownBg: #e3e3e3;
 			display: block;
 			clear: both;
 		}
-		}
-	}
-	& .vsm-item.mobile-item {
-		& > .vsm-link {
-		& > .vsm-icon {
-			height: 30px;
-			line-height: 30px;
-			width: 30px;
-			text-align: center;
-			border-radius: 3px;
-		}
-		}
-	}
-	& .vsm-item.active-item, .vsm-item.parent-active-item {
-		& > .vsm-link {
-		font-weight: 600;
 		}
 	}
 	& .vsm-link {
@@ -132,61 +113,6 @@ $dropDownBg: #e3e3e3;
 		margin-left: 10px;
 		margin-right: 0px;
 	}
-	& .vsm-arrow {
-		width: 30px;
-		text-align: center;
-		font-style: normal;
-		font-weight: 900;
-		position: absolute;
-		right: 10px;
-		top: 50%;
-		transform: translateY(-50%);
-		transition: 0.3s transform;
-		&:after {
-		content: '\f105';
-		font-family: 'Font Awesome 5 Free';
-		}
-		&.open-arrow {
-		transform: translateY(-50%) rotate(90deg);
-		}
-	}
-	&.rtl .vsm-arrow {
-		left: 10px;
-		right: inherit;
-	}
-	& .vsm-dropdown > .vsm-list {
-		padding: 5px;
-	}
-	& .expand-enter-active,
-	& .expand-leave-active {
-		transition: height 0.35s ease;
-		overflow: hidden;
-	}
-	& .expand-enter,
-	& .expand-leave-to {
-		height: 0 !important;
-	}
-	& .slide-animation-enter-active {
-		animation: slide-animation 0.2s;
-	}
-	& .slide-animation-leave-active {
-		animation: slide-animation 0.2s reverse;
-	}
-	@keyframes slide-animation {
-		0% {
-		width: 0%;
-		}
-		100% {
-		width: 100%;
-		}
-	}
-	& .vsm-header {
-		font-size: 14px;
-		font-weight: 600;
-		padding: 10px;
-		white-space: nowrap;
-		text-transform: uppercase;
-	}
 	& .vsm-badge {
 		padding: 0px 6px;
 		font-size: 12px;
@@ -216,26 +142,25 @@ $dropDownBg: #e3e3e3;
 		cursor: pointer;
 		border: none;
 		width: 100%;
+	}
+	& .down-btn {
 		&:after {
-		content: '\f065';
-		font-family: 'FontAwesome';
+			content: '\f103';
+			font-family: 'FontAwesome';
+		}
+	}
+	& .up-btn {
+		&:after {
+			content: '\f102';
+			font-family: 'FontAwesome';
 		}
 	}
 }
 
-  .v-sidebar-menu {
+.v-sidebar-menu {
 	background-color: $baseBg;
 	& .vsm-link {
 		color: $itemColor;
-	}
-	& .vsm-item.mobile-item {
-		& > .vsm-link {
-			color: $mobileItemColor;
-		}
-		& > .vsm-icon {
-			color: $mobileIconColor;
-			background-color: $mobileIconBg;
-		}
 	}
 	& .vsm-item.first-item {
 		&.active-item > .vsm-link, &.parent-active-item > .vsm-link {
@@ -270,34 +195,15 @@ $dropDownBg: #e3e3e3;
 			}
 		}
 	}
-	& .vsm-dropdown {
-		& > .vsm-list {
-			background-color: $dropDownBg;
-			& .vsm-link {
-				color: $dropDownColor;
-			}         
-			& .vsm-link:hover {
-				color: $itemHoverColor;
-				background-color: $itemHoverBg;
-				& .vsm-icon {
-					color: $itemHoverColor !important;
-				}
-			}
-		}
-	}
-	& .vsm-mobile-bg {
-		background-color: $mobileItemBg;
-		border-radius: 0 32px 32px 0;
-	}
-	& .vsm-header {
-		color: rgba($itemColor, 0.7);
-	}
-	& .vsm-badge.default-badge {
-		color: $itemColor;
-		background-color: $darkenBg;
-	}
 	& .collapse-btn {
 		color: $itemColor;
 		background-color: $darkenBg;
 	}
+}
+
+.vsm-list-overlay {
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	z-index: 998;
 }
