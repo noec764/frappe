@@ -186,7 +186,7 @@ frappe.views.KanbanView.setup_dropdown_in_sidebar = function(doctype, $dropdown)
 				$(`<li>
 					<a href="#${route}">
 						<span>${__(board.name)}</span>
-					${board.private ? '<i class="fa fa-lock fa-fw text-warning"></i>' : ''}
+					${board.private ? '<i class="uil uil-padlock fa-fw text-warning"></i>' : ''}
 					</a>
 				</li>
 				`).appendTo($dropdown);

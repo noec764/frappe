@@ -105,7 +105,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 						>
 							${_html}
 							<button class="btn btn-default zoom-view" data-name="${encoded_name}">
-								<i class="fa fa-search-plus"></i>
+								<i class="uil uil-search-plus"></i>
 							</button>
 						</div>
 					</a>

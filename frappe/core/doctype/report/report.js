@@ -21,7 +21,7 @@ frappe.ui.form.on('Report', {
 					frappe.set_route("query-report", doc.name);
 					break;
 			}
-		}, "fa fa-table");
+		}, "uil uil-table");
 
 		if (doc.is_standard === "Yes") {
 			frm.add_custom_button(doc.disabled ? __("Enable Report") : __("Disable Report"), function() {
@@ -30,7 +30,7 @@ frappe.ui.form.on('Report', {
 				}).then(() => {
 					frm.reload_doc();
 				});
-			}, doc.disabled ? "fa fa-check" : "fa fa-off");
+			}, doc.disabled ? "uil uil-check" : "uil uil-times");
 		}
 
 		frm.events.report_type(frm);

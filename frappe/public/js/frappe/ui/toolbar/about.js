@@ -5,9 +5,9 @@ frappe.ui.misc.about = function() {
 
 		$(d.body).html(`<div>\
 		<p>${__("Open Source Applications for the Web")}</p>
-		<p><i class='fa fa-globe fa-fw'></i>
+		<p><i class='uil uil-globe'></i>
 			${ __("Website:") } <a href='https://dokos.io' target='_blank'>https://dokos.io</a></p>
-		<p><i class='fa fa-github fa-fw'></i>
+		<p><i class='fab fa-github fa-fw'></i>
 			${ __("Source:") } <a href='https://gitlab.com/dokos' target='_blank'>https://gitlab.com/dokos</a></p>
 		<hr>
 		<h4>${ __("Installed Apps") }</h4>

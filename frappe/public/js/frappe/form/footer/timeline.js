@@ -462,21 +462,21 @@ frappe.ui.form.Timeline = class Timeline {
 
 	set_icon_and_color(c) {
 		if(c.communication_type == "Feedback"){
-			c.icon = "octicon octicon-comment-discussion"
+			c.icon = "uil uil-comments-alt"
 		} else {
 			c.icon = {
 				"Email": "octicon octicon-mail",
-				"Chat": "octicon octicon-comment-discussion",
+				"Chat": "uil uil-comments-alt",
 				"Phone": "octicon octicon-device-mobile",
 				"SMS": "octicon octicon-comment",
-				"Event": "fa fa-calendar",
+				"Event": "uil uil-calendar-alt",
 				"Meeting": "octicon octicon-briefcase",
-				"ToDo": "fa fa-check",
+				"ToDo": "uil uil-check",
 				"Submitted": "octicon octicon-lock",
 				"Cancelled": "octicon octicon-x",
 				"Assigned": "octicon octicon-person",
 				"Assignment Completed": "octicon octicon-check",
-				"Comment": "octicon octicon-comment-discussion",
+				"Comment": "uil uil-comments-alt",
 				"Milestone": "octicon octicon-milestone",
 				"Workflow": "octicon octicon-git-branch",
 				"Label": "octicon octicon-tag",

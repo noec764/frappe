@@ -170,7 +170,7 @@ frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlCode.extend({
 					map._onResize();
 				},
 				title: 'Refresh map',
-				icon: 'fa fa-refresh'
+				icon: 'uil uil-sync'
 			}]
 		}).addTo(this.map);
 	},

@@ -107,7 +107,7 @@ frappe.ui.Tags = class {
 			<button class="btn btn-default btn-xs remove-tag"
 				title="${ __("Remove Tag") }"
 				data-tag-label="${label}">
-				<i class="fa fa-remove text-muted"></i>
+				<i class="uil uil-times text-muted"></i>
 			</button></div>`);
 
 		let $searchTag = $tag.find(".toggle-tag");

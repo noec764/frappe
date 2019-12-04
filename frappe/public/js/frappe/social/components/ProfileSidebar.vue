@@ -7,13 +7,13 @@
 			<p>{{ user.bio }}</p>
 			<div class="location" v-if="user.location">
 				<span class="text-muted">
-					<i class="fa fa-map-marker">&nbsp;</i>
+					<i class="uil uil-location">&nbsp;</i>
 					{{ user.location }}
 				</span>
 			</div>
 			<div class="interest" v-if="user.interest">
 				<span class="text-muted">
-					<i class="fa fa-puzzle-piece">&nbsp;</i>
+					<i class="uil uil-puzzle-piece">&nbsp;</i>
 					{{ user.interest }}
 				</span>
 			</div>

@@ -84,7 +84,23 @@ kbd {
 .btn [class^="fa fa-"],
 .nav [class^="fa fa-"],
 .btn [class*="fa fa-"],
-.nav [class*="fa fa-"] {
+.nav [class*="fa fa-"],
+.btn [class^="fas fa-"],
+.nav [class^="fas fa-"],
+.btn [class*="fas fa-"],
+.nav [class*="fas fa-"],
+.btn [class^="far fa-"],
+.nav [class^="far fa-"],
+.btn [class*="far fa-"],
+.nav [class*="far fa-"],
+.btn [class^="fab fa-"],
+.nav [class^="fab fa-"],
+.btn [class*="fab fa-"],
+.nav [class*="fab fa-"],
+.btn [class^="uil uil-"],
+.nav [class^="uil uil-"],
+.btn [class*="uil uil-"],
+.nav [class*="uil uil-"] {
   display: inline-block;
 }
 .dropdown-menu > li > a {
@@ -1002,8 +1018,8 @@ input[type="checkbox"] {
 }
 input[type="checkbox"]:before {
   position: absolute;
-  font-family: 'FontAwesome';
-  content: '\f096';
+  font-family: 'unicons';
+  content: '\ebaa';
   visibility: visible;
   font-style: normal;
   font-weight: normal;
@@ -1022,7 +1038,7 @@ input[type="checkbox"]:focus:before {
   color: #778595;
 }
 input[type="checkbox"]:checked:before {
-  content: '\f14a';
+  content: '\e8d8';
   font-size: 13px;
   color: #3b99fc;
 }

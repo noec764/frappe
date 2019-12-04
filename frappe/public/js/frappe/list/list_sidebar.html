@@ -14,6 +14,7 @@
 	<li class="list-link">
 		<div class="btn-group">
 			<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" onclick="return false;">
+				<i class="uil uil-chart"></i>
 				{{ __("Reports") }} <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu reports-dropdown" role="menu">
@@ -24,19 +25,19 @@
 	{% endif %}
 	<li class="divider"></li>
 	<li class="list-link" data-view="List">
-		<a href="#List/{%= doctype %}/List">{%= __("List") %}</a></li>
+		<a href="#List/{%= doctype %}/List"><i class="uil uil-list-ui-alt"></i> {%= __("List") %}</a></li>
 	<li class="hide list-link" data-view="Image">
-		<a href="#List/{%= doctype %}/Image">{%= __("Images") %}</a></li>
+		<a href="#List/{%= doctype %}/Image"><i class="uil uil-images"></i> {%= __("Images") %}</a></li>
 	<li class="hide list-link" data-view="Gantt">
-		<a href="#List/{%= doctype %}/Gantt">{%= __("Gantt") %}</a></li>
+		<a href="#List/{%= doctype %}/Gantt"><i class="uil uil-chart-growth-alt"></i> {%= __("Gantt") %}</a></li>
 	<li class="hide tree-link">
-		<a href="#Tree/{%= doctype %}">{%= __("Tree") %}</a></li>
+		<a href="#Tree/{%= doctype %}"><i class="uil uil-cloud-database-tree"></i> {%= __("Tree") %}</a></li>
 	<li class="hide list-link" data-view="Calendar">
-		<a href="#List/{%= doctype %}/Calendar">{%= __("Calendar") %}</a></li>
+		<a href="#List/{%= doctype %}/Calendar"><i class="uil uil-calendar-alt"></i> {%= __("Calendar") %}</a></li>
 	<li class="hide list-link" data-view="Kanban">
 		<div class="btn-group">
 			<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" onclick="return false;">
-				{{ __("Kanban") }} <span class="caret"></span>
+				<i class="uil uil-columns"></i> {{ __("Kanban") }} <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu kanban-dropdown" style="max-height: 300px; overflow-y: auto;" role="menu">
 				<li class="new-kanban-board"><a href="#" onclick="return false;">{{ __("New Kanban Board") }}</a></li>
@@ -46,21 +47,21 @@
 	<li class="hide list-link" data-view="Inbox">
 		<div class="btn-group">
 			<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" onclick="return false;">
-				{{ __("Email Inbox") }} <span class="caret"></span>
+				<i class="uil uil-envelope-download"></i> {{ __("Email Inbox") }} <span class="caret"></span>
 			</a>
 			<ul class="dropdown-menu email-account-dropdown" style="max-height: 300px; overflow-y: auto;" role="menu">
 			</ul>
 		</div>
 	</li>
 	{% if(frappe.help.has_help(doctype)) { %}
-	<li><a class="help-link list-link" data-doctype="{{ doctype }}">{{ __("Help") }}</a></li>
+	<li><i class="uil uil-question-circle"></i><a class="help-link list-link" data-doctype="{{ doctype }}">{{ __("Help") }}</a></li>
 	{% } %}
 </ul>
 <ul class="list-unstyled sidebar-menu list-group-by">
 </ul>
 
 <ul class="list-unstyled sidebar-menu sidebar-stat">
-	<li class="list-sidebar-label stat-label">{{ __("Tags") }}</li>
+	<li class="list-sidebar-label stat-label"><i class="uil uil-tag-alt"></i> {{ __("Tags") }}</li>
 	<li class="list-stats list-link">
 		<div class="btn-group">
 			<a class = "dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#" onclick="return false;">
@@ -78,7 +79,7 @@
 	</li>
 </ul>
 <ul class="list-unstyled sidebar-menu charts-menu hide">
-	<li class="h6">{%= __("Charts") %}</li>
+	<li class="h6"><i class="uil uil-chart-pie"></i> {%= __("Charts") %}</li>
 	<li class="list-link">
 		<a class="toggle-charts">{%= __("Toggle Charts") %}</a>
 	</li>
@@ -89,5 +90,5 @@
 <ul class="list-unstyled sidebar-menu list-filters"></ul>
 <ul class="list-unstyled close-sidebar-button visible-xs visible-sm">
 	<li class="divider"></li>
-	<li class="close-sidebar">{{ __("Close") }}</li>
+	<li class="close-sidebar"><i class="uil uil-times-square"></i> {{ __("Close") }}</li>
 </ul>

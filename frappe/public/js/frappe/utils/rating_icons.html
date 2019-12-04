@@ -2,5 +2,5 @@
 	{{ __("Rating: ") }}
 {% endif %}
 {% for(var i=1, l=6; i<l; i++) { %}
-	<i class="fa fa-fw {{ i<=rating? "fa-star": "fa-star-o" }} star-icon" data-idx=1></i>
+	<i class="fa-fw fa-star {{ i<=rating? "far": "fas" }} star-icon" data-idx=1></i>
 {% } %}

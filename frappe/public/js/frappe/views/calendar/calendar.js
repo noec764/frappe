@@ -188,9 +188,9 @@ frappe.views.Calendar = class {
 		this.$wrapper.find(".fc-button-group").addClass("btn-group");
 
 		this.$wrapper.find('.fc-prev-button span')
-			.attr('class', '').addClass('fa fa-chevron-left');
+			.attr('class', '').addClass('uil uil-angle-left');
 		this.$wrapper.find('.fc-next-button span')
-			.attr('class', '').addClass('fa fa-chevron-right');
+			.attr('class', '').addClass('uil uil-angle-right');
 
 		const btn_group = this.$wrapper.find(".fc-button-group");
 		btn_group.find(".fc-state-active").addClass("active");

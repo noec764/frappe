@@ -37,7 +37,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 	make_wrapper() {
 		this.$wrapper = this.sidebar.sidebar.find('.list-group-by');
 		let html = `
-			<li class="list-sidebar-label">
+			<li class="list-sidebar-label uil uil-filter">
 				${__('Filter By')}
 			</li>
 			<div class="list-group-by-fields">

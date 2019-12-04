@@ -4,7 +4,7 @@
 		"public/less/indicator.less"
 	],
 	"css/frappe-chat-web.css": [
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/css/octicons/octicons.css",
 		"public/less/chat.less"
 	],
@@ -76,8 +76,9 @@
 		"public/js/lib/leaflet/L.Control.Locate.css",
 		"public/js/lib/leaflet/easy-button.css",
 		"public/css/bootstrap.css",
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/css/octicons/octicons.css",
+		"public/css/fonts/unicons/css/unicons.css",
 		"public/less/desk.less",
 		"public/less/flex.less",
 		"public/less/indicator.less",
@@ -105,7 +106,7 @@
 	],
 	"css/printview.css": [
 		"public/css/bootstrap.css",
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/less/print.less"
 	],
 	"concat:js/libs.min.js": [

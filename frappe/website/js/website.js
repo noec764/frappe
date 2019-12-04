@@ -178,7 +178,7 @@ $.extend(frappe, {
 		}
 	},
 	show_message: function(text, icon) {
-		if(!icon) icon="fa fa-refresh fa-spin";
+		if(!icon) icon="uil uil-sync fa-spin";
 		frappe.hide_message();
 		$('<div class="message-overlay"></div>')
 			.html('<div class="content"><i class="'+icon+' text-muted"></i><br>'

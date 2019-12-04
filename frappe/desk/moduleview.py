@@ -35,7 +35,7 @@ def get_data(module, build=True):
 	else:
 		add_custom_doctypes(data, doctype_info)
 
-	add_section(data, _("Custom Reports"), "fa fa-list-alt",
+	add_section(data, _("Custom Reports"), "uil uil-chart-pie-alt",
 		get_report_list(module))
 
 	data = combine_common_sections(data)
@@ -122,13 +122,13 @@ def build_standard_config(module, doctype_info):
 
 	data = []
 
-	add_section(data, _("Documents"), "fa fa-star",
+	add_section(data, _("Documents"), "uil uil-favorite",
 		[d for d in doctype_info if d.document_type in ("Document", "Transaction")])
 
-	add_section(data, _("Setup"), "fa fa-cog",
+	add_section(data, _("Setup"), "uil uil-cog",
 		[d for d in doctype_info if d.document_type in ("Master", "Setup", "")])
 
-	add_section(data, _("Standard Reports"), "fa fa-list",
+	add_section(data, _("Standard Reports"), "uil uil-chart",
 		get_report_list(module, is_standard="Yes"))
 
 	return data
@@ -145,10 +145,10 @@ def add_section(data, label, icon, items):
 
 def add_custom_doctypes(data, doctype_info):
 	"""Adds Custom DocTypes to modules setup via `config/desktop.py`."""
-	add_section(data, _("Documents"), "fa fa-star",
+	add_section(data, _("Documents"), "uil uil-favorite",
 		[d for d in doctype_info if (d.custom and d.document_type in ("Document", "Transaction"))])
 
-	add_section(data, _("Setup"), "fa fa-cog",
+	add_section(data, _("Setup"), "uil uil-cog",
 		[d for d in doctype_info if (d.custom and d.document_type in ("Setup", "Master", ""))])
 
 def get_doctype_info(module):

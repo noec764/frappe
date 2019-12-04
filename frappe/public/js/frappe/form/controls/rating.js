@@ -3,11 +3,11 @@ frappe.ui.form.ControlRating  = frappe.ui.form.ControlInt.extend({
 		this._super();
 		const star_template = `
 			<div class="rating">
-				<i class="fa fa-fw fa-star" data-rating=1></i>
-				<i class="fa fa-fw fa-star" data-rating=2></i>
-				<i class="fa fa-fw fa-star" data-rating=3></i>
-				<i class="fa fa-fw fa-star" data-rating=4></i>
-				<i class="fa fa-fw fa-star" data-rating=5></i>
+				<i class="far fa-fw fa-star" data-rating=1></i>
+				<i class="far fa-fw fa-star" data-rating=2></i>
+				<i class="far fa-fw fa-star" data-rating=3></i>
+				<i class="far fa-fw fa-star" data-rating=4></i>
+				<i class="far fa-fw fa-star" data-rating=5></i>
 			</div>
 		`;
 

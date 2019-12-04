@@ -76,6 +76,12 @@ $dropDownBg: #e3e3e3;
 			width: 30px;
 			text-align: center;
 			border-radius: 3px;
+			& > .selected-module {
+				border-radius: 4px;
+				display: inline-block;
+				color: #fff;
+				background-color: $primaryColor;
+			}
 		}
 		&:after {
 			content: '';
@@ -145,14 +151,16 @@ $dropDownBg: #e3e3e3;
 	}
 	& .down-btn {
 		&:after {
-			content: '\f103';
-			font-family: 'FontAwesome';
+			content: '\e829';
+			font-family: 'unicons';
+			font-size: 1.3em;
 		}
 	}
 	& .up-btn {
 		&:after {
-			content: '\f102';
-			font-family: 'FontAwesome';
+			content: '\e82c';
+			font-family: 'unicons';
+			font-size: 1.3em;
 		}
 	}
 }

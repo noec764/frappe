@@ -24,7 +24,7 @@ frappe.setup.UserProgressSlide = class UserProgressSlide extends frappe.ui.Slide
 
 	make_done_state() {
 		this.$done_state = $(`<div class="done-state text-center">
-			<div class="check-container"><i class="check fa fa-fw fa-check-circle text-success"></i></div>
+			<div class="check-container"><i class="check far fa-fw fa-check-circle text-success"></i></div>
 			<h4 class="title"><a></a></h4>
 			<div class="help-links"></div>
 		</div>`).appendTo(this.$body);

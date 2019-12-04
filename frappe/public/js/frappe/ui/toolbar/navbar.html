@@ -2,10 +2,10 @@
 	<div class="container">
 		<div class="navbar-header navbar-desk">
 			<a class="navbar-brand toggle-modules visible-xs visible-sm">
-				<i class="fa fa-ellipsis-v"></i>
+				<i class="uil uil-ellipsis-v"></i>
 			</a>
 			<a class="navbar-brand toggle-sidebar visible-xs visible-sm">
-				<i class="octicon octicon-three-bars"></i>
+				<i class="uil uil-ellipsis-h"></i>
 			</a>
 			<a class="navbar-brand navbar-home hidden-xs hidden-sm" href="#">
 				<img class="app-logo" src="{{ frappe.app.logo_url }}">
@@ -43,9 +43,10 @@
 
 			<li class="dropdown dropdown-help dropdown-mobile">
 				<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-					onclick="return false;"  style="height: 40px;">
-					<span class="hidden-xs hidden-sm" style="line-height: 24px;">{{ __("Help") }} <b class="caret"></b></span>
-					<span class="visible-xs visible-sm standard-image help-icon">?</span>
+					onclick="return false;">
+					<span class="ellipsis hidden-xs hidden-sm">{{ __("Help") }}</span>
+					<b class="hidden-xs hidden-sm caret"></b>
+					<span class="visible-xs visible-sm"><i class="uil uil-question-circle"></i></span>
 				</a>
 				<ul class="dropdown-menu" id="toolbar-help" role="menu">
 					<li id="help-links"></li>
@@ -66,13 +67,13 @@
 			<li class="navbar-reload">
 				<a class="dropdown-toggle refresh-btn" data-toggle="dropdown" onclick="return frappe.ui.toolbar.clear_cache();">
 					<div class="refresh-icon">
-						<i class="fa fa-refresh"></i>
+						<i class="uil uil-refresh"></i>
 					</div>
 				</a>
 			</li>
 
 			<li class="dropdown dropdown-notifications dropdown-mobile">
-				<span class="notifications-indicator"><i class="fa fa-circle"></i></span>
+				<span class="notifications-indicator"><i class="fas fa-circle"></i></span>
 					<a
 						class="dropdown-toggle notifications-icon"
 						data-toggle="dropdown"
@@ -80,7 +81,7 @@
 						aria-expanded="true"
 						href="#"
 						onclick="return false;">
-						<span><i class="fa fa-bell" aria-hidden="true"></i></span>
+						<span><i class="uil uil-bell" aria-hidden="true"></i></span>
 					</a>
 					<ul
 						class="dropdown-menu notifications-list"

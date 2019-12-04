@@ -55,7 +55,7 @@ frappe.form.formatters = {
 	Rating: function(value) {
 		return `<span class="rating">
 		${Array.from(new Array(5)).map((_, i) =>
-			`<i class="fa fa-fw fa-star ${i < (value || 0) ? "star-click": "" } star-icon" data-idx="${(i+1)}"></i>`
+			`<i class="far fa-fw fa-star ${i < (value || 0) ? "star-click": "" } star-icon" data-idx="${(i+1)}"></i>`
 		).join('')}
 			</span>`;
 	},
@@ -86,7 +86,7 @@ frappe.form.formatters = {
 		if(value) {
 			return '<i class="octicon octicon-check" style="margin-right: 3px;"></i>';
 		} else {
-			return '<i class="fa fa-square disabled-check"></i>';
+			return '<i class="far fa-square disabled-check"></i>';
 		}
 	},
 	Link: function(value, docfield, options, doc) {
@@ -229,7 +229,7 @@ frappe.form.formatters = {
 			return repl("<span class='label label-%(style)s' \
 				data-workflow-state='%(value)s'\
 				style='padding-bottom: 4px; cursor: pointer;'>\
-				<i class='fa fa-small fa-white fa-%(icon)s'></i> %(value)s</span>", {
+				<i class='fas fa-small fa-white fa-%(icon)s'></i> %(value)s</span>", {
 					value: value,
 					style: workflow_state.style.toLowerCase(),
 					icon: workflow_state.icon

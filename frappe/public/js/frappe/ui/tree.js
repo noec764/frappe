@@ -17,9 +17,9 @@ frappe.ui.Tree = class {
 
 		if(!icon_set) {
 			this.icon_set = {
-				open: 'fa fa-fw fa-folder-open',
-				closed: 'fa fa-fw fa-folder',
-				leaf: 'octicon octicon-primitive-dot'
+				open: 'far fa-fw fa-folder-open',
+				closed: 'far fa-fw fa-folder',
+				leaf: 'fas fa-fw fa-circle'
 			};
 		}
 

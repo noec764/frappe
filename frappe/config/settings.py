@@ -7,7 +7,6 @@ def get_data():
 	data = [
 		{
 			"label": _("Core"),
-			"icon": "fa fa-wrench",
 			"items": [
 				{
 					"type": "doctype",
@@ -37,7 +36,6 @@ def get_data():
 		},
 		{
 			"label": _("Data"),
-			"icon": "fa fa-th",
 			"items": [
 				{
 					"type": "doctype",
@@ -78,7 +76,6 @@ def get_data():
 					"name": "backups",
 					"label": _("Download Backups"),
 					"description": _("List of backups available for download"),
-					"icon": "fa fa-download"
 				},
 				{
 					"type": "doctype",
@@ -90,7 +87,6 @@ def get_data():
 		},
 		{
 			"label": _("Email / Notifications"),
-			"icon": "fa fa-envelope",
 			"items": [
 				{
 					"type": "doctype",
@@ -132,7 +128,6 @@ def get_data():
 		},
 		{
 			"label": _("Printing"),
-			"icon": "fa fa-print",
 			"items": [
 				{
 					"type": "page",
@@ -159,7 +154,6 @@ def get_data():
 		},
 		{
 			"label": _("Workflow"),
-			"icon": "fa fa-random",
 			"items": [
 				{
 					"type": "doctype",
@@ -185,7 +179,6 @@ def get_data():
 		},
 		{
 			"label": _("Automation"),
-			"icon": "fa fa-random",
 			"items": [
 				{
 					"type": "doctype",
@@ -205,5 +198,5 @@ def get_data():
 			]
 		},
 	]
-	add_setup_section(data, "frappe", "website", _("Website"), "fa fa-globe")
+	add_setup_section(data, "frappe", "website", _("Website"), "fas fa-globe")
 	return data

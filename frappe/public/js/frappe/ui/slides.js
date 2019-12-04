@@ -287,7 +287,7 @@ frappe.ui.Slides = class Slides {
 		this.$slide_progress.empty();
 
 		this.slides.map((slide, id) => {
-			let $dot = $(`<i class="fa fa-fw fa-circle"> </i> `)
+			let $dot = $(`<i class="fas fa-fw fa-circle"> </i> `)
 				.attr({'data-step-id': id});
 
 			if(this.done_state && (this.slide_dict[id] &&

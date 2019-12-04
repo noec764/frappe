@@ -43,7 +43,7 @@
 		{% if address_title %}
 		<div class="col-md-3 col-md-offset-1 address"
 				itemscope itemtype="http://schema.org/PostalAddress">
-			<h4 style="margin-top: 0px;"><i class="fa fa-map-marker"></i> {{ address_title }}</h4>
+			<h4 style="margin-top: 0px;"><i class="uil uil-map-pin"></i> {{ address_title }}</h4>
 			{% if address_line1 %}
 				<span itemprop="streetAddress">{{ address_line1 }}</span><br>
 			{% endif %}
@@ -63,13 +63,13 @@
 				<span itemprop="addressCountry">{{ country }}</span><br><br>
 			{% endif %}
 			{% if phone %}
-				<i class='fa fa-phone'></i> <span itemprop="telephone">{{ phone }}</span><br>
+				<i class='uil uil-phone-alt'></i> <span itemprop="telephone">{{ phone }}</span><br>
 			{% endif %}
 			{% if email_id %}
-				<i class='fa fa-envelope'></i> <span itemprop="email">{{ email_id }}</span><br>
+				<i class='uil uil-envelope-alt'></i> <span itemprop="email">{{ email_id }}</span><br>
 			{% endif %}
 			{% if skype %}
-				<i class='fa fa-skype'></i> <span itemprop="email">{{ skype }}</span><br>
+				<i class='uil uil-skype-alt'></i> <span itemprop="email">{{ skype }}</span><br>
 			{% endif %}
 
 		</div>

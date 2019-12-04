@@ -91,7 +91,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	setup_print_button() {
 		this.add_button_to_header(
-			'<i class="fa fa-print" aria-hidden="true"></i>',
+			'<i class="uil uil-print" aria-hidden="true"></i>',
 			"light",
 			() => this.print()
 		);

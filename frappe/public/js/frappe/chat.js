@@ -1803,7 +1803,7 @@ class extends Component {
 				!props.target ?
 					h(frappe.components.FAB, {
 						  class: "frappe-fab",
-						   icon: state.active ? "fa fa-fw fa-times" : "font-heavy octicon octicon-comment",
+						   icon: state.active ? "uil uil-times" : "font-heavy octicon octicon-comment",
 						   size: frappe._.is_mobile() ? null : "large",
 						   type: "primary",
 						onclick: () => this.toggle(),
@@ -2661,7 +2661,7 @@ frappe.chat.render = (render = true, force = false) =>
 			const $template = $(`
 				<a class="dropdown-toggle frappe-chat-toggle" data-toggle="dropdown">
 					<div>
-						<i class="octicon octicon-comment-discussion"/>
+						<i class="uil uil-comments-alt"/>
 					</div>
 				</a>
 			`)

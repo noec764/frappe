@@ -181,6 +181,7 @@ frappe.views.ListSidebar = class ListSidebar {
 
 			const dropdown_html = `
 				<div class="btn-group">
+					<i class="uil uil-calendar-alt"></i>
 					<a class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						${ __("Calendar") } <span class="caret"></span>
 					</a>

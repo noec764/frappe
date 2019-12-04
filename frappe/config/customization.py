@@ -5,7 +5,6 @@ def get_data():
 	return [
 		{
 			"label": _("Form Customization"),
-			"icon": "fa fa-glass",
 			"items": [
 				{
 					"type": "doctype",
