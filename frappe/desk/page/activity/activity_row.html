@@ -20,7 +20,7 @@
 		{% } else if (reference_doctype && !feed_type) { %}
 			{%= __("Updated {0}: {1}", [link, "<strong>" + subject + "</strong>"]) %}
 		{% } else if (feed_type==="Like" && reference_doctype) { %}
-			{%= by %} <i class="octicon octicon-heart"></i>
+			{%= by %} <i class="fas fa-heart"></i>
 			{% if (in_list(["Comment", "Communication"], reference_doctype)) { %}
 				{%= content %}
 			{% } else { %}

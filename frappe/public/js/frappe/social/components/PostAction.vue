@@ -1,7 +1,7 @@
 <template>
 	<div class="post-action-container">
 		<div class="like" @click="$emit('toggle_like')">
-			<i class="octicon octicon-heart" :class="{'liked': post_liked}"></i>
+			<i class="fas fa-heart" :class="{'liked': post_liked}"></i>
 			<span class="likes" :data-liked-by="liked_by_data">{{ like_count }}</span>
 		</div>
 		<div class="comment" @click="$emit('toggle_comment')">

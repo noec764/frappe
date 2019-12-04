@@ -480,7 +480,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		let subject_html = `
 			<input class="level-item list-check-all hidden-xs" type="checkbox" title="${__("Select All")}">
 			<span class="level-item list-liked-by-me">
-				<i class="octicon octicon-heart text-extra-muted" title="${__("Likes")}"></i>
+				<i class="fas fa-heart text-extra-muted" title="${__("Likes")}"></i>
 			</span>
 			<span class="level-item">${__(subject_field.label)}</span>
 		`;
@@ -759,7 +759,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		let subject_html = `
 			<input class="level-item list-row-checkbox hidden-xs" type="checkbox" data-name="${escape(doc.name)}">
 			<span class="level-item" style="margin-bottom: 1px;">
-				<i class="octicon octicon-heart like-action ${heart_class}"
+				<i class="fas fa-heart like-action ${heart_class}"
 					data-name="${doc.name}" data-doctype="${this.doctype}"
 					data-liked-by="${encodeURI(doc._liked_by) || '[]'}"
 				>

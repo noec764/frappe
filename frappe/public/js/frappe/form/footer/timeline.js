@@ -484,7 +484,7 @@ frappe.ui.form.Timeline = class Timeline {
 				"Attachment Removed": "octicon octicon-trashcan",
 				"Shared": "octicon octicon-eye",
 				"Unshared": "octicon octicon-circle-slash",
-				"Like": "octicon octicon-heart",
+				"Like": "fas fa-heart",
 				"Edit": "octicon octicon-pencil",
 				"Relinked": "octicon octicon-check",
 				"Reply": "octicon octicon-mail-reply"
