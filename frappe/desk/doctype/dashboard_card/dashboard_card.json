@@ -68,7 +68,7 @@
    "fieldname": "timespan",
    "fieldtype": "Select",
    "label": "Timespan",
-   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nNo Timespan"
+   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nAll Time"
   },
   {
    "fieldname": "section_break_7",
@@ -119,7 +119,7 @@
    "label": "Time Series Based On"
   }
  ],
- "modified": "2019-09-10 11:20:49.498529",
+ "modified": "2019-09-11 11:20:49.498529",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",

@@ -83,7 +83,7 @@ def handle():
 
 				if frappe.local.request.method=="PUT":
 					if frappe.local.form_dict.data is None:
-						data = frappe.parse_json(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
 					else:
 						data = frappe.parse_json(frappe.local.form_dict.data)
 					doc = frappe.get_doc(doctype, name)
@@ -118,7 +118,7 @@ def handle():
 
 				if frappe.local.request.method=="POST":
 					if frappe.local.form_dict.data is None:
-						data = frappe.parse_json(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
 					else:
 						data = frappe.parse_json(frappe.local.form_dict.data)
 					data.update({

@@ -274,3 +274,4 @@ execute:frappe.delete_doc("Test Runner")
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
 frappe.patches.dokos.v1_2.add_rrule_to_events
+frappe.patches.dokos.v1_3.no_timespan_to_all_time

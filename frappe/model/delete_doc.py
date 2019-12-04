@@ -80,8 +80,8 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 				and frappe.conf.developer_mode:
 				try:
 					delete_controllers(name, doc.module)
-				except (FileNotFoundError, OSError):
-					# in case a doctype doesnt have any controller code
+				except (FileNotFoundError, OSError, KeyError):
+					# in case a doctype doesnt have any controller code  nor any app and module
 					pass
 
 		else:
