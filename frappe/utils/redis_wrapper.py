@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 
 import redis, frappe, re
 from six.moves import cPickle as pickle
-from frappe.utils import cstr
+from frappe.utils import cstr, cint
 from six import iteritems
 
 
@@ -43,9 +43,9 @@ class RedisWrapper(redis.Redis):
 
 		try:
 			if expires_in_sec:
-				self.setex(key, expires_in_sec, pickle.dumps(val))
+				self.setex(name=key, time=cint(expires_in_sec), value=pickle.dumps(val))
 			else:
-				self.set(key, pickle.dumps(val))
+				self.set(name=key, value=pickle.dumps(val))
 
 		except redis.exceptions.ConnectionError:
 			return None
