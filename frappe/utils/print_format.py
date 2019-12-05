@@ -117,6 +117,7 @@ def letter_to_pdf(html, title, letterhead=None, attach=False, doctype=None, docn
 				"file_name": title,
 				"attached_to_doctype": doctype,
 				"attached_to_name": docname,
+				"is_private": 1,
 				"file_url": "/private/files/" + fname.split('/private/files/')[1]
 			})
 			new_file.insert()
