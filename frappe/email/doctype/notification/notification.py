@@ -60,8 +60,12 @@ def get_context(context):
 """)
 
 	def validate_standard(self):
-		if self.is_standard and not frappe.conf.developer_mode:
-			frappe.throw(_('Cannot edit Standard Notification. To edit, please disable this and duplicate it'))
+		if (self.is_standard or self._doc_before_save.is_standard) and not frappe.conf.developer_mode:
+			if self._doc_before_save.enabled != self.enabled:
+				self.db_set("enabled", self.enabled)
+				self.reload()
+			else:
+				frappe.throw(_('Cannot edit Standard Notification. To edit, please disable this and duplicate it'))
 
 	def validate_condition(self):
 		temp_doc = frappe.new_doc(self.document_type)
