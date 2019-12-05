@@ -42,7 +42,8 @@ def get_context(context):
 		"boot": boot if context.get("for_mobile") else boot_json,
 		"csrf_token": csrf_token,
 		"google_analytics_id": frappe.conf.get("google_analytics_id"),
-		"mixpanel_id": frappe.conf.get("mixpanel_id")
+		"mixpanel_id": frappe.conf.get("mixpanel_id"),
+		"splash_image": frappe.defaults.get_defaults().get("desk_logo")
 	})
 
 	return context

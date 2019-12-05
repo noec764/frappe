@@ -427,15 +427,26 @@ frappe.Application = Class.extend({
 	},
 
 	set_app_logo_url: function() {
-		return frappe.call('frappe.client.get_hooks', { hook: 'app_logo_url' })
-			.then(r => {
-				frappe.app.logo_url = (r.message || []).slice(-1)[0];
-				if (window.cordova) {
-					let host = frappe.request.url;
-					host = host.slice(0, host.length - 1);
-					frappe.app.logo_url = host + frappe.app.logo_url;
-				}
-			});
+		if (frappe.boot.sysdefaults.desk_logo) {
+			return new Promise(resolve => {
+				this.add_app_logo_url_to_frappe([frappe.boot.sysdefaults.desk_logo]);
+				resolve();
+			})
+		} else {
+			return frappe.call('frappe.client.get_hooks', { hook: 'app_logo_url' })
+				.then(r => {
+					this.add_app_logo_url_to_frappe(r.message);
+				});
+		}
+	},
+
+	add_app_logo_url_to_frappe: function(logo_url) {
+		this.logo_url = (logo_url || []).slice(-1)[0];
+		if (window.cordova) {
+			let host = frappe.request.url;
+			host = host.slice(0, host.length - 1);
+			this.logo_url = host + frappe.app.logo_url;
+		}
 	},
 
 	trigger_primary_action: function() {

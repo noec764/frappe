@@ -10,7 +10,7 @@ app_icon = "octicon octicon-circuit-board"
 app_color = "orange"
 source_link = "https://gitlab.com/dokos/dodock"
 app_license = "MIT"
-app_logo_url = '/assets/frappe/images/frappe-framework-logo.png'
+app_logo_url = '/assets/frappe/images/dokos-logo.png'
 
 develop_version = '1.x.x-develop'
 

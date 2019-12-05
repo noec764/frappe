@@ -10,6 +10,7 @@
   "language",
   "column_break_3",
   "time_zone",
+  "desk_logo",
   "is_first_startup",
   "setup_complete",
   "date_and_number_format",
@@ -408,16 +409,22 @@
    "label": "Create contacts from incoming emails"
   },
   {
-    "default": "4",
-    "description": "Will run scheduled jobs only once a day for inactive sites. Default 4 days if set to 0.",
-    "fieldname": "dormant_days",
-    "fieldtype": "Int",
-    "label": "Run Jobs only Daily if Inactive For (Days)"
+   "default": "4",
+   "description": "Will run scheduled jobs only once a day for inactive sites. Default 4 days if set to 0.",
+   "fieldname": "dormant_days",
+   "fieldtype": "Int",
+   "label": "Run Jobs only Daily if Inactive For (Days)"
+  },
+  {
+   "fieldname": "desk_logo",
+   "fieldtype": "Attach Image",
+   "label": "Desk Logo"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
- "modified": "2019-09-24 10:04:28.807388",
+ "links": [],
+ "modified": "2019-12-05 12:28:59.602143",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
