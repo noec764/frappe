@@ -47,7 +47,7 @@ export default {
 	props: {
 		items: {
 			type: Array,
-			default: []
+			default: () => []
 		},
 		horizontal: {
 			type: Boolean,

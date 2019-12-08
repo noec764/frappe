@@ -143,29 +143,43 @@
 				}
 			}
 		},
-		
 		data () {
 			return {
-				chart: null,
-				data: {
+				chart: null
+			}
+		},
+		computed: {
+			data() {
+				return {
 					labels: this.labels,
 					datasets: this.dataSets,
 					yMarkers: this.yMarkers,
 					yRegions: this.yRegions
-				},
-				heatmapData: {
+				}
+			},
+			heatmapData() {
+				return {
 					dataPoints: this.dataPoints,
 					start: this.startDate,
 					end: this.endDate,
 					countLabel: this.countLabel
 				}
 			}
+
 		},
 		mounted () {
 			this.startChart()
 		},
+		watch: {
+			dataSets() {
+				this.startChart()
+			}
+		},
 		methods: {
-			startChart () {
+			startChart () { 
+				this.chart = new frappe.Chart(`#${this.id}`, this.getOptions())
+			},
+			getOptions() {
 				const baseOptions = {
 					type: this.type,
 					discreteDomains: this.discreteDomains,
@@ -187,11 +201,11 @@
 					maxLegendPoints: this.maxLegendPoints,
 					maxSlices: this.maxSlices,
 				}
-				const options = Object.assign(
+				
+				return Object.assign(
 					baseOptions,
 					(this.type === 'heatmap') ? heatMapOptions : chartOptions
 				)
-				this.chart = new frappe.Chart(`#${this.id}`, options)
 			},
 			export () {
 				this.chart.export()

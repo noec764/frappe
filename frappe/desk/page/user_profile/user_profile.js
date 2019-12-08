@@ -115,7 +115,7 @@ class UserProfile {
 		let current_year = this.get_year(frappe.datetime.now_date());
 		let years_list = [];
 		for (var year = current_year; year >= creation_year; year--) {
-			years_list.push(year);
+			years_list.push({label: year, value: year});
 		}
 		return years_list;
 	}
@@ -243,7 +243,11 @@ class UserProfile {
 		let filters = [
 			{
 				label: __('Type'),
-				options: ['Type', 'Reference Doctype', 'Rule'],
+				options: [
+					{label: __('Type'), value: 'Type'},
+					{label: __('Reference Doctype'), value: 'Reference Doctype'},
+					{label: __('Rule'), value: 'Rule'}
+				],
 				fieldnames: ['type', 'reference_doctype', 'rule'],
 				action: (selected_item, fieldname) => {
 					let title = selected_item + ' Distribution';

@@ -20,7 +20,7 @@
 
 <script>
 
-import FrappeCharts from '../../../../../lib/FrappeCharts.vue';
+import FrappeCharts from 'frappe/public/js/lib/FrappeCharts.vue';
 
 export default {
 	name: 'GraphCard',
