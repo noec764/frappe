@@ -153,12 +153,12 @@ frappe.ui.Notifications = class Notifications {
 		let title = target ? `title="${__('Your Target')}"` : '';
 		let $list_item = !target
 			? $(`<li><a class="badge-hover" data-action="route_to_document_type" data-doctype="${name}" ${title}>
-				${label}
+				${__(label)}
 				<span class="badge pull-right">${value}</span>
 			</a></li>`)
 			: $(`<li><a class="progress-small" data-action="route_to_document_type" ${title}
 				data-doctype="${doc_dt}" data-docname="${name}">
-					<span class="dropdown-item-label">${label}<span>
+					<span class="dropdown-item-label">${__(label)}<span>
 					<div class="progress-chart">
 						<div class="progress">
 							<div class="progress-bar" style="width: ${value}%"></div>
@@ -373,7 +373,7 @@ frappe.ui.Notifications = class Notifications {
 						data-action="${category.action}"
 						href="#${category_id}"
 						data-toggle="collapse">
-						${category.label}
+						${__(category.label)}
 						<span class="octicon octicon-chevron-down collapse-indicator"></span>
 						${settings_html}
 						${mark_all_read_html}
