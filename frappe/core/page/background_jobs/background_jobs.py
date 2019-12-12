@@ -35,9 +35,9 @@ def get_info(show_failed=False):
 
 			jobs.append({
 				'job_name': job_name,
-				'status': j.status, 'queue': name,
+				'status': j.get_status(), 'queue': name,
 				'creation': format_datetime(convert_utc_to_user_timezone(j.created_at)),
-				'color': colors[j.status]
+				'color': colors[j.get_status()]
 			})
 			if j.exc_info:
 				jobs[-1]['exc_info'] = j.exc_info
