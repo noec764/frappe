@@ -149,10 +149,7 @@ function get_currency_symbol(currency) {
 }
 
 function get_number_format(currency) {
-	let format = null;
-	if (currency) format = frappe.model.get_value(":Currency", currency, "number_format");
-
-	return (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.number_format) || format || "#,###.##";
+	return (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.number_format) || "#,###.##";
 }
 
 function get_number_format_info(format) {
