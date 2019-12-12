@@ -918,6 +918,7 @@ input[type="checkbox"] {
 	&:focus {
 		outline: none;
 	}
+
 	.fa-circle {
 		font-size: 10px;
 		margin: 0px 2px;
@@ -949,6 +950,7 @@ input[type="checkbox"] {
 	}
 	.lead {
 		margin-top: 20px;
+		font-weight: 500;
 	}
 	.success-state {
 		margin-bottom: 20px;
@@ -983,6 +985,12 @@ input[type="checkbox"] {
 // Onboarding Dialog
 .onboarding-dialog {
 
+	.slide-body {
+		width: 65%;
+		margin-right: auto;
+		margin-left: auto;
+	}
+
 	.modal-dialog {
 		width: 50%;
 		height: 80%;
@@ -990,7 +998,7 @@ input[type="checkbox"] {
 	}
 
 	.onboarding-icon {
-		color: #3246F5;
+		color: @text-muted;
 		margin-right: 5px;
 	}
 
@@ -1001,8 +1009,8 @@ input[type="checkbox"] {
 	}
 
 	img {
-		max-width: 128px;
-		max-height: 128px;
+		max-height: 175px;
+		width: auto;
 	}
 
 	.slides-progress {
