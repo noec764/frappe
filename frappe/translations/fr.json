@@ -259,13 +259,14 @@
         "Status": "Statut",
         "Stopped": "Arrêté",
         "Subject": "Sujet",
-        "Submit on Creation": "Valider à la création",
         "Submitted": "Soumis",
         "System Manager": "Responsable Système",
         "Template": "Modèle",
         "To add dynamic subject, use jinja tags like\n\n<div><pre><code>New {{ doc.doctype }} #{{ doc.name }}</code></pre></div>": "Pour ajouter un sujet dynamique, utilisez des tags jinja comme <div><pre> <code>Nouveau {{ doc.doctype }} #{{ doc.name }}</code> </pre> </div>",
         "Weekly": "Hebdomadaire",
-        "Yearly": "Annuel"
+        "Yearly": "Annuel",
+        "Submit document after creation": "Valider le document après sa création",
+        "Document Title": "Titre du document"
     },
     "DocType: Block Module": {
         "Block Module": "Bloquer le Module",
@@ -4114,7 +4115,9 @@
         "Message not setup": "Message non configuré",
         "Please setup a message first": "Veuillez d'abord configurer un message",
         "To configure Auto Repeat, enable \"Allow Auto Repeat\" from {0}.": "Pour configurer les répétitions automatiques, activez \"Autoriser les répétitions automatiques\" via {0}",
-        "View {0}": "Voir {0}"
+        "View {0}": "Voir {0}",
+        "Trigger this repetition": "Lancer cette répétition automatique",
+        "Auto repeat triggered": "Répétition automatique lancée"
     },
     "apps/frappe/frappe/automation/doctype/auto_repeat/auto_repeat.py": {
         "'Recipients' not specified": "'Destinataires' non spécifiés",
@@ -4134,7 +4137,8 @@
     "apps/frappe/frappe/automation/doctype/auto_repeat/auto_repeat_schedule.html": {
         "Frequency": "Fréquence",
         "Next Scheduled Date": "Prochaine date prévue",
-        "Reference Document": "Document de référence"
+        "Reference Document": "Document de référence",
+        "Scheduled Date": "Date programmée"
     },
     "apps/frappe/frappe/chat/__init__.py": {
         "Sorry, you're not authorized.": "Désolé, vous n'êtes pas autorisé."
