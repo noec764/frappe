@@ -21,6 +21,7 @@ class AutoRepeat(Document):
 	def validate(self):
 		self.update_status()
 		self.validate_reference_doctype()
+		self.get_reference_title()
 		self.validate_dates()
 		self.validate_email_id()
 		self.set_dates()
@@ -49,17 +50,25 @@ class AutoRepeat(Document):
 		if self.disabled:
 			self.next_schedule_date = None
 		else:
-			self.next_schedule_date = get_next_schedule_date(self.start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, self.end_date)
+			full_schedule = len(frappe.get_all(self.reference_doctype, filters={"auto_repeat": self.name})) <= 1
+			self.next_schedule_date = get_next_schedule_date(add_days(self.start_date, -1), self.frequency, self.repeat_on_day, self.repeat_on_last_day, self.end_date, for_full_schedule=full_schedule)
 
 	def unlink_if_applicable(self):
 		if self.status == 'Completed' or self.disabled:
-			frappe.db.set_value(self.reference_doctype, self.reference_document, 'auto_repeat', '')
+			for doc in frappe.get_all(self.reference_doctype, filters={"auto_repeat": self.name}):
+				frappe.db.set_value(self.reference_doctype, doc.name, 'auto_repeat', '')
 
 	def validate_reference_doctype(self):
 		if frappe.flags.in_test or frappe.flags.in_patch:
 			return
 		if not frappe.get_meta(self.reference_doctype).allow_auto_repeat:
 			frappe.throw(_("Enable Allow Auto Repeat for the doctype {0} in Customize Form").format(self.reference_doctype))
+
+	def get_reference_title(self):
+		title_field = frappe.get_meta(self.reference_doctype).get_title_field() or "name"
+		title = frappe.db.get_value(self.reference_doctype, self.reference_document, title_field)
+		if self.document_title != title:
+			self.document_title = title
 
 	def validate_dates(self):
 		if frappe.flags.in_patch:
@@ -104,7 +113,7 @@ class AutoRepeat(Document):
 
 	def get_auto_repeat_schedule(self):
 		schedule_details = []
-		start_date = getdate(self.start_date)
+		start_date = getdate(add_days(self.start_date, -1))
 		end_date = getdate(self.end_date)
 
 		if not self.end_date:
@@ -118,7 +127,7 @@ class AutoRepeat(Document):
 			start_date = get_next_schedule_date(start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day)
 
 		if self.end_date:
-			start_date = start_date = get_next_schedule_date(
+			start_date = get_next_schedule_date(
 					start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
 			while (getdate(start_date) < getdate(end_date)):
 				row = {
@@ -127,7 +136,7 @@ class AutoRepeat(Document):
 					"next_scheduled_date" : start_date
 				}
 				schedule_details.append(row)
-				start_date = start_date = get_next_schedule_date(
+				start_date = get_next_schedule_date(
 					start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
 
 
@@ -151,6 +160,9 @@ class AutoRepeat(Document):
 		new_doc = frappe.copy_doc(reference_doc, ignore_no_copy = False)
 		self.update_doc(new_doc, reference_doc)
 		new_doc.insert(ignore_permissions = True)
+
+		if self.submit_after_creation and new_doc.meta.is_submittable:
+			new_doc.submit()
 
 		return new_doc
 
@@ -271,8 +283,12 @@ class AutoRepeat(Document):
 
 
 def get_next_schedule_date(start_date, frequency, repeat_on_day, repeat_on_last_day=False, end_date=None, for_full_schedule=False):
-	month_count = month_map.get(frequency)
+	month_count = month_map.get(frequency) or 0
 	day_count = 0
+
+	if not for_full_schedule:
+		start_date = getdate(today())
+
 	if month_count and repeat_on_last_day:
 		day_count = 31
 		next_date = get_next_date(start_date, month_count, day_count)
@@ -280,15 +296,10 @@ def get_next_schedule_date(start_date, frequency, repeat_on_day, repeat_on_last_
 		day_count = repeat_on_day
 		next_date = get_next_date(start_date, month_count, day_count)
 	elif month_count:
-		next_date = get_next_date(start_date, month_count)
+		next_date = get_next_date(start_date, month_count, day_count)
 	else:
 		days = 7 if frequency == 'Weekly' else 1
 		next_date = add_days(start_date, days)
-
-	# next schedule date should be after or on current date
-	if not for_full_schedule:
-		while getdate(next_date) < getdate(today()):
-			next_date = get_next_date(next_date, month_count, day_count)
 
 	return next_date
 
@@ -298,36 +309,45 @@ def get_next_date(dt, mcount, day=None):
 	return dt
 
 #called through hooks
-def make_auto_repeat_entry():
+@frappe.whitelist()
+def make_auto_repeat_entry(auto_repeat=None):
 	enqueued_method = 'frappe.automation.doctype.auto_repeat.auto_repeat.create_repeated_entries'
 	jobs = get_jobs()
 
 	if not jobs or enqueued_method not in jobs[frappe.local.site]:
-		date = getdate(today())
-		data = get_auto_repeat_entries(date)
+		data = get_auto_repeat_entries(auto_repeat=auto_repeat)
 		frappe.enqueue(enqueued_method, data=data)
 
 def create_repeated_entries(data):
 	for d in data:
-		doc = frappe.get_doc('Auto Repeat', d.name)
+		disabled = d.disabled
 
 		current_date = getdate(today())
-		schedule_date = getdate(doc.next_schedule_date)
+		schedule_date = getdate(d.next_schedule_date)
 
-		if schedule_date == current_date and not doc.disabled:
+		while schedule_date < add_days(current_date, 1) and not disabled:
+			doc = frappe.get_doc('Auto Repeat', d.name)
 			doc.create_documents()
-			schedule_date = get_next_schedule_date(schedule_date, doc.frequency, doc.repeat_on_day, doc.repeat_on_last_day, doc.end_date)
 
-			if schedule_date and not doc.disabled:
+			full_schedule = schedule_date < current_date
+			schedule_date = get_next_schedule_date(schedule_date, doc.frequency, doc.repeat_on_day, doc.repeat_on_last_day, doc.end_date, for_full_schedule=full_schedule)
+
+			disabled = frappe.db.get_value('Auto Repeat', doc.name, 'disabled')
+			if schedule_date and not disabled:
 				frappe.db.set_value('Auto Repeat', doc.name, 'next_schedule_date', schedule_date)
 
-def get_auto_repeat_entries(date=None):
+def get_auto_repeat_entries(date=None, auto_repeat=None):
 	if not date:
 		date = getdate(today())
-	return frappe.db.get_all('Auto Repeat', filters=[
+	query_filters=[
 		['next_schedule_date', '<=', date],
 		['status', '=', 'Active']
-	])
+	]
+
+	if auto_repeat:
+		query_filters.append(['name', '=', auto_repeat])
+
+	return frappe.db.get_all('Auto Repeat', filters=query_filters, fields=["name", "disabled", "next_schedule_date"])
 
 #called through hooks
 def set_auto_repeat_as_completed():

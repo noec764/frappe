@@ -40,6 +40,13 @@ frappe.ui.form.on('Auto Repeat', {
 			frm.add_custom_button(label, () =>
 				frappe.set_route("List", frm.doc.reference_doctype, { auto_repeat: frm.doc.name })
 			);
+
+			frm.add_custom_button(__('Trigger this repetition'), () => {
+				frappe.xcall("frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry", {auto_repeat: frm.doc.name})
+				.then(() => {
+					frappe.show_alert({message: __('Auto repeat triggered'), indicator: 'green'})
+				})
+			});
 		}
 
 		// auto repeat schedule
