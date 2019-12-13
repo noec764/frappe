@@ -74,7 +74,7 @@ def send(recipients=None, sender=None, subject=None, message=None, text_content=
 	if not text_content:
 		try:
 			text_content = html2text(message)
-		except HTMLParser.HTMLParseError:
+		except Exception:
 			text_content = "See html attachment"
 
 	recipients = list(set(recipients))
