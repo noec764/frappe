@@ -47,7 +47,7 @@ $.extend(frappe.datetime, {
 	},
 
 	obj_to_str: function(d) {
-		return moment(d).locale("en").format();
+		return moment(d).locale(frappe.boot.lang || 'en').format();
 	},
 
 	obj_to_user: function(d) {
@@ -139,7 +139,7 @@ $.extend(frappe.datetime, {
 
 		// user_fmt.replace("YYYY", "YY")? user might only input 2 digits of the year, which should also be parsed
 		return moment(val, [user_fmt.replace("YYYY", "YY"),
-			user_fmt]).locale("en").format(system_fmt);
+			user_fmt]).locale(frappe.boot.lang || 'en').format(system_fmt);
 	},
 
 	user_to_obj: function(d) {
@@ -147,7 +147,7 @@ $.extend(frappe.datetime, {
 	},
 
 	global_date_format: function(d) {
-		var m = moment(d);
+		var m = moment(d).locale(frappe.boot.lang || 'en');
 		if(m._f && m._f.indexOf("HH")!== -1) {
 			return m.format("Do MMMM YYYY, h:mma")
 		} else {
