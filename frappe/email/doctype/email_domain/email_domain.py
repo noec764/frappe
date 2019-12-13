@@ -76,5 +76,5 @@ class EmailDomain(Document):
 				email_account.save()
 			except Exception as e:
 				frappe.msgprint(email_account.name)
-				frappe.throw(e)
+				frappe.throw(str(e))
 				return None

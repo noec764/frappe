@@ -1018,7 +1018,7 @@ def to_markdown(html):
 	text = None
 	try:
 		text = html2text(html or '')
-	except HTMLParser.HTMLParseError:
+	except Exception:
 		pass
 
 	return text
