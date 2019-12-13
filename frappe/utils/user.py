@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 
+import warnings
 import frappe, json
 from frappe import _dict
 import frappe.share
@@ -161,7 +162,8 @@ class UserPermissions:
 			for docname in docs:
 				if frappe.get_meta(docname, cached=True).allow_import == 1:
 					self.can_import.append(docname)
-			frappe.cache().hset("can_import", frappe.session.user, self.can_import)
+		
+		frappe.cache().hset("can_import", frappe.session.user, self.can_import)
 
 	def get_defaults(self):
 		import frappe.defaults
@@ -310,6 +312,11 @@ def set_last_active_to_now(user):
 	frappe.db.set_value("User", user, "last_active", now_datetime())
 
 def disable_users(limits=None):
+	warnings.warn(
+		"disable_users will be deprecated. Please create a custom method for this functionality.",
+		FutureWarning
+	)
+
 	if not limits:
 		return
 
@@ -337,7 +344,7 @@ def disable_users(limits=None):
 
 		from frappe.core.doctype.user.user import get_total_users
 
-		if get_total_users() > cint(limits.get('users')):
+		if get_total_users() or 0 > cint(limits.get('users')):
 			reset_simultaneous_sessions(cint(limits.get('users')))
 
 	frappe.db.commit()

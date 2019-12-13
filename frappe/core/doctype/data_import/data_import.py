@@ -29,9 +29,8 @@ class DataImport(Document):
 			upload(data_import_doc=self, from_data_import="Yes", validate_template=True)
 
 @frappe.whitelist()
-def get_importable_doc():
-	import_lst = frappe.cache().hget("can_import", frappe.session.user)
-	return import_lst
+def get_importable_doctypes():
+	return frappe.cache().hget("can_import", frappe.session.user)
 
 @frappe.whitelist()
 def import_data(data_import):

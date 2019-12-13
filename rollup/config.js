@@ -63,14 +63,15 @@ function get_rollup_options_for_js(output_file, input_files) {
 			},
 			exclude: [path.resolve(bench_path, '**/*.css'), path.resolve(bench_path, '**/*.less')]
 		}),
-		commonjs({
-			namedExports: {
-				'node_modules/@fullcalendar/core/main.js': ['Calendar']
-			}
-		}),
 		node_resolve({
 			customResolveOptions: {
 				paths: node_resolve_paths
+			}
+		}),
+		commonjs({
+			namedExports: {
+				'node_modules/@fullcalendar/core/main.js': ['Calendar'],
+				'frappe/public/js/lib/rrule/rrule-tz.min.js': ['RRule', 'ENGLISH']
 			}
 		}),
 		!production && visualizer({

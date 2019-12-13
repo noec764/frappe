@@ -30,8 +30,7 @@ app_include_js = [
 	"assets/js/list.min.js",
 	"assets/js/form.min.js",
 	"assets/js/control.min.js",
-	"assets/js/report.min.js",
-	"assets/frappe/js/frappe/toolbar.js"
+	"assets/js/report.min.js"
 ]
 app_include_css = [
 	"assets/css/desk.min.css",
@@ -65,6 +64,14 @@ email_append_to = ["Event", "ToDo", "Communication"]
 get_rooms = 'frappe.chat.doctype.chat_room.chat_room.get_rooms'
 
 calendars = ["Event"]
+
+gcalendar_integrations = {
+	"Event": {
+		"pull_insert": "frappe.desk.doctype.event.event.insert_event_to_calendar",
+		"pull_update": "frappe.desk.doctype.event.event.update_event_in_calendar",
+		"pull_delete": "frappe.desk.doctype.event.event.insert_event_to_calendar"
+	}
+}
 
 leaderboards = "frappe.desk.leaderboard.get_leaderboards"
 
@@ -140,9 +147,9 @@ doc_events = {
 		]
 	},
 	"Event": {
-		"after_insert": "frappe.integrations.doctype.google_calendar.google_calendar.insert_event_in_google_calendar",
-		"on_update": "frappe.integrations.doctype.google_calendar.google_calendar.update_event_in_google_calendar",
-		"on_trash": "frappe.integrations.doctype.google_calendar.google_calendar.delete_event_from_google_calendar",
+		"after_insert": "frappe.desk.doctype.event.event.insert_event_in_google_calendar",
+		"on_update": "frappe.desk.doctype.event.event.update_event_in_google_calendar",
+		"on_trash": "frappe.desk.doctype.event.event.delete_event_in_google_calendar",
 	},
 	"Contact": {
 		"after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
@@ -160,7 +167,8 @@ scheduler_events = {
 		"frappe.integrations.doctype.razorpay_settings.razorpay_settings.capture_payment",
 		"frappe.twofactor.delete_all_barcodes_for_users",
 		"frappe.website.doctype.web_page.web_page.check_publish_status",
-		'frappe.utils.global_search.sync_global_search'
+		'frappe.utils.global_search.sync_global_search',
+		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
 	],
 	"hourly": [
 		"frappe.model.utils.link_count.update_link_count",
@@ -170,8 +178,7 @@ scheduler_events = {
 		"frappe.limits.update_space_usage",
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
-		"frappe.desk.form.document_follow.send_hourly_updates",
-		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
+		"frappe.desk.form.document_follow.send_hourly_updates"
 	],
 	"daily": [
 		"frappe.email.queue.clear_outbox",

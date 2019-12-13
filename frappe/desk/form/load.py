@@ -188,6 +188,7 @@ def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=
 		FROM `tabCommunication` as C
 		WHERE C.communication_type IN ('Communication', 'Feedback')
 		AND (C.reference_doctype = %(doctype)s AND C.reference_name = %(name)s)
+		AND not_added_to_reference_timeline = 0
 		{conditions}
 	'''.format(fields=fields, conditions=conditions)
 

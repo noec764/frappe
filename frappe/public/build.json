@@ -1,7 +1,12 @@
 {
 	"css/frappe-web-b4.css": [
-		"public/less/indicator.less",
-		"public/scss/website.scss"
+		"public/scss/website.scss",
+		"public/less/indicator.less"
+	],
+	"css/frappe-chat-web.css": [
+		"public/css/font-awesome.css",
+		"public/css/octicons/octicons.css",
+		"public/less/chat.less"
 	],
 	"concat:js/moment-bundle.min.js": [
 		"node_modules/moment/min/moment-with-locales.min.js",
@@ -245,11 +250,12 @@
 		"public/js/frappe/form/controls/control.js",
 		"public/js/frappe/views/formview.js",
 		"public/js/frappe/form/form.js",
-		"public/js/frappe/meta_tag.js"
+		"public/js/frappe/meta_tag.js",
+		"public/js/frappe/calendar_recurrence.js"
 	],
 	"css/list.min.css": [
 		"public/less/list.less",
-		"public/less/calendar.less",
+		"public/scss/calendar.scss",
 		"public/less/role_editor.less",
 		"public/less/gantt.less",
 		"public/less/tags.less"

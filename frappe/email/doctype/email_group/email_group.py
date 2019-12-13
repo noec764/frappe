@@ -3,6 +3,7 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+import warnings
 import frappe
 from frappe import _
 from frappe.utils import validate_email_address
@@ -91,6 +92,10 @@ def add_subscribers(name, email_list):
 	return frappe.get_doc("Email Group", name).update_total_subscribers()
 
 def restrict_email_group(doc, method):
+	warnings.warn(
+		"restrict_email_group will be deprecated. Please create a custom method for this functionality.",
+		FutureWarning
+	)
 	from frappe.limits import get_limits
 
 	email_group_limit = get_limits().get('email_group')

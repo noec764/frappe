@@ -8,7 +8,8 @@ from frappe import _
 import json
 from frappe.model.document import Document
 from frappe.core.doctype.user.user import extract_mentions
-from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
+from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification,\
+	get_title, get_title_html
 from frappe.utils import get_fullname
 from frappe.website.render import clear_cache
 from frappe.database.schema import add_column
@@ -51,16 +52,13 @@ class Comment(Document):
 				return
 
 			sender_fullname = get_fullname(frappe.session.user)
-			title_field = frappe.get_meta(self.reference_doctype).get_title_field()
-			title = self.reference_name if title_field == "name" else \
-				frappe.db.get_value(self.reference_doctype, self.reference_name, title_field)
+			title = get_title(self.reference_doctype, self.reference_name)
 
 			recipients = [frappe.db.get_value("User", {"enabled": 1, "name": name, "user_type": "System User", "allowed_in_mentions": 1}, "email")
 				for name in mentions]
-			link = get_link_to_form(self.reference_doctype, self.reference_name, label=parent_doc_label)
 
 			notification_message = _('''{0} mentioned you in a comment in {1} {2}''')\
-				.format(frappe.bold(sender_fullname), frappe.bold(self.reference_doctype), frappe.bold(title))
+				.format(frappe.bold(sender_fullname), frappe.bold(self.reference_doctype), get_title_html(title))
 
 			notification_doc = {
 				'type': 'Mention',
@@ -72,6 +70,7 @@ class Comment(Document):
 			}
 
 			enqueue_create_notification(recipients, notification_doc)
+
 
 def on_doctype_update():
 	frappe.db.add_index("Comment", ["reference_doctype", "reference_name"])
@@ -157,8 +156,10 @@ def update_comments_in_parent(reference_doctype, reference_name, _comments):
 			# missing column and in request, add column and update after commit
 			frappe.local._comments = (getattr(frappe.local, "_comments", [])
 				+ [(reference_doctype, reference_name, _comments)])
+
 		elif frappe.db.is_data_too_long(e):
 			raise frappe.DataTooLongException
+
 		else:
 			raise ImplicitCommitError
 

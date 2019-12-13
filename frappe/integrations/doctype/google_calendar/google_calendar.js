@@ -3,6 +3,8 @@
 
 frappe.ui.form.on("Google Calendar", {
 	refresh: function(frm) {
+		frm.trigger('setup_reference_options');
+
 		if (frm.is_new()) {
 			frm.dashboard.set_headline(__("To use Google Calendar, enable {0}.", [`<a href='#Form/Google Settings'>${__('Google Settings')}</a>`]));
 		}
@@ -54,5 +56,12 @@ frappe.ui.form.on("Google Calendar", {
 				}
 			}
 		});
+	},
+	setup_reference_options(frm) {
+		frappe.xcall('frappe.integrations.doctype.google_calendar.google_calendar.get_reference_options')
+		.then(r => {
+			frm.fields_dict.reference_document.df.options = r;
+			frm.refresh_field('reference_document');
+		})
 	}
 });

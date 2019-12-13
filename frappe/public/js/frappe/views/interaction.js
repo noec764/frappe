@@ -6,7 +6,9 @@ frappe.provide("frappe.interaction_settings");
 frappe.views.InteractionComposer = class InteractionComposer {
 	constructor(opts) {
 		$.extend(this, opts);
-		this.make();
+		frappe.model.with_doctype("Event Participants", () => {
+			this.make();
+		});
 	}
 
 	make() {
@@ -74,6 +76,9 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				fieldname:"due_date"},
 			{label:__("Assigned To"), fieldtype:"Link",
 				fieldname:"assigned_to", options:"User"},
+			{fieldtype: "Section Break"},
+			{label:__("Participants"), fieldtype:"Table MultiSelect",
+				fieldname:"participants", options:"Event Participants"},
 			{fieldtype: "Section Break"},
 			{label:__("Summary"), fieldtype:"Data",
 				fieldname:"summary"},
@@ -218,8 +223,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			interaction_values["event_type"] = (form_values.public == 1) ? "Public" : "Private";
 		}
 		if (interaction_values["doctype"] == "Event") {
-			interaction_values["event_participants"] = [{"reference_doctype": form_values.reference_doctype,
-				"reference_docname": form_values.reference_document}];
+			interaction_values["event_participants"] = form_values.participants;
 		}
 		if (!("owner" in interaction_values)){
 			interaction_values["owner"] = frappe.session.user;

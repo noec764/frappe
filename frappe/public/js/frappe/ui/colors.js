@@ -13,7 +13,7 @@ frappe.ui.color_map = {
 	green: ["#cef6d1", "#9deca2", "#6be273", "#428b46"],
 	cyan: ["#d2f8ed", "#a4f3dd", "#77ecca", "#49937e"],
 	skyblue: ["#d2f1ff", "#a6e4ff", "#78d6ff", "#4f8ea8"],
-	blue: ["#d2d2ff", "#a3a3ff", "#7575ff", "#4d4da8"],
+	blue: ["#d7e4ff", "#9cbcff", "#6195ff", "#003aaf"],
 	purple: ["#dac7ff", "#b592ff", "#8e58ff", "#5e3aa8"],
 	pink: ["#f8d4f8", "#f3aaf0", "#ec7dea", "#934f92"],
 	white: ["#d1d8dd", "#fafbfc", "#ffffff", ""],
@@ -88,7 +88,7 @@ frappe.ui.color = {
 		if(shade_value <= 1) {
 			return this.get(color_name, 'dark');
 		}
-		return this.get(color_name, 'extra-light');
+		return '#fff';
 	},
 
 	validate_hex: function(hex) {

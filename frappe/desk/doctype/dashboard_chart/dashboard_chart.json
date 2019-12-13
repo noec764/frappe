@@ -1,4 +1,5 @@
 {
+ "allow_rename": 1,
  "autoname": "field:chart_name",
  "creation": "2019-01-10 12:28:06.282875",
  "doctype": "DocType",
@@ -11,8 +12,14 @@
   "document_type",
   "based_on",
   "value_based_on",
+  "group_by_type",
+  "group_by_based_on",
+  "aggregate_function_based_on",
+  "number_of_groups",
   "column_break_6",
   "timespan",
+  "from_date",
+  "to_date",
   "time_interval",
   "timeseries",
   "filters_section",
@@ -39,7 +46,7 @@
    "fieldname": "chart_type",
    "fieldtype": "Select",
    "label": "Chart Type",
-   "options": "Count\nSum\nAverage\nCustom"
+   "options": "Count\nSum\nAverage\nCustom\nGroup By"
   },
   {
    "depends_on": "eval:doc.chart_type === 'Custom'",
@@ -56,13 +63,13 @@
    "options": "DocType"
   },
   {
-   "depends_on": "eval: doc.chart_type !== 'Custom'",
+   "depends_on": "eval: ['Count', 'Sum', 'Average'].includes(doc.chart_type)",
    "fieldname": "based_on",
    "fieldtype": "Select",
    "label": "Time Series Based On"
   },
   {
-   "depends_on": "eval: ['Sum', 'Average'].includes(doc.chart_type)",
+   "depends_on": "eval: ['Sum', 'Average'].includes(doc.chart_type)\n",
    "fieldname": "value_based_on",
    "fieldtype": "Select",
    "label": "Value Based On"
@@ -76,7 +83,7 @@
    "fieldname": "timespan",
    "fieldtype": "Select",
    "label": "Timespan",
-   "options": "Last Year\nLast Quarter\nLast Month\nLast Week"
+   "options": "Last Year\nLast Quarter\nLast Month\nLast Week\nSelect Date Range"
   },
   {
    "depends_on": "timeseries",
@@ -87,6 +94,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:doc.chart_type !== 'Group By'",
    "fieldname": "timeseries",
    "fieldtype": "Check",
    "label": "Time Series"
@@ -142,12 +150,50 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.chart_type === 'Group By'",
+   "fieldname": "group_by_based_on",
+   "fieldtype": "Select",
+   "label": "Group By Based On"
+  },
+  {
+   "default": "Count",
+   "depends_on": "eval:doc.chart_type === 'Group By'",
+   "fieldname": "group_by_type",
+   "fieldtype": "Select",
+   "label": "Group By Type",
+   "options": "Count\nSum\nAverage"
+  },
+  {
+   "depends_on": "eval: ['Sum', 'Average'].includes(doc.group_by_type)",
+   "fieldname": "aggregate_function_based_on",
+   "fieldtype": "Select",
+   "label": "Aggregate Function Based On"
+  },
+  {
+   "depends_on": "eval:doc.chart_type === 'Group By'",
+   "fieldname": "number_of_groups",
+   "fieldtype": "Int",
+   "label": "Number of Groups"
+  },
+  {
+   "depends_on": "eval:doc.timespan === 'Select Date Range'",
+   "fieldname": "from_date",
+   "fieldtype": "Date",
+   "label": "From Date"
+  },
+  {
+   "depends_on": "eval:doc.timespan === 'Select Date Range'",
+   "fieldname": "to_date",
+   "fieldtype": "Date",
+   "label": "To Date"
+  },
+  {
    "fieldname": "unit",
    "fieldtype": "Data",
    "label": "Tooltip Unit"
   }
  ],
- "modified": "2019-09-10 10:36:56.514212",
+ "modified": "2019-11-12 20:52:14.316430",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",
@@ -164,10 +210,6 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-  },
-  {
-   "read": 1,
-   "role": "All"
   }
  ],
  "sort_field": "modified",
