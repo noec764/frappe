@@ -2,6 +2,8 @@ import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
 def execute():
+	frappe.reload_doctype("Auto Repeat")
+
 	auto_repeats = frappe.get_all("Auto Repeat",\
 		fields=["name", "docstatus", "status", "reference_doctype"])
 	references = set()
