@@ -211,6 +211,7 @@ class Document(BaseDocument):
 
 		self.set("__islocal", True)
 
+
 		self.check_permission("create")
 		self._set_defaults()
 		self.set_user_and_timestamp()
@@ -218,7 +219,10 @@ class Document(BaseDocument):
 		self.check_if_latest()
 		self.run_method("before_insert")
 		self._validate_links()
-		self.set_new_name(draft_name=self.meta.name_after_submit if hasattr(self.meta, "name_after_submit") else False)
+
+		give_draft_name = self.meta.name_after_submit if hasattr(self.meta, "name_after_submit") \
+			and not self._action == "submit" else False
+		self.set_new_name(draft_name=give_draft_name)
 		self.set_parent_in_children()
 		self.validate_higher_perm_levels()
 
