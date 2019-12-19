@@ -65,13 +65,13 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	if not fields:
 		fields = [field_map.start, field_map.end, field_map.title, 'name']
 
-	if field_map.color:
+	if field_map.color and doc_meta.has_field(field_map.color):
 		fields.append(field_map.color)
 
-	if field_map.rrule:
+	if field_map.rrule and doc_meta.has_field(field_map.rrule):
 		fields.append(field_map.rrule)
 
-	if field_map.allDay:
+	if field_map.allDay and doc_meta.has_field(field_map.allDay):
 		fields.append(field_map.allDay)
 
 	start_date = "ifnull(%s, '0001-01-01 00:00:00')" % field_map.start
@@ -81,22 +81,26 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 
 	filters += [
 		[doctype, start_date, '<=', end],
-		[doctype, end_date, '>=', start],
-		[doctype, 'repeat_this_event', '!=', 1]
+		[doctype, end_date, '>=', start]
 	]
+
+	if doc_meta.has_field("repeat_this_event"):
+		filters.append([doctype, 'repeat_this_event', '!=', 1])
+
 
 	events = frappe.get_list(doctype, fields=fields, filters=filters)
 
-	recurring_filters += [
-		[doctype, 'repeat_this_event', '!=', 0],
-		[doctype, "ifnull(repeat_till, '3000-01-01 00:00:00')", '>=', start]
-	]
-	recurring_events = frappe.get_list(doctype, fields=fields, filters=recurring_filters)
+	if doc_meta.has_field("repeat_this_event") and doc_meta.has_field("repeat_till"):
+		recurring_filters += [
+			[doctype, 'repeat_this_event', '!=', 0],
+			[doctype, "ifnull(repeat_till, '3000-01-01 00:00:00')", '>=', start]
+		]
+		recurring_events = frappe.get_list(doctype, fields=fields, filters=recurring_filters, debug=True)
 
-	if recurring_events:
-		events.extend(recurring_events)
-		for recurring_event in recurring_events:
-			events.extend(process_recurring_events(recurring_event, start, end, field_map.start, field_map.end, field_map.rrule))
+		if recurring_events:
+			events.extend(recurring_events)
+			for recurring_event in recurring_events:
+				events.extend(process_recurring_events(recurring_event, start, end, field_map.start, field_map.end, field_map.rrule))
 
 	return events
 
