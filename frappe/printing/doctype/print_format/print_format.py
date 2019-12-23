@@ -13,7 +13,7 @@ from frappe.model.document import Document
 
 class PrintFormat(Document):
 	def validate(self):
-		if ((self.standard=="Yes" or self._doc_before_save.standard=="Yes")
+		if ((self.standard=="Yes" or (hasattr(self, "_doc_before_save") and self._doc_before_save.standard=="Yes"))
 			and not frappe.local.conf.get("developer_mode")
 			and not (frappe.flags.in_import or frappe.flags.in_test)):
 

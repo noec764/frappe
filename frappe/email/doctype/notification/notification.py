@@ -60,7 +60,7 @@ def get_context(context):
 """)
 
 	def validate_standard(self):
-		if (self.is_standard or self._doc_before_save.is_standard) and not frappe.conf.developer_mode:
+		if (self.is_standard or (hasattr(self, "_doc_before_save") and self._doc_before_save.is_standard)) and not frappe.conf.developer_mode:
 			if self._doc_before_save.enabled != self.enabled:
 				self.db_set("enabled", self.enabled)
 				self.reload()
