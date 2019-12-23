@@ -80,12 +80,11 @@ export default {
 		getModules() {
 			this.modules = frappe.boot.allowed_modules.sort(dynamicSort("label"));
 
-			let maxLength = 0
-			this.modules.forEach(item => {
-				maxLength = item.label.length > maxLength ? item.label.length : maxLength;
-			})
+			const maxLength = this.modules.reduce((acc, item) => {
+				return item.label.length > acc ? item.label.length : acc;
+			}, 0)
 
-			this.width = (maxLength * 10) + "px";
+			this.width = ((maxLength > 25) ? (maxLength * 10) : (maxLength * 11)) + "px";
 		},
 		scrollUpDown() {
 			const scrollHeight = document.querySelector("#sidebard-modules-list").scrollHeight
