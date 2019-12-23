@@ -57,10 +57,11 @@
    "default": "Email",
    "fieldname": "channel",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Channel",
    "options": "Email\nSlack",
-   "reqd": 1,
-   "set_only_once": 1
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.channel=='Slack'",
@@ -265,7 +266,7 @@
  ],
  "icon": "fa fa-envelope",
  "links": [],
- "modified": "2019-12-23 14:46:04.987693",
+ "modified": "2019-12-23 15:08:17.518587",
  "modified_by": "Administrator",
  "module": "Email",
  "name": "Notification",
