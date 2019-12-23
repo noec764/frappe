@@ -135,7 +135,7 @@ function format_currency(v, currency, decimals) {
 
 function get_currency_symbol(currency) {
 	if (frappe.boot) {
-		if (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.hide_currency_symbol == "Yes")
+		if (frappe.boot.sysdefaults && frappe.boot.sysdefaults.hide_currency_symbol == "Yes")
 			return null;
 
 		if (!currency)
