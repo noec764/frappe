@@ -143,16 +143,23 @@ doc_events = {
 		],
 		"on_change": [
 			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points"
-		]
+		],
+		"after_insert": "frappe.cache_manager.build_table_count_cache"
 	},
 	"Event": {
 		"after_insert": "frappe.desk.doctype.event.event.insert_event_in_google_calendar",
 		"on_update": "frappe.desk.doctype.event.event.update_event_in_google_calendar",
-		"on_trash": "frappe.desk.doctype.event.event.delete_event_in_google_calendar",
+		"on_trash": "frappe.desk.doctype.event.event.delete_event_in_google_calendar"
 	},
 	"Contact": {
 		"after_insert": "frappe.integrations.doctype.google_contacts.google_contacts.insert_contacts_to_google_contacts",
-		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
+		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts"
+	},
+	"DocType": {
+		"after_save": "frappe.cache_manager.build_domain_restricted_doctype_cache"
+	},
+	"Page": {
+		"after_save": "frappe.cache_manager.build_domain_restricted_page_cache"
 	}
 
 }
