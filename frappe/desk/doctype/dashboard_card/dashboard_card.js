@@ -4,10 +4,6 @@
 frappe.provide('frappe.dashboards.card_sources');
 
 frappe.ui.form.on('Dashboard Card', {
-	setup: function(frm) {
-		// fetch timeseries from source
-		frm.add_fetch('source', 'timeseries', 'timeseries');
-	},
 	refresh: function(frm) {
 		frm.card_filters = null;
 		frm.set_df_property("filters_section", "hidden", 1);
@@ -71,7 +67,7 @@ frappe.ui.form.on('Dashboard Card', {
 					frappe.xcall('frappe.desk.doctype.dashboard_card_source.dashboard_card_source.get_config', {name: frm.doc.source})
 						.then(config => {
 							frappe.dom.eval(config);
-							frm.card_filters = frappe.dashboards.chart_sources[frm.doc.source].filters;
+							frm.card_filters = frappe.dashboards.card_sources[frm.doc.source].filters;
 							frm.trigger('render_filters_table');
 						});
 				} else {
