@@ -260,10 +260,11 @@ class Communication(Document):
 	def set_timeline_links(self):
 		contacts = get_contacts([self.sender, self.recipients, self.cc, self.bcc])
 		for contact_name in contacts:
-			self.add_link('Contact', contact_name)
+			if contact_name is not None:
+				self.add_link('Contact', contact_name)
 
-			#link contact's dynamic links to communication
-			add_contact_links_to_communication(self, contact_name)
+				#link contact's dynamic links to communication
+				add_contact_links_to_communication(self, contact_name)
 
 	def deduplicate_timeline_links(self):
 		if self.timeline_links:
