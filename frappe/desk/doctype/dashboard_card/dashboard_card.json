@@ -109,8 +109,7 @@
    "fieldname": "filters_json",
    "fieldtype": "Code",
    "label": "Filters JSON",
-   "options": "JSON",
-   "reqd": 1
+   "options": "JSON"
   },
   {
    "depends_on": "eval:doc.card_type!=\"Custom\"",
@@ -119,7 +118,7 @@
    "label": "Time Series Based On"
   }
  ],
- "modified": "2019-09-11 11:20:49.498529",
+ "modified": "2019-12-29 11:20:49.498529",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",
