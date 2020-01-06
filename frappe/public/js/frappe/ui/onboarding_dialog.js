@@ -34,7 +34,7 @@ frappe.setup.OnboardingSlide = class OnboardingSlide extends frappe.ui.Slide {
 
 	before_show() {
 		(this.id === 0) ?
-			this.$next_btn.text(__('Let\'s Start')) : this.$next_btn.text(__('Next'));
+			this.$next_btn.text(__("Let's Start")) : this.$next_btn.text(__('Next'));
 		//last slide
 		if (this.is_last_slide()) {
 			this.$complete_btn.removeClass('hide').addClass('action primary');
