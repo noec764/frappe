@@ -718,7 +718,7 @@ frappe.chat.room.create = function (kind, owner, users, name, fn) {
 
 	return new Promise(resolve => {
 		frappe.call("frappe.chat.doctype.chat_room.chat_room.create",
-			{ kind: kind, owner: owner || frappe.session.user, users: users, name: name },
+			{ kind: kind, token: owner || frappe.session.user, users: users, name: name },
 			r => {
 				let room = r.message
 				room     = { ...room, creation: new frappe.datetime.datetime(room.creation) }
@@ -1803,7 +1803,7 @@ class extends Component {
 				!props.target ?
 					h(frappe.components.FAB, {
 						  class: "frappe-fab",
-						   icon: state.active ? "uil uil-times" : "font-heavy octicon octicon-comment",
+						   icon: state.active ? "fa fa-fw fa-times" : "font-heavy octicon octicon-comment",
 						   size: frappe._.is_mobile() ? null : "large",
 						   type: "primary",
 						onclick: () => this.toggle(),
@@ -2661,7 +2661,7 @@ frappe.chat.render = (render = true, force = false) =>
 			const $template = $(`
 				<a class="dropdown-toggle frappe-chat-toggle" data-toggle="dropdown">
 					<div>
-						<i class="uil uil-comments-alt"/>
+						<i class="octicon octicon-comment-discussion"/>
 					</div>
 				</a>
 			`)
