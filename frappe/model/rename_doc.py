@@ -25,7 +25,7 @@ def update_document_title(doctype, docname, title_field=None, old_title=None, ne
 	return docname
 
 @frappe.whitelist()
-def rename_doc(doctype, old, new, force=False, merge=False, ignore_permissions=False, ignore_if_exists=False):
+def rename_doc(doctype, old, new, force=False, merge=False, ignore_permissions=False, ignore_if_exists=False, show_alert=True):
 	"""
 		Renames a doc(dt, old) to doc(dt, new) and
 		updates all linked fields of type "Link"
@@ -90,7 +90,9 @@ def rename_doc(doctype, old, new, force=False, merge=False, ignore_permissions=F
 
 	frappe.clear_cache()
 	frappe.enqueue('frappe.utils.global_search.rebuild_for_doctype', doctype=doctype)
-	frappe.msgprint(_('Document renamed from {0} to {1}').format(bold(old), bold(new)), alert=True, indicator='green')
+
+	if show_alert:
+		frappe.msgprint(_('Document renamed from {0} to {1}').format(bold(old), bold(new)), alert=True, indicator='green')
 
 	return new
 
