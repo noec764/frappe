@@ -9,7 +9,7 @@ from frappe.desk.form import assign_to
 from frappe.utils.jinja import validate_template
 from dateutil.relativedelta import relativedelta
 from frappe.utils.user import get_system_managers
-from frappe.utils import cstr, getdate, split_emails, add_days, today, get_last_day, get_first_day
+from frappe.utils import cstr, getdate, split_emails, add_days, today, get_last_day, get_first_day, month_diff
 from frappe.model.document import Document
 from frappe.core.doctype.communication.email import make
 from frappe.utils.background_jobs import get_jobs
@@ -117,28 +117,27 @@ class AutoRepeat(Document):
 		end_date = getdate(self.end_date)
 
 		if not self.end_date:
-			start_date = get_next_schedule_date(start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day)
+			next_date = get_next_schedule_date(start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day)
 			row = {
 				"reference_document": self.reference_document,
 				"frequency": self.frequency,
-				"next_scheduled_date": start_date
+				"next_scheduled_date": next_date
 			}
 			schedule_details.append(row)
 			start_date = get_next_schedule_date(start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day)
 
 		if self.end_date:
-			start_date = get_next_schedule_date(
+			next_date = get_next_schedule_date(
 					start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
 			while (getdate(start_date) < getdate(end_date)):
 				row = {
 					"reference_document" : self.reference_document,
 					"frequency" : self.frequency,
-					"next_scheduled_date" : start_date
+					"next_scheduled_date": next_date
 				}
 				schedule_details.append(row)
-				start_date = get_next_schedule_date(
-					start_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
-
+				next_date = get_next_schedule_date(
+					next_date, self.frequency, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
 
 		return schedule_details
 
