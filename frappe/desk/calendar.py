@@ -8,6 +8,7 @@ import json
 from frappe import _
 from frappe.utils import get_datetime, get_weekdays, formatdate, getdate
 from dateutil.rrule import rrulestr
+from datetime import timedelta
 
 RRULE_FREQUENCIES = {
 	"RRULE:FREQ=DAILY": "Daily",
@@ -108,7 +109,8 @@ def process_recurring_events(event, start, end, starts_on_field, ends_on_field, 
 	result = []
 	if rrule_field and event.get(rrule_field):
 		rrule_r = list(rrulestr(event.get(rrule_field), dtstart=event.get(starts_on_field), \
-			ignoretz=True, cache=False).between(after=get_datetime(start), before=get_datetime(end)))
+			ignoretz=True, cache=False).between(after=get_datetime(start) + timedelta(seconds=-1), before=get_datetime(end) + timedelta(seconds=1)))
+
 		for r in rrule_r:
 			if r == event.get(starts_on_field):
 				continue
@@ -141,7 +143,7 @@ def get_rrule(doc):
 			"saturday"
 		}
 	"""
-	rrule = get_rrule_frequency(doc.get("repeat_on"))
+	rrule = get_rrule_frequency(doc.get("repeat_on")) or ""
 	weekdays = get_weekdays()
 
 	if doc.get("repeat_on") == "Weekly":

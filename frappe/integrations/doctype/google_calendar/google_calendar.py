@@ -41,8 +41,8 @@ class GoogleCalendar(Document):
 			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
-			"client_id": google_settings.client_id,
-			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+			"client_id": google_settings.client_id or frappe.conf.google_client_id,
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 			"refresh_token": self.refresh_token,
 			"grant_type": "refresh_token",
 			"scope": SCOPES
@@ -90,10 +90,13 @@ def authorize_access(g_calendar, reauthorize=None):
 				frappe.db.set_value("Google Calendar", google_calendar.name, "next_sync_token", None)
 				frappe.db.commit()
 
-			frappe.local.response["type"] = "redirect"
-			frappe.local.response["location"] = "/desk#Form/{0}/{1}".format(quote("Google Calendar"), quote(google_calendar.name))
+				frappe.local.response["type"] = "redirect"
+				frappe.local.response["location"] = "/desk#Form/{0}/{1}".format(quote("Google Calendar"), quote(google_calendar.name))
 
-			frappe.msgprint(_("Google Calendar has been configured."))
+				frappe.msgprint(_("Google Calendar has been configured."))
+			else:
+				frappe.msgprint(_("Google Calendar configuration failed : {0}.").format(r.get("error_description") or str(r)))
+
 		except Exception as e:
 			frappe.throw(e)
 

@@ -17,7 +17,7 @@ from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send
 class Notification(Document):
 	def onload(self):
 		'''load message'''
-		if self.is_standard:
+		if self.is_standard and not frappe.conf.developer_mode:
 			self.message = self.get_template()
 
 	def autoname(self):

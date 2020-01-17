@@ -38,7 +38,7 @@ class AutoRepeat(Document):
 			if start_date <= today_date:
 				start_date = today_date
 
-	def after_save(self):
+	def on_update(self):
 		frappe.get_doc(self.reference_doctype, self.reference_document).notify_update()
 
 	def on_trash(self):
