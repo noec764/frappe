@@ -108,18 +108,21 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 def process_recurring_events(event, start, end, starts_on_field, ends_on_field, rrule_field):
 	result = []
 	if rrule_field and event.get(rrule_field):
-		rrule_r = list(rrulestr(event.get(rrule_field), dtstart=event.get(starts_on_field), \
-			ignoretz=True, cache=False).between(after=get_datetime(start) + timedelta(seconds=-1), before=get_datetime(end) + timedelta(seconds=1)))
+		try:
+			rrule_r = list(rrulestr(event.get(rrule_field), dtstart=event.get(starts_on_field), \
+				ignoretz=True, cache=False).between(after=get_datetime(start) + timedelta(seconds=-1), before=get_datetime(end) + timedelta(seconds=1)))
 
-		for r in rrule_r:
-			if r == event.get(starts_on_field):
-				continue
+			for r in rrule_r:
+				if r == event.get(starts_on_field):
+					continue
 
-			new_e = dict(event)
-			new_e[starts_on_field] = new_e.get(starts_on_field).replace(year=r.year, month=r.month, day=r.day)
-			days_diff = new_e.get(starts_on_field) - event.get(starts_on_field)
-			new_e[ends_on_field] = new_e.get(ends_on_field) + days_diff
-			result.append(new_e)
+				new_e = dict(event)
+				new_e[starts_on_field] = new_e.get(starts_on_field).replace(year=r.year, month=r.month, day=r.day)
+				days_diff = new_e.get(starts_on_field) - event.get(starts_on_field)
+				new_e[ends_on_field] = new_e.get(ends_on_field) + days_diff
+				result.append(new_e)
+		except Exception:
+			return result
 
 	return result
 
