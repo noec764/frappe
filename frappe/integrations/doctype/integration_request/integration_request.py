@@ -16,7 +16,7 @@ class IntegrationRequest(Document):
 		data = json.loads(self.data)
 		data.update(params)
 
-		self.data = json.dumps(data)
+		self.data = json.dumps(data, indent=4)
 		self.status = status
 		self.save(ignore_permissions=True)
 		frappe.db.commit()
