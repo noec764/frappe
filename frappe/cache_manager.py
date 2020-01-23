@@ -119,7 +119,7 @@ def clear_doctype_map(doctype, name):
 	cache_key = frappe.scrub(doctype) + '_map'
 	frappe.cache().hdel(cache_key, name)
 
-def build_table_count_cache(*args):
+def build_table_count_cache(*args, **kwargs):
 	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
 		return
 	_cache = frappe.cache()
@@ -140,7 +140,7 @@ def build_table_count_cache(*args):
 
 	return counts
 
-def build_domain_restricted_doctype_cache(*args):
+def build_domain_restricted_doctype_cache(*args, **kwargs):
 	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
 		return
 	_cache = frappe.cache()
@@ -151,7 +151,7 @@ def build_domain_restricted_doctype_cache(*args):
 
 	return doctypes
 
-def build_domain_restricted_page_cache(*args):
+def build_domain_restricted_page_cache(*args, **kwargs):
 	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
 		return
 	_cache = frappe.cache()
