@@ -106,7 +106,7 @@
    "fieldname": "app",
    "fieldtype": "Select",
    "label": "App",
-   "options": "Frappe\nERPNext",
+   "options": "dodock\ndokos",
    "reqd": 1
   },
   {
@@ -159,7 +159,7 @@
    "print_hide": 1
   }
  ],
- "modified": "2019-12-04 10:50:43.528901",
+ "modified": "2019-12-05 10:50:43.528901",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Onboarding Slide",

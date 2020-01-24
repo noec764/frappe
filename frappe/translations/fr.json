@@ -881,6 +881,7 @@
         "Use this fieldname to generate title": "Utilisez ce nom de champ pour générer le titre"
     },
     "DocType: Customize Form Field": {
+        " Allow in Quick Entry ": "Autoriser dans les écritures rapides",
         "Allow Bulk Edit": "Autoriser les modifications en masse",
         "Allow on Submit": "Autoriser les modifications après validation",
         "Attach": "Joindre",
@@ -1628,6 +1629,7 @@
         "Add Signature": "Ajouter une signature",
         "Always use Account's Email Address as Sender": "Toujours utiliser l'adresse email du compte comme expéditeur",
         "Always use Account's Name as Sender's Name": "Toujours utiliser le nom du compte en tant que nom d'expéditeur",
+        "Append Emails to Sent Folder": "Ajouter les emails au dossier 'Envoyé'",
         "Append To": "Ajouter à",
         "Append as communication against this DocType (must have fields, \"Status\", \"Subject\")": "Ajouter en tant que communication pour ce DocType (doit avoir les champs, \"Status\", \"Subject\")",
         "Attachment Limit (MB)": "Taille maximale de la pièce jointe (MB)",
@@ -1685,6 +1687,7 @@
         "Use Different Email Login ID": "Utiliser un email d'identification différent",
         "Use IMAP": "Utiliser IMAP",
         "Use SSL": "Utiliser SSL",
+        "Use SSL for Outgoing": "Utiliser SSL pour les emails sortants",
         "Use TLS": "Utiliser TLS",
         "Uses the Email Address Name mentioned in this Account as the Sender's Name for all emails sent using this Account.": "Utilise le nom de l'adresse email renseignée dans ce compte comme nom d'expéditeur pour tous les emails envoyés depuis ce compte",
         "Uses the Email Address mentioned in this Account as the Sender for all emails sent using this Account. ": "Utilise l'adresse email mentionnée dans ce compte comme expéditeur pour tous les emails envoyés depuis ce compte.",
@@ -1697,6 +1700,7 @@
         "no failed attempts": "aucune tentative ratée"
     },
     "DocType: Email Domain": {
+        "Append Emails to Sent Folder": "Ajouter les emails au dossier 'Envoyé'",
         "Append To": "Ajouter A",
         "Append as communication against this DocType (must have fields, \"Status\", \"Subject\")": "Ajouter en tant que communication pour ce type de document (doit avoir les champs \"Status\", \"Subject\")",
         "Attachment Limit (MB)": "Taille maximale des pièces jointes (MB)",
@@ -1712,6 +1716,7 @@
         "System Manager": "Responsable Système",
         "Use IMAP": "Utiliser IMAP",
         "Use SSL": "Utiliser SSL",
+        "Use SSL for Outgoing": "Utiliser SSL pour les emails sortants",
         "Use TLS": "Utiliser TLS",
         "domain name": "Nom de domaine",
         "e.g. pop.gmail.com / imap.gmail.com": "ex. pop.gmail.com / imap.gmail.com",
@@ -2629,12 +2634,15 @@
     "DocType: Onboarding Slide": {
         "Action Settings": "Paramètres d'action",
         "Add More Button": "Button 'Ajouter plus'",
+        "Add a help video link just in case user has no idea about what to fill in the slide.": "Ajoutez un lien vidéo au cas où l'utilisateur ne sait pas comment remplir la diapositive",
         "App": "App",
         "Continue": "Continuer",
         "Create": "Créer",
         "Description": "Description",
         "Desk": "Bureau",
+        "Determines the order of the slide in the wizard. If the slide is not to be displayed, priority should be set to 0.": "Détermine l'ordre de la diapositive dans l'assitant. Si la diapositive ne doit pas être affichée, la priorité doit être 0",
         "Domains": "Domaines",
+        "ERPNext": "ERPNext",
         "Fields": "Champ",
         "Frappe": "Frappe",
         "Help Links": "Liens d'aide",
@@ -2642,6 +2650,7 @@
         "Is Completed": "Complété",
         "Max Count": "Décompte maximum",
         "Module": "Module",
+        "Onboarding Slide": "Diapositive d'accueil",
         "Reference Document Type": "Type de document de référence",
         "Settings": "Paramètres",
         "Slide Description": "Description de la diapositive",
@@ -3172,6 +3181,7 @@
         "Description": "Description",
         "Desk": "Bureau",
         "Domains": "Domaines",
+        "ERPNext": "ERPNext",
         "Fields": "Champ",
         "Frappe": "Frappe",
         "Help Links": "Liens d'aide",
@@ -3186,6 +3196,7 @@
         "Slide Order": "Ordre de la diapositive",
         "Slide Title": "Titre de la diapositive",
         "Slide Type": "Type de diapositive",
+        "Submit Method": "Méthode pour la validation",
         "System Manager": "Responsable Système"
     },
     "DocType: Setup Wizard Slide Field": {
@@ -3212,6 +3223,7 @@
         "Rating": "Évaluation",
         "Section Break": "Saut de section",
         "Select": "Sélectionner",
+        "Setup Wizard Slide Field": "Champ de l'assistant d'installation",
         "Small Text": "Petit texte",
         "Text": "Texte",
         "Text Editor": "Éditeur de texte",
@@ -3783,11 +3795,14 @@
         "Doc Event": "Événement Doc",
         "Doc Events": "Événements Doc",
         "DocType": "DocType",
+        "Enable Security": "Activer la sécurité",
         "Form URL-Encoded": "Formulaire encodé en URL",
+        "HOOK-.####": "HOOK-.####",
         "Headers": "En-Têtes",
         "Integrations": "Intégrations",
         "JSON": "JSON",
         "JSON Request Body": "Corps de requête JSON",
+        "Naming Series": "Nom de série",
         "Request Structure": "Structure de la requête",
         "Request URL": "URL de Demande",
         "System Manager": "Responsable Système",
@@ -3796,6 +3811,8 @@
         "Webhook Data": "Données Webhook",
         "Webhook Headers": "En-Têtes Webhook",
         "Webhook Request": "Requête Webhook",
+        "Webhook Secret": "Secret du Webhook",
+        "Webhook Security": "Sécurité du Webhook",
         "Webhook Trigger": "Déclencheur du webhook",
         "after_insert": "after_insert",
         "on_cancel": "on_cancel",
@@ -4281,9 +4298,11 @@
     },
     "apps/frappe/frappe/__init__.py": {
         "App {0} is not installed": "App {0} n'est pas installée",
+        "Error": "Erreur",
         "No permission for {0}": "Pas d'autorisation pour {0}",
         "Only for {}": "Seulement pour {}",
-        "Thank you": "Merci"
+        "Thank you": "Merci",
+        "{0} has no versions tracked.": "La gestion des versions n'est pas activé pour {0}."
     },
     "apps/frappe/frappe/api.py": {
         "Not permitted": "Interdit"
@@ -5610,6 +5629,10 @@
     "apps/frappe/frappe/desk/doctype/notification_settings/notification_settings.js": {
         "Settings": "Paramètres"
     },
+    "apps/frappe/frappe/desk/doctype/onboarding_slide/onboarding_slide.py": {
+        "An Onboarding Slide <b>{0}</b> with the same slide order already exists": "Une diapositive d'accueil <b>{0}</b> avec le même ordre de diapositives existe déjà",
+        "An Onboarding Slide of Slide Type Continue already exists.": "Une diapositive d'accueil de type 'Continuer' existe déjà."
+    },
     "apps/frappe/frappe/desk/doctype/todo/todo.js": {
         "Close": "Fermer",
         "New": "Nouveau·elle",
@@ -5640,6 +5663,9 @@
     },
     "apps/frappe/frappe/desk/form/document_follow.py": {
         "Document Follow Notification": "Notification de suivi de document"
+    },
+    "apps/frappe/frappe/desk/form/linked_with.py": {
+        "Cancelling documents": "Annulation des documents"
     },
     "apps/frappe/frappe/desk/form/load.py": {
         "Insufficient Permission for {0}": "Vous n'avez pas les autorisations suffisantes pour accéder au document {0}"
@@ -5701,6 +5727,7 @@
     "apps/frappe/frappe/desk/page/leaderboard/leaderboard.js": {
         "Company": "Société",
         "Field": "Champ",
+        "Leaderboard": "Classement général",
         "No items found.": "Aucun élément trouvé",
         "Please select Company": "Veuillez sélectionner une société",
         "Timespan": "Période"
@@ -6040,6 +6067,7 @@
         "Google Calendar - Could not fetch event from Google Calendar, error code {0}.": "Google Agenda - Echec de l'import d'événements depuis Google Agenda, code d'erreur {0}",
         "Google Calendar - Could not insert event in Google Calendar {0}, error code {1}.": "Google Agenda - Echec de la création d'un événement dans le Google Agenda {0}, code d'erreur {1}",
         "Google Calendar - Could not update Event {0} in Google Calendar, error code {1}.": "Google Agenda - Echec de la mise à jour de l'événement {0} dans Google Agenda, code d'erreur {1}",
+        "Google Calendar configuration failed : {0}.": "La configuration de Google Agenda a échoué : {0}",
         "Google Calendar has been configured.": "Google Agenda est configuré",
         "No Google Calendar Event to sync.": "Aucun événement Google Agenda à synchroniser.",
         "Something went wrong during the token generation. Click on {0} to generate a new one.": "Une erreur a empêché la génération du jeton. Veuillez cliquer sur {0} pour en générer un nouveau",
@@ -6162,6 +6190,9 @@
         "Something went wrong": "Quelque chose s'est mal passé"
     },
     "apps/frappe/frappe/integrations/doctype/razorpay_settings/razorpay_settings.py": {
+        "Controller method get_razorpay_order missing": "La méthode de contrôleur get_razorpay_order est manquante",
+        "Could not create Razorpay order. Please contact Administrator": "La commande Razorpay n'a pas pu être créé. Veuillez contacter votre administrateur.",
+        "Could not create razorpay order": "La commande Razorpay n'a pas pu être créé",
         "Invalid Subscription": "Abonnement invalide",
         "Please select another payment method. Razorpay does not support transactions in currency '{0}'": "Veuillez choisir un autre mode de paiement. Razorpay ne supporte pas les transactions en monnaie ‘{0}’",
         "Seems API Key or API Secret is wrong !!!": "Il semble que la Clé API ou le Secret API soit faux !!!",
@@ -6566,6 +6597,7 @@
         "Some of the features might not work in your browser. Please update your browser to the latest version.": "Certaines des fonctionnalités peuvent ne pas fonctionner dans votre navigateur. Veuillez mettre à jour votre navigateur vers la dernière version.",
         "Submit": "Valider",
         "The application has been updated to a new version, please refresh this page": "L'application a été mise à jour vers une nouvelle version, veuillez rafraîchir cette page",
+        "Updated To A New Version 🎉": "Mise à jour vers une nouvelle version 🎉",
         "Updated To New Version": "Mis à jour vers une nouvelle version",
         "Updated To New Version 🎉": "Mise à jour vers une nouvelle version 🎉",
         "Version Updated": "Application mise à jour"
@@ -6762,6 +6794,7 @@
         "Re: {0}": "Re: {0}",
         "Reply": "Répondre",
         "Save": "Enregistrer",
+        "Send an email to {0} to link it here": "Envoyez un email à {0} pour le lier ici",
         "added": "ajouté",
         "cancelled this document": "ce document est annulé",
         "cancelled this document {0}": "a annulé le document {0}",
@@ -6789,8 +6822,10 @@
     "apps/frappe/frappe/public/js/frappe/form/form.js": {
         "\"amended_from\" field must be present to do an amendment.": "Le champs \"amended_from\" doit être présent pour faire une modification",
         "Allowing DocType, DocType. Be careful!": "Autorisation de DocType, DocType. Soyez prudent !",
+        "Cancel All Documents": "Annuler tous les documents",
         "Cannot open instance when its {0} is open": "Impossible d'ouvrir une instance quand son {0} est ouverte",
         "Cannot open {0} when its instance is open": "Impossible d'ouvrir {0} quand son instance est ouverte",
+        "Do you want to cancel all linked documents?": "Voulez-vous annuler tous les documents liés",
         "Field {0} not found.": "Champ {0} introuvable.",
         "Go to next record": "Voir le document suivant",
         "Go to previous record": "Voir le document précédent",
@@ -6803,6 +6838,8 @@
         "See on Website": "Voir sur le site",
         "Submit this document to confirm": "Valider ce document pour confirmer",
         "This form has been modified after you have loaded it": "Ce formulaire a été modifié après que vous l'ayez chargé",
+        "You do not have permissions to cancel all linked documents.": "Vous n'avez pas les autorisations pour annuler tous les documents liés",
+        "{0} {1} is linked with the following submitted documents: {2}": "{0} {1} est lié avec les documents validés suivants : {2}",
         "{} Complete": "{} terminée."
     },
     "apps/frappe/frappe/public/js/frappe/form/form_sidebar.js": {
@@ -7090,6 +7127,7 @@
     },
     "apps/frappe/frappe/public/js/frappe/form/toolbar.js": {
         "Amend": "Modifier",
+        "Are you sure you want to merge {0} with {1}?": "Êtes-vous certain de vouloir fusionner {0} avec {1}",
         "Cancel": "Annuler",
         "Customize": "Personnaliser",
         "Delete": "Supprimer",
@@ -7112,6 +7150,7 @@
         "Repeat": "Répétition",
         "Request Feedback": "Demander des Retours d’Expérience",
         "Select Field": "Sélectionner le champ",
+        "This cannot be undone": "Cette action ne peut pas être annulée",
         "Title": "Titre",
         "Unchanged": "Inchangé",
         "Update": "Mettre à Jour"
@@ -7252,6 +7291,7 @@
         "Submit {0} documents?": "Valider {0} documents ?",
         "Toggle Sidebar": "Afficher/Cacher la barre latérale",
         "User Permissions": "Autorisations des Utilisateurs",
+        "You haven't created a {0} yet": "Vous n'avez pas encore créé {0}",
         "{0} items selected": "{0} articles sélectionnés",
         "{0} of {1}": "{0} sur {1}",
         "{0} of {1} ({2} rows with children)": "{0} sur {1} ({2} lignes avec les lignes de tableaux)"
@@ -7333,6 +7373,7 @@
         "Rename": "Renommer",
         "Rename {0}": "Renommer {0}",
         "Tags": "Balises",
+        "This cannot be undone": "Cette action ne peut pas être annulée",
         "Unable to load: {0}": "Impossible de charger : {0}",
         "Unknown Column: {0}": "Colonne Inconnue : {0}"
     },
@@ -7594,6 +7635,7 @@
     },
     "apps/frappe/frappe/public/js/frappe/ui/onboarding_dialog.js": {
         "Complete": "Terminé",
+        "Let's Start": "C'est parti",
         "Need Help?": "Besoin d'aide ?",
         "Next": "Suivant",
         "Success": "Réussite",
@@ -8058,6 +8100,7 @@
     "apps/frappe/frappe/public/js/frappe/views/reports/report_view.js": {
         "Add Column": "Ajouter une Colonne",
         "Also adding the dependent currency field {0}": "Ajout également du champ de devise dépendante {0}",
+        "Also adding the status dependency field {0}": "Le champ dont le statut dépend a été également ajouté",
         "Cannot remove ID field": "Impossible de supprimer le champ ID",
         "Chart Type": "Type de graphique",
         "Configure Chart": "Configurer le graphique",
@@ -8084,6 +8127,7 @@
         "Setup Auto Email": "Configuration Auto Email",
         "Show Totals": "Afficher les Totaux",
         "Showing only Numeric fields from Report": "Afficher uniquement les champs numériques du rapport",
+        "Status": "Statut",
         "Toggle Chart": "Afficher/Cacher le graphique",
         "Toggle Sidebar": "Afficher/Cacher la barre latérale",
         "Totals": "Totaux",
@@ -8465,6 +8509,9 @@
     },
     "apps/frappe/frappe/templates/includes/navbar/dropdown_login.html": {
         "Login": "Connexion"
+    },
+    "apps/frappe/frappe/templates/includes/navbar/navbar.html": {
+        "Home": "Accueil"
     },
     "apps/frappe/frappe/templates/includes/navbar/navbar_login.html": {
         "Login": "Connexion",
@@ -9387,6 +9434,7 @@
         "Last Updated On": "Dernière Mise à Jour",
         "Last synced:": "Dernière synchronisation:",
         "Leaderboard": "Classement général",
+        "Let's Start": "C'est parti",
         "Letter": "Lettre",
         "Letterhead": "En-tête",
         "Level": "Niveau",
@@ -9541,6 +9589,7 @@
         "The application has been updated to a new version, please refresh this page": "L'application a été mise à jour vers une nouvelle version, veuillez rafraîchir cette page",
         "The resource you are looking for is not available": "La ressource que vous recherchez n'est pas disponible",
         "There were errors while sending email. Please try again.": "Il y a eu des erreurs lors de l'envoi d’emails. Veuillez essayer à nouveau.",
+        "This cannot be undone": "Cette action ne peut pas être annulée",
         "This dashboard is empty": "Ce tableau de bord est vide",
         "This form does not have any input": "Ce formulaire n'a aucune entrée",
         "Title": "Titre",
@@ -9557,6 +9606,7 @@
         "Unknown Column: {0}": "Colonne Inconnue : {0}",
         "Upcoming Events": "Evénements à venir",
         "Update Translations": "Mettre à jour les traductions",
+        "Updated To A New Version 🎉": "Mise à jour vers une nouvelle version 🎉",
         "Updated To New Version": "Mis à Jour vers la Nouvelle Version",
         "Updated To New Version 🎉": "Mise à jour vers une nouvelle version 🎉",
         "Upload": "Charger",
@@ -9697,6 +9747,7 @@
         "Appreciate": "Apprécier",
         "Are you sure you want to delete all rows?": "Êtes-vous sûr ce vouloir supprimer toutes les lignes ?",
         "Are you sure you want to delete the attachment?": "Êtes-vous sûr de vouloir supprimer la pièce jointe?",
+        "Are you sure you want to merge {0} with {1}?": "Êtes-vous certain de vouloir fusionner {0} avec {1}",
         "Assign": "Assigner",
         "Assign To": "Attribuer À",
         "Assign to me": "Attribuer à moi",
@@ -9715,6 +9766,7 @@
         "Can Share": "Peut Partager",
         "Can Write": "Peut Écrire",
         "Cancel": "Annuler",
+        "Cancel All Documents": "Annuler tous les documents",
         "Cancelling": "Annulation",
         "Cannot have multiple printers mapped to a single print format.": "Vous ne pouvez pas avoir plusieurs imprimantes liées à un seul format d'impression",
         "Cannot move row": "Ligne impossible à déplacer",
@@ -9747,6 +9799,7 @@
         "Delete comment?": "Supprimer le commentaire ?",
         "Details": "Détails",
         "Do not edit headers which are preset in the template": "Ne pas modifier les en-têtes prédéfinis dans le modèle",
+        "Do you want to cancel all linked documents?": "Voulez-vous annuler tous les documents liés",
         "Document is only editable by users of role": "Document est modifiable uniquement par les utilisateurs du rôle",
         "Download": "Télécharger",
         "Duplicate": "Dupliquer",
@@ -9907,6 +9960,7 @@
         "Select a reference DocType": "Sélectionner un document de référence",
         "Select template": "Sélectionner un Modèle",
         "Select uploaded file": "Sélectionner le fichier téléchargé",
+        "Send an email to {0} to link it here": "Envoyez un email à {0} pour le lier ici",
         "Send an email to {0} to link it here.": "Envoyer un email à {0} pour le lier à ce document",
         "Settings": "Paramètres",
         "Settings...": "Paramètres...",
@@ -9928,6 +9982,7 @@
         "Text Size": "Taille du texte",
         "The CSV format is case sensitive": "Le format CSV est sensible à la casse",
         "There were errors": "Il y a eu des erreurs",
+        "This cannot be undone": "Cette action ne peut pas être annulée",
         "This feature is brand new and still experimental": "Cette fonctionnalité est toute nouvelle et encore expérimentale",
         "This form has been modified after you have loaded it": "Ce formulaire a été modifié après que vous l'ayez chargé",
         "This may get printed on multiple pages": "Ceci peut être imprimé sur plusieurs pages",
@@ -9958,6 +10013,7 @@
         "You are now following this document. You will receive daily updates via email. You can change this in User Settings.": "Vous suivez désormais ce document. Vous recevrez des mises à jours quotidiennes par email ou à la fréquence que vous avez déterminé dans vos paramètres utilisateur.",
         "You do not have enough points": "Vous n'avez pas suffisamment de points",
         "You do not have enough review points": "Vous n'avez pas suffisamment de points de revue",
+        "You do not have permissions to cancel all linked documents.": "Vous n'avez pas les autorisations pour annuler tous les documents liés",
         "You unfollowed this document": "Vous ne suivez plus ce document",
         "added": "ajouté",
         "cancelled this document": "ce document est annulé",
@@ -9995,6 +10051,7 @@
         "{0} rows for {1}": "{0} lignes pour {1}",
         "{0} to {1}": "{0} à {1}",
         "{0} values selected": "{0} valeurs sélectionnées",
+        "{0} {1} is linked with the following submitted documents: {2}": "{0} {1} est lié avec les documents validés suivants : {2}",
         "{} Complete": "{} terminée."
     },
     "sites/assets/js/frappe-recorder.min.js": {
@@ -10086,6 +10143,7 @@
         "Start Date": "Date de début",
         "Submit": "Valider",
         "Tags": "Balises",
+        "This cannot be undone": "Cette action ne peut pas être annulée",
         "This form does not have any input": "Ce formulaire n'a aucune entrée",
         "Toggle Public/Private": "Modifier public/privé",
         "Unable to load: {0}": "Impossible de charger : {0}",
@@ -10330,6 +10388,7 @@
         "Week": "Semaine",
         "With Letterhead": "Avec en-tête de Lettre",
         "You are not allowed to print this report": "Vous n'êtes pas autorisé à imprimer ce rapport",
+        "You haven't created a {0} yet": "Vous n'avez pas encore créé {0}",
         "You selected Draft or Cancelled documents": "Vous avez sélectionné des documents Brouillon ou Annulés",
         "toggle Tag": "Afficher/Cacher la balise",
         "use % as wildcard": "utiliser % comme joker",
@@ -10369,6 +10428,7 @@
         "Add Column": "Ajouter une Colonne",
         "Add Group": "Ajouter un groupe",
         "Also adding the dependent currency field {0}": "Ajout également du champ de devise dépendante {0}",
+        "Also adding the status dependency field {0}": "Le champ dont le statut dépend a été également ajouté",
         "Average of {0}": "Moyenne de {0}",
         "Cannot remove ID field": "Impossible de supprimer le champ ID",
         "Chart Type": "Type de graphique",
@@ -10434,6 +10494,7 @@
         "Show Totals": "Afficher les Totaux",
         "Show all data": "Afficher toutes les données",
         "Showing only Numeric fields from Report": "Afficher uniquement les champs numériques du rapport",
+        "Status": "Statut",
         "Sum of {0}": "Somme de {0}",
         "This is a background report. Please set the appropriate filters and then generate a new one.": "Ceci est un rapport d'arrière plan. Veuillez définir les filtres correspondants et cliquer sur 'Générer un rapport'",
         "This report was generated {0}.": "Ce rapport a été préparé {0}.",

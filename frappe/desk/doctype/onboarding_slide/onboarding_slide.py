@@ -39,7 +39,7 @@ def get_onboarding_slides_as_list():
 	for entry in slide_docs:
 		# using get_doc because child table fields are not fetched in get_all
 		slide_doc = frappe.get_doc('Onboarding Slide', entry.name)
-		if frappe.scrub(slide_doc.app) in frappe.get_installed_apps():
+		if frappe.scrub(slide_doc.app) in frappe.get_mapped_installed_apps():
 			slide = frappe._dict(
 				slide_type=slide_doc.slide_type,
 				title=slide_doc.slide_title,
