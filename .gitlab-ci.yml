@@ -15,7 +15,7 @@ before_script:
   - export LANG=C.UTF-8
   - export LC_ALL=C.UTF-8
   - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
-  - python3 install.py --production --without-erpnext --user dokotest --site test_site --mysql-root-password password --admin-password password
+  - python3 install.py --production --without-erpnext --user dokotest --site test_site --run-travis --verbose
 
 stages:
   - Unit Tests
