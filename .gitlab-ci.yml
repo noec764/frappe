@@ -5,7 +5,7 @@ variables:
   GIT_CHECKOUT: "false"
 
 before_script:
-  - add dokotest
+  - adduser dokotest
   - usermod -aG sudo dokotest
   - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
   - python3 install.py --production --user dokotest
