@@ -5,8 +5,9 @@ variables:
   GIT_CHECKOUT: "false"
 
 before_script:
-  - adduser dokotest
+  - adduser --disabled-password --gecos "" dokotest
   - usermod -aG sudo dokotest
+  - apt-get install -y wget
   - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
   - python3 install.py --production --user dokotest
 
