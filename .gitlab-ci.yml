@@ -7,12 +7,12 @@ variables:
 before_script:
   - apt-get update && apt-get -y install curl
   - apt-get update && apt-get install -y wget
-  - apt-get update && apt-get install python3-minimal
-  - apt-get install build-essential python-setuptools
+  - apt-get update && apt-get install -y python3-minimal
+  - apt-get update && apt-get install -y build-essential python-setuptools
   - adduser --disabled-password --gecos "" dokotest
   - usermod -aG sudo dokotest
   - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
-  - python3 install.py --production --user dokotest
+  - python3 install.py --production --without-erpnext --user dokotest
 
 stages:
   - Unit Tests
