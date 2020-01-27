@@ -5,6 +5,8 @@ variables:
   GIT_CHECKOUT: "false"
 
 before_script:
+  - apt-get update
+  - apt-get -y install curl
   - adduser --disabled-password --gecos "" dokotest
   - usermod -aG sudo dokotest
   - apt-get install -y wget
