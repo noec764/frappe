@@ -1,0 +1,19 @@
+image: "ubuntu:18.04"
+
+before_script:
+  - sudo apt-get install python3-minimal
+  - sudo apt-get install build-essential python-setuptools
+  - add dokotest
+  - usermod -aG sudo dokotest
+  - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
+  - sudo python3 install.py --production --user dokotest
+
+stages:
+  - Unit Tests
+
+unittests:
+  stage: Unit Tests
+  script:
+    - bench --site test_site reinstall --yes
+    - bench --site test_site scheduler disable
+    - bench --site test_site run-tests --coverage
