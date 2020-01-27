@@ -5,8 +5,6 @@ variables:
   GIT_CHECKOUT: "false"
 
 before_script:
-  - apt-get install python3-minimal
-  - apt-get install build-essential python-setuptools
   - add dokotest
   - usermod -aG sudo dokotest
   - wget https://gitlab.com/dokos/docli/raw/master/playbooks/install.py
