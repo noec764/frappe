@@ -1,4 +1,4 @@
-image: "ubuntu:18.04"
+image: "debian:9.6"
 
 variables:
   GIT_STRATEGY: none
