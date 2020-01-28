@@ -12,10 +12,7 @@ before_script:
   - apt-get update && apt-get install -y sudo
   - apt-get update && apt-get install -y systemd
   - apt-get update && apt-get install -y dbus
-  - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-suggests --no-install-recommends \
-    git libffi-dev liblcms2-dev libldap2-dev libmariadbclient-dev libsasl2-dev libssl1.0-dev libtiff5-dev \
-    libwebp-dev mariadb-client iputils-ping python-dev python-pip python-setuptools python-tk redis-tools rlwrap \
-    software-properties-common tk8.6-dev xfonts-75dpi xfonts-base wkhtmltopdf fonts-cantarell
+  - apt-get update && apt-get install -y libmariadbclient-dev mariadb-client
   - systemctl daemon-reload
   - adduser --disabled-password --gecos "" dokotest
   - usermod -aG sudo dokotest
