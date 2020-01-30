@@ -234,6 +234,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 	result = list(events)
 	for event in events:
 		if event.get("repeat_this_event"):
+			result = [x for x in result if x.get("name") != event.get("name")]
 			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
 
 	return result

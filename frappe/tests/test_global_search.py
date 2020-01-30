@@ -42,7 +42,9 @@ class TestGlobalSearch(unittest.TestCase):
 			frappe.get_doc(dict(
 				doctype='Event',
 				subject=text,
-				repeat_on='Monthly',
+				repeat_this_event=1,
+				rrule='RRULE:FREQ=MONTHLY;COUNT=30;INTERVAL=1;WKST=MO',
+				event_type="Public",
 				starts_on=frappe.utils.now_datetime())).insert()
 
 		global_search.sync_global_search()
@@ -113,6 +115,7 @@ class TestGlobalSearch(unittest.TestCase):
 			doc = frappe.get_doc({
 				'doctype':'Event',
 				'subject': text,
+				"event_type": "Public",
 				'starts_on': frappe.utils.now_datetime()
 			})
 			doc.insert()

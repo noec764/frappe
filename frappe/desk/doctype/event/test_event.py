@@ -109,21 +109,21 @@ class TestEvent(unittest.TestCase):
 		ev = frappe.get_doc({
 			"doctype":"Event",
 			"subject": "_Test Event",
-			"starts_on": "2014-02-01",
+			"starts_on": "2020-01-05",
 			"event_type": "Public",
 			"repeat_this_event": 1,
-			"repeat_on": "Yearly"
+			"rrule": "RRULE:FREQ=YEARLY;COUNT=30;INTERVAL=1;WKST=MO"
 		})
 		ev.insert()
 
-		ev_list = get_events("2014-02-01", "2014-02-01", "Administrator", for_reminder=True)
-		self.assertTrue(bool(list(filter(lambda e: e.name==ev.name, ev_list))))
+		ev_list = get_events("2020-01-05", "2020-01-05", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list))))
 
-		ev_list1 = get_events("2015-01-20", "2015-01-20", "Administrator", for_reminder=True)
-		self.assertFalse(bool(list(filter(lambda e: e.name==ev.name, ev_list1))))
+		ev_list1 = get_events("2021-01-20", "2021-01-20", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list1))))
 
-		ev_list2 = get_events("2014-02-20", "2014-02-20", "Administrator", for_reminder=True)
-		self.assertFalse(bool(list(filter(lambda e: e.name==ev.name, ev_list2))))
+		ev_list2 = get_events("2020-01-20", "2020-01-20", "Administrator", for_reminder=True)
+		self.assertFalse(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list2))))
 
-		ev_list3 = get_events("2015-02-01", "2015-02-01", "Administrator", for_reminder=True)
-		self.assertTrue(bool(list(filter(lambda e: e.name==ev.name, ev_list3))))
+		ev_list3 = get_events("2023-01-05", "2023-01-05", "Administrator", for_reminder=True)
+		self.assertTrue(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list3))))

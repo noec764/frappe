@@ -63,6 +63,7 @@ def make(doctype=None, name=None, content=None, subject=None, sent_or_received =
 		"cc": cc or None,
 		"bcc": bcc or None,
 		"communication_medium": communication_medium,
+		"communication_type": "Email",
 		"sent_or_received": sent_or_received,
 		"reference_doctype": doctype,
 		"reference_name": name,

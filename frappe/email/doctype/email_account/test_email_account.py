@@ -173,7 +173,7 @@ class TestEmailAccount(unittest.TestCase):
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 
 		# reference document for testing
-		event = frappe.get_doc(dict(doctype='Event', subject='test-message')).insert()
+		event = frappe.get_doc(dict(doctype='Event', subject='test-message', event_type='Public')).insert()
 
 		# send a mail against this
 		frappe.sendmail(recipients='test@example.com', subject='test message for threading',

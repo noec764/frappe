@@ -260,7 +260,8 @@ class DatabaseQuery(object):
 		# add tables from fields
 		if self.fields:
 			for f in self.fields:
-				if ( not ("tab" in f and "." in f) ) or ("locate(" in f) or ("strpos(" in f) or ("count(" in f):
+				if ( not ("tab" in f and "." in f) ) or ("locate(" in f) or ("strpos(" in f) or \
+					("count(" in f) or ("avg(" in f)  or ("sum(" in f):
 					continue
 
 				table_name = f.split('.')[0]
@@ -283,10 +284,14 @@ class DatabaseQuery(object):
 	def set_field_tables(self):
 		'''If there are more than one table, the fieldname must not be ambiguous.
 		If the fieldname is not explicitly mentioned, set the default table'''
+		def _in_standard_sql_methods(field):
+			methods = ('count(', 'avg(', 'sum(')
+			return field.lower().startswith(methods)
+
 		if len(self.tables) > 1:
-			for i, f in enumerate(self.fields):
-				if '.' not in f:
-					self.fields[i] = '{0}.{1}'.format(self.tables[0], f)
+			for idx, field in enumerate(self.fields):
+				if '.' not in field and not _in_standard_sql_methods(field):
+					self.fields[idx] = '{0}.{1}'.format(self.tables[0], field)
 
 	def set_optional_columns(self):
 		"""Removes optional columns like `_user_tags`, `_comments` etc. if not in table"""
@@ -597,7 +602,6 @@ class DatabaseQuery(object):
 		match_filters = {}
 		match_conditions = []
 		for df in doctype_link_fields:
-
 			if df.get('ignore_user_permissions'): continue
 
 			user_permission_values = user_permissions.get(df.get('options'), {})
