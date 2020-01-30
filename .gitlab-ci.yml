@@ -1,7 +1,9 @@
 image: "python:3.6-buster"
 
 services:
-  - mariadb
+  - name: mariadb
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+  -name: redis
 
 variables:
   GIT_STRATEGY: none
@@ -32,6 +34,6 @@ unittests:
   stage: Unit Tests
   script:
     - su -c "cp -r /home/dokotest/dokos-bench/apps/frappe/test_sites/test_site /home/dokotest/dokos-bench/sites/" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site reinstall --yes" dokotest
+    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site reinstall --yes --mariadb-root-password test_dodock" dokotest
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site scheduler disable" dokotest
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-tests --coverage" dokotest
