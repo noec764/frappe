@@ -10,6 +10,7 @@ variables:
   GIT_CHECKOUT: "false"
   MYSQL_DATABASE: "test_dodock"
   MYSQL_ROOT_PASSWORD: "test_dodock"
+  REDIS_PORT: 6379
 
 before_script:
   - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends locales && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && dpkg-reconfigure --frontend=noninteractive locales && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -26,6 +27,7 @@ before_script:
   - su -c "cd /home/dokotest && git clone https://gitlab.com/dokos/docli.git" dokotest
   - su -c "pip install --user /home/dokotest/docli --no-cache" dokotest
   - su -c "cd /home/dokotest && bench init dokos-bench --no-backups --no-auto-update --skip-redis-config-generation --skip-assets" dokotest
+  - su -c "cd /home/dokotest/dokos-bench && bench config set-common-config -c redis_queue redis://redis:6379" dokotest
 
 stages:
   - Unit Tests
@@ -36,4 +38,4 @@ unittests:
     - su -c "cp -r /home/dokotest/dokos-bench/apps/frappe/test_sites/test_site /home/dokotest/dokos-bench/sites/" dokotest
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site reinstall --yes --mariadb-root-password test_dodock" dokotest
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site scheduler disable" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-tests --coverage" dokotest
+    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-tests --coverage --app frappe" dokotest
