@@ -18,11 +18,20 @@ class FrappeException(Exception):
 	pass
 
 class FrappeClient(object):
-	def __init__(self, url, username=None, password=None, verify=True):
+	def __init__(self, url, username=None, password=None, verify=True, api_key=None, api_secret=None, frappe_authorization_source=None):
+		self.headers = {
+			'Accept': 'application/json',
+			'content-type': 'application/x-www-form-urlencoded',
+		}
 		self.headers = dict(Accept='application/json')
 		self.verify = verify
 		self.session = requests.session()
 		self.url = url
+		self.api_key = api_key
+		self.api_secret = api_secret
+		self.frappe_authorization_source = frappe_authorization_source
+
+		self.setup_key_authentication_headers()
 
 		# login if username/password provided
 		if username and password:
@@ -49,6 +58,18 @@ class FrappeClient(object):
 				raise SiteExpiredError
 			raise AuthError
 
+	def setup_key_authentication_headers(self):
+		if self.api_key and self.api_secret:
+			token = base64.b64encode(('{}:{}'.format(self.api_key, self.api_secret)).encode('utf-8')).decode('utf-8')
+			auth_header = {
+				'Authorization': 'Basic {}'.format(token),
+			}
+			self.headers.update(auth_header)
+
+			if self.frappe_authorization_source:
+				auth_source = {'Frappe-Authorization-Source': self.frappe_authorization_source}
+				self.headers.update(auth_source)
+
 	def logout(self):
 		'''Logout session'''
 		self.session.get(self.url, params={
@@ -68,7 +89,7 @@ class FrappeClient(object):
 			params["limit_start"] = limit_start
 			params["limit_page_length"] = limit_page_length
 		res = self.session.get(self.url + "/api/resource/" + doctype, params=params, verify=self.verify, headers=self.headers)
-		return self.post_process(res)
+		return frappe._dict(self.post_process(res))
 
 	def insert(self, doc):
 		'''Insert a document to the remote server
@@ -76,7 +97,7 @@ class FrappeClient(object):
 		:param doc: A dict or Document object to be inserted remotely'''
 		res = self.session.post(self.url + "/api/resource/" + doc.get("doctype"),
 			data={"data":frappe.as_json(doc)}, verify=self.verify, headers=self.headers)
-		return self.post_process(res)
+		return frappe._dict(self.post_process(res))
 
 	def insert_many(self, docs):
 		'''Insert multiple documents to the remote server
@@ -179,7 +200,7 @@ class FrappeClient(object):
 		res = self.session.get(self.url + "/api/resource/" + doctype + "/" + name,
 			params=params, verify=self.verify, headers=self.headers)
 
-		return self.post_process(res)
+		return frappe._dict(self.post_process(res))
 
 	def rename_doc(self, doctype, old_name, new_name):
 		'''Rename remote document
