@@ -3,7 +3,7 @@ image: "python:3.6-buster"
 services:
   - name: mariadb
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
-  -name: redis
+  - name: redis
 
 variables:
   GIT_STRATEGY: none
