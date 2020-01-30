@@ -20,7 +20,7 @@ from frappe.desk.doctype.tag.tag import delete_tags_for_document
 from frappe.exceptions import FileNotFoundError
 
 DOCTYPES_TO_SKIP = ["Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", \
-	"File", "Version", "Document Follow", "Comment", "View Log", "Tag Link", "Notification Log"]
+	"File", "Version", "Document Follow", "Comment", "View Log", "Tag Link", "Notification Log", "Email Queue"]
 
 def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reload=False,
 	ignore_permissions=False, flags=None, ignore_on_trash=False, ignore_missing=True):
