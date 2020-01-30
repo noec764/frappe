@@ -21,7 +21,7 @@ def follow_document(doctype, doc_name, user, force=False):
 		follow only if track changes are set to 1
 	'''
 	avoid_follow = ["Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log",
-		"File", "Version", "View Log", "Document Follow", "Comment"]
+		"File", "Version", "View Log", "Document Follow", "Comment", "Email Queue"]
 
 	track_changes = frappe.get_meta(doctype).track_changes
 	exists = is_document_followed(doctype, doc_name, user)
