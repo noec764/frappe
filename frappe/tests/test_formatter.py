@@ -17,9 +17,9 @@ class TestFormatter(unittest.TestCase):
 		frappe.db.set_default("currency", 'INR')
 
 		# if currency field is not passed then default currency should be used.
-		self.assertEqual(format(100, df, doc), '₹ 100.00')
+		self.assertEqual(format(100, df, doc), '100.00 ₹')
 
 		doc.currency = 'USD'
-		self.assertEqual(format(100, df, doc), "$ 100.00")
+		self.assertEqual(format(100, df, doc), "100.00 $")
 
 		frappe.db.set_default("currency", None)

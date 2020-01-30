@@ -39,13 +39,13 @@ class TestFilters(unittest.TestCase):
 class TestMoney(unittest.TestCase):
 	def test_money_in_words(self):
 		nums_bhd = [
-			(5000, "BHD Five Thousand only."), (5000.0, "BHD Five Thousand only."),
-			(0.1, "One Hundred Fils only."), (0, "BHD Zero only."), ("Fail", "")
+			(5000, "BHD Five Thousand"), (5000.0, "BHD Five Thousand"),
+			(0.1, "One Hundred Fils"), (0, "BHD Zero"), ("Fail", "")
 		]
 
 		nums_ngn = [
-			(5000, "NGN Five Thousand only."), (5000.0, "NGN Five Thousand only."),
-			(0.1, "Ten Kobo only."), (0, "NGN Zero only."), ("Fail", "")
+			(5000, "NGN Five Thousand"), (5000.0, "NGN Five Thousand"),
+			(0.1, "Ten Kobo"), (0, "NGN Zero"), ("Fail", "")
 		]
 
 		for num in nums_bhd:

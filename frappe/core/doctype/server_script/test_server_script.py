@@ -52,9 +52,9 @@ class TestServerScript(unittest.TestCase):
 
 		frappe.db.commit()
 
-	# @classmethod
-	# def tearDownClass(cls):
-	# 	frappe.db.sql('truncate `tabServer Script`')
+	@classmethod
+	def tearDownClass(cls):
+		frappe.db.sql('truncate `tabServer Script`')
 
 	def setUp(self):
 		frappe.cache().delete_value('server_script_map')
