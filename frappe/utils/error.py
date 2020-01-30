@@ -127,17 +127,10 @@ def get_snapshot(exception, context=10):
 			if (name != 'messages' or sys.version_info < (2.6)) and not name.startswith('__'):
 				value = pydoc.text.repr(getattr(evalue, name))
 
-				# render multilingual string properly
-				if type(value) == bytes and value.startswith(b"u'"):
-					value = eval(value)
-
-				s['exception'][name] = encode(value)
+				s['exception'][name] = frappe.safe_encode(value)
 
 	# add all local values (of last frame) to the snapshot
 	for name, value in locals.items():
-		if type(value)==bytes and value.startswith(b"u'"):
-			value = eval(value)
-
 		s['locals'][name] = pydoc.text.repr(value)
 
 	return s
