@@ -32,4 +32,4 @@ class MilestoneTracker(Document):
 def evaluate_milestone(doc, event):
 	for d in frappe.cache_manager.get_doctype_map('Milestone Tracker', doc.doctype,
 		dict(document_type = doc.doctype, disabled=0)):
-		frappe.get_doc('Milestone Tracker', d.name).apply(doc)
+		frappe.get_doc('Milestone Tracker', d.get("name")).apply(doc)

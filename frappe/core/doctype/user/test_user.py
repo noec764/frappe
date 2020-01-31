@@ -12,6 +12,7 @@ from frappe.utils import get_url
 from frappe.core.doctype.user.user import get_total_users
 from frappe.core.doctype.user.user import MaxUsersReachedError, test_password_strength
 from frappe.core.doctype.user.user import extract_mentions
+import requests
 
 test_records = frappe.get_test_records('User')
 

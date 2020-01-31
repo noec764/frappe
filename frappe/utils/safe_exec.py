@@ -16,7 +16,7 @@ class ServerScriptNotEnabled(frappe.PermissionError): pass
 
 def safe_exec(script, _globals=None, _locals=None):
 	# script reports must be enabled via site_config.json
-	if not frappe.conf.server_script_enabled and not frappe.flags.in_test:
+	if not frappe.conf.server_script_enabled:
 		frappe.msgprint('Please Enable Server Scripts')
 		raise ServerScriptNotEnabled
 

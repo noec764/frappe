@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe
 import unittest
 import requests
-from frappe.utils import get_site_url
+from frappe.utils import get_url
 
 scripts = [
 	dict(
@@ -54,7 +54,9 @@ class TestServerScript(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		frappe.db.sql('truncate `tabServer Script`')
+		docs = frappe.get_all("Server Script")
+		for doc in docs:
+			frappe.delete_doc("Server Script", doc.name)
 
 	def setUp(self):
 		frappe.cache().delete_value('server_script_map')
@@ -69,6 +71,6 @@ class TestServerScript(unittest.TestCase):
 		self.assertRaises(frappe.ValidationError, frappe.get_doc(dict(doctype='ToDo', description='validate me')).insert)
 
 	def test_api(self):
-		response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
+		response = requests.post(get_url() + "/api/method/test_server_script")
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual("hello", response.json()["message"])
