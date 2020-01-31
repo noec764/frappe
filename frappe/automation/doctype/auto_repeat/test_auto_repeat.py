@@ -22,12 +22,16 @@ class TestAutoRepeat(unittest.TestCase):
 		if not frappe.db.sql("SELECT `fieldname` FROM `tabCustom Field` WHERE `fieldname`='auto_repeat' and `dt`=%s", "Todo"):
 			add_custom_fields()
 
+	def tearDown(self):
+		for doc in frappe.get_all("Auto Repeat"):
+			frappe.delete_doc("Auto Repeat", doc.name, force=True)
+
 	def test_daily_auto_repeat(self):
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test recurring todo', assigned_by='Administrator')).insert()
 
-		doc = make_auto_repeat(reference_document=todo.name)
-		self.assertEqual(doc.next_schedule_date, today())
+		doc = make_auto_repeat(reference_document=todo.name, start_date=today())
+		self.assertEqual(doc.next_schedule_date, getdate(today()))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 		frappe.db.commit()
@@ -78,7 +82,7 @@ class TestAutoRepeat(unittest.TestCase):
 		create_repeated_entries(data)
 
 		docnames = frappe.get_all(doc.reference_doctype, {'auto_repeat': doc.name})
-		self.assertEqual(len(docnames), months)
+		self.assertEqual(len(docnames), int(months) + 1)
 
 	def test_notification_is_attached(self):
 		todo = frappe.get_doc(
@@ -102,14 +106,16 @@ class TestAutoRepeat(unittest.TestCase):
 			dict(doctype='ToDo', description='test next schedule date todo', assigned_by='Administrator')).insert()
 		doc = make_auto_repeat(frequency='Monthly',	reference_document=todo.name, start_date=add_months(today(), -2))
 
-		#check next_schedule_date is set as per current date
-		#it should not be a previous month's date
-		self.assertEqual(doc.next_schedule_date, current_date)
+		#check next_schedule_date
+		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), -2)))
 		data = get_auto_repeat_entries(current_date)
 		create_repeated_entries(data)
-		docnames = frappe.get_all(doc.reference_doctype, {'auto_repeat': doc.name})
+		docnames = frappe.get_all(doc.reference_doctype, filters={'auto_repeat': doc.name})
+
 		#the original doc + the repeated doc
-		self.assertEqual(len(docnames), 2)
+		self.assertEqual(len(docnames), 3)
+		doc.load_from_db()
+		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), 1)))
 
 
 def make_auto_repeat(**args):
