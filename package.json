@@ -6,7 +6,9 @@
     "production": "FRAPPE_ENV=production node rollup/build.js",
     "watch": "node rollup/watch.js",
     "cypress:run": "cypress run --record --key 14ddd919-b01f-4d5f-b9d1-5af54d34c7f3",
-    "cypress:open": "cypress open"
+    "cypress:open": "cypress open",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "repository": {
     "type": "git",
@@ -52,7 +54,7 @@
     "vue": "^2.6.10",
     "vue-good-table": "^2.18.1",
     "vue-router": "^2.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "snyk": "^1.288.0"
   },
   "devDependencies": {
     "babel-runtime": "^6.26.0",
@@ -69,6 +71,8 @@
     "rollup-plugin-postcss": "^2.0.3",
     "rollup-plugin-terser": "^4.0.4",
     "rollup-plugin-visualizer": "^1.1.1",
-    "rollup-plugin-vue": "^5.0.0"
-  }
+    "rollup-plugin-vue": "^5.0.0",
+    "vue-template-compiler": "^2.6.10"
+  },
+  "snyk": true
 }
