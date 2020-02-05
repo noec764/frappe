@@ -45,6 +45,7 @@
      "report_hide",
      "search_index",
      "ignore_xss_filter",
+     "allow_in_quick_entry",
      "translatable",
      "description",
      "permlevel",
@@ -364,12 +365,18 @@
         "fieldtype": "Code",
         "label": "Read Only Depends On",
         "length": 255
+       },
+       {
+         "default": "0",
+         "fieldname": "allow_in_quick_entry",
+         "fieldtype": "Check",
+         "label": "Allow in Quick Entry"
        }
     ],
     "icon": "fa fa-glass",
     "idx": 1,
     "links": [],
-    "modified": "2019-09-26 12:57:19.268934",
+    "modified": "2020-02-01 11:50:09.222967",
     "modified_by": "Administrator",
     "module": "Custom",
     "name": "Custom Field",
