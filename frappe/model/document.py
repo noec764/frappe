@@ -519,8 +519,11 @@ class Document(BaseDocument):
 	def validate_workflow(self):
 		'''Validate if the workflow transition is valid'''
 		if frappe.flags.in_install == 'frappe': return
-		if self.meta.get_workflow():
+		workflow = self.meta.get_workflow()
+		if workflow:
 			validate_workflow(self)
+			if not self._action == 'save':
+				set_workflow_state_on_action(self, workflow, self._action)
 
 	def validate_set_only_once(self):
 		'''Validate that fields are not changed if not in insert'''

@@ -223,7 +223,7 @@ export default class Grid {
 		return (this.grid_rows || []).map(row => {
 			return row.doc.__checked ? row.doc.name : null;
 		}).filter(d => {
-			return d; 
+			return d;
 		});
 	}
 
