@@ -29,6 +29,7 @@ class TestNotification(unittest.TestCase):
 			"reference_name": communication.name, "status":"Not Sent"}))
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 
+		communication.load_from_db()
 		communication.content = "test 2"
 		communication.save()
 

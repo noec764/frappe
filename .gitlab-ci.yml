@@ -4,13 +4,18 @@ services:
   - name: mariadb
     command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
   - name: redis
+    alias: redis_queue
+  - name: redis
+    alias: redis_cache
+  - name: redis
+    alias: redis_socketio
+
 
 variables:
   GIT_STRATEGY: none
   GIT_CHECKOUT: "false"
   MYSQL_DATABASE: "test_dodock"
   MYSQL_ROOT_PASSWORD: "test_dodock"
-  REDIS_PORT: 6379
 
 before_script:
   - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends locales && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && dpkg-reconfigure --frontend=noninteractive locales && apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -27,7 +32,7 @@ before_script:
   - su -c "cd /home/dokotest && git clone https://gitlab.com/dokos/docli.git" dokotest
   - su -c "pip install --user /home/dokotest/docli --no-cache" dokotest
   - su -c "cd /home/dokotest && bench init dokos-bench --no-backups --no-auto-update --skip-redis-config-generation --skip-assets" dokotest
-  - su -c "cd /home/dokotest/dokos-bench && bench config set-common-config -c redis_queue redis://redis:6379" dokotest
+  - su -c "cd /home/dokotest/dokos-bench && bench config set-common-config -c redis_queue redis://redis_queue:6379 -c redis_cache redis://redis_cache:6379 -c redis_socketio redis://redis_socketio:6379" dokotest
 
 stages:
   - Unit Tests
