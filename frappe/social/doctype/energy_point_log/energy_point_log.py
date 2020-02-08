@@ -318,7 +318,7 @@ def send_summary(timespan):
 	for user in all_users:
 		frappe.set_user_lang(user.name)
 		frappe.sendmail(
-				subject='{} energy points summary'.format(timespan),
+				subject=_('{} energy points summary').format(_(timespan)),
 				recipients=user.email,
 				template="energy_points_summary",
 				args={
