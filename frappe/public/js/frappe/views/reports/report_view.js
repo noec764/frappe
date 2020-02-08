@@ -1035,11 +1035,10 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					}
 				};
 			}
-
-			if (col.field === 'docstatus' && !frappe.meta.has_field(this.doctype, 'status')) {
+			if ((col.field === 'docstatus' && frappe.model.is_submittable(this.doctype)) && !frappe.meta.has_field(this.doctype, 'status')) {
 				// get status from docstatus
-				let status = frappe.get_indicator(d, this.doctype);
-				if (!status[0]) {
+				const status = frappe.get_indicator(d, this.doctype);
+				if (status&&!status[0]) {
 					// get_indicator returns the dependent field's condition as the 3rd parameter
 					let dependent_col = status[2].split(',')[0];
 					// add status dependency column
@@ -1048,7 +1047,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				return {
 					name: d.name,
 					doctype: col.docfield.parent,
-					content: status[0],
+					content: status ? status[0] : '',
 					editable: false
 				};
 			} else if (col.field in d) {

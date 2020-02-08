@@ -313,19 +313,23 @@ def send_summary(timespan):
 	to_date = getdate()
 	settings = {x["name"]: x["energy_points_summary"] for x in frappe.get_all("User", \
 		filters={"user_type": "System User", "enabled": 1}, fields=["name", "energy_points_summary"])}
-	all_users = [user.email for user in get_enabled_system_users() if settings.get(user["name"]) == 1]
+	all_users = [user for user in get_enabled_system_users() if settings.get(user["name"]) == 1]
 
-	frappe.sendmail(
-			subject='{} energy points summary'.format(timespan),
-			recipients=all_users,
-			template="energy_points_summary",
-			args={
-				'top_performer': user_points[0],
-				'top_reviewer': max(user_points, key=lambda x:x['given_points']),
-				'standings': user_points[:10], # top 10
-				'footer_message': get_footer_message(timespan).format(from_date, to_date)
-			}
-		)
+	for user in all_users:
+		frappe.set_user_lang(user.name)
+		frappe.sendmail(
+				subject='{} energy points summary'.format(timespan),
+				recipients=user.email,
+				template="energy_points_summary",
+				args={
+					'top_performer': user_points[0],
+					'top_reviewer': max(user_points, key=lambda x:x['given_points']),
+					'standings': user_points[:10], # top 10
+					'footer_message': get_footer_message(timespan).format(from_date, to_date)
+				}
+			)
+
+	frappe.set_user_lang(frappe.session.user)
 
 def get_footer_message(timespan):
 	if timespan == 'Monthly':
