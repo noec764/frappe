@@ -182,7 +182,6 @@ $.extend(frappe.model, {
 						doctype: doctype,
 						name: name
 					},
-					freeze: true,
 					callback: function(r) {
 						callback && callback(name, r);
 						resolve(frappe.get_doc(doctype, name));
@@ -554,6 +553,7 @@ $.extend(frappe.model, {
 		const message = __("Merge with existing");
 		const warning = __("This cannot be undone");
 		const merge_label = message + " <b>(" + warning + ")</b>";
+
 		var d = new frappe.ui.Dialog({
 			title: __("Rename {0}", [__(docname)]),
 			fields: [
