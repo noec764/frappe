@@ -742,6 +742,7 @@
     "DocType: Custom Field": {
         "Adds a custom field to a DocType": "Ajoute un champ personnalisé à un type de document",
         "Administrator": "Administrateur",
+        "Allow in Quick Entry": "Ajouter dans les entrées rapides",
         "Allow on Submit": "Autoriser les modifications après validation",
         "Attach": "Joindre",
         "Attach Image": "Joindre une image",
@@ -2659,7 +2660,9 @@
         "Slide Order": "Ordre de la diapositive",
         "Slide Title": "Titre de la diapositive",
         "Slide Type": "Type de diapositive",
-        "System Manager": "Responsable Système"
+        "System Manager": "Responsable Système",
+        "dodock": "dodock",
+        "dokos": "dokos"
     },
     "DocType: Onboarding Slide Field": {
         "Align": "Aligner",
@@ -2739,8 +2742,10 @@
     "DocType: Payment Gateway": {
         "Core": "Module central",
         "Cost Center": "Centre de coûts",
+        "Cost center": "Centre de coût",
         "Credit Card": "Carte de crédit",
         "Fee Account": "Compte de frais",
+        "Fee account": "Compte de frais",
         "Fees": "Frais",
         "Gateway": "Passerelle",
         "Gateway Controller": "Contrôleur de la passerelle de paiement",
@@ -3099,6 +3104,7 @@
         "System Manager": "Responsable Système"
     },
     "DocType: Scheduled Job Log": {
+        "Complete": "Terminé",
         "Core": "Module central",
         "Details": "Détails",
         "Failed": "Échec",
@@ -3176,10 +3182,12 @@
     "DocType: Setup Wizard Slide": {
         "Action Settings": "Paramètres d'action",
         "Add More Button": "Button 'Ajouter plus'",
+        "Add a help video link just in case user has no idea about what to fill in the slide.": "Ajoutez un lien vidéo au cas où l'utilisateur ne sait pas comment remplir la diapositive",
         "App": "App",
         "Create": "Créer",
         "Description": "Description",
         "Desk": "Bureau",
+        "Determines the order of the slide in the wizard. If the slide is not to be displayed, priority should be set to 0.": "Détermine l'ordre de la diapositive dans l'assistant. Si la diapositive ne doit pas être affichée, la priorité doit être 0",
         "Domains": "Domaines",
         "ERPNext": "ERPNext",
         "Fields": "Champ",
@@ -3190,6 +3198,7 @@
         "Module": "Module",
         "Reference Document Type": "Type de document de référence",
         "Settings": "Paramètres",
+        "Setup Wizard Slide": "Diapositive de l'assistant d'installation",
         "Slide Description": "Description de la diapositive",
         "Slide Fields": "Champs de la diapositive",
         "Slide Image Source": "Source de l'image de la diapositive",
@@ -4343,6 +4352,8 @@
     },
     "apps/frappe/frappe/automation/doctype/auto_repeat/auto_repeat.py": {
         "'Recipients' not specified": "'Destinataires' non spécifiés",
+        "A recurring {0} {1} has been created for you via Auto Repeat {2}.": "Un {0} {1} récurrent a été créé pour vous via la répétition automatique {2}",
+        "Allow Print for Draft": "Autoriser les impression des documents en brouillon",
         "Auto Repeat Document Creation Failed": "La création du document de répétition automatique a échoué",
         "Auto Repeat Document Creation Failure": "Echec de la création du document de répétition automatique",
         "Auto Repeat failed for {0}": "La répétition automatique a échoué pour {0}",
@@ -4350,11 +4361,13 @@
         "Enable Allow Auto Repeat for the doctype {0} in Customize Form": "Activez les répétitions automatiques pour le type de document {0} dans la personnalisation de formulaire",
         "New {0}: {1}": "Nouveau {0}: {1}",
         "No contacts linked to document": "Aucun contacts liés à ce document",
+        "Note": "Note",
         "Please add a subject to your email": "Veuillez ajouter un sujet à votre email",
         "Please find attached {0}: {1}": "Veuillez trouvez ci-joint {0}: {1}",
         "The {0} is already on auto repeat {1}": "{0} est déjà dans la répétition automatique {1}",
         "{0} is an invalid email address in 'Recipients'": "{0} est une adresse e-mail invalide dans 'Destinataires'",
-        "{0} should not be same as {1}": "{0} ne doit pas être identique à {1}"
+        "{0} should not be same as {1}": "{0} ne doit pas être identique à {1}",
+        "{0}: Failed to attach new recurring document. To enable attaching document in the auto repeat notification email, enable {1} in Print Settings": "{0}: Echec de l'attachement d'un nouveau document récurrent. Pour autoriser l'attachement d'un document dans un email de notification de répétition automatique, veuillez autoriser {1} dans les options d'impression"
     },
     "apps/frappe/frappe/automation/doctype/auto_repeat/auto_repeat_schedule.html": {
         "Frequency": "Fréquence",
@@ -4633,7 +4646,8 @@
         "Addresses": "Adresses",
         "Company is mandatory, as it is your company address": "Société est obligatoire, car il s'agit de l'adresse de société",
         "No default Address Template found. Please create a new one from Setup > Printing and Branding > Address Template.": "Aucun modèle d'adresse trouvé. Veuillez créer un nouveau modèle via Configuration > Impression et marque > Modèle d'adresse.",
-        "There is an error in your Address Template {0}": "Il y a une erreur dans votre modèle d'adresse {0}"
+        "There is an error in your Address Template {0}": "Il y a une erreur dans votre modèle d'adresse {0}",
+        "{0} is not a valid report format. Report format should one of the following {1}": "{0} n'est pas un format de rapport valide. Les formats de rapports doivent être l'un des suivants {1}"
     },
     "apps/frappe/frappe/contacts/doctype/address_template/address_template.py": {
         "Default Address Template cannot be deleted": "Le Modèle d’Adresse par défaut ne peut pas être supprimé",
@@ -5860,7 +5874,8 @@
         "Invalid Output Format": "Format de Sortie Invalide",
         "No Data": "Aucune Donnée",
         "Only {0} emailed reports are allowed per user": "Seulement {0} rapports envoyés par Email sont autorisés par utilisateur",
-        "Please set filters value in Report Filter table.": "Veuillez définir la valeur des filtres dans le Tableau des Filtres de Rapport."
+        "Please set filters value in Report Filter table.": "Veuillez définir la valeur des filtres dans le Tableau des Filtres de Rapport.",
+        "{0} is not a valid report format. Report format should one of the following {1}": "{0} n'est pas un format de rapport valide. Les formats de rapports doivent être l'un des suivants {1}"
     },
     "apps/frappe/frappe/email/doctype/email_account/email_account.js": {
         "Email Domain not configured for this account, Create one?": "Nom de Domain de l'Email non configuré pour ce compte, En créer un ?",
@@ -5873,6 +5888,7 @@
         "Automatic Linking can be activated only for one Email Account.": "La liaison automatique ne peut être activée que pour un seul compte email.",
         "Automatic Linking can be activated only if Incoming is enabled.": "La liaison automatique ne peut être activée que si les emails entrants sont autorisés.",
         "Email ID must be unique, Email Account already exists \\\n\t\t\t\tfor {0}": "L'identifiant de messagerie doit être unique, le compte de messagerie existe déjà \\ pour {0}",
+        "Email ID must be unique, Email Account already exists for {0}": "L'email n'est pas unique, le compte email existe déjà pour {0}",
         "Error while connecting to email account {0}": "Erreur lors de la connexion au compte Email {0}",
         "Leave this conversation": "Se désinscrire",
         "Login Id is required": "ID de Connexion est nécessaire",
@@ -6587,6 +6603,7 @@
         "Browser not supported": "Navigateur non pris en charge",
         "Checking one moment": "Vérification...",
         "Email Account setup please enter your password for: ": "Veuillez entrer votre mot de passe pour la configuration du compte email ",
+        "Email Account setup please enter your password for: {0}": "Veuillez entrer un mot de passe pour l'adresse email: {0}",
         "Inactive": "Inactif",
         "Login": "Connexion",
         "Please Enter Your Password to Continue": "Veuillez entrer votre mot de passe pour continuer",
@@ -7279,6 +7296,7 @@
         "Open list item": "Ouvrir l'élément de la liste",
         "Print": "Imprimer",
         "Refreshing": "Actualisation...",
+        "Restricted": "Restrictions",
         "Restrictions": "Restrictions",
         "Role Permissions Manager": "Gestionnaire des rôles et autorisation",
         "Save": "Enregistrer",
@@ -8308,7 +8326,8 @@
         "{0} gained {1} point for {2} {3}": "{0} a gagné {1} point pour {2} {3}",
         "{0} gained {1} points for {2} {3}": "{0} a gagné {1} points pour {2} {3}",
         "{0} reverted your point on {1}": "{0} a annulé votre point sur {1}",
-        "{0} reverted your points on {1}": "{0} a annulé vos points sur {1}"
+        "{0} reverted your points on {1}": "{0} a annulé vos points sur {1}",
+        "{} energy points summary": "Récapitulatif de points d'énergie {}"
     },
     "apps/frappe/frappe/social/doctype/energy_point_log/energy_point_log_list.js": {
         "Open {0}": "Ouvrir {0}",
@@ -9384,6 +9403,7 @@
         "Edit in Full Page": "Editer en pleine page",
         "Email": "E-mail",
         "Email Account setup please enter your password for: ": "Configuration du Compte Email veuillez entrer votre mot de passe pour :",
+        "Email Account setup please enter your password for: {0}": "Veuillez entrer un mot de passe pour l'adresse email: {0}",
         "Email Inbox": "Boîte de Réception",
         "Email Template": "Modèle d'email",
         "Email not sent to {0} (unsubscribed / disabled)": "Email pas envoyé à {0} (désabonné / désactivé)",
@@ -10336,6 +10356,7 @@
         "Rename": "Renommer",
         "Report Builder": "Éditeur de Rapports",
         "Reports": "Rapports",
+        "Restricted": "Restrictions",
         "Restrictions": "Restrictions",
         "Role Permissions Manager": "Gestionnaire des rôles et autorisation",
         "Save": "Enregistrer",
