@@ -50,7 +50,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "description": "You can use octicons or font-awesome (v4.7) icons",
+   "description": "You can use octicons or font-awesome (v5) icons",
    "fieldname": "icon",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -118,7 +118,7 @@
    "label": "Time Series Based On"
   }
  ],
- "modified": "2019-12-29 11:20:49.498529",
+ "modified": "2020-02-12 11:20:49.498529",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Card",
