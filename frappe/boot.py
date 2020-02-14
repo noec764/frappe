@@ -194,9 +194,9 @@ def load_translations(bootinfo):
 
 	bootinfo["lang"] = frappe.lang
 
-	# load translated report names
-	for name in bootinfo.user.all_reports:
-		messages[name] = frappe._(name)
+	# load translated report names --> Already loaded in translate.py
+	# for name in bootinfo.user.all_reports:
+	#	 messages[name] = frappe._(name)
 
 	# only translated
 	messages = {k:v for k, v in iteritems(messages) if k!=v}

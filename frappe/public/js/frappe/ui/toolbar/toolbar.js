@@ -2,6 +2,7 @@
 // MIT License. See license.txt
 
 import SidebarMenu from './components/SidebarMenu.vue'
+import smoothscroll from 'smoothscroll-polyfill';
 
 frappe.provide("frappe.ui.toolbar");
 frappe.provide('frappe.search');
@@ -50,19 +51,11 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 	},
 
 	setup_modules_menu() {
+		smoothscroll.polyfill();
 		this.menu_sidebar = new Vue({
 			el: '#modules-menu',
 			render: h => h(SidebarMenu)
 		});
-
-		frappe.sidebar_update.on('collapse', (width) => {
-			const sidebarWidth = parseInt(width) + "px"
-			document.getElementById("body_div").style.paddingLeft = sidebarWidth;
-			const pages = document.getElementsByClassName("page-head");
-			Array.from(pages).forEach(page => {
-				page.style.paddingLeft = sidebarWidth;
-			})
-		})
 	},
 
 	setup_sidebar: function() {
@@ -99,6 +92,10 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 						.addClass('dropdown-menu');
 				});
 			}
+		});
+
+		header.find(".toggle-modules").on("click", function() {
+			frappe.sidebar_update.trigger('toggle_mobile_menu')
 		});
 	},
 

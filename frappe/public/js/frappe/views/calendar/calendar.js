@@ -188,9 +188,9 @@ frappe.views.Calendar = class {
 		this.$wrapper.find(".fc-button-group").addClass("btn-group");
 
 		this.$wrapper.find('.fc-prev-button span')
-			.attr('class', '').addClass('fa fa-chevron-left');
+			.attr('class', '').addClass('uil uil-angle-left');
 		this.$wrapper.find('.fc-next-button span')
-			.attr('class', '').addClass('fa fa-chevron-right');
+			.attr('class', '').addClass('uil uil-angle-right');
 
 		const btn_group = this.$wrapper.find(".fc-button-group");
 		btn_group.find(".fc-state-active").addClass("active");
@@ -359,6 +359,9 @@ frappe.views.Calendar = class {
 
 			me.fix_end_date_for_event_render(d);
 			me.prepare_colors(d);
+
+			d.title = frappe.utils.html2text(d.title);
+
 			return d;
 		});
 	}
@@ -366,9 +369,13 @@ frappe.views.Calendar = class {
 	prepare_colors(d) {
 		let color, color_name;
 		if(this.get_css_class) {
-			color_name = this.color_map[this.get_css_class(d)];
-			color_name = frappe.ui.color.validate_hex(color_name) ?
-				color_name : 'blue';
+			color_name = this.color_map[this.get_css_class(d)] || 'blue';
+
+			if (color_name.startsWith("#")) {
+				color_name = frappe.ui.color.validate_hex(color_name) ?
+					color_name : 'blue';
+			}
+
 			d.backgroundColor = frappe.ui.color.get(color_name, 'default');
 			d.textColor = frappe.ui.color.get(color_name, 'dark');
 		} else {

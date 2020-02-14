@@ -386,7 +386,7 @@ def ipn_handler():
 		})
 
 		doc = frappe.get_doc({
-			"data": json.dumps(frappe.local.form_dict),
+			"data": json.dumps(frappe.local.form_dict, indent=4),
 			"doctype": "Integration Request",
 			"integration_type": "Webhook",
 			"status": "Queued"

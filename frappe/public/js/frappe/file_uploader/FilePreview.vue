@@ -15,14 +15,14 @@
 			<div class="text-medium flex justify-between">
 				<span :title="file.name">
 					<a :href="file.doc.file_url" v-if="file.doc" target="_blank">
-						<i v-if="file.doc.is_private" class="fa fa-lock fa-fw text-warning"></i>
-						<i v-else class="fa fa-unlock-alt fa-fw text-warning"></i>
+						<i v-if="file.doc.is_private" class="uil uil-padlock fa-fw text-warning"></i>
+						<i v-else class="fas fa-unlock-alt fa-fw text-warning"></i>
 						{{ file.name | file_name }}
 					</a>
 					<span v-else>
 						<span class="cursor-pointer" @click="$emit('toggle_private')" :title="__('Toggle Public/Private')">
-							<i v-if="file.private" class="fa fa-lock fa-fw text-warning"></i>
-							<i v-else class="fa fa-unlock-alt fa-fw text-warning"></i>
+							<i v-if="file.private" class="uil uil-padlock fa-fw text-warning"></i>
+							<i v-else class="fas fa-unlock-alt fa-fw text-warning"></i>
 						</span>
 						{{ file.name | file_name }}
 					</span>

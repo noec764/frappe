@@ -239,6 +239,18 @@
 .progress-area {
 	padding-top: 15px;
 	padding-bottom: 15px;
+
+	.progress-chart {
+		padding-top: 15px;
+	}
+
+	.progress {
+		margin-bottom: 5px;
+	}
+
+	.progress-message {
+		margin-top: 0px;
+	}
 }
 
 .form-links {
@@ -310,7 +322,7 @@ h6.uppercase, .h6.uppercase {
 	}
 }
 
-.form-section:not(:last-child),
+.form-section:not(:last-child):not(.bottomless-section),
 .form-inner-toolbar {
 	border-bottom: 1px solid @border-color;
 }

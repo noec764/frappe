@@ -78,6 +78,10 @@ def rebuild_for_doctype(doctype):
 		return filters
 
 	meta = frappe.get_meta(doctype)
+	
+	if cint(meta.issingle) == 1:
+		return
+	
 	if cint(meta.istable) == 1:
 		parent_doctypes = frappe.get_all("DocField", fields="parent", filters={
 			"fieldtype": ["in", frappe.model.table_fields],
@@ -134,8 +138,8 @@ def rebuild_for_doctype(doctype):
 				"name": frappe.db.escape(doc.name),
 				"content": frappe.db.escape(' ||| '.join(content or '')),
 				"published": published,
-				"title": frappe.db.escape(title or '')[:int(frappe.db.VARCHAR_LEN)],
-				"route": frappe.db.escape(route or '')[:int(frappe.db.VARCHAR_LEN)]
+				"title": frappe.db.escape((title or '')[:int(frappe.db.VARCHAR_LEN)]),
+				"route": frappe.db.escape((route or '')[:int(frappe.db.VARCHAR_LEN)])
 			})
 	if all_contents:
 		insert_values_for_multiple_docs(all_contents)
@@ -296,9 +300,10 @@ def get_routes_to_index():
 
 	return routes_to_index
 
+
 def add_route_to_global_search(route):
 	from frappe.website.render import render_page
-	from frappe.tests.test_website import set_request
+	from frappe.utils import set_request
 	frappe.set_user('Guest')
 	frappe.local.no_cache = True
 
@@ -324,34 +329,6 @@ def add_route_to_global_search(route):
 
 	frappe.set_user('Administrator')
 
-
-def add_web_pages_to_global_search(files_to_index):
-	for route, filepath in files_to_index.items():
-		content = frappe.read_file(filepath)
-		if filepath.endswith('.html'):
-			content_html = content
-			content_md = frappe.utils.to_markdown(content)
-		else:
-			content_md = content
-			content_html = frappe.utils.md_to_html(content)
-
-		soup = BeautifulSoup(content_html, 'html.parser')
-
-		h1 = soup.find('h1')
-		title = h1.text if h1 else None
-		if not title:
-			title = frappe.unscrub(os.path.basename(filepath).split('.')[0])
-
-		value = dict(
-			doctype='Static Web Page',
-			name=route,
-			content=content_md,
-			published=1,
-			title=title,
-			route=route
-		)
-
-		sync_value_in_queue(value)
 
 def get_formatted_value(value, field):
 	"""
@@ -442,72 +419,65 @@ def search(text, start=0, limit=20, doctype=""):
 	from frappe.desk.doctype.global_search_settings.global_search_settings import get_doctypes_for_global_search
 
 	results = []
-	texts = [t.strip() for t in text.split('&') if t]
-	priorities = get_doctypes_for_global_search()
-	allowed_doctypes = ",".join(["'{0}'".format(dt) for dt in priorities])
-	for text in texts:
-		mariadb_conditions = ''
-		postgres_conditions = ''
+	sorted_results = []
+
+	allowed_doctypes = get_doctypes_for_global_search()
+
+	for text in set(text.split('&')):
+		text = text.strip()
+		if not text:
+			continue
+
+		conditions = '1=1'
 		offset = ''
 
-		if doctype:
-			mariadb_conditions = postgres_conditions = '`doctype` = {} AND '.format(frappe.db.escape(doctype))
+		mariadb_text = frappe.db.escape('+' + text + '*')
 
-		mariadb_text = frappe.db.escape('+"' + text + '"*')
 		mariadb_fields = '`doctype`, `name`, `content`, MATCH (`content`) AGAINST ({} IN BOOLEAN MODE) AS rank'.format(mariadb_text)
 		postgres_fields = '`doctype`, `name`, `content`, TO_TSVECTOR("content") @@ PLAINTO_TSQUERY({}) AS rank'.format(frappe.db.escape(text))
 
-		if allowed_doctypes:
-			mariadb_conditions += '`doctype` IN ({})'.format(allowed_doctypes)
-			postgres_conditions += '`doctype` IN ({})'.format(allowed_doctypes)
+		values = {}
+
+		if doctype:
+			conditions = '`doctype` = %(doctype)s'
+			values['doctype'] = doctype
+		elif allowed_doctypes:
+			conditions = '`doctype` IN %(allowed_doctypes)s'
+			values['allowed_doctypes'] = tuple(allowed_doctypes)
 
 		if int(start) > 0:
 			offset = 'OFFSET {}'.format(start)
 
 		common_query = """
-			SELECT {fields}
-			FROM `__global_search`
-			WHERE {conditions}
-			ORDER BY rank DESC
-			LIMIT {limit}
-			{offset}
-		"""
+				SELECT {fields}
+				FROM `__global_search`
+				WHERE {conditions}
+				ORDER BY rank DESC
+				LIMIT {limit}
+				{offset}
+			"""
 
 		result = frappe.db.multisql({
-				'mariadb': common_query.format(fields=mariadb_fields, conditions=mariadb_conditions, limit=limit, offset=offset),
-				'postgres': common_query.format(fields=postgres_fields, conditions=postgres_conditions, limit=limit, offset=offset)
-			}, as_dict=True)
+				'mariadb': common_query.format(fields=mariadb_fields, conditions=conditions, limit=limit, offset=offset),
+				'postgres': common_query.format(fields=postgres_fields, conditions=conditions, limit=limit, offset=offset)
+			}, values=values, as_dict=True)
 
-		tmp_result=[]
-		for i in result:
-			if i.rank > 0.0:
-				if i in results or not results:
-					tmp_result.extend([i])
-		results.extend(tmp_result)
+		results.extend(result)
 
-	for r in results:
-		try:
-			if frappe.get_meta(r.doctype).image_field:
-				r.image = frappe.db.get_value(r.doctype, r.name, frappe.get_meta(r.doctype).image_field)
-		except Exception:
-			frappe.clear_messages()
-
-	sorted_results = []
-
-	for priority in priorities:
-		tmp_result = []
-		if not results:
-			break
-
+	# sort results based on allowed_doctype's priority
+	for doctype in allowed_doctypes:
 		for index, r in enumerate(results):
-			if r.doctype == priority:
-				tmp_result.extend([r])
-				results.pop(index)
+			if r.doctype == doctype and r.rank > 0.0:
+				try:
+					meta = frappe.get_meta(r.doctype)
+					if meta.image_field:
+						r.image = frappe.db.get_value(r.doctype, r.name, meta.image_field)
+				except Exception:
+					frappe.clear_messages()
 
-		sorted_results.extend(tmp_result)
+				sorted_results.extend([r])
 
 	return sorted_results
-
 
 @frappe.whitelist(allow_guest=True)
 def web_search(text, scope=None, start=0, limit=20):
@@ -556,7 +526,6 @@ def web_search(text, scope=None, start=0, limit=20):
 		r.relevance = words_match
 
 	results = sorted(results, key=lambda x: x.relevance, reverse=True)
-
 	return results
 
 def get_distinct_words(text):

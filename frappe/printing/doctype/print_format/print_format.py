@@ -13,11 +13,15 @@ from frappe.model.document import Document
 
 class PrintFormat(Document):
 	def validate(self):
-		if (self.standard=="Yes"
+		if ((self.standard=="Yes" or (getattr(self, "_doc_before_save") and self._doc_before_save.standard=="Yes"))
 			and not frappe.local.conf.get("developer_mode")
 			and not (frappe.flags.in_import or frappe.flags.in_test)):
 
-			frappe.throw(frappe._("Standard Print Format cannot be updated"))
+			if self._doc_before_save.disabled != self.disabled:
+				self.db_set("disabled", self.disabled)
+				self.reload()
+			else:
+				frappe.throw(frappe._("Standard Print Format cannot be updated"))
 
 		# old_doc_type is required for clearing item cache
 		self.old_doc_type = frappe.db.get_value('Print Format',

@@ -554,7 +554,7 @@ def extract_messages_from_code(code, is_py=False):
 	return pos_to_line_no(messages, code)
 
 def is_translatable(m):
-	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.endswith("px") and not m.startswith("eval:"):
+	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.startswith("fas fa-") and not m.startswith("far fa-") and not m.startswith("uil uil-") and not m.endswith("px") and not m.startswith("eval:"):
 		return True
 	return False
 
@@ -578,7 +578,7 @@ def write_json_file(path, app_messages):
 	:param app_messages: Translatable strings for this app.
 	"""
 	with open(path, 'w', encoding="utf8", newline=os.linesep) as msgfile:
-		json.dump(app_messages, msgfile, ensure_ascii=False)
+		json.dump(app_messages, msgfile, ensure_ascii=False, indent=4, sort_keys=True)
 		msgfile.write(os.linesep)
 
 def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, write=True):

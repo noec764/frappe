@@ -58,11 +58,8 @@ class Address(Document):
 	def validate_reference(self):
 		if self.is_your_company_address:
 			if not [row for row in self.links if row.link_doctype == "Company"]:
-				frappe.throw(_("Company is mandatory, as it is your company address"))
-
-			# removing other links
-			to_remove = [row for row in self.links if row.link_doctype != "Company"]
-			[ self.remove(row) for row in to_remove ]
+				frappe.throw(_("{0} is not a valid report format. Report format should one of the following {1}")
+					.format(frappe.bold(self.format), frappe.bold(", ".join(valid_report_formats))))
 
 	def get_display(self):
 		return get_address_display(self.as_dict())

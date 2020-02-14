@@ -73,7 +73,7 @@ class File(Document):
 		if not self.is_folder:
 			self.add_comment_in_reference_doc('Attachment',
 				_('Added {0}').format("<a href='{file_url}' target='_blank'>{file_name}</a>{icon}".format(**{
-					"icon": ' <i class="fa fa-lock text-warning"></i>' if self.is_private else "",
+					"icon": ' <i class="uil uil-padlock text-warning"></i>' if self.is_private else "",
 					"file_url": quote(self.file_url) if self.file_url else self.file_name,
 					"file_name": self.file_name or self.file_url
 				})))
@@ -83,12 +83,15 @@ class File(Document):
 			setup_folder_path(successor[0], self.name)
 
 	def get_successor(self):
-		return frappe.db.get_values(doctype='File', filters={'folder': self.name}, fieldname='name')
+		return frappe.db.get_values(doctype='File',
+						filters={'folder': self.name},
+						fieldname='name')
 
 	def validate(self):
 		if self.is_new():
+			self.set_is_private()
+			self.set_file_name()
 			self.validate_duplicate_entry()
-			self.validate_file_name()
 		self.validate_folder()
 
 		if not self.file_url and not self.flags.ignore_file_validate:
@@ -131,6 +134,9 @@ class File(Document):
 					frappe.db.set_value(self.attached_to_doctype, self.attached_to_name,
 						self.attached_to_field, self.file_url)
 
+		if self.file_url and (self.is_private != self.file_url.startswith('/private')):
+			frappe.throw(_('Invalid file URL. Please contact System Administrator.'))
+
 	def set_folder_name(self):
 		"""Make parent folders if not exists based on reference doctype and name"""
 		if self.attached_to_doctype and not self.folder:
@@ -155,9 +161,11 @@ class File(Document):
 
 	def validate_duplicate_entry(self):
 		if not self.flags.ignore_duplicate_entry_error and not self.is_folder:
-			# check duplicate name
+			if not self.content_hash:
+				self.generate_content_hash()
 
-			# check duplicate assignement
+			# check duplicate name
+			# check duplicate assignment
 			filters = {
 				'content_hash': self.content_hash,
 				'is_private': self.is_private,
@@ -182,21 +190,20 @@ class File(Document):
 					else:
 						self.file_url = duplicate_file.file_url
 
-	def validate_file_name(self):
+	def set_file_name(self):
 		if not self.file_name and self.file_url:
 			self.file_name = self.file_url.split('/')[-1]
 
 	def generate_content_hash(self):
-		if self.content_hash or not self.file_url:
+		if self.content_hash or not self.file_url or self.file_url.startswith('http'):
 			return
 
-		if self.file_url.startswith("/files/"):
-			try:
-				with open(get_files_path(self.file_name.lstrip("/")), "rb") as f:
-					self.content_hash = get_content_hash(f.read())
-			except IOError:
-				frappe.msgprint(_("File {0} does not exist").format(self.file_url))
-				raise
+		try:
+			with open(get_files_path(self.file_name.lstrip("/"), is_private=self.is_private), "rb") as f:
+				self.content_hash = get_content_hash(f.read())
+		except IOError:
+			frappe.msgprint(_("File {0} does not exist").format(self.file_url))
+			raise
 
 	def on_trash(self):
 		if self.is_home_folder or self.is_attachments_folder:
@@ -323,7 +330,7 @@ class File(Document):
 		if self.attached_to_doctype and self.attached_to_name:
 			comment = frappe.get_doc(self.attached_to_doctype, self.attached_to_name).add_comment("Attachment",
 			_	("added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>{icon}".format(**{
-					"icon": ' <i class="fa fa-lock text-warning"></i>' \
+					"icon": ' <i class="uil uil-padlock text-warning"></i>' \
 						if file_doc.is_private else "",
 					"file_url": file_doc.file_url.replace("#", "%23") \
 						if file_doc.file_name else file_doc.file_url,
@@ -543,11 +550,7 @@ class File(Document):
 			delete_file(self.thumbnail_url)
 
 	def is_downloadable(self):
-		if self.is_private:
-			if has_permission(self, 'read'):
-				return True
-
-			return False
+		return self.is_private and has_permission(self, 'read')
 
 	def get_extension(self):
 		'''returns split filename and extension'''
@@ -561,6 +564,9 @@ class File(Document):
 			except frappe.DoesNotExistError:
 				frappe.clear_messages()
 
+	def set_is_private(self):
+		if self.file_url:
+			self.is_private = cint(self.file_url.startswith('/private'))
 
 def on_doctype_update():
 	frappe.db.add_index("File", ["attached_to_doctype", "attached_to_name"])
@@ -580,6 +586,7 @@ def make_home_folder():
 		"is_attachments_folder": 1,
 		"file_name": _("Attachments")
 	}).insert()
+
 
 @frappe.whitelist()
 def create_new_folder(file_name, folder):
@@ -609,7 +616,8 @@ def setup_folder_path(filename, new_parent):
 	file.save()
 
 	if file.is_folder:
-		frappe.rename_doc("File", file.name, file.get_name_based_on_parent_folder(), ignore_permissions=True)
+		from frappe.model.rename_doc import rename_doc
+		rename_doc("File", file.name, file.get_name_based_on_parent_folder(), ignore_permissions=True)
 
 def get_extension(filename, extn, content):
 	mimetype = None

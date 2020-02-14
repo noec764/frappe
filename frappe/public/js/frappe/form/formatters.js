@@ -55,7 +55,7 @@ frappe.form.formatters = {
 	Rating: function(value) {
 		return `<span class="rating">
 		${Array.from(new Array(5)).map((_, i) =>
-			`<i class="fa fa-fw fa-star ${i < (value || 0) ? "star-click": "" } star-icon" data-idx="${(i+1)}"></i>`
+			`<i class="far fa-fw fa-star ${i < (value || 0) ? "star-click": "" } star-icon" data-idx="${(i+1)}"></i>`
 		).join('')}
 			</span>`;
 	},
@@ -86,7 +86,7 @@ frappe.form.formatters = {
 		if(value) {
 			return '<i class="octicon octicon-check" style="margin-right: 3px;"></i>';
 		} else {
-			return '<i class="fa fa-square disabled-check"></i>';
+			return '<i class="far fa-square disabled-check"></i>';
 		}
 	},
 	Link: function(value, docfield, options, doc) {
@@ -156,7 +156,8 @@ frappe.form.formatters = {
 			if(frappe.boot.sysdefaults.time_zone) {
 				m = m.tz(frappe.boot.sysdefaults.time_zone);
 			}
-			return m.format(frappe.boot.sysdefaults.date_format.toUpperCase() + ', h:mm a z');
+			return m.format(frappe.boot.sysdefaults.date_format.toUpperCase()
+				+  ' ' + frappe.boot.sysdefaults.time_format);
 		} else {
 			return "";
 		}
@@ -180,6 +181,13 @@ frappe.form.formatters = {
 
 		return frappe.form.formatters.Data(value);
 	},
+	Time: function(value) {
+		if (value) {
+			value = frappe.datetime.str_to_user(value, true);
+		}
+
+		return value || "";
+	},
 	LikedBy: function(value) {
 		var html = "";
 		$.each(JSON.parse(value || "[]"), function(i, v) {
@@ -197,13 +205,7 @@ frappe.form.formatters = {
 		return html;
 	},
 	Comment: function(value) {
-		var html = "";
-		$.each(JSON.parse(value || "[]"), function(i, v) {
-			if(v) html+= '<span class="label label-warning" \
-				style="margin-right: 7px;"\
-				data-field="_comments" data-label="'+v.name+'">'+v.comment+'</span>';
-		});
-		return html;
+		return value;
 	},
 	Assign: function(value) {
 		var html = "";
@@ -229,7 +231,7 @@ frappe.form.formatters = {
 			return repl("<span class='label label-%(style)s' \
 				data-workflow-state='%(value)s'\
 				style='padding-bottom: 4px; cursor: pointer;'>\
-				<i class='fa fa-small fa-white fa-%(icon)s'></i> %(value)s</span>", {
+				<i class='fas fa-small fa-white fa-%(icon)s'></i> %(value)s</span>", {
 					value: value,
 					style: workflow_state.style.toLowerCase(),
 					icon: workflow_state.icon

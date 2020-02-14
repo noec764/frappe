@@ -17,7 +17,7 @@ from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send
 class Notification(Document):
 	def onload(self):
 		'''load message'''
-		if self.is_standard:
+		if self.is_standard and not frappe.conf.developer_mode:
 			self.message = self.get_template()
 
 	def autoname(self):
@@ -60,14 +60,18 @@ def get_context(context):
 """)
 
 	def validate_standard(self):
-		if self.is_standard and not frappe.conf.developer_mode:
-			frappe.throw(_('Cannot edit Standard Notification. To edit, please disable this and duplicate it'))
+		if (self.is_standard or (getattr(self, "_doc_before_save") and self._doc_before_save.is_standard)) and not frappe.conf.developer_mode:
+			if self._doc_before_save.enabled != self.enabled:
+				self.db_set("enabled", self.enabled)
+				self.reload()
+			else:
+				frappe.throw(_('Cannot edit Standard Notification. To edit, please disable this and duplicate it'))
 
 	def validate_condition(self):
 		temp_doc = frappe.new_doc(self.document_type)
 		if self.condition:
 			try:
-				frappe.safe_eval(self.condition, None, get_context(temp_doc))
+				frappe.safe_eval(self.condition, None, get_context(temp_doc.as_dict()))
 			except Exception:
 				frappe.throw(_("The Condition '{0}' is invalid").format(self.condition))
 
@@ -356,8 +360,8 @@ def evaluate_alert(doc, alert, event):
 		frappe.throw(_("Error while evaluating Notification {0}. Please fix your template.").format(alert))
 	except Exception as e:
 		error_log = frappe.log_error(message=frappe.get_traceback(), title=str(e))
-		frappe.throw(_("Error in Notification: {}".format(
-			frappe.utils.get_link_to_form('Error Log', error_log.name))))
+		frappe.throw(_("Error in Notification: {}").format(
+			frappe.utils.get_link_to_form('Error Log', error_log.name)))
 
 def get_context(doc):
 	return {"doc": doc, "nowdate": nowdate, "frappe.utils": frappe.utils}

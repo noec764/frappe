@@ -29,8 +29,6 @@ def build(app=None, make_copy=False, restore = False, verbose=False):
 @click.command('watch')
 def watch():
 	"Watch and concatenate JS and CSS files as and when they change"
-	# if os.environ.get('CI'):
-	# 	return
 	import frappe.build
 	frappe.init('')
 	frappe.build.watch(True)
@@ -322,9 +320,9 @@ def data_import(context, file_path, doctype, import_type=None, submit_after_impo
 @click.argument('doctype')
 @click.argument('path')
 @pass_context
-def _bulk_rename(context, doctype, path):
+def bulk_rename(context, doctype, path):
 	"Rename multiple records via CSV file"
-	from frappe.model.rename_doc import bulk_rename
+	from frappe.model.rename_doc import bulk_rename as _bulk_rename
 	from frappe.utils.csvutils import read_csv_content
 
 	site = get_site(context)
@@ -335,19 +333,9 @@ def _bulk_rename(context, doctype, path):
 	frappe.init(site=site)
 	frappe.connect()
 
-	bulk_rename(doctype, rows, via_console = True)
+	_bulk_rename(doctype, rows, via_console = True)
 
 	frappe.destroy()
-
-@click.command('mysql')
-def mysql():
-	"""
-		Deprecated
-	"""
-	click.echo("""
-mysql command is deprecated.
-Did you mean "bench mariadb"?
-""")
 
 @click.command('mariadb')
 @pass_context
@@ -387,15 +375,10 @@ def postgres(context):
 @click.command('jupyter')
 @pass_context
 def jupyter(context):
-	try:
-		from pip import main
-	except ImportError:
-		from pip._internal import main
+	installed_packages = (r.split('==')[0] for r in subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], encoding='utf8'))
 
-	reqs = subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'])
-	installed_packages = [r.decode().split('==')[0] for r in reqs.split()]
 	if 'jupyter' not in installed_packages:
-		main(['install', 'jupyter'])
+		subprocess.check_output([sys.executable, '-m', 'pip', 'install', 'jupyter'])
 	site = get_site(context)
 	frappe.init(site=site)
 	jupyter_notebooks_path = os.path.abspath(frappe.get_site_path('jupyter_notebooks'))
@@ -432,7 +415,11 @@ def console(context):
 	frappe.connect()
 	frappe.local.lang = frappe.db.get_default("lang")
 	import IPython
-	IPython.embed(display_banner = "")
+	all_apps = frappe.get_installed_apps()
+	for app in all_apps:
+		locals()[app] = __import__(app)
+	print("Apps in this namespace:\n{}".format(", ".join(all_apps)))
+	IPython.embed(display_banner="", header="")
 
 @click.command('run-tests')
 @click.option('--app', help="For App")
@@ -458,6 +445,15 @@ def run_tests(context, app=None, module=None, doctype=None, test=(),
 	tests = test
 
 	site = get_site(context)
+
+	allow_tests = frappe.get_conf(site).allow_tests
+
+	if not (allow_tests or os.environ.get('CI')):
+		click.secho('Testing is disabled for the site!', bold=True)
+		click.secho('You can enable tests by entering following command:')
+		click.secho('bench --site {0} set-config allow_tests true'.format(site), fg='green')
+		return
+
 	frappe.init(site=site)
 
 	frappe.flags.skip_before_tests = skip_before_tests
@@ -471,7 +467,7 @@ def run_tests(context, app=None, module=None, doctype=None, test=(),
 
 	ret = frappe.test_runner.main(app, module, doctype, context.verbose, tests=tests,
 		force=context.force, profile=profile, junit_xml_output=junit_xml_output,
-		ui_tests = ui_tests, doctype_list_path = doctype_list_path, failfast=failfast)
+		ui_tests=ui_tests, doctype_list_path=doctype_list_path, failfast=failfast)
 
 	if coverage:
 		cov.stop()
@@ -504,26 +500,6 @@ def run_ui_tests(context, app, headless=False):
 	command = '{site_env} {password_env} yarn run cypress:{run_or_open}'
 	formatted_command = command.format(site_env=site_env, password_env=password_env, run_or_open=run_or_open)
 	frappe.commands.popen(formatted_command, cwd=app_base_path, raise_err=True)
-
-@click.command('run-setup-wizard-ui-test')
-@click.option('--app', help="App to run tests on, leave blank for all apps")
-@click.option('--profile', is_flag=True, default=False)
-@pass_context
-def run_setup_wizard_ui_test(context, app=None, profile=False):
-	"Run setup wizard UI test"
-	import frappe.test_runner
-
-	site = get_site(context)
-	frappe.init(site=site)
-	frappe.connect()
-
-	ret = frappe.test_runner.run_setup_wizard_ui_test(app=app, verbose=context.verbose,
-		profile=profile)
-	if len(ret.failures) == 0 and len(ret.errors) == 0:
-		ret = 0
-
-	if os.environ.get('CI'):
-		sys.exit(ret)
 
 @click.command('serve')
 @click.option('--port', default=8000)
@@ -622,33 +598,6 @@ def get_version():
 		elif hasattr(module, "__version__"):
 			print("{0} {1}".format(m, module.__version__))
 
-
-@click.command('setup-global-help')
-@click.option('--db_type')
-@click.option('--root_password')
-def setup_global_help(db_type=None, root_password=None):
-	'''Deprecated: setup help table in a separate database that will be
-	shared by the whole bench and set `global_help_setup` as 1 in
-	common_site_config.json'''
-	print_in_app_help_deprecation()
-
-@click.command('get-docs-app')
-@click.argument('app')
-def get_docs_app(app):
-	'''Deprecated: Get the docs app for given app'''
-	print_in_app_help_deprecation()
-
-@click.command('get-all-docs-apps')
-def get_all_docs_apps():
-	'''Deprecated: Get docs apps for all apps'''
-	print_in_app_help_deprecation()
-
-@click.command('setup-help')
-@pass_context
-def setup_help(context):
-	'''Deprecated: Setup help table in the current site (called after migrate)'''
-	print_in_app_help_deprecation()
-
 @click.command('rebuild-global-search')
 @click.option('--static-pages', is_flag=True, default=False, help='Rebuild global search for static pages')
 @pass_context
@@ -722,10 +671,6 @@ def auto_deploy(context, app, migrate=False, restart=False, remote='upstream'):
 	else:
 		print('No Updates')
 
-def print_in_app_help_deprecation():
-	print("In app help has been removed.\nYou can access the documentation on erpnext.com/docs or frappe.io/docs")
-	return
-
 commands = [
 	build,
 	clear_cache,
@@ -743,21 +688,17 @@ commands = [
 	data_import,
 	import_doc,
 	make_app,
-	mysql,
 	mariadb,
 	postgres,
 	request,
 	reset_perms,
 	run_tests,
 	run_ui_tests,
-	run_setup_wizard_ui_test,
 	serve,
 	set_config,
 	show_config,
 	watch,
-	_bulk_rename,
+	bulk_rename,
 	add_to_email_queue,
-	setup_global_help,
-	setup_help,
 	rebuild_global_search
 ]

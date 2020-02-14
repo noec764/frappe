@@ -95,7 +95,8 @@ class TestAutoAssign(unittest.TestCase):
 		self.assertEqual(frappe.db.get_value('ToDo', dict(
 			reference_type = 'Note',
 			reference_name = note.name,
-			status = 'Open'
+			status = 'Open',
+			description="Awesome note"
 		), 'owner'), None)
 
 	def test_clear_assignment(self):
@@ -113,6 +114,7 @@ class TestAutoAssign(unittest.TestCase):
 
 		# test auto unassign
 		note.public = 0
+		note.description = "Awesome note"
 		note.save()
 
 		todo.load_from_db()

@@ -84,7 +84,23 @@ kbd {
 .btn [class^="fa fa-"],
 .nav [class^="fa fa-"],
 .btn [class*="fa fa-"],
-.nav [class*="fa fa-"] {
+.nav [class*="fa fa-"],
+.btn [class^="fas fa-"],
+.nav [class^="fas fa-"],
+.btn [class*="fas fa-"],
+.nav [class*="fas fa-"],
+.btn [class^="far fa-"],
+.nav [class^="far fa-"],
+.btn [class*="far fa-"],
+.nav [class*="far fa-"],
+.btn [class^="fab fa-"],
+.nav [class^="fab fa-"],
+.btn [class*="fab fa-"],
+.nav [class*="fab fa-"],
+.btn [class^="uil uil-"],
+.nav [class^="uil uil-"],
+.btn [class*="uil uil-"],
+.nav [class*="uil uil-"] {
   display: inline-block;
 }
 .dropdown-menu > li > a {
@@ -1002,28 +1018,29 @@ input[type="checkbox"] {
 }
 input[type="checkbox"]:before {
   position: absolute;
-  font-family: 'FontAwesome';
-  content: '\f096';
+  font-family: 'unicons';
+  content: '\ebaa';
   visibility: visible;
   font-style: normal;
   font-weight: normal;
   font-variant: normal;
   text-transform: none;
-  line-height: 14px;
+  line-height: 1em;
   display: inline-block;
-  font-size: 14px;
+  font-size: 1em;
   color: #d1d8dd;
   -webkit-transition: 150ms color;
   -o-transition: 150ms color;
   transition: 150ms color;
   left: 999999px;
+  cursor: pointer;
 }
 input[type="checkbox"]:focus:before {
   color: #778595;
 }
 input[type="checkbox"]:checked:before {
-  content: '\f14a';
-  font-size: 13px;
+  content: '\e8d8';
+  font-size: 1em;
   color: #3b99fc;
 }
 input[type="checkbox"]:focus {
@@ -1158,16 +1175,6 @@ input[type="checkbox"]:focus {
   color: #fff;
   border-color: #b1bdca;
 }
-.user-progress-dialog .slides-progress {
+.onboarding-dialog .slides-progress {
   margin-top: 15px;
-}
-.user-progress-dialog .done-state .check-container {
-  font-size: 64px;
-  margin: 40px;
-}
-.user-progress-dialog .done-state .title {
-  font-weight: normal;
-}
-.user-progress-dialog .done-state .help-links a {
-  margin: 0px 10px;
 }

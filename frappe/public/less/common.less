@@ -29,6 +29,10 @@ p {
 	margin: 10px 0;
 }
 
+details > summary {
+	cursor: pointer;
+}
+
 .text-color {
 	color: @text-color !important;
 }
@@ -102,7 +106,23 @@ kbd {
 .btn [class^="fa fa-"],
 .nav [class^="fa fa-"],
 .btn [class*="fa fa-"],
-.nav [class*="fa fa-"] {
+.nav [class*="fa fa-"],
+.btn [class^="fas fa-"],
+.nav [class^="fas fa-"],
+.btn [class*="fas fa-"],
+.nav [class*="fas fa-"],
+.btn [class^="far fa-"],
+.nav [class^="far fa-"],
+.btn [class*="far fa-"],
+.nav [class*="far fa-"],
+.btn [class^="fab fa-"],
+.nav [class^="fab fa-"],
+.btn [class*="fab fa-"],
+.nav [class*="fab fa-"],
+.btn [class^="uil uil-"],
+.nav [class^="uil uil-"],
+.btn [class*="uil uil-"],
+.nav [class*="uil uil-"] {
 	display: inline-block;
 }
 
@@ -159,6 +179,11 @@ a.badge-hover& {
 	.modal-content {
 		min-height: 110px;
 	}
+}
+
+.msgprint-scroll {
+	max-height: 36em;
+	overflow: scroll;
 }
 
 .msgprint {

@@ -5,7 +5,6 @@ def get_data():
 	return [
 		{
 			"label": _("Web Site"),
-			"icon": "fa fa-star",
 			"items": [
 				{
 					"type": "doctype",
@@ -58,7 +57,6 @@ def get_data():
 		},
 		{
 			"label": _("Setup"),
-			"icon": "fa fa-cog",
 			"items": [
 				{
 					"type": "doctype",

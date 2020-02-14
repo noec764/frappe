@@ -5,7 +5,7 @@
 			:class="{'psuedo-zoom': full_size}"
 			@dblclick="full_size = !full_size"
 		/>
-		<i class="fa fa-close close" @click="$root.$emit('hide_preview')"></i>
+		<i class="uil uil-times close" @click="$root.$emit('hide_preview')"></i>
 	</div>
 </template>
 <script>

@@ -50,7 +50,7 @@ frappe.pages['activity'].on_page_load = function(wrapper) {
 	if(frappe.boot.user.can_get_report.indexOf("Feed")!=-1) {
 		this.page.add_menu_item(__('Build Report'), function() {
 			frappe.set_route("List", "Feed", "Report");
-		}, 'fa fa-th')
+		}, 'uil uil-pathfinder')
 	}
 
 	this.page.add_menu_item(__('Activity Log'), function() {
@@ -59,7 +59,7 @@ frappe.pages['activity'].on_page_load = function(wrapper) {
 		}
 
 		frappe.set_route("List", "Activity Log", "Report");
-	}, 'fa fa-th');
+	}, 'uil uil-pathfinder');
 };
 
 frappe.pages['activity'].on_page_show = function() {
@@ -102,7 +102,7 @@ frappe.activity.Feed = Class.extend({
 		data.by = frappe.user.full_name(data.owner);
 		data.avatar = frappe.avatar(data.owner);
 
-		data.icon = "fa fa-flag";
+		data.icon = "far fa-flag";
 
 		// color for comment
 		data.add_class = {

@@ -102,7 +102,7 @@
 						&ndash; {%= data.comment_on_small %}</span>
 					<span class="comment-likes hidden-xs"
 						data-liked-by=\'{{ JSON.stringify(data._liked_by) }}\'>
-						<i class="octicon octicon-heart like-action
+						<i class="fas fa-heart like-action
 							{% if (!data.liked_by_user) { %}
 								text-extra-muted not-liked
 							{% } %} fa-fw"
@@ -135,10 +135,10 @@
 					<div class="ellipsis">
 						<a href="{%= encodeURI(a.file_url).replace(/#/g, \'%23\') %}"
 							class="text-muted small" target="_blank" rel="noopener noreferrer">
-							<i class="fa fa-paperclip"></i>
+							<i class="uil uil-paperclip"></i>
 							{%= a.file_url.split("/").slice(-1)[0] %}
 							{% if (a.is_private) { %}
-							<i class="fa fa-lock text-warning"></i>
+							<i class="uil uil-padlock text-warning"></i>
 							{% } %}
 						</a>
 					</div>

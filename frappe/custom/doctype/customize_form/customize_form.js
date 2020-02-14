@@ -17,6 +17,15 @@ frappe.ui.form.on("Customize Form", {
 			};
 		});
 
+		frm.set_query("default_print_format", function() {
+			return {
+				filters: {
+					'print_format_type': ['!=', 'JS'],
+					'doc_type': ['=', frm.doc.doc_type]
+				}
+			}
+		});
+
 		$(frm.wrapper).on("grid-row-render", function(e, grid_row) {
 			if(grid_row.doc && grid_row.doc.fieldtype=="Section Break") {
 				$(grid_row.row).css({"font-weight": "bold"});
@@ -78,15 +87,15 @@ frappe.ui.form.on("Customize Form", {
 
 			frm.add_custom_button(__('Refresh Form'), function() {
 				frm.script_manager.trigger("doc_type");
-			}, "fa fa-refresh", "btn-default");
+			}, "uil uil-sync", "btn-default");
 
 			frm.add_custom_button(__('Reset to defaults'), function() {
 				frappe.customize_form.confirm(__('Remove all customizations?'), frm);
-			}, "fa fa-eraser", "btn-default");
+			}, "uil uil-minus-circle", "btn-default");
 
 			frm.add_custom_button(__('Set Permissions'), function() {
 				frappe.set_route('permission-manager', frm.doc.doc_type);
-			}, "fa fa-lock", "btn-default");
+			}, "uil uil-padlock", "btn-default");
 
 			if(frappe.boot.developer_mode) {
 				frm.add_custom_button(__('Export Customizations'), function() {

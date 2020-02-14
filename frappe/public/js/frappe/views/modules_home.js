@@ -23,7 +23,7 @@ frappe.modules.Home = class {
 	setup_header() {
 		this.page.set_secondary_action(__("Edit Dashboard"), () => {
 			this.edit_module()
-		}, "octicon octicon-pencil")
+		}, "octicon octicon-pencil").removeClass('btn-sm').addClass('btn-xs');
 	}
 	edit_module() {
 		const fields = get_fields()

@@ -2,6 +2,8 @@ from __future__ import unicode_literals, absolute_import, print_function
 import click
 from frappe.commands import pass_context, get_site
 
+APP_MAPPING = {"dokos": "erpnext", "dodock": "frappe"}
+
 # translation
 @click.command('build-message-files')
 @pass_context
@@ -29,9 +31,10 @@ def new_language(context, lang_code, app):
 
 	# init site
 	frappe.connect(site=context['sites'][0])
-	frappe.translate.write_translations_file(app, lang_code)
+	translations = frappe.translate.get_untranslated(lang_code, get_all=all, app=APP_MAPPING.get(app, app), write=False)
+	frappe.translate.write_translations_file(APP_MAPPING.get(app, app), lang_code, translations)
 
-	print("File created at ./apps/{app}/{app}/translations/{lang_code}.csv".format(app=app, lang_code=lang_code))
+	print("File created at ./apps/{app}/{app}/translations/{lang_code}.json".format(app=APP_MAPPING.get(app, app), lang_code=lang_code))
 	print("You will need to add the language in frappe/geo/languages.json, if you haven't done it already.")
 
 @click.command('get-untranslated')
@@ -47,7 +50,7 @@ def get_untranslated(context, lang, untranslated_file, all=None, app=None):
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.get_untranslated(lang, untranslated_file, get_all=all, app=app)
+		frappe.translate.get_untranslated(lang, untranslated_file, get_all=all, app=APP_MAPPING.get(app, app))
 	finally:
 		frappe.destroy()
 
@@ -63,7 +66,7 @@ def update_translations(context, lang, translated_file, app):
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.update_translations(lang, translated_file, app)
+		frappe.translate.update_translations(lang, translated_file, APP_MAPPING.get(app, app))
 	finally:
 		frappe.destroy()
 
@@ -78,7 +81,7 @@ def cleanup_translations(context, apps=None, langs=None):
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.cleanup_translation_files(apps, langs)
+		frappe.translate.cleanup_translation_files([a.translate(APP_MAPPING) for a in apps], langs)
 	finally:
 		frappe.destroy()
 

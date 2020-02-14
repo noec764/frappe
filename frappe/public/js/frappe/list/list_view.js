@@ -137,8 +137,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	show_restricted_list_indicator_if_applicable() {
 		const match_rules_list = frappe.perm.get_match_rules(this.doctype);
-		if(match_rules_list.length) {
-			this.restricted_list = $('<button class="restricted-list form-group">Restricted</button>')
+		if (match_rules_list.length) {
+			this.restricted_list = $(`<button class="restricted-list form-group">${__("Restricted")}</button>`)
 				.prepend('<span class="octicon octicon-lock"></span>')
 				.click(() => this.show_restrictions(match_rules_list))
 				.appendTo(this.page.page_form);
@@ -148,7 +148,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	show_restrictions(match_rules_list=[]) {
 		frappe.msgprint(frappe.render_template('list_view_permission_restrictions', {
 			condition_list: match_rules_list
-		}), 'Restrictions');
+		}), __('Restrictions'));
 	}
 
 	set_fields() {
@@ -301,15 +301,32 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
  		this.columns = this.columns.slice(0, column_count);
 	}
 
+	get_documentation_link() {
+		if (this.meta.documentation) {
+			return `<a href="${this.meta.documentation}" target="blank" class="meta-description small text-muted">Need Help?</a>`;
+		}
+		return '';
+	}
+
 	get_no_result_message() {
+		let help_link = this.get_documentation_link();
+		let filters = this.filter_area.get();
+		let no_result_message = filters.length ? __('No {0} found', [__(this.doctype)]) : __("You haven't created a {0} yet", [__(this.doctype)]);
+		let new_button_label = filters.length ? __('Create a new {0}', [__(this.doctype)]) : __('Create your first {0}', [__(this.doctype)]);
+		let empty_state_image = this.settings.empty_state_image || '/assets/frappe/images/ui-states/empty.png';
+
 		const new_button = this.can_create ?
 			`<p><button class="btn btn-primary btn-sm btn-new-doc">
-				${__('Create a new {0}', [__(this.doctype)])}
+				${new_button_label}
 			</button></p>` : '';
 
 		return `<div class="msg-box no-border">
-			<p>${__('No {0} found', [__(this.doctype)])}</p>
+			<div>
+				<img src="${empty_state_image}" alt="Generic Empty State" class="null-state">
+			</div>
+			<p>${no_result_message}</p>
 			${new_button}
+			${help_link}
 		</div>`;
 	}
 
@@ -390,6 +407,16 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		});
 	}
 
+	after_render() {
+		this.list_sidebar.reload_stats();
+		this.$no_result.html(`
+			<div class="no-result text-muted flex justify-center align-center">
+				${this.get_no_result_message()}
+			</div>
+		`);
+		this.setup_new_doc_event();
+	}
+
 	render() {
 		this.render_list();
 		this.on_row_checked();
@@ -443,7 +470,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 			tag_editor.wrapper.on('click', '.tagit-label', (e) => {
 				const $this = $(e.currentTarget);
-				this.filter_area.add('Tag Link', 'tag', '=', $this.text());
+				this.filter_area.add(this.doctype, '_user_tags', '=', $this.text());
 			});
 		});
 	}
@@ -453,7 +480,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		let subject_html = `
 			<input class="level-item list-check-all hidden-xs" type="checkbox" title="${__("Select All")}">
 			<span class="level-item list-liked-by-me">
-				<i class="octicon octicon-heart text-extra-muted" title="${__("Likes")}"></i>
+				<i class="fas fa-heart text-extra-muted" title="${__("Likes")}"></i>
 			</span>
 			<span class="level-item">${__(subject_field.label)}</span>
 		`;
@@ -577,7 +604,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 					data-filter="${fieldname},=,${value}">
 					${_value}
 				</a>`;
-			} else if (['Text Editor', 'Text', 'Small Text'].includes(df.fieldtype)) {
+			} else if (['Text Editor', 'Text', 'Small Text', 'HTML Editor'].includes(df.fieldtype)) {
 				html = `<span class="text-muted ellipsis">
 					${_value}
 				</span>`;
@@ -589,7 +616,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			}
 
 			return `<span class="ellipsis"
-				title="${__(label) + ': ' + _value}">
+				title="${__(label)}: ${escape(_value)}">
 				${html}
 			</span>`;
 		};
@@ -653,7 +680,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		const comment_count =
 			`<span class="${!doc._comment_count ? 'text-extra-muted' : ''} comment-count">
-				<i class="octicon octicon-comment-discussion"></i>
+				<i class="uil uil-comments-alt"></i>
 				${doc._comment_count > 99 ? "99+" : doc._comment_count}
 			</span>`;
 
@@ -732,7 +759,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		let subject_html = `
 			<input class="level-item list-row-checkbox hidden-xs" type="checkbox" data-name="${escape(doc.name)}">
 			<span class="level-item" style="margin-bottom: 1px;">
-				<i class="octicon octicon-heart like-action ${heart_class}"
+				<i class="fas fa-heart like-action ${heart_class}"
 					data-name="${doc.name}" data-doctype="${this.doctype}"
 					data-liked-by="${encodeURI(doc._liked_by) || '[]'}"
 				>
@@ -1017,7 +1044,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	setup_realtime_updates() {
-		if (this.list_view_settings.disable_auto_refresh) {
+		if (this.list_view_settings && this.list_view_settings.disable_auto_refresh) {
 			return;
 		}
 		frappe.realtime.on('list_update', data => {
@@ -1511,3 +1538,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 $(document).on('save', (event, doc) => {
 	frappe.views.ListView.trigger_list_update(doc);
 });
+
+frappe.get_list_view = (doctype) => {
+	let route = `List/${doctype}/List`;
+	return frappe.views.list_view[route];
+};

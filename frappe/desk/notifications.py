@@ -11,14 +11,18 @@ import json
 @frappe.whitelist()
 @frappe.read_only()
 def get_notifications():
+	out = {
+		"open_count_doctype": {},
+		"targets": {},
+	}
 	if (frappe.flags.in_install or
 		not frappe.db.get_single_value('System Settings', 'setup_complete')):
-		return {
-			"open_count_doctype": {},
-			"targets": {},
-		}
+		return out
 
 	config = get_notification_config()
+
+	if not config:
+		return out
 
 	groups = list(config.get("for_doctype")) + list(config.get("for_module"))
 	cache = frappe.cache()
@@ -31,10 +35,10 @@ def get_notifications():
 		if count is not None:
 			notification_count[name] = count
 
-	return {
-		"open_count_doctype": get_notifications_for_doctypes(config, notification_count),
-		"targets": get_notifications_for_targets(config, notification_percent),
-	}
+	out['open_count_doctype'] = get_notifications_for_doctypes(config, notification_count)
+	out['targets'] = get_notifications_for_targets(config, notification_percent)
+
+	return out
 
 @frappe.whitelist()
 def get_notifications_for_doctypes(config, notification_count):
@@ -119,6 +123,10 @@ def clear_notifications(user=None):
 		return
 	cache = frappe.cache()
 	config = get_notification_config()
+
+	if not config:
+		return
+
 	for_doctype = list(config.get('for_doctype')) if config.get('for_doctype') else []
 	for_module = list(config.get('for_module')) if config.get('for_module') else []
 	groups = for_doctype + for_module
@@ -140,6 +148,8 @@ def delete_notification_count_for(doctype):
 
 def clear_doctype_notifications(doc, method=None, *args, **kwargs):
 	config = get_notification_config()
+	if not config:
+		return
 	if isinstance(doc, string_types):
 		doctype = doc # assuming doctype name was passed directly
 	else:
@@ -173,6 +183,8 @@ def get_notification_info():
 	return out
 
 def get_notification_config():
+	user = frappe.session.user or 'Guest'
+
 	def _get():
 		subscribed_documents = get_subscribed_documents()
 		config = frappe._dict()
@@ -196,7 +208,7 @@ def get_notification_config():
 						config[key].update(nc.get(key, {}))
 		return config
 
-	return frappe.cache().hget("notification_config", frappe.session.user, _get)
+	return frappe.cache().hget("notification_config", user, _get)
 
 def get_filters_for(doctype):
 	'''get open filters for doctype'''

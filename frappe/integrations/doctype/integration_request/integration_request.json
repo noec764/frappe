@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "creation": "2016-08-04 04:58:40.457416",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -19,9 +20,9 @@
   "column_break_7",
   "service_id",
   "section_break_9",
+  "error",
   "data",
-  "output",
-  "error"
+  "output"
  ],
  "fields": [
   {
@@ -138,7 +139,8 @@
   }
  ],
  "in_create": 1,
- "modified": "2019-10-09 11:56:28.059802",
+ "links": [],
+ "modified": "2020-01-22 17:52:25.414400",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integration Request",

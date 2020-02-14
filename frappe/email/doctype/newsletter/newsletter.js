@@ -10,7 +10,7 @@ frappe.ui.form.on('Newsletter', {
 				frm.call('send_emails').then(() => {
 					frm.refresh();
 				});
-			}, "fa fa-play", "btn-success");
+			}, "fas fa-play-circle", "btn-success");
 		}
 
 		frm.events.setup_dashboard(frm);

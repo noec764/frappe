@@ -66,7 +66,7 @@ frappe.ui.Page = Class.extend({
 	},
 
 	add_main_section: function() {
-		$(frappe.render_template("page", {headerPadding: document.getElementById("body_div").style.paddingLeft})).appendTo(this.wrapper);
+		$(frappe.render_template("page")).appendTo(this.wrapper);
 		if(this.single_column) {
 			// nesting under col-sm-12 for consistency
 			this.add_view("main", '<div class="row layout-main">\

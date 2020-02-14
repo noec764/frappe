@@ -83,9 +83,9 @@ def handle():
 
 				if frappe.local.request.method=="PUT":
 					if frappe.local.form_dict.data is None:
-						data = json.loads(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
 					else:
-						data = json.loads(frappe.local.form_dict.data)
+						data = frappe.parse_json(frappe.local.form_dict.data)
 					doc = frappe.get_doc(doctype, name)
 
 					if "flags" in data:
@@ -97,6 +97,10 @@ def handle():
 					frappe.local.response.update({
 						"data": doc.save().as_dict()
 					})
+
+					if doc.parenttype and doc.parent:
+						frappe.get_doc(doc.parenttype, doc.parent).save()
+
 					frappe.db.commit()
 
 				if frappe.local.request.method=="DELETE":
@@ -110,7 +114,7 @@ def handle():
 			elif doctype:
 				if frappe.local.request.method=="GET":
 					if frappe.local.form_dict.get('fields'):
-						frappe.local.form_dict['fields'] = json.loads(frappe.local.form_dict['fields'])
+						frappe.local.form_dict['fields'] = frappe.parse_json(frappe.local.form_dict['fields'])
 					frappe.local.form_dict.setdefault('limit_page_length', 20)
 					frappe.local.response.update({
 						"data":  frappe.call(frappe.client.get_list,
@@ -118,9 +122,9 @@ def handle():
 
 				if frappe.local.request.method=="POST":
 					if frappe.local.form_dict.data is None:
-						data = json.loads(frappe.local.request.get_data())
+						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
 					else:
-						data = json.loads(frappe.local.form_dict.data)
+						data = frappe.parse_json(frappe.local.form_dict.data)
 					data.update({
 						"doctype": doctype
 					})

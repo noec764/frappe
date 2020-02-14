@@ -4,7 +4,7 @@
 		"public/less/indicator.less"
 	],
 	"css/frappe-chat-web.css": [
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/css/octicons/octicons.css",
 		"public/less/chat.less"
 	],
@@ -20,6 +20,9 @@
 	],
 	"js/frappe-recorder.min.js": [
 		"public/js/frappe/recorder/recorder.js"
+	],
+	"js/checkout.min.js": [
+		"public/js/integrations/razorpay.js"
 	],
 	"js/frappe-web.min.js": [
 		"public/js/frappe/class.js",
@@ -52,6 +55,22 @@
 		"website/js/bootstrap-4.js"
 	],
 	"js/control.min.js": [
+		"node_modules/air-datepicker/dist/js/datepicker.min.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.cs.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.da.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.de.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.en.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.es.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.fi.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.fr.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.hu.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.nl.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.pl.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.pt-BR.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.pt.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.ro.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.sk.js",
+		"node_modules/air-datepicker/dist/js/i18n/datepicker.zh.js",
 		"public/js/frappe/ui/capture.js",
 		"public/js/frappe/event_emitter.js",
 		"public/js/frappe/form/controls/text_editor.html",
@@ -73,8 +92,9 @@
 		"public/js/lib/leaflet/L.Control.Locate.css",
 		"public/js/lib/leaflet/easy-button.css",
 		"public/css/bootstrap.css",
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/css/octicons/octicons.css",
+		"public/css/fonts/unicons/css/unicons.css",
 		"public/less/desk.less",
 		"public/less/flex.less",
 		"public/less/indicator.less",
@@ -102,7 +122,7 @@
 	],
 	"css/printview.css": [
 		"public/css/bootstrap.css",
-		"public/css/font-awesome.css",
+		"public/css/fonts/fontawesome/css/all.css",
 		"public/less/print.less"
 	],
 	"concat:js/libs.min.js": [
@@ -116,8 +136,6 @@
 		"public/js/lib/socket.io.min.js",
 		"public/js/lib/jSignature.min.js",
 		"public/js/frappe/translate.js",
-		"public/js/lib/datepicker/datepicker.min.js",
-		"public/js/lib/datepicker/locale-all.js",
 		"public/js/lib/leaflet/leaflet.js",
 		"public/js/lib/leaflet/leaflet.draw.js",
 		"public/js/lib/leaflet/L.Control.Locate.js",
@@ -150,6 +168,7 @@
 		"public/js/frappe/ui/page.html",
 		"public/js/frappe/ui/page.js",
 		"public/js/frappe/ui/slides.js",
+		"public/js/frappe/ui/onboarding_dialog.js",
 		"public/js/frappe/ui/find.js",
 		"public/js/frappe/ui/iconbar.js",
 		"public/js/frappe/form/layout.js",
@@ -319,9 +338,7 @@
 	],
 	"js/web_form.min.js": [
 		"public/js/frappe/utils/datetime.js",
-		"public/js/frappe/web_form/webform_script.js",
-		"public/js/lib/datepicker/datepicker.min.js",
-		"public/js/lib/datepicker/datepicker.en.js"
+		"public/js/frappe/web_form/webform_script.js"
 	],
 	"css/web_form.css": [
 		"public/less/list.less",

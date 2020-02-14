@@ -5,7 +5,6 @@ def get_data():
 	return [
 		{
 			"label": _("Users"),
-			"icon": "fa fa-group",
 			"items": [
 				{
 					"type": "doctype",
@@ -26,20 +25,17 @@ def get_data():
 		},
 		{
 			"label": _("Permissions"),
-			"icon": "fa fa-lock",
 			"items": [
 				{
 					"type": "page",
 					"name": "permission-manager",
 					"label": _("Role Permissions Manager"),
-					"icon": "fa fa-lock",
 					"description": _("Set Permissions on Document Types and Roles")
 				},
 				{
 					"type": "doctype",
 					"name": "User Permission",
 					"label": _("User Permissions"),
-					"icon": "fa fa-lock",
 					"description": _("Restrict user for specific document")
 				},
 				{
@@ -51,14 +47,12 @@ def get_data():
 					"type": "report",
 					"is_query_report": True,
 					"doctype": "User",
-					"icon": "fa fa-eye-open",
 					"name": "Permitted Documents For User",
 					"description": _("Check which Documents are readable by a User")
 				},
 				{
 					"type": "report",
 					"doctype": "DocShare",
-					"icon": "fa fa-share",
 					"name": "Document Share Report",
 					"description": _("Report of all document shares")
 				}
@@ -66,7 +60,6 @@ def get_data():
 		},
 		{
 			"label": _("Logs"),
-			"icon": "fa fa-group",
 			"items": [
 				{
 					"type": "doctype",

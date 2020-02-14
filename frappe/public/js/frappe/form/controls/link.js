@@ -190,7 +190,7 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 							// new item
 							r.results.push({
 								label: "<span class='text-primary link-option'>"
-									+ "<i class='fa fa-plus' style='margin-right: 5px;'></i> "
+									+ "<i class='uil uil-plus' style='margin-right: 5px;'></i> "
 									+ __("Create a new {0}", [__(me.get_options())])
 									+ "</span>",
 								value: "create_new__link_option",
@@ -203,7 +203,7 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 							// not applicable in web forms
 							r.results.push({
 								label: "<span class='text-primary link-option'>"
-									+ "<i class='fa fa-search' style='margin-right: 5px;'></i> "
+									+ "<i class='uil uil-search-alt' style='margin-right: 5px;'></i> "
 									+ __("Advanced Search")
 									+ "</span>",
 								value: "advanced_search__link_option",

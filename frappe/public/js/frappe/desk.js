@@ -76,15 +76,17 @@ frappe.Application = Class.extend({
 			frappe.msgprint(frappe.boot.messages);
 		}
 
-		if (frappe.boot.change_log && frappe.boot.change_log.length && !window.Cypress) {
+		if (frappe.user_roles.includes('System Manager')) {
 			this.show_change_log();
-		} else {
-			this.show_notes();
+			this.show_update_available();
 		}
+		this.show_notes();
 
-		this.show_update_available();
+		/*if (frappe.boot.is_first_startup) {
+			this.setup_onboarding_wizard();
+		}*/
 
-		if(frappe.ui.startup_setup_dialog && !frappe.boot.setup_complete) {
+		if (frappe.ui.startup_setup_dialog && !frappe.boot.setup_complete) {
 			frappe.ui.startup_setup_dialog.pre_show();
 			frappe.ui.startup_setup_dialog.show();
 		}
@@ -114,10 +116,10 @@ frappe.Application = Class.extend({
 		// listen to build errors
 		this.setup_build_error_listener();
 
-		if (frappe.sys_defaults.email_user_password){
+		if (frappe.sys_defaults.email_user_password) {
 			var email_list =  frappe.sys_defaults.email_user_password.split(',');
 			for (var u in email_list) {
-				if (email_list[u]===frappe.user.name){
+				if (email_list[u]===frappe.user.name) {
 					this.set_password(email_list[u]);
 				}
 			}
@@ -167,7 +169,7 @@ frappe.Application = Class.extend({
 	email_password_prompt: function(email_account,user,i) {
 		var me = this;
 		var d = new frappe.ui.Dialog({
-			title: __('Email Account setup please enter your password for: '+email_account[i]["email_id"]),
+			title: __('Email Account setup please enter your password for: {0}', [email_account[i]["email_id"]]),
 			fields: [
 				{	'fieldname': 'password',
 					'fieldtype': 'Password',
@@ -191,7 +193,7 @@ frappe.Application = Class.extend({
 					"fieldname": "checking"
 				}]
 			});
-			s.fields_dict.checking.$wrapper.html('<i class="fa fa-spinner fa-spin fa-4x"></i>');
+			s.fields_dict.checking.$wrapper.html('<i class="fas fa-spinner fa-spin fa-4x"></i>');
 			s.show();
 			frappe.call({
 				method: 'frappe.core.doctype.user.user.set_email_password',
@@ -424,15 +426,26 @@ frappe.Application = Class.extend({
 	},
 
 	set_app_logo_url: function() {
-		return frappe.call('frappe.client.get_hooks', { hook: 'app_logo_url' })
-			.then(r => {
-				frappe.app.logo_url = (r.message || []).slice(-1)[0];
-				if (window.cordova) {
-					let host = frappe.request.url;
-					host = host.slice(0, host.length - 1);
-					frappe.app.logo_url = host + frappe.app.logo_url;
-				}
-			});
+		if (frappe.boot.sysdefaults.desk_logo) {
+			return new Promise(resolve => {
+				this.add_app_logo_url_to_frappe([frappe.boot.sysdefaults.desk_logo]);
+				resolve();
+			})
+		} else {
+			return frappe.call('frappe.client.get_hooks', { hook: 'app_logo_url' })
+				.then(r => {
+					this.add_app_logo_url_to_frappe(r.message);
+				});
+		}
+	},
+
+	add_app_logo_url_to_frappe: function(logo_url) {
+		this.logo_url = (logo_url || []).slice(-1)[0];
+		if (window.cordova) {
+			let host = frappe.request.url;
+			host = host.slice(0, host.length - 1);
+			this.logo_url = host + frappe.app.logo_url;
+		}
 	},
 
 	trigger_primary_action: function() {
@@ -458,12 +471,31 @@ frappe.Application = Class.extend({
 
 	show_change_log: function() {
 		var me = this;
-		var d = frappe.msgprint(
-			frappe.render_template("change_log", {"change_log": frappe.boot.change_log}),
-			__("Updated To New Version")
-		);
-		d.keep_open = true;
-		d.custom_onhide = function() {
+		const change_log = frappe.boot.change_log;
+
+		// frappe.boot.change_log = [{
+		// 	"change_log": [
+		// 		[<version>, <change_log in markdown>],
+		// 		[<version>, <change_log in markdown>],
+		// 	],
+		// 	"description": "ERP made simple",
+		// 	"title": "ERPNext",
+		// 	"version": "12.2.0"
+		// }];
+
+		if (!Array.isArray(change_log) || !change_log.length || window.Cypress) {
+			return;
+		}
+
+		// Iterate over changelog
+		var change_log_dialog = frappe.msgprint({
+			message: frappe.render_template("change_log", {"change_log": change_log}),
+			title: __("Updated To A New Version 🎉"),
+			wide: true,
+			scroll: true
+		});
+		change_log_dialog.keep_open = true;
+		change_log_dialog.custom_onhide = function() {
 			frappe.call({
 				"method": "frappe.utils.change_log.update_last_known_versions"
 			});
@@ -474,6 +506,20 @@ frappe.Application = Class.extend({
 	show_update_available: () => {
 		frappe.call({
 			"method": "frappe.utils.change_log.show_update_popup"
+		});
+	},
+
+	setup_onboarding_wizard: () => {
+		frappe.call('frappe.desk.doctype.onboarding_slide.onboarding_slide.get_onboarding_slides').then(res => {
+			if (res.message) {
+				let slides = res.message;
+				if (slides.length) {
+					this.progress_dialog = new frappe.setup.OnboardingDialog({
+						slides: slides
+					});
+					this.progress_dialog.show();
+				}
+			}
 		});
 	},
 

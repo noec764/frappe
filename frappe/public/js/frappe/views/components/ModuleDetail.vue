@@ -71,6 +71,7 @@ export default {
 .h4 {
 	font-size: 18px;
 	margin-bottom: 15px;
+	color: #4d88ff;
 }
 
 </style>

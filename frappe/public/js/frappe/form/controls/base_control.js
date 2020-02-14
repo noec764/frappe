@@ -105,7 +105,7 @@ frappe.ui.form.Control = Class.extend({
 
 		const translation_btn =
 			`<a class="btn-translation no-decoration text-muted" title="${__('Open Translation')}">
-				<i class="fa fa-globe"></i>
+				<i class="uil uil-globe"></i>
 			</a>`;
 
 		$(translation_btn)

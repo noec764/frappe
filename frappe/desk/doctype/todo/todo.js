@@ -25,7 +25,7 @@ frappe.ui.form.on("ToDo", {
 						// back to list
 						frappe.set_route("List", "ToDo");
 					});
-				}, "fa fa-check", "btn-success");
+				}, "uil uil-check", "btn-success");
 			} else {
 				frm.add_custom_button(__("Reopen"), function() {
 					frm.set_value("status", "Open");

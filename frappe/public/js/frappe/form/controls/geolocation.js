@@ -1,4 +1,5 @@
-frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlCode.extend({
+frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlData.extend({
+	horizontal: false,
 	make_wrapper() {
 		// Create the elements for map area
 		this._super();
@@ -170,7 +171,7 @@ frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlCode.extend({
 					map._onResize();
 				},
 				title: 'Refresh map',
-				icon: 'fa fa-refresh'
+				icon: 'uil uil-sync'
 			}]
 		}).addTo(this.map);
 	},

@@ -2,7 +2,7 @@ frappe.pages['permission-manager'].on_page_load = (wrapper) => {
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __('Role Permissions Manager'),
-		icon: "fa fa-lock",
+		icon: "uil uil-padlock",
 		single_column: true
 	});
 
@@ -298,7 +298,7 @@ frappe.PermissionEngine = Class.extend({
 
 	add_delete_button: function(row, d) {
 		var me = this;
-		$("<button class='btn btn-default btn-sm'><i class='fa fa-remove'></i></button>")
+		$("<button class='btn btn-default btn-sm'><i class='uil uil-trash-alt'></i></button>")
 			.appendTo($("<td>").appendTo(row))
 			.attr("data-doctype", d.parent)
 			.attr("data-role", d.role)
@@ -360,7 +360,7 @@ frappe.PermissionEngine = Class.extend({
 
 	show_add_rule: function() {
 		var me = this;
-		$("<button class='btn btn-default btn-primary btn-sm'><i class='fa fa-plus'></i> "
+		$("<button class='btn btn-default btn-primary btn-sm'><i class='uil uil-plus'></i> "
 			+__("Add A New Rule")+"</button>")
 			.appendTo($("<p class='permission-toolbar'>").appendTo(this.body))
 			.click(function() {
@@ -413,7 +413,7 @@ frappe.PermissionEngine = Class.extend({
 	make_reset_button: function() {
 		var me = this;
 		$('<button class="btn btn-default btn-sm" style="margin-left: 10px;">\
-			<i class="fa fa-refresh"></i> ' + __("Restore Original Permissions") + '</button>')
+			<i class="uil uil-sync"></i> ' + __("Restore Original Permissions") + '</button>')
 			.appendTo(this.body.find(".permission-toolbar"))
 			.on("click", function() {
 				me.get_standard_permissions(function(data) {

@@ -28,7 +28,7 @@ class GoogleCalendar(Document):
 		if not google_settings.enable:
 			frappe.throw(_("Enable Google API in Google Settings."))
 
-		if not google_settings.client_id or not google_settings.client_secret:
+		if (not google_settings.client_id and not frappe.conf.google_client_id) or (not google_settings.client_secret and not frappe.conf.google_client_secret):
 			frappe.throw(_("Enter Client Id and Client Secret in Google Settings."))
 
 		return google_settings
@@ -39,10 +39,10 @@ class GoogleCalendar(Document):
 		if not self.refresh_token:
 			button_label = frappe.bold(_("Allow Google Calendar Access"))
 			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
-
+		
 		data = {
-			"client_id": google_settings.client_id,
-			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+			"client_id": google_settings.client_id or frappe.conf.google_client_id,
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 			"refresh_token": self.refresh_token,
 			"grant_type": "refresh_token",
 			"scope": SCOPES
@@ -73,13 +73,13 @@ def authorize_access(g_calendar, reauthorize=None):
 
 	if not google_calendar.authorization_code or reauthorize:
 		frappe.cache().hset("google_calendar", "google_calendar", google_calendar.name)
-		return get_authentication_url(client_id=google_settings.client_id, redirect_uri=redirect_uri)
+		return get_authentication_url(client_id=google_settings.client_id or frappe.conf.google_client_id, redirect_uri=redirect_uri)
 	else:
 		try:
 			data = {
 				"code": google_calendar.get_password(fieldname="authorization_code", raise_exception=False),
-				"client_id": google_settings.client_id,
-				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+				"client_id": google_settings.client_id or frappe.conf.google_client_id,
+				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code"
 			}
@@ -90,10 +90,13 @@ def authorize_access(g_calendar, reauthorize=None):
 				frappe.db.set_value("Google Calendar", google_calendar.name, "next_sync_token", None)
 				frappe.db.commit()
 
-			frappe.local.response["type"] = "redirect"
-			frappe.local.response["location"] = "/desk#Form/{0}/{1}".format(quote("Google Calendar"), quote(google_calendar.name))
+				frappe.local.response["type"] = "redirect"
+				frappe.local.response["location"] = "/desk#Form/{0}/{1}".format(quote("Google Calendar"), quote(google_calendar.name))
 
-			frappe.msgprint(_("Google Calendar has been configured."))
+				frappe.msgprint(_("Google Calendar has been configured."))
+			else:
+				frappe.msgprint(_("Google Calendar configuration failed : {0}.").format(r.get("error_description") or str(r)))
+
 		except Exception as e:
 			frappe.throw(e)
 
@@ -136,8 +139,8 @@ def get_google_calendar_object(g_calendar):
 		"token": account.get_access_token(),
 		"refresh_token": account.refresh_token,
 		"token_uri": get_auth_url(),
-		"client_id": google_settings.client_id,
-		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+		"client_id": google_settings.client_id or frappe.conf.google_client_id,
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 		"scopes": "https://www.googleapis.com/auth/calendar/v3"
 	}
 

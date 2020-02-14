@@ -268,7 +268,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.$working_state = this.get_message(
 			__("Setting up your system"),
-			__("Starting Frappe ...")).appendTo(this.parent);
+			__("Starting dodock ...")).appendTo(this.parent);
 
 		this.attach_abort_button();
 
@@ -350,7 +350,7 @@ frappe.setup.slides_settings = [
 		// Welcome (language) slide
 		name: "welcome",
 		title: __("Hello!"),
-		icon: "fa fa-world",
+		icon: "fas fa-globe",
 		// help: __("Let's prepare the system for first use."),
 
 		fields: [
@@ -382,7 +382,7 @@ frappe.setup.slides_settings = [
 		// Region slide
 		name: 'region',
 		title: __("Select Your Region"),
-		icon: "fa fa-flag",
+		icon: "far fa-flag",
 		// help: __("Select your Country, Time Zone and Currency"),
 		fields: [
 			{ fieldname: "country", label: __("Your Country"), reqd:1,
@@ -413,7 +413,7 @@ frappe.setup.slides_settings = [
 		// Profile slide
 		name: 'user',
 		title: __("The First User: You"),
-		icon: "fa fa-user",
+		icon: "far fa-user",
 		fields: [
 			{ "fieldtype":"Attach Image", "fieldname":"attach_user_image",
 				label: __("Attach Your Picture"), is_private: 0, align: 'center'},

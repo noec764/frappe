@@ -6,9 +6,11 @@ frappe.patches.v8_0.update_global_search_table
 frappe.patches.v7_0.update_auth
 frappe.patches.v8_0.drop_in_dialog #2017-09-22
 frappe.patches.v7_2.remove_in_filter
-frappe.patches.v11_0.drop_column_apply_user_permissions
+execute:frappe.reload_doc('core', 'doctype', 'doctype_action', force=True)
+execute:frappe.reload_doc('core', 'doctype', 'doctype_link', force=True)
 execute:frappe.reload_doc('core', 'doctype', 'doctype', force=True) #2017-09-22
 execute:frappe.reload_doc('core', 'doctype', 'docfield', force=True) #2018-02-20
+frappe.patches.v11_0.drop_column_apply_user_permissions
 execute:frappe.reload_doc('core', 'doctype', 'custom_docperm')
 execute:frappe.reload_doc('core', 'doctype', 'docperm') #2018-05-29
 execute:frappe.reload_doc('core', 'doctype', 'comment')
@@ -267,7 +269,11 @@ frappe.patches.v12_0.setup_tags
 frappe.patches.v12_0.copy_to_parent_for_tags
 frappe.patches.v12_0.create_notification_settings_for_user
 frappe.patches.v11_0.make_all_prepared_report_attachments_private
+frappe.patches.v12_0.setup_email_linking
+frappe.patches.v12_0.fix_home_settings_for_all_users
+execute:frappe.delete_doc("Test Runner")
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
 frappe.patches.dokos.v1_2.add_rrule_to_events
+frappe.patches.dokos.v1_3.no_timespan_to_all_time

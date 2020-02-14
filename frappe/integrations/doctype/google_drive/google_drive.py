@@ -40,8 +40,8 @@ class GoogleDrive(Document):
 			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
-			"client_id": google_settings.client_id,
-			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+			"client_id": google_settings.client_id or frappe.conf.google_client_id,
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 			"refresh_token": self.get_password(fieldname="refresh_token", raise_exception=False),
 			"grant_type": "refresh_token",
 			"scope": SCOPES
@@ -70,13 +70,13 @@ def authorize_access(reauthorize=None):
 	if not google_drive.authorization_code or reauthorize:
 		if reauthorize:
 			frappe.db.set_value("Google Drive", None, "backup_folder_id", "")
-		return get_authentication_url(client_id=google_settings.client_id, redirect_uri=redirect_uri)
+		return get_authentication_url(client_id=google_settings.client_id or frappe.conf.google_client_id, redirect_uri=redirect_uri)
 	else:
 		try:
 			data = {
 				"code": google_drive.authorization_code,
-				"client_id": google_settings.client_id,
-				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+				"client_id": google_settings.client_id or frappe.conf.google_client_id,
+				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code"
 			}
@@ -119,8 +119,8 @@ def get_google_drive_object():
 		"token": account.get_access_token(),
 		"refresh_token": account.get_password(fieldname="refresh_token", raise_exception=False),
 		"token_uri": get_auth_url(),
-		"client_id": google_settings.client_id,
-		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+		"client_id": google_settings.client_id or frappe.conf.google_client_id,
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
 		"scopes": "https://www.googleapis.com/auth/drive/v3"
 	}
 

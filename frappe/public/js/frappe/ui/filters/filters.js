@@ -487,7 +487,7 @@ frappe.ui.Filter = Class.extend({
 			</button>
 			<button class="btn btn-default btn-xs remove-filter"
 				title="${ __("Remove Filter") }">
-				<i class="fa fa-remove text-muted"></i>
+				<i class="uil uil-times text-muted"></i>
 			</button></div>`)
 			.insertAfter(this.flist.wrapper.find(".set-filters .new-filter"));
 

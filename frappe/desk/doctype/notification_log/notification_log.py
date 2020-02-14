@@ -37,6 +37,14 @@ def get_title_html(title):
 	return '<b class="subject-title">{0}</b>'.format(title)
 
 def enqueue_create_notification(users, doc):
+	'''
+	During installation of new site, enqueue_create_notification tries to connect to Redis.
+	This breaks new site creation if Redis server is not running.
+	We do not need any notifications in fresh installation
+	'''
+	if frappe.flags.in_install:
+		return
+
 	doc = frappe._dict(doc)
 
 	if isinstance(users, frappe.string_types):

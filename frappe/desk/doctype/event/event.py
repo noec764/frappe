@@ -83,6 +83,8 @@ class Event(Document):
 		communication.subject = self.subject
 		communication.content = self.description if self.description else self.subject
 		communication.communication_date = self.starts_on
+		communication.sender = self.owner
+		communication.sender_full_name = frappe.utils.get_fullname(self.owner)
 		communication.reference_doctype = self.doctype
 		communication.reference_name = self.name
 		communication.communication_medium = communication_mapping.get(self.event_category) if self.event_category else ""
@@ -232,6 +234,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 	result = list(events)
 	for event in events:
 		if event.get("repeat_this_event"):
+			result = [x for x in result if x.get("name") != event.get("name")]
 			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
 
 	return result

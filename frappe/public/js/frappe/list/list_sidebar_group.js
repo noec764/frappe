@@ -37,7 +37,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 	make_wrapper() {
 		this.$wrapper = this.sidebar.sidebar.find('.list-group-by');
 		let html = `
-			<li class="list-sidebar-label">
+			<li class="list-sidebar-label uil uil-filter">
 				${__('Filter By')}
 			</li>
 			<div class="list-group-by-fields">
@@ -90,7 +90,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 					this.render_dropdown_items(field_count_list, dropdown);
 					this.sidebar.setup_dropdown_search(dropdown, '.group-by-value');
 				} else {
-					dropdown.find('.group-by-loading').hide();
+					dropdown.find('.group-by-loading').html(`${__("No filters found")}`);
 				}
 			});
 		});

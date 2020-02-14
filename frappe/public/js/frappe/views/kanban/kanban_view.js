@@ -107,6 +107,11 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 		});
 	}
 
+	get_fields() {
+		this.fields.push([this.board.field_name, this.board.reference_doctype]);
+		return super.get_fields();
+	}
+
 	render() {
 		const board_name = this.board_name;
 		if (this.kanban && board_name === this.kanban.board_name) {
@@ -186,7 +191,7 @@ frappe.views.KanbanView.setup_dropdown_in_sidebar = function(doctype, $dropdown)
 				$(`<li>
 					<a href="#${route}">
 						<span>${__(board.name)}</span>
-					${board.private ? '<i class="fa fa-lock fa-fw text-warning"></i>' : ''}
+					${board.private ? '<i class="uil uil-padlock fa-fw text-warning"></i>' : ''}
 					</a>
 				</li>
 				`).appendTo($dropdown);

@@ -42,7 +42,7 @@ def upload():
 	if dt and dn:
 		comment = frappe.get_doc(dt, dn).add_comment("Attachment",
 			_("added {0}").format("<a href='{file_url}' target='_blank'>{file_name}</a>{icon}".format(**{
-				"icon": ' <i class="fa fa-lock text-warning"></i>' \
+				"icon": ' <i class="uil uil-padlock text-warning"></i>' \
 					if file_doc.is_private else "",
 				"file_url": file_doc.file_url.replace("#", "%23") \
 					if file_doc.file_name else file_doc.file_url,

@@ -10,7 +10,7 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 		this.$value = $(
 			`<div class="attached-file flex justify-between align-center">
 				<div class="ellipsis">
-					<i class="fa fa-paperclip"></i>
+					<i class="uil uil-paperclip"></i>
 					<a class="attached-file-link" target="_blank"></a>
 				</div>
 				<div>

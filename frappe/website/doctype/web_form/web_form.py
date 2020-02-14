@@ -209,7 +209,7 @@ def get_context(context):
 		if self.accept_payment:
 			controller = get_payment_gateway_controller(self.payment_gateway)
 
-			title = "Payment for {0} {1}".format(doc.doctype, doc.name)
+			title = _("Payment for {0} {1}").format(doc.doctype, doc.name)
 			amount = self.amount
 			if self.amount_based_on_field:
 				amount = doc.get(self.amount_field)

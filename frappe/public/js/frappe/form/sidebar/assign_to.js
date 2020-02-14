@@ -58,7 +58,7 @@ frappe.ui.form.AssignTo = Class.extend({
 				if(d[i].owner===frappe.session.user) {
 					me.primary_action = this.frm.page.add_menu_item(__("Assignment Complete"), function() {
 						me.remove(frappe.session.user);
-					}, "fa fa-check", "btn-success")
+					}, "uil uil-check", "btn-success")
 				}
 
 				if(!(d[i].owner === frappe.session.user || me.frm.perm[0].write)) {

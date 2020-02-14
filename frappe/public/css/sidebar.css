@@ -53,7 +53,7 @@ body[data-route^="Module"] .main-menu .form-sidebar {
 .layout-side-section .sidebar-menu > li > a:hover,
 .layout-side-section .sidebar-menu > li > a:focus,
 .layout-side-section .sidebar-menu > li > a:active {
-  text-decoration: underline;
+  text-decoration: none;
 }
 .sidebar-menu .badge {
   position: absolute;

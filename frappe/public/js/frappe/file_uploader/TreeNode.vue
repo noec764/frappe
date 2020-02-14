@@ -7,7 +7,7 @@
 			:disabled="node.fetching"
 		>
 			<i v-if="node.is_leaf" class="octicon octicon-primitive-dot node-leaf"></i>
-			<i v-else class="fa fa-fw node-parent" :class="[node.open ? 'fa-folder-open' : 'fa-folder']"></i>
+			<i v-else class="far fa-fw node-parent" :class="[node.open ? 'fa-folder-open' : 'fa-folder']"></i>
 			<a class="tree-label grey h6">{{ node.label }}</a>
 		</span>
 		<ul class="tree-children" v-show="node.open">

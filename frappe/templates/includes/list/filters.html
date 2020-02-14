@@ -7,7 +7,7 @@
 						placeholder="Search..." value="{{ txt or '' }}">
 					<span class="input-group-btn">
 						<button class="btn btn-light" type="submit">
-							<i class="fa fa-search"></i></button>
+							<i class="uil uil-search-alt"></i></button>
 					</span>
 				</div>
 			</form>
@@ -15,7 +15,7 @@
 	</div>
 	{% if txt %}
 	<div>
-		<div class="filter-message small text-muted">Results filtered by <b>{{ txt }}</b>.
+		<div class="filter-message small text-muted">{{ _("Results filtered by") }} <b>{{ txt }}</b>.
 			<a href="/{{ pathname }}" class="text-muted">( <span class="close-inline">&times;</span> {{ _("clear") }} )</a></div>
 	</div>
 	{% endif %}

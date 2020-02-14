@@ -14,6 +14,7 @@ frappe.ui.FilterGroup = class {
 
 	toggle_clear_filter() {
 		let clear_filter_button = this.wrapper.find('.clear-filters');
+
 		if (this.filters.length == 0) {
 			clear_filter_button.hide();
 		} else {
@@ -158,8 +159,7 @@ frappe.ui.FilterGroup = class {
 			<div class="active-tag-filters">
 				<button class="btn btn-default btn-xs filter-button text-muted add-filter">
 					${__("Add Filter")}
-				</button>
-				<button class="btn btn-default btn-xs filter-button text-muted clear-filters" style="display: none;">
+				</button><button class="btn btn-default btn-xs filter-button text-muted clear-filters" style="display: none;">
 					${__("Clear Filters")}
 				</button>
 			</div>

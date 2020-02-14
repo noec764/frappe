@@ -105,7 +105,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 						>
 							${_html}
 							<button class="btn btn-default zoom-view" data-name="${encoded_name}">
-								<i class="fa fa-search-plus"></i>
+								<i class="uil uil-search-plus"></i>
 							</button>
 						</div>
 					</a>
@@ -146,7 +146,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 			<div class="list-row-col list-subject level ">
 				<input class="level-item list-check-all hidden-xs" type="checkbox" title="Select All">
 				<span class="level-item list-liked-by-me">
-					<i class="octicon octicon-heart text-extra-muted" title="Likes"></i>
+					<i class="fas fa-heart text-extra-muted" title="Likes"></i>
 				</span>
 				<span class="level-item"></span>
 			</div>

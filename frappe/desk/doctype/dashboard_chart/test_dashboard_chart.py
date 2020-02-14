@@ -35,6 +35,8 @@ class TestDashboardChart(unittest.TestCase):
 			getdate('2019-06-30'))
 		self.assertEqual(get_period_ending('2019-10-01', 'Quarterly'),
 			getdate('2019-12-31'))
+		self.assertEqual(get_period_ending('2019-10-01', 'Yearly'),
+			getdate('2019-12-31'))
 
 	def test_dashboard_chart(self):
 		if frappe.db.exists('Dashboard Chart', 'Test Dashboard Chart'):
@@ -57,7 +59,7 @@ class TestDashboardChart(unittest.TestCase):
 		result = get(chart_name ='Test Dashboard Chart', refresh = 1)
 		for idx in range(13):
 			month = datetime(int(cur_date.year), int(cur_date.strftime('%m')), int(calendar.monthrange(cur_date.year, cur_date.month)[1]))
-			month = formatdate(month.strftime('%Y-%m-%d'))
+			month = formatdate(month.strftime('%Y-%m-%d'), 'yyyy-mm-dd')
 			self.assertEqual(result.get('labels')[idx], month)
 			cur_date += relativedelta(months=1)
 
@@ -89,7 +91,7 @@ class TestDashboardChart(unittest.TestCase):
 		result = get(chart_name ='Test Empty Dashboard Chart', refresh = 1)
 		for idx in range(13):
 			month = datetime(int(cur_date.year), int(cur_date.strftime('%m')), int(calendar.monthrange(cur_date.year, cur_date.month)[1]))
-			month = formatdate(month.strftime('%Y-%m-%d'))
+			month = formatdate(month.strftime('%Y-%m-%d'), 'yyyy-mm-dd')
 			self.assertEqual(result.get('labels')[idx], month)
 			cur_date += relativedelta(months=1)
 
@@ -121,7 +123,7 @@ class TestDashboardChart(unittest.TestCase):
 		result = get(chart_name ='Test Empty Dashboard Chart 2', refresh = 1)
 		for idx in range(13):
 			month = datetime(int(cur_date.year), int(cur_date.strftime('%m')), int(calendar.monthrange(cur_date.year, cur_date.month)[1]))
-			month = formatdate(month.strftime('%Y-%m-%d'))
+			month = formatdate(month.strftime('%Y-%m-%d'), 'yyyy-mm-dd')
 			self.assertEqual(result.get('labels')[idx], month)
 			cur_date += relativedelta(months=1)
 

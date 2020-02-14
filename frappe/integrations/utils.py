@@ -60,7 +60,7 @@ def create_request_log(data, integration_type, service_name, name=None):
 		"integration_request_service": service_name,
 		"reference_doctype": data.get("reference_doctype"),
 		"reference_docname": data.get("reference_docname"),
-		"data": json.dumps(data, default=json_handler)
+		"data": json.dumps(data, default=json_handler, indent=4)
 	})
 
 	if name:
@@ -78,12 +78,12 @@ def get_payment_gateway_controller(payment_gateway):
 		try:
 			return frappe.get_doc("{0} Settings".format(payment_gateway))
 		except Exception:
-			frappe.throw(_("{0} Settings not found".format(payment_gateway)))
+			frappe.throw(_("{0} Settings not found").format(payment_gateway))
 	else:
 		try:
 			return frappe.get_doc(gateway.gateway_settings, gateway.gateway_controller)
 		except Exception:
-			frappe.throw(_("{0} Settings not found".format(payment_gateway)))
+			frappe.throw(_("{0} Settings not found").format(payment_gateway))
 
 
 @frappe.whitelist(allow_guest=True, xss_safe=True)
@@ -122,7 +122,7 @@ def get_gateway_controller(doctype, docname):
 	return gateway_controller
 
 class PaymentGatewayController(Document):
-	def finalize_request(self):
+	def finalize_request(self, reference_no=None):
 		redirect_to = self.data.get('redirect_to') or 'payment-success'
 		redirect_message = self.data.get('redirect_message') or None
 
@@ -135,7 +135,7 @@ class PaymentGatewayController(Document):
 				custom_redirect_to = None
 				try:
 					custom_redirect_to = self.reference_document\
-						.run_method("on_payment_authorized", self.flags.status_changed_to)
+						.run_method("on_payment_authorized", self.flags.status_changed_to, reference_no)
 				except Exception:
 					frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
 

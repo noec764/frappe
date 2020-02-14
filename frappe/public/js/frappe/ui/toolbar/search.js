@@ -45,9 +45,9 @@ frappe.search.SearchDialog = Class.extend({
 		var $placeholder = $('<div class="row search-results hide">' +
 				'<div class="empty-state"><span style="margin-top: -100px">' +
 				'<i class="mega-octicon octicon-telescope status-icon">' +
-				'<i class="fa fa-square cover twinkle-one hide" style="left:0px;"></i>'+
-				'<i class="fa fa-square cover twinkle-two hide" style="left:8px; top:5px;"></i>'+
-				'<i class="fa fa-square cover twinkle-three hide" style="left:13px; top:-3px;"></i></i>'+
+				'<i class="far fa-square cover twinkle-one hide" style="left:0px;"></i>'+
+				'<i class="far fa-square cover twinkle-two hide" style="left:8px; top:5px;"></i>'+
+				'<i class="far fa-square cover twinkle-three hide" style="left:13px; top:-3px;"></i></i>'+
 				'<p>' + __(status_text) + '</p></span></div>' +
 			'</div>');
 		this.update($placeholder);
@@ -313,10 +313,16 @@ frappe.search.SearchDialog = Class.extend({
 			return link;
 		}
 
-		if(result.image) {
-			$result.append('<a '+ get_link(result) +
-				'><div class="result-image"><img data-name="' + result.label
-					+ '" src="'+ result.image +'" alt="' + result.label + '"></div></a>');
+		if (result.image) {
+			$result.append(`<a ${get_link(result)}>
+				<div class="result-image">
+					<img
+						data-name="${result.label}"
+						src="${result.image}"
+						alt="${result.label}"
+						onerror="this.src='/assets/frappe/images/fallback-thumbnail.jpg'">
+				</div>
+			</a>`);
 		} else if (result.image === null) {
 			$result.append('<a '+ get_link(result) +
 				'><div class="result-image"><div class="flex-text"><span>'
