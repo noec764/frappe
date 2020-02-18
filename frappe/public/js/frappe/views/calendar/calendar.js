@@ -35,6 +35,13 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		this.calendar_name = frappe.get_route()[3];
 	}
 
+	before_refresh() {
+		super.before_refresh();
+		if (this.calendar_settings.filters.length > 0) {
+			this.filter_area.add(this.calendar_settings.filters);
+		}
+	}
+
 	setup_view() {
 
 	}
