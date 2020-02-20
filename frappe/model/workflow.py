@@ -187,6 +187,7 @@ def bulk_workflow_approval(docnames, doctype, action):
 		try:
 			show_progress(docnames, _('Applying: {0}').format(action), i, docname)
 			apply_workflow(frappe.get_doc(doctype, docname), action)
+			frappe.db.commit()
 		except frappe.ValidationError:
 			pass
 
