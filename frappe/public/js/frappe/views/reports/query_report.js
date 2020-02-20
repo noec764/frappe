@@ -224,6 +224,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					// filter values have not changed
 					return;
 				}
+
 				// clear previous_filters after 10 seconds, to allow refresh for new data
 				this.previous_filters = current_filters;
 				setTimeout(() => this.previous_filters = null, 10000);
@@ -868,8 +869,9 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		const base_url = frappe.urllib.get_base_url();
 		const print_css = frappe.boot.print_css;
 		const landscape = print_settings.orientation == 'Landscape';
-		const columns = this.get_columns_for_print(print_settings, custom_format);
+
 		const custom_format = this.report_settings.html_format || null;
+		const columns = this.get_columns_for_print(print_settings, custom_format);
 		const data = this.get_data_for_print();
 		const applied_filters = this.get_filter_values();
 
@@ -993,6 +995,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				return this.data[index];
 			}
 		}).filter(Boolean);
+
 		if (this.raw_data.add_total_row) {
 			let totalRow = this.datatable.bodyRenderer.getTotalRow().reduce((row, cell) => {
 				row[cell.column.id] = cell.content;
@@ -1019,7 +1022,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 	}
 
 	get_menu_items() {
-		return [
+		let items = [
 			{
 				label: __('Refresh'),
 				action: () => this.refresh(),
@@ -1150,6 +1153,18 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				standard: true
 			},
 			{
+				label: __('User Permissions'),
+				action: () => frappe.set_route('List', 'User Permission', {
+					doctype: 'Report',
+					name: this.report_name
+				}),
+				condition: () => frappe.model.can_set_user_permissions('Report'),
+				standard: true
+			}
+		];
+
+		if (frappe.user.is_report_manager()) {
+			items.push({
 				label: __('Save'),
 				action: () => {
 					let d = new frappe.ui.Dialog({
@@ -1160,6 +1175,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 								fieldname: 'report_name',
 								label: __("Report Name"),
 								default: this.report_doc.is_standard == 'No' ? this.report_name : "",
+								reqd: true
 							}
 						],
 						primary_action: (values) => {
@@ -1181,17 +1197,10 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					d.show();
 				},
 				standard: true
-			},
-			{
-				label: __('User Permissions'),
-				action: () => frappe.set_route('List', 'User Permission', {
-					doctype: 'Report',
-					name: this.report_name
-				}),
-				condition: () => frappe.model.can_set_user_permissions('Report'),
-				standard: true
-			}
-		];
+			})
+		}
+
+		return items;
 	}
 
 	add_portrait_warning(dialog) {
