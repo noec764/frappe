@@ -111,6 +111,5 @@ def generate_theme_files_if_not_exist():
 		doc = frappe.get_doc('Website Theme', theme.name)
 		try:
 			doc.generate_theme_if_not_exist()
-			doc.save()
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Theme File Generation Failed")
