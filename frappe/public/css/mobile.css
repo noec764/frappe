@@ -78,7 +78,7 @@ body {
     vertical-align: middle;
   }
   #navbar-breadcrumbs > li > a:before {
-    content: "\f104";
+    content: "\e82e";
     margin-right: 10px;
     color: #6C7680;
   }
