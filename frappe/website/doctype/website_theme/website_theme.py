@@ -77,10 +77,11 @@ class WebsiteTheme(Document):
 		frappe.msgprint(_('Compiled Successfully'), alert=True)
 
 	def generate_theme_if_not_exist(self):
-		bench_path = frappe.utils.get_bench_path()
-		theme_path = join_path(bench_path, 'sites', self.theme_url[1:])
-		if not path_exists(theme_path):
-			self.generate_bootstrap_theme()
+		if self.theme_url:
+			bench_path = frappe.utils.get_bench_path()
+			theme_path = join_path(bench_path, 'sites', self.theme_url[1:])
+			if not path_exists(theme_path):
+				self.generate_bootstrap_theme()
 
 	def set_as_default(self):
 		website_settings = frappe.get_doc('Website Settings')
@@ -110,6 +111,5 @@ def generate_theme_files_if_not_exist():
 		doc = frappe.get_doc('Website Theme', theme.name)
 		try:
 			doc.generate_theme_if_not_exist()
-			doc.save()
 		except Exception:
-			pass
+			frappe.log_error(frappe.get_traceback(), "Theme File Generation Failed")

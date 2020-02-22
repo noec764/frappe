@@ -28,6 +28,7 @@ class DataImport(Document):
 		if self.import_file and not self.total_rows:
 			upload(data_import_doc=self, from_data_import="Yes", validate_template=True)
 
+
 @frappe.whitelist()
 def get_importable_doctypes():
 	return frappe.cache().hget("can_import", frappe.session.user)
