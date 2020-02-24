@@ -116,7 +116,7 @@ def process_recurring_events(event, start, end, starts_on_field, ends_on_field, 
 				new_e = dict(event)
 				new_e[starts_on_field] = new_e.get(starts_on_field).replace(year=r.year, month=r.month, day=r.day)
 				days_diff = new_e.get(starts_on_field) - event.get(starts_on_field)
-				new_e[ends_on_field] = (getdate(event.get(ends_on_field)) + days_diff) if event.get(ends_on_field) else new_e.get(starts_on_field)
+				new_e[ends_on_field] = (get_datetime(event.get(ends_on_field)) + days_diff) if event.get(ends_on_field) else new_e.get(starts_on_field)
 				result.append(new_e)
 		except Exception:
 			return result
