@@ -2,7 +2,7 @@ import frappe
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
 def execute():
-	frappe.reload_doctype("Auto Repeat")
+	frappe.reload_doc("automation", "doctype", "auto_repeat")
 
 	auto_repeats = frappe.get_all("Auto Repeat",\
 		fields=["name", "docstatus", "status", "reference_doctype"])
@@ -34,4 +34,7 @@ def execute():
 	for auto_repeat in auto_repeats:
 		doc = frappe.get_doc("Auto Repeat", auto_repeat["name"])
 		doc.update_status()
-		doc.save()
+		try:
+			doc.save()
+		except frappe.ValidationError:
+			continue

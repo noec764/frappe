@@ -373,9 +373,17 @@ class BaseDocument(object):
 			else:
 				raise
 
+	def db_update_all(self):
+		"""Raw update parent + children
+		DOES NOT VALIDATE AND CALL TRIGGERS"""
+		self.db_update()
+		for df in self.meta.get_table_fields():
+			for doc in self.get(df.fieldname):
+				doc.db_update()
+
 	def show_unique_validation_message(self, e):
 		# TODO: Find a better way to extract fieldname
-		if frappe.conf.db_type != 'postgres':
+		if frappe.db.db_type != 'postgres':
 			fieldname = str(e).split("'")[-2]
 			label = None
 
@@ -394,7 +402,7 @@ class BaseDocument(object):
 		raise frappe.UniqueValidationError(self.doctype, self.name, e)
 
 	def update_modified(self):
-		'''Update modified timestamp'''
+		"""Update modified timestamp"""
 		self.set("modified", now())
 		frappe.db.set_value(self.doctype, self.name, 'modified', self.modified, update_modified=False)
 
@@ -441,7 +449,7 @@ class BaseDocument(object):
 		return missing
 
 	def get_invalid_links(self, is_submittable=False):
-		'''Returns list of invalid links and also updates fetch values if not set'''
+		"""Returns list of invalid links and also updates fetch values if not set"""
 
 		def get_msg(df, docname):
 			if self.parentfield:
@@ -473,9 +481,11 @@ class BaseDocument(object):
 				# that are mapped as link_fieldname.source_fieldname in Options of
 				# Readonly or Data or Text type fields
 
-				# NOTE: All fields will be replaced, if you want manual changes to stay
-				# use `frm.add_fetch`
-				fields_to_fetch = self.meta.get_fields_to_fetch(df.fieldname)
+				fields_to_fetch = [
+					_df for _df in self.meta.get_fields_to_fetch(df.fieldname)
+					if not _df.get('fetch_if_empty')
+					or (_df.get('fetch_if_empty') and not self.get(_df.fieldname))
+				]
 
 				if not fields_to_fetch:
 					# cache a single value type
@@ -668,7 +678,7 @@ class BaseDocument(object):
 			self.set(fieldname, sanitized_value)
 
 	def _save_passwords(self):
-		'''Save password field values in __Auth table'''
+		"""Save password field values in __Auth table"""
 		if self.flags.ignore_save_passwords is True:
 			return
 

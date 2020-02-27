@@ -1,6 +1,8 @@
 import frappe
 
 def execute():
+	frappe.reload_doc("desk", "doctype", "dashboard_card")
+	frappe.reload_doc("desk", "doctype", "dashboard_chart")
 	for dt in ["Dashboard Chart", "Dashboard Card"]:
 		docs = frappe.get_all(dt, filters={"timespan": "No Timespan"})
 
