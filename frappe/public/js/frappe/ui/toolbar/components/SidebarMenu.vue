@@ -25,7 +25,7 @@
 				@click="scrollUpDown"
 			/>
 		</div>
-		<div v-if="mobileDisplay && !isCollapsed" class="vsm-list-overlay" @click="mobileCollapse" :style="{'width': sidebarWidth}"></div>
+		<div v-if="mobileDisplay && !isCollapsed" class="vsm-list-overlay" @click="mobileCollapse"></div>
 	</div>
 </template>
 
