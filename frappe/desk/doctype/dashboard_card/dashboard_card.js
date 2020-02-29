@@ -7,6 +7,13 @@ frappe.ui.form.on('Dashboard Card', {
 	refresh: function(frm) {
 		frm.card_filters = null;
 		frm.set_df_property("filters_section", "hidden", 1);
+		frm.set_query('document_type', function() {
+			return {
+				filters: {
+					'issingle': false
+				}
+			}
+		});
 		frm.trigger('update_options');
 	},
 	source(frm) {
