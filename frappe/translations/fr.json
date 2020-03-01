@@ -1013,7 +1013,8 @@
         "Time Series Based On": "Séries chronologiques basées sur",
         "Timespan": "Période",
         "Value Based On": "Valeur basée sur",
-        "You can use octicons or font-awesome (v4.7) icons": "Vous pouvez utiliser les octicons ou les icônes font-awesome (v4.7)"
+        "You can use octicons or font-awesome (v4.7) icons": "Vous pouvez utiliser les octicons ou les icônes font-awesome (v4.7)",
+        "You can use octicons or font-awesome (v5) icons": "Vous pouvez utiliser les octicons ou les icônes de font-awesome (v5)"
     },
     "DocType: Dashboard Card Source": {
         "All": "Tous",
@@ -4309,8 +4310,10 @@
         "App {0} is not installed": "App {0} n'est pas installée",
         "Error": "Erreur",
         "No permission for {0}": "Pas d'autorisation pour {0}",
+        "Not Permitted": "Non autorisé",
         "Only for {}": "Seulement pour {}",
         "Thank you": "Merci",
+        "This action is only allowed for {}": "Cette action est seulement autorisée pour {}",
         "{0} has no versions tracked.": "La gestion des versions n'est pas activé pour {0}."
     },
     "apps/frappe/frappe/api.py": {
@@ -4641,6 +4644,9 @@
         "Web Site": "Site Internet",
         "Write titles and introductions to your blog.": "Écrire des titres et des introductions sur votre blog."
     },
+    "apps/frappe/frappe/contacts/doctype/address/address.js": {
+        "Links": "Liens"
+    },
     "apps/frappe/frappe/contacts/doctype/address/address.py": {
         "Address Title is mandatory.": "Le Titre de l'Adresse est obligatoire.",
         "Addresses": "Adresses",
@@ -4657,7 +4663,8 @@
         "Setting this Address Template as default as there is no other default": "Définition de ce modèle d'adresse par défaut, car il n'y a pas d'autre défaut"
     },
     "apps/frappe/frappe/contacts/doctype/contact/contact.js": {
-        "Invite as User": "Inviter en tant qu'utilisateur"
+        "Invite as User": "Inviter en tant qu'utilisateur",
+        "Links": "Liens"
     },
     "apps/frappe/frappe/contacts/doctype/contact/contact.py": {
         "Number {0} cannot be set as primary for Phone as well as Mobile No.": "Le numéro de téléphone {0} ne peut pas être défini comme téléphone et mobile principal",
@@ -5263,6 +5270,10 @@
         "{0} Dashboard": "Tableau de bord {0}",
         "{0} List": "Liste {0}"
     },
+    "apps/frappe/frappe/core/page/dashboard/dashboard.py": {
+        "Invalid Filter Value": "Valeur de filtre invalide",
+        "Please check the filter values set for Dashboard Chart: {}": "Veuillez vérifier les valeurs des filtres définis pour le graphique du tableau de bord: {}"
+    },
     "apps/frappe/frappe/core/page/desktop/desktop.js": {
         "Home": "Accueil"
     },
@@ -5831,10 +5842,12 @@
     "apps/frappe/frappe/desk/query_report.py": {
         "Must have report permission to access this report.": "Doit avoir l'autorisation d'accéder aux rapport dont celui-ci.",
         "Must specify a Query to run": "Vous devez spécifier une Requête à exécuter",
+        "No data to export": "Aucune donnée à exporter",
         "Query must be a SELECT": "Requête doit être un SELECT",
         "Report updated successfully": "Rapport mis à jour avec succès",
         "Report {0} is disabled": "Rapport {0} est désactivé",
         "Total": "Total",
+        "You can try changing the filters of your report.": "Vous pouvez essayer de modifier les filtres de votre rapport",
         "You don't have access to Report: {0}": "Vous n'avez pas accès au Rapport : {0}",
         "You don't have permission to get a report on: {0}": "Vous n'avez pas l'autorisation d'obtenir un rapport sur : {0}",
         "{0} saved successfully": "{0} enregistré avec succès"
@@ -6391,12 +6404,15 @@
     },
     "apps/frappe/frappe/model/workflow.py": {
         "Applying: {0}": "Mise à jour : {0}",
+        "Errored Transactions": "Transactions en erreur",
         "Illegal Document Status for {0}": "Statut de document non autorisé pour {0}",
         "Not a valid Workflow Action": "Action de flux de travail non valide",
         "Self approval is not allowed": "L'auto-approbation n'est pas autorisée",
+        "Successful Transactions": "Transactions réussies",
         "Workflow State not set": "L'état du workflow n'est pas défini",
         "Workflow State transition not allowed from {0} to {1}": "Transition d'état de workflow de {0} à {1} non autorisée",
         "Workflow State {0} is not allowed": "L'état de workflow {0} n'est pas autorisé",
+        "Workflow Status": "Statut de flux de travail",
         "{0} is not a valid Workflow State. Please update your Workflow and try again.": "{0} n'est pas un état de Workflow valide. Veuillez mettre à jour votre Workflow et réessayer."
     },
     "apps/frappe/frappe/modules/utils.py": {
@@ -6595,6 +6611,7 @@
         "No Data": "Aucune donnée",
         "Show Warnings": "Afficher les avertissements",
         "Showing only first {0} rows in preview": "La prévisualisation n'affiche que les {0} premières colonnes",
+        "Showing only first {0} rows out of {1}": "Affichage des {0} premières lignes sur {1}",
         "Untitled Column": "Colonne sans titre"
     },
     "apps/frappe/frappe/public/js/frappe/desk.js": {
@@ -9318,6 +9335,7 @@
         "Select fields to export": "Sélectionnez les champs à exporter",
         "Show Warnings": "Afficher les avertissements",
         "Showing only first {0} rows in preview": "La prévisualisation n'affiche que les {0} premières colonnes",
+        "Showing only first {0} rows out of {1}": "Affichage des {0} premières lignes sur {1}",
         "Unselect All": "Tout déselectionner",
         "Untitled Column": "Colonne sans titre",
         "{0} (1 row mandatory)": "{0} (1 ligne obligatoire)",
