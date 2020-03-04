@@ -38,6 +38,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	render() {
 		this.make_wrapper();
 		this.bind_leaflet_map();
+		this.bind_leaflet_draw_control();
 		this.render_map();
 	}
 
@@ -83,6 +84,50 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 		}).addTo(this.map);
+	}
+
+	bind_leaflet_draw_control() {
+		this.editableLayers = new L.FeatureGroup();
+
+		var options = {
+			position: 'topleft',
+			draw: {
+				polyline: {
+					shapeOptions: {
+						color: frappe.ui.color.get('blue'),
+						weight: 5
+					}
+				},
+				polygon: false,
+				marker: false,
+				circle: false,
+				circlemarker: false,
+				rectangle: false
+			},
+			edit: {
+				featureGroup: this.editableLayers,
+				remove: false
+			}
+		};
+
+		// create control and add to map
+		var drawControl = new L.Control.Draw(options);
+
+		this.map.addControl(drawControl);
+
+		this.map.on('draw:created', (e) => {
+			var type = e.layerType,
+				layer = e.layer;
+			if (type === 'marker') {
+				layer.bindPopup('Marker');
+			}
+			this.editableLayers.addLayer(layer);
+		});
+
+		this.map.on('draw:deleted draw:edited', (e) => {
+			var layer = e.layer;
+			this.editableLayers.removeLayer(layer);
+		});
 	}
 
 	render_map() {

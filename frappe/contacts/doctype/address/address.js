@@ -32,6 +32,12 @@ frappe.ui.form.on("Address", {
 				}, __("Links"));
 			}
 		}
+
+		frappe.db.get_value("Google Settings", "Google Settings", ["enable", "api_key"], r => {
+			if (r.enable !== "1" || !r.api_key) {
+				frm.toggle_display("map_location_section", false);
+			}
+		})
 	},
 	validate: function(frm) {
 		// clear linked customer / supplier / sales partner on saving...
