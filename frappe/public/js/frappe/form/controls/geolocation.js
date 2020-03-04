@@ -89,7 +89,7 @@ frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlData.extend({
 		});
 
 		L.Icon.Default.imagePath = '/assets/frappe/images/leaflet/';
-		this.map = L.map(this.map_id).setView([19.0800, 72.8961], 13);
+		this.map = L.map(this.map_id).fitWorld();
 
 		L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
 			attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
