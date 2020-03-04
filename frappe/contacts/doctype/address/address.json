@@ -1,9 +1,11 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "creation": "2013-01-10 16:34:32",
  "doctype": "DocType",
  "document_type": "Setup",
+ "engine": "InnoDB",
  "field_order": [
   "address_details",
   "address_title",
@@ -24,7 +26,9 @@
   "disabled",
   "linked_with",
   "is_your_company_address",
-  "links"
+  "links",
+  "map_location_section",
+  "map_location"
  ],
  "fields": [
   {
@@ -149,11 +153,21 @@
    "fieldtype": "Table",
    "label": "Links",
    "options": "Dynamic Link"
+  },
+  {
+   "fieldname": "map_location_section",
+   "fieldtype": "Section Break",
+   "label": "Map Location"
+  },
+  {
+   "fieldname": "map_location",
+   "fieldtype": "Geolocation"
   }
  ],
  "icon": "fa fa-map-marker",
  "idx": 5,
- "modified": "2019-08-09 14:16:53.343251",
+ "links": [],
+ "modified": "2020-02-27 18:33:32.710235",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address",

@@ -18,6 +18,8 @@ from past.builtins import cmp
 from frappe.contacts.address_and_contact import set_link_title
 
 import functools
+import googlemaps
+import json
 
 
 class Address(Document):
@@ -40,8 +42,10 @@ class Address(Document):
 	def validate(self):
 		self.link_address()
 		self.validate_reference()
+		self.validate_preferred_address()
 		set_link_title(self)
 		deduplicate_dynamic_links(self)
+		self.get_coordinates()
 
 	def link_address(self):
 		"""Link address based on owner"""
@@ -61,6 +65,17 @@ class Address(Document):
 				frappe.throw(_("{0} is not a valid report format. Report format should one of the following {1}")
 					.format(frappe.bold(self.format), frappe.bold(", ".join(valid_report_formats))))
 
+	def validate_preferred_address(self):
+		preferred_fields = ['is_primary_address', 'is_shipping_address']
+
+		for field in preferred_fields:
+			if self.get(field):
+				for link in self.links:
+					address = get_preferred_address(link.link_doctype, link.link_name, field)
+
+					if address:
+						update_preferred_address(address, field)
+
 	def get_display(self):
 		return get_address_display(self.as_dict())
 
@@ -76,6 +91,48 @@ class Address(Document):
 				return True
 
 		return False
+
+	def get_coordinates(self):
+		if frappe.db.get_single_value("Google Settings", "enable") and frappe.db.get_single_value("Google Settings", "api_key"):
+			address = get_condensed_address(self)
+
+			gmaps = googlemaps.Client(key=frappe.db.get_single_value("Google Settings", "api_key"))
+			geocode_result = gmaps.geocode(json.dumps(address))
+
+			if geocode_result:
+				self.map_location = json.dumps({
+					"type":"FeatureCollection",
+					"features":[
+						{
+							"type":"Feature",
+							"properties":{},
+							"geometry": {
+								"type":"Point",
+								"coordinates":[
+									geocode_result[0].get("geometry", {}).get("location", {}).get("lng"),
+									geocode_result[0].get("geometry", {}).get("location", {}).get("lat")
+								]
+							}
+						}
+					]
+				})
+
+def get_preferred_address(doctype, name, preferred_key='is_primary_address'):
+	if preferred_key in ['is_shipping_address', 'is_primary_address']:
+		address = frappe.db.sql(""" SELECT
+				addr.name
+			FROM
+				`tabAddress` addr, `tabDynamic Link` dl
+			WHERE
+				dl.parent = addr.name and dl.link_doctype = %s and
+				dl.link_name = %s and ifnull(addr.disabled, 0) = 0 and
+				%s = %s
+			""" % ('%s', '%s', preferred_key, '%s'), (doctype, name, 1), as_dict=1)
+
+		if address:
+			return address[0].name
+
+	return
 
 @frappe.whitelist()
 def get_default_address(doctype, name, sort_key='is_primary_address'):
@@ -258,3 +315,6 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 def get_condensed_address(doc):
 	fields = ["address_title", "address_line1", "address_line2", "city", "county", "state", "country"]
 	return ", ".join([doc.get(d) for d in fields if doc.get(d)])
+
+def update_preferred_address(address, field):
+	frappe.db.set_value('Address', address, field, 0)
