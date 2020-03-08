@@ -67,6 +67,7 @@ export default {
 		this.isMounted = true;
 		this.getModules();
 		this.$refs.sidebarList.addEventListener("touchstart", this.handleTouchStart, false);
+		this.$refs.sidebarList.addEventListener("touchend", this.handleTouchEnd, false);
 	},
 	methods: {
 		mouseLeave () {
@@ -114,14 +115,13 @@ export default {
 			}
 		},
 		handleTouchStart(evt) {
-			this.mobileOpenSidebar();
-		},
-		mobileOpenSidebar() {
 			clearTimeout(this.timer);
 			this.isCollapsed = false;
+		},
+		handleTouchEnd(evt) {
 			this.timer = setTimeout(() => {
 				this.isCollapsed = true;
-			}, 3000);
+			}, 1000);
 		}
 	}
 }
