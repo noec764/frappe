@@ -3,7 +3,7 @@
 		<div
 			class="v-sidebar-menu hidden-sm hidden-xs"
 			:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
-			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '', showBottomButton ? {'padding-bottom': '20px'} : '']"
+			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '', !showBottomButton ? {'padding-bottom': '20px'} : '']"
 			@mouseenter="mouseEnter"
 			@mouseleave="mouseLeave"
 			@wheel="onWheel"
@@ -65,6 +65,7 @@ export default {
 	mounted() {
 		this.isMounted = true;
 		this.getModules();
+		this.$refs.sidebarList.addEventListener("touchend", handleTouchEnd, false);
 	},
 	methods: {
 		mouseLeave () {
@@ -110,6 +111,10 @@ export default {
 			} else {
 				this.goToTop = false
 			}
+		},
+		handleTouchEnd(evt) {
+			evt.preventDefault();
+			this.isCollapsed = false;
 		}
 	}
 }
