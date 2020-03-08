@@ -44,7 +44,8 @@ export default {
 			widthCollapsed: '50px',
 			mobileDisplay: false,
 			goToTop: false,
-			isMounted: false
+			isMounted: false,
+			timer: null
 		}
 	},
 	created() {
@@ -65,7 +66,7 @@ export default {
 	mounted() {
 		this.isMounted = true;
 		this.getModules();
-		this.$refs.sidebarList.addEventListener("touchend", handleTouchEnd, false);
+		this.$refs.sidebarList.addEventListener("touchstart", this.handleTouchStart, false);
 	},
 	methods: {
 		mouseLeave () {
@@ -112,9 +113,15 @@ export default {
 				this.goToTop = false
 			}
 		},
-		handleTouchEnd(evt) {
-			evt.preventDefault();
+		handleTouchStart(evt) {
+			this.mobileOpenSidebar();
+		},
+		mobileOpenSidebar() {
+			clearTimeout(this.timer);
 			this.isCollapsed = false;
+			this.timer = setTimeout(() => {
+				this.isCollapsed = true;
+			}, 3000);
 		}
 	}
 }
