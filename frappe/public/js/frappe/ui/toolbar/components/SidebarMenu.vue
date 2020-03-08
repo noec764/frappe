@@ -3,23 +3,23 @@
 		<div
 			class="v-sidebar-menu hidden-sm hidden-xs"
 			:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
-			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '']"
+			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '', showBottomButton ? {'padding-bottom': '20px'} : '']"
 			@mouseenter="mouseEnter"
 			@mouseleave="mouseLeave"
 			@wheel="onWheel"
-			@scroll="measureScroll"
+			@scroll="onWheel"
 		>
-			<div class="vsm-list" id="sidebard-modules-list">
+			<div class="vsm-list" id="sidebard-modules-list" ref="sidebarList">
 				<template v-for="(item, index) in modules">
 					<item
 						:key="index"
 						:item="item"
-						:first-item="true"
 						:is-collapsed="isCollapsed"
 					/>
 				</template>
 			</div>
 			<button
+				v-if="!mobileDisplay && showBottomButton"
 				class="collapse-btn"
 				:class="goToTop ? 'up-btn' : 'down-btn'"
 				@click="scrollUpDown"
@@ -43,24 +43,27 @@ export default {
 			width: '250px',
 			widthCollapsed: '50px',
 			mobileDisplay: false,
-			goToTop: false
+			goToTop: false,
+			isMounted: false
 		}
 	},
 	created() {
 		frappe.sidebar_update.on('toggle_mobile_menu', () => {
 			this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand()
 		})
-
-		frappe.sidebar_update.on('close_mobile_menu', () => {
-			this.mobileCollapse()
-		})
 	},
 	computed: {
 		sidebarWidth () {
 			return this.isCollapsed ? this.widthCollapsed : this.width
+		},
+		showBottomButton() {
+			if (this.isMounted) {
+				return (this.modules.length * 50) > this.$refs.sidebarList.clientHeight;
+			}
 		}
 	},
 	mounted() {
+		this.isMounted = true;
 		this.getModules();
 	},
 	methods: {
