@@ -35,6 +35,8 @@
 						{%= __("View Website") %}</a></li>
 					<li><a href="#background_jobs">
 						{%= __("Background Jobs") %}</a></li>
+					<li class="visible-xs visible-sm"><a onclick="return frappe.ui.toolbar.clear_cache();">
+						{%= __("Reload") %}</a></li>
 					<li class="divider"></li>
 					<li><a href="#" onclick="return frappe.app.logout();">
 						{%= __("Logout") %}</a></li>
@@ -64,7 +66,7 @@
 			<li class="frappe-chat-dropdown"></li>
 			<!-- end frappe.chat -->
 			
-			<li class="navbar-reload">
+			<li class="navbar-reload hidden-xs hidden-sm">
 				<a class="dropdown-toggle refresh-btn" data-toggle="dropdown" onclick="return frappe.ui.toolbar.clear_cache();">
 					<div class="refresh-icon">
 						<i class="uil uil-refresh"></i>

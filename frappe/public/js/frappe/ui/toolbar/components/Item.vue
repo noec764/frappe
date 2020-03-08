@@ -1,7 +1,6 @@
 <template>
 	<div
-		class="vsm-item"
-		:class="[{'first-item' : firstItem}]"
+		class="vsm-item first-item"
 		@mouseenter="mouseEnter($event)"
 		@touchend="touchEnd($event)"
 	>
@@ -29,17 +28,13 @@ export default {
 			type: Object,
 			required: true
 		},
-		firstItem: {
-			type: Boolean,
-			default: false
-		},
 		isCollapsed: {
 			type: Boolean
 		}
 	},
 	methods: {
 		mouseEnter(event) {
-			if (this.isCollapsed && this.firstItem) {
+			if (this.isCollapsed) {
 				this.$parent.$emit('mouseEnterItem', {
 					item: this.item,
 					pos:
@@ -50,7 +45,7 @@ export default {
 			}
 		},
 		touchEnd(event) {
-			if (this.isCollapsed && this.firstItem) {
+			if (this.isCollapsed) {
 				this.$parent.$emit('touchEndItem')
 			}
 		}
