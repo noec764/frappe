@@ -176,27 +176,7 @@ def get_data():
 					"description": _("Set up rules for user assignments.")
 				}
 			]
-		},
-		{
-			"label": _("Automation"),
-			"items": [
-				{
-					"type": "doctype",
-					"name": "Assignment Rule",
-					"description": _("Set up rules for user assignments.")
-				},
-				{
-					"type": "doctype",
-					"name": "Milestone",
-					"description": _("Tracks milestones on the lifecycle of a document if it undergoes multiple stages.")
-				},
-				{
-					"type": "doctype",
-					"name": "Auto Repeat",
-					"description": _("Automatically generates recurring documents.")
-				},
-			]
-		},
+		}
 	]
 	add_setup_section(data, "frappe", "website", _("Website"), "fas fa-globe")
 	return data
