@@ -443,11 +443,10 @@ frappe.views.CommunicationComposer = Class.extend({
 	},
 	setup_email: function() {
 		// email
-		var me = this;
 		var fields = this.dialog.fields_dict;
 
 		if(this.attach_document_print) {
-			$(fields.attach_document_print.input).click();
+			fields.attach_document_print.input.dispatchEvent(new MouseEvent(`click`));;
 			$(fields.select_print_format.wrapper).toggle(true);
 		}
 

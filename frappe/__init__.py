@@ -24,7 +24,7 @@ if PY2:
 	reload(sys)
 	sys.setdefaultencoding("utf-8")
 
-__version__ = '1.3.9'
+__version__ = '1.3.10'
 __title__ = "Dodock Framework"
 
 local = Local()
@@ -69,7 +69,7 @@ def _(msg, lang=None):
 	msg = as_unicode(msg).strip()
 
 	# return lang_full_dict according to lang passed parameter
-	return get_reduced_dict(lang).get(non_translated_msg) or non_translated_msg
+	return get_reduced_dict(lang).get(msg) or non_translated_msg
 
 def as_unicode(text, encoding='utf-8'):
 	'''Convert to unicode if required'''
