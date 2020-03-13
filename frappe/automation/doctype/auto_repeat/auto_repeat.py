@@ -122,11 +122,9 @@ class AutoRepeat(Document):
 
 	def get_auto_repeat_schedule(self):
 		schedule_details = []
-		start_date = getdate(self.start_date)
-		end_date = getdate(self.end_date)
 
 		if not self.end_date:
-			next_date = get_next_schedule_date(start_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day)
+			next_date = get_next_schedule_date(self.start_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day)
 			row = {
 				"reference_document": self.reference_document,
 				"frequency": self.frequency,
@@ -134,19 +132,16 @@ class AutoRepeat(Document):
 			}
 			schedule_details.append(row)
 
-		if self.end_date:
-			next_date = get_next_schedule_date(
-				start_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day, for_full_schedule=True)
-
-			while (getdate(next_date) < getdate(end_date)):
+		else:
+			next_date = get_next_schedule_date(self.start_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day, for_full_schedule=True)
+			while (getdate(next_date) < getdate(self.end_date)):
 				row = {
 					"reference_document" : self.reference_document,
 					"frequency" : self.frequency,
 					"next_scheduled_date" : next_date
 				}
 				schedule_details.append(row)
-				next_date = get_next_schedule_date(
-					next_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day, end_date, for_full_schedule=True)
+				next_date = get_next_schedule_date(next_date, self.frequency, self.start_date, self.repeat_on_day, self.repeat_on_last_day, self.end_date, for_full_schedule=True)
 
 		return schedule_details
 
@@ -303,18 +298,14 @@ class AutoRepeat(Document):
 			header=[subject, 'red']
 		)
 
-
 def get_next_schedule_date(schedule_date, frequency, start_date, repeat_on_day=None, repeat_on_last_day=False, end_date=None, for_full_schedule=False):
-	if schedule_date == start_date and for_full_schedule:
+	if schedule_date == start_date and getdate(start_date).day == repeat_on_day and not repeat_on_last_day and for_full_schedule:
 		return getdate(start_date)
 
-	if month_map.get(frequency):
-		month_count = month_map.get(frequency) + month_diff(schedule_date, start_date) - 1
-	else:
-		month_count = 0
+	month_count = (month_map.get(frequency) + month_diff(schedule_date, start_date) - 1) if month_map.get(frequency) else 0
 
 	day_count = 31
-	if month_count and repeat_on_last_day:
+	if repeat_on_last_day:
 		day_count = 31
 		next_date = get_next_date(start_date, month_count, day_count)
 	elif month_count and repeat_on_day:
