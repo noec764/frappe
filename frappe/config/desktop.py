@@ -30,7 +30,7 @@ def get_data():
 			"label": _("Automation"),
 			"color": "#bdc3c7",
 			"reverse": 1,
-			"icon": "octicon octicon-gist",
+			"icon": "fas fa-charging-station",
 			"type": "module",
 			"description": "Auto Repeat, Assignment Rule, Milestone Tracking and Event Streaming."
 		},
