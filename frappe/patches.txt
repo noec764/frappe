@@ -273,6 +273,7 @@ frappe.patches.v12_0.setup_email_linking
 frappe.patches.v12_0.fix_home_settings_for_all_users
 execute:frappe.delete_doc("Test Runner")
 execute:frappe.delete_doc_if_exists('DocType', 'Google Maps Settings')
+execute:frappe.db.set_default('desktop:home_page', 'workspace')
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version

@@ -1,7 +1,7 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
-import Desktop from './components/Desktop.vue';
+import Desktop from './desktop/desktop.js';
 
 frappe.provide('frappe.views.pageview');
 frappe.provide("frappe.standard_pages");
@@ -44,23 +44,20 @@ frappe.views.pageview = {
 		if(!name) {
 			name = (frappe.boot ? frappe.boot.home_page : window.page_name);
 
-			if(name === "desktop") {
-				if(!frappe.pages.desktop) {
-					let page = frappe.container.add_page('desktop');
+			if(name === "workspace") {
+				if(!frappe.workspace) {
+					let page = frappe.container.add_page('workspace');
 					let container = $('<div class="container"></div>').appendTo(page);
 					container = $('<div></div>').appendTo(container);
 
-					Vue.prototype.__ = window.__;
-					Vue.prototype.frappe = window.frappe;
-
-					new Vue({
-						el: container[0],
-						render: h => h(Desktop)
-					});
+					frappe.workspace = new Desktop({
+						wrapper: container
+					})
 				}
 
-				frappe.container.change_to('desktop');
-				frappe.utils.set_title(__('Home'));
+				frappe.container.change_to('workspace');
+				frappe.workspace.route();
+				frappe.utils.set_title(__('Desk'));
 				return;
 			}
 		}
