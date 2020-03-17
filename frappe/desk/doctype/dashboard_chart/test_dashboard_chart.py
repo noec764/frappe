@@ -50,7 +50,7 @@ class TestDashboardChart(unittest.TestCase):
 			based_on = 'creation',
 			timespan = 'Last Year',
 			time_interval = 'Monthly',
-			filters_json = '{}',
+			filters_json = '[]',
 			timeseries = 1
 		)).insert()
 
@@ -82,7 +82,7 @@ class TestDashboardChart(unittest.TestCase):
 			based_on = 'creation',
 			timespan = 'Last Year',
 			time_interval = 'Monthly',
-			filters_json = '{}',
+			filters_json = '[]',
 			timeseries = 1
 		)).insert()
 
@@ -114,7 +114,7 @@ class TestDashboardChart(unittest.TestCase):
 			based_on = 'creation',
 			timespan = 'Last Year',
 			time_interval = 'Monthly',
-			filters_json = '{}',
+			filters_json = '[]',
 			timeseries = 1
 		)).insert()
 
@@ -144,7 +144,7 @@ class TestDashboardChart(unittest.TestCase):
 			chart_type = 'Group By',
 			document_type = 'ToDo',
 			group_by_based_on = 'status',
-			filters_json = '{}',
+			filters_json = '[]',
 		)).insert()
 
 		result = get(chart_name ='Test Group By Dashboard Chart', refresh = 1)
@@ -164,7 +164,7 @@ class TestDashboardChart(unittest.TestCase):
 			chart_type = 'Count',
 			document_type = 'System Settings',
 			group_by_based_on = 'Created On',
-			filters_json = '{}',
+			filters_json = '[]',
 		))
 
 		self.assertRaises(frappe.ValidationError, chart_doc.insert)
