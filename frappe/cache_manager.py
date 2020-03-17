@@ -120,7 +120,11 @@ def clear_doctype_map(doctype, name):
 	frappe.cache().hdel(cache_key, name)
 
 def build_table_count_cache(*args, **kwargs):
-	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
+	if (frappe.flags.in_patch
+		or frappe.flags.in_install
+		or frappe.flags.in_migrate
+		or frappe.flags.in_import
+		or frappe.flags.in_setup_wizard):
 		return
 	_cache = frappe.cache()
 	data = frappe.db.multisql({
@@ -141,7 +145,11 @@ def build_table_count_cache(*args, **kwargs):
 	return counts
 
 def build_domain_restricted_doctype_cache(*args, **kwargs):
-	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
+	if (frappe.flags.in_patch
+		or frappe.flags.in_install
+		or frappe.flags.in_migrate
+		or frappe.flags.in_import
+		or frappe.flags.in_setup_wizard):
 		return
 	_cache = frappe.cache()
 	active_domains = frappe.get_active_domains()
@@ -152,7 +160,11 @@ def build_domain_restricted_doctype_cache(*args, **kwargs):
 	return doctypes
 
 def build_domain_restricted_page_cache(*args, **kwargs):
-	if frappe.flags.in_patch or frappe.flags.in_install or frappe.flags.in_import:
+	if (frappe.flags.in_patch
+		or frappe.flags.in_install
+		or frappe.flags.in_migrate
+		or frappe.flags.in_import
+		or frappe.flags.in_setup_wizard):
 		return
 	_cache = frappe.cache()
 	active_domains = frappe.get_active_domains()

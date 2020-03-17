@@ -139,7 +139,8 @@ doc_events = {
 		],
 		"on_trash": [
 			"frappe.desk.notifications.clear_doctype_notifications",
-			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions"
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+			"frappe.cache_manager.build_table_count_cache"
 		],
 		"on_change": [
 			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points"
@@ -267,7 +268,10 @@ bot_parsers = [
 	'frappe.utils.bot.CountBot'
 ]
 
-setup_wizard_exception = "frappe.desk.page.setup_wizard.setup_wizard.email_setup_wizard_exception"
+setup_wizard_exception = [
+	"frappe.desk.page.setup_wizard.setup_wizard.email_setup_wizard_exception",
+	"frappe.desk.page.setup_wizard.setup_wizard.log_setup_wizard_exception"
+]
 before_write_file = "frappe.limits.validate_space_limit"
 
 before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
