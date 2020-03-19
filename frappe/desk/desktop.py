@@ -8,7 +8,7 @@ import json
 from frappe import _, DoesNotExistError
 from frappe.boot import get_allowed_pages, get_allowed_reports
 from six import string_types
-from frappe.cache_manager import build_domain_restriced_doctype_cache, build_domain_restriced_page_cache, build_table_count_cache
+from frappe.cache_manager import build_domain_restricted_doctype_cache, build_domain_restricted_page_cache, build_table_count_cache
 
 class Workspace:
 	def __init__(self, page_name):
@@ -26,8 +26,8 @@ class Workspace:
 		self.allowed_reports = get_allowed_reports()
 
 		self.table_counts = build_table_count_cache()
-		self.restricted_doctypes = build_domain_restriced_doctype_cache()
-		self.restricted_pages = build_domain_restriced_page_cache()
+		self.restricted_doctypes = build_domain_restricted_doctype_cache()
+		self.restricted_pages = build_domain_restricted_page_cache()
 
 	def get_pages_to_extend(self):
 		pages = frappe.get_all("Desk Page", filters={
