@@ -351,7 +351,7 @@ frappe.search.utils = {
 						if(result_current_length < result_max_length) {
 							// We have room, push the entire field
 							field_text = '<span class="field-name text-muted">' +
-								me.bolden_match_part(field_name, keywords) + ': </span> ' +
+								__(me.bolden_match_part(__(field_name), keywords)) + ': </span> ' +
 								me.bolden_match_part(field_value, keywords);
 							if(fields.indexOf(field_text) === -1 && doc_name !== field_value) {
 								fields.push(field_text);
@@ -362,7 +362,7 @@ frappe.search.utils = {
 								// Ellipsify (trim at word end) and push
 								remaining_length -= field_name.length;
 								field_text = '<span class="field-name text-muted">' +
-									me.bolden_match_part(field_name, keywords) + ': </span> ';
+									__(me.bolden_match_part(__(field_name)), keywords) + ': </span> ';
 								field_value = field_value.slice(0, remaining_length);
 								field_value = field_value.slice(0, field_value.lastIndexOf(' ')) + ' ...';
 								field_text += me.bolden_match_part(field_value, keywords);
@@ -400,7 +400,6 @@ frappe.search.utils = {
 					};
 					results_sets.push(set);
 				}
-
 			});
 			return results_sets;
 		}
@@ -628,5 +627,6 @@ frappe.search.utils = {
 			'args': args
 		});
 	},
+
 	searchable_functions: [],
 };

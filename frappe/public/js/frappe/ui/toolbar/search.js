@@ -224,7 +224,7 @@ frappe.search.SearchDialog = Class.extend({
 		this.nav_lists = {};
 
 		result_sets.forEach(function(set) {
-			$sidebar.append($(__(sidebar_item_html, [set.title, set.title])));
+			$sidebar.append($(__(sidebar_item_html, [__(set.title), set.title])));
 			me.add_section_to_summary(set.title, set.results);
 			me.full_lists[set.title] = me.render_full_list(set.title, set.results, set.fetch_type);
 		});
@@ -246,7 +246,7 @@ frappe.search.SearchDialog = Class.extend({
 						<div class="back-link">
 							<a class="all-results-link small">${__("All Results")}</a>
 						</div>
-						<div class="h4 section-head">${type}</div>
+						<div class="h4 section-head">${__(type)}</div>
 						<div class="section-body"></div>
 					</div>
 				</div>
@@ -284,7 +284,7 @@ frappe.search.SearchDialog = Class.extend({
 			this.full_lists["all-results"].append($('<div class="row module-section"></div>'));
 		}
 		var $results_col = $(`<div class="col-sm-${col_width} module-section-column" data-type="${type}">
-			<div class="h4 section-head">${type}</div>
+			<div class="h4 section-head">${__(type)}</div>
 			<div class="section-body"></div>
 			</div>`);
 		results.slice(0, section_length).forEach(function(result) {
@@ -329,7 +329,7 @@ frappe.search.SearchDialog = Class.extend({
 					+ frappe.get_abbr(result.label) +'</span></div></div></a>');
 		}
 
-		var title_html = '<a '+ get_link(result) +' class="module-section-link small">'+ result.label +'</a>';
+		var title_html = '<a '+ get_link(result) +' class="module-section-link small">'+ __(result.label) +'</a>';
 		var $result_text = $('<div style="display: inline-block;"></div>');
 		if(result.description) {
 			$result_text.append($('<b>' + title_html + '</b>'));
