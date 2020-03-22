@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 from frappe.utils import cint, strip_html_tags
 from frappe.model.base_document import get_controller
 from six import text_type
+from frappe.translate import send_translations
 
 def setup_global_search_table():
 	"""
@@ -464,6 +465,9 @@ def search(text, start=0, limit=20, doctype=""):
 
 		results.extend(result)
 
+	if frappe.flags.translated_doctypes is None:
+		frappe.flags.translated_doctypes = [] # Faster for smaller lists
+
 	# sort results based on allowed_doctype's priority
 	for doctype in allowed_doctypes:
 		for index, r in enumerate(results):
@@ -472,6 +476,9 @@ def search(text, start=0, limit=20, doctype=""):
 					meta = frappe.get_meta(r.doctype)
 					if meta.image_field:
 						r.image = frappe.db.get_value(r.doctype, r.name, meta.image_field)
+					if doctype not in frappe.flags.translated_doctypes:
+						frappe.flags.translated_doctypes.append(doctype)
+						send_translations(frappe.get_lang_dict("doctype", doctype))
 				except Exception:
 					frappe.clear_messages()
 
