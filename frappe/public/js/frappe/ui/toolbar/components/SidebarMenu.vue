@@ -59,7 +59,7 @@ export default {
 		},
 		showBottomButton() {
 			if (this.isMounted) {
-				return (this.modules.length * 50) > this.$refs.sidebarList.clientHeight;
+				return (this.modules.length * 50) > (this.$refs.sidebarList.clientHeight - 35);
 			}
 		}
 	},
