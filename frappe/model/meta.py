@@ -165,7 +165,7 @@ class Meta(Document):
 
 	def get_valid_columns(self):
 		if not hasattr(self, "_valid_columns"):
-			if self.name in ("DocType", "DocField", "DocPerm", 'DocType Action', 'DocType Link', "Property Setter"):
+			if self.name in ("DocType", "DocField", "DocPerm", 'DocType Action', 'DocType Link'):
 				self._valid_columns = get_table_columns(self.name)
 			else:
 				self._valid_columns = self.default_fields + \
@@ -236,7 +236,7 @@ class Meta(Document):
 		are to be fetched and updated for a particular link field
 
 		These fields are of type Data, Link, Text, Readonly and their
-		options property is set as `link_fieldname`.`source_fieldname`'''
+		fetch_from property is set as `link_fieldname`.`source_fieldname`'''
 
 		out = []
 
@@ -290,17 +290,20 @@ class Meta(Document):
 		return get_workflow_name(self.name)
 
 	def add_custom_fields(self):
-		try:
-			self.extend("fields", frappe.db.sql("""SELECT * FROM `tabCustom Field`
-				WHERE dt = %s AND docstatus < 2""", (self.name,), as_dict=1,
-				update={"is_custom_field": 1}))
-		except Exception as e:
-			if frappe.db.is_table_missing(e):
-				return
-			else:
-				raise
+		if not frappe.db.table_exists('Custom Field'):
+			return
+
+		custom_fields = frappe.db.sql("""
+			SELECT * FROM `tabCustom Field`
+			WHERE dt = %s AND docstatus < 2
+		""", (self.name,), as_dict=1, update={"is_custom_field": 1})
+
+		self.extend("fields", custom_fields)
 
 	def apply_property_setters(self):
+		if not frappe.db.table_exists('Property Setter'):
+			return
+
 		property_setters = frappe.db.sql("""select * from `tabProperty Setter` where
 			doc_type=%s""", (self.name,), as_dict=1)
 
@@ -378,8 +381,9 @@ class Meta(Document):
 			if custom_perms:
 				self.permissions = [Document(d) for d in custom_perms]
 
-	def get_fieldnames_with_value(self):
-		return [df.fieldname for df in self.fields if df.fieldtype not in no_value_fields]
+	def get_fieldnames_with_value(self, with_field_meta=False):
+		return [df if with_field_meta else df.fieldname \
+			for df in self.fields if df.fieldtype not in no_value_fields]
 
 
 	def get_fields_to_check_permissions(self, user_permission_doctypes):
@@ -412,10 +416,10 @@ class Meta(Document):
 	def get_dashboard_data(self):
 		'''Returns dashboard setup related to this doctype.
 
-		This method will return the `data` property in the
-		`[doctype]_dashboard.py` file in the doctype folder,
-		along with any overrides or extensions
-		implemented in other Frappe applications via hooks.'''
+		This method will return the `data` property in the `[doctype]_dashboard.py`
+		file in the doctype's folder, along with any overrides or extensions
+		implemented in other Frappe applications via hooks.
+		'''
 		data = frappe._dict()
 		try:
 			module = load_doctype_module(self.name, suffix='_dashboard')
@@ -460,6 +464,7 @@ class Meta(Document):
 						data.non_standard_fieldnames[link.link_doctype] = link.link_fieldname
 					else:
 						data.fieldname = link.link_fieldname
+
 
 	def get_row_template(self):
 		return self.get_web_template(suffix='_row')
