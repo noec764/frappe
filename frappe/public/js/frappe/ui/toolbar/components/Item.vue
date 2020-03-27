@@ -6,7 +6,7 @@
 	>
 		<a
 			class="vsm-link"
-			:href="item.type === 'module' ? '#modules/' + item.module_name : item.link"
+			:href="'#workspace/' + item.name"
 		>
 			<i
 				v-if="item.icon"

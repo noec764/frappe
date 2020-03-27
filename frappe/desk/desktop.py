@@ -9,6 +9,7 @@ from frappe import _, DoesNotExistError
 from frappe.boot import get_allowed_pages, get_allowed_reports
 from six import string_types
 from frappe.cache_manager import build_domain_restricted_doctype_cache, build_domain_restricted_page_cache, build_table_count_cache
+from frappe.desk.notifications import get_notifications
 
 class Workspace:
 	def __init__(self, page_name):
@@ -77,6 +78,8 @@ class Workspace:
 
 	def get_cards(self):
 		cards = self.doc.cards + get_custom_reports_and_doctypes(self.doc.module)
+		notifications = get_notifications()
+
 		if len(self.extended_cards):
 			cards = cards + self.extended_cards
 		default_country = frappe.db.get_default("country")
@@ -104,6 +107,9 @@ class Workspace:
 					count = _doctype_contains_a_record(name)
 
 					item["count"] = count
+
+			if notifications["open_count_doctype"].get(item.get("name")):
+				item["open_count"] = notifications["open_count_doctype"].get(item.get("name"))
 
 			return item
 
@@ -165,7 +171,8 @@ class Workspace:
 
 		for item in shortcuts:
 			new_item = item.as_dict().copy()
-			new_item['name'] = _(item.link_to)
+			new_item['name'] = item.link_to
+			new_item['label'] = _(item.link_to)
 			if self.is_item_allowed(item.link_to, item.type) and _in_active_domains(item):
 				if item.type == "Page":
 					page = self.allowed_pages[item.link_to]
@@ -221,14 +228,18 @@ def get_desk_sidebar_items():
 
 	# pages sorted based on pinned to top and then by name
 	order_by = "pin_to_top desc, pin_to_bottom asc, name asc"
-	pages = frappe.get_all("Desk Page", fields=["name", "category"], filters=filters, order_by=order_by, ignore_permissions=True)
+	pages = frappe.get_all("Desk Page", fields=["name", "category", "icon", "color"], filters=filters, order_by=order_by, ignore_permissions=True)
 
+	"""
 	from collections import defaultdict
 	sidebar_items = defaultdict(list)
 
 	for page in pages:
 		# The order will be maintained while categorizing
 		sidebar_items[page["category"]].append(page)
+	"""
+	sidebar_items = [{"label": _(p["name"]), **p} for p in pages]
+
 	return sidebar_items
 
 def get_table_with_counts():

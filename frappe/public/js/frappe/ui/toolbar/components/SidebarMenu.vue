@@ -84,13 +84,16 @@ export default {
 			this.mobileDisplay = false;
 		},
 		getModules() {
-			this.modules = frappe.boot.allowed_modules.sort(dynamicSort("label"));
+			frappe.xcall("frappe.desk.desktop.get_desk_sidebar_items")
+			.then(r => {
+				this.modules = r.sort(dynamicSort("label"));
 
-			const maxLength = this.modules.reduce((acc, item) => {
-				return item.label.length > acc ? item.label.length : acc;
-			}, 0)
+				const maxLength = this.modules.reduce((acc, item) => {
+					return item.label.length > acc ? item.label.length : acc;
+				}, 0)
 
-			this.width = ((maxLength > 25) ? (maxLength * 10) : (maxLength * 11)) + "px";
+				this.width = ((maxLength > 25) ? (maxLength * 10) : (maxLength * 11)) + "px";
+			});
 		},
 		scrollUpDown() {
 			const scrollHeight = document.querySelector("#sidebard-modules-list").scrollHeight

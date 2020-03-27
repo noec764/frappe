@@ -1,5 +1,10 @@
 @import "variables.less";
 
+[data-route^="workspace/"],
+[data-route="desk"] {
+	background-color: #f5f7fa;
+}
+
 .desk-container {
 	margin-top: 20px;
 
@@ -69,7 +74,7 @@
 	}
 
 	.desk-body {
-		padding-left: calc(24rem + 15px);
+		// padding-left: calc(24rem + 15px);
 		display: flex;
 		flex-direction: column;
   		height: 100%;
@@ -177,6 +182,8 @@
 	border-radius: 5px;
 	border: 1px solid @border-color;
 	height: 100%;
+	background-color: #fff;
+    box-shadow: 0 1px 3px 0 #e6ebf1;
 
 	.widget-head {
 		display: flex;
@@ -376,4 +383,9 @@
 
 .pill-orange {
 	background:	@orange;
+}
+
+.open-count-badge {
+	background-color: #6195FF;
+	color: #fff;
 }

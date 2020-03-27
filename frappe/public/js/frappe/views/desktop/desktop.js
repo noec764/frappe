@@ -15,10 +15,7 @@ export default class Desktop {
 
 	make() {
 		this.make_container();
-		this.fetch_desktop_settings().then(() => {
-			this.route();
-			this.make_sidebar();
-		});
+		this.route();
 	}
 
 	route() {
@@ -28,7 +25,6 @@ export default class Desktop {
 
 	make_container() {
 		this.container = $(`<div class="desk-container row">
-				<div class="desk-sidebar"></div>
 				<div class="desk-body"></div>
 			</div>`);
 
@@ -74,7 +70,7 @@ export default class Desktop {
 				this.current_page = item.name;
 			}
 			let $item = get_sidebar_item(item);
-			$item.appendTo(this.sidebar);
+			// $item.appendTo(this.sidebar);
 			this.sidebar_items[item.name] = $item;
 		};
 
@@ -82,7 +78,7 @@ export default class Desktop {
 			let $title = $(
 				`<div class="sidebar-group-title h6 uppercase">${name}</div>`
 			);
-			$title.appendTo(this.sidebar);
+			// $title.appendTo(this.sidebar);
 		};
 
 		this.sidebar_categories.forEach(category => {
@@ -236,7 +232,7 @@ class DesktopPage {
 
 	make_shortcuts() {
 		this.sections["shortcuts"] = new frappe.widget.WidgetGroup({
-			title: this.data.shortcuts.label || `Your Shortcuts`,
+			title: this.data.shortcuts.label || __("Your Shortcuts"),
 			container: this.page,
 			type: "bookmark",
 			columns: 3,
@@ -247,7 +243,7 @@ class DesktopPage {
 
 	make_cards() {
 		let cards = new frappe.widget.WidgetGroup({
-			title: this.data.cards.label || `Reports & Masters`,
+			title: this.data.cards.label || __("Reports & Masters"),
 			container: this.page,
 			type: "links",
 			columns: 3,
@@ -277,8 +273,8 @@ class DesktopPage {
 			</div>`;
 		});
 
-		$(`<div class="legend">
+		/*$(`<div class="legend">
 			${legend.join("\n")}
-		</div>`).insertAfter(cards.body);
+		</div>`).insertAfter(cards.body);*/
 	}
 }
