@@ -111,6 +111,8 @@ class Workspace:
 			if notifications["open_count_doctype"].get(item.get("name")):
 				item["open_count"] = notifications["open_count_doctype"].get(item.get("name"))
 
+			item["label"] = _(item.get("label") or item.get("name"))
+
 			return item
 
 		new_data = []
@@ -139,7 +141,7 @@ class Workspace:
 				else:
 					new_section = section.as_dict().copy()
 				new_section["links"] = new_items
-				new_section["label"] = section.title
+				new_section["label"] = _(section.title)
 				new_data.append(new_section)
 
 		return new_data
