@@ -91,7 +91,7 @@ class Dashboard {
 				container: this.container,
 				type: "chart",
 				columns: 2,
-				allow_sorting: true,
+				allow_sorting: false,
 				widgets: this.charts,
 			});
 		});
