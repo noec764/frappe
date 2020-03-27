@@ -277,6 +277,8 @@ execute:frappe.delete_doc_if_exists('DocType', 'Google Maps Settings')
 execute:frappe.db.set_default('desktop:home_page', 'workspace')
 execute:frappe.delete_doc_if_exists('DocType', 'GSuite Settings')
 execute:frappe.delete_doc_if_exists('DocType', 'GSuite Templates')
+execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Account')
+execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Settings')
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
