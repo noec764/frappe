@@ -97,7 +97,7 @@ class Address(Document):
 			address = get_condensed_address(self)
 
 			gmaps = googlemaps.Client(key=frappe.db.get_single_value("Google Settings", "api_key"))
-			geocode_result = gmaps.geocode(json.dumps(address))
+			geocode_result = gmaps.geocode(address)
 
 			if geocode_result:
 				self.map_location = json.dumps({
