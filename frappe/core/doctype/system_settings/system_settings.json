@@ -38,6 +38,7 @@
   "allow_login_using_user_name",
   "allow_error_traceback",
   "password_settings",
+  "logout_on_password_reset",
   "force_user_to_reset_password",
   "column_break_31",
   "enable_password_policy",
@@ -428,6 +429,12 @@
     "label": "Time Format",
     "options": "HH:mm:ss\nHH:mm",
     "reqd": 1
+   },
+   {
+    "default": "1",
+    "fieldname": "logout_on_password_reset",
+    "fieldtype": "Check",
+    "label": "Logout All Sessions on Password Reset"
    }
  ],
  "icon": "fa fa-cog",
