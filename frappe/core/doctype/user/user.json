@@ -182,7 +182,7 @@
   {
    "fieldname": "time_zone",
    "fieldtype": "Select",
-   "label": "Timezone"
+   "label": "Time zone"
   },
   {
    "description": "Get your globally recognized avatar from Gravatar.com",
@@ -306,7 +306,7 @@
    "default": "0",
    "fieldname": "logout_all_sessions",
    "fieldtype": "Check",
-   "label": "Logout from all devices while changing Password"
+   "label": "Logout from all devices after changing password"
   },
   {
    "fieldname": "reset_password_key",
@@ -614,7 +614,7 @@
  "idx": 413,
  "image_field": "user_image",
  "max_attachments": 5,
- "modified": "2019-10-22 14:16:34.810223",
+ "modified": "2020-03-23 22:59:26.154985",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
