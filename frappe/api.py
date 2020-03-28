@@ -82,10 +82,7 @@ def handle():
 					frappe.local.response.update({"data": doc})
 
 				if frappe.local.request.method=="PUT":
-					if frappe.local.form_dict.data is None:
-						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
-					else:
-						data = frappe.parse_json(frappe.local.form_dict.data)
+					data = get_request_form_data()
 					doc = frappe.get_doc(doctype, name)
 
 					if "flags" in data:
@@ -125,10 +122,7 @@ def handle():
 					})
 
 				if frappe.local.request.method == "POST":
-					if frappe.local.form_dict.data is None:
-						data = frappe.parse_json(frappe.safe_decode(frappe.local.request.get_data()))
-					else:
-						data = frappe.parse_json(frappe.local.form_dict.data)
+					data = get_request_form_data()
 					data.update({
 						"doctype": doctype
 					})
@@ -144,6 +138,13 @@ def handle():
 
 	return build_response("json")
 
+def get_request_form_data():
+	if frappe.local.form_dict.data is None:
+		data = frappe.safe_decode(frappe.local.request.get_data())
+	else:
+		data = frappe.local.form_dict.data
+
+	return frappe.parse_json(data)
 
 def validate_oauth():
 	""" authentication using oauth """
