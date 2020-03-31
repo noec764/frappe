@@ -143,7 +143,7 @@ frappe.ui.form.on("Customize Form", {
 			}, 1000);
 		}
 
-	},
+	}
 
 });
 
