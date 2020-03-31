@@ -215,12 +215,12 @@ def write_file(content, fname, is_private=0):
 	return get_files_path(fname, is_private=is_private)
 
 
-def remove_all(dt, dn, from_delete=False):
+def remove_all(dt, dn):
 	"""remove all files in a transaction"""
 	try:
 		for fid in frappe.db.sql_list("""select name from `tabFile` where
 			attached_to_doctype=%s and attached_to_name=%s""", (dt, dn)):
-			remove_file(fid, dt, dn, from_delete)
+			remove_file(fid, dt, dn)
 	except Exception as e:
 		if e.args[0]!=1054: raise # (temp till for patched)
 
@@ -236,7 +236,7 @@ def remove_file_by_url(file_url, doctype=None, name=None):
 		return remove_file(fid)
 
 
-def remove_file(fid, attached_to_doctype=None, attached_to_name=None, from_delete=False):
+def remove_file(fid, attached_to_doctype=None, attached_to_name=None):
 	"""Remove file and File entry"""
 	file_name = None
 	if not (attached_to_doctype and attached_to_name):
@@ -246,7 +246,7 @@ def remove_file(fid, attached_to_doctype=None, attached_to_name=None, from_delet
 			attached_to_doctype, attached_to_name, file_name = attached
 
 	ignore_permissions, comment = False, None
-	if attached_to_doctype and attached_to_name and not from_delete:
+	if attached_to_doctype and attached_to_name:
 		doc = frappe.get_doc(attached_to_doctype, attached_to_name)
 		ignore_permissions = doc.has_permission("write") or False
 		if frappe.flags.in_web_form:

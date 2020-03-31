@@ -674,7 +674,7 @@ def delete_file(path):
 			os.remove(path)
 
 
-def remove_file(fid=None, attached_to_doctype=None, attached_to_name=None, from_delete=False):
+def remove_file(fid=None, attached_to_doctype=None, attached_to_name=None):
 	"""Remove file and File entry"""
 	file_name = None
 	if not (attached_to_doctype and attached_to_name):
@@ -684,7 +684,7 @@ def remove_file(fid=None, attached_to_doctype=None, attached_to_name=None, from_
 			attached_to_doctype, attached_to_name, file_name = attached
 
 	ignore_permissions, comment = False, None
-	if attached_to_doctype and attached_to_name and not from_delete:
+	if attached_to_doctype and attached_to_name:
 		doc = frappe.get_doc(attached_to_doctype, attached_to_name)
 		ignore_permissions = doc.has_permission("write") or False
 		if frappe.flags.in_web_form:
@@ -701,12 +701,12 @@ def get_max_file_size():
 	return conf.get('max_file_size') or 10485760
 
 
-def remove_all(dt, dn, from_delete=False):
+def remove_all(dt, dn):
 	"""remove all files in a transaction"""
 	try:
 		for fid in frappe.db.sql_list("""select name from `tabFile` where
 			attached_to_doctype=%s and attached_to_name=%s""", (dt, dn)):
-			remove_file(fid=fid, attached_to_doctype=dt, attached_to_name=dn, from_delete=from_delete)
+			remove_file(fid=fid, attached_to_doctype=dt, attached_to_name=dn)
 	except Exception as e:
 		if e.args[0]!=1054: raise # (temp till for patched)
 
