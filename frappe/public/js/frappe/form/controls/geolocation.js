@@ -51,6 +51,7 @@ frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlData.extend({
 			this.add_non_group_layers(data_layers, this.editableLayers);
 			try {
 				this.map.flyToBounds(this.editableLayers.getBounds(), {
+					animate: false,
 					padding: [50,50]
 				});
 			}

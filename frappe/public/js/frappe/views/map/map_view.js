@@ -158,6 +158,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		})
 		try {
 			me.map.flyToBounds(me.editableLayers.getBounds(), {
+				animate: false,
 				padding: [50,50]
 			});
 		}
