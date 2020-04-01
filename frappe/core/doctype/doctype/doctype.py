@@ -15,7 +15,7 @@ import frappe
 from frappe import _
 import frappe.website.render
 from frappe.utils import now, cint
-from frappe.model import no_value_fields, default_fields, data_fieldtypes, table_fields
+from frappe.model import no_value_fields, default_fields, data_fieldtypes, table_fields, data_field_options
 from frappe.model.document import Document
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
@@ -945,6 +945,15 @@ def validate_fields(meta):
 		if hasattr(field, 'fetch_from') and getattr(field, 'fetch_from'):
 			field.fetch_from = field.fetch_from.strip('\n').strip()
 
+	def validate_data_field_type(docfield):
+		if docfield.fieldtype == "Data":
+			if docfield.options and (docfield.options not in data_field_options):
+				df_str = frappe.bold(_(docfield.label))
+				text_str = _("{0} is an invalid Data field.").format(df_str) + "<br>" * 2 + _("Only Options allowed for Data field are:") + "<br>"
+				df_options_str = "<ul><li>" + "</li><li>".join([_(x) for x in data_field_options]) + "</ul>"
+
+				frappe.msgprint(text_str + df_options_str, title="Invalid Data Field", raise_exception=True)
+
 	fields = meta.get("fields")
 	fieldname_list = [d.fieldname for d in fields]
 
@@ -975,6 +984,7 @@ def validate_fields(meta):
 		check_table_multiselect_option(d)
 		scrub_options_in_select(d)
 		scrub_fetch_from(d)
+		validate_data_field_type(d)
 
 	check_fold(fields)
 	check_search_fields(meta, fields)
