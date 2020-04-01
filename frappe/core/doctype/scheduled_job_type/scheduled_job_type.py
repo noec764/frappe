@@ -153,6 +153,12 @@ def insert_single_event(frequency, event, cron_format = None):
 			cron_format = cron_format,
 			frequency = frequency
 		)).insert()
+	else:
+		task = frappe.get_doc('Scheduled Job Type', dict(method=event))
+		if task.cron_format != cron_format or task.frequency != frequency:
+			task.cron_format = cron_format
+			task.frequency = frequency
+			task.save()
 
 def clear_events(all_events, scheduler_events):
 	for event in frappe.get_all('Scheduled Job Type', ('name', 'method')):
