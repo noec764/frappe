@@ -59,10 +59,14 @@ frappe.views.ListSidebar = class ListSidebar {
 			show_list_link = true;
 		}
 		//show map view
-		const map_fields = frappe.get_meta(this.doctype).fields.filter(f => f.fieldtype === "Geolocation")
-		if (map_fields.length) {
-			this.sidebar.find('.list-link[data-view="Map"]').removeClass("hide");
-		}
+		frappe.db.get_value("Google Settings", "Google Settings", ["enable", "api_key"], r => {
+			if (r.enable === "1" || r.api_key) {
+				const map_fields = frappe.get_meta(this.doctype).fields.filter(f => f.fieldtype === "Geolocation")
+				if (map_fields.length) {
+					this.sidebar.find('.list-link[data-view="Map"]').removeClass("hide");
+				}
+			}
+		});
 		//show link for kanban view
 		this.sidebar.find('.list-link[data-view="Kanban"]').removeClass('hide');
 		if (this.doctype === "Communication" && frappe.boot.email_accounts.length) {
