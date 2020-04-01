@@ -875,6 +875,7 @@
         "Search Fields": "Champs de recherche",
         "Sort Field": "Champ de tri",
         "Sort Order": "Ordre de tri",
+        "Subject Field": "Champ de sujet",
         "System Manager": "Responsable Système",
         "Title Field": "Champ titre",
         "Track Changes": "Suivre les modifications",
@@ -1059,6 +1060,8 @@
         "Number of Groups": "Nombre de groupes",
         "Preregistered": "Pré-enregistrée",
         "Quarterly": "Trimestriel",
+        "Report": "Rapport",
+        "Report Name": "Nom du Rapport",
         "Select Date Range": "Sélectionner une plage de date",
         "Sum": "Somme",
         "System Manager": "Responsable Système",
@@ -1075,10 +1078,17 @@
         "Width": "Largeur",
         "Yearly": "Annuelle"
     },
+    "DocType: Dashboard Chart Field": {
+        "Color": "Couleur",
+        "Desk": "Bureau"
+    },
     "DocType: Dashboard Chart Link": {
         "Chart": "Graphique",
         "Dashboard Chart Link": "Lien du graphique du tableau de bord",
-        "Desk": "Bureau"
+        "Desk": "Bureau",
+        "Full": "Complet",
+        "Half": "Demi",
+        "Width": "Largeur"
     },
     "DocType: Dashboard Chart Source": {
         "All": "Tous",
@@ -1138,6 +1148,7 @@
         "Document Type": "Type de document",
         "Don't Send Emails": "Ne pas envoyer d'emails",
         "Download Template": "Télécharger un modèle",
+        "Error": "Erreur",
         "Import File": "Fichier d'import",
         "Import Log": "Journal d'import",
         "Import Log Preview": "Prévisualisation du journal d'import",
@@ -1286,6 +1297,17 @@
         "System Manager": "Responsable Système",
         "User": "Utilisateur"
     },
+    "DocType: Desk Card": {
+        "Desk": "Bureau",
+        "Icon": "Icône",
+        "Links": "Liens",
+        "Title": "Titre"
+    },
+    "DocType: Desk Chart": {
+        "Chart Name": "Nom de la carte",
+        "Desk": "Bureau",
+        "Label": "Étiquette"
+    },
     "DocType: Desk Items": {
         "Dashboard Calendar": "Calendrier du tableau de bord",
         "Dashboard Card": "Carte du tableau de bord",
@@ -1296,6 +1318,32 @@
         "Widget Name": "Nom du widget",
         "Widget Type": "Type de widget",
         "Widget Width": "Largeur du widget"
+    },
+    "DocType: Desk Page": {
+        "Administration": "Administration",
+        "All": "Tous",
+        "Category": "Catégorie",
+        "Charts": "Graphiques",
+        "Color": "Couleur",
+        "Desk": "Bureau",
+        "Domains": "Domaines",
+        "Icon": "Icône",
+        "Is Standard": "Est un formulaire standard",
+        "Label": "Étiquette",
+        "Module": "Module",
+        "Modules": "Modules",
+        "Name": "Nom",
+        "System Manager": "Responsable Système"
+    },
+    "DocType: Desk Shortcut": {
+        "Color": "Couleur",
+        "Desk": "Bureau",
+        "DocType": "DocType",
+        "Format": "Format",
+        "Icon": "Icône",
+        "Page": "Page",
+        "Report": "Rapport",
+        "Type": "Type"
     },
     "DocType: Desktop Icon": {
         "App": "App",
@@ -1489,6 +1537,7 @@
         "Document": "Document",
         "Documentation Link": "Lien vers la documentation",
         "Editable Grid": "Grille éditable",
+        "Email Settings": "Paramètres d'Email",
         "Fields": "Champ",
         "Form Settings": "Paramètres du formulaire",
         "Has Web View": "A une vue web",
@@ -1540,6 +1589,7 @@
         "Single Types have only one record no tables associated. Values are stored in tabSingles": "Les types de document uniques ont un seul enregistrement et aucune table associée. Les valeurs sont stockées dans la table tabSingles.",
         "Sort Field": "Champ de tri",
         "Sort Order": "Ordre de tri",
+        "Subject Field": "Champ de sujet",
         "System": "Système",
         "System Manager": "Responsable Système",
         "Timeline Field": "Champ chronologie",
@@ -1583,6 +1633,16 @@
         "Email": "E-mail",
         "System Manager": "Responsable système",
         "User": "Utilisateur"
+    },
+    "DocType: Document Type Field Mapping": {
+        "Child Table Mapping": "Mapping de Table Enfant",
+        "Is Child Table": "Table enfant",
+        "Local Fieldname": "Nom du champ local",
+        "Remote Fieldname": "Nom de champ distant"
+    },
+    "DocType: Document Type Mapping": {
+        "Mapping Name": "Nom du Mapping",
+        "System Manager": "Responsable Système"
     },
     "DocType: Domain": {
         "Administrator": "Administrateur",
@@ -1945,6 +2005,7 @@
         "Repeat this Event": "Répéter cet Evénement",
         "Saturday": "Samedi",
         "Send an email reminder in the morning": "Envoyer un email de rappel dans la matinée",
+        "Sender": "Expéditeur",
         "Sent/Received Email": "Email envoyé / reçu",
         "Starts on": "Commence le",
         "Status": "Statut",
@@ -1958,6 +2019,16 @@
         "Weekly": "Hebdomadaire",
         "Yearly": "Annuel"
     },
+    "DocType: Event Consumer": {
+        "API Key": "Clé API",
+        "API Secret": "Secret API",
+        "System Manager": "Responsable Système"
+    },
+    "DocType: Event Consumer Document Type": {
+        "Document Type": "Type de Document",
+        "Pending": "En cours",
+        "Rejected": "Rejeté"
+    },
     "DocType: Event Participants": {
         "Contact": "Contact",
         "Desk": "Bureau",
@@ -1965,6 +2036,39 @@
         "Reference Doctype": "DocType de référence",
         "Reference Document Type": "Type de document de référence",
         "Reference Name": "Nom de la Référence"
+    },
+    "DocType: Event Producer": {
+        "API Key": "Clé API",
+        "API Secret": "Secret API",
+        "System Manager": "Responsable Système"
+    },
+    "DocType: Event Producer Document Type": {
+        "Document Type": "Type de Document",
+        "Mapping": "Mapping",
+        "Pending": "En cours",
+        "Rejected": "Rejeté"
+    },
+    "DocType: Event Sync Log": {
+        "Create": "Créer",
+        "Data": "Données",
+        "Delete": "Supprimer",
+        "Doctype": "Type de document",
+        "Document Name": "Nom du Document",
+        "Error": "Erreur",
+        "Failed": "Échec",
+        "Mapping": "Mapping",
+        "Status": "Statut",
+        "System Manager": "Responsable Système",
+        "Update": "Mettre à Jour"
+    },
+    "DocType: Event Update Log": {
+        "Create": "Créer",
+        "Data": "Données",
+        "Delete": "Supprimer",
+        "DocType": "DocType",
+        "Document Name": "Nom du Document",
+        "System Manager": "Responsable Système",
+        "Update": "Mettre à Jour"
     },
     "DocType: Feedback Request": {
         "Core": "Module central",
@@ -4402,6 +4506,12 @@
     "apps/frappe/frappe/commands/site.py": {
         "Invalid limit {0}": "Limite {0} invalide"
     },
+    "apps/frappe/frappe/config/automation.py": {
+        "Automatically generates recurring documents.": "Génère des documents récurrents automatiquement",
+        "Automation": "Automatisation",
+        "Set up rules for user assignments.": "Créer des règles pour l'attribution aux utilisateurs",
+        "Tracks milestones on the lifecycle of a document if it undergoes multiple stages.": "Suivez les jalons de cycle de vie d'un document soumis à plusieurs étapes"
+    },
     "apps/frappe/frappe/config/core.py": {
         "A log of request errors": "Un journal des erreurs de requête",
         "Background Email Queue": "File d’Attente d’Email en Arrière-Plan",
@@ -4450,6 +4560,7 @@
         "Tools": "Outils"
     },
     "apps/frappe/frappe/config/desktop.py": {
+        "Automation": "Automatisation",
         "Contacts": "Contacts",
         "Customization": "Personnalisations",
         "Dashboard": "Tableau de Bord",
@@ -4832,6 +4943,7 @@
         "There should be atleast one row for {0} table": "Il doit y avoir au moins une ligne pour la table {0}",
         "Value must be one of {0}": "La valeur doit être l'un des suivantes: {0}",
         "Value {0} missing for {1}": "Valeur {0} manquante pour {1}",
+        "via Data Import": "via l'outil d'import de données",
         "{0} are mandatory fields": "{0} sont des champs obligatoires",
         "{0} is a mandatory field": "{0} est un champ obligatoire"
     },
@@ -5355,6 +5467,9 @@
         "You have used up all of the space allotted to you. Please buy more space in your subscription.": "Vous avez utilisé tout l'espace qui vous était alloué. Veuillez ajouter plus d'espace dans votre abonnement.",
         "{0} available out of {1}": "{0} disponible sur {1}"
     },
+    "apps/frappe/frappe/core/page/workspace/workspace.js": {
+        "Home": "Accueil"
+    },
     "apps/frappe/frappe/core/report/data_integrity/data_integrity.js": {
         "DocType": "DocType"
     },
@@ -5428,6 +5543,7 @@
         "Example": "Exemple",
         "Export Custom Permissions": "Exporter les autorisations personnalisées",
         "Export Customizations": "Exporter les personnalisations",
+        "Go to {0} List": "Aller à la liste {0}",
         "Help": "Aide",
         "Help: Field Properties": "Aide: Propriétés du champ",
         "Hidden": "Masqué",
@@ -5587,6 +5703,7 @@
     "apps/frappe/frappe/desk/doctype/dashboard_chart/dashboard_chart.js": {
         "Click table to edit": "Cliquez sur la table pour modifier",
         "Click to Set Filters": "Cliquer pour définir des filtres",
+        "Condition": "Conditions",
         "Created On": "Créé le",
         "Filter": "Filtre",
         "Last Modified On": "Dernière modification le",
@@ -5816,6 +5933,7 @@
         "Last Month": "30 jours glissants",
         "Last Quarter": "3 mois glissants",
         "Last Week": "7 jours glissants",
+        "Last Year": "Dernière année",
         "Location": "Lieu",
         "Monthly": "Mensuel",
         "Monthly Rank: ": "Classement mensuel",
@@ -6027,6 +6145,9 @@
         "Invalid recipient address": "Adresse de destinataire invalide",
         "Please setup default Email Account from Setup > Email > Email Account": "Veuillez définir un compte email via Configuration > Email > Compte Email",
         "Unable to send emails at this time": "Impossible d'envoyer des emails en ce moment"
+    },
+    "apps/frappe/frappe/event_streaming/doctype/event_producer/event_producer.py": {
+        "Invalid URL": "URL invalide"
     },
     "apps/frappe/frappe/geo/doctype/currency/currency.js": {
         "This Currency is disabled. Enable to use in transactions": "Cette devise est désactivée. Activez la pour l'utiliser dans les transactions"
@@ -7281,10 +7402,12 @@
         "Filter By": "Filtrer par",
         "Loading...": "Chargement en cours...",
         "Me": "Moi",
+        "No": "Non",
         "No filters found": "Aucun filtre trouvé",
         "Not Specified": "Non renseigné",
         "Search": "Rechercher",
-        "Select Filters": "Sélectionner des filtres"
+        "Select Filters": "Sélectionner des filtres",
+        "Yes": "Oui"
     },
     "apps/frappe/frappe/public/js/frappe/list/list_sidebar_stat.html": {
         "No records tagged.": "Aucun enregistrement étiqueté.",
@@ -8069,6 +8192,7 @@
         "Widget type": "Type de widget"
     },
     "apps/frappe/frappe/public/js/frappe/views/pageview.js": {
+        "Desk": "Bureau",
         "Home": "Accueil",
         "Sorry! I could not find what you were looking for.": "Désolé ! Je n'ai pas trouvé ce que vous cherchez.",
         "Sorry! You are not permitted to view this page.": "Désolé ! Vous n'êtes pas autorisé à consulter cette page."
@@ -8091,8 +8215,10 @@
         "Page {0} of {1}": "Page {0} sur {1}"
     },
     "apps/frappe/frappe/public/js/frappe/views/reports/query_report.js": {
+        "Add": "Ajouter",
         "Add Column": "Ajouter une Colonne",
         "Collapse All": "Tout réduire",
+        "Color": "Couleur",
         "Create": "Créer",
         "Create Chart": "Ajouter un graphique",
         "Download": "Télécharger",
@@ -8279,6 +8405,16 @@
         "Not Permitted": "Non Autorisé",
         "Please login before trying to access this page.": "Veuillez vous connecter avant d'accéder à cette page.",
         "You are not permitted to access this page.": "Vous n'êtes pas autorisé à accéder à cette page."
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/chart_widget.js": {
+        "Edit...": "Modification...",
+        "Last synced {0}": "Dernière synchronisation le {0}",
+        "Refresh": "Actualiser",
+        "{0} List": "Liste {0}",
+        "{0} Report": "Rapport de/d' {0}"
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/links_widget.js": {
+        "You need to create these first: ": "Vous devez d'abord créer un·e:"
     },
     "apps/frappe/frappe/public/js/integrations/razorpay.js": {
         "Show Log": "Afficher le Journal"
@@ -9409,6 +9545,7 @@
         "Day": "Jour",
         "Dear": "Cher/Chère",
         "Delete": "Supprimer",
+        "Desk": "Bureau",
         "Discard": "Ignorer",
         "Document Status": "Statut du Document",
         "Document Type": "Type de Document",
@@ -9419,6 +9556,7 @@
         "Drop files here": "Déposez vos fichiers ici",
         "Edit Desktop": "Modifier le bureau",
         "Edit in Full Page": "Editer en pleine page",
+        "Edit...": "Modification...",
         "Email": "E-mail",
         "Email Account setup please enter your password for: ": "Configuration du Compte Email veuillez entrer votre mot de passe pour :",
         "Email Account setup please enter your password for: {0}": "Veuillez entrer un mot de passe pour l'adresse email: {0}",
@@ -9470,6 +9608,7 @@
         "Last Modified On": "Dernière modification le",
         "Last Updated By": "Dernière Mise à Jour Par",
         "Last Updated On": "Dernière Mise à Jour",
+        "Last synced {0}": "Dernière synchronisation le {0}",
         "Last synced:": "Dernière synchronisation:",
         "Leaderboard": "Classement général",
         "Let's Start": "C'est parti",
@@ -9682,6 +9821,7 @@
         "You do not have enough permissions to access this resource. Please contact your manager to get access.": "Vous ne disposez pas de suffisamment d'autorisations pour accéder à cette ressource. Veuillez contacter votre responsable pour obtenir l'accès.",
         "You don't have any messages yet.": "Vous n'avez encore aucun message.",
         "You have unsaved changes in this form. Please save before you continue.": "Vous avez des modifications non enregistrées dans ce formulaire. Veuillez enregistrer avant de continuer.",
+        "You need to create these first: ": "Vous devez d'abord créer un·e:",
         "Your Target": "Votre objectif",
         "Your application": "Votre application",
         "Your download is being built, this may take a few moments...": "Votre téléchargement est en cours de construction, patientez quelques instants ...",
@@ -10334,6 +10474,7 @@
         "New Kanban Board": "Nouveau Tableau Kanban",
         "New {0}": "Nouveau·elle {0}",
         "Next": "Suivant",
+        "No": "Non",
         "No Email Account": "Aucun Compte Email",
         "No Email Accounts Assigned": "Aucun Compte de Messagerie Attribué",
         "No Emails": "Aucun Email",
@@ -10426,6 +10567,7 @@
         "View List": "Voir La Liste",
         "Week": "Semaine",
         "With Letterhead": "Avec en-tête de Lettre",
+        "Yes": "Oui",
         "You are not allowed to print this report": "Vous n'êtes pas autorisé à imprimer ce rapport",
         "You haven't created a {0} yet": "Vous n'avez pas encore créé {0}",
         "You selected Draft or Cancelled documents": "Vous avez sélectionné des documents Brouillon ou Annulés",
@@ -10464,6 +10606,7 @@
         "You are not allowed to print this document": "Vous n'êtes pas autorisé à imprimer ce document"
     },
     "sites/assets/js/report.min.js": {
+        "Add": "Ajouter",
         "Add Column": "Ajouter une Colonne",
         "Add Group": "Ajouter un groupe",
         "Also adding the dependent currency field {0}": "Ajout également du champ de devise dépendante {0}",
@@ -10472,6 +10615,7 @@
         "Cannot remove ID field": "Impossible de supprimer le champ ID",
         "Chart Type": "Type de graphique",
         "Collapse All": "Tout réduire",
+        "Color": "Couleur",
         "Configure Chart": "Configurer le graphique",
         "Count": "Décompte",
         "Create": "Créer",

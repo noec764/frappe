@@ -290,7 +290,7 @@ def get_messages_for_app(app):
 		# pages
 		for name, title in frappe.db.sql("""select name, title from tabPage
 			where module in ({})""".format(modules)):
-			messages.append(('Page: ' + title or name, title or name))
+			messages.append(('Page: ' + (title or name), title or name))
 			messages.extend(get_messages_from_page(name))
 
 

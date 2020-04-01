@@ -219,6 +219,10 @@ def get_desktop_page(page):
 def get_desk_sidebar_items():
 	"""Get list of sidebar items for desk
 	"""
+	def sort_items(items_list, sort_keys):
+		for key, reverse in reversed(sort_keys):
+			items_list.sort(key=lambda x:x.get(key), reverse=reverse)
+		return items_list
 	# don't get domain restricted pages
 	filters = {
 		'restrict_to_domain': ['in', frappe.get_active_domains()],
@@ -229,19 +233,13 @@ def get_desk_sidebar_items():
 		filters['developer_mode_only'] = '0'
 
 	# pages sorted based on pinned to top and then by name
-	order_by = "pin_to_top desc, pin_to_bottom asc, name asc"
-	pages = frappe.get_all("Desk Page", fields=["name", "category", "icon", "color"], filters=filters, order_by=order_by, ignore_permissions=True)
+	pages = frappe.get_all("Desk Page",
+		fields=["name", "category", "icon", "color", "pin_to_top", "pin_to_bottom"],
+		filters=filters, ignore_permissions=True)
 
-	"""
-	from collections import defaultdict
-	sidebar_items = defaultdict(list)
-
-	for page in pages:
-		# The order will be maintained while categorizing
-		sidebar_items[page["category"]].append(page)
-	"""
 	sidebar_items = [{"label": _(p["name"]), **p} for p in pages]
-
+	sidebar_items = sort_items(sidebar_items, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
+	print(sidebar_items)
 	return sidebar_items
 
 def get_table_with_counts():
