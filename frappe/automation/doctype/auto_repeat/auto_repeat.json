@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "autoname": "format:AUT-AR-{#####}",
@@ -175,6 +176,7 @@
    "fieldtype": "Select",
    "hidden": 1,
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Status",
    "options": "\nActive\nDisabled\nCompleted",
    "read_only": 1
@@ -207,7 +209,8 @@
    "read_only": 1
   }
  ],
- "modified": "2019-12-13 14:45:34.112161",
+ "links": [],
+ "modified": "2020-04-02 18:05:21.879454",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Auto Repeat",
