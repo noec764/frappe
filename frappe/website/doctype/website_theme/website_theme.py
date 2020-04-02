@@ -111,7 +111,7 @@ def generate_theme_files_if_not_exist():
 	themes = frappe.get_all('Website Theme')
 	for theme in themes:
 		doc = frappe.get_doc('Website Theme', theme.name)
-		if not self.is_standard_and_not_valid_user():
+		if not doc.is_standard_and_not_valid_user():
 			try:
 				doc.generate_theme_if_not_exist()
 				doc.save()
