@@ -536,4 +536,4 @@ def add_renaming_log(doctype, old, new):
 		"document_type": doctype,
 		"previous_name": old,
 		"new_name": new
-	}).insert()
+	}).insert(ignore_permissions=True)
