@@ -4,7 +4,7 @@
 from __future__ import unicode_literals, print_function
 import frappe
 from frappe import _, bold
-from frappe.utils import cint
+from frappe.utils import cint, nowdate
 from frappe.model.naming import validate_name
 from frappe.model.dynamic_links import get_dynamic_link_map
 from frappe.utils.password import rename_password
@@ -65,6 +65,7 @@ def rename_doc(doctype, old, new, force=False, merge=False, ignore_permissions=F
 	update_attachments(doctype, old, new)
 
 	rename_versions(doctype, old, new)
+	add_renaming_log(doctype, old, new)
 
 	# call after_rename
 	new_doc = frappe.get_doc(doctype, new)
@@ -527,3 +528,12 @@ def get_fetch_fields(doctype, linked_to, ignore_doctypes=None):
 			out.append(linked_doctype_info)
 
 	return out
+
+def add_renaming_log(doctype, old, new):
+	frappe.get_doc({
+		"doctype": "Renamed Document",
+		"date": nowdate(),
+		"document_type": doctype,
+		"previous_name": old,
+		"new_name": new
+	}).insert()

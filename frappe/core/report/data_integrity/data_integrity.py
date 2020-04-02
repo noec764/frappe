@@ -45,7 +45,7 @@ def get_data(filters=None):
 		if sealed_doc:
 			seal = get_chained_seal(sealed_doc)
 			integrity = "Yes" if seal == doc._seal else "No"
-			comment = ""
+			comment = _("Data integrity verified") if integrity == "Yes" else _("Data integrity could not be verified")
 
 			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
 				integrity, comment, seal, doc._seal, doc._seal_version])
@@ -60,24 +60,17 @@ def get_link_fields(doc, meta):
 	return links
 
 def revise_renamed_links(doc, fields):
-	submission_date = get_datetime(doc["timestamp"])
 	for field in fields:
-		versions = frappe.get_all("Version",\
+		docname = doc[field.fieldname]
+		versions = frappe.get_all("Renamed Document",\
 			filters={
-				"ref_doctype": field.options,\
-				"docname": doc[field.fieldname],\
-				"creation": ["between", [submission_date, now_datetime()]]
+				"document_type": field.options,\
+				"new_name": docname
 			},
-			fields=["data"])
+			fields=["old_name", "new_name"])
 
-		if versions:
-			for version in versions:
-				data = json.loads(version.data)
-				if data["changed"] and data["changed"][0][2] == doc[field.fieldname]:
-					continue
-				else:
-					doc[field.fieldname] = data["changed"][0][1]
-					break
+		if docname in [x.get("new_name") for x in versions]:
+			doc[field.fieldname] = [x.get("new_name") for x in versions if x.get("new_name") == docname]
 
 	return doc
 
@@ -155,7 +148,7 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user_perms.build_permissions()
 	can_read = user_perms.can_read
 
-	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1})]
+	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1}) if get_versions_data(d[0])]
 
 	out = []
 	for dt in can_read:
