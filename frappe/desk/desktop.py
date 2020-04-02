@@ -240,7 +240,7 @@ def get_desk_sidebar_items():
 
 	sidebar_items = [{"label": _(p["name"]), **p} for p in pages]
 	sidebar_items = sort_items(sidebar_items, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
-	print(sidebar_items)
+
 	return sidebar_items
 
 def get_table_with_counts():
