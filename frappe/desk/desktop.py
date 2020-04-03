@@ -30,6 +30,8 @@ class Workspace:
 		self.restricted_doctypes = build_domain_restricted_doctype_cache()
 		self.restricted_pages = build_domain_restricted_page_cache()
 
+		self.notifications = get_notifications()
+
 	def get_pages_to_extend(self):
 		pages = frappe.get_all("Desk Page", filters={
 			"extends": self.page_name,
@@ -78,7 +80,6 @@ class Workspace:
 
 	def get_cards(self):
 		cards = self.doc.cards + get_custom_reports_and_doctypes(self.doc.module)
-		notifications = get_notifications()
 
 		if len(self.extended_cards):
 			cards = cards + self.extended_cards
@@ -108,8 +109,8 @@ class Workspace:
 
 					item["count"] = count
 
-			if notifications["open_count_doctype"].get(item.get("name")):
-				item["open_count"] = notifications["open_count_doctype"].get(item.get("name"))
+			if self.notifications["open_count_doctype"].get(item.get("name")):
+				item["open_count"] = self.notifications["open_count_doctype"].get(item.get("name"))
 
 			item["label"] = _(item.get("label") or item.get("name"))
 
