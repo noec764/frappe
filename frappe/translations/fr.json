@@ -6399,7 +6399,7 @@
     "apps/frappe/frappe/integrations/utils.py": {
         "Integration request status update error": "Erreur de mise à jour du statut de demande d'intégration",
         "Looks like something is wrong with this site's payment gateway configuration. No payment has been made.": "On dirait que quelque chose ne va pas dans la configuration de la passerelle de paiement de ce site. Aucun paiement n'a été effectué.",
-        "Payment custom redirect error": "Error de redirection après paiement",
+        "Payment custom redirect error": "Erreur de redirection après paiement",
         "Something went wrong": "Quelque chose s'est mal passé",
         "{0} Settings not found": "Paramètres {0} introuvables"
     },
