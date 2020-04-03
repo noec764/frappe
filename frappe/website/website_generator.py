@@ -81,6 +81,9 @@ class WebsiteGenerator(Document):
 		'''Return breadcrumbs'''
 		pass
 
+	def on_update(self):
+		self.send_indexing_request()
+
 	def on_trash(self):
 		self.clear_cache()
 
@@ -116,3 +119,13 @@ class WebsiteGenerator(Document):
 			route.page_title = self.get(self.get_title_field())
 
 		return route
+
+	def send_indexing_request(self, operation_type='URL_UPDATED'):
+		"""Send indexing request on update/trash operation."""
+
+		if frappe.db.get_single_value('Website Settings', 'enable_google_indexing') \
+			and self.is_website_published() and self.meta.allow_guest_to_view:
+
+			url = frappe.utils.get_url(self.route)
+			frappe.enqueue('frappe.website.doctype.website_settings.google_indexing.publish_site', \
+				url=url, operation_type=operation_type)
