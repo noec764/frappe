@@ -126,23 +126,19 @@ class PaymentGatewayController(Document):
 		redirect_to = self.data.get('redirect_to') or 'payment-success'
 		redirect_message = self.data.get('redirect_message') or None
 
-		if self.flags.status_changed_to in ["Completed", "Autorized", "Pending"]\
-			and self.reference_document:
-			if self.get("redirect_url"):
-				redirect_url = self.redirect_url
-				redirect_to = None
-			elif self.reference_document:
-				custom_redirect_to = None
-				try:
-					custom_redirect_to = self.reference_document\
-						.run_method("on_payment_authorized", self.flags.status_changed_to, reference_no)
-				except Exception:
-					frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
+		if self.flags.status_changed_to in ["Completed", "Autorized", "Pending"] and self.reference_document:
+			custom_redirect_to = None
+			try:
+				custom_redirect_to = self.reference_document\
+					.run_method("on_payment_authorized", self.flags.status_changed_to, reference_no)
+			except Exception:
+				frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
 
-				if custom_redirect_to and custom_redirect_to != "no-redirection":
-					redirect_to = custom_redirect_to
+			if custom_redirect_to and custom_redirect_to != "no-redirection":
+				redirect_to = custom_redirect_to
 
-				redirect_url = 'payment-success'
+			redirect_url = self.redirect_url if self.get("redirect_url") else 'payment-success'
+
 		else:
 			redirect_url = 'payment-failed'
 
