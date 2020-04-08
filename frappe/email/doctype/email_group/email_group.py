@@ -3,7 +3,6 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
-import warnings
 import frappe
 from frappe import _
 from frappe.utils import validate_email_address
@@ -14,13 +13,13 @@ class EmailGroup(Document):
 	def onload(self):
 			singles = [d.name for d in frappe.db.get_all("DocType", "name", {"issingle": 1})]
 			self.get("__onload").import_types = [{"value": d.parent, "label": "{0} ({1})".format(d.parent, d.label)} \
-				for d in frappe.db.get_all("DocField", ("parent", "label"), {"options": "Email"}) 
+				for d in frappe.db.get_all("DocField", ("parent", "label"), {"options": "Email"})
 				if d.parent not in singles]
 
 	def import_from(self, doctype):
 		"""Extract Email Addresses from given doctype and add them to the current list"""
 		meta = frappe.get_meta(doctype)
-		email_field = [d.fieldname for d in meta.fields 
+		email_field = [d.fieldname for d in meta.fields
 			if d.fieldtype in ("Data", "Small Text", "Text", "Code") and d.options=="Email"][0]
 		unsubscribed_field = "unsubscribed" if meta.get_field("unsubscribed") else None
 		added = 0
@@ -67,6 +66,11 @@ def import_from(name, doctype):
 def add_subscribers(name, email_list):
 	if not isinstance(email_list, (list, tuple)):
 		email_list = email_list.replace(",", "\n").split("\n")
+
+	template = frappe.db.get_value('Email Group', name, 'welcome_email_template')
+	if template:
+		welcome_email = frappe.get_doc("Email Template", template)
+
 	count = 0
 	for email in email_list:
 		email = email.strip()
@@ -79,7 +83,9 @@ def add_subscribers(name, email_list):
 					"doctype": "Email Group Member",
 					"email_group": name,
 					"email": parsed_email
-				}).insert(ignore_permissions = frappe.flags.ignore_permissions)
+				}).insert(ignore_permissions=frappe.flags.ignore_permissions)
+
+				send_welcome_email(welcome_email, parsed_email, name)
 
 				count += 1
 			else:
@@ -91,17 +97,15 @@ def add_subscribers(name, email_list):
 
 	return frappe.get_doc("Email Group", name).update_total_subscribers()
 
-def restrict_email_group(doc, method):
-	warnings.warn(
-		"restrict_email_group will be deprecated. Please create a custom method for this functionality.",
-		FutureWarning
-	)
-	from frappe.limits import get_limits
-
-	email_group_limit = get_limits().get('email_group')
-	if not email_group_limit:
+def send_welcome_email(welcome_email, email, email_group):
+	"""Send welcome email for the subscribers of a given email group."""
+	if not welcome_email:
 		return
 
-	email_group = frappe.get_doc("Email Group", doc.email_group)
-	if email_group.get_total_subscribers() >= email_group_limit:
-		frappe.throw(_("Please Upgrade to add more than {0} subscribers").format(email_group_limit))
+	args = dict(
+		email=email,
+		email_group=email_group
+	)
+
+	message = frappe.render_template(welcome_email.response, args)
+	frappe.sendmail(email, subject=welcome_email.subject, message=message)

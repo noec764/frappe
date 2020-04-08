@@ -195,7 +195,8 @@ scheduler_events = {
 		"frappe.limits.update_space_usage",
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
-		"frappe.desk.form.document_follow.send_hourly_updates"
+		"frappe.desk.form.document_follow.send_hourly_updates",
+		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email"
 	],
 	"daily": [
 		"frappe.email.queue.clear_outbox",
