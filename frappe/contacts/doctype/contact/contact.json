@@ -115,6 +115,7 @@
    "label": "Phone",
    "oldfieldname": "contact_no",
    "oldfieldtype": "Data",
+   "options": "Phone",
    "read_only": 1
   },
   {
@@ -200,6 +201,7 @@
    "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Mobile No",
+   "options": "Phone",
    "read_only": 1
   },
   {
@@ -245,7 +247,7 @@
  "icon": "fa fa-user",
  "idx": 1,
  "image_field": "image",
- "modified": "2019-10-09 17:48:26.790985",
+ "modified": "2020-04-06 18:25:28.223693",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Contact",
