@@ -16,9 +16,10 @@ from frappe.utils import get_request_site_address
 from frappe.utils.background_jobs import enqueue
 from six.moves.urllib.parse import quote
 from apiclient.http import MediaFileUpload
-from frappe.utils import get_backups_path, get_bench_path, cint
+from frappe.utils import get_backups_path, get_bench_path
 from frappe.utils.backups import new_backup
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
+from frappe.integrations.offsite_backup_utils import get_latest_backup_file, send_email, validate_file_size
 
 SCOPES = "https://www.googleapis.com/auth/drive"
 
@@ -183,13 +184,16 @@ def upload_system_backup_to_google_drive():
 	check_for_folder_in_google_drive()
 	account.load_from_db()
 
-	progress(1, "Backing up Data.")
-	backup = new_backup()
+	validate_file_size()
 
-	fileurl_backup = os.path.basename(backup.backup_path_db)
-	fileurl_public_files = os.path.basename(backup.backup_path_files)
-	fileurl_private_files = os.path.basename(backup.backup_path_private_files)
-
+	if frappe.flags.create_new_backup:
+		set_progress(1, "Backing up Data.")
+		backup = new_backup()
+		fileurl_backup = os.path.basename(backup.backup_path_db)
+		fileurl_public_files = os.path.basename(backup.backup_path_files)
+		fileurl_private_files = os.path.basename(backup.backup_path_private_files)
+	else:
+		fileurl_backup, fileurl_public_files, fileurl_private_files = get_latest_backup_file(with_files=True)
 
 	for fileurl in [fileurl_backup, fileurl_public_files, fileurl_private_files]:
 		file_metadata = {
@@ -203,55 +207,29 @@ def upload_system_backup_to_google_drive():
 			frappe.throw(_("Google Drive - Could not locate locate - {0}").format(e))
 
 		try:
-			progress(2, "Uploading backup to Google Drive.")
+			set_progress(2, "Uploading backup to Google Drive.")
 			google_drive.files().create(body=file_metadata, media_body=media, fields="id").execute()
 		except HttpError as e:
-			send_email(success=False, error=e)
-			frappe.msgprint(_("Google Drive - Could not upload backup - Error {0}").format(e))
+			send_email(False, "Google Drive", "Google Drive", "email", error_status=e)
 
-	progress(3, "Uploading successful.")
+	set_progress(3, "Uploading successful.")
 	frappe.db.set_value("Google Drive", None, "last_backup_on", frappe.utils.now_datetime())
-	send_email(success=True)
+	send_email(True, "Google Drive", "Google Drive", "email")
 	return _("Google Drive Backup Successful.")
 
 def daily_backup():
-	take_backups_if("Daily")
+	if cint(frappe.db.get_single_value("Google Drive", "enabled")):
+		if frappe.db.get_single_value("Google Drive", "frequency") == "Daily":
+			upload_system_backup_to_google_drive()
 
 def weekly_backup():
-	take_backups_if("Weekly")
-
-def take_backups_if(freq):
-	if cint(frappe.db.get_value("Google Drive", None, "enabled")):
-		if frappe.db.get_value("Google Drive", None, "frequency") == freq:
+	if cint(frappe.db.get_single_value("Google Drive", "enabled")):
+		if frappe.db.get_single_value("Google Drive", "frequency") == "Weekly":
 			upload_system_backup_to_google_drive()
 
 def get_absolute_path(filename):
 	file_path = os.path.join(get_backups_path()[2:], filename)
 	return "{0}/sites/{1}".format(get_bench_path(), file_path)
 
-def progress(progress, message):
+def set_progress(progress, message):
 	frappe.publish_realtime("upload_to_google_drive", dict(progress=progress, total=3, message=message), user=frappe.session.user)
-
-def send_email(success, error=None):
-	if success:
-		if not frappe.db.get_single_value("Google Drive", "send_email_for_successful_backup"):
-			return
-
-		subject = _("Backup Upload Successful")
-		message = """<h3>{0}</h3><p>{1}</p>
-		""".format(_("Backup Uploaded Successfully"), _("Hi there, this is just to inform you that your backup was successfully uploaded to Google Drive."))
-	else:
-		subject = _("[Warning] Backup Upload Failed")
-		message = """<h3>{0}</h3><p>{1}</p>
-		<p>{2} <br>
-		<pre><code>{3}</code></pre>
-		</p>
-		<p>{4}</p>
-		""".format(_("Backup Upload Failed"), _("Oops, your automated backup to Google Drive failed."), \
-			_("Error message:"), error, _("Please contact your system manager for more information."))
-
-	frappe.sendmail(
-		recipients=frappe.db.get_single_value("Google Drive", "email"),
-		subject=subject,
-		message=message
-	)
