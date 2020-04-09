@@ -30,6 +30,7 @@ class Contact(Document):
 
 	def validate(self):
 		self.set_primary_email()
+		self.clear_primary_phone_numbers()
 		self.set_primary("phone")
 		self.set_primary("mobile_no")
 
@@ -117,6 +118,10 @@ class Contact(Document):
 			if d.get(field_name) == 1:
 				setattr(self, fieldname, d.phone)
 				break
+
+	def clear_primary_phone_numbers(self):
+		self.phone = ""
+		self.mobile_no = ""
 
 def get_default_contact(doctype, name):
 	'''Returns default contact for the given doctype, name'''
