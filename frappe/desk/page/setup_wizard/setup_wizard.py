@@ -81,12 +81,12 @@ def setup_complete(args):
 
 def update_global_settings(args):
 	if args.language and args.language != "English":
-		set_default_language(get_language_code(args.lang))
+		set_default_language(get_language_code(args.language))
 		frappe.db.commit()
 	frappe.clear_cache()
 
 	update_system_settings(args)
-	if (frappe.conf.get('developer_mode') or 0) != 1:
+	if (frappe.conf.get('developer_mode') or 0) != 1 or frappe.flags.in_demo:
 		update_user_name(args)
 
 def run_post_setup_complete(args):
