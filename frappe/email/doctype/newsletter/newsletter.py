@@ -268,6 +268,7 @@ def send_scheduled_email():
 	scheduled_newsletter = frappe.get_all('Newsletter', filters = {
 		'schedule_send': ('<=', now_datetime()),
 		'email_sent': 0
-	}, fields = ['name'])
+	}, fields = ['name'], ignore_ifnull=True)
+
 	for newsletter in scheduled_newsletter:
 		send_newsletter(newsletter.name)
