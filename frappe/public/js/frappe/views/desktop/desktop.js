@@ -1,7 +1,6 @@
 export default class Desktop {
 	constructor({ wrapper }) {
 		this.wrapper = wrapper;
-		window.desk = this;
 		this.pages = {};
 		this.sidebar_items = {};
 		this.sidebar_categories = [
@@ -41,12 +40,12 @@ export default class Desktop {
 					this.desktop_settings = response.message;
 				} else {
 					frappe.throw({
-						title: "Couldn't Load Desk",
+						title: __("Couldn't Load Desk"),
 						message:
-							"Something went wrong while loading Desk. <b>Please relaod the page</b>. If the problem persists, contact the Administrator",
+							__("Something went wrong while loading Desk. <b>Please relaod the page</b>. If the problem persists, contact the Administrator"),
 						indicator: "red",
 						primary_action: {
-							label: "Reload",
+							label: __("Reload"),
 							action: () => location.reload()
 						}
 					});
@@ -60,7 +59,7 @@ export default class Desktop {
 				item.name}" class="sidebar-item ${
 				item.selected ? "selected" : ""
 			}">
-					<span>${item.name}</span>
+				<span>${item.label || item.name}</span>
 				</div>`);
 		};
 
@@ -127,20 +126,20 @@ export default class Desktop {
 		this.pages[page] = $page;
 		return $page;
 	}
-
-	setup_events() {}
 }
 
 class DesktopPage {
 	constructor({ container, page_name }) {
+		frappe.desk_page = this;
 		this.container = container;
 		this.page_name = page_name;
 		this.sections = {};
 		this.allow_customization = false;
-		this.make();
+		this.reload();
 	}
 
 	show() {
+		frappe.desk_page = this;
 		this.page.show();
 	}
 
@@ -148,8 +147,34 @@ class DesktopPage {
 		this.page.hide();
 	}
 
+	reload() {
+		this.in_customize_mode = false;
+		this.page && this.page.remove();
+		this.make();
+		this.setup_events();
+	}
+
+	make_customization_link() {
+		this.customize_link = $(`<div class="small customize-options" style="cursor: pointer;">${__('Customize Workspace')}</div>`);
+		this.customize_link.appendTo(this.page);
+		this.customize_link.on('click', () => {
+			this.customize();
+		});
+
+		this.save_or_discard_link = $(`<div class="small customize-options small-bounce">
+			<span class="save-customization">${__('Save')}</span> / <span class="discard-customization">${__('Discard')}</span>
+			</div>`).hide();
+
+		this.save_or_discard_link.appendTo(this.page);
+		this.save_or_discard_link.find(".save-customization").on("click", () => this.save_customization());
+		this.save_or_discard_link.find(".discard-customization").on("click", () => this.reload());
+		this.page.addClass('allow-customization');
+	}
+
 	make() {
-		this.make_page();
+		this.page = $(`<div class="desk-page" data-page-name=${this.page_name}></div>`);
+		this.page.appendTo(this.container);
+
 		this.get_data().then(res => {
 			this.data = res.message;
 			// this.make_onboarding();
@@ -159,28 +184,32 @@ class DesktopPage {
 				return;
 			}
 
-			this.allow_customization = this.data.allow_customization || false;
-
-			let create_shortcuts_and_cards = () => {
-				this.data.shortcuts.items.length && this.make_shortcuts();
-				this.data.cards.items.length && this.make_cards();
-			};
-
-			if (!this.sections["onboarding"] && this.data.charts.items.length) {
-				this.make_charts().then(() => {
-					create_shortcuts_and_cards();
-				});
-			} else {
-				create_shortcuts_and_cards();
-			}
+			this.refresh();
 		});
 	}
 
-	make_page() {
-		this.page = $(
-			`<div class="desk-page" data-page-name=${this.page_name}></div>`
-		);
-		this.page.appendTo(this.container);
+	refresh() {
+		this.page.empty();
+		this.allow_customization = this.data.allow_customization || false;
+		this.allow_customization && this.make_customization_link();
+
+		let create_shortcuts_and_cards = () => {
+			this.data.shortcuts.items.length && this.make_shortcuts();
+			this.data.cards.items.length && this.make_cards();
+
+			if (this.allow_customization) {
+				// Move the widget group up to align with labels if customization is allowed
+				$('.desk-page .widget-group:visible:first').css('margin-top', '-25px');
+			}
+		};
+
+		if (!this.sections["onboarding"] && this.data.charts.items.length) {
+			this.make_charts().then(() => {
+				create_shortcuts_and_cards();
+			});
+		} else {
+			create_shortcuts_and_cards();
+		}
 	}
 
 	get_data() {
@@ -189,40 +218,50 @@ class DesktopPage {
 		});
 	}
 
-	make_onboarding() {
-		this.sections["onboarding"] = new frappe.widget.WidgetGroup({
-			title: `Getting Started`,
-			container: this.page,
-			type: "onboarding",
-			columns: 1,
-			widgets: [
-				{
-					label: "Unlock Great Customer Experience",
-					subtitle: "Just a few steps, and you’re good to go.",
-					steps: [
-						{
-							label: "Configure Lead Sources",
-							completed: true
-						},
-						{
-							label: "Add Your Leads",
-							completed: false
-						},
-						{
-							label: "Create Your First Opportunity",
-							completed: false
-						},
-						{
-							label: "Onboard your Sales Team",
-							completed: false
-						},
-						{
-							label: "Assign Territories",
-							completed: false
-						}
-					]
-				}
-			]
+	setup_events() {
+		$(document.body).on('toggleFullWidth', () => this.refresh());
+	}
+
+	customize() {
+		if (this.in_customize_mode) {
+			return;
+		}
+
+		// It may be possible the chart area is hidden since it has no widgets
+		// So the margin-top: -25px would be applied to the shortcut group
+		// We need to remove this as the  chart group will be visible during customization
+		$('.desk-page .widget-group:visible:first').css('margin-top', '0px');
+
+		this.customize_link.hide();
+		this.save_or_discard_link.show();
+
+		Object.keys(this.sections).forEach(section => {
+			this.sections[section].customize();
+		});
+		this.in_customize_mode = true;
+
+		// Move the widget group up to align with labels if customization is allowed
+		$('.desk-page .widget-group:visible:first').css('margin-top', '-25px');
+	}
+
+	save_customization() {
+		const config = {};
+
+		if (this.sections.charts) config.charts = this.sections.charts.get_widget_config();
+		if (this.sections.shortcuts) config.shortcuts = this.sections.shortcuts.get_widget_config();
+		if (this.sections.cards) config.cards = this.sections.cards.get_widget_config();
+
+		frappe.call('frappe.desk.desktop.save_customization', {
+			page: this.page_name,
+			config: config
+		}).then(res => {
+			if (res.message) {
+				frappe.msgprint({ message: __("Customizations Saved Successfully"), title: __("Success")});
+				this.reload();
+			} else {
+				frappe.throw({message: __("Something went wrong while saving customizations"), title: __("Failed")});
+				this.reload();
+			}
 		});
 	}
 
@@ -236,11 +275,18 @@ class DesktopPage {
 			}
 
 			this.sections["charts"] = new frappe.widget.WidgetGroup({
-				title: this.data.charts.label || `${this.page_name} Dashboard`,
+				title: this.data.charts.label || __('{} Dashboard', [__(this.page_name)]),
 				container: this.page,
 				type: "chart",
 				columns: 1,
-				allow_sorting: false,
+				options: {
+					allow_sorting: this.allow_customization && !frappe.is_mobile(),
+					allow_create: this.allow_customization,
+					allow_delete: this.allow_customization,
+					allow_hiding: false,
+					allow_edit: true,
+					max_widget_count: 2,
+				},
 				widgets: this.data.charts.items
 			});
 		});
@@ -248,22 +294,34 @@ class DesktopPage {
 
 	make_shortcuts() {
 		this.sections["shortcuts"] = new frappe.widget.WidgetGroup({
-			title: this.data.shortcuts.label || __("Your Shortcuts"),
+			title: this.data.shortcuts.label || __(`Your Shortcuts`),
 			container: this.page,
-			type: "bookmark",
+			type: "shortcut",
 			columns: 3,
-			allow_sorting: this.allow_customization && frappe.is_mobile(),
+			options: {
+				allow_sorting: this.allow_customization && !frappe.is_mobile(),
+				allow_create: this.allow_customization,
+				allow_delete: this.allow_customization,
+				allow_hiding: false,
+				allow_edit: true,
+			},
 			widgets: this.data.shortcuts.items
 		});
 	}
 
 	make_cards() {
 		let cards = new frappe.widget.WidgetGroup({
-			title: this.data.cards.label || __("Reports & Masters"),
+			title: this.data.cards.label || __(`Reports & Masters`),
 			container: this.page,
 			type: "links",
 			columns: 3,
-			allow_sorting: this.allow_customization && frappe.is_mobile(),
+			options: {
+				allow_sorting: this.allow_customization && !frappe.is_mobile(),
+				allow_create: false,
+				allow_delete: false,
+				allow_hiding: this.allow_customization,
+				allow_edit: false,
+			},
 			widgets: this.data.cards.items
 		});
 
@@ -289,8 +347,10 @@ class DesktopPage {
 			</div>`;
 		});
 
-		/*$(`<div class="legend">
+		/*
+		$(`<div class="legend">
 			${legend.join("\n")}
-		</div>`).insertAfter(cards.body);*/
+		</div>`).insertAfter(cards.body);
+		*/
 	}
 }
