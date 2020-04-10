@@ -61,7 +61,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 				label = __('Created By');
 			} else {
 				label = frappe.meta.get_label(this.doctype, fieldname);
-				fieldtype = frappe.meta.get_docfield(this.doctype, fieldname).fieldtype;
+				fieldtype = docfield.fieldtype;
 			}
 
 			return `<li class="group-by-field list-link">
