@@ -38,8 +38,8 @@ class Workspace:
 		self.allowed_reports = get_allowed_reports()
 
 		self.table_counts = get_table_with_counts()
-		self.restricted_doctypes = build_domain_restricted_doctype_cache()
-		self.restricted_pages = build_domain_restricted_page_cache()
+		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restricted_doctype_cache()
+		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
 
 		self.notifications = get_notifications()
 
