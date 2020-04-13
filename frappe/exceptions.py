@@ -90,3 +90,7 @@ class SecurityException(Exception): pass
 class InvalidColumnName(ValidationError): pass
 class InvalidDates(ValidationError): pass
 class DataTooLongException(ValidationError): pass
+# OAuth exceptions
+class InvalidAuthorizationHeader(CSRFTokenError): pass
+class InvalidAuthorizationPrefix(CSRFTokenError): pass
+class InvalidAuthorizationToken(CSRFTokenError): pass
