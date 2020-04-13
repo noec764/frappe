@@ -43,9 +43,9 @@ def enqueue_events_for_all_sites():
 	for site in sites:
 		try:
 			enqueue_events_for_site(site=site)
-		except:
+		except Exception as e:
 			# it should try to enqueue other sites
-			print(frappe.get_traceback())
+			print(e.__class__, 'Failed to enqueue events for site: {}'.format(site))
 
 def enqueue_events_for_site(site):
 	def log_and_raise():
