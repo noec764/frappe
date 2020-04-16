@@ -240,7 +240,7 @@ def get_desktop_page(page):
 		return None
 
 @frappe.whitelist()
-def get_desk_sidebar_items():
+def get_desk_sidebar_items(flatten=False):
 	"""Get list of sidebar items for desk
 	"""
 	def sort_items(items_list, sort_keys):
@@ -265,6 +265,8 @@ def get_desk_sidebar_items():
 	pages = frappe.get_all("Desk Page",
 		fields=["name", "category", "icon", "color", "pin_to_top", "pin_to_bottom"],
 		filters=filters, ignore_permissions=True)
+	if flatten:
+		return pages
 
 	sidebar_items = [{"label": _(p["name"]), **p} for p in pages]
 	sidebar_items = sort_items(sidebar_items, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
