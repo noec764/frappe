@@ -215,7 +215,7 @@ class DocType(Document):
 			if d.fieldtype:
 				if (not getattr(d, "fieldname", None)):
 					if d.label:
-						d.fieldname = d.label.strip().lower().replace(' ','_')
+						d.fieldname = d.label.strip().lower().replace(' ','_').strip('?')
 						if d.fieldname in restricted:
 							d.fieldname = d.fieldname + '1'
 						if d.fieldtype=='Section Break':
@@ -231,7 +231,7 @@ class DocType(Document):
 				d.fieldname = re.sub('''['",./%@()<>{}]''', '', d.fieldname)
 
 				# fieldnames should be lowercase
-				d.fieldname = d.fieldname.lower()
+				d.fieldname = d.fieldname.lower().strip('?')
 
 			# unique is automatically an index
 			if d.unique: d.search_index = 0
