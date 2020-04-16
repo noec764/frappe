@@ -193,7 +193,7 @@
    "label": "Tooltip Unit"
   }
  ],
- "modified": "2019-11-13 20:52:14.316430",
+ "modified": "2020-04-08 20:52:14.316430",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",
@@ -210,7 +210,19 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
-  }
+  },
+  {
+    "create": 0,
+    "delete": 0,
+    "email": 0,
+    "export": 0,
+    "print": 0,
+    "read": 1,
+    "report": 0,
+    "role": "All",
+    "share": 0,
+    "write": 0
+   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",

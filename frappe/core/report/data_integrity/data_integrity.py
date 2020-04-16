@@ -4,11 +4,13 @@
 from __future__ import unicode_literals
 import frappe
 import hashlib
+import collections
+import json
 from frappe import _, scrub
-from frappe.utils import format_datetime, get_datetime, now_datetime
+from frappe.utils import format_datetime, get_datetime
 from frappe.utils.seal import get_sealed_doc, get_chained_seal
 from frappe.modules import load_doctype_module
-import json
+from frappe.desk.form.load import get_versions
 
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
@@ -40,12 +42,14 @@ def get_data(filters=None):
 
 		# Check for renamed links
 		link_fields = get_link_fields(sealed_doc, doc_meta)
-		sealed_doc = revise_renamed_links(sealed_doc, link_fields)
+		if link_fields:
+			submission_date = get_submission_date(doc)
+			sealed_doc = revise_renamed_links(sealed_doc, link_fields, submission_date)
 
 		if sealed_doc:
 			seal = get_chained_seal(sealed_doc)
 			integrity = "Yes" if seal == doc._seal else "No"
-			comment = ""
+			comment = _("Data integrity verified") if integrity == "Yes" else _("Data integrity could not be verified")
 
 			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
 				integrity, comment, seal, doc._seal, doc._seal_version])
@@ -59,28 +63,26 @@ def get_link_fields(doc, meta):
 
 	return links
 
-def revise_renamed_links(doc, fields):
-	submission_date = get_datetime(doc["timestamp"])
+def revise_renamed_links(doc, fields, submission_date):
 	for field in fields:
-		versions = frappe.get_all("Version",\
+		docname = doc[field.fieldname]
+		versions = frappe.get_all("Renamed Document",\
 			filters={
-				"ref_doctype": field.options,\
-				"docname": doc[field.fieldname],\
-				"creation": ["between", [submission_date, now_datetime()]]
+				"document_type": field.options,
+				"creation": (">", submission_date)
 			},
-			fields=["data"])
+			fields=["previous_name", "new_name", "creation"],
+			order_by="creation")
 
-		if versions:
-			for version in versions:
-				data = json.loads(version.data)
-				if data["changed"] and data["changed"][0][2] == doc[field.fieldname]:
-					continue
-				else:
-					doc[field.fieldname] = data["changed"][0][1]
-					break
+		if docname in [x.get("new_name") for x in versions]:
+			doc[field.fieldname] = versions[0].get("previous_name")
 
 	return doc
 
+def get_submission_date(doc):
+	versions = get_versions(doc)
+	submission = [x.get("creation") for x in versions if ['docstatus', 0, 1] in frappe.parse_json(x.get("data", {})).get("changed")]
+	return get_datetime(submission[0]) if submission else get_datetime(doc.creation)
 
 def get_versions_data(doctype):
 	try:
@@ -155,7 +157,7 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user_perms.build_permissions()
 	can_read = user_perms.can_read
 
-	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1})]
+	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1}) if get_versions_data(d[0])]
 
 	out = []
 	for dt in can_read:
