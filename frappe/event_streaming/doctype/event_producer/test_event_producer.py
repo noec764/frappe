@@ -23,7 +23,7 @@ def create_event_producer(producer_url):
 	event_producer.user = 'Administrator'
 	event_producer.insert()
 
-@unittest.skip("Specific configuration to be done")
+@unittest.skip("Skipped in CI")
 class TestEventProducer(unittest.TestCase):
 	def setUp(self):
 		self.producer_url = 'http://test_site_producer:8000'

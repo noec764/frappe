@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe, unittest
 
-@unittest.skip("Specific setup for CI")
+@unittest.skip("Skipped in CI")
 class TestDataMigrationRun(unittest.TestCase):
 	def test_run(self):
 		create_plan()
