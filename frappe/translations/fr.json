@@ -95,6 +95,7 @@
         "Is Your Company Address": "Est l'Adresse de votre Entreprise",
         "Links": "Liens",
         "Maintenance User": "Maintenance Utilisateur",
+        "Map Location": "Localisation",
         "Office": "Bureau",
         "Other": "Autre",
         "Permanent": "Permanent",
@@ -1138,6 +1139,7 @@
         "Document Type": "Type de document",
         "Don't Send Emails": "Ne pas envoyer d'emails",
         "Download Template": "Télécharger un modèle",
+        "Error": "Erreur",
         "Import File": "Fichier d'import",
         "Import Log": "Journal d'import",
         "Import Log Preview": "Prévisualisation du journal d'import",
@@ -2953,6 +2955,15 @@
         "Mention transaction completion page URL": "Mentionnez la page URL de fin de transaction",
         "Razorpay Settings": "Paramètres Razorpay",
         "Redirect To": "Rediriger Vers",
+        "System Manager": "Responsable Système"
+    },
+    "DocType: Renamed Document": {
+        "Core": "Module central",
+        "Date": "Date",
+        "Document Type": "Type de document",
+        "New Name": "Nouveau nom",
+        "Previous Name": "Nom précédent",
+        "Renamed Document": "Document renommé",
         "System Manager": "Responsable Système"
     },
     "DocType: Report": {
@@ -5362,6 +5373,8 @@
         "Calculated Seal": "Sceau calculé",
         "Comments": "Commentaires",
         "Creation Date": "Date de création",
+        "Data integrity could not be verified": "L'intégrité des données n'a pas pu être vérifiée",
+        "Data integrity verified": "Intégrité des données vérifiée",
         "Document Name": "Nom du Document",
         "Integrity": "Intégrité",
         "Owner": "Responsable",
@@ -7257,6 +7270,7 @@
         "Kanban": "Kanban",
         "List": "Liste",
         "Loading": "Chargement",
+        "Map": "Carte",
         "New Kanban Board": "Nouveau Tableau Kanban",
         "Report Builder": "Éditeur de Rapports",
         "Reports": "Rapports",
@@ -8058,6 +8072,9 @@
         "Please enable pop-ups in your browser": "Veuillez autoriser les popups dans votre navigateur",
         "Print a PDF": "Imprimer un PDF",
         "Title": "Titre"
+    },
+    "apps/frappe/frappe/public/js/frappe/views/map/map_view.js": {
+        "Map": "Carte"
     },
     "apps/frappe/frappe/public/js/frappe/views/modules_home.js": {
         "Add": "Ajouter",
@@ -10320,6 +10337,7 @@
         "List": "Liste",
         "Loading": "Chargement",
         "Loading...": "Chargement en cours...",
+        "Map": "Carte",
         "Me": "Moi",
         "Missing parameter Kanban Board Name": "Paramètre manquant Nom du tableau Kanban",
         "Month": "Mois",
