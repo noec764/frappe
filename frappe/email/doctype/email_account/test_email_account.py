@@ -141,6 +141,7 @@ class TestEmailAccount(unittest.TestCase):
 		# parse reply
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.receive(test_mails=test_mails)
+		frappe.db.commit()
 
 		sent = frappe.get_doc("Communication", sent_name)
 
@@ -188,6 +189,7 @@ class TestEmailAccount(unittest.TestCase):
 		# pull the mail
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.receive(test_mails=test_mails)
+		frappe.db.commit()
 
 		comm_list = frappe.get_all("Communication", filters={"sender":"test_sender@example.com"},
 			fields=["name", "reference_doctype", "reference_name"])

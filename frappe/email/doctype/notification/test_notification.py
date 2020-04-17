@@ -37,7 +37,7 @@ class TestNotification(unittest.TestCase):
 			"reference_name": communication.name, "status":"Not Sent"}))
 
 		self.assertEqual(frappe.db.get_value('Communication',
-			communication.name, 'subject'), '__testing__')
+			communication.name, 'subject'), 'test')
 
 	def test_condition(self):
 		event = frappe.new_doc("Event")

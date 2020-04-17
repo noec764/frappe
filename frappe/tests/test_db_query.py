@@ -362,7 +362,14 @@ def create_nested_doctype():
 			{'label': 'Description', 'fieldname': 'description'}
 		],
 		'permissions': [
-			{'role': 'Blogger'}
+			{
+				'role': 'Blogger',
+				'level': 0,
+				'read': 1,
+				'write': 1,
+				'create': 1,
+				'delete': 1
+			}
 		]
 	}).insert()
 

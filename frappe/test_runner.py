@@ -369,6 +369,7 @@ def make_test_objects(doctype, test_records=None, verbose=None, reset=False):
 
 		try:
 			d.run_method("before_test_insert")
+			d.flags.ignore_permissions = True
 			d.insert()
 
 			if docstatus == 1:

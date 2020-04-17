@@ -63,6 +63,7 @@ class TestDomainification(unittest.TestCase):
 			"doctype": "DocType",
 			"module": "Core",
 			"custom": 1,
+			"issingle": 0,
 			"fields": [{"label": "Some Field", "fieldname": "some_fieldname", "fieldtype": "Data"}],
 			"permissions": [{"role": "System Manager", "read": 1}],
 			"name": name

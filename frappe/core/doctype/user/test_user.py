@@ -10,7 +10,7 @@ from frappe import _dict
 from frappe.limits import update_limits, clear_limit
 from frappe.utils import get_url
 from frappe.core.doctype.user.user import get_total_users
-from frappe.core.doctype.user.user import MaxUsersReachedError, test_password_strength
+from frappe.core.doctype.user.user import test_password_strength
 from frappe.core.doctype.user.user import extract_mentions
 import requests
 
@@ -116,44 +116,6 @@ class TestUser(unittest.TestCase):
 
 		self.assertTrue("System Manager" in [d.role for d in me.get("roles")])
 
-	def test_user_limit_for_site(self):
-		update_limits({'users': get_total_users()})
-
-		# reload site config
-		from frappe import _dict
-		frappe.local.conf = _dict(frappe.get_site_config())
-
-		# Create a new user
-		user = frappe.new_doc('User')
-		user.email = 'test_max_users@example.com'
-		user.first_name = 'Test_max_user'
-
-		self.assertRaises(MaxUsersReachedError, user.add_roles, 'System Manager')
-
-		if frappe.db.exists('User', 'test_max_users@example.com'):
-			delete_contact('test_max_users@example.com')
-			frappe.delete_doc('User', 'test_max_users@example.com')
-
-		# Clear the user limit
-		clear_limit('users')
-
-	def test_user_limit_for_site_with_simultaneous_sessions(self):
-		clear_limit('users')
-
-		# make sure this user counts
-		user = frappe.get_doc('User', 'test@example.com')
-		user.add_roles('Website Manager')
-		user.save()
-
-		update_limits({'users': get_total_users()})
-
-		user.simultaneous_sessions = user.simultaneous_sessions + 1
-
-		self.assertRaises(MaxUsersReachedError, user.save)
-
-		# Clear the user limit
-		clear_limit('users')
-
 	# def test_deny_multiple_sessions(self):
 	#	from frappe.installer import update_site_config
 	# 	clear_limit('users')
@@ -226,26 +188,6 @@ class TestUser(unittest.TestCase):
 		delete_contact(new_user.name)
 		frappe.delete_doc('User', new_user.name)
 		self.assertFalse(frappe.db.exists('User', new_user.name))
-
-	def test_deactivate_additional_users(self):
-		update_limits({'users': get_total_users()+1})
-
-		if not frappe.db.exists("User", "test_deactivate_additional_users@example.com"):
-			user = frappe.new_doc('User')
-			user.email = 'test_deactivate_additional_users@example.com'
-			user.first_name = 'Test Deactivate Additional Users'
-			user.add_roles("System Manager")
-
-		#update limits
-		update_limits({"users": get_total_users()-1})
-		self.assertEqual(frappe.db.get_value("User", "test_deactivate_additional_users@example.com", "enabled"), 0)
-
-		if frappe.db.exists("User", "test_deactivate_additional_users@example.com"):
-			delete_contact('test_deactivate_additional_users@example.com')
-			frappe.delete_doc('User', 'test_deactivate_additional_users@example.com')
-
-		# Clear the user limit
-		clear_limit('users')
 
 	def test_password_strength(self):
 		# Test Password without Password Strenth Policy

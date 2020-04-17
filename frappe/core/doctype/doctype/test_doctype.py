@@ -12,11 +12,16 @@ from frappe.core.doctype.doctype.doctype import UniqueFieldnameError, IllegalMan
 
 
 class TestDocType(unittest.TestCase):
+	def setUp(self):
+		for dt in ["Test Search Fields", "Test Field Order DocType", "Test Name Field", "Test Depends On"]:
+			frappe.delete_doc_if_exists("DocType", dt)
+
 	def new_doctype(self, name, unique=0, depends_on=''):
 		return frappe.get_doc({
 			"doctype": "DocType",
 			"module": "Core",
 			"custom": 1,
+			"issingle": 0,
 			"fields": [{
 				"label": "Some Field",
 				"fieldname": "some_fieldname",
@@ -176,11 +181,11 @@ class TestDocType(unittest.TestCase):
 			"name": "Test Field Order DocType",
 			"__islocal": 1
 		})
+		test_doctype.insert()
 
 		path = get_file_path(test_doctype.module, test_doctype.doctype, test_doctype.name)
 		initial_fields_order = ['field_1', 'field_2', 'field_3', 'field_4']
 
-		frappe.delete_doc_if_exists("DocType", "Test Field Order DocType")
 		if os.path.isfile(path):
 			os.remove(path)
 

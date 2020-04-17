@@ -17,7 +17,7 @@ class TestPrintFormat(unittest.TestCase):
 
 	def test_print_user_standard(self):
 		print_html = self.test_print_user("Standard")
-		self.assertTrue(re.findall('\.print-format {[\s]*font-size: 9pt;', print_html))
+		self.assertTrue(re.findall('\.print-format {[\s]*font-size', print_html))
 		self.assertFalse(re.findall('th {[\s]*background-color: #eee;[\s]*}', print_html))
 		self.assertFalse("font-family: serif;" in print_html)
 

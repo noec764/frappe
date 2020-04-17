@@ -38,11 +38,13 @@ class TestDocument(unittest.TestCase):
 			"event_type": "Public"
 		})
 		d.insert()
+		frappe.db.commit()
 		self.assertTrue(d.name.startswith("EV"))
 		self.assertEqual(frappe.db.get_value("Event", d.name, "subject"),
 			"test-doc-test-event 1")
 
 		# test if default values are added
+		d.load_from_db()
 		self.assertEqual(d.send_reminder, 1)
 		return d
 
@@ -180,48 +182,13 @@ class TestDocument(unittest.TestCase):
 
 		# css attributes
 		xss = '<div style="something: doesn\'t work; color: red;">Test</div>'
-		escaped_xss = '<div style="">Test</div>'
+		escaped_xss = '<div style="color: red;">Test</div>'
 		d.subject += xss
 		d.save()
 		d.reload()
 
 		self.assertTrue(xss not in d.subject)
 		self.assertTrue(escaped_xss in d.subject)
-
-	def test_link_count(self):
-		if os.environ.get('CI'):
-			# cannot run this test reliably in travis due to its handling
-			# of parallelism
-			return
-
-		from frappe.model.utils.link_count import update_link_count
-
-		update_link_count()
-
-		doctype, name = 'User', 'test@example.com'
-
-		d = self.test_insert()
-		d.append('event_participants', {"reference_doctype": doctype, "reference_docname": name})
-
-		d.save()
-
-		link_count = frappe.cache().get_value('_link_count') or {}
-		old_count = link_count.get((doctype, name)) or 0
-
-		frappe.db.commit()
-
-		link_count = frappe.cache().get_value('_link_count') or {}
-		new_count = link_count.get((doctype, name)) or 0
-
-		self.assertEqual(old_count + 1, new_count)
-
-		before_update = frappe.db.get_value(doctype, name, 'idx')
-
-		update_link_count()
-
-		after_update = frappe.db.get_value(doctype, name, 'idx')
-
-		self.assertEqual(before_update + new_count, after_update)
 
 	def test_naming_series(self):
 		data = ["TEST-", "TEST/17-18/.test_data./.####", "TEST.YYYY.MM.####"]

@@ -10,6 +10,7 @@ from frappe.utils.data import get_url
 import requests
 import base64
 
+@unittest.skip("Specific setup for CI")
 class TestAPI(unittest.TestCase):
 	def test_insert_many(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)

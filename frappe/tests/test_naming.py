@@ -74,6 +74,7 @@ class TestNaming(unittest.TestCase):
 
 		self.assertEqual(count.get('current'), 0)
 		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()
 
 		series = 'TEST-{}-'.format(year)
 		key = 'TEST-.YYYY.-.#####'
@@ -84,6 +85,7 @@ class TestNaming(unittest.TestCase):
 
 		self.assertEqual(count.get('current'), 1)
 		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()
 
 		series = 'TEST-'
 		key = 'TEST-'
@@ -94,3 +96,4 @@ class TestNaming(unittest.TestCase):
 
 		self.assertEqual(count.get('current'), 2)
 		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()

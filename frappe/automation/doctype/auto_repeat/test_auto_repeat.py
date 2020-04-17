@@ -31,7 +31,7 @@ class TestAutoRepeat(unittest.TestCase):
 			dict(doctype='ToDo', description='test recurring todo', assigned_by='Administrator')).insert()
 
 		doc = make_auto_repeat(reference_document=todo.name, start_date=today())
-		self.assertEqual(doc.next_schedule_date, getdate(today()))
+		self.assertEqual(getdate(doc.next_schedule_date), add_days(getdate(today()), 1))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 		frappe.db.commit()
@@ -82,7 +82,7 @@ class TestAutoRepeat(unittest.TestCase):
 		create_repeated_entries(data)
 
 		docnames = frappe.get_all(doc.reference_doctype, {'auto_repeat': doc.name})
-		self.assertEqual(len(docnames), int(months) + 1)
+		self.assertEqual(len(docnames), int(months))
 
 	def test_notification_is_attached(self):
 		todo = frappe.get_doc(
@@ -107,7 +107,7 @@ class TestAutoRepeat(unittest.TestCase):
 		doc = make_auto_repeat(frequency='Monthly',	reference_document=todo.name, start_date=add_months(today(), -2))
 
 		#check next_schedule_date
-		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), -2)))
+		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), -1)))
 		data = get_auto_repeat_entries(current_date)
 		create_repeated_entries(data)
 		docnames = frappe.get_all(doc.reference_doctype, filters={'auto_repeat': doc.name})
