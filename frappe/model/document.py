@@ -223,7 +223,7 @@ class Document(BaseDocument):
 		self._validate_links()
 
 		self.set_new_name(
-			draft_name=getattr(self.meta, "name_after_submit") and not self._action == "submit",
+			draft_name=getattr(self.meta, "name_after_submit", False) and not self._action == "submit",
 			set_name=set_name,
 			set_child_names=set_child_names
 		)
