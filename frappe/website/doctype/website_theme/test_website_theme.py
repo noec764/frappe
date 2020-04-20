@@ -28,3 +28,4 @@ class TestWebsiteTheme(unittest.TestCase):
 
 		self.assertTrue(theme.custom_scss in css)
 		self.assertTrue('fonts.googleapis.com' in css)
+

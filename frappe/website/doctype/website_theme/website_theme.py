@@ -133,3 +133,4 @@ def generate_theme_files_if_not_exist():
 
 def get_scss(doc):
 	return (doc.theme_scss or '') + '\n' + (doc.custom_scss or '')
+

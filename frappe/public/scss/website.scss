@@ -32,6 +32,17 @@ a:hover {
 	background-color: $gray-200;
 }
 
+// make navbar padding consistent with the page
+.navbar {
+	padding-left: 0;
+	padding-right: 0;
+
+	.container {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+}
+
 .navbar.bg-dark {
 	.dropdown-menu {
 		font-size: .75rem;
