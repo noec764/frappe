@@ -3,12 +3,6 @@ export default class Desktop {
 		this.wrapper = wrapper;
 		this.pages = {};
 		this.sidebar_items = {};
-		this.sidebar_categories = [
-			"Modules",
-			"Domains",
-			"Places",
-			"Administration"
-		];
 		this.make();
 	}
 
@@ -30,64 +24,6 @@ export default class Desktop {
 		this.container.appendTo(this.wrapper);
 		this.sidebar = this.container.find(".desk-sidebar");
 		this.body = this.container.find(".desk-body");
-	}
-
-	fetch_desktop_settings() {
-		return frappe
-			.call("frappe.desk.desktop.get_desk_sidebar_items")
-			.then(response => {
-				if (response.message) {
-					this.desktop_settings = response.message;
-				} else {
-					frappe.throw({
-						title: __("Couldn't Load Desk"),
-						message:
-							__("Something went wrong while loading Desk. <b>Please relaod the page</b>. If the problem persists, contact the Administrator"),
-						indicator: "red",
-						primary_action: {
-							label: __("Reload"),
-							action: () => location.reload()
-						}
-					});
-				}
-			});
-	}
-
-	make_sidebar() {
-		const get_sidebar_item = function(item) {
-			return $(`<a href="${"desk#workspace/" +
-				item.name}" class="sidebar-item ${
-				item.selected ? "selected" : ""
-			}">
-				<span>${item.label || item.name}</span>
-				</div>`);
-		};
-
-		const make_sidebar_category_item = item => {
-			if (item.name == this.get_page_to_show()) {
-				item.selected = true;
-				this.current_page = item.name;
-			}
-			let $item = get_sidebar_item(item);
-			// $item.appendTo(this.sidebar);
-			this.sidebar_items[item.name] = $item;
-		};
-
-		const make_category_title = name => {
-			let $title = $(
-				`<div class="sidebar-group-title h6 uppercase">${name}</div>`
-			);
-			// $title.appendTo(this.sidebar);
-		};
-
-		this.sidebar_categories.forEach(category => {
-			if (this.desktop_settings.hasOwnProperty(category)) {
-				make_category_title(category);
-				this.desktop_settings[category].forEach(item => {
-					make_sidebar_category_item(item);
-				});
-			}
-		});
 	}
 
 	show_page(page) {

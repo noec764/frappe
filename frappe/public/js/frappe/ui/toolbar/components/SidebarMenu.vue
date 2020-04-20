@@ -92,7 +92,7 @@ export default {
 					return item.label.length > acc ? item.label.length : acc;
 				}, 0)
 
-				this.width = ((maxLength > 25) ? (maxLength * 10) : (maxLength * 11)) + "px";
+				this.width = ((maxLength > 25) ? (maxLength * 10) : (maxLength * 12)) + "px";
 			});
 		},
 		scrollUpDown() {

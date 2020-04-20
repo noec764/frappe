@@ -13,7 +13,7 @@ from frappe.cache_manager import (
 	build_domain_restricted_page_cache,
 	build_table_count_cache
 )
-from frappe.desk.notifications import get_notifications
+from frappe.desk.notifications import get_notification_for_doctype
 
 class Workspace:
 	def __init__(self, page_name):
@@ -40,8 +40,6 @@ class Workspace:
 		self.table_counts = get_table_with_counts()
 		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restricted_doctype_cache()
 		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
-
-		self.notifications = get_notifications()
 
 	def get_page_for_user(self):
 		filters = {
@@ -131,8 +129,7 @@ class Workspace:
 
 					item["count"] = count
 
-			if self.notifications["open_count_doctype"].get(item.get("name")):
-				item["open_count"] = self.notifications["open_count_doctype"].get(item.get("name"))
+			item["open_count"] = get_notification_for_doctype(item.get("name"))
 
 			item["label"] = _(item.get("label") or item.get("name"))
 
