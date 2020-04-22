@@ -199,20 +199,12 @@ frappe.views.CommunicationComposer = Class.extend({
 					if(me.reply_added===email_template) {
 						return;
 					}
-					var content_field = me.dialog.fields_dict.content;
-					var subject_field = me.dialog.fields_dict.subject;
-					var content = content_field.get_value() || "";
-					var subject = subject_field.get_value() || "";
+					const signature = me.get_signature()
+
+					const content_field = me.dialog.fields_dict.content;
+					const subject_field = me.dialog.fields_dict.subject;
 	
-					var parts = content.split('<!-- salutation-ends -->');
-	
-					if(parts.length===2) {
-						content = [reply.message, "<br>", parts[1]];
-					} else {
-						content = [reply.message, "<br>", content];
-					}
-	
-					content_field.set_value(content.join(''));
+					content_field.set_value(`${reply.message}<br>${signature || ""}`);
 					subject_field.set_value(reply.subject);
 	
 					me.reply_added = email_template;
@@ -621,13 +613,19 @@ frappe.views.CommunicationComposer = Class.extend({
 		}
 	},
 
-	setup_earlier_reply: function() {
-		let fields = this.dialog.fields_dict;
+	get_signature() {
 		let signature = frappe.boot.user.email_signature || "";
 
 		if(!frappe.utils.is_html(signature)) {
 			signature = signature.replace(/\n/g, "<br>");
 		}
+
+		return signature
+	},
+
+	setup_earlier_reply: function() {
+		let fields = this.dialog.fields_dict;
+		let signature = this.get_signature()
 
 		if(this.txt) {
 			this.message = this.txt + (this.message ? ("<br><br>" + this.message) : "");
@@ -639,9 +637,9 @@ frappe.views.CommunicationComposer = Class.extend({
 			}
 		}
 
-		if(this.real_name) {
+		if(this.real_name && !this.message) {
 			this.message = '<p>'+__('Dear') +' '
-				+ this.real_name + ",</p><!-- salutation-ends --><br>" + (this.message || "");
+				+ this.real_name + ",</p><br>";
 		}
 
 		if(this.message && signature && this.message.includes(signature)) {
