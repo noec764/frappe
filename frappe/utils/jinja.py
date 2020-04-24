@@ -167,7 +167,7 @@ def transform_template_blot(template, context):
 
 	for doctype in doctypes:
 		for key in doctype:
-			get_doc = "{% " + " set {0} = frappe.get_doc('{1}', {2}) ".format(key.replace(" ", "").lower(), key, \
+			get_doc = "{% " + " set {0} = frappe.get_doc('{1}', {2}) if {2} else None".format(key.replace(" ", "").lower(), key, \
 				'doc.{0}'.format(doctype[key]) if 'doc' in context else doctype[key]) + " %}"
 			soup.insert(0, get_doc)
 
