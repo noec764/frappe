@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Built on dodock. https://dokos.io/ -->
+<!-- Built on Frappe. https://frappe.io/ -->
 <html lang="en">
 <head>
 	<meta charset="utf-8">
@@ -25,15 +25,31 @@
 		{{ head_html or "" }}
 		{%- endif %}
 
-		{% if theme.theme_url %}
-		<link type="text/css" rel="stylesheet" href="{{ theme.theme_url }}">
+		{%- if theme.based_on == 'Bootstrap 4' or doctype != 'Web Page' -%}
+			{%- if theme.theme_url -%}
+			<link type="text/css" rel="stylesheet" href="{{ theme.theme_url }}">
+			{%- else -%}
+			<link type="text/css" rel="stylesheet" href="/assets/css/frappe-web-b4.css">
+			{%- endif -%}
 		{% else %}
-		<link type="text/css" rel="stylesheet" href="/assets/css/frappe-web-b4.css">
+			{%- if developer_mode -%}
+			<!-- load the full list of tailwind classes in development -->
+			<link type="text/css" rel="stylesheet" href="/assets/css/tailwind.css">
+			{%- else -%}
+			<!-- load tree-shaken classes in production -->
+			<!-- container for processed tailwind styles -->
+			<!-- tailwind-styles -->
+			{% endif %}
+			{%- if theme.theme_css -%}
+			<style>
+				{{ theme.theme_css }}
+			</style>
+			{%- endif -%}
+		{%- endif -%}
 
 		{%- for link in web_include_css %}
 		<link type="text/css" rel="stylesheet" href="{{ link|abs_url }}">
 		{%- endfor -%}
-		{% endif %}
 	{%- endblock -%}
 
 	{%- block head_include %}
@@ -50,23 +66,24 @@
 		}
 		window.dev_server = {{ dev_server }};
 		window.socketio_port = {{ frappe.socketio_port }};
-    </script>
+		window.frappe._messages = {{ translated_messages }};
+	</script>
 </head>
 <body frappe-session-status="{{ 'logged-in' if frappe.session.user != 'Guest' else 'logged-out'}}" data-path="{{ path | e }}" {%- if template and template.endswith('.md') %} frappe-content-type="markdown" {% endif -%}>
 	{%- block banner -%}
 		{% include "templates/includes/banner_extension.html" ignore missing %}
 
 		{% if banner_html -%}
-			{{ banner_html or "" }}
+		{{ banner_html or "" }}
 		{%- endif %}
 	{%- endblock -%}
 
 	{%- block navbar -%}
-			{%- if navbar_content -%}
-				{{ navbar_content }}
-			{%- else -%}
-				{% include "templates/includes/navbar/navbar.html" %}
-			{%- endif -%}
+		{%- if navbar_content -%}
+			{{ navbar_content }}
+		{%- else -%}
+			{% include "templates/includes/navbar/navbar.html" %}
+		{%- endif -%}
 	{%- endblock -%}
 
 	{% block content %}
@@ -95,9 +112,5 @@
 	{%- block script %}{%- endblock %}
 	<!-- csrf_token -->
 	{%- block body_include %}{{ body_include or "" }}{% endblock -%}
-
-	<script>
-		window.frappe._messages = {{ translated_messages }};
-	</script>
 </body>
 </html>

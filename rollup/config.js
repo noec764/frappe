@@ -128,6 +128,12 @@ function get_rollup_options_for_css(output_file, input_files) {
 		multi_entry(),
 		// less -> css
 		postcss({
+			plugins: [
+				require('tailwindcss'),
+				require('postcss-nested'),
+				require('autoprefixer'),
+				starts_with_css && production ? require('cssnano')({ preset: 'default' }) : null
+			].filter(Boolean),
 			extract: output_path,
 			loaders: [less_loader],
 			use: [
@@ -148,7 +154,6 @@ function get_rollup_options_for_css(output_file, input_files) {
 				path.resolve(bench_path, '**/*.scss'),
 				path.resolve(bench_path, '**/*.css')
 			],
-			minimize: starts_with_css && production,
 			sourceMap: starts_with_css && !production
 		})
 	];
@@ -163,6 +168,7 @@ function get_rollup_options_for_css(output_file, input_files) {
 
 				// console.warn everything else
 				log(chalk.yellow.underline(warning.code), ':', warning.message);
+				log(warning);
 			}
 		},
 		outputOptions: {

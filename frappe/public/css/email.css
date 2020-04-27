@@ -169,3 +169,8 @@ hr {
   margin-bottom: 20px;
 }
 /* csslint ignore:end */
+
+.list-unstyled {
+  list-style-type: none;
+  padding: 0;
+}
