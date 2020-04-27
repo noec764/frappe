@@ -338,6 +338,10 @@ class Document(BaseDocument):
 			# Add a seal
 			self.add_seal()
 
+		# clear unsaved flag
+		if hasattr(self, "__unsaved"):
+			delattr(self, "__unsaved")
+
 		return self
 
 	def copy_attachments_from_amended_from(self):
