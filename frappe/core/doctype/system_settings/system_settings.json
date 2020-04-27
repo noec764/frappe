@@ -20,6 +20,7 @@
   "number_format",
   "float_precision",
   "currency_precision",
+  "currency_symbol_position",
   "sec_backup_limit",
   "backup_limit",
   "background_workers",
@@ -423,24 +424,32 @@
    "label": "Desk Logo"
   },
   {
-    "default": "HH:mm:ss",
-    "fieldname": "time_format",
-    "fieldtype": "Select",
-    "label": "Time Format",
-    "options": "HH:mm:ss\nHH:mm",
-    "reqd": 1
-   },
-   {
-    "default": "1",
-    "fieldname": "logout_on_password_reset",
-    "fieldtype": "Check",
-    "label": "Logout All Sessions on Password Reset"
-   }
+   "default": "HH:mm:ss",
+   "fieldname": "time_format",
+   "fieldtype": "Select",
+   "label": "Time Format",
+   "options": "HH:mm:ss\nHH:mm",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "logout_on_password_reset",
+   "fieldtype": "Check",
+   "label": "Logout All Sessions on Password Reset"
+  },
+  {
+   "default": "Right",
+   "fieldname": "currency_symbol_position",
+   "fieldtype": "Select",
+   "label": "Currency Symbol Position",
+   "options": "Left\nRight",
+   "reqd": 1
+  }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2020-03-16 14:50:40.914532",
+ "modified": "2020-04-27 09:41:17.535368",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
