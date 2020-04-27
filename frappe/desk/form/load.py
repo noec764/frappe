@@ -20,7 +20,6 @@ def getdoc(doctype, name, user=None):
 	Requries "doctype", "name" as form variables.
 	Will also call the "onload" method on the document.
 	"""
-
 	if not (doctype and name):
 		raise Exception('doctype and name required!')
 

@@ -112,7 +112,7 @@ class DesktopPage {
 		this.page.appendTo(this.container);
 
 		this.get_data().then(res => {
-			this.data = res.message;
+			this.data = res;
 			// this.make_onboarding();
 			if (!this.data) {
 				delete localStorage.current_desk_page;
@@ -121,7 +121,7 @@ class DesktopPage {
 			}
 
 			this.refresh();
-		});
+		}).catch(e => console.log(e));
 	}
 
 	refresh() {
@@ -154,9 +154,9 @@ class DesktopPage {
 	}
 
 	get_data() {
-		return frappe.call("frappe.desk.desktop.get_desktop_page", {
+		return frappe.xcall("frappe.desk.desktop.get_desktop_page", {
 			page: this.page_name
-		});
+		})
 	}
 
 	setup_events() {
