@@ -2,7 +2,6 @@ export default class Desktop {
 	constructor({ wrapper }) {
 		this.wrapper = wrapper;
 		this.pages = {};
-		this.sidebar_items = {};
 		this.make();
 	}
 
@@ -31,14 +30,8 @@ export default class Desktop {
 			this.pages[this.current_page].hide();
 		}
 
-		if (this.sidebar_items && this.sidebar_items[this.current_page]) {
-			this.sidebar_items[this.current_page].removeClass("selected");
-			this.sidebar_items[page].addClass("selected");
-		}
 		this.current_page = page;
 		localStorage.current_desk_page = page;
-		frappe.set_route("workspace", page);
-
 		this.pages[page] ? this.pages[page].show() : this.make_page(page);
 	}
 
@@ -46,6 +39,7 @@ export default class Desktop {
 		const default_page = this.desktop_settings
 			? this.desktop_settings["Modules"][0].name
 			: "Website";
+
 		let page =
 			frappe.get_route()[1] ||
 			localStorage.current_desk_page ||
@@ -113,7 +107,6 @@ class DesktopPage {
 
 		this.get_data().then(res => {
 			this.data = res;
-			// this.make_onboarding();
 			if (!this.data) {
 				delete localStorage.current_desk_page;
 				frappe.set_route("workspace");
@@ -121,7 +114,7 @@ class DesktopPage {
 			}
 
 			this.refresh();
-		}).catch(e => console.log(e));
+		});
 	}
 
 	refresh() {

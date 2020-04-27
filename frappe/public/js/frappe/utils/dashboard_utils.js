@@ -13,9 +13,9 @@ frappe.dashboard_utils = {
 
 			if (filter.fieldnames) {
 				options_html = filter.options.map((option, i) =>
-					`<li><a data-fieldname = "${filter.fieldnames[i]}">${option}</a></li>`).join('');
+					`<li><a data-fieldname = "${filter.fieldnames[i]}" data-value="${option.value}">${option.label}</a></li>`).join('');
 			} else {
-				options_html = filter.options.map( option => `<li><a>${option}</a></li>`).join('');
+				options_html = filter.options.map( option => `<li><a data-value="${option.value}">${option.label}</a></li>`).join('');
 			}
 
 			let dropdown_html = chart_filter_html + `<ul class="dropdown-menu">${options_html}</ul></div>`;
@@ -33,7 +33,11 @@ frappe.dashboard_utils = {
 				}
 
 				let selected_item = $el.text();
-				$el.parents(`.${button_class}`).find('.filter-label').text(selected_item);
+				if ($el.attr('data-value')) {
+					selected_item = $el.attr('data-value');
+				}
+				const selected_label = $el.text();
+				$el.parents(`.${button_class}`).find('.filter-label').text(selected_label);
 				filter.action(selected_item, fieldname);
 			});
 		});

@@ -95,11 +95,11 @@ export default class ChartWidget extends Widget {
 			{
 				label: this.chart_settings.timespan || this.chart_doc.timespan,
 				options: [
-					"Select Date Range",
-					"Last Year",
-					"Last Quarter",
-					"Last Month",
-					"Last Week"
+					{label: __("Select Date Range"), value: "Select Date Range"},
+					{label: __("Last Year"), value: "Last Year"},
+					{label: __("Last Quarter"), value: "Last Quarter"},
+					{label: __("Last Month"), value: "Last Month"},
+					{label: __("Last Week"), value: "Last Week"}
 				],
 				action: selected_item => {
 					this.selected_timespan = selected_item;
