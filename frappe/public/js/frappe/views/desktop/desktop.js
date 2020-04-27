@@ -267,31 +267,5 @@ class DesktopPage {
 		});
 
 		this.sections["cards"] = cards;
-
-		const legend = [
-			{
-				color: "blue",
-				description: __("Important")
-			},
-			{
-				color: "orange",
-				description: __("No Records Created")
-			},
-			{
-				color: "red",
-				description: __("Has Open Entries")
-			}
-		].map(item => {
-			return `<div class="legend-item small text-muted justify-flex-start">
-				<span class="indicator ${item.color}"></span>
-				<span class="link-content ellipsis" draggable="false">${item.description}</span>
-			</div>`;
-		});
-
-		/*
-		$(`<div class="legend">
-			${legend.join("\n")}
-		</div>`).insertAfter(cards.body);
-		*/
 	}
 }
