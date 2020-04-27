@@ -10,7 +10,6 @@ from frappe.utils import cstr
 
 from frappe.model.document import Document
 from jinja2 import TemplateSyntaxError
-from frappe.utils.user import is_website_user
 from frappe.model.naming import make_autoname
 from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from six import iteritems, string_types
