@@ -682,5 +682,5 @@ class FilterArea {
 }
 
 // utility function to validate view modes
-frappe.views.view_modes = ['List', 'Gantt', 'Kanban', 'Calendar', 'Image', 'Inbox', 'Report', 'Map'];
+frappe.views.view_modes = ['List', 'Gantt', 'Kanban', 'Calendar', 'Image', 'Inbox', 'Report', 'Map', 'Dashboard'];
 frappe.views.is_valid = view_mode => frappe.views.view_modes.includes(view_mode);

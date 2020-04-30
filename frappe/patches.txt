@@ -281,6 +281,7 @@ execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Account')
 execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Settings')
 frappe.patches.v12_0.remove_parent_and_parenttype_from_print_formats
 frappe.patches.v13_0.website_theme_custom_scss
+frappe.patches.v13_0.set_existing_dashboard_charts_as_public
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
