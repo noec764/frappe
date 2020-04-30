@@ -959,6 +959,16 @@ def validate_fields(meta):
 
 				frappe.msgprint(text_str + df_options_str, title="Invalid Data Field", raise_exception=True)
 
+	def check_child_table_option(docfield):
+		if docfield.fieldtype not in ['Table MultiSelect', 'Table']: return
+
+		doctype = docfield.options
+		meta = frappe.get_meta(doctype)
+
+		if not meta.istable:
+			frappe.throw(_('Option {0} for field {1} is not a child table')
+				.format(frappe.bold(doctype), frappe.bold(docfield.fieldname)), title=_("Invalid Option"))
+
 	fields = meta.get("fields")
 	fieldname_list = [d.fieldname for d in fields]
 
