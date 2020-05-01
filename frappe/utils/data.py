@@ -703,6 +703,9 @@ def strip_html(text):
 	return _striptags_re.sub("", text)
 
 def escape_html(text):
+	if not isinstance(text, string_types):
+		return text
+
 	html_escape_table = {
 		"&": "&amp;",
 		'"': "&quot;",
