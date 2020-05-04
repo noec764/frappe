@@ -187,7 +187,6 @@
   font-style: normal;
   text-decoration: inherit;
   -webkit-font-smoothing: antialiased;
-  *margin-right: 0.3em;
   display: inline-block;
   speak: none;
   font-size: 24px;
@@ -195,7 +194,6 @@
   position: relative;
   top: 3px;
   content: "\e830";
-  margin-right: 10px;
   color: #C0C9D2;
 }
 #navbar-breadcrumbs > li > a:hover:before,

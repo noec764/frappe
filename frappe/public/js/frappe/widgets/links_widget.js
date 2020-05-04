@@ -26,16 +26,6 @@ export default class LinksWidget extends Widget {
 			return is_link_disabled(item) ? "disabled-link" : "";
 		};
 
-		const get_indicator_color = item => {
-			if (item.open_count) {
-				return "red";
-			}
-			if (item.onboard) {
-				return item.count ? "blue" : "orange";
-			}
-			return "grey";
-		};
-
 		const get_link_for_item = item => {
 			if (is_link_disabled(item)) {
 				return `<span class="link-content ellipsis disabled-link">${
@@ -63,8 +53,8 @@ export default class LinksWidget extends Widget {
 			return $(`<div class="link-item flush-top small ${
 				item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">
-					<span class="indicator ${get_indicator_color(item)}"></span>
 					${get_link_for_item(item)}
+					${item.open_count ? `<span class="badge open-count-badge">${item.open_count}</span>` : ''}
 			</div>`);
 		});
 

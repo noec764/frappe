@@ -10,3 +10,5 @@ def execute():
 
 	if "target_name" in get_table_columns("Translation"):
 		rename_field("Translation", "target_name", "translated_text")
+
+	frappe.db.commit()

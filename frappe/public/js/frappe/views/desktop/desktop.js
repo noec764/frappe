@@ -131,8 +131,8 @@ class DesktopPage {
 		}
 
 		this.allow_customization && this.make_customization_link();
-		this.data.onboarding && this.data.onboarding.items.length && this.make_onboarding();
-		this.make_charts().then(() => {
+
+		let create_shortcuts_and_cards = () => {
 			this.make_shortcuts();
 			this.make_cards();
 
@@ -140,7 +140,15 @@ class DesktopPage {
 				// Move the widget group up to align with labels if customization is allowed
 				$('.desk-page .widget-group:visible:first').css('margin-top', '-25px');
 			}
-		});
+		};
+
+		if (!this.sections["onboarding"]) {
+			this.make_charts().then(() => {
+				create_shortcuts_and_cards();
+			});
+		} else {
+			create_shortcuts_and_cards();
+		}
 	}
 
 	get_data() {
@@ -161,7 +169,6 @@ class DesktopPage {
 		// It may be possible the chart area is hidden since it has no widgets
 		// So the margin-top: -25px would be applied to the shortcut group
 		// We need to remove this as the  chart group will be visible during customization
-		$('.widget.onboarding-widget-box').hide();
 		$('.desk-page .widget-group:visible:first').css('margin-top', '0px');
 
 		this.customize_link.hide();
@@ -193,27 +200,6 @@ class DesktopPage {
 			} else {
 				frappe.throw({message: __("Something went wrong while saving customizations"), title: __("Failed")});
 				this.reload();
-			}
-		});
-	}
-
-	make_onboarding() {
-		this.onboarding_widget = frappe.widget.make_widget({
-			label: this.data.onboarding.label || __(`Let's Get Started`),
-			subtitle: this.data.onboarding.subtitle,
-			steps: this.data.onboarding.items,
-			success: this.data.onboarding.success,
-			docs_url: this.data.onboarding.docs_url,
-			user_can_dismiss: this.data.onboarding.user_can_dismiss,
-			widget_type: 'onboarding',
-			container: this.page,
-			options: {
-				allow_sorting: false,
-				allow_create: false,
-				allow_delete: false,
-				allow_hiding: false,
-				allow_edit: false,
-				max_widget_count: 2,
 			}
 		});
 	}

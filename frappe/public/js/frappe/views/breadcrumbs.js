@@ -55,6 +55,7 @@ frappe.breadcrumbs = {
 
 	update: function() {
 		var breadcrumbs = frappe.breadcrumbs.all[frappe.breadcrumbs.current_page()];
+		let breadcrumbs_added = false;
 
 		if(!frappe.visible_modules) {
 			frappe.visible_modules = $.map(frappe.boot.allowed_modules, (m) => {
@@ -73,6 +74,7 @@ frappe.breadcrumbs = {
 			const html = `<li><a href="${breadcrumbs.route}">${breadcrumbs.label}</a></li>`;
 			$breadcrumbs.append(html);
 			$("body").removeClass("no-breadcrumbs");
+			breadcrumbs_added = true;
 			return;
 		}
 
@@ -94,14 +96,13 @@ frappe.breadcrumbs = {
 			if(frappe.get_module(breadcrumbs.module)) {
 				// if module access exists
 				var module_info = frappe.get_module(breadcrumbs.module),
-					icon = module_info && module_info.icon,
 					label = module_info ? module_info.label : breadcrumbs.module;
-
 
 				if(module_info && !module_info.blocked && frappe.visible_modules.includes(module_info.module_name)) {
 					$(repl('<li><a href="#workspace/%(module)s">%(label)s</a></li>',
 						{ module: breadcrumbs.module, label: __(label) }))
 						.appendTo($breadcrumbs);
+					breadcrumbs_added = true;
 				}
 			}
 		}
@@ -120,7 +121,13 @@ frappe.breadcrumbs = {
 				$(repl('<li><a href="#%(route)s">%(label)s</a></li>',
 					{route: route, label: __(breadcrumbs.doctype)}))
 					.appendTo($breadcrumbs);
+				breadcrumbs_added = true;
 			}
+		}
+
+		if (!breadcrumbs_added && frappe.get_prev_route && frappe.get_prev_route[1]) {
+			const html = `<li><a href="${frappe.get_prev_route.join("/")}">${__(frappe.get_prev_route[1])}</a></li>`;
+			$breadcrumbs.append(html);
 		}
 
 		$("body").removeClass("no-breadcrumbs");

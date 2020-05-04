@@ -31,7 +31,6 @@
 	font-style: normal;
 	text-decoration: inherit;
 	-webkit-font-smoothing: antialiased;
-	*margin-right: .3em;
 	display: inline-block;
 	speak: none;
 	font-size: 24px;
@@ -42,28 +41,26 @@
 
 .breadcrumb-divider-left() {
 	content: "\e82e";
-	margin-right: 10px;
 	color: @navbar-default-color;
 }
 
 .breadcrumb-divider-right() {
 	content: "\e830";
-	margin-right: 10px;
 	color: @breadcrumb-divider-color;
 }
 
 // transitions
 .transition(@transition) {
   -webkit-transition: @transition;
-       -o-transition: @transition;
-          transition: @transition;
+	   -o-transition: @transition;
+		  transition: @transition;
 }
 
 .transition-transform(@transition) {
   -webkit-transition: -webkit-transform @transition;
-     -moz-transition: -moz-transform @transition;
-       -o-transition: -o-transform @transition;
-          transition: transform @transition;
+	 -moz-transition: -moz-transform @transition;
+	   -o-transition: -o-transform @transition;
+		  transition: transform @transition;
 }
 
 .navbar-center-show() {
