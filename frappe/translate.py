@@ -257,8 +257,8 @@ def get_user_translations(lang):
 	if out is None:
 		out = {}
 		for fields in frappe.get_all('Translation',
-			fields= ["source_name", "target_name"], filters={'language': lang}):
-				out.update({fields.source_name: fields.target_name})
+			fields=["source_text", "translated_text"], filters={'language': lang}):
+				out.update({fields.source_text: fields.translated_text})
 		frappe.cache().hset('lang_user_translations', lang, out)
 
 	return out
@@ -275,7 +275,7 @@ def clear_cache():
 	cache.delete_key("translation_assets", shared=True)
 	cache.delete_key("lang_user_translations")
 
-def get_messages_for_app(app):
+def get_messages_for_app(app, deduplicate=True):
 	"""Returns all messages (list) for a specified `app`"""
 	messages = []
 	modules = ", ".join(['"{}"'.format(m.title().replace("_", " ")) \
@@ -316,6 +316,8 @@ def get_messages_for_app(app):
 
 	# server_messages
 	messages.extend(get_server_messages(app))
+	if deduplicate:
+		messages = deduplicate_messages(messages)
 	return messages
 
 def get_messages_from_doctype(name):
@@ -435,7 +437,7 @@ def get_messages_from_report(name):
 	report = frappe.get_doc("Report", name)
 	messages = _get_messages_from_page_or_report("Report", name,
 		frappe.db.get_value("DocType", report.ref_doctype, "module"))
-	# TODO position here!
+
 	if report.query:
 		messages.extend([(None, message) for message in re.findall('"([^:,^"]*):', report.query) if is_translatable(message)])
 	messages.append((None,report.report_name))
@@ -525,19 +527,27 @@ def get_messages_from_file(path):
 
 	:param path: path of the code file
 	"""
+	frappe.flags.setdefault('scanned_files', [])
+	# TODO: Find better alternative
+	# To avoid duplicate scan
+	if path in set(frappe.flags.scanned_files):
+		return []
+
+	frappe.flags.scanned_files.append(path)
 	apps_path = get_bench_dir()
 	if os.path.exists(path):
 		with open(path, 'r') as sourcefile:
 			return [(os.path.relpath(path, apps_path),
-					message) for pos, message in extract_messages_from_code(sourcefile.read(), path.endswith(".py"))]
+					message) for line, message in extract_messages_from_code(sourcefile.read(), path.endswith(".py"))]
 	else:
 		return []
 
-def extract_messages_from_code(code, is_py=False):
-	"""Extracts translatable srings from a code file
-
-	:param code: code from which translatable files are to be extracted
-	:param is_py: include messages in triple quotes e.g. `_('''message''')`"""
+def extract_messages_from_code(code):
+	"""
+		Extracts translatable strings from a code file
+		:param code: code from which translatable files are to be extracted
+		:param is_py: include messages in triple quotes e.g. `_('''message''')`
+	"""
 	try:
 		code = frappe.as_unicode(render_include(code))
 	except (TemplateError, ImportError, InvalidIncludePath, IOError):
@@ -545,20 +555,22 @@ def extract_messages_from_code(code, is_py=False):
 		pass
 
 	messages = []
-	messages += [(m.start(), m.groups()[0]) for m in re.compile('_\("([^"]*)"').finditer(code)]
-	messages += [(m.start(), m.groups()[0]) for m in re.compile("_\('([^']*)'").finditer(code)]
-	if is_py:
-		messages += [(m.start(), m.groups()[0]) for m in re.compile('_\("{3}([^"]*)"{3}.*\)').finditer(code)]
+	pattern = r"_\(([\"']{,3})(?P<message>((?!\1).)*)\1(\s*,\s*context\s*=\s*([\"'])(?P<py_context>((?!\5).)*)\5)*(\s*,\s*(.)*?\s*(,\s*([\"'])(?P<js_context>((?!\11).)*)\11)*)*\)"
+	for m in re.compile(pattern).finditer(code):
+		message = m.group('message')
+		pos = m.start()
 
-	messages = [(pos, message) for pos, message in messages if is_translatable(message)]
-	return pos_to_line_no(messages, code)
+		if is_translatable(message):
+			messages.append([pos, message])
+
+	return add_line_number(messages, code)
 
 def is_translatable(m):
 	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.startswith("fas fa-") and not m.startswith("far fa-") and not m.startswith("uil uil-") and not m.endswith("px") and not m.startswith("eval:"):
 		return True
 	return False
 
-def pos_to_line_no(messages, code):
+def add_line_number(messages, code):
 	ret = []
 	messages = sorted(messages, key=lambda x: x[0])
 	newlines = [m.start() for m in re.compile('\\n').finditer(code)]
@@ -568,7 +580,7 @@ def pos_to_line_no(messages, code):
 		while newline_i < len(newlines) and pos > newlines[newline_i]:
 			line+=1
 			newline_i+= 1
-		ret.append((line, message))
+		ret.append([line, message])
 	return ret
 
 def write_json_file(path, app_messages):
@@ -739,11 +751,13 @@ def update_translations_for_source(source=None, translation_dict=None):
 	translation_dict = json.loads(translation_dict)
 
 	# for existing records
-	translation_records = frappe.db.get_values('Translation', { 'source_name': source }, ['name', 'language'],  as_dict=1)
+	translation_records = frappe.db.get_values('Translation', {
+		'source_text': source
+	}, ['name', 'language'],  as_dict=1)
 	for d in translation_records:
 		if translation_dict.get(d.language, None):
 			doc = frappe.get_doc('Translation', d.name)
-			doc.target_name = translation_dict.get(d.language)
+			doc.translated_text = translation_dict.get(d.language)
 			doc.save()
 			# done with this lang value
 			translation_dict.pop(d.language)
@@ -751,24 +765,24 @@ def update_translations_for_source(source=None, translation_dict=None):
 			frappe.delete_doc('Translation', d.name)
 
 	# remaining values are to be inserted
-	for lang, target_name in iteritems(translation_dict):
+	for lang, translated_text in iteritems(translation_dict):
 		doc = frappe.new_doc('Translation')
 		doc.language = lang
-		doc.source_name = source
-		doc.target_name = target_name
+		doc.source_text = source
+		doc.translated_text = translated_text
 		doc.save()
 
 	return translation_records
 
 @frappe.whitelist()
-def get_translations(source_name):
-	if is_html(source_name):
-		source_name = strip_html_tags(source_name)
+def get_translations(source_text):
+	if is_html(source_text):
+		source_text = strip_html_tags(source_text)
 
 	return frappe.db.get_list('Translation',
-		fields = ['name', 'language', 'target_name as translation'],
+		fields = ['name', 'language', 'translated_text as translation'],
 		filters = {
-			'source_name': source_name
+			'source_text': source_text
 		}
 	)
 

@@ -49,7 +49,7 @@ class _dict(dict):
 	def copy(self):
 		return _dict(dict(self).copy())
 
-def _(msg, lang=None):
+def _(msg, lang=None, context=None):
 	"""Returns translated string in current lang, if exists."""
 	from frappe.translate import get_reduced_dict
 	from frappe.utils import strip_html_tags, is_html

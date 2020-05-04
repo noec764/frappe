@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_copy": 0, 
  "allow_import": 1, 
  "allow_rename": 0, 
@@ -74,7 +75,7 @@
    "collapsible": 0, 
    "columns": 0, 
    "description": "If your data is in HTML, please copy paste the exact HTML code with the tags.", 
-   "fieldname": "source_name", 
+   "fieldname": "source_text", 
    "fieldtype": "Code", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
@@ -129,7 +130,7 @@
    "bold": 0, 
    "collapsible": 0, 
    "columns": 0, 
-   "fieldname": "target_name", 
+   "fieldname": "translated_text", 
    "fieldtype": "Code", 
    "hidden": 0, 
    "ignore_user_permissions": 0, 
@@ -163,7 +164,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2016-12-29 14:39:48.571006", 
+ "modified": "2020-03-12 13:28:48.223409",
  "modified_by": "Administrator", 
  "module": "Core", 
  "name": "Translation", 
@@ -197,7 +198,7 @@
  "read_only_onload": 0, 
  "sort_field": "modified", 
  "sort_order": "DESC", 
- "title_field": "source_name", 
+ "title_field": "source_text",
  "track_changes": 1, 
  "track_seen": 0
 }

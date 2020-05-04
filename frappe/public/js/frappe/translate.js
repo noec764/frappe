@@ -3,7 +3,10 @@
 
 // for translation
 frappe._messages = {};
-frappe._ = function(txt, replace) {
+frappe._ = function(txt, replace, context = null) {
+	if ($.isEmptyObject(frappe._messages) && frappe.boot) {
+		$.extend(frappe._messages, frappe.boot.__messages);
+	}
 	if(!txt)
 		return txt;
 	if(typeof(txt) != "string")
@@ -22,7 +25,9 @@ frappe.get_languages = function() {
 		$.each(frappe.boot.lang_dict, function(lang, value){
 			frappe.languages.push({'label': lang, 'value': value})
 		});
-		frappe.languages = frappe.languages.sort(function(a, b) { return (a.value < b.value) ? -1 : 1 });
+		frappe.languages = frappe.languages.sort(function(a, b) {
+			return a.value < b.value ? -1 : 1;
+		});
 	}
 	return frappe.languages;
 };
