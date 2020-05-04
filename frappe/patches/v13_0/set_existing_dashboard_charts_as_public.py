@@ -10,8 +10,7 @@ def execute():
 		"Has Role",
 		fields=["parent"],
 		filters={"role": ['in', ['System Manager', 'Dashboard Manager']], "parenttype": "User"},
-		distinct=True,
-		as_list=True
+		distinct=True
 	)
 
 	users = [item.parent for item in users_with_permission]
