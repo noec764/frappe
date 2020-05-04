@@ -160,16 +160,16 @@ def make_dict_from_messages(messages, full_dict=None):
 	:param messages: List of untranslated messages
 	"""
 
-	out = defaultdict(dict)
+	out = dict()
 	if full_dict==None:
 		full_dict = get_full_dict(frappe.local.lang)
 
 	for m in messages:
 		if m[0] in full_dict:
-			if m[1] in full_dict[m[0]]:
+			if m[1] and m[1] in full_dict[m[0]]:
 				out[m[1]] = full_dict[m[0]][m[1]]
 
-	return dict(out)
+	return out
 
 def get_lang_js(fortype, name):
 	"""Returns code snippet to be appended at the end of a JS script.
@@ -258,6 +258,7 @@ def get_user_translations(lang):
 		out = {}
 		for fields in frappe.get_all('Translation',
 			fields=["source_text", "translated_text"], filters={'language': lang}):
+			if fields.source_text and fields.translateds:
 				out.update({fields.source_text: fields.translated_text})
 		frappe.cache().hset('lang_user_translations', lang, out)
 
@@ -537,8 +538,7 @@ def get_messages_from_file(path):
 	apps_path = get_bench_dir()
 	if os.path.exists(path):
 		with open(path, 'r') as sourcefile:
-			return [(os.path.relpath(path, apps_path),
-					message) for line, message in extract_messages_from_code(sourcefile.read(), path.endswith(".py"))]
+			return [(os.path.relpath(path, apps_path), message) for message in extract_messages_from_code(sourcefile.read())]
 	else:
 		return []
 
@@ -558,30 +558,17 @@ def extract_messages_from_code(code):
 	pattern = r"_\(([\"']{,3})(?P<message>((?!\1).)*)\1(\s*,\s*context\s*=\s*([\"'])(?P<py_context>((?!\5).)*)\5)*(\s*,\s*(.)*?\s*(,\s*([\"'])(?P<js_context>((?!\11).)*)\11)*)*\)"
 	for m in re.compile(pattern).finditer(code):
 		message = m.group('message')
-		pos = m.start()
 
-		if is_translatable(message):
-			messages.append([pos, message])
+		if message and is_translatable(message):
+			messages.append(message)
 
-	return add_line_number(messages, code)
+	return messages
 
 def is_translatable(m):
 	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.startswith("fas fa-") and not m.startswith("far fa-") and not m.startswith("uil uil-") and not m.endswith("px") and not m.startswith("eval:"):
 		return True
 	return False
 
-def add_line_number(messages, code):
-	ret = []
-	messages = sorted(messages, key=lambda x: x[0])
-	newlines = [m.start() for m in re.compile('\\n').finditer(code)]
-	line = 1
-	newline_i = 0
-	for pos, message in messages:
-		while newline_i < len(newlines) and pos > newlines[newline_i]:
-			line+=1
-			newline_i+= 1
-		ret.append([line, message])
-	return ret
 
 def write_json_file(path, app_messages):
 	"""Write translation JSON file.
