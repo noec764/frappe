@@ -39,8 +39,8 @@ class Workspace:
 		self.onboarding = None
 
 		self.table_counts = get_table_with_counts()
-		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restriced_doctype_cache()
-		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restriced_page_cache()
+		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restricted_doctype_cache()
+		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
 
 	def get_page_for_user(self):
 		filters = {
@@ -98,7 +98,7 @@ class Workspace:
 		item_type = item_type.lower()
 
 		if item_type == "doctype":
-			return (name in self.can_read and name in self.restricted_doctypes)
+			return (name in self.user.can_read and name in self.restricted_doctypes)
 		if item_type == "page":
 			return (name in self.allowed_pages and name in self.restricted_pages)
 		if item_type == "report":
