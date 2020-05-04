@@ -60,12 +60,6 @@
    "options": "Desk Shortcut"
   },
   {
-   "depends_on": "eval:doc.extends_another_page == 0",
-   "fieldname": "onboarding",
-   "fieldtype": "Data",
-   "label": "Onboarding"
-  },
-  {
    "fieldname": "restrict_to_domain",
    "fieldtype": "Link",
    "label": "Restrict to Domain",
@@ -203,10 +197,16 @@
     "fieldtype": "Data",
     "label": "For User",
     "read_only": 1
+  },
+  {
+    "fieldname": "onboarding",
+    "fieldtype": "Link",
+    "label": "Onboarding",
+    "options": "Onboarding"
   }
  ],
  "links": [],
- "modified": "2020-03-26 12:35:41.981432",
+ "modified": "2020-04-26 12:21:46.205079",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Desk Page",
