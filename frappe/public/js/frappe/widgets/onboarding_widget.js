@@ -21,20 +21,20 @@ export default class OnboardingWidget extends Widget {
 	add_step(step) {
 		// Make Step
 		let status = "";
-		let icon_class = "fa-circle-o";
+		let icon_class = "uil uil-circle";
 
 		if (step.is_skipped) {
 			status = "skipped";
-			icon_class = "fa-times-circle-o";
+			icon_class = "uil uil-times-circle";
 		}
 
 		if (step.is_complete) {
 			status = "complete";
-			icon_class = "fa-check-circle-o";
+			icon_class = "uil uil-check-circle";
 		}
 
 		let $step = $(`<div class="onboarding-step ${status}">
-				<i class="fa ${icon_class}" aria-hidden="true" title="${status}"></i>
+				<i class="${icon_class}" aria-hidden="true" title="${status}"></i>
 				<span id="title">${step.title}</span>
 			</div>`);
 
