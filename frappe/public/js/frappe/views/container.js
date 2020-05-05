@@ -19,7 +19,7 @@ frappe.views.Container = Class.extend({
 
 		$(document).on("page-change", function() {
 			// set data-route in body
-			var route_str = frappe.get_route_str();
+			var route_str = frappe.get_route_str() || "desk";
 			$("body").attr("data-route", route_str);
 			$("body").attr("data-sidebar", me.has_sidebar() ? 1 : 0);
 		});
