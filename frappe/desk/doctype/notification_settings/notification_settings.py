@@ -74,3 +74,7 @@ def get_permission_query_conditions(user):
 @frappe.whitelist()
 def set_seen_value(value, user):
 	frappe.db.set_value('Notification Settings', user, 'seen', value, update_modified=False)
+
+@frappe.whitelist()
+def get_calendar_options():
+	return [x for x in frappe.get_hooks('calendars')]

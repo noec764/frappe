@@ -88,7 +88,6 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	if doc_meta.has_field("repeat_this_event"):
 		filters.append([doctype, 'repeat_this_event', '!=', 1])
 
-
 	events = frappe.get_list(doctype, fields=fields, filters=filters)
 
 	if doc_meta.has_field("repeat_this_event") and doc_meta.has_field("repeat_till"):

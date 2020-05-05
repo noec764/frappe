@@ -2,6 +2,7 @@ frappe.provide('frappe.search');
 
 frappe.ui.Notifications = class Notifications {
 	constructor() {
+		this.date = frappe.datetime.get_today();
 		frappe.model
 			.with_doc('Notification Settings', frappe.session.user)
 			.then(doc => {
@@ -56,32 +57,51 @@ frappe.ui.Notifications = class Notifications {
 	}
 
 	render_todays_events(e, $target) {
-		let hide = $target.next().hasClass('in');
+		const hide = $target.next().hasClass('in');
+		const calendar = this.notifications_settings.default_calendar
 		if (!hide) {
-			let today = frappe.datetime.get_today();
-			frappe.xcall('frappe.desk.doctype.event.event.get_events', {
-				start: today,
-				end: today
-			}).then(event_list => {
-				this.render_events_html(event_list);
-			});
+			frappe.model.with_doctype(calendar, () => {
+				const meta = frappe.get_meta(calendar);
+				const calendar_options = eval(meta.__calendar_js);
+				const events_method = calendar_options.get_events_method || 'frappe.desk.calendar.get_events';
+				const fields_map = calendar_options.field_map;
+				const end_date = events_method == 'frappe.desk.calendar.get_events' ? frappe.datetime.add_days(this.date, 1) : this.date;
+
+				frappe.xcall(events_method, {
+					doctype: calendar,
+					start: this.date,
+					end: end_date,
+					field_map: fields_map,
+					user: frappe.session.user,
+					filters: []
+				}).then(event_list => {
+					this.render_events_html(event_list, fields_map);
+				});
+			})
 		}
 	}
 
-	render_events_html(event_list) {
+	render_events_html(event_list, field_map) {
 		let html = '';
 		if (event_list.length) {
 			let get_event_html = event => {
-				let time = frappe.datetime.get_time(event.starts_on);
-				return `<a class="recent-item event" href="#Form/Event/${event.name}">
+				const time = frappe.datetime.get_time(event.starts_on || event[field_map["start"]]);
+				const color = event.color || event[field_map["color"]] || "#6195ff";
+				return `
+				<style>.indicator-${event.name}:before {background: ${color};}</style>
+				<a class="recent-item event" href="#Form/Event/${event.name}">
+					<span class="indicator indicator-${event.name}"></span>
 					<span class="event-time bold">${time}</span>
-					<span class="event-subject">${event.subject}</span>
+					<span class="event-subject">${event.title || event[field_map["title"]]}</span>
 				</a>`;
 			};
-			html = event_list.map(get_event_html).join('');
+			const events = event_list.map(get_event_html).join('');
+			html = `<li class="recent-item text-center">
+					<span class="text-muted">${frappe.datetime.get_date(event_list[0].starts_on || event_list[0][field_map["start"]])}</span>
+				</li>${events}`
 		} else {
 			html = `<li class="recent-item text-center">
-					<span class="text-muted">${__('No Events Today')}</span>
+					<span class="text-muted">${__('No Planned Events')}</span>
 				</li>`;
 		}
 
@@ -343,15 +363,15 @@ frappe.ui.Notifications = class Notifications {
 				value: "Notifications"
 			},
 			{
-				label: __("Today's Events"),
-				value: "Todays Events",
-				action: "render_todays_events"
-			},
-			{
 				label: __("Open Documents"),
 				value: "Open Documents",
 				action: "get_open_document_config"
-			}
+			},
+			{
+				label: __("Next Events"),
+				value: "Todays Events",
+				action: "render_todays_events"
+			},
 		];
 
 		let get_headers_html = category => {
@@ -368,6 +388,17 @@ frappe.ui.Notifications = class Notifications {
 						${__('Mark all as Read')}
 					</span>`
 					: '';
+			const day_toggle =
+				category.value === 'Todays Events'
+				? `
+				<span style="line-height: 20px;"><span class="pull-right" data-action="get_next_day">
+					<i class="uil uil-angle-right"></i>
+				</span>
+				<span class="pull-right" data-action="get_today">${__("Today")}</span>
+				<span class="pull-right" data-action="get_prev_day">
+					<i class="uil uil-angle-left"></i>
+				</span><span>`
+				: '';
 			let html = `<li class="notifications-category">
 					<li class="text-muted header"
 						data-action="${category.action}"
@@ -377,6 +408,7 @@ frappe.ui.Notifications = class Notifications {
 						<span class="octicon octicon-chevron-down collapse-indicator"></span>
 						${settings_html}
 						${mark_all_read_html}
+						${day_toggle}
 					</li>
 					<div id="${category_id}" class="collapse category-list" data-category="${category.value}">
 						<div class="text-center text-muted notifications-loading">
@@ -393,13 +425,13 @@ frappe.ui.Notifications = class Notifications {
 			.join('<li class="divider"></li>');
 		this.$dropdown_list.append(html);
 		this.$dropdown_list
-			.find('.category-list[data-category="Open Documents"]')
+			.find('.category-list[data-category="Todays Events"]')
 			.collapse('show');
 		this.toggle_collapse_indicator(
-			this.$dropdown_list.find('.category-list[data-category="Open Documents"]')
+			this.$dropdown_list.find('.category-list[data-category="Todays Events"]')
 		);
-		this.get_open_document_config(
-			this.$dropdown_list.find('.category-list[data-category="Open Documents"]')
+		this.render_todays_events(null,
+			this.$dropdown_list.find('.category-list[data-category="Todays Events"]')
 		)
 	}
 
@@ -408,6 +440,24 @@ frappe.ui.Notifications = class Notifications {
 		this.$dropdown.removeClass('open');
 		this.$dropdown.trigger('hide.bs.dropdown');
 		this.route_to_settings();
+	}
+
+	get_next_day(e) {
+		e.stopImmediatePropagation();
+		this.date = frappe.datetime.add_days(this.date, 1)
+		this.render_todays_events(null, this.$dropdown_list.find('.category-list[data-category="Todays Events"]'))
+	}
+
+	get_prev_day(e) {
+		e.stopImmediatePropagation();
+		this.date = frappe.datetime.add_days(this.date, -1)
+		this.render_todays_events(null, this.$dropdown_list.find('.category-list[data-category="Todays Events"]'))
+	}
+
+	get_today(e) {
+		e.stopImmediatePropagation();
+		this.date = frappe.datetime.get_today();
+		this.render_todays_events(null, this.$dropdown_list.find('.category-list[data-category="Todays Events"]'))
 	}
 
 	bind_events() {

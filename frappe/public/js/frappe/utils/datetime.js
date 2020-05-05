@@ -226,6 +226,10 @@ $.extend(frappe.datetime, {
 		return moment(timestamp).format('hh:mm A');
 	},
 
+	get_date: (timestamp) => {
+		return moment(timestamp).format("LL");
+	},
+
 	validate: function(d) {
 		return moment(d, [
 			frappe.defaultDateFormat,
