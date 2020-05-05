@@ -78,7 +78,7 @@ body {
     vertical-align: middle;
   }
   #navbar-breadcrumbs > li > a:before {
-    content: "\e82e";
+    content: "\eb9f";
     margin-right: 10px;
     color: #6C7680;
   }
@@ -157,7 +157,7 @@ body {
     transition: 0.2s;
     position: relative;
     top: 3px;
-    content: "\e82e";
+    content: "\eb9f";
     margin-right: 10px;
     color: #6C7680;
   }

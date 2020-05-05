@@ -1019,7 +1019,7 @@ input[type="checkbox"] {
 input[type="checkbox"]:before {
   position: absolute;
   font-family: 'unicons';
-  content: '\ebaa';
+  content: '\eaa2';
   visibility: visible;
   font-style: normal;
   font-weight: normal;
