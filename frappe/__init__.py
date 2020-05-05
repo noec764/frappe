@@ -50,7 +50,12 @@ class _dict(dict):
 		return _dict(dict(self).copy())
 
 def _(msg, lang=None, context=None):
-	"""Returns translated string in current lang, if exists."""
+	"""
+	Returns translated string in current lang, if exists.
+	Usage:
+			_('Change')
+			_('Change', context='Coins')
+	"""
 	from frappe.translate import get_reduced_dict
 	from frappe.utils import strip_html_tags, is_html
 
