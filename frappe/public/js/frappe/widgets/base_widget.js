@@ -26,7 +26,7 @@ export default class Widget {
 
 		options.allow_delete &&
 			this.add_custom_button(
-				'<i class="fa fa-trash" aria-hidden="true"></i>',
+				'<i class="uil uil-trash" aria-hidden="true"></i>',
 				() => this.delete(),
 				"",
 				`${__('Delete')}`
@@ -34,7 +34,7 @@ export default class Widget {
 
 		options.allow_sorting &&
 			this.add_custom_button(
-				'<i class="fa fa-arrows" aria-hidden="true"></i>',
+				'<i class="uil uil-arrows-h" aria-hidden="true"></i>',
 				null,
 				"drag-handle",
 			);
@@ -46,7 +46,7 @@ export default class Widget {
 				this.title_field.css("opacity", 0.5);
 				this.footer.css("opacity", 0.5);
 			}
-			const classname = this.hidden ? 'fa fa-eye' : 'fa fa-eye-slash';
+			const classname = this.hidden ? 'uil uil-eye' : 'uil uil-eye-slash';
 			const title = this.hidden ? `${__('Show')}` : `${__('Hide')}`;
 			this.add_custom_button(
 				`<i class="${classname}" aria-hidden="true"></i>`,
@@ -62,14 +62,14 @@ export default class Widget {
 
 		options.allow_edit &&
 			this.add_custom_button(
-				'<i class="fa fa-pencil" aria-hidden="true"></i>',
+				'<i class="uil uil-edit" aria-hidden="true"></i>',
 				() => this.edit()
 			);
 
 		if (options.allow_resize) {
 			const title = this.width == 'Full'? `${__('Collapse')}` : `${__('Expand')}`;
 			this.add_custom_button(
-				'<i class="fa fa-expand" aria-hidden="true"></i>',
+				'<i class="uil uil-maximize-left" aria-hidden="true"></i>',
 				() => this.toggle_width(),
 				"resize-button",
 				title
@@ -191,7 +191,7 @@ export default class Widget {
 		}
 		this.show_or_hide_button.empty();
 
-		const classname = this.hidden ? 'fa fa-eye' : 'fa fa-eye-slash';
+		const classname = this.hidden ? 'uil uil-eye' : 'uil uil-eye-slash';
 		const title = this.hidden ? `${__('Show')}` : `${__('Hide')}`;
 
 		$(`<i class="${classname}" aria-hidden="true" title="${title}"></i>`).appendTo(

@@ -21,21 +21,21 @@ export default class OnboardingWidget extends Widget {
 	add_step(step) {
 		// Make Step
 		let status = "";
-		let icon_class = "uil uil-circle";
+		let icon_class = "uil-circle";
 
 		if (step.is_skipped) {
 			status = "skipped";
-			icon_class = "uil uil-times-circle";
+			icon_class = "uil-times-circle";
 		}
 
 		if (step.is_complete) {
 			status = "complete";
-			icon_class = "uil uil-check-circle";
+			icon_class = "uil-check-circle";
 		}
 
 		let $step = $(`<div class="onboarding-step ${status}">
-				<i class="${icon_class}" aria-hidden="true" title="${status}"></i>
-				<span id="title">${step.title}</span>
+				<i class="uil ${icon_class}" aria-hidden="true" title="${status}"></i>
+				<span id="title">${__(step.title)}</span>
 			</div>`);
 
 		step.$step = $step;
@@ -43,7 +43,7 @@ export default class OnboardingWidget extends Widget {
 		// Add skip button
 		if (!step.is_mandatory && !step.is_complete) {
 			let skip_html = $(
-				`<span class="ml-5 small text-muted step-skip">Skip</span>`
+				`<span class="ml-5 small text-muted step-skip">${__("Skip")}</span>`
 			);
 
 			skip_html.appendTo($step);
@@ -229,8 +229,8 @@ export default class OnboardingWidget extends Widget {
 
 	update_step_status(step, status, value, callback) {
 		let icon_class = {
-			is_complete: "fa-check-circle-o",
-			is_skipped: "fa-times-circle-o",
+			is_complete: "uil-check-circle",
+			is_skipped: "uil-times-circle",
 		};
 
 		frappe
@@ -242,9 +242,9 @@ export default class OnboardingWidget extends Widget {
 			.then(() => {
 				callback();
 
-				let icon = step.$step.find("i.fa");
+				let icon = step.$step.find("i.uil");
 				icon.removeClass();
-				icon.addClass("fa");
+				icon.addClass("uil");
 				icon.addClass(icon_class[status]);
 
 				let pending = this.steps.filter((step) => {
@@ -321,10 +321,10 @@ export default class OnboardingWidget extends Widget {
 	}
 
 	set_title(title) {
-		super.set_title(title);
+		super.set_title(__(title));
 		if (this.subtitle) {
 			let subtitle = $(
-				`<div class="widget-subtitle">${this.subtitle}</div>`
+				`<div class="widget-subtitle">${__(this.subtitle)}</div>`
 			);
 			subtitle.appendTo(this.title_field);
 		}

@@ -146,10 +146,10 @@ export default class NumberCardWidget extends Widget {
 			if (this.percentage_stat == 0) {
 				color_class = 'grey-stat';
 			} else if (this.percentage_stat > 0) {
-				caret_html = '<i class="fa fa-caret-up"></i>';
+				caret_html = '<i class="uil uil-angle-up"></i>';
 				color_class = 'green-stat';
 			} else {
-				caret_html = '<i class="fa fa-caret-down"></i>';
+				caret_html = '<i class="uil uil-angle-down"></i>';
 				color_class = 'red-stat';
 			}
 
