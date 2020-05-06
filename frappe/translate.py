@@ -276,7 +276,7 @@ def clear_cache():
 	cache.delete_key("translation_assets", shared=True)
 	cache.delete_key("lang_user_translations")
 
-def get_messages_for_app(app, deduplicate=True):
+def get_messages_for_app(app):
 	"""Returns all messages (list) for a specified `app`"""
 	messages = []
 	modules = ", ".join(['"{}"'.format(m.title().replace("_", " ")) \
@@ -317,8 +317,7 @@ def get_messages_for_app(app, deduplicate=True):
 
 	# server_messages
 	messages.extend(get_server_messages(app))
-	if deduplicate:
-		messages = deduplicate_messages(messages)
+
 	return messages
 
 def get_messages_from_doctype(name):
