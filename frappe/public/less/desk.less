@@ -814,6 +814,7 @@ input[type="checkbox"] {
 		color: @text-extra-muted;
 		.transition(150ms color);
 		left: 0px;
+		cursor: pointer;
 	}
 
 	&:focus:before {
@@ -821,9 +822,10 @@ input[type="checkbox"] {
 	}
 
 	&:checked:before {
-		content: '\e8d8';
+		content: '\e9b4';
 		font-size: 13px;
 		color: @checkbox-color;
+		cursor: pointer;
 	}
 
 	&:focus {

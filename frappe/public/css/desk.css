@@ -1039,7 +1039,7 @@ input[type="checkbox"]:focus:before {
   color: #778595;
 }
 input[type="checkbox"]:checked:before {
-  content: '\e8d8';
+  content: '\e9b4';
   font-size: 1em;
   color: #3b99fc;
 }
