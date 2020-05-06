@@ -3443,14 +3443,14 @@
         "System Manager": "Responsable Système"
     },
     "DocType: Scheduled Job Log": {
-        "Complete": "Terminé",
+        "Complete": "Terminée",
         "Core": "Module central",
         "Details": "Détails",
         "Failed": "Échec",
         "Scheduled": "Programmé",
         "Scheduled Job": "Tâche de fond programmée",
         "Scheduled Job Log": "Journal des tâches de fonds programmées",
-        "Start": "Démarrer",
+        "Start": "Lancée",
         "Status": "Statut",
         "Success": "Réussite",
         "System Manager": "Responsable Système"
@@ -3703,7 +3703,7 @@
         "Password": "Mot de Passe",
         "Permissions": "Autorisations",
         "Right": "Droit",
-        "Run Jobs only Daily if Inactive For (Days)": "Ne lancer les tâche qu'une fois par jour si inactif depuis (jours)",
+        "Run Jobs only Daily if Inactive For (Days)": "Ne lancer les tâches qu'une fois par jour si inactif depuis (jours)",
         "Run scheduled jobs only if checked": "Les tâches planifiées ne sont exécutées que si la case est cochée.",
         "SMS": "SMS",
         "Scheduler Last Event": "Dernier événement du planificateur",
@@ -7845,7 +7845,7 @@
         "1 minute ago": "Il y a 1 minute",
         "> {0} year(s) ago": "> {0} ans",
         "Yesterday": "Hier",
-        "just now": "juste maintenant",
+        "just now": "il y a quelques secondes",
         "now": "maintenant",
         "{0} days ago": "Il y a {0} jours",
         "{0} minutes ago": "Il y a {0} minutes",
@@ -8361,7 +8361,7 @@
         "1 year ago": "Il y a 1 an",
         "> {0} year(s) ago": "> {0} ans",
         "Yesterday": "Hier",
-        "just now": "juste maintenant",
+        "just now": "maintenant",
         "now": "maintenant",
         "yesterday": "Hier",
         "{0} M": "{0} M",
@@ -8372,10 +8372,10 @@
         "{0} m": "{0} m",
         "{0} minutes ago": "Il y a {0} minutes",
         "{0} months ago": "Il y a {0} mois",
-        "{0} w": "{0} s",
+        "{0} w": "{0} S",
         "{0} weeks ago": "Il y a {0} semaines",
         "{0} y": "{0} a",
-        "{0} years ago": "{0} ans"
+        "{0} years ago": "Il y a {0} ans"
     },
     "apps/frappe/frappe/public/js/frappe/utils/rating_icons.html": {
         "Rating: ": "Évaluation :"

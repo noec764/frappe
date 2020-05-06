@@ -58,7 +58,7 @@ frappe.ui.Notifications = class Notifications {
 
 	render_todays_events(e, $target) {
 		const hide = $target.next().hasClass('in');
-		const calendar = this.notifications_settings.default_calendar
+		const calendar = this.notifications_settings.default_calendar || "Event";
 		if (!hide) {
 			frappe.model.with_doctype(calendar, () => {
 				const meta = frappe.get_meta(calendar);
