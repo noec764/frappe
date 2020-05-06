@@ -169,19 +169,23 @@ class EmailAccount(Document):
 		try:
 			email_server.connect()
 		except (error_proto, imaplib.IMAP4.error) as e:
-			message = e.message.lower().replace(" ","")
+			if hasattr(e, "message"):
+				message = e.message.lower().replace(" ","")
+			else:
+				message = str(e)
+
 			if in_receive and any(map(lambda t: t in message, ['authenticationfail', 'loginviayourwebbrowser', #abbreviated to work with both failure and failed
 				'loginfailed', 'err[auth]', 'errtemporaryerror'])): #temporary error to deal with godaddy
 				# if called via self.receive and it leads to authentication error, disable incoming
 				# and send email to system manager
 				self.handle_incoming_connect_error(
-					description=_('Authentication failed while receiving emails from Email Account {0}. Message from server: {1}').format(self.name, e.message)
+					description=_('Authentication failed while receiving emails from Email Account {0}. Message from server: {1}').format(self.name, message)
 				)
 
 				return None
 
 			else:
-				frappe.throw(e.message)
+				frappe.throw(message)
 
 		except socket.error:
 			if in_receive:
@@ -286,7 +290,7 @@ class EmailAccount(Document):
 
 				except Exception:
 					frappe.db.rollback()
-					frappe.log_error('email_account.receive')
+					frappe.log_error(frappe.get_traceback(), 'Email reception error')
 					if self.use_imap:
 						self.handle_bad_emails(email_server, uid, msg, frappe.get_traceback())
 					exceptions.append(frappe.get_traceback())

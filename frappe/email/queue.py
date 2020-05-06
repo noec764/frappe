@@ -426,6 +426,8 @@ def send_one(email, smtpserver=None, auto_commit=True, now=False):
 	recipients_list = frappe.db.sql('''select name, recipient, status from
 		`tabEmail Queue Recipient` where parent=%s''', email.name, as_dict=1)
 
+	email_sent_to_any_recipient = False
+
 	if frappe.are_emails_muted():
 		frappe.msgprint(_("Emails are muted"))
 		return
@@ -485,7 +487,7 @@ def send_one(email, smtpserver=None, auto_commit=True, now=False):
 			frappe.get_doc('Communication', email.communication).set_delivery_status(commit=auto_commit)
 
 		if smtpserver.append_emails_to_sent_folder and email_sent_to_any_recipient:
-			smtpserver.email_account.append_email_to_sent_folder(encode(message))
+			smtpserver.email_account.append_email_to_sent_folder(safe_encode(message.as_string()))
 
 	except (smtplib.SMTPServerDisconnected,
 			smtplib.SMTPConnectError,
@@ -532,7 +534,7 @@ def send_one(email, smtpserver=None, auto_commit=True, now=False):
 
 		else:
 			# log to Error Log
-			frappe.log_error('frappe.email.queue.flush')
+			frappe.log_error(frappe.get_traceback(), 'Email sending error')
 
 def prepare_message(email, recipient, recipients_list):
 	message = email.message
