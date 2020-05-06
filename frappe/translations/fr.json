@@ -290,22 +290,31 @@
         "Blog Intro": "Intro du Blog",
         "Blog Post": "Article de Blog",
         "Blogger": "Blogueur",
+        "Comments on this blog post will be disabled if checked.": "Les commentaires de cet article de blog seront désactivés si cette case est cochée.",
         "Content": "Contenu",
         "Content (HTML)": "Contenu (HTML)",
         "Content (Markdown)": "Contenu (Markdown)",
         "Content Type": "Type de Contenu",
         "Description for listing page, in plain text, only a couple of lines. (max 140 characters)": "Texte de description pour l'affichage en liste, quelques lignes seulement. (Max 140 caractères)",
+        "Disable Comments": "Désactiver les commentaires",
         "Email Sent": "Email Envoyé",
+        "Google Snippet Preview": "Prévisualisation Google Snippet",
         "Guest": "Invité",
         "HTML": "HTML",
         "Markdown": "Markdown",
+        "Meta Description": "Metadescription",
+        "Meta Image": "Meta image",
+        "Meta Tags": "Meta tags",
         "Published": "Publié",
         "Published On": "Publié le",
+        "Read Time": "Temps de lecture",
         "Rich Text": "Text riche",
         "Route": "Route",
+        "This is an example Google SERP Preview.": "Exemple de prévisualisation Google SERP",
         "Title": "Titre",
         "Website": "Site Web",
-        "Website Manager": "Responsable du Site Web"
+        "Website Manager": "Responsable du Site Web",
+        "in minutes": "en minutes"
     },
     "DocType: Blog Settings": {
         "Blog Introduction": "Introduction du Blog",
@@ -424,6 +433,11 @@
         "IP Address": "Adresse IP",
         "System Manager": "Responsable Système",
         "Token": "Jeton"
+    },
+    "DocType: Color": {
+        "Color": "Couleur",
+        "Website": "Site web",
+        "Website Manager": "Responsable du site web"
     },
     "DocType: Comment": {
         "Assigned": "Attribué",
@@ -598,6 +612,7 @@
         "Google Contacts Description": "Description des contacts Google",
         "Google Contacts Id": "ID de contact Google",
         "Image": "Image",
+        "Is Billing Contact": "Contact de facturation",
         "Is Primary Contact": "Personne de Contact",
         "Last Name": "Nom de Famille",
         "Links": "Liens",
@@ -783,6 +798,7 @@
         "Image": "Image",
         "In Global Search": "Dans la Recherche Globale",
         "In List View": "Ajouter une colonne pour ce champ dans la vue en liste",
+        "In Preview": "Prévisualisation",
         "In Standard Filter": "Ajouter un filtre standard pour ce champ",
         "Index": "Index",
         "Insert After": "Insérer Après",
@@ -856,6 +872,7 @@
         "ASC": "ASC",
         "Allow Auto Repeat": "Autoriser les répétitions automatiques",
         "Allow Import (via Data Import Tool)": "Autoriser l'import (via l'outil d'import de données)",
+        "Allow document creation via Email": "Autoriser la création de document via Email",
         "Change Label (via Custom Translation)": "Modifier le libellé (via une traduction personnalisée )",
         "Custom": "Personnaliser",
         "Customize Form": "Personnaliser le formulaire",
@@ -874,6 +891,8 @@
         "Must be of type \"Attach Image\"": "Doit être de type \"Joindre une image\"",
         "Quick Entry": "Écriture rapide",
         "Search Fields": "Champs de recherche",
+        "Sender Field": "Champ d'expéditeur",
+        "Show Preview Popup": "Afficher le popup de prévisualisation",
         "Sort Field": "Champ de tri",
         "Sort Order": "Ordre de tri",
         "Subject Field": "Champ de sujet",
@@ -886,6 +905,7 @@
     "DocType: Customize Form Field": {
         " Allow in Quick Entry ": "Autoriser dans les écritures rapides",
         "Allow Bulk Edit": "Autoriser les modifications en masse",
+        "Allow in Quick Entry": "Ajouter dans les entrées rapides",
         "Allow on Submit": "Autoriser les modifications après validation",
         "Attach": "Joindre",
         "Attach Image": "Joindre une image",
@@ -926,6 +946,7 @@
         "In Filter": "Ajouter un filtre",
         "In Global Search": "Ajouter dans la recherche globale",
         "In List View": "Ajouter une colonne pour ce champ dans la vue en liste",
+        "In Preview": "Prévisualisation",
         "In Standard Filter": "Ajouter un filtre standard pour ce champ",
         "Int": "Int",
         "Is Custom Field": "Est un champ personnalisé",
@@ -972,8 +993,11 @@
         "Width": "Largeur"
     },
     "DocType: Dashboard": {
+        "All": "Tous",
+        "Cards": "Cartes",
         "Charts": "Graphiques",
         "Dashboard": "Tableau de bord",
+        "Dashboard Manager": "Gestionnaire de tableau de bord",
         "Dashboard Name": "Nom du tableau de bord",
         "Desk": "Bureau",
         "Is Default": "Tableau de bord par défaut",
@@ -1039,10 +1063,14 @@
         "Color": "Couleur",
         "Count": "Décompte",
         "Custom": "Personnalisé",
+        "Custom Options": "Options personnalisées",
         "Daily": "Quotidien",
         "Dashboard Chart": "Graphique du tableau de bord",
+        "Dashboard Manager": "Gestionnaire de tableau de bord",
         "Desk": "Bureau",
         "Document Type": "Type de Document",
+        "Donut": "Beignet",
+        "Ex: \"colors\": [\"#d1d8dd\", \"#ff5858\"]": "Ex: \"couleurs\": [\"#d1d8dd\", \"#ff5858\"]",
         "Filters": "Filtres",
         "Filters JSON": "Filtres JSON",
         "From Date": "A partir du",
@@ -1051,6 +1079,8 @@
         "Group By Based On": "Grouper sur la base de",
         "Group By Type": "Grouper par type",
         "Half": "Demi",
+        "Is Custom": "Personnalisé",
+        "Is Public": "Public",
         "Last Month": "Dernier mois",
         "Last Quarter": "Dernier trimestre",
         "Last Synced On": "Dernière synchronisation",
@@ -1059,6 +1089,8 @@
         "Line": "Linéaire",
         "Monthly": "Mensuel",
         "Number of Groups": "Nombre de groupes",
+        "Percentage": "Pourcentage",
+        "Pie": "Circulaire",
         "Preregistered": "Pré-enregistrée",
         "Quarterly": "Trimestriel",
         "Report": "Rapport",
@@ -1067,6 +1099,7 @@
         "Sum": "Somme",
         "System Manager": "Responsable Système",
         "Third": "Tiers",
+        "This chart will be available to all users if this is set": "Ce graphique sera disponible pour tous les utilisateurs si cette case est cochée.",
         "Time Interval": "Intervalle de temps",
         "Time Series": "Séries temporelles",
         "Time Series Based On": "Séries chronologiques basées sur",
@@ -1077,11 +1110,15 @@
         "Value Based On": "Valeur basée sur",
         "Weekly": "Hebdomadaire",
         "Width": "Largeur",
+        "X Field": "Champ X",
+        "Y Axis": "Axe Y",
         "Yearly": "Annuelle"
     },
     "DocType: Dashboard Chart Field": {
         "Color": "Couleur",
-        "Desk": "Bureau"
+        "Dashboard Chart Field": "Champ de graphique de tableau de bord",
+        "Desk": "Bureau",
+        "Y Field": "Champ Y"
     },
     "DocType: Dashboard Chart Link": {
         "Chart": "Graphique",
@@ -1099,6 +1136,13 @@
         "Source Name": "Nom de la source",
         "System Manager": "Responsable Système",
         "Timeseries": "Séries chronologiques"
+    },
+    "DocType: Dashboard Settings": {
+        "All": "Tous",
+        "Chart Configuration": "Configuration du graphique",
+        "Dashboard Settings": "Paramètres du tableau de bord",
+        "Desk": "Bureau",
+        "User": "Utilisateur"
     },
     "DocType: Data Export": {
         "CSV": "CSV",
@@ -1300,13 +1344,17 @@
     },
     "DocType: Desk Card": {
         "Desk": "Bureau",
+        "Desk Card": "Carte du bureau",
+        "Hidden": "Masqué",
         "Icon": "Icône",
+        "Label": "Étiquette",
         "Links": "Liens",
         "Title": "Titre"
     },
     "DocType: Desk Chart": {
         "Chart Name": "Nom de la carte",
         "Desk": "Bureau",
+        "Desk Chart": "Graphique du bureau",
         "Label": "Étiquette"
     },
     "DocType: Desk Items": {
@@ -1323,27 +1371,48 @@
     "DocType: Desk Page": {
         "Administration": "Administration",
         "All": "Tous",
+        "Cards": "Cartes",
         "Category": "Catégorie",
         "Charts": "Graphiques",
         "Color": "Couleur",
+        "Dashboards": "Tableaux de bord",
         "Desk": "Bureau",
+        "Desk Page": "Page du bureau",
+        "Developer Mode Only": "Mode développeur seulement",
+        "Disable User Customization": "Désactiver les personnalisations des utilisateurs",
         "Domains": "Domaines",
+        "Extends": "Etend",
+        "Extends Another Page": "Etendre une autre page",
+        "For User": "Pour l'Utilisateur",
         "Icon": "Icône",
         "Is Standard": "Est un formulaire standard",
         "Label": "Étiquette",
+        "Link Cards": "Cartes de lien",
         "Module": "Module",
         "Modules": "Modules",
         "Name": "Nom",
+        "Onboarding": "Onboarding",
+        "Pin To Bottom": "Epingler en haut",
+        "Pin To Top": "Epingler en bas",
+        "Places": "Espaces",
+        "Restrict to Domain": "Restreindre au domaine",
+        "Shortcuts": "Raccourcis",
         "System Manager": "Responsable Système"
     },
     "DocType: Desk Shortcut": {
         "Color": "Couleur",
+        "Count Filter": "Filtres pour le décompte",
         "Desk": "Bureau",
+        "Desk Shortcut": "Raccourci du bureau",
         "DocType": "DocType",
+        "For example: {} Open": "Par exemple: {} ouverts",
         "Format": "Format",
         "Icon": "Icône",
+        "Label": "Étiquette",
+        "Link To": "Pointe vers",
         "Page": "Page",
         "Report": "Rapport",
+        "Restrict to Domain": "Restreindre au domaine",
         "Type": "Type"
     },
     "DocType: Desktop Icon": {
@@ -1520,6 +1589,7 @@
         "Allow Guest to View": "Autoriser les invités à voir de document",
         "Allow Import (via Data Import Tool)": "Autoriser l'import (via l'outil d'import de données)",
         "Allow Rename": "Permettre le renommage",
+        "Allow document creation via Email": "Autoriser la création de document via Email",
         "Allow events in timeline": "Autoriser les événements dans la chronologie",
         "App": "App",
         "Auto Name": "Nom auto",
@@ -1582,6 +1652,7 @@
         "Restrict To Domain": "Restreindre au domaine",
         "Route": "Route",
         "Search Fields": "Champs de recherche",
+        "Sender Field": "Champ d'expéditeur",
         "Set name after submit": "Déterminer le nom après la validation",
         "Setup": "Configuration",
         "Show Preview Popup": "Afficher le popup de prévisualisation",
@@ -1636,13 +1707,26 @@
         "User": "Utilisateur"
     },
     "DocType: Document Type Field Mapping": {
+        "Child Table": "Table enfant",
         "Child Table Mapping": "Mapping de Table Enfant",
+        "Default Value": "Valeur par défaut",
+        "Document": "Document",
+        "Document Type Field Mapping": "Mapping des champs des types de document",
+        "Event Streaming": "Flux d'événement",
         "Is Child Table": "Table enfant",
         "Local Fieldname": "Nom du champ local",
-        "Remote Fieldname": "Nom de champ distant"
+        "Mapping": "Mapping",
+        "Mapping Type": "Type de mapping",
+        "Remote Fieldname": "Nom de champ distant",
+        "Remote Value Filters": "Filtres pour les valeurs distantes"
     },
     "DocType: Document Type Mapping": {
+        "Document Type Mapping": "Mapping des types de document",
+        "Event Streaming": "Flux d'événement",
+        "Field Mapping": "Mapping des champs",
+        "Local Document Type": "Type de document local",
         "Mapping Name": "Nom du Mapping",
+        "Remote Document Type": "Type de document distant",
         "System Manager": "Responsable Système"
     },
     "DocType: Domain": {
@@ -1798,11 +1882,13 @@
         "Unread": "Non Lus"
     },
     "DocType: Email Group": {
+        "Confirmation Email Template": "Email de confirmation",
         "Email": "E-mail",
         "Email Group": "Groupe Email",
         "Newsletter Manager": "Responsable de la Newsletter",
         "Title": "Titre",
-        "Total Subscribers": "Total d'Abonnés"
+        "Total Subscribers": "Total d'Abonnés",
+        "Welcome Email Template": "Email de bienvenue"
     },
     "DocType: Email Group Member": {
         "Email": "E-mail",
@@ -2023,10 +2109,21 @@
     "DocType: Event Consumer": {
         "API Key": "Clé API",
         "API Secret": "Secret API",
+        "Callback URL": "URL de Callback",
+        "Event Consumer": "Consommateur d'événements",
+        "Event Consumer Document Types": "Types de documents du consommateur d'événements",
+        "Event Streaming": "Flux d'événement",
+        "Event Subscriber": "Abonné aux événements",
+        "In Test": "En test",
+        "Incoming Change": "Changement en cours",
         "System Manager": "Responsable Système"
     },
     "DocType: Event Consumer Document Type": {
+        "Approval Status": "Statut d'approbation",
+        "Approved": "Approuvé",
         "Document Type": "Type de Document",
+        "Event Consumer Document Type": "Type de document du consommateur d'événements",
+        "Event Streaming": "Flux d'événement",
         "Pending": "En cours",
         "Rejected": "Rejeté"
     },
@@ -2041,13 +2138,28 @@
     "DocType: Event Producer": {
         "API Key": "Clé API",
         "API Secret": "Secret API",
+        "Event Producer": "Producteur d'événements",
+        "Event Producer Document Types": "Types de document du producteur d'événements",
+        "Event Streaming": "Flux d'événement",
+        "Event Subscriber": "Abonné aux événements",
+        "Incoming Change": "Changement en cours",
+        "Last Update": "Dernière mise à jour",
+        "Producer URL": "URL du producteur",
         "System Manager": "Responsable Système"
     },
     "DocType: Event Producer Document Type": {
+        "Approval Status": "Statut d'approbation",
+        "Approved": "Approuvé",
         "Document Type": "Type de Document",
+        "Event Producer Document Type": "Type de document du producteur d'événements",
+        "Event Streaming": "Flux d'événements",
+        "Has Mapping": "A un mapping",
+        "If the document has different field names on the Producer and Consumer's end check this and set up the Mapping": "Si un document a des noms de champ différent entre le producteur et le consommateur d'événements, cochez cette case et créez un mapping.",
+        "If this is checked the documents will have the same name as they have on the Event Producer's site": "Si cette case est cochée, les documents auront le même nom que sur le site du producteur d'événements.",
         "Mapping": "Mapping",
         "Pending": "En cours",
-        "Rejected": "Rejeté"
+        "Rejected": "Rejeté",
+        "Use Same Name": "Conserver le même nom"
     },
     "DocType: Event Sync Log": {
         "Create": "Créer",
@@ -2056,11 +2168,19 @@
         "Doctype": "Type de document",
         "Document Name": "Nom du Document",
         "Error": "Erreur",
+        "Event Configurations": "Configurations des événements",
+        "Event Producer": "Producteur d'événements",
+        "Event Streaming": "Flux d'événements",
+        "Event Sync Log": "Journal des synchronisations d'événements",
         "Failed": "Échec",
         "Mapping": "Mapping",
+        "Producer Document Name": "Nom du document du producteur",
         "Status": "Statut",
+        "Synced": "Synchronisé",
         "System Manager": "Responsable Système",
-        "Update": "Mettre à Jour"
+        "Update": "Mettre à Jour",
+        "Update Type": "Type de mise à jour",
+        "Use Same Name": "Conserver le même nom"
     },
     "DocType: Event Update Log": {
         "Create": "Créer",
@@ -2068,8 +2188,11 @@
         "Delete": "Supprimer",
         "DocType": "DocType",
         "Document Name": "Nom du Document",
+        "Event Streaming": "Flux d'événements",
+        "Event Update Log": "Journal des mises à jour d'événements",
         "System Manager": "Responsable Système",
-        "Update": "Mettre à Jour"
+        "Update": "Mettre à Jour",
+        "Update Type": "Type de mise à jour"
     },
     "DocType: Feedback Request": {
         "Core": "Module central",
@@ -2541,6 +2664,7 @@
         "Create and Send Newsletters": "Créer et Envoyer des Newsletters",
         "Email": "E-mail",
         "Email Group": "Groupe Email",
+        "Email Sent": "Email envoyé",
         "Email Sent?": "Email Envoyé ?",
         "Message": "Message",
         "Newsletter": "Newsletter",
@@ -2549,6 +2673,7 @@
         "Receipient": "Bénéficiaire",
         "Recipients": "Destinataires",
         "Route": "Route",
+        "Schedule Send": "Programmer l'envoi",
         "Scheduled To Send": "Envoi plannifié",
         "Send Attachements": "Envoyer Pièces Jointes",
         "Send Unsubscribe Link": "Envoyer le Lien de Désabonnement",
@@ -2661,6 +2786,7 @@
     "DocType: Notification Settings": {
         "All": "Tous",
         "Assignments": "Attributions",
+        "Default displayed calendar": "Calendrier affiché par défaut",
         "Desk": "Bureau",
         "Document Share": "Partage de document",
         "Email Settings": "Paramètres des emails",
@@ -2677,6 +2803,40 @@
         "Desk": "Bureau",
         "Document": "Document",
         "Notification Subscribed Document": "Document souscrit par notification"
+    },
+    "DocType: Number Card": {
+        "Aggregate Function Based On": "Fonction agrégée sur la base de",
+        "All": "Tous",
+        "Average": "Moyenne",
+        "Color": "Couleur",
+        "Count": "Décompte",
+        "Daily": "Quotidien",
+        "Dashboard Manager": "Gestionnaire de tableau de bord",
+        "Desk": "Bureau",
+        "Document Type": "Type de Document",
+        "Filters JSON": "Filtres JSON",
+        "Filters Section": "Filtres",
+        "Function": "Fonction",
+        "Is Public": "Public",
+        "Label": "Étiquette",
+        "Maximum": "Maximum",
+        "Minimum": "Minimum",
+        "Monthly": "Mensuelle",
+        "Number Card": "Carte statistique",
+        "Show Percentage Stats": "Afficher les pourcentage d'évolution",
+        "Show percentage difference according to this time interval": "Afficher l'évolution en fonction de l'intervale de temps suivant",
+        "Stats": "Statistiques",
+        "Stats Time Interval": "Intervale de temps",
+        "Sum": "Somme",
+        "System Manager": "Responsable système",
+        "This card will be available to all Users if this is set": "Si cette case est cochée, cette carte sera disponible pour tous les utilisateurs.",
+        "Weekly": "Hebdomadaire",
+        "Yearly": "Annuelle"
+    },
+    "DocType: Number Card Link": {
+        "Card": "Carte",
+        "Desk": "Bureau",
+        "Number Card Link": "Lien de carte statistique"
     },
     "DocType: OAuth Authorization Code": {
         "Authorization Code": "Code d'autorisation",
@@ -2710,6 +2870,7 @@
     "DocType: OAuth Client": {
         " Advanced Settings": "Paramètres avancés",
         "A list of resources which the Client App will have access to after the user allows it.<br> e.g. project": "Liste des ressources auxquelles l'application client aura accès.<br>Par exemple: projet",
+        "Advanced Settings": "Paramètres avancés",
         "App Client ID": "ID client de l'application",
         "App Client Secret": "Secret client de l'application",
         "App Name": "Nom de l'application",
@@ -2727,6 +2888,7 @@
         "Skip Authorization": "Ne pas demander d'autorisation",
         "System Manager": "Responsable système",
         "Token": "Jeton",
+        "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.\n<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook": "URIs pour recevoir un code d'autorisation une fois que l'utilisateur a autorisé l'accès, de même que les retours en cas d'échec. Généralement un point d'arrivée REST exposée par l'application cliente.\n<br>ex: http://hostname//api/method/frappe.www.login.login_via_facebook",
         "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook": "URIs pour recevoir le code d'autorisation ainsi que les réponses d'échec une fois que l'utilisateur autorise l'accès. Typiquement, un point de terminaison REST exposé par l'application cliente.<br>Par exemple, http: //hostname//api/method/frappe.www.login.login_via_facebook",
         "User": "Utilisateur"
     },
@@ -2737,6 +2899,28 @@
         "OAuth Provider Settings": "Paramètres du Fournisseur OAuth",
         "Skip Authorization": "Passer autorisation",
         "System Manager": "Responsable Système"
+    },
+    "DocType: Onboarding": {
+        "All": "Tous",
+        "Allow Roles": "Autoriser les rôles",
+        "Allow users to dismiss onboarding temporarily for a day": "Autoriser les utilisateurs à cacher la carte d'onboarding temporairement (1 jour)",
+        "Desk": "Bureau",
+        "Documentation URL": "URL de la documentation",
+        "Is Complete": "Terminé",
+        "Module": "Module",
+        "Onboarding": "Onboarding",
+        "Steps": "Etapes",
+        "Subtitle": "Sous-titres",
+        "Success Message": "Message de succès",
+        "System Manager": "Responsable système",
+        "System managers are allowed by default": "Les responsables système sont autorisés par défaut",
+        "Title": "Titre",
+        "User Can Dismiss ": "L'utilisateur peut cacher la carte"
+    },
+    "DocType: Onboarding Permission": {
+        "Desk": "Bureau",
+        "Onboarding Permission": "Autorisations d'onboarding",
+        "Role": "Rôle"
     },
     "DocType: Onboarding Slide": {
         "Action Settings": "Paramètres d'action",
@@ -2807,6 +2991,36 @@
         "Label": "Étiquette",
         "Onboarding Slide Help Link": "Lien d'aide de diapositive d'accueil",
         "Video": "Vidéo"
+    },
+    "DocType: Onboarding Step": {
+        "Action": "Action",
+        "Administrator": "Administrateur",
+        "All": "Tous",
+        "Create Entry": "Créer une entrée",
+        "Desk": "Bureau",
+        "Field": "Champ",
+        "Is Complete": "Terminée",
+        "Is Mandatory": "Obligatoire",
+        "Is Skipped": "Sautée",
+        "Onboarding Step": "Etape d'onboarding",
+        "Reference Document": "Document de référence",
+        "Reference Report": "Rapport de référence",
+        "Report Description": "Description du rapport",
+        "Report Reference Doctype": "Type de document de référence du rapport",
+        "Report Type": "Type de Rapport",
+        "This will be shown to the user in a dialog after routing to the report": "Cette description sera affichée dans un popup à l'affichage du rapport",
+        "Title": "Titre",
+        "Update Settings": "Mettre à jour les paramètres",
+        "Use % for any non empty value.": "Utiliser % pour toutes les valeurs non nulles",
+        "Value to Validate": "Valeur à valider",
+        "Video URL": "URL de la vidéo",
+        "View Report": "Voir un rapport",
+        "Watch Video": "Voir une vidéo"
+    },
+    "DocType: Onboarding Step Map": {
+        "Desk": "Bureau",
+        "Onboarding Step Map": "Carte des étapes d'onboarding",
+        "Step": "Etape"
     },
     "DocType: Page": {
         "Administrator": "Administrateur",
@@ -2933,6 +3147,7 @@
         "Filter Values": "Valeurs du filtre",
         "Filters": "Filtres",
         "Prepared Report": "Rapport préparé",
+        "Prepared Report User": "Utilisateur de rapport préparé",
         "Queued": "File d'Attente",
         "Ref Report DocType": "Réf Rapport DocType",
         "Report End Time": "Heure de fin du rapport",
@@ -3151,10 +3366,16 @@
         "User": "Utilisateur"
     },
     "DocType: S3 Backup Settings": {
+        "API Access": "Accès API",
         "Access Key ID": "ID de Clé d'Accès",
+        "Access Key Secret": "Clé secrète d'accès",
+        "Backup Details": "Détails de sauvegarde",
+        "Backup Files": "Fichiers de sauvegarde",
         "Backup Frequency": "Fréquence de Sauvegarde",
         "Backup Limit": "Limite de Sauvegarde",
+        "Backup public and private files along with the database.": "Sauvegarder les fichiers publics et privés en même temps que la base de données",
         "Bucket": "Bucket",
+        "Bucket Name": "Nom du compartiment",
         "Daily": "Quotidien",
         "Enable Automatic Backup": "Activer la sauvegarde automatique",
         "Endpoint URL": "URL du noeud final",
@@ -3162,12 +3383,15 @@
         "Monthly": "Mensuel",
         "None": "Aucun",
         "Note: By default emails for failed backups are sent.": "Remarque: par défaut, les e-mails pour les sauvegardes ayant échoué sont envoyés.",
+        "Notification": "Notification",
         "Region": "Région",
         "S3 Backup Settings": "Paramètres de sauvegarde S3",
+        "S3 Bucket Details": "Détails du compartiment S3",
         "Secret Access Key": "Clé d'accès secrète",
         "See https://docs.aws.amazon.com/de_de/general/latest/gr/rande.html#s3_region for details.": "Voir https://docs.aws.amazon.com/de_de/general/latest/gr/rande.html#s3_region pour plus de détails",
         "Send Email for Successful Backup": "Envoyer un courrier électronique pour une sauvegarde réussie",
         "Send Notifications To": "Envoyer des Notifications À",
+        "Set to 0 for no limit on the number of backups taken": "Mettre 0 pour ne pas définir de limite de nombre de sauvegardes",
         "System Manager": "Responsable Système",
         "Weekly": "Hebdomadaire",
         "ap-northeast-1": "ap-northeast-1",
@@ -3226,6 +3450,7 @@
         "Scheduled": "Programmé",
         "Scheduled Job": "Tâche de fond programmée",
         "Scheduled Job Log": "Journal des tâches de fonds programmées",
+        "Start": "Démarrer",
         "Status": "Statut",
         "Success": "Réussite",
         "System Manager": "Responsable Système"
@@ -3247,6 +3472,7 @@
         "Monthly": "Mensuelle",
         "Monthly Long": "Mensuelle - Long",
         "Scheduled Job Type": "Type de tâche de fond programmée",
+        "Server Script": "Scripts python",
         "Stopped": "Arrêté",
         "System Manager": "Responsable Système",
         "Weekly": "Hebdomadaire",
@@ -3272,6 +3498,7 @@
         "Disabled": "Desactivé",
         "DocType Event": "Evénement déclencheur",
         "Reference Document Type": "Type de document de référence",
+        "Scheduler Event": "Evénément programmé",
         "Script": "Script",
         "Script Manager": "Gestionnaire de script",
         "Script Type": "Type de script",
@@ -3435,6 +3662,7 @@
         "Country": "Pays",
         "Create contacts from incoming emails": "Créer des contacts à partir des emails entrants",
         "Currency Precision": "Précision de la Devise",
+        "Currency Symbol Position": "Position du symbole de devise",
         "Date Format": "Format de Date",
         "Date and Number Format": "Format de Date et Nombre",
         "Desk Logo": "Logo du bureau",
@@ -3443,6 +3671,7 @@
         "Email": "E-mail",
         "Email Footer Address": "Pied de Page Email",
         "Enable Chat": "Activer le chat",
+        "Enable Onboarding": "Autoriser l'onboarding",
         "Enable Password Policy": "Activer la Politique de Mot de Passe",
         "Enable Scheduled Jobs": "Activer les Tâches Planifiées",
         "Enable Two Factor Auth": "Autoriser l'Authentification à Double Facteurs",
@@ -3462,6 +3691,8 @@
         "In seconds": "En secondes",
         "Is First Startup": "Premier Lancement",
         "Language": "Langue",
+        "Left": "Gauche",
+        "Logout All Sessions on Password Reset": "Déconnecter de toutes les sessions au changement de mot de passe",
         "Minimum Password Score": "Score Minimum de Mot de Passe",
         "Note: Multiple sessions will be allowed in case of mobile device": "Remarque : Plusieurs sessions seront autorisées en cas d'appareil mobile",
         "Number Format": "Format Numérique",
@@ -3471,6 +3702,7 @@
         "Older backups will be automatically deleted": "Les anciennes sauvegardes seront automatiquement supprimées",
         "Password": "Mot de Passe",
         "Permissions": "Autorisations",
+        "Right": "Droit",
         "Run Jobs only Daily if Inactive For (Days)": "Ne lancer les tâche qu'une fois par jour si inactif depuis (jours)",
         "Run scheduled jobs only if checked": "Les tâches planifiées ne sont exécutées que si la case est cochée.",
         "SMS": "SMS",
@@ -3670,6 +3902,7 @@
         "Location": "Lieu",
         "Login After": "Connexion à Partir de",
         "Login Before": "Connexion Jusqu'à",
+        "Logout from all devices after changing password": "Déconnecter de tous les appareils après changement du mot de passe",
         "Logout from all devices while changing Password": "Déconnecter de tous les appareils lors de la modification du mot de passe",
         "Middle Name (Optional)": "Deuxième Prénom (Optionnel)",
         "Mobile No": "N° Mobile",
@@ -3703,6 +3936,7 @@
         "These values will be automatically updated in transactions and also will be useful to restrict permissions for this user on transactions containing these values.": "Ces valeurs seront automatiquement mises à jour dans les transactions et sera également utile pour restreindre les autorisations pour cet utilisateur sur les transactions contenant ces valeurs.",
         "Third Party Authentication": "Authentification Tierce",
         "Tile": "Mosaïque",
+        "Time zone": "Fuseau horaire",
         "Timezone": "Fuseau Horaire",
         "Unsubscribed": "Désinscrit",
         "User": "Utilisateur",
@@ -3762,6 +3996,20 @@
         "System Manager": "Responsable Système",
         "Table HTML": "HTML de Table",
         "Version": "Version"
+    },
+    "DocType: Video": {
+        "All": "Tous",
+        "Core": "Module central",
+        "Description": "Description",
+        "Duration": "Durée",
+        "Provider": "Fournisseur",
+        "Publish Date": "Date de publication",
+        "System Manager": "Responsable système",
+        "Title": "Titre",
+        "URL": "URL",
+        "Video": "Vidéo",
+        "Vimeo": "Vimeo",
+        "YouTube": "YouTube"
     },
     "DocType: View Log": {
         "Core": "Module central",
@@ -3864,6 +4112,7 @@
     },
     "DocType: Web Page": {
         "0 is highest": "0 est le plus élevé",
+        "Add Custom Tags": "Ajouter des tags personnalisés",
         "Add code as &lt;script&gt;": "Ajouter le code en tant que &lt;script&gt;",
         "Add comma separated keywords for SEO": "Ajouter des mots clés séparés par une virgule pour la SEO",
         "Add description for SEO. Max character length is 160.": "Ajouter une description pour la SEO. 160 caractères maximum.",
@@ -3876,10 +4125,13 @@
         "Dynamic Template": "Modèle dynamique",
         "Enable Comments": "Activer Commentaires",
         "End Date": "Date de Fin",
+        "Full Width": "Largeur complète",
         "HTML": "HTML",
         "HTML for header section. Optional": "HTML pour la section d'en-tête. Optionnel",
         "Header": "En-Tête",
+        "Header and Breadcrumbs": "En-tête et fil d'Ariane",
         "Header, Breadcrumbs and Meta Tags": "En-tête, aides à la navigation et meta tags",
+        "Image": "Image",
         "Insert Code": "Insérez le Code",
         "Insert Style": "Insérez le Style",
         "Javascript": "Javascript",
@@ -3890,6 +4142,9 @@
         "Main Section (HTML)": "Section principale (HTML)",
         "Main Section (Markdown)": "Section principale (Markdown)",
         "Markdown": "Markdown",
+        "Meta Tags": "Meta tags",
+        "Page Builder": "Constructeur de page",
+        "Page Building Blocks": "Blocs de construction de page",
         "Page to show on the website\n": "Page à afficher sur le site Web",
         "Priority": "Priorité",
         "Published": "Publié",
@@ -3912,6 +4167,65 @@
         "Website": "Site Web",
         "Website Manager": "Responsable du Site Web",
         "Website Sidebar": "Barre Latérale du Site Web"
+    },
+    "DocType: Web Page Block": {
+        "Add Container": "Ajouter un contenant",
+        "Add Gray Background": "Ajouter un fond gris",
+        "Add Padding": "Ajouter du padding",
+        "CSS Class": "Classe CSS",
+        "Edit Values": "Modifier les valeurs",
+        "Hide Block": "Cacher le bloc",
+        "Web Page Block": "Bloc de page web",
+        "Web Template": "Modèle de bloc web",
+        "Web Template Values": "Valeurs de modèle de bloc web",
+        "Website": "Site Web"
+    },
+    "DocType: Web Page View": {
+        "Browser": "Navigateur",
+        "Browser Version": "Version du navigateur",
+        "Date": "Date",
+        "Path": "Lien",
+        "Referrer": "Référent",
+        "System Manager": "Responsable système",
+        "Web Page View": "Vue de page web",
+        "Website": "Site Web"
+    },
+    "DocType: Web Template": {
+        "Fields": "Champ",
+        "Standard": "Standard",
+        "System Manager": "Responsable système",
+        "Template": "Modèle",
+        "Web Template": "Modèle de bloc web",
+        "Website": "Site Web"
+    },
+    "DocType: Web Template Field": {
+        "Attach Image": "Joindre une image",
+        "Check": "Vérifier",
+        "Column Break": "Saut de colonne",
+        "Data": "Données",
+        "Fieldname": "Nom du champ",
+        "Fieldtype": "Type de champ",
+        "Int": "Int",
+        "Label": "Étiquette",
+        "Mandatory": "Obligatoire",
+        "Markdown Editor": "Editeur Markdown",
+        "Options": "Options",
+        "Section Break": "Saut de section",
+        "Select": "Sélectionner",
+        "Small Text": "Petit texte",
+        "Text": "Texte",
+        "Website": "Site Web"
+    },
+    "DocType: Web View Item": {
+        "Columns": "Colonnes",
+        "Content": "Contenu",
+        "HTML": "HTML",
+        "Hide": "Cacher",
+        "List": "Liste",
+        "Markdown": "Markdown",
+        "Title": "Titre",
+        "Web Form": "Formulaire web",
+        "Website": "Site Web"
     },
     "DocType: Webhook": {
         "Condition": "Conditions",
@@ -4087,9 +4401,12 @@
         "Custom Theme": "Thème personnalisé",
         "Custom Theme URL": "URL du thème personnalisé",
         "Custom?": "Personnaliser ?",
+        "Dark Color": "Couleurs foncées",
         "Font Size": "Taille de la Police",
+        "Footer": "Pied de Page",
         "Footer Color": "Couleur de Pied de Page",
         "Footer Text Color": "Couleur du Texte du Pied de Page",
+        "Google Font": "Police Google Font",
         "Google Font (Heading)": "Police Google (titre)",
         "Google Font (Text)": "Police Google (texte)",
         "Heading Style": "Style de Titre",
@@ -4099,6 +4416,7 @@
         "Link to Bootstrap CSS": "Lien vers Bootstrap CSS",
         "Link to your Bootstrap theme": "Lien vers votre thème Bootstrap",
         "Module": "Module",
+        "Primary Color": "Couleur primaire",
         "Style using CSS": "Style en utilisant CSS",
         "Text Color": "Couleur du Texte",
         "Text Styles": "Styles de texte",
@@ -4399,6 +4717,9 @@
     "Page: User Profile": {
         "User Profile": "Profil utilisateur"
     },
+    "Page: workspace": {
+        "workspace": "Espace de travail"
+    },
     "Report: Address And Contacts": {
         "Address And Contacts": "Adresse et contacts"
     },
@@ -4422,6 +4743,7 @@
     },
     "apps/frappe/frappe/__init__.py": {
         "App {0} is not installed": "App {0} n'est pas installée",
+        "Change": "Modifier",
         "Error": "Erreur",
         "No permission for {0}": "Pas d'autorisation pour {0}",
         "Not Permitted": "Non autorisé",
@@ -4519,6 +4841,7 @@
     "apps/frappe/frappe/config/automation.py": {
         "Automatically generates recurring documents.": "Génère des documents récurrents automatiquement",
         "Automation": "Automatisation",
+        "Event Streaming": "Flux d'événement",
         "Set up rules for user assignments.": "Créer des règles pour l'attribution aux utilisateurs",
         "Tracks milestones on the lifecycle of a document if it undergoes multiple stages.": "Suivez les jalons de cycle de vie d'un document soumis à plusieurs étapes"
     },
@@ -4817,15 +5140,22 @@
         "{0} mentioned you in a comment in {1}": "{0} vous a mentionné dans un commentaire dans {1}"
     },
     "apps/frappe/frappe/core/doctype/communication/communication.js": {
+        "Actions": "Actions",
         "Add Contact": "Ajouter un contact",
         "Are you sure you want to relink this communication to {0}?": "Êtes-vous sûr de vouloir lier cette communication à {0} ?",
         "Close": "Fermer",
+        "Contact": "Contact",
+        "Create": "Créer",
+        "Email Account": "Compte email",
         "Email has been marked as spam": "L'email a été marqué comme étant un spam",
         "Email has been moved to trash": "L'email a été déplacé dans la corbeille",
         "Forward": "Faire suivre",
         "Fw: {0}": "Fw: {0}",
+        "Mark as Read": "Marquer comme lu",
         "Mark as Spam": "Marquer comme spam",
+        "Mark as Unread": "Marquer comme non lu",
         "Mark as {0}": "Marquer comme {0}",
+        "Move": "Déplacer",
         "Move To Trash": "Mettre À la corbeille",
         "Re: {0}": "Re: {0}",
         "Reference Doctype": "DocType de référence",
@@ -5210,8 +5540,10 @@
     },
     "apps/frappe/frappe/core/doctype/report/report.py": {
         "Cannot edit a standard report. Please duplicate and create a new report": "Modification du rapport standard impossible. Veuillez le dupliquer et créer un nouveau rapport",
+        "Must specify a Query to run": "Vous devez spécifier une requête à exécuter",
         "Only Administrator allowed to create Query / Script Reports": "Seul l'Administrateur est autorisé à créer des Rapports de Requêtes / Script",
-        "Only Administrator can save a standard report. Please rename and save.": "Seul l'Administrateur peut enregistrer un rapport standard. Merci de renommer et sauvegarder."
+        "Only Administrator can save a standard report. Please rename and save.": "Seul l'Administrateur peut enregistrer un rapport standard. Merci de renommer et sauvegarder.",
+        "Query must be a SELECT": "La requête doit être un SELECT"
     },
     "apps/frappe/frappe/core/doctype/role/role.py": {
         "Standard roles cannot be disabled": "Les rôles standard ne peuvent pas être désactivées",
@@ -5251,6 +5583,7 @@
     },
     "apps/frappe/frappe/core/doctype/user/user.js": {
         "Create User Email": "Créer un compte email pour l'utilisateur",
+        "New Password": "Nouveau mot de passe",
         "Password": "Mot de passe",
         "Permissions": "Autorisations",
         "Refreshing...": "Actualisation...",
@@ -5644,6 +5977,9 @@
     "apps/frappe/frappe/desk/calendar.py": {
         "Not Permitted": "Non Autorisé"
     },
+    "apps/frappe/frappe/desk/desktop.py": {
+        "Custom Reports": "Rapports personnalisés"
+    },
     "apps/frappe/frappe/desk/doctype/auto_repeat/auto_repeat.js": {
         "Message not setup": "Message non configuré",
         "Please setup a message first": "Veuillez d'abord configurer un message",
@@ -5782,6 +6118,13 @@
     },
     "apps/frappe/frappe/desk/doctype/notification_settings/notification_settings.js": {
         "Settings": "Paramètres"
+    },
+    "apps/frappe/frappe/desk/doctype/number_card/number_card.js": {
+        "Click to Set Filters": "Cliquer pour définir des filtres",
+        "Condition": "Conditions",
+        "Filter": "Filtre",
+        "Set Filters": "Définir des filtres",
+        "Value": "Valeur"
     },
     "apps/frappe/frappe/desk/doctype/onboarding_slide/onboarding_slide.py": {
         "An Onboarding Slide <b>{0}</b> with the same slide order already exists": "Une diapositive d'accueil <b>{0}</b> avec le même ordre de diapositives existe déjà",
@@ -6086,7 +6429,9 @@
         "{0} already unsubscribed for {1} {2}": "{0} déjà désabonné pour {1} {2}"
     },
     "apps/frappe/frappe/email/doctype/newsletter/newsletter.js": {
-        "Send": "Envoyer"
+        "Do you really want to send this email newsletter?": "Voulez-vous vraiment envoyer cette newsletter ?",
+        "Send": "Envoyer",
+        "Send Now": "Envoyer Maintenant"
     },
     "apps/frappe/frappe/email/doctype/newsletter/newsletter.py": {
         "Click here to verify": "Cliquez ici pour vérifier",
@@ -6095,6 +6440,7 @@
         "Newsletter": "Newsletter",
         "Newsletter has already been sent": "La Newsletter a déjà été envoyée",
         "Newsletter should have at least one recipient": "Les newsletters doivent avoir au moins un destinataire",
+        "Newsletter should have atleast one recipient": "Une newsletter doit avoir au moins un destinataire",
         "Permission Error": "Erreur d'autorisation",
         "Please save the Newsletter before sending": "Veuillez sauvegarder la Newsletter avant de l'envoyer",
         "Please verify your Email Address": "Veuillez vérifier votre adresse e-mail",
@@ -6130,7 +6476,8 @@
         "Notification communication creation error": "Erreur de création d'une communication de notification",
         "Please specify which date field must be checked": "Veuillez spécifier quel champ Date doit être vérifié",
         "Please specify which value field must be checked": "Veuillez indiquer quel champ de valeur doit être vérifiée",
-        "The Condition '{0}' is invalid": "La Condition '{0}' est invalide"
+        "The Condition '{0}' is invalid": "La Condition '{0}' est invalide",
+        "via Notification": "via les notifications"
     },
     "apps/frappe/frappe/email/queue.py": {
         "Cannot send this email. You have crossed the sending limit of {0} emails for this day.": "Impossible d'envoyer cet email. Vous avez dépassé la limite journalière d'envoi d'emails {0}.",
@@ -6161,12 +6508,16 @@
     "apps/frappe/frappe/event_streaming/doctype/event_producer/event_producer.py": {
         "Invalid URL": "URL invalide"
     },
+    "apps/frappe/frappe/event_streaming/doctype/event_sync_log/event_sync_log.js": {
+        "Resync": "Re-synchroniser"
+    },
     "apps/frappe/frappe/geo/doctype/currency/currency.js": {
         "This Currency is disabled. Enable to use in transactions": "Cette devise est désactivée. Activez la pour l'utiliser dans les transactions"
     },
     "apps/frappe/frappe/handler.py": {
         "Logged Out": "Déconnecté",
         "Not permitted": "Interdit",
+        "You can only upload JPG, PNG, PDF, or Microsoft documents.": "Vous pouvez uniquement télécharger des fichiers JPG, PNG, PDF ou des documents Microsoft.",
         "You have been successfully logged out": "Vous avez été déconnecté avec succès"
     },
     "apps/frappe/frappe/installer.py": {
@@ -6369,6 +6720,7 @@
         "Backup Upload Failed!": "Le téléchargement de la sauvegarde a échoué",
         "Backup Upload Successful": "Téléchargement de la sauvegarde réussie",
         "Backup Uploaded Successfully!": "La sauvegarde a été téléchargée avec succès!",
+        "Do not have permission to access {0} bucket.": "Vous n'avez pas l'autorisation d'accéder au compartiment {0}",
         "Error message: %s": "Message d'erreur: %s",
         "Hi there, this is just to inform you that your backup was successfully uploaded to your Amazon S3 bucket. So relax!": "Bonjour, nous vous informons que votre sauvegarde a été téléchargée avec succès sur votre Bucket Amazon S3.",
         "Invalid Access Key ID or Secret Access Key.": "ID de clé d'accès ou clé d'accès secrète invalide.",
@@ -6401,6 +6753,7 @@
     "apps/frappe/frappe/integrations/doctype/webhook/webhook.py": {
         "Check Request URL": "Vérifier l'URL de Demande",
         "DocType must be Submittable for the selected Doc Event": "Le DocType doit être soumissible pour l'événement Doc sélectionné",
+        "Invalid JSON": "JSON invalide",
         "Same Field is entered more than once": "Champ identique entré plus d'une fois"
     },
     "apps/frappe/frappe/integrations/oauth2.py": {
@@ -6538,6 +6891,7 @@
     "apps/frappe/frappe/model/workflow.py": {
         "Applying: {0}": "Mise à jour : {0}",
         "Errored Transactions": "Transactions en erreur",
+        "Failed Transactions": "Transactions en échec",
         "Illegal Document Status for {0}": "Statut de document non autorisé pour {0}",
         "Not a valid Workflow Action": "Action de flux de travail non valide",
         "Self approval is not allowed": "L'auto-approbation n'est pas autorisée",
@@ -6832,6 +7186,10 @@
     "apps/frappe/frappe/public/js/frappe/form/controls/base_control.js": {
         "Open Translation": "Ouvrir la traduction"
     },
+    "apps/frappe/frappe/public/js/frappe/form/controls/code.js": {
+        "Collapse": "Réduire",
+        "Expand": "Etendre"
+    },
     "apps/frappe/frappe/public/js/frappe/form/controls/comment.js": {
         "Add a comment": "Ajouter un commentaire",
         "Comment": "Commenter",
@@ -6974,6 +7332,7 @@
         "submitted this document": "a validé ce document",
         "submitted this document {0}": "a soumis le document {0}",
         "via Data Import": "Via l'import de données",
+        "via {0}": "via {0}",
         "viewed": "vu",
         "{0} changed {1} to {2}": "{0} a changé {1} en {2}",
         "{0} from {1} to {2}": "{0} de {1} à {2}",
@@ -7149,6 +7508,7 @@
         "Mandatory fields required in {0}": "Champs Obligatoires Requis : {0}",
         "Missing Fields": "Champs Manquants",
         "Name": "Nom",
+        "No changes in document": "Document inchangé",
         "Saved": "Enregistré",
         "Saving": "En Cours d'Enregistrement",
         "Submitting": "Soumission",
@@ -7191,6 +7551,7 @@
     },
     "apps/frappe/frappe/public/js/frappe/form/sidebar/form_sidebar.js": {
         "Repeats {0}": "Répétition {0}",
+        "{0} Page Views": "{0} vues de page",
         "{0} created this {1}": "{0} a créé {1}",
         "{0} edited this {1}": "{0} a édité {1}"
     },
@@ -7383,6 +7744,7 @@
         "Charts": "Graphiques",
         "Close": "Fermer",
         "Configure Charts": "Configurer les graphiques",
+        "Dashboard": "Tableau de bord",
         "Email Inbox": "Boîte de Réception",
         "Gantt": "Gantt",
         "Help": "Aide",
@@ -7398,7 +7760,8 @@
         "Show tags": "Voir les balises",
         "Tags": "Balises",
         "Toggle Charts": "Afficher/Cacher les graphiques",
-        "Tree": "Arbre"
+        "Tree": "Arbre",
+        "Views": "Vues"
     },
     "apps/frappe/frappe/public/js/frappe/list/list_sidebar.js": {
         "Calendar": "Calendrier",
@@ -7751,6 +8114,7 @@
         "Add Group": "Ajouter un groupe",
         "Average of {0}": "Moyenne de {0}",
         "Count": "Décompte",
+        "Select Field...": "Sélectionner un champ...",
         "Sum of {0}": "Somme de {0}"
     },
     "apps/frappe/frappe/public/js/frappe/ui/keyboard.js": {
@@ -7790,7 +8154,9 @@
         "Loading...": "Chargement en cours...",
         "Mark all as Read": "Tout marquer comme lu",
         "Mark as Read": "Marquer comme lu",
+        "Next Events": "Prochains événements",
         "No Events Today": "Aucun événement aujourd'hui",
+        "No Planned Events": "Aucun événement prévu",
         "No Upcoming Events": "Aucun événement à venir",
         "No activity": "Aucune activité",
         "Notification Settings": "Paramètres des notifications",
@@ -7799,6 +8165,7 @@
         "Open Documents": "Documents ouverts",
         "Settings": "Paramètres",
         "To Do": "ToDo",
+        "Today": "Aujourd'hui",
         "Today's Events": "Evénements du jour",
         "Upcoming Events": "Evénements à venir",
         "View Full Log": "Voir les journaux complets",
@@ -7923,6 +8290,7 @@
         "Report {0}": "Rapport {0}",
         "Reports": "Rapports",
         "Setup": "Configuration",
+        "Workspace": "Espace de travail",
         "calendar": "calendrier",
         "email inbox": "Boîte Email",
         "new": "nouveau"
@@ -7988,14 +8356,26 @@
     "apps/frappe/frappe/public/js/frappe/utils/pretty_date.js": {
         "1 hour ago": "Il y a 1 heure",
         "1 minute ago": "Il y a 1 minute",
+        "1 month ago": "Il y a 1 mois",
+        "1 week ago": "Il y a une semaine",
+        "1 year ago": "Il y a 1 an",
         "> {0} year(s) ago": "> {0} ans",
         "Yesterday": "Hier",
         "just now": "juste maintenant",
         "now": "maintenant",
+        "yesterday": "Hier",
+        "{0} M": "{0} M",
+        "{0} d": "{0} j",
         "{0} days ago": "Il y a {0} jours",
+        "{0} h": "{0} h",
+        "{0} hours ago": "Il y a {0} heures",
+        "{0} m": "{0} m",
         "{0} minutes ago": "Il y a {0} minutes",
         "{0} months ago": "Il y a {0} mois",
-        "{0} weeks ago": "Il y a {0} semaines"
+        "{0} w": "{0} s",
+        "{0} weeks ago": "Il y a {0} semaines",
+        "{0} y": "{0} a",
+        "{0} years ago": "{0} ans"
     },
     "apps/frappe/frappe/public/js/frappe/utils/rating_icons.html": {
         "Rating: ": "Évaluation :"
@@ -8016,6 +8396,9 @@
         "{0} List": "Liste {0}",
         "{0} Modules": "Modules de/d' {0}",
         "{0} Report": "Rapport de/d' {0}"
+    },
+    "apps/frappe/frappe/public/js/frappe/utils/web_page_block.js": {
+        "Edit Values": "Modifier les valeurs"
     },
     "apps/frappe/frappe/public/js/frappe/views/calendar/calendar.js": {
         "All day": "Toute la journée",
@@ -8085,6 +8468,22 @@
     },
     "apps/frappe/frappe/public/js/frappe/views/container.js": {
         "Page not found": "Page non trouvée"
+    },
+    "apps/frappe/frappe/public/js/frappe/views/dashboard/dashboard_view.js": {
+        "Add": "Ajouter",
+        "Created On": "Créé le",
+        "Customize": "Personnaliser",
+        "Discard": "Ignorer",
+        "Last Modified On": "Dernière modification le",
+        "Reset": "Réinitialiser",
+        "Save": "Enregistrer",
+        "{0} Dashboard": "Tableau de bord: {0}"
+    },
+    "apps/frappe/frappe/public/js/frappe/views/desktop/desktop.js": {
+        "Discard": "Ignorer",
+        "Failed": "Échec",
+        "Save": "Enregistrer",
+        "Success": "Réussite"
     },
     "apps/frappe/frappe/public/js/frappe/views/file/file_view.js": {
         "Create": "Créer",
@@ -8272,7 +8671,8 @@
         "This report was generated {0}.": "Ce rapport a été préparé {0}.",
         "To get the updated report, click on {0}.": "Pour avoir un rapport mis à jour, cliquez sur {0}",
         "User Permissions": "Autorisations des Utilisateurs",
-        "With Group Indentation": "Avec une indentation de groupe"
+        "With Group Indentation": "Avec une indentation de groupe",
+        "Y Field": "Champ Y"
     },
     "apps/frappe/frappe/public/js/frappe/views/reports/report_view.js": {
         "Add Column": "Ajouter une Colonne",
@@ -8422,15 +8822,54 @@
         "Please login before trying to access this page.": "Veuillez vous connecter avant d'accéder à cette page.",
         "You are not permitted to access this page.": "Vous n'êtes pas autorisé à accéder à cette page."
     },
+    "apps/frappe/frappe/public/js/frappe/widgets/base_widget.js": {
+        "Collapse": "Réduire",
+        "Delete": "Supprimer",
+        "Expand": "Etendre",
+        "Hide": "Cacher",
+        "Save": "Enregistrer",
+        "Show": "Afficher"
+    },
     "apps/frappe/frappe/public/js/frappe/widgets/chart_widget.js": {
+        "Edit": "Modifier",
         "Edit...": "Modification...",
         "Last synced {0}": "Dernière synchronisation le {0}",
+        "No Filters Set": "Aucun filtre défini",
         "Refresh": "Actualiser",
+        "Reset Chart": "Réinitialiser le graphique",
         "{0} List": "Liste {0}",
         "{0} Report": "Rapport de/d' {0}"
     },
     "apps/frappe/frappe/public/js/frappe/widgets/links_widget.js": {
         "You need to create these first: ": "Vous devez d'abord créer un·e:"
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/new_widget.js": {
+        "New Chart": "Nouveau graphique",
+        "New Number Card": "Nouvelle carte statistique",
+        "New Shortcut": "Nouveau raccourci"
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/number_card_widget.js": {
+        "Edit": "Modifier",
+        "Loading...": "Chargement en cours...",
+        "Refresh": "Actualiser",
+        "since last month": "depuis le mois dernier",
+        "since last week": "depuis la semaine dernière",
+        "since last year": "depuis l'année dernière",
+        "since yesterday": "depuis hiers"
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/onboarding_widget.js": {
+        "Continue": "Continuer",
+        "Go Back": "Retour",
+        "Oops": "Oups",
+        "Skip": "Passer",
+        "Skip Step": "Passer l'étape"
+    },
+    "apps/frappe/frappe/public/js/frappe/widgets/widget_dialog.js": {
+        "Add": "Ajouter",
+        "Edit Chart": "Modifier le graphique",
+        "Edit Shortcut": "Modifier le raccourci",
+        "New Chart": "Nouveau graphique",
+        "New Shortcut": "Nouveau raccourci"
     },
     "apps/frappe/frappe/public/js/integrations/razorpay.js": {
         "Show Log": "Afficher le Journal"
@@ -8546,7 +8985,8 @@
         "This will permanently remove your data.": "Cette action supprimera vos données définitivement",
         "Verification Link": "lien de validation",
         "We have received a request for deletion of {0} data associated with: {1}": "Nous avons reçu votre demande de suppression des données associées à {1} sur {0}",
-        "You can also copy-paste this ": "Vous pouvez ausso copier/coller ce "
+        "You can also copy-paste this ": "Vous pouvez ausso copier/coller ce ",
+        "You can also copy-paste this {0} to your browser": "Vous pouvez aussi copier-coller ce {0} dans votre navigateur."
     },
     "apps/frappe/frappe/templates/emails/download_data.html": {
         " to your browser": " dans votre navigateur",
@@ -8677,6 +9117,7 @@
     "apps/frappe/frappe/templates/includes/login/login.js": {
         "Both login and password required": "Un login et un mot de passe sont requis",
         "Enter Code displayed in OTP App.": "Entrez le code affiché dans l'application OTP",
+        "Hide": "Cacher",
         "Instructions Emailed": "Instructions Envoyées par Email",
         "Invalid Login. Try again.": "Login Invalide. Réessayer.",
         "Login token required": "Identifiants de Connexion Requis",
@@ -8686,6 +9127,7 @@
         "OTP setup using OTP App was not completed. Please contact Administrator.": "Le paramétrage OTP n'est pas terminé. Veuillez contacter l'Administrateur.",
         "Oops! Something went wrong": "Oups ! Quelque chose a mal tourné",
         "SMS was not sent. Please contact Administrator.": "Le SMS n'a pas été envoyé. Veuillez contacter l'Administrateur.",
+        "Show": "Afficher",
         "Success": "Réussite",
         "Valid Login id required.": "Un Identifiant de Connexion valide est nécéssaire.",
         "Valid email and name required": "Email et nom valides requis",
@@ -8797,6 +9239,9 @@
     "apps/frappe/frappe/tests/test_twofactor.py": {
         "Administrator": "Administrateur"
     },
+    "apps/frappe/frappe/translate.py": {
+        "message": "message"
+    },
     "apps/frappe/frappe/twofactor.py": {
         "Incorrect Verification code": "Code de Vérification incorrect",
         "Login Verification Code from {}": "Code de Vérification de Connexion depuis {}",
@@ -8807,7 +9252,9 @@
         "Verification code has been sent to your registered email address.": "Le code de vérification a été envoyé à votre adresse e-mail enregistrée."
     },
     "apps/frappe/frappe/utils/__init__.py": {
-        "{0} is not a valid Email Address": "{0} n’est pas une Adresse email valide"
+        "{0} is not a valid Email Address": "{0} n’est pas une Adresse email valide",
+        "{0} is not a valid Name": "{0} n'est pas un nom valide",
+        "{0} is not a valid Phone Number": "{0} n'est pas un numéro de téléphone valide"
     },
     "apps/frappe/frappe/utils/background_jobs.py": {
         "Queue should be one of {0}": "La Queue doit être parmi {0}"
@@ -8908,6 +9355,7 @@
         "Encryption key is invalid, Please check site_config.json": "La clé de cryptage n'est pas valide, veuillez vérifier site_config.json",
         "Incorrect User or Password": "Utilisateur ou mot de passe incorrect",
         "Password cannot be more than 100 characters long": "Mot de Passe ne peut pas contenir plus de 100 caractères",
+        "Password cannot be more than 127 characters long": "Le mot de passe ne peut pas avoir plus de 127 caractères.",
         "Password not found": "Mot de Passe non trouvé"
     },
     "apps/frappe/frappe/utils/password_strength.py": {
@@ -8973,7 +9421,8 @@
     },
     "apps/frappe/frappe/website/doctype/blog_post/templates/blog_post_row.html": {
         "1 comment": "1 commentaire",
-        "{0} comments": "{0} commentaires"
+        "{0} comments": "{0} commentaires",
+        "{0} min read": "{0} mins de lecture"
     },
     "apps/frappe/frappe/website/doctype/contact_us_settings/contact_us_settings.js": {
         "See on Website": "Voir sur le Site"
@@ -9058,16 +9507,25 @@
     "apps/frappe/frappe/website/doctype/website_route_meta/website_route_meta.js": {
         "Visit Web Page": "Voir la page web"
     },
+    "apps/frappe/frappe/website/doctype/website_settings/google_indexing.py": {
+        "Google Indexing has been configured.": "Le référencement Google a été configuré"
+    },
     "apps/frappe/frappe/website/doctype/website_settings/website_settings.js": {
         "Select a Brand Image first.": "Sélectionner une Image de Marque en premier.",
         "View Website": "Voir Le Site Web"
     },
     "apps/frappe/frappe/website/doctype/website_settings/website_settings.py": {
+        "Allow API Indexing Access": "Autoriser l'accès à l'API de référencement",
+        "Allow Google Indexing Access": "Autoriser l'accès au référence Google",
+        "Click on {0} to generate Refresh Token.": "Cliquez sur {0} pour générer un jeton de rafraîchissement",
+        "Enable Google API in Google Settings.": "Activez l'API Google dans les paramètres Google",
+        "Google Integration is disabled.": "L'intégration Google est désactivée",
         "Invalid Home Page": "Page d'Accueil Invalide",
         "Invalid Home Page <br> Standard pages examples: index, login, products, blog, about, contact": "Page d'accueil invalide <br> Exemple de pages standard: index, login, products, blog, about, contact",
         "Invalid Home Page <br> Standard pages: index, login, products, blog, about, contact": "Page d'accueil invalide <br> Pages standard: index, login, products, blog, about, contact",
         "Logout": "Déconnexion",
         "My Account": "Mon Compte",
+        "Something went wrong during the token generation. Click on {0} to generate a new one.": "Une erreur a empêché la génération du jeton. Veuillez cliquer sur {0} pour en générer un nouveau",
         "{0} does not exist in row {1}": "{0} n'existe pas dans la ligne {1}",
         "{0} in row {1} cannot have both URL and child items": "{0} à la ligne {1} ne peut pas avoir à la fois une URL et des sous-articles"
     },
@@ -9177,6 +9635,7 @@
         "New Message from Website Contact Page": "Nouveau Message depuis la Page Contact du Site Web"
     },
     "apps/frappe/frappe/www/desk.py": {
+        "Log in to access this page.": "Connectez-vous pour accéder à cette page.",
         "You are not permitted to access this page.": "Vous n'êtes pas autorisé à accéder à cette page."
     },
     "apps/frappe/frappe/www/feedback.html": {
@@ -9223,6 +9682,7 @@
         "Password": "Mot de Passe",
         "Reset Password": "Réinitialiser le mot de passe",
         "Send Password": "Envoyer le Mot de passe",
+        "Show": "Afficher",
         "Sign Up": "Inscription",
         "Sign up": "S'inscrire",
         "To enable it follow the instructions in the following link: {0}": "Pour l'activer, veuillez suivre les instructions du lien suivant: {0}",
@@ -9298,6 +9758,7 @@
     },
     "apps/frappe/frappe/www/update-password.html": {
         "Hint: Include symbols, numbers and capital letters in the password": "Astuce: inclure des symboles, des chiffres et des majuscules dans le mot de passe",
+        "Invalid Link": "Lien Invalide",
         "Invalid Password": "Mot de Passe Invalide",
         "New Password": "Nouveau Mot de Passe",
         "New Password Required.": "Nouveau Mot de Passe Requis.",
@@ -9307,6 +9768,7 @@
         "Please enter the password": "Veuillez entrer le mot de passe",
         "Reset Password": "Réinitialiser Mot de Passe",
         "Set Password": "Définir mot de passe",
+        "Status Updated": "Statut mis à jour",
         "Success! You are good to go 👍": "Succès! Vous pouvez y aller 👍",
         "Update": "Mettre à Jour",
         "Your account's password has expired.": "Le mot de passe de votre compte a expiré."
@@ -9383,6 +9845,7 @@
         "Clear": "Réinitialiser",
         "Clear Attachment": "Effacer la Pièce Jointe",
         "Code": "Code",
+        "Collapse": "Réduire",
         "Comment": "Commenter",
         "Create a new {0}": "Créer un·e nouveau·elle {0}",
         "Ctrl + Down": "Ctrl + Bas",
@@ -9399,6 +9862,7 @@
         "Edit": "Modifier",
         "Edit via Upload": "Modifier via Chargement",
         "Editing Row": "Modifier Ligne",
+        "Expand": "Etendre",
         "Field": "Champ",
         "Filters applied for {0}": "Filtres appliqués pour {0}",
         "First": "Première",
@@ -9497,6 +9961,9 @@
         "(Ctrl + G)": "(Ctrl + G)",
         "1 hour ago": "Il y a 1 heure",
         "1 minute ago": "Il y a 1 minute",
+        "1 month ago": "Il y a 1 mois",
+        "1 week ago": "Il y a une semaine",
+        "1 year ago": "Il y a 1 an",
         "<p>No results found for '": "<p>Aucun résultat trouvé pour '",
         "> {0} year(s) ago": "> {0} ans",
         "About": "À propos",
@@ -9542,10 +10009,12 @@
         "Click on a file to select it.": "Cliquez sur un fichier pour le sélectionner",
         "Click on the lock icon to toggle public/private": "Cliquez sur le cadenas pour changer en public/privé",
         "Close": "Fermer",
+        "Collapse": "Réduire",
         "Comments": "Commentaires",
         "Complete": "Terminé",
         "Confirm": "Confirmer",
         "Connection lost. Some features might not work.": "Connexion perdue. Certaines fonctionnalités peuvent ne pas fonctionner.",
+        "Continue": "Continuer",
         "Copied to clipboard.": "Copié dans le presse-papier",
         "Create": "Créer",
         "Create a new ": "Créer un·e nouveau·elle",
@@ -9570,7 +10039,10 @@
         "Drop": "Déposer",
         "Drop Here": "Déposer ic",
         "Drop files here": "Déposez vos fichiers ici",
+        "Edit": "Modifier",
+        "Edit Chart": "Modifier le graphique",
         "Edit Desktop": "Modifier le bureau",
+        "Edit Shortcut": "Modifier le raccourci",
         "Edit in Full Page": "Editer en pleine page",
         "Edit...": "Modification...",
         "Email": "E-mail",
@@ -9585,7 +10057,9 @@
         "Enter Value": "Entrez une Valeur",
         "Enter your password": "Entrez votre mot de passe",
         "Error": "Erreur",
+        "Expand": "Etendre",
         "Export not allowed. You need {0} role to export.": "Pas autorisé à exporter. Vous devez avoir le rôle {0} pour exporter.",
+        "Failed": "Échec",
         "Feedback Request for {0} is sent to {1}": "Demande de Retour d'Expérience {0} est envoyé à {1}",
         "File Upload": "Envoi de Fichiers",
         "File Upload Disconnected. Please try again.": "Envoi du Fichier Déconnecté. Veuillez Réessayer.",
@@ -9603,10 +10077,12 @@
         "Get Items": "Obtenir les Articles",
         "Global Search": "Recherche Globale",
         "Global Shortcuts": "Raccourcis globaux",
+        "Go Back": "Retour",
         "Group Name": "Nom de groupe",
         "Half-yearly": "Semestrielle",
         "Help": "Aide",
         "Help on Search": "Aide lors de la Recherche",
+        "Hide": "Cacher",
         "Hide details": "Cacher les détails",
         "Home": "Accueil",
         "ID": "ID",
@@ -9661,14 +10137,20 @@
         "Navigate Home": "Revenir au bureau",
         "Need Help?": "Besoin d'aide ?",
         "New": "Nouveau·elle",
+        "New Chart": "Nouveau graphique",
         "New Chat": "Nouveau chat",
         "New Email": "Nouvel Email",
         "New Letter": "Nouvelle lettre",
         "New Name": "Nouveau Nom",
+        "New Number Card": "Nouvelle carte statistique",
+        "New Shortcut": "Nouveau raccourci",
         "New {0}": "Nouveau·elle {0}",
         "Next": "Suivant",
+        "Next Events": "Prochains événements",
         "No": "Non",
         "No Events Today": "Aucun événement aujourd'hui",
+        "No Filters Set": "Aucun filtre défini",
+        "No Planned Events": "Aucun événement prévu",
         "No Results": "Aucun Résultat",
         "No Upcoming Events": "Aucun événement à venir",
         "No activity": "Aucune activité",
@@ -9686,6 +10168,7 @@
         "On {0}, {1} wrote:": "Sur {0}, {1} a écrit :",
         "Only image extensions (.gif, .jpg, .jpeg, .tiff, .png, .svg) allowed": "Seules les extensions d'image (.gif, .jpg, .jpeg, .tiff, .png, .svg) sont autorisées",
         "Only {0} entries shown. Please filter for more specific results.": "Seulement {0} entrées affichées. Veuillez filtrer pour des résultats plus spécifiques.",
+        "Oops": "Oups",
         "Open Awesomebar": "Ouvrir la barre de recherche",
         "Open Documents": "Documents ouverts",
         "Open Help": "Ouvrir l'aide",
@@ -9727,6 +10210,7 @@
         "Report {0}": "Rapport {0}",
         "Reports": "Rapports",
         "Request Timed Out": "La Requête a Expirée",
+        "Reset Chart": "Réinitialiser le graphique",
         "Retake": "Reprendre",
         "Role Permissions": "Autorisations du Rôle",
         "Save": "Enregistrer",
@@ -9760,8 +10244,11 @@
         "Set User Permissions": "Définir les Autorisations des Utilisateurs",
         "Settings": "Paramètres",
         "Setup": "Configuration",
+        "Show": "Afficher",
         "Show Keyboard Shortcuts": "Voir les raccourcis claviers",
         "Show more details": "Montrer plus de détails",
+        "Skip": "Passer",
+        "Skip Step": "Passer l'étape",
         "Socketio is not connected. Cannot upload": "Socketio n'est pas connecté. Impossible de télécharger",
         "Some of the features might not work in your browser. Please update your browser to the latest version.": "Certaines des fonctionnalités peuvent ne pas fonctionner dans votre navigateur. Veuillez mettre à jour votre navigateur vers la dernière version.",
         "Something went wrong": "Quelque chose s'est mal passé",
@@ -9824,6 +10311,7 @@
         "Week": "Semaine",
         "Weekly": "Hebdomadaire",
         "Widget type": "Type de widget",
+        "Workspace": "Espace de travail",
         "Write": "Écrire",
         "Yearly": "Annuelle",
         "Yes": "Oui",
@@ -9856,6 +10344,10 @@
         "now": "maintenant",
         "or": "ou",
         "or attach a": "ou attachez un",
+        "since last month": "depuis le mois dernier",
+        "since last week": "depuis la semaine dernière",
+        "since last year": "depuis l'année dernière",
+        "since yesterday": "depuis hiers",
         "tag name..., e.g. #tag": "Nom du tag..., ex. #tag",
         "text in document type": "Texte dans le type de document",
         "updated to {0}": "mis à jour pour {0}",
@@ -9863,9 +10355,11 @@
         "value": "valeur",
         "via automatic rule {0} on {1}": "via la règle automatique {0} sur {1}",
         "web link": "lien web",
+        "yesterday": "Hier",
         "{0} Dashboard": "Tableau de bord de/d' {0}",
         "{0} Feedback Request": "{0} Demande de Retour d'Expérience",
         "{0} List": "Liste {0}",
+        "{0} M": "{0} M",
         "{0} Modules": "Modules de/d' {0}",
         "{0} Report": "Rapport de/d' {0}",
         "{0} added": "{0} ajouté(e)",
@@ -9875,13 +10369,20 @@
         "{0} criticized on {1}": "{0} a mis une crtique sur {1}",
         "{0} criticized your work on {1} {2}": "{0} a critiqué votre travail sur {1} {2}",
         "{0} criticized {1}": "{0} a critiqué {1}",
+        "{0} d": "{0} j",
         "{0} days ago": "Il y a {0} jours",
+        "{0} h": "{0} h",
+        "{0} hours ago": "Il y a {0} heures",
+        "{0} m": "{0} m",
         "{0} minutes ago": "Il y a {0} minutes",
         "{0} months ago": "Il y a {0} mois",
         "{0} reverted your points on {1} {2}": "{0} a annulé vos points sur {1} {2}",
         "{0} reverted {1}": "{0} a annulé {1}",
         "{0} to {1}": "{0} à {1}",
+        "{0} w": "{0} s",
         "{0} weeks ago": "Il y a {0} semaines",
+        "{0} y": "{0} a",
+        "{0} years ago": "{0} ans",
         "{0} {1} added": "{0} {1} ajouté",
         "← Back to upload files": "← Retour au chargement de fichier"
     },
@@ -9972,6 +10473,7 @@
         "Click here to post bugs and suggestions": "Cliquez ici pour rapporter un bug ou faire des suggestions",
         "Close": "Fermer",
         "Code": "Code",
+        "Collapse": "Réduire",
         "Comment": "Commenter",
         "Comments": "Commentaires",
         "Complete By": "Date d'échéance",
@@ -10007,6 +10509,7 @@
         "Error connecting to QZ Tray Application...<br><br> You need to have QZ Tray application installed and running, to use the Raw Print feature.<br><br><a target=\"_blank\" href=\"https://qz.io/download/\">Click here to Download and install QZ Tray</a>.<br> <a target=\"_blank\" href=\"https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing\">Click here to learn more about Raw Printing</a>.": "Erreur de connection à l'application QZ Tray...<br><br> Vous devez avoir l'application QZ installé et en fonctionnement pour utiliser la fonctionnalité d'impression brute.<br><br><a target=\"_blank\" href=\"https://qz.io/download/\">Cliquez ici pour télécharger et installer QZ Tray</a>.<br> <a target=\"_blank\" href=\"https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing\">Cliquez ici pour en savoir plus sur l'impression brute</a>.",
         "Error in Custom Script": "Erreur dans le Script Personnalisé",
         "Everyone": "Tout le monde",
+        "Expand": "Etendre",
         "Feedback": "Retour d’Expérience",
         "Field": "Champ",
         "Field {0} not found.": "Champ {0} introuvable.",
@@ -10076,6 +10579,7 @@
         "No Data": "Aucune Donnée",
         "No Preview Available": "Aperçu non disponible",
         "No Printer is Available.": "Aucun imprimante disponible",
+        "No changes in document": "Document inchangé",
         "No permission to '{0}' {1}": "Pas d'autorisation pour '{0}' {1}",
         "No values to show": "Aucune valeur à afficher",
         "None: End of Workflow": "Aucun: Fin de Flux de Travail",
@@ -10228,8 +10732,10 @@
         "submitted this document {0}": "a soumis le document {0}",
         "third": "troisième",
         "via Data Import": "via l'outil d'import de données",
+        "via {0}": "via {0}",
         "viewed": "vu",
         "{0} Name": "{0} Nom",
+        "{0} Page Views": "{0} vues de page",
         "{0} already exists. Select another name": "{0} existe déjà. Veuillez sélectionner un autre nom",
         "{0} appreciation point for {1} {2}": "{0} point d'appréciation pour {1} {2}",
         "{0} appreciation points for {1} {2}": "{0} points d'appréciation pour {1} {2}",
@@ -10254,6 +10760,9 @@
     "sites/assets/js/frappe-web.min.js": {
         "1 hour ago": "Il y a 1 heure",
         "1 minute ago": "Il y a 1 minute",
+        "1 month ago": "Il y a 1 mois",
+        "1 week ago": "Il y a une semaine",
+        "1 year ago": "Il y a 1 an",
         "> {0} year(s) ago": "> {0} ans",
         "Access not permitted.<br>Please login.": "Accès non autorisé.<br>Veuillez vous connecter.",
         "Assigned To": "Assigné à",
@@ -10369,14 +10878,23 @@
         "or attach a": "ou attachez un",
         "uploaded file": "fichier téléchargé",
         "web link": "lien web",
+        "yesterday": "Hier",
         "{0} Dashboard": "Tableau de bord de/d' {0}",
         "{0} List": "Liste {0}",
+        "{0} M": "{0} M",
         "{0} Modules": "Modules de/d' {0}",
         "{0} Report": "Rapport de/d' {0}",
+        "{0} d": "{0} j",
         "{0} days ago": "Il y a {0} jours",
+        "{0} h": "{0} h",
+        "{0} hours ago": "Il y a {0} heures",
+        "{0} m": "{0} m",
         "{0} minutes ago": "Il y a {0} minutes",
         "{0} months ago": "Il y a {0} mois",
+        "{0} w": "{0} s",
         "{0} weeks ago": "Il y a {0} semaines",
+        "{0} y": "{0} a",
+        "{0} years ago": "{0} ans",
         "← Back to upload files": "← Retour au chargement de fichier"
     },
     "sites/assets/js/list.min.js": {
@@ -10385,6 +10903,7 @@
         "1 year": "1 ans",
         "3 months": "3 mois",
         "6 months": "6 mois",
+        "Add": "Ajouter",
         "Add ": "Ajouter",
         "Add Attachment": "Ajouter une Pièce Jointe",
         "Add Child": "Ajouter une Sous-Catégorie",
@@ -10422,10 +10941,12 @@
         "Create your first {0}": "Créer votre premier·e {0}",
         "Created": "Créé Par",
         "Created By": "Créé par",
+        "Created On": "Créé le",
         "Creating {0}": "Création de {0}",
         "Customize": "Personnaliser",
         "Customize Form": "Personnaliser le formulaire",
         "Cut": "Couper",
+        "Dashboard": "Tableau de bord",
         "Date": "Date",
         "Day": "Jour",
         "Default": "Par Défaut",
@@ -10433,6 +10954,7 @@
         "Delete {0} items permanently?": "Supprimer {0} éléments de façon permanente?",
         "Descendants Of": "Descendants De",
         "Disabled": "Desactivé",
+        "Discard": "Ignorer",
         "Doctype required": "Doctype requis",
         "Draft": "Brouillon",
         "Duplicate Filter Name": "Nom du filtre en double",
@@ -10470,6 +10992,7 @@
         "Is Global": "Est Global",
         "Kanban": "Kanban",
         "Kanban Board Name": "Nom du Tableau Kanban",
+        "Last Modified On": "Dernière modification le",
         "Like": "Comme",
         "Likes": "Aime",
         "Linked with {0}": "Lié avec {0}",
@@ -10532,6 +11055,7 @@
         "Rename": "Renommer",
         "Report Builder": "Éditeur de Rapports",
         "Reports": "Rapports",
+        "Reset": "Réinitialiser",
         "Restricted": "Restrictions",
         "Restrictions": "Restrictions",
         "Role Permissions Manager": "Gestionnaire des rôles et autorisation",
@@ -10582,6 +11106,7 @@
         "User Permissions": "Autorisations des Utilisateurs",
         "Value": "Valeur",
         "View List": "Voir La Liste",
+        "Views": "Vues",
         "Week": "Semaine",
         "With Letterhead": "Avec en-tête de Lettre",
         "Yes": "Oui",
@@ -10592,6 +11117,7 @@
         "use % as wildcard": "utiliser % comme joker",
         "values separated by commas": "valeurs séparées par des virgules",
         "{0} Calendar": "{0} Calendrier",
+        "{0} Dashboard": "Tableau de bord: {0}",
         "{0} Tree": "{0} Arbre",
         "{0} created successfully": "{0} créé avec succès",
         "{0} items selected": "{0} articles sélectionnés",
@@ -10686,6 +11212,7 @@
         "Save Report": "Enregistrer le rapport",
         "See all past reports.": "Voir tous les rapports précédents",
         "Select Column": "Sélectionner la colonne",
+        "Select Field...": "Sélectionner un champ...",
         "Select File Format": "Sélectionnez le format du fichier",
         "Select File Type": "Sélectionner le Type de Fichier",
         "Select To Download:": "Sélectionner Pour Télécharger :",
@@ -10710,6 +11237,7 @@
         "With Ledgers": "Avec Livres",
         "X Axis Field": "Champ de l'Axe X",
         "Y Axis Fields": "Champs de l'Axe Y",
+        "Y Field": "Champ Y",
         "{0} Chart": "Graphique {0}"
     },
     "sites/assets/js/social.min.js": {
