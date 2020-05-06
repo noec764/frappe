@@ -26,6 +26,7 @@
   "backup_limit",
   "background_workers",
   "enable_scheduler",
+  "restricted_jobs_logs",
   "dormant_days",
   "permissions",
   "apply_strict_user_permissions",
@@ -448,16 +449,22 @@
    "reqd": 1
   },
   {
-    "default": "0",
-    "fieldname": "enable_onboarding",
-    "fieldtype": "Check",
-    "label": "Enable Onboarding"
+   "default": "0",
+   "fieldname": "enable_onboarding",
+   "fieldtype": "Check",
+   "label": "Enable Onboarding"
+  },
+  {
+   "default": "1",
+   "fieldname": "restricted_jobs_logs",
+   "fieldtype": "Check",
+   "label": "Keep logs for the last 30 days only"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2020-05-01 19:21:15.496065",
+ "modified": "2020-05-06 09:51:30.726856",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
