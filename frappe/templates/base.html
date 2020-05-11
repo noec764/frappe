@@ -65,7 +65,7 @@
 			frappe.ready_events.push(fn);
 		}
 		window.dev_server = {{ dev_server }};
-		window.socketio_port = {{ frappe.socketio_port }};
+		window.socketio_port = {{ (frappe.socketio_port or 'null') }};
 		window.frappe._messages = {{ translated_messages }};
 	</script>
 </head>
