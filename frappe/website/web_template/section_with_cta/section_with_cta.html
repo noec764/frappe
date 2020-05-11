@@ -1,7 +1,7 @@
 <div class="relative">
 	<div class="px-8 py-12 text-center sm:px-12 md:py-20 bg-primary-100 rounded-xl">
-		<h2 class="max-w-xl mx-auto text-2xl font-extrabold leading-tight md:text-4xl">{{ title }}</h2>
-		<p class="max-w-xl mx-auto mt-2 text-base text-gray-900 md:text-lg">{{ subtitle }}</p>
+		<h2 class="max-w-xl mx-auto text-2xl font-extrabold leading-tight md:text-4xl">{{ title or "" }}</h2>
+		<p class="max-w-xl mx-auto mt-2 text-base text-gray-900 md:text-lg">{{ subtitle or "" }}</p>
 		<p class="mt-8">
 			{{ c('button', label=cta_label, url=cta_url, variant="primary", size="large") }}
 		</p>
