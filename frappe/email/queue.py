@@ -9,6 +9,7 @@ import smtplib, quopri, json
 from frappe import msgprint, _, safe_decode, safe_encode
 from frappe.email.smtp import SMTPServer, get_outgoing_email_account
 from frappe.email.email_body import get_email, get_formatted_html, add_attachment
+from frappe.utils import encode
 from frappe.utils.verified_command import get_signed_params, verify_request
 from html2text import html2text
 from frappe.utils import get_url, nowdate, now_datetime, add_days, split_emails, cstr, cint
@@ -470,7 +471,7 @@ def send_one(email, smtpserver=None, auto_commit=True, now=False, from_test=Fals
 			frappe.get_doc('Communication', email.communication).set_delivery_status(commit=auto_commit)
 
 		if smtpserver.append_emails_to_sent_folder and email_sent_to_any_recipient:
-			smtpserver.email_account.append_email_to_sent_folder(safe_encode(message.as_string()))
+			smtpserver.email_account.append_email_to_sent_folder(encode(message))
 
 	except (smtplib.SMTPServerDisconnected,
 			smtplib.SMTPConnectError,
