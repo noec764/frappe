@@ -89,6 +89,17 @@ class DBTable:
 					'fieldtype': 'Datetime'
 				})
 
+			# add _submitted and _submitted_by columns if is_submittable
+			if self.meta.get('is_submittable'):
+				fields.append({
+					'fieldname': '_submitted',
+					'fieldtype': 'Datetime'
+				})
+				fields.append({
+					'fieldname': '_submitted_by',
+					'fieldtype': 'Data'
+				})
+
 			# add _seal column if is_sealed
 			if self.meta.get('is_sealed'):
 				fields.append({

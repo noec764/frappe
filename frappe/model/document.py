@@ -84,7 +84,7 @@ class Document(BaseDocument):
 		If DocType name and document name are passed, the object will load
 		all values (including child documents) from the database.
 		"""
-		self.doctype = self.name = None
+		self.doctype = self.name = self._draft_name = None
 		self._default_new_docs = {}
 		self.flags = frappe._dict()
 
@@ -330,13 +330,14 @@ class Document(BaseDocument):
 		if self._action == "submit" and getattr(self.meta, "name_after_submit"):
 			self._draft_name = self.name
 			self.set_new_name()
-			rename_doc(self.doctype, self._draft_name, self.name, ignore_permissions=True, force=True)
+			rename_doc(self.doctype, self._draft_name, self.name, ignore_permissions=True, force=True, show_alert=False)
 
 		self.run_post_save_methods()
 
 		if self._action == "submit":
-			# Add a seal
-			self.add_seal()
+			# Add submitted record and seal
+			self.add_submitted_record()
+			self.register_seal()
 
 		# clear unsaved flag
 		if hasattr(self, "__unsaved"):
@@ -415,8 +416,8 @@ class Document(BaseDocument):
 		else:
 			set_new_name(self, draft_name=draft_name)
 
-		if draft_name:
-			self._draft_name = self.name
+		if draft_name and getattr(self.meta, "name_after_submit"):
+			frappe.db.set_value(self.doctype, self.name, "_draft_name", self.name, update_modified=False)
 
 		if set_child_names:
 			# set name for children
@@ -428,24 +429,22 @@ class Document(BaseDocument):
 		else:
 			self.flags.name_set = True
 
-	def add_seal(self):
-		if hasattr(self.meta, 'is_sealed') and self.meta.is_sealed:
+	def register_seal(self):
+		if getattr(self.meta, 'is_submittable') and getattr(self.meta, 'is_sealed'):
 			from frappe.utils.seal import get_seal_doc_and_version, get_chained_seal
 			doc = get_seal_doc_and_version(self)
 			if doc:
 				seal = get_chained_seal(doc)
 				if seal:
-					self.register_seal(doc, seal)
+					frappe.db.set_value(self.doctype, self.name, "_seal", seal, update_modified=False)
+					frappe.db.set_value(self.doctype, self.name, "_seal_version", doc.get("version", "0.0.0"), update_modified=False)
 
-	def register_seal(self, doc, seal):
-		if not "version" in doc:
-			version = "0.0.0"
-		else:
-			version = doc["version"]
-
-		self.db_set('_seal', seal, update_modified=False)
-		self.db_set('_seal_version', version, update_modified=False)
-		frappe.local.flags.commit = True
+	def add_submitted_record(self):
+		if getattr(self.meta, 'is_submittable'):
+			self._submitted = now()
+			self._submitted_by = frappe.session.user
+			frappe.db.set_value(self.doctype, self.name, "_submitted", self._submitted, update_modified=False)
+			frappe.db.set_value(self.doctype, self.name, "_submitted_by", self._submitted_by, update_modified=False)
 
 	def get_title(self):
 		"""Get the document title based on title_field or `title` or `name`"""

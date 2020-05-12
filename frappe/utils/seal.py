@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _, scrub
 from frappe.model.document import Document
-from frappe.utils import now
+from frappe.utils import now, get_datetime
 from frappe.utils.data import DATE_FORMAT, TIME_FORMAT, DATETIME_FORMAT
 from six import string_types
 import datetime
@@ -40,10 +40,11 @@ def get_sealed_doc(doc, modules, version, sanitize=False):
 	if current_mapping:
 		current_mapping = current_mapping[0]
 
-		if isinstance(doc.creation, datetime.date):
-			timestamp = datetime.datetime.strftime(doc.creation, DATETIME_FORMAT)
-		else:
-			timestamp = doc.creation
+		timestamp = None
+		if isinstance(doc._submitted, datetime.date):
+			timestamp = datetime.datetime.strftime(doc._submitted, DATETIME_FORMAT)
+		elif doc._submitted:
+			timestamp = datetime.datetime.strftime(get_datetime(doc._submitted), DATETIME_FORMAT)
 
 		sealed_doc = {
 			"version": version,
@@ -101,15 +102,16 @@ def get_chained_seal(doc):
 		doc = doc.as_dict()
 
 	previous_seal = dict()
-	previous_entry = frappe.db.sql("""
-		SELECT name, _seal, creation
-		FROM `tab%s`
-		WHERE creation < '%s' AND _seal IS NOT NULL
-		ORDER BY creation DESC LIMIT 1""" % (doc["doctype"],\
-		datetime.datetime.strptime(doc["timestamp"], DATETIME_FORMAT)), as_dict=True)
+	if doc.get("timestamp"):
+		previous_entry = frappe.db.sql("""
+			SELECT name, _seal, _submitted
+			FROM `tab%s`
+			WHERE _submitted < '%s' AND _seal IS NOT NULL
+			ORDER BY _submitted DESC LIMIT 1""" % (doc["doctype"],\
+			doc.get("timestamp")), as_dict=True)
 
-	if previous_entry:
-		previous_seal = previous_entry[0]
+		if previous_entry:
+			previous_seal = previous_entry[0]
 
 	if not previous_seal:
 		if frappe.db.get_global("initial_hash"):

@@ -32,9 +32,9 @@ def get_data(filters=None):
 	for document in documents:
 		doc = frappe.get_doc(filters.get("doctype"), document.name)
 
-		if doc._seal is None:
+		if doc._seal is None or doc._submitted is None:
 			comment = _("This document is not sealed")
-			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
+			result.append([doc.name, format_datetime(doc._submitted) or "", doc.owner,\
 				"Out", comment, "", "", "", ""])
 			continue
 
@@ -43,15 +43,14 @@ def get_data(filters=None):
 		# Check for renamed links
 		link_fields = get_link_fields(sealed_doc, doc_meta)
 		if link_fields:
-			submission_date = get_submission_date(doc)
-			sealed_doc = revise_renamed_links(sealed_doc, link_fields, submission_date)
+			sealed_doc = revise_renamed_links(sealed_doc, link_fields, doc._submitted)
 
 		if sealed_doc:
 			seal = get_chained_seal(sealed_doc)
 			integrity = "Yes" if seal == doc._seal else "No"
 			comment = _("Data integrity verified") if integrity == "Yes" else _("Data integrity could not be verified")
 
-			result.append([doc.name, format_datetime(doc.creation), doc.owner,\
+			result.append([doc.name, format_datetime(doc._submitted), doc.owner,\
 				integrity, comment, seal, doc._seal, doc._seal_version])
 
 	return result
@@ -79,11 +78,6 @@ def revise_renamed_links(doc, fields, submission_date):
 
 	return doc
 
-def get_submission_date(doc):
-	versions = get_versions(doc)
-	submission = [x.get("creation") for x in versions if ['docstatus', 0, 1] in frappe.parse_json(x.get("data", {})).get("changed")]
-	return get_datetime(submission[0]) if submission else get_datetime(doc.creation)
-
 def get_versions_data(doctype):
 	try:
 		data = []
@@ -107,8 +101,8 @@ def get_columns(filters=None):
 			"width": 150
 		},
 		{
-			"label": _("Creation Date"),
-			"fieldname": "creation_date",
+			"label": _("Submission Date"),
+			"fieldname": "submission_date",
 			"fieldtype": "Data",
 			"width": 150
 		},

@@ -318,10 +318,6 @@ class BaseDocument(object):
 		# if doctype is "DocType", don't insert null values as we don't know if it is valid yet
 		d = self.get_valid_dict(convert_dates_to_str=True, ignore_nulls = self.doctype in DOCTYPES_FOR_DOCTYPE)
 
-		if hasattr(self.meta, "name_after_submit") and hasattr(self, "_draft_name"):
-			if self.meta.name_after_submit and self._draft_name:
-				d["_draft_name"] = self._draft_name
-
 		columns = list(d)
 		try:
 			frappe.db.sql("""INSERT INTO `tab{doctype}` ({columns})
