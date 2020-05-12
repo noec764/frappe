@@ -513,6 +513,7 @@
         "From Full Name": "Nom de l’expéditeur",
         "Has  Attachment": "A une pièce jointe",
         "In Reply To": "En réponse à",
+        "Inbox User": "Utilisateur de la boîte de réception",
         "Info": "Info",
         "Integrations can use this field to set email delivery status": "Les intégrations peuvent utiliser ce champ pour définir le statut de l'email de livraison",
         "Keep a track of all communications": "Garder une trace de toutes les communications",
@@ -1806,6 +1807,7 @@
         "If non standard port (e.g. 587). If on Google Cloud, try port 2525.": "Si port non standard (par exemple 587). Si vous utilisez Google Cloud, essayez le port 2525.",
         "If non-standard port (e.g. POP3: 995/110, IMAP: 993/143)": "Si le port n'est pas standard (ex. POP3: 995/110, IMAP: 993/143)",
         "Ignore attachments over this size": "Ignorer les pièces jointes supérieures à cette taille",
+        "Inbox User": "Utilisateur de la boîte de réception",
         "Initial Sync Count": "Nbre d'emails à récupérer lors de la synchronisation initiale",
         "No of emails remaining to be synced": "Nbre d’emails restants à synchronisés",
         "Notifications and bulk mails will be sent from this outgoing server.": "Les notifications et lots d’emails seront envoyés à partir de ce serveur sortant.",
@@ -3690,6 +3692,7 @@
         "In Hours": "En Heures",
         "In seconds": "En secondes",
         "Is First Startup": "Premier Lancement",
+        "Keep logs for the last 30 days only": "Conserver les logs pendant seulement 30 jours",
         "Language": "Langue",
         "Left": "Gauche",
         "Logout All Sessions on Password Reset": "Déconnecter de toutes les sessions au changement de mot de passe",
@@ -4214,6 +4217,7 @@
         "Select": "Sélectionner",
         "Small Text": "Petit texte",
         "Text": "Texte",
+        "Web Template Field": "Champ de modèle de bloc web",
         "Website": "Site Web"
     },
     "DocType: Web View Item": {
@@ -4305,6 +4309,7 @@
         "Address and other legal information you may want to put in the footer.": "Adresse et autres informations juridiques que vous voudriez mettre dans le pied de page.",
         "All": "Tous",
         "An icon file with .ico extension. Should be 16 x 16 px. Generated using a favicon generator. [favicon-generator.org]": "Un fichier d'icône avec l’extension .ico. Devrait être 16 x 16 px. Générer en utilisant un générateur de favicon. [favicon-generator.org]",
+        "Authorize API Indexing  Access": "Autoriser l'accès à l'API d'indexation",
         "Banner": "Bannière",
         "Banner HTML": "Bannière HTML",
         "Banner is above the Top Menu Bar.": "La Bannière est au-dessus de la Barre de Menu Supérieure.",
@@ -4318,6 +4323,8 @@
         "Disable Customer Signup link in Login page": "Désactiver le Lien d'Inscription dans la Page de Connexion",
         "Disable Signup": "Désactiver Inscription",
         "Enable Chat": "Activer le chat",
+        "Enable Google Indexing": "Autoriser l'indexation Google",
+        "Enable In App Website Tracking": "Autoriser le tracking de site web dans l'application",
         "FavIcon": "FavIcon",
         "Footer": "Pied de Page",
         "Footer Items": "Éléments du Pied de Page",
@@ -4328,6 +4335,8 @@
         "Hide Footer Signup": "Masquer l’Inscription dans le Pied de Page",
         "Home Page": "Page d’Accueil",
         "Include Search in Top Bar": "Inclure la Recherche dans la Bar du Haut",
+        "Indexing Authorization Code": "Code d'autorisation d'indexation",
+        "Indexing Refresh Token": "Jeton de rafraichissement d'indexation",
         "Integrations": "Intégrations",
         "Landing Page": "Page d'Accueil",
         "Link that is the website home page. Standard Links (index, login, products, blog, about, contact)": "Lien vers la page d'accueil du site. Liens standard (index, connexion, produits, blog, à propos, contact)",
@@ -4343,6 +4352,7 @@
         "Subdomain": "Sous-domaine",
         "Title Prefix": "Préfixe de Titre",
         "To": "À",
+        "To use Google Indexing, enable <a href=\"#Form/Google Settings\">Google Settings</a>.": "Pour utiliser l'indexation Google, autorisez les <a href=\"#Form/Google Settings\">Paramètres Google</a>.",
         "Top Bar": "Barre Supérieure",
         "Top Bar Items": "Articles de la Barre Supérieure",
         "Website": "Site Web",
@@ -4395,13 +4405,18 @@
         "Background": "Arrière-plan",
         "Background Color": "Couleur d’Arrière-plan",
         "Background Image": "Image d’Arrière-plan",
+        "Bootstrap 4": "Bootstrap 4",
         "Bootstrap Theme": "Thème Bootstrap",
+        "Button Rounded Corners": "Boutons aux contours arrondis",
+        "Button Shadows": "Ombre sous les boutons",
         "Custom CSS": "CSS Personnalisé",
         "Custom JS": "JS personnalisé",
+        "Custom SCSS": "SCSS personnalisé",
         "Custom Theme": "Thème personnalisé",
         "Custom Theme URL": "URL du thème personnalisé",
         "Custom?": "Personnaliser ?",
         "Dark Color": "Couleurs foncées",
+        "Font Properties": "Propriétés de la police",
         "Font Size": "Taille de la Police",
         "Footer": "Pied de Page",
         "Footer Color": "Couleur de Pied de Page",
@@ -4412,15 +4427,20 @@
         "Heading Style": "Style de Titre",
         "If image is selected, color will be ignored.": "Si l'image est sélectionnée, la couleur sera ignorée.",
         "JavaScript": "JavaScript",
+        "Light Color": "Couleur claire",
         "Link Color": "Couleur du Lien",
         "Link to Bootstrap CSS": "Lien vers Bootstrap CSS",
         "Link to your Bootstrap theme": "Lien vers votre thème Bootstrap",
         "Module": "Module",
+        "Navbar": "Barre de navigation",
         "Primary Color": "Couleur primaire",
         "Style using CSS": "Style en utilisant CSS",
+        "Stylesheet": "Feuille de style",
         "Text Color": "Couleur du Texte",
         "Text Styles": "Styles de texte",
         "Theme": "Thème",
+        "Theme CSS": "CSS du thème",
+        "Theme Configuration": "Configuration du thème",
         "Theme JSON": "Thème JSON",
         "Theme URL": "URL du thème",
         "Title Case": "Casse du Titre",
@@ -5133,7 +5153,8 @@
     },
     "apps/frappe/frappe/core/doctype/comment/comment.py": {
         "New Mention": "Nouvelle Mention",
-        "{0} mentioned you in a comment in {1}": "{0} vous a mentionné dans un commentaire dans {1}"
+        "{0} mentioned you in a comment in {1}": "{0} vous a mentionné dans un commentaire dans {1}",
+        "{0} mentioned you in a comment in {1} {2}": "{0} vous a mentionné dans un commentaire dans {1} {2}"
     },
     "apps/frappe/frappe/core/doctype/communication/comment.py": {
         "New Mention": "Nouvelle Mention",
@@ -5388,6 +5409,7 @@
         "If Owner": "Si Responsable",
         "Image field must be a valid fieldname": "Champ de l'image doit être un champ valide",
         "Image field must be of type Attach Image": "Champ de l'image doit être du type Image Jointe",
+        "Invalid Option": "Option invalide",
         "Invalid fieldname '{0}' in autoname": "Champ invalide '{0}' dans nom automatique",
         "Invalid {0} condition": "Condition {0} invalide",
         "Is Published Field must be a valid fieldname": "Le Champ Publié doit-il être un nom de champ valide",
@@ -5543,7 +5565,8 @@
         "Must specify a Query to run": "Vous devez spécifier une requête à exécuter",
         "Only Administrator allowed to create Query / Script Reports": "Seul l'Administrateur est autorisé à créer des Rapports de Requêtes / Script",
         "Only Administrator can save a standard report. Please rename and save.": "Seul l'Administrateur peut enregistrer un rapport standard. Merci de renommer et sauvegarder.",
-        "Query must be a SELECT": "La requête doit être un SELECT"
+        "Query must be a SELECT": "La requête doit être un SELECT",
+        "Report Document Error": "Erreur du rapport"
     },
     "apps/frappe/frappe/core/doctype/role/role.py": {
         "Standard roles cannot be disabled": "Les rôles standard ne peuvent pas être désactivées",
@@ -5555,6 +5578,14 @@
         "Reset to defaults": "Rétablir par défaut",
         "Successfully Updated": "Mis à Jour avec Succès",
         "Update": "Mettre à Jour"
+    },
+    "apps/frappe/frappe/core/doctype/server_script/server_script.js": {
+        "Schedule Script": "Planifier un script",
+        "Select Event Type": "Sélectionner un type d'événement"
+    },
+    "apps/frappe/frappe/core/doctype/server_script/server_script.py": {
+        "Enabled scheduled execution for script {0}": "Autoriser l'éxécution planifiée pour le script {0}",
+        "Scheduled execution for script {0} has updated": "L'éxécution planifiée pour le script {0} a été mise à jour"
     },
     "apps/frappe/frappe/core/doctype/session_default_settings/session_default_settings.py": {
         "Default {0}": "{0} par défaut"
@@ -5582,11 +5613,15 @@
         "Run Tests": "Exécuter les Tests"
     },
     "apps/frappe/frappe/core/doctype/user/user.js": {
+        "Confirm New Password": "Confirmer le nouveau mot de passe",
         "Create User Email": "Créer un compte email pour l'utilisateur",
+        "Logout All Sessions": "Déconnecter toutes les sessions",
         "New Password": "Nouveau mot de passe",
         "Password": "Mot de passe",
+        "Passwords do not match!": "Les mots de passe ne correspondent pas",
         "Permissions": "Autorisations",
         "Refreshing...": "Actualisation...",
+        "Reset LDAP Password": "Réinitialiser le mot de passe LDAP",
         "Reset OTP Secret": "Réinitialiser le secret d'OTP",
         "Reset Password": "Réinitialiser le mot de passe",
         "Save API Secret: ": "Enregistrer le secret d'API: ",
@@ -5625,6 +5660,7 @@
         "Suggested Username: {0}": "Nom d'Utilisateur Suggérée : {0}",
         "Temperorily Disabled": "Temporairement Désactivé",
         "Temporarily Disabled": "Désactivé temporairement",
+        "The Link specified has either been used before or is invalid": "Ce lien a déjà été utilisé ou est invalide.",
         "There should remain at least one System Manager": "Il doit rester au moins un Responsable Système",
         "Throttled": "Étranglé",
         "Too many users signed up recently, so the registration is disabled. Please try back in an hour": "Trop d'utilisateurs se sont inscrits récemment, du coup l’inscription est désactivée. Veuillez essayer à nouveau dans une heure",
@@ -5720,6 +5756,8 @@
         "Last synced {0}": "Dernière synchronisation le {0}",
         "Loading...": "Chargement en cours...",
         "No Data": "Aucune Donnée",
+        "No Permitted Charts": "Aucun graphique autorisé",
+        "No Permitted Charts on this Dashboard": "Aucun graphique autorisé sur ce tableau de bord",
         "Refresh": "Actualiser",
         "dashboard": "tableau de bord",
         "{0} Dashboard": "Tableau de bord {0}",
@@ -5925,11 +5963,13 @@
     "apps/frappe/frappe/custom/doctype/customize_form/customize_form.py": {
         "'In List View' not allowed for type {0} in row {1}": "'Ajouter une colonne pour ce champ dans la vue en liste' n'est pas permis pour le type {0} à la ligne {1}",
         "Core DocTypes cannot be customized.": "Les types de documents centraux ne peuvent pas être personnalisés",
+        "Data Too Long": "La donnée est trop longue",
         "Fieldtype cannot be changed from {0} to {1} in row {2}": "FieldType ne peut pas être modifié de {0} à {1}, à la ligne {2}",
         "Only standard DocTypes are allowed to be customized from Customize Form.": "Seuls les types de documents standards peuvent être personnalisés depuis l'outil de personnalisation",
         "Row {0}: Not allowed to disable Mandatory for standard fields": "Ligne {0}: impossible de désactiver Obligatoire pour les champs standard",
         "Row {0}: Not allowed to enable Allow on Submit for standard fields": "Ligne {0} : 'Autoriser les modifications après validation' n'est pas permis pour les champs standards",
         "Single DocTypes cannot be customized.": "Les types de documents simples ne peuvent pas être personnalisés",
+        "Value for field {0} is too long in {1}. Length should be lesser than {2} characters": "La valeur pour le champ {0} est trop longue en {1}. La longueur doit être inférieure à {2} caractères.",
         "You can't set 'Options' for field {0}": "Vous ne pouvez pas configurer 'Options' pour le champ {0}",
         "You can't set 'Translatable' for field {0}": "Vous ne pouvez pas définir \"Traduisible\" pour le champ {0}",
         "You cannot unset 'Read Only' for field {0}": "Vous ne pouvez pas désactiver 'Lecture Seule' pour le champ {0}\"",
@@ -5978,6 +6018,8 @@
         "Not Permitted": "Non Autorisé"
     },
     "apps/frappe/frappe/desk/desktop.py": {
+        "Could not save customization": "La personnalisation n'a pas pu être enregistrée",
+        "Custom Documents": "Documents personnalisés",
         "Custom Reports": "Rapports personnalisés"
     },
     "apps/frappe/frappe/desk/doctype/auto_repeat/auto_repeat.js": {
@@ -6049,12 +6091,16 @@
         "Only Administrator is allowed to create Dashboard Card Sources": "Seul l'administrateur est autorisé à créer des sources de carte de tableau de bord"
     },
     "apps/frappe/frappe/desk/doctype/dashboard_chart/dashboard_chart.js": {
+        "Add to Dashboard": "Ajouter au tableau de bord",
         "Click table to edit": "Cliquez sur la table pour modifier",
         "Click to Set Filters": "Cliquer pour définir des filtres",
         "Condition": "Conditions",
         "Created On": "Créé le",
         "Filter": "Filtre",
         "Last Modified On": "Dernière modification le",
+        "Please create chart first": "Veuillez d'abord créer un graphique",
+        "Report has no data, please modify the filters or change the Report Name": "Le rapport n'a pas de données, veuillez modifier les filtres ou modifier le nom du rapport.",
+        "Select Dashboard": "Sélectionner un tableau de bord",
         "Set Filters": "Définir des filtres",
         "Value": "Valeur"
     },
@@ -6062,7 +6108,9 @@
         "Aggregate Function field is required to create a dashboard chart": "Le champ 'Fonction agrégée' est obligatoire pour créer un graphique du tableau de bord",
         "Document type is required to create a dashboard chart": "Le type de document est requis pour créer un graphie de tableau de bord",
         "Group By field is required to create a dashboard chart": "Le champ 'Grouper' est obligatoire pour créer un graphique du tableau de bord",
-        "Time series based on is required to create a dashboard chart": "Une base pour la série temporelle est requise pour créer un graphique de tableau de bord"
+        "Invalid json added in the custom options: {0}": "Le JSON ajouté aux options personnalisées est invalide: {0}",
+        "Time series based on is required to create a dashboard chart": "Une base pour la série temporelle est requise pour créer un graphique de tableau de bord",
+        "You cannot create a dashboard chart from single DocTypes": "Vous ne pouvez pas créer de graphique à partir de types de documents uniques"
     },
     "apps/frappe/frappe/desk/doctype/dashboard_chart_source/dashboard_chart_source.py": {
         "Only Administrator is allowed to create Dashboard Chart Sources": "Seul l'administrateur est autorisé à créer des sources de graphiques de tableau de bord"
@@ -7567,6 +7615,7 @@
         "Only users involved in the document are listed": "Seuls les utilisateurs concernés par ce document sont listés",
         "Points": "Points",
         "Reason": "Raison",
+        "Reviews": "Revues",
         "Submit": "Valider",
         "To User": "Pour l'utilisateur",
         "You do not have enough points": "Vous n'avez pas suffisamment de points",
@@ -8699,6 +8748,7 @@
         "Report:": "Rapport:",
         "Save": "Enregistrer",
         "Save As": "Enregistrer Sous",
+        "Search": "Rechercher",
         "Select Column": "Sélectionner la colonne",
         "Select File Type": "Sélectionner le Type de Fichier",
         "Setup Auto Email": "Configuration Auto Email",
@@ -9399,7 +9449,8 @@
         "Updating": "Mise à jour en cours",
         "You don't have permission to access this file": "Vous n'avez pas l'autorisation d'accéder à ce fichier",
         "You need to be logged in and have System Manager Role to be able to access backups.": "Vous devez être connecté et avoir le Role Responsable Système pour pouvoir accéder aux sauvegardes.",
-        "Your system is being updated. Please refresh again after a few moments": "Votre système est mis à jour. Veuillez rafraîchir à nouveau dans quelques instants"
+        "Your system is being updated. Please refresh again after a few moments": "Votre système est mis à jour. Veuillez rafraîchir à nouveau dans quelques instants",
+        "Your system is being updated. Please refresh again after a few moments.": "Votre système est mis à jour. Veuillez rafraîchir à nouveau dans quelques instants."
     },
     "apps/frappe/frappe/utils/verified_command.py": {
         "Invalid Link": "Lien Invalide",
@@ -11210,6 +11261,7 @@
         "Save": "Enregistrer",
         "Save As": "Enregistrer Sous",
         "Save Report": "Enregistrer le rapport",
+        "Search": "Rechercher",
         "See all past reports.": "Voir tous les rapports précédents",
         "Select Column": "Sélectionner la colonne",
         "Select Field...": "Sélectionner un champ...",
