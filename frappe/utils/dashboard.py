@@ -71,7 +71,7 @@ def get_from_date_from_timespan(to_date, timespan):
 		years = -50
 	return add_to_date(to_date, years=years, months=months, days=days, as_datetime=True)
 
-	def sync_dashboards(app=None):
+def sync_dashboards(app=None):
 	"""Import, overwrite fixtures from `[app]/fixtures`"""
 	if not cint(frappe.db.get_single_value('System Settings', 'setup_complete')):
 		return
