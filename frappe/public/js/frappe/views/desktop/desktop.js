@@ -38,7 +38,7 @@ export default class Desktop {
 	get_page_to_show() {
 		const default_page = this.desktop_settings
 			? this.desktop_settings["Modules"][0].name
-			: "Website";
+			: "Home";
 
 		let page =
 			frappe.get_route()[1] ||
