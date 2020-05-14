@@ -1,82 +1,64 @@
 /* csslint ignore:start */
-
 /* palette colors*/
-
 body {
   line-height: 1.5;
   color: #36414c;
 }
-
 p {
   margin: 1em 0 !important;
 }
-
 hr {
   border-top: 1px solid #e6ebf1;
 }
-
 .body-table {
   font-family: -apple-system, BlinkMacSystemFont, "Varela Round", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
-
 .body-table td {
   font-family: -apple-system, BlinkMacSystemFont, "Varela Round", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
-
 .email-header,
 .email-body,
 .email-footer {
   width: 100% !important;
   min-width: 100% !important;
 }
-
 .email-body {
   font-size: 16px;
 }
-
 .email-footer {
   border-top: 1px solid #e6ebf1;
   font-size: 14px;
 }
-
 .email-header {
   border: 1px solid #e6ebf1;
   border-radius: 4px 4px 0 0;
 }
-
 .email-header .brand-image {
   width: 24px;
   height: 24px;
   display: block;
 }
-
 .email-header-title {
   font-weight: bold;
 }
-
 .body-table.has-header .email-body {
   border: 1px solid #e6ebf1;
   border-radius: 0 0 4px 4px;
   border-top: none;
 }
-
 .body-table.has-header .email-footer {
   border-top: none;
 }
-
 .email-footer-container {
   margin-top: 30px;
 }
-
 .email-footer-container > div:not(:last-child) {
   margin-bottom: 5px;
 }
-
 .email-unsubscribe a {
   color: #647181;
   text-decoration: underline;
 }
-
 .btn {
   text-decoration: none;
   padding: 7px 10px;
@@ -84,24 +66,20 @@ hr {
   border: 1px solid;
   border-radius: 3px;
 }
-
 .btn.btn-default {
   color: #fff;
   background-color: #f0f4f7;
   border-color: transparent;
 }
-
 .btn.btn-primary {
   color: #fff;
   background-color: #6195FF;
   border-color: #4884ff;
 }
-
 .table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .table td,
 .table th {
   padding: 8px;
@@ -110,68 +88,53 @@ hr {
   border-top: 1px solid #e6ebf1;
   text-align: left;
 }
-
 .table th {
   font-weight: bold;
 }
-
 .table > thead > tr > th {
   vertical-align: middle;
   border-bottom: 2px solid #e6ebf1;
 }
-
 .table > thead:first-child > tr:first-child > th {
   border-top: none;
 }
-
 .table.table-bordered {
   border: 1px solid #e6ebf1;
 }
-
 .table.table-bordered td,
 .table.table-bordered th {
   border: 1px solid #e6ebf1;
 }
-
 .more-info {
   font-size: 80% !important;
   color: #647181 !important;
   border-top: 1px solid #ebeff2;
   padding-top: 10px;
 }
-
 .text-right {
   text-align: right !important;
 }
-
 .text-center {
   text-align: center !important;
 }
-
 .text-muted {
   color: #647181 !important;
 }
-
 .text-extra-muted {
   color: #e6ebf1 !important;
 }
-
 .text-regular {
   font-size: 16px;
 }
-
 .text-medium {
   font-size: 14px;
 }
-
 .text-small {
   font-size: 12px;
 }
-
 .text-bold {
   font-weight: bold;
 }
-
 .indicator {
   width: 8px;
   height: 8px;
@@ -180,38 +143,29 @@ hr {
   display: inline-block;
   margin-right: 5px;
 }
-
 .indicator.indicator-blue {
   background-color: #6195FF;
 }
-
 .indicator.indicator-green {
   background-color: #69eb94;
 }
-
 .indicator.indicator-orange {
   background-color: #ffa00a;
 }
-
 .indicator.indicator-red {
   background-color: #ff5b3a;
 }
-
 .indicator.indicator-yellow {
   background-color: #feef72;
 }
-
 .screenshot {
   box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid #e6ebf1;
   margin: 8px 0;
   max-width: 100%;
 }
-
 /* auto email report */
-
 .report-title {
   margin-bottom: 20px;
 }
-
 /* csslint ignore:end */
