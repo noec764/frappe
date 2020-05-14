@@ -500,7 +500,7 @@ frappe.ui.form.Dashboard = Class.extend({
 	},
 
 	render_graph: function(args) {
-		if (!args) {
+		if (!Object.keys(args).length) {
 			return
 		}
 
