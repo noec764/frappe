@@ -59,8 +59,13 @@ class FrappeClient(object):
 		elif r.status_code == 502:
 			raise SiteUnreachableError
 		else:
-			if json.loads(r.text).get('exc_type') == "SiteExpiredError":
-				raise SiteExpiredError
+			try:
+				error = json.loads(r.text)
+				if error.get('exc_type') == "SiteExpiredError":
+					raise SiteExpiredError
+			except json.decoder.JSONDecodeError:
+				error = r.text
+				print(error)
 			raise AuthError
 
 	def setup_key_authentication_headers(self):
