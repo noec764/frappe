@@ -85,13 +85,11 @@ frappe.ui.form.MultiSelectDialog = Class.extend({
 			}
 		]);
 
-		let doctype_plural = !this.doctype.endsWith('y') ? this.doctype + 's'
-			: this.doctype.slice(0, -1) + 'ies';
 		this.dialog = new frappe.ui.Dialog({
-			title: __("Select {0}", [(this.doctype=='[Select]') ? __("value") : __(doctype_plural)]),
+			title: __("Select: {0}", [(this.doctype=='[Select]') ? __("value") : __(me.doctype)]),
 			fields: fields,
 			primary_action_label: __("Get Items"),
-			secondary_action_label: __("Make {0}", [me.doctype]),
+			secondary_action_label: __("Make: {0}", [__(me.doctype)]),
 			primary_action: function() {
 				me.action(me.get_checked_values(), me.args);
 			},
