@@ -500,7 +500,10 @@ frappe.ui.form.Dashboard = Class.extend({
 	},
 
 	render_graph: function(args) {
-		var me = this;
+		if (!args) {
+			return
+		}
+
 		this.chart_area.empty().removeClass('hidden');
 		args = Object.assign({
 			type: 'line',
