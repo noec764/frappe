@@ -1,252 +1,199 @@
 {
- "actions": [],
- "allow_import": 1,
- "autoname": "field:theme",
- "creation": "2015-02-18 12:46:38.168929",
- "doctype": "DocType",
- "document_type": "Setup",
- "engine": "InnoDB",
- "field_order": [
-  "theme",
-  "based_on",
-  "module",
-  "custom",
-  "bootstrap_theme_section",
-  "google_font",
-  "font_size",
-  "font_properties",
-  "button_rounded_corners",
-  "button_shadows",
-  "button_gradients",
-  "column_break_11",
-  "primary_color",
-  "text_color",
-  "light_color",
-  "dark_color",
-  "background_color",
-  "stylesheet_section",
-  "theme_scss",
-  "custom_scss",
-  "theme_url",
-  "tailwind_theme_section",
-  "custom_css",
-  "theme_css",
-  "navbar_section",
-  "navbar",
-  "footer_section",
-  "footer",
-  "custom_js_section",
-  "js"
- ],
- "fields": [
-  {
-   "fieldname": "theme",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Theme",
-   "reqd": 1,
-   "unique": 1
-  },
-  {
-   "default": "Website",
-   "fieldname": "module",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Module",
-   "options": "Module Def",
-   "reqd": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "custom",
-   "fieldtype": "Check",
-   "label": "Custom?"
-  },
-  {
-   "fieldname": "theme_scss",
-   "fieldtype": "Code",
-   "label": "Theme",
-   "options": "SCSS",
-   "read_only": 1
-  },
-  {
-   "fieldname": "theme_url",
-   "fieldtype": "Read Only",
-   "label": "Theme URL"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "custom_js_section",
-   "fieldtype": "Section Break",
-   "label": "Custom JS"
-  },
-  {
-   "fieldname": "js",
-   "fieldtype": "Code",
-   "label": "JavaScript",
-   "options": "JS"
-  },
-  {
-    "default": "Bootstrap 4",
-    "fieldname": "based_on",
-    "fieldtype": "Select",
-    "label": "Theme Based On",
-    "options": "Bootstrap 4\nTailwind"
-  },
-  {
-    "depends_on": "eval:doc.based_on == 'Tailwind'",
-    "fieldname": "navbar_section",
-    "fieldtype": "Section Break",
-    "label": "Navbar"
+  "actions": [],
+  "allow_import": 1,
+  "autoname": "field:theme",
+  "creation": "2015-02-18 12:46:38.168929",
+  "doctype": "DocType",
+  "document_type": "Setup",
+  "engine": "InnoDB",
+  "field_order": [
+   "theme",
+   "module",
+   "custom",
+   "bootstrap_theme_section",
+   "google_font",
+   "font_size",
+   "font_properties",
+   "button_rounded_corners",
+   "button_shadows",
+   "button_gradients",
+   "column_break_11",
+   "primary_color",
+   "text_color",
+   "light_color",
+   "dark_color",
+   "background_color",
+   "stylesheet_section",
+   "custom_overrides",
+   "custom_scss",
+   "theme_scss",
+   "theme_url",
+   "custom_js_section",
+   "js"
+  ],
+  "fields": [
+   {
+    "fieldname": "theme",
+    "fieldtype": "Data",
+    "in_list_view": 1,
+    "label": "Theme",
+    "reqd": 1,
+    "unique": 1
    },
    {
-    "depends_on": "eval:doc.based_on=='Tailwind'",
-    "fieldname": "tailwind_theme_section",
+    "default": "Website",
+    "fieldname": "module",
+    "fieldtype": "Link",
+    "in_list_view": 1,
+    "label": "Module",
+    "options": "Module Def",
+    "reqd": 1
+   },
+   {
+    "default": "1",
+    "fieldname": "custom",
+    "fieldtype": "Check",
+    "label": "Custom?"
+   },
+   {
+    "fieldname": "theme_scss",
+    "fieldtype": "Code",
+    "label": "Theme",
+    "options": "SCSS",
+    "read_only": 1
+   },
+   {
+    "fieldname": "theme_url",
+    "fieldtype": "Read Only",
+    "label": "Theme URL"
+   },
+   {
+    "collapsible": 1,
+    "fieldname": "custom_js_section",
     "fieldtype": "Section Break",
-    "label": "Tailwind Theme"
+    "label": "Custom JS"
+   },
+   {
+    "fieldname": "js",
+    "fieldtype": "Code",
+    "label": "JavaScript",
+    "options": "JS"
    },
    {
     "fieldname": "bootstrap_theme_section",
     "fieldtype": "Section Break",
     "label": "Theme Configuration"
-   },  
-  {
-   "depends_on": "eval:doc.based_on == 'Tailwind'",
-   "fieldname": "footer_section",
-   "fieldtype": "Section Break",
-   "label": "Footer"
-  },
-  {
-    "fieldname": "navbar",
-    "fieldtype": "Table",
-    "label": "Navbar",
-    "options": "Web Page Block"
    },
    {
-    "fieldname": "footer",
-    "fieldtype": "Table",
-    "label": "Footer",
-    "options": "Web Page Block"
+    "fieldname": "google_font",
+    "fieldtype": "Data",
+    "label": "Google Font"
    },
    {
-    "fieldname": "custom_css",
+    "fieldname": "font_size",
+    "fieldtype": "Data",
+    "label": "Font Size"
+   },
+   {
+    "fieldname": "primary_color",
+    "fieldtype": "Link",
+    "label": "Primary Color",
+    "options": "Color"
+   },
+   {
+    "fieldname": "text_color",
+    "fieldtype": "Link",
+    "label": "Text Color",
+    "options": "Color"
+   },
+   {
+    "fieldname": "dark_color",
+    "fieldtype": "Link",
+    "label": "Dark Color",
+    "options": "Color"
+   },
+   {
+    "fieldname": "background_color",
+    "fieldtype": "Link",
+    "label": "Background Color",
+    "options": "Color"
+   },
+   {
+    "fieldname": "stylesheet_section",
+    "fieldtype": "Section Break",
+    "label": "Stylesheet"
+   },
+   {
+    "fieldname": "custom_scss",
     "fieldtype": "Code",
-    "label": "Custom CSS",
-    "options": "CSS"
+    "label": "Custom SCSS"
    },
    {
-    "fieldname": "theme_css",
-    "fieldtype": "Code",
-    "hidden": 1,
-    "label": "Theme CSS",
-    "options": "CSS",
-    "read_only": 1
+    "fieldname": "light_color",
+    "fieldtype": "Link",
+    "label": "Light Color",
+    "options": "Color"
    },
-  {
-   "fieldname": "google_font",
-   "fieldtype": "Data",
-   "label": "Google Font"
-  },
-  {
-   "fieldname": "font_size",
-   "fieldtype": "Data",
-   "label": "Font Size"
-  },
-  {
-   "fieldname": "primary_color",
-   "fieldtype": "Link",
-   "label": "Primary Color",
-   "options": "Color"
-  },
-  {
-   "fieldname": "text_color",
-   "fieldtype": "Link",
-   "label": "Text Color",
-   "options": "Color"
-  },
-  {
-   "fieldname": "dark_color",
-   "fieldtype": "Link",
-   "label": "Dark Color",
-   "options": "Color"
-  },
-  {
-   "fieldname": "background_color",
-   "fieldtype": "Link",
-   "label": "Background Color",
-   "options": "Color"
-  },
-  {
-   "depends_on": "eval:doc.based_on == 'Bootstrap 4'",
-   "fieldname": "stylesheet_section",
-   "fieldtype": "Section Break",
-   "label": "Stylesheet"
-  },
-  {
-   "fieldname": "custom_scss",
-   "fieldtype": "Code",
-   "label": "Custom SCSS"
-  },
-  {
-   "fieldname": "light_color",
-   "fieldtype": "Link",
-   "label": "Light Color",
-   "options": "Color"
-  },
-  {
-   "default": "300,600",
-   "fieldname": "font_properties",
-   "fieldtype": "Data",
-   "label": "Font Properties"
-  },
-  {
-   "default": "1",
-   "fieldname": "button_rounded_corners",
-   "fieldtype": "Check",
-   "label": "Button Rounded Corners"
-  },
-  {
-   "default": "0",
-   "fieldname": "button_shadows",
-   "fieldtype": "Check",
-   "label": "Button Shadows"
-  },
-  {
-   "default": "0",
-   "fieldname": "button_gradients",
-   "fieldtype": "Check",
-   "label": "Button Gradients"
-  },
-  {
-   "fieldname": "column_break_11",
-   "fieldtype": "Column Break"
-  }
- ],
- "links": [],
- "modified": "2020-04-25 00:00:23.347879",
- "modified_by": "Administrator",
- "module": "Website",
- "name": "Website Theme",
- "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "read": 1,
-   "role": "Website Manager",
-   "write": 1
-  },
-  {
-   "create": 1,
-   "delete": 1,
-   "export": 1,
-   "import": 1,
-   "read": 1,
-   "role": "Administrator",
-   "write": 1
-  }
- ],
- "sort_field": "modified",
- "sort_order": "DESC",
- "track_changes": 1
-}
+   {
+    "default": "300,600",
+    "fieldname": "font_properties",
+    "fieldtype": "Data",
+    "label": "Font Properties"
+   },
+   {
+    "default": "1",
+    "fieldname": "button_rounded_corners",
+    "fieldtype": "Check",
+    "label": "Button Rounded Corners"
+   },
+   {
+    "default": "0",
+    "fieldname": "button_shadows",
+    "fieldtype": "Check",
+    "label": "Button Shadows"
+   },
+   {
+    "default": "0",
+    "fieldname": "button_gradients",
+    "fieldtype": "Check",
+    "label": "Button Gradients"
+   },
+   {
+    "fieldname": "column_break_11",
+    "fieldtype": "Column Break"
+   },
+   {
+    "fieldname": "custom_overrides",
+    "fieldtype": "Code",
+    "label": "Custom Overrides",
+    "options": "SCSS"
+   }
+  ],
+  "links": [],
+  "modified": "2020-05-11 16:01:04.654990",
+  "modified_by": "Administrator",
+  "module": "Website",
+  "name": "Website Theme",
+  "owner": "Administrator",
+  "permissions": [
+   {
+    "create": 1,
+    "delete": 1,
+    "read": 1,
+    "role": "Website Manager",
+    "write": 1
+   },
+   {
+    "create": 1,
+    "delete": 1,
+    "export": 1,
+    "import": 1,
+    "read": 1,
+    "role": "Administrator",
+    "write": 1
+   }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "track_changes": 1
+ }
