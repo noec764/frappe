@@ -14,6 +14,9 @@ class AuthError(Exception):
 class SiteExpiredError(Exception):
 	pass
 
+class SiteUnreachableError(Exception):
+	pass
+
 class FrappeException(Exception):
 	pass
 
@@ -53,6 +56,8 @@ class FrappeClient(object):
 
 		if r.status_code==200 and r.json().get('message') == "Logged In":
 			return r.json()
+		elif r.status_code == 502:
+			raise SiteUnreachableError
 		else:
 			if json.loads(r.text).get('exc_type') == "SiteExpiredError":
 				raise SiteExpiredError
