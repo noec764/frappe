@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import validate_email_address ,cint
+from frappe.utils import validate_email_address ,cint, cstr
 import imaplib,poplib,smtplib
 from frappe.email.utils import get_port
 
