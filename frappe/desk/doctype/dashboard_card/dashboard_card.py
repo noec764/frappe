@@ -75,4 +75,4 @@ class DashboardCard(Document):
 
 	def check_document_type(self):
 		if frappe.get_meta(self.document_type).issingle:
-			frappe.throw("You cannot create a dashboard chart from single DocTypes")
+			frappe.throw(_("You cannot create a dashboard chart from single DocTypes"))

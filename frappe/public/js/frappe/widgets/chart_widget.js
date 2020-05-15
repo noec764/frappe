@@ -551,6 +551,21 @@ export default class ChartWidget extends Widget {
 			chart_args.data.end = new Date(`${heatmap_year+1}-01-01`);
 		}
 
+		let set_options = (options) => {
+			let custom_options = JSON.parse(options);
+			for (let key in custom_options) {
+				chart_args[key] = custom_options[key];
+			}
+		};
+
+		if (this.custom_options) {
+			set_options(this.custom_options);
+		}
+
+		if (this.chart_doc.custom_options) {
+			set_options(this.chart_doc.custom_options);
+		}
+
 		return chart_args;
 	}
 
