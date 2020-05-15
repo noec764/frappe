@@ -598,8 +598,8 @@ frappe.ui.form.Section = Class.extend({
 			if(this.df.cssClass) {
 				this.wrapper.addClass(this.df.cssClass);
 			}
-			if(this.df.options && this.df.options=="noBottomBorder") {
-				this.wrapper.addClass("bottomless-section");
+			if (this.df.hide_border) {
+				this.wrapper.toggleClass("hide-border", true);
 			}
 		}
 
