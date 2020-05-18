@@ -180,7 +180,7 @@
       "description": "Show full form instead of a quick entry modal",
       "fieldname": "show_full_form",
       "fieldtype": "Check",
-      "label": "Show Full Form?"
+      "label": "Show Full Form"
      }
     ],
     "links": [],

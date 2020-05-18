@@ -793,6 +793,7 @@
         "Geolocation": "Géolocalisation",
         "HTML": "HTML",
         "Hidden": "Masqué",
+        "Hide Border": "Cacher la bordure inférieure",
         "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
         "Ignore User Permissions": "Ignorer les autorisations des utilisateurs",
         "Ignore XSS Filter": "Ignorer le filtre XSS",
@@ -842,6 +843,13 @@
         "Translatable": "Traduisible",
         "Unique": "Unique",
         "Width": "Largeur"
+    },
+    "DocType: Custom Link": {
+        "Custom": "Personnalisé",
+        "Custom Link": "Lien personnalisé",
+        "Document Type": "Type de document",
+        "Links": "Liens",
+        "System Manager": "Responsable système"
     },
     "DocType: Custom Role": {
         "Core": "Module central",
@@ -941,6 +949,7 @@
         "HTML Editor": "Éditeur HTML",
         "Heading": "Titre",
         "Hidden": "Masqué",
+        "Hide Border": "Cacher la bordure inférieure",
         "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
         "Ignore User Permissions": "Ignorer les autorisations des utilisateurs",
         "Image": "Image",
@@ -996,12 +1005,14 @@
     "DocType: Dashboard": {
         "All": "Tous",
         "Cards": "Cartes",
+        "Chart Options": "Options du graphique",
         "Charts": "Graphiques",
         "Dashboard": "Tableau de bord",
         "Dashboard Manager": "Gestionnaire de tableau de bord",
         "Dashboard Name": "Nom du tableau de bord",
         "Desk": "Bureau",
         "Is Default": "Tableau de bord par défaut",
+        "Set Default Options for all charts on this Dashboard (Ex: \"colors\": [\"#d1d8dd\", \"#ff5858\"])": "Définissez des options par défaut pour tous les graphiques de ce tableau de bord (Ex: \"couleurs\": [\"#d1d8dd\", \"#ff5858\"])",
         "System Manager": "Responsable système"
     },
     "DocType: Dashboard Calendar": {
@@ -1403,6 +1414,7 @@
     "DocType: Desk Shortcut": {
         "Color": "Couleur",
         "Count Filter": "Filtres pour le décompte",
+        "Dashboard": "Tableau de bord",
         "Desk": "Bureau",
         "Desk Shortcut": "Raccourci du bureau",
         "DocType": "DocType",
@@ -1486,6 +1498,7 @@
         "HTML Editor": "Éditeur HTML",
         "Heading": "Titre",
         "Hidden": "Masqué",
+        "Hide Border": "Cacher la bordure inférieure",
         "If checked, this field will be not overwritten based on Fetch From if a value already exists.": "Si coché, ce champ ne sera pas écrasé par la valeur récupérée ci dessus.",
         "Ignore User Permissions": "Ignorer les autorisations des utilisateurs",
         "Ignore XSS Filter": "Ignorer le Filtre XSS",
@@ -2465,6 +2478,18 @@
         "Website": "Site Web",
         "Website Manager": "Responsable du Site Web"
     },
+    "DocType: Installed Application": {
+        "Application Name": "Nom de l'application",
+        "Application Version": "Version de l'application",
+        "Core": "Module central",
+        "Git Branch": "Branche Git",
+        "Installed Application": "Application installée"
+    },
+    "DocType: Installed Applications": {
+        "Core": "Module central",
+        "Installed Applications": "Applications installées",
+        "System Manager": "Responsable système"
+    },
     "DocType: Integration Request": {
         "Authorized": "Autorisé",
         "Cancelled": "Annulé",
@@ -2660,6 +2685,23 @@
         "Module Name": "Nom du Module",
         "Restrict To Domain": "Restreindre au Domaine",
         "System Manager": "Responsable Système"
+    },
+    "DocType: Module Onboarding": {
+        "All": "Tous",
+        "Allow Roles": "Autoriser les rôles",
+        "Allow users to dismiss onboarding temporarily for a day": "Autoriser les utilisateurs à cacher la carte d'onboarding temporairement (1 jour)",
+        "Desk": "Bureau",
+        "Documentation URL": "URL de la documentation",
+        "Is Complete": "Terminée",
+        "Module": "Module",
+        "Module Onboarding": "Onboarding par module",
+        "Steps": "Etapes",
+        "Subtitle": "Sous-titres",
+        "Success Message": "Message de succès",
+        "System Manager": "Responsable système",
+        "System managers are allowed by default": "Les responsables système sont autorisés par défaut",
+        "Title": "Titre",
+        "User Can Dismiss ": "L'utilisateur peut cacher la carte"
     },
     "DocType: Newsletter": {
         "A Lead with this Email Address should exist": "Un Prospect avec cette Adresse email devrait exister",
@@ -2998,22 +3040,33 @@
         "Action": "Action",
         "Administrator": "Administrateur",
         "All": "Tous",
+        "Callback Message": "Message de succès",
+        "Callback Title": "Titre du message de succès",
         "Create Entry": "Créer une entrée",
         "Desk": "Bureau",
+        "Example: #Tree/Account": "Exemple: #Tree/Account",
         "Field": "Champ",
+        "Go to Page": "Aller à la page",
         "Is Complete": "Terminée",
         "Is Mandatory": "Obligatoire",
+        "Is Single": "Type de document unique",
         "Is Skipped": "Sautée",
         "Onboarding Step": "Etape d'onboarding",
+        "Path": "Lien",
         "Reference Document": "Document de référence",
         "Reference Report": "Rapport de référence",
         "Report Description": "Description du rapport",
         "Report Reference Doctype": "Type de document de référence du rapport",
         "Report Type": "Type de Rapport",
+        "Show Form Tour": "Afficher la découverte du formulaire",
+        "Show Full Form": "Afficher le formulaire complet",
+        "Show full form instead of a quick entry modal": "Afficher le formulaire complet au lieu du popup d'écriture rapide",
+        "This will be shown in a modal after routing": "Sera affiché dans un popup",
         "This will be shown to the user in a dialog after routing to the report": "Cette description sera affichée dans un popup à l'affichage du rapport",
         "Title": "Titre",
         "Update Settings": "Mettre à jour les paramètres",
         "Use % for any non empty value.": "Utiliser % pour toutes les valeurs non nulles",
+        "Validate Field": "Valider le champ",
         "Value to Validate": "Valeur à valider",
         "Video URL": "URL de la vidéo",
         "View Report": "Voir un rapport",
@@ -3023,6 +3076,31 @@
         "Desk": "Bureau",
         "Onboarding Step Map": "Carte des étapes d'onboarding",
         "Step": "Etape"
+    },
+    "DocType: Package Document Type": {
+        "Custom": "Personnaliser",
+        "Document Type": "Type de document",
+        "Filters": "Filtres",
+        "Include Attachments": "Inclure les pièces jointes",
+        "Overwrite": "Ecraser",
+        "Package Document Type": "Type de document à empaqueter"
+    },
+    "DocType: Package Publish Target": {
+        "Custom": "Personnaliser",
+        "Package Publish Target": "Cible de publication du paquet",
+        "Password": "Mot de passe",
+        "Site URL": "URL du site",
+        "Username": "Nom d'utilisateur"
+    },
+    "DocType: Package Publish Tool": {
+        "All": "Tous",
+        "Click on the row for accessing filters.": "Cliquer sur la ligne pour accéder aux filtres",
+        "Custom": "Personnaliser",
+        "Document Types": "Types de documents",
+        "Last Deployed On": "Déployé pour la dernière fois le",
+        "Package Publish Tool": "Outil de publication de paquet",
+        "Sites": "Sites",
+        "System Manager": "Responsable système"
     },
     "DocType: Page": {
         "Administrator": "Administrateur",
@@ -3805,6 +3883,8 @@
     },
     "DocType: Top Bar Item": {
         "For top bar": "Pour la barre supérieure",
+        "Icon": "Icône",
+        "If Icon is set, it will be shown instead of Label": "Si l'icône est définir, elle sera affichée à la place du libellé",
         "If you set this, this Item will come in a drop-down under the selected parent.": "Si vous définissez ceci, cet Article sera dans un menu déroulant sous le parent sélectionné.",
         "Label": "Étiquette",
         "Link to the page you want to open. Leave blank if you want to make it a group parent.": "Lien vers la page que vous souhaitez ouvrir. Laissez ce champ vide si vous voulez faire un parent de groupe.",
@@ -4175,6 +4255,8 @@
         "Add Container": "Ajouter un contenant",
         "Add Gray Background": "Ajouter un fond gris",
         "Add Padding": "Ajouter du padding",
+        "Add Space on Bottom": "Ajouter de l'espace en bas",
+        "Add Space on Top": "Ajouter de l'espace en haut",
         "CSS Class": "Classe CSS",
         "Edit Values": "Modifier les valeurs",
         "Hide Block": "Cacher le bloc",
@@ -4316,6 +4398,8 @@
         "Brand": "Marque",
         "Brand HTML": "Marque HTML",
         "Brand Image": "Logo",
+        "Call To Action": "Appel à action",
+        "Call To Action URL": "URL d'appel à action",
         "Chat": "Chat",
         "Chat Operators": "Opérateurs du Chat",
         "Chat Room Name": "Nom de la Salle de Chat",
@@ -4328,6 +4412,7 @@
         "FavIcon": "FavIcon",
         "Footer": "Pied de Page",
         "Footer Items": "Éléments du Pied de Page",
+        "Footer Logo": "Logo du pied de page",
         "From": "À partir de",
         "Google Analytics ID": "ID Google Analytics",
         "HTML Header & Robots": "HTML En-Tête & Robots",
@@ -4407,10 +4492,12 @@
         "Background Image": "Image d’Arrière-plan",
         "Bootstrap 4": "Bootstrap 4",
         "Bootstrap Theme": "Thème Bootstrap",
+        "Button Gradients": "Bouton aux couleurs dégradées",
         "Button Rounded Corners": "Boutons aux contours arrondis",
         "Button Shadows": "Ombre sous les boutons",
         "Custom CSS": "CSS Personnalisé",
         "Custom JS": "JS personnalisé",
+        "Custom Overrides": "Ecrasements de style personnalisés",
         "Custom SCSS": "SCSS personnalisé",
         "Custom Theme": "Thème personnalisé",
         "Custom Theme URL": "URL du thème personnalisé",
@@ -4890,7 +4977,9 @@
         "Custom Translations": "Traductions Personnalisées",
         "Customize": "Personnalisations",
         "Form Customization": "Personnalisation de formulaire",
-        "Other": "Autre"
+        "Import and Export Packages.": "Importer et exporter des paquets",
+        "Other": "Autre",
+        "Package": "Paquet"
     },
     "apps/frappe/frappe/config/desk.py": {
         "Activity": "Activité",
@@ -5907,6 +5996,9 @@
         "Insert After field '{0}' mentioned in Custom Field '{1}', with label '{2}', does not exist": "Insérer Après le champ '{0}' mentionné dans un Champ Personnalisé '{1}', avec l'étiquette '{2}', n'existe pas",
         "Label is mandatory": "L’Étiquette est obligatoire"
     },
+    "apps/frappe/frappe/custom/doctype/custom_link/custom_link.js": {
+        "Go to {0} List": "Aller à la liste {0}"
+    },
     "apps/frappe/frappe/custom/doctype/custom_script/custom_script.js": {
         "Add script for Child Table": "Ajouter un script pour une table enfant",
         "Go to {0}": "Voir {0}",
@@ -5974,6 +6066,15 @@
         "You can't set 'Translatable' for field {0}": "Vous ne pouvez pas définir \"Traduisible\" pour le champ {0}",
         "You cannot unset 'Read Only' for field {0}": "Vous ne pouvez pas désactiver 'Lecture Seule' pour le champ {0}\"",
         "{0} updated": "{0} mis(e) à jour"
+    },
+    "apps/frappe/frappe/custom/doctype/package_publish_tool/package_publish_tool.js": {
+        "Click table to edit": "Cliquez sur la table pour modifier",
+        "Click to Set Filters": "Cliquer pour définir des filtres",
+        "Condition": "Conditions",
+        "Filter": "Filtre",
+        "Save": "Enregistrer",
+        "Set Filters": "Définir des filtres",
+        "Value": "Valeur"
     },
     "apps/frappe/frappe/custom/doctype/property_setter/property_setter.js": {
         "Value for a check field can be either 0 or 1": "La valeur pour un champ de contrôle peut être 0 ou 1"
@@ -6074,6 +6175,9 @@
     "apps/frappe/frappe/desk/doctype/dashboard/dashboard.js": {
         "Show Dashboard": "Voir le tableau de bord"
     },
+    "apps/frappe/frappe/desk/doctype/dashboard/dashboard.py": {
+        "Invalid json added in the custom options: {0}": "Le JSON ajouté aux options personnalisées est invalide: {0}"
+    },
     "apps/frappe/frappe/desk/doctype/dashboard_card/dashboard_card.js": {
         "Click table to edit": "Cliquez sur la table pour modifier les filtres",
         "Click to Set Filters": "Cliquer pour définir des filtres",
@@ -6085,7 +6189,8 @@
     },
     "apps/frappe/frappe/desk/doctype/dashboard_card/dashboard_card.py": {
         "Document type is required to create a dashboard card": "Un type de document est requis pour créer une carte de tableau de board",
-        "Time series based on is required to create a dashboard card": "Un champ de référence pour la série temporelle est requis pour créer une carte de tableau de bord"
+        "Time series based on is required to create a dashboard card": "Un champ de référence pour la série temporelle est requis pour créer une carte de tableau de bord",
+        "You cannot create a dashboard chart from single DocTypes": "Vous ne pouvez pas créer de graphique à partir de types de documents uniques"
     },
     "apps/frappe/frappe/desk/doctype/dashboard_card_source/dashboard_card_source.py": {
         "Only Administrator is allowed to create Dashboard Card Sources": "Seul l'administrateur est autorisé à créer des sources de carte de tableau de bord"
@@ -6171,6 +6276,7 @@
         "Click to Set Filters": "Cliquer pour définir des filtres",
         "Condition": "Conditions",
         "Filter": "Filtre",
+        "Set": "Définir",
         "Set Filters": "Définir des filtres",
         "Value": "Valeur"
     },
@@ -7404,10 +7510,12 @@
         "Go to next record": "Voir le document suivant",
         "Go to previous record": "Voir le document précédent",
         "Maximum Attachment Limit for this record reached.": "Taille maximale des Pièces Jointes pour cet enregistrement est atteint.",
+        "Next": "Suivant",
         "No permission to '{0}' {1}": "Pas d'autorisation pour '{0}' {1}",
         "Permanently Cancel {0}?": "Annuler de Manière Permanente {0} ?",
         "Permanently Submit {0}?": "Valider de Manière Permanente {0} ?",
         "Please save before attaching.": "Veuillez enregistrer avant de joindre une pièce.",
+        "Previous": "Précedent",
         "Refresh": "Actualiser",
         "See on Website": "Voir sur le site",
         "Submit this document to confirm": "Valider ce document pour confirmer",
@@ -8884,9 +8992,11 @@
         "Edit": "Modifier",
         "Edit...": "Modification...",
         "Last synced {0}": "Dernière synchronisation le {0}",
+        "More": "Plus",
         "No Filters Set": "Aucun filtre défini",
         "Refresh": "Actualiser",
         "Reset Chart": "Réinitialiser le graphique",
+        "Set": "Définir",
         "{0} List": "Liste {0}",
         "{0} Report": "Rapport de/d' {0}"
     },
@@ -9340,6 +9450,10 @@
         "Unknown file encoding. Tried utf-8, windows-1250, windows-1252.": "Encodage du fichier inconnu. Essayez utf-8, windows-1250, windows-1252.",
         "{0} is required": "{0} est nécessaire",
         "{0} must be one of {1}": "{0} doit être l'un des {1}"
+    },
+    "apps/frappe/frappe/utils/dashboard.py": {
+        "Invalid Filter Value": "Valeur de filtre invalide",
+        "Please check the filter values set for Dashboard Chart: {}": "Veuillez vérifier les valeurs des filtres définis pour le graphique du tableau de bord: {}"
     },
     "apps/frappe/frappe/utils/data.py": {
         "1 hour ago": "Il y a 1 heure",
@@ -10445,13 +10559,14 @@
         "Connection lost. Some features might not work.": "Connexion perdue. Certaines fonctionnalités peuvent ne pas fonctionner.",
         "Create a new ": "Créer un·e nouveau·elle",
         "Create a new {0}": "Créer un·e nouveau·elle {0}",
+        "Créer: {0}": "Créer: {0}",
         "Dashboard": "Tableau de Bord",
         "Date Range": "Intervalle de Date",
         "Following fields have missing values:": "Les champs suivants ont des valeurs manquantes:",
         "Get Items": "Obtenir les Articles",
         "Hide details": "Cacher les détails",
         "Invalid \"depends_on\" expression": "Expression \"depends_on\" non valide",
-        "Créer: {0}": "Créer: {0}",
+        "Make: {0}": "Créer: {0}",
         "Missing Values Required": "Valeurs Manquantes Requises",
         "More": "Plus",
         "Name": "Nom",
@@ -10626,6 +10741,7 @@
         "New Print Format Name": "Nouveau format d'impression",
         "New {0}": "Nouveau·elle {0}",
         "New {0} (Ctrl+B)": "Nouveau·elle {0} (Ctrl + B)",
+        "Next": "Suivant",
         "Next actions": "Prochaines actions",
         "No Data": "Aucune Donnée",
         "No Preview Available": "Aperçu non disponible",
@@ -10663,6 +10779,7 @@
         "Points": "Points",
         "Portrait": "Portrait",
         "Preview": "Aperçu",
+        "Previous": "Précedent",
         "Print": "Imprimer",
         "Print Format": "Format d'impression",
         "Print Sent to the printer!": "Impression envoyées à l'imprimante",
