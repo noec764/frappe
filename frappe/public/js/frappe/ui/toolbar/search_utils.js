@@ -277,7 +277,7 @@ frappe.search.utils = {
 		var out = [];
 		frappe.boot.allowed_workspaces.forEach(function(item) {
 			var level = me.fuzzy_search(keywords, item.name);
-			if(level > 0) {
+			if (level > 0) {
 				var ret = {
 					type: "Workspace",
 					label: __("Open {0}", [me.bolden_match_part(__(item.name), keywords)]),
@@ -285,6 +285,26 @@ frappe.search.utils = {
 					index: level,
 					route: ["workspace", item.name]
 				};
+				out.push(ret);
+			}
+		});
+		return out;
+	},
+
+	get_dashboards: function(keywords) {
+		var me = this;
+		var out = [];
+		frappe.boot.dashboards.forEach(function(item) {
+			var level = me.fuzzy_search(keywords, item.name);
+			if (level > 0) {
+				var ret = {
+					type: "Dashboard",
+					label: __("{0} Dashboard", [me.bolden_match_part(__(item.name), keywords)]),
+					value: __("{0} Dashboard", [__(item.name)]),
+					index: level,
+					route: ["dashboard", item.name]
+				};
+
 				out.push(ret);
 			}
 		});
@@ -476,6 +496,11 @@ frappe.search.utils = {
 			title: __("Workspace"),
 			fetch_type: "Nav",
 			results: sort_uniques(this.get_workspaces(keywords))
+		},
+		{
+			title: __("Dashboard"),
+			fetch_type: "Nav",
+			results: sort_uniques(this.get_dashboards(keywords))
 		},
 		{
 			title: __("Setup"),
