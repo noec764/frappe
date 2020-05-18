@@ -217,7 +217,7 @@ class EmailAccount(Document):
 				for user in get_system_managers(only_name=True):
 					try:
 						assign_to.add({
-							'assign_to': user,
+							'assign_to': [user],
 							'doctype': self.doctype,
 							'name': self.name,
 							'description': description,
