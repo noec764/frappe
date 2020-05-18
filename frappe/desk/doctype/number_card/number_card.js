@@ -78,7 +78,7 @@ frappe.ui.form.on('Number Card', {
 						frm.trigger('set_filters_in_table');
 					}
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 
 			frappe.dashboards.filters_dialog = dialog;

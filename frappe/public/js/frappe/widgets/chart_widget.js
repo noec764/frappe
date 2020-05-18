@@ -402,7 +402,7 @@ export default class ChartWidget extends Widget {
 					me.fetch_and_update_chart();
 				}
 			},
-			primary_action_label: "Set"
+			primary_action_label: __("Set")
 		});
 
 		if (this.is_document_type) {

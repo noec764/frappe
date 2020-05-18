@@ -1584,14 +1584,25 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let steps = frappe.tour[this.doctype].map(step => {
 			let field = this.get_docfield(step.fieldname);
-			return {
-				element: `.frappe-control[title='${step.fieldname}']`,
-				popover: {
-					title: step.title || field.label,
-					description: step.description
-				}
-			};
-		});
+			if (!(field.hidden||field.hidden_due_to_dependency)) {
+				return {
+					element: `.frappe-control[data-fieldname='${step.fieldname}']`,
+					popover: {
+						title: step.title || field.label,
+						description: step.description,
+						position: step.position || 'auto'
+					}
+				};
+			}
+		}).filter(step => {
+			if (step) {
+				return step;
+			}
+		})
+
+		if (!steps.length) {
+			return
+		}
 
 		driver.defineSteps(steps);
 		driver.start();
