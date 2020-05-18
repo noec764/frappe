@@ -161,7 +161,9 @@ class Workspace:
 			}
 
 	def get_cards(self):
-		cards = self.doc.cards + get_custom_reports_and_doctypes(self.doc.module)
+		cards = self.doc.cards
+		if not self.doc.hide_custom:
+			cards = cards + get_custom_reports_and_doctypes(self.doc.module)
 
 		if len(self.extended_cards):
 			cards = cards + self.extended_cards
