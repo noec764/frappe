@@ -103,7 +103,7 @@ class TestAutoRepeat(unittest.TestCase):
 	def test_next_schedule_date(self):
 		current_date = getdate(today())
 		todo = frappe.get_doc(
-			dict(doctype='ToDo', description='test next schedule date todo', assigned_by='Administrator')).insert()
+			dict(doctype='ToDo', description='test next schedule date for monthly', assigned_by='Administrator')).insert()
 		doc = make_auto_repeat(frequency='Monthly',	reference_document=todo.name, start_date=add_months(today(), -2))
 
 		#check next_schedule_date
@@ -116,6 +116,11 @@ class TestAutoRepeat(unittest.TestCase):
 		self.assertEqual(len(docnames), 3)
 		doc.load_from_db()
 		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), 1)))
+
+		todo = frappe.get_doc(
+			dict(doctype='ToDo', description='test next schedule date for daily', assigned_by='Administrator')).insert()
+		doc = make_auto_repeat(frequency='Daily', reference_document=todo.name, start_date=add_days(today(), -2))
+		self.assertEqual(getdate(doc.next_schedule_date), current_date)
 
 
 def make_auto_repeat(**args):
