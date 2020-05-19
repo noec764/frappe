@@ -1572,10 +1572,21 @@ frappe.ui.form.Form = class FrappeForm {
 			keyboardControl: true,
 			nextBtnText: __('Next'),
 			prevBtnText: __('Previous'),
+			doneBtnText: __('Done'),
+			closeBtnText: __('Close'),
 			opacity: 0.25,
 			onNext: () => {
 				if (!driver.hasNextStep()) {
 					on_finish && on_finish();
+				}
+			},
+			onHighlightStarted: (e) => {
+				if (e.node.classList.contains("hide-control")) {
+					if (!!driver.steps[driver.currentStep + 2]) {
+						driver.moveNext();
+					} else {
+						driver.reset();
+					}
 				}
 			}
 		});
@@ -1584,20 +1595,14 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let steps = frappe.tour[this.doctype].map(step => {
 			let field = this.get_docfield(step.fieldname);
-			if (!(field.hidden||field.hidden_due_to_dependency)) {
-				return {
-					element: `.frappe-control[data-fieldname='${step.fieldname}']`,
-					popover: {
-						title: step.title || field.label,
-						description: step.description,
-						position: step.position || 'auto'
-					}
-				};
-			}
-		}).filter(step => {
-			if (step) {
-				return step;
-			}
+			return {
+				element: `.frappe-control[data-fieldname='${step.fieldname}']`,
+				popover: {
+					title: step.title || field.label,
+					description: step.description,
+					position: step.position || 'top'
+				}
+			};
 		})
 
 		if (!steps.length) {
