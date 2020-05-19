@@ -78,7 +78,6 @@ frappe.Application = Class.extend({
 
 		if (frappe.user_roles.includes('System Manager')) {
 			this.show_change_log();
-			this.show_update_available();
 		}
 
 		if (!frappe.boot.developer_mode) {
@@ -506,12 +505,6 @@ frappe.Application = Class.extend({
 			});
 			me.show_notes();
 		};
-	},
-
-	show_update_available: () => {
-		frappe.call({
-			"method": "frappe.utils.change_log.show_update_popup"
-		});
 	},
 
 	setup_analytics: function() {
