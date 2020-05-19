@@ -458,6 +458,7 @@ export default class OnboardingWidget extends Widget {
 				JSON.stringify(dismissed)
 			);
 			this.delete();
+			$(document.body).trigger('refreshDashboard');
 		});
 		dismiss.appendTo(this.action_area);
 	}

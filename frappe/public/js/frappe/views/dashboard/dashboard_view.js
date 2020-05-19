@@ -106,7 +106,6 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	}
 
 	setup_events() {
-		$(document.body).on('toggleFullWidth', () => this.render_dashboard());
 		$(document.body).on('toggleListSidebar', () => this.render_dashboard());
 	}
 

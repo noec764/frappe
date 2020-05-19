@@ -143,11 +143,11 @@ export default class ChartWidget extends Widget {
 				{
 					label: this.chart_settings.timespan || this.chart_doc.timespan,
 					options: [
-						"Select Date Range",
-						"Last Year",
-						"Last Quarter",
-						"Last Month",
-						"Last Week"
+						{"label": __("Select Date Range"), "value": "Select Date Range"},
+						{"label": __("Last Year"), "value": "Last Year"},
+						{"label": __("Last Quarter"), "value": "Last Quarter"},
+						{"label": __("Last Month"), "value": "Last Month"},
+						{"label": __("Last Week"), "value": "Last Week"}
 					],
 					action: selected_item => {
 						this.selected_timespan = selected_item;
@@ -178,7 +178,13 @@ export default class ChartWidget extends Widget {
 				},
 				{
 					label: this.chart_settings.time_interval || this.chart_doc.time_interval,
-					options: ["Yearly", "Quarterly", "Monthly", "Weekly", "Daily"],
+					options: [
+						{"label": __("Yearly"), "value": "Yearly"},
+						{"label": __("Quarterly"), "value": "Quarterly"},
+						{"label": __("Monthly"), "value": "Monthly"},
+						{"label": __("Weekly"), "value": "Weekly"},
+						{"label": __("Daily"), "value": "Daily"}
+					],
 					action: selected_item => {
 						this.selected_time_interval = selected_item;
 						this.save_chart_config_for_user({'time_interval': this.selected_time_interval});
@@ -316,7 +322,7 @@ export default class ChartWidget extends Widget {
 
 		if (this.chart_doc.document_type) {
 			actions.push({
-				label: __("{0} List", [this.chart_doc.document_type]),
+				label: __("{0} List", [__(this.chart_doc.document_type)]),
 				action: "action-list",
 				handler: () => {
 					frappe.set_route("List", this.chart_doc.document_type);
@@ -324,7 +330,7 @@ export default class ChartWidget extends Widget {
 			});
 		} else if (this.chart_doc.chart_type === "Report") {
 			actions.push({
-				label: __("{0} Report", [this.chart_doc.report_name]),
+				label: __("{0} Report", [__(this.chart_doc.report_name)]),
 				action: "action-list",
 				handler: () => {
 					frappe.set_route(

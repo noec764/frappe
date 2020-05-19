@@ -150,7 +150,7 @@ class DesktopPage {
 	}
 
 	setup_events() {
-		$(document.body).on('toggleFullWidth', () => this.refresh());
+		$(document.body).on('refreshDashboard', () => this.refresh());
 	}
 
 	customize() {
@@ -232,7 +232,7 @@ class DesktopPage {
 				container: this.page,
 				type: "chart",
 				columns: 1,
-				hidden: Boolean(this.onboarding_widget),
+				hidden: Boolean(this.onboarding_widget&&!this.onboarding_widget.is_dismissed()),
 				options: {
 					allow_sorting: this.allow_customization,
 					allow_create: this.allow_customization,
