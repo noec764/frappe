@@ -128,11 +128,12 @@ def generate_theme_files_if_not_exist():
 	themes = frappe.get_all('Website Theme')
 	for theme in themes:
 		doc = frappe.get_doc('Website Theme', theme.name)
-		try:
-			doc.generate_theme_if_not_exist()
-			doc.save()
-		except Exception:
-			frappe.log_error(frappe.get_traceback(), "Theme File Generation Failed")
+		if not doc.is_standard_and_not_valid_user():
+			try:
+				doc.generate_theme_if_not_exist()
+				doc.save()
+			except Exception:
+				frappe.log_error(frappe.get_traceback(), "Theme File Generation Failed")
 
 def get_scss(doc):
 	return frappe.render_template('frappe/website/doctype/website_theme/website_theme_template.scss', doc.as_dict())

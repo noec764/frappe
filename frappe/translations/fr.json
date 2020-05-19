@@ -1091,6 +1091,7 @@
         "Group By Based On": "Grouper sur la base de",
         "Group By Type": "Grouper par type",
         "Half": "Demi",
+        "Heatmap": "Carte thermique",
         "Is Custom": "Personnalisé",
         "Is Public": "Public",
         "Last Month": "Dernier mois",
@@ -1124,6 +1125,7 @@
         "Width": "Largeur",
         "X Field": "Champ X",
         "Y Axis": "Axe Y",
+        "Year": "Année",
         "Yearly": "Annuelle"
     },
     "DocType: Dashboard Chart Field": {
@@ -4788,6 +4790,20 @@
         "Workflow": "Flux de Travail",
         "Workflow Transition": "Transition du Flux de Travail"
     },
+    "Module Onboarding: Website": {
+        "Corporate website, blog, shopping cart and portals.": "Site web d'entreprise, blog, panier et portails",
+        "Setup your website": "Créez votre site web",
+        "Your website is set up !": "Votre site web est prêt"
+    },
+    "Onboarding Step: Add Blog Category": {
+        "Add Blog Category": "Ajouter une catégorie de blog"
+    },
+    "Onboarding Step: Create Blogger": {
+        "Create Blogger": "Créer un blogueur"
+    },
+    "Onboarding Step: Enable Website Tracking": {
+        "Enable Website Tracking": "Activer le suivi du site web"
+    },
     "Page: Activity": {
         "Activity": "Activité"
     },
@@ -8435,6 +8451,7 @@
     "apps/frappe/frappe/public/js/frappe/ui/toolbar/search_utils.js": {
         "Administration": "Administration",
         "Create a new ...": "Créer un nouveau ...",
+        "Dashboard": "Tableau de bord",
         "Email Inbox": "Boîte de Réception",
         "Find '{0}' in ... ": "Trouver '{0}' dans ...",
         "Find {0} in {1}": "Trouver {0} dans {1}",
@@ -8450,7 +8467,8 @@
         "Workspace": "Espace de travail",
         "calendar": "calendrier",
         "email inbox": "Boîte Email",
-        "new": "nouveau"
+        "new": "nouveau",
+        "{0} Dashboard": "Tableau de bord: {0}"
     },
     "apps/frappe/frappe/public/js/frappe/ui/toolbar/toolbar.js": {
         "An error occurred while setting Session Defaults": "Une erreur a empêché de définir les valeurs par défaut de la session",
@@ -8637,10 +8655,16 @@
         "{0} Dashboard": "Tableau de bord: {0}"
     },
     "apps/frappe/frappe/public/js/frappe/views/desktop/desktop.js": {
+        "Customizations Saved Successfully": "Personnalisations enregistrées avec succès",
+        "Customize Workspace": "Personnaliser le bureau",
         "Discard": "Ignorer",
         "Failed": "Échec",
+        "Reports & Masters": "Rapports et données de base",
         "Save": "Enregistrer",
-        "Success": "Réussite"
+        "Something went wrong while saving customizations": "Une erreur a empêché l'enregistrement de vos personnalisations",
+        "Success": "Réussite",
+        "Your Shortcuts": "Vos raccourcis",
+        "{} Dashboard": "Tableau de bord: {}"
     },
     "apps/frappe/frappe/public/js/frappe/views/file/file_view.js": {
         "Create": "Créer",
@@ -11240,7 +11264,7 @@
         "Select multiple list items": "Sélectionner plusieurs éléments de la liste",
         "Select or drag across time slots to create a new event.": "Sélectionner ou glisser sur des intervalles de temps pour créer un nouvel événement.",
         "Select records for assignment": "Sélectionner les dossiers pour attribution",
-        "Set": "Définir",
+        "Set": "Défini",
         "Settings": "Paramètres",
         "Share URL": "URL de partage",
         "Show Weekends": "Afficher les week-ends",

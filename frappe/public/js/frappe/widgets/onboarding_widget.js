@@ -445,7 +445,7 @@ export default class OnboardingWidget extends Widget {
 		if (!this.user_can_dismiss) return;
 
 		const dismiss = $(
-			`<div class="small" style="cursor:pointer;">Dismiss</div>`
+			`<div class="small" style="cursor:pointer;">${__("Dismiss")}</div>`
 		);
 		dismiss.on("click", () => {
 			let dismissed = JSON.parse(

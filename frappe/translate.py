@@ -123,6 +123,8 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Module: ', name), name from `tabModule Def`")
 			messages += frappe.db.sql("select concat('Page: ', name), name from `tabPage`")
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
+			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title, subtitle, success_message from `tabModule Onboarding`")
+			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title, callback_title, callback_message from `tabOnboarding Step`")
 			messages += "null"
 
 		message_dict = make_dict_from_messages(messages)
@@ -305,6 +307,21 @@ def get_messages_for_app(app):
 				if not isinstance(i, tuple):
 					raise Exception
 
+		# module_onboarding
+		for name in frappe.db.sql_list("""select name from `tabModule Onboarding`
+			where module in ({})""".format(modules)):
+			messages.extend(get_messages_from_module_onboarding(name))
+			for i in messages:
+				if not isinstance(i, tuple):
+					raise Exception
+
+			steps = frappe.get_all("Onboarding Step Map", filters={"parent": name}, fields=["step"])
+			for step in steps:
+				messages.extend(get_messages_from_onboarding_step(step.step))
+				for i in messages:
+					if not isinstance(i, tuple):
+						raise Exception
+
 	# workflow based on app.hooks.fixtures
 	messages.extend(get_messages_from_workflow(app_name=app))
 
@@ -443,6 +460,22 @@ def get_messages_from_report(name):
 	messages.append((None,report.report_name))
 	return messages
 
+def get_messages_from_module_onboarding(name):
+	module_onboarding = frappe.get_doc("Module Onboarding", name)
+	messages = []
+	for field in ["title", "subtitle", "success_message"]:
+		if module_onboarding.get(field):
+			messages.append(('Module Onboarding: ' + name, module_onboarding.get(field)))
+	return messages
+
+def get_messages_from_onboarding_step(name):
+	onboarding_step = frappe.get_doc("Onboarding Step", name)
+	messages = []
+	for field in ["title", "callback_title", "callback_message"]:
+		if onboarding_step.get(field):
+			messages.append(('Onboarding Step: ' + name, onboarding_step.get(field)))
+	return messages
+
 def _get_messages_from_page_or_report(doctype, name, module=None):
 	if not module:
 		module = frappe.db.get_value(doctype, name, "module")
@@ -463,6 +496,19 @@ def get_server_messages(app):
 		inside an app"""
 	messages = []
 	file_extensions = ('.py', '.html', '.js', '.vue')
+	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
+		for dontwalk in (".git", "public", "locale"):
+			if dontwalk in folders: folders.remove(dontwalk)
+
+		for f in files:
+			f = frappe.as_unicode(f)
+			if f.endswith(file_extensions):
+				messages.extend(get_messages_from_file(os.path.join(basepath, f)))
+
+	return messages
+
+def get_onboarding_messages(app):
+	messages = []
 	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
 		for dontwalk in (".git", "public", "locale"):
 			if dontwalk in folders: folders.remove(dontwalk)
@@ -611,7 +657,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	if get_all:
 		print(str(len(messages)) + " messages")
 		for m in messages:
-				untranslated[m[0]][escape_newlines(m[1])] = get_existing_translation(escape_newlines(m[1]), comparison_dict)
+			untranslated[m[0]][escape_newlines(m[1])] = get_existing_translation(escape_newlines(m[1]), comparison_dict)
 
 		if write:
 			write_json_file(untranslated_file, untranslated)
