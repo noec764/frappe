@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 import frappe
 
 from frappe import throw, _
-from frappe.utils import cstr
+from frappe.utils import cstr, cint
 
 from frappe.model.document import Document
 from jinja2 import TemplateSyntaxError
@@ -149,7 +149,7 @@ def get_default_address(doctype, name, sort_key='is_primary_address'):
 		""" %(sort_key, '%s', '%s'), (doctype, name))
 
 	if out:
-		return sorted(out, key = functools.cmp_to_key(lambda x,y: cmp(y[1], x[1])))[0][0]
+		return sorted(out, key = functools.cmp_to_key(lambda x,y: cmp(cint(y[1]), cint(x[1]))))[0][0]
 	else:
 		return None
 
