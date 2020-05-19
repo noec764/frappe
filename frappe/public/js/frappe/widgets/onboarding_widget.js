@@ -265,7 +265,7 @@ export default class OnboardingWidget extends Widget {
 			frappe.route_hooks.after_save = callback;
 		}
 
-		frappe.set_route(`Form/${step.reference_document}/New ${step.reference_document} 1`);
+		frappe.new_doc(step.reference_document);
 	}
 
 	show_quick_entry(step) {
