@@ -1578,15 +1578,17 @@ frappe.ui.form.Form = class FrappeForm {
 			onNext: () => {
 				if (!driver.hasNextStep()) {
 					on_finish && on_finish();
+				} else if (driver.steps[driver.currentStep + 1].node.classList.contains("hide-control")) {
+					driver.moveNext();
 				}
 			},
-			onHighlightStarted: (e) => {
-				if (e.node.classList.contains("hide-control")) {
-					if (!!driver.steps[driver.currentStep + 2]) {
-						driver.moveNext();
-					} else {
-						driver.reset();
+			onPrevious: () => {
+				if (driver.currentStep - 1 >= 0) {
+					if (driver.steps[driver.currentStep - 1].node.classList.contains("hide-control")) {
+						driver.movePrevious();
 					}
+				} else {
+					driver.reset();
 				}
 			}
 		});
@@ -1595,12 +1597,13 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let steps = frappe.tour[this.doctype].map(step => {
 			let field = this.get_docfield(step.fieldname);
+			const position = this.get_field_position(field);
 			return {
 				element: `.frappe-control[data-fieldname='${step.fieldname}']`,
 				popover: {
 					title: step.title || field.label,
 					description: step.description,
-					position: step.position || 'top'
+					position: step.position || position
 				}
 			};
 		})
@@ -1611,6 +1614,14 @@ frappe.ui.form.Form = class FrappeForm {
 
 		driver.defineSteps(steps);
 		driver.start();
+	}
+
+	get_field_position(field) {
+		if (["Date", "Datetime", "Time"].includes(field.fieldtype)) {
+			return 'bottom'
+		} else {
+			return 'top'
+		}
 	}
 };
 
