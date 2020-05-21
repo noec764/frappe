@@ -24,8 +24,6 @@
 					{% for option in query_options.split("\n") -%}
 					<option value="{{ option }}">{{ option }}</option>
 					{%- endfor %}
-				{% else %}
-					<option value="General">General</option>
 				{% endif %}
 				</select>
 			</div>

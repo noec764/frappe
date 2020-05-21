@@ -12,10 +12,9 @@ sitemap = 1
 def get_context(context):
 	doc = frappe.get_doc("Contact Us Settings", "Contact Us Settings")
 
+	query_options = []
 	if doc.query_options:
 		query_options = [opt.strip() for opt in doc.query_options.replace(",", "\n").split("\n") if opt]
-	else:
-		query_options = ["Sales", "Support", "General"]
 
 	out = {
 		"query_options": query_options,
@@ -32,11 +31,11 @@ max_communications_per_hour = 1000
 @frappe.whitelist(allow_guest=True)
 def send_message(subject="Website Query", message="", sender=""):
 	if not message:
-		frappe.response["message"] = 'Please write something'
+		frappe.response["message"] = _('Please add a message')
 		return
 
 	if not sender:
-		frappe.response["message"] = 'Email Address Required'
+		frappe.response["message"] = _('Email address required')
 		return
 
 	# guest method, cap max writes per hour
