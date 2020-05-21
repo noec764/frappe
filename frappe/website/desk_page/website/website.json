@@ -13,7 +13,7 @@
   {
    "hidden": 0,
    "label": "Web Site",
-   "links": "[\n    {\n        \"description\": \"Content web page.\",\n        \"label\": \"Web Page\",\n        \"name\": \"Web Page\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Content web block.\",\n        \"label\": \"Web Block\",\n        \"name\": \"Web Block\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"User editable form on Website.\",\n        \"label\": \"Web Form\",\n        \"name\": \"Web Form\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Website Sidebar\",\n        \"name\": \"Website Sidebar\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Embed image slideshows in website pages.\",\n        \"label\": \"Website Slideshow\",\n        \"name\": \"Website Slideshow\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add meta tags to your web pages\",\n        \"label\": \"Website Route Meta\",\n        \"name\": \"Website Route Meta\",\n        \"type\": \"doctype\"\n    }\n]"
+   "links": "[\n    {\n        \"description\": \"Content web page.\",\n        \"label\": \"Web Page\",\n        \"name\": \"Web Page\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Content web block.\",\n        \"label\": \"Web Template\",\n        \"name\": \"Web Template\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"User editable form on Website.\",\n        \"label\": \"Web Form\",\n        \"name\": \"Web Form\",\n        \"onboard\": 1,\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Website Sidebar\",\n        \"name\": \"Website Sidebar\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Embed image slideshows in website pages.\",\n        \"label\": \"Website Slideshow\",\n        \"name\": \"Website Slideshow\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add meta tags to your web pages\",\n        \"label\": \"Website Route Meta\",\n        \"name\": \"Website Route Meta\",\n        \"type\": \"doctype\"\n    }\n]"
   },
   {
    "hidden": 0,
@@ -35,11 +35,12 @@
  "docstatus": 0,
  "doctype": "Desk Page",
  "extends_another_page": 0,
+ "hide_custom": 0,
  "icon": "fas fa-globe",
  "idx": 0,
  "is_standard": 1,
  "label": "Website",
- "modified": "2020-05-07 15:40:01.064362",
+ "modified": "2020-05-21 10:31:38.872078",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",

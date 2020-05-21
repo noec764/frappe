@@ -1,5 +1,5 @@
-<h2 class="section-title">{{ title }}</h2>
-<p class="section-description">{{ subtitle }}</p>
+<h2 class="section-title">{{ title or '' }}</h2>
+<p class="section-description">{{ subtitle or '' }}</p>
 
 <div class="mt-5">
 	{% set ns = namespace(tabs=[]) %}
@@ -21,7 +21,7 @@
 	{%- endif -%}
 
 	{%- endfor -%}
-	<ul class="nav nav-tabs flex-nowrap overflow-auto" role="tablist" aria-label="{{ title or '' }}">
+	<ul class="nav nav-tabs flex-nowrap" role="tablist" aria-label="{{ title or '' }}">
 		{%- for tab in ns.tabs -%}
 		{%- set first_tab = true if loop.index0 == 0 else false -%}
 		<li class="nav-item">

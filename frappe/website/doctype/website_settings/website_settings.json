@@ -31,7 +31,6 @@
    "copyright",
    "address",
    "footer_items",
-   "hide_footer_signup",
    "integrations",
    "enable_view_tracking",
    "enable_google_indexing",
@@ -180,12 +179,6 @@
     "fieldtype": "Table",
     "label": "Footer Items",
     "options": "Top Bar Item"
-   },
-   {
-    "default": "0",
-    "fieldname": "hide_footer_signup",
-    "fieldtype": "Check",
-    "label": "Hide Footer Signup"
    },
    {
     "collapsible": 1,
@@ -358,7 +351,7 @@
   "issingle": 1,
   "links": [],
   "max_attachments": 10,
-  "modified": "2020-05-15 14:12:32.907352",
+  "modified": "2020-05-16 14:12:32.907352",
   "modified_by": "Administrator",
   "module": "Website",
   "name": "Website Settings",

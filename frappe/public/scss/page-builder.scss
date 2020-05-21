@@ -156,6 +156,8 @@
 }
 
 .nav-tabs {
+	border-bottom: none;
+
 	.nav-link {
 		color: $gray-700;
 		font-weight: 500;
