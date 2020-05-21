@@ -5661,7 +5661,7 @@
         "Report Builder reports are managed directly by the report builder. Nothing to do.": "Les rapports de l’Éditeur de Rapports sont gérés directement par l’Éditeur de Rapports. Vous n’avez rien à faire.",
         "Show Report": "Afficher le rapport",
         "To format columns, give column labels in the query.": "Pour formater des colonnes, donnez des étiquettes de colonne dans la requête.",
-        "Write a Python file in the same folder where this is saved and return column and result.": "Écrire un fichier Python dans le même dossier où cela est sauvegardé et retourner la colonne et le résultat.",
+        "Write a Python file in the same folder where this is saved and return column and result.": "Écrire un script Python dans le dossier où est enregistré ce rapport et renvoyer la colonne et le résultat.",
         "Write a SELECT query. Note result is not paged (all data is sent in one go).": "Écrire une requête SELECT. Remarque : le résultat n'est pas paginé (toutes les données sont transmises en une seule fois).",
         "[Label]:[Field Type]/[Options]:[Width]": "[Étiquette]: [Type de champ] / [Options]: [Largeur]"
     },
