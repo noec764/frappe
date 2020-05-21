@@ -289,6 +289,7 @@ frappe.patches.v13_0.remove_web_view
 frappe.patches.v13_0.remove_tailwind_from_page_builder
 frappe.patches.v13_0.rename_onboarding
 frappe.patches.v13_0.email_unsubscribe
+execute:frappe.delete_doc("Web Template", "Section with Left Image", force=1)
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
