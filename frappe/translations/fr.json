@@ -8376,8 +8376,8 @@
         "Installed Apps": "Applications installées",
         "Loading versions...": "Chargement des versions...",
         "Open Source Applications for the Web": "Applications Open Source pour le Web",
-        "Source:": "Code source",
-        "Website:": "Site web",
+        "Source:": "Code source:",
+        "Website:": "Site web:",
         "Your application": "Votre application"
     },
     "apps/frappe/frappe/public/js/frappe/ui/toolbar/awesome_bar.js": {
@@ -10444,7 +10444,7 @@
         "Sorry! I could not find what you were looking for.": "Désolé ! Je n'ai pas trouvé ce que vous recherchiez.",
         "Sorry! You are not permitted to view this page.": "Désolé ! Vous n'êtes pas autorisé à consulter cette page.",
         "Source Text": "Texte Source",
-        "Source:": "Code source",
+        "Source:": "Code source:",
         "Start Date": "Date de début",
         "Start a conversation.": "Commencer une conversation.",
         "Statistics": "Statistiques",
@@ -10496,7 +10496,7 @@
         "View Website": "Voir Le Site Web",
         "Warning: Unable to find {0} in any table related to {1}": "Attention : Impossible de trouver {0} dans tout tableau relatif au {1}",
         "Web Link": "Lien Web",
-        "Website:": "Site web",
+        "Website:": "Site web:",
         "Week": "Semaine",
         "Weekly": "Hebdomadaire",
         "Widget type": "Type de widget",

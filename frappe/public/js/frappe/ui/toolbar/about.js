@@ -9,13 +9,13 @@ frappe.ui.misc.about = function() {
 			${ __("Website:") } <a href='https://dokos.io' target='_blank'>https://dokos.io</a></p>
 		<p><i class='fab fa-github fa-fw'></i>
 			${ __("Source:") } <a href='https://gitlab.com/dokos' target='_blank'>https://gitlab.com/dokos</a></p>
-		<hr>
-		<h4>${ __("Installed Apps") }</h4>
-		<div id='about-app-versions'>${ __("Loading versions...") }</div>
 		<p><i class='fab fa-linkedin fa-fw'></i>\
 			Linkedin: <a href='https://www.linkedin.com/company/dokos.io' target='_blank'>https://www.linkedin.com/company/dokos.io</a></p>\
 		<p><i class='fab fa-twitter fa-fw'></i>\
 			Twitter: <a href='https://twitter.com/dokos_io' target='_blank'>https://twitter.com/dokos_io</a></p>\
+		<hr>
+		<h4>${ __("Installed Apps") }</h4>
+		<div id='about-app-versions'>${ __("Loading versions...") }</div>
 		<hr>\
 		<p class='text-muted'>&copy; Dokos SAS and contributors </p>
 		</div>`);
