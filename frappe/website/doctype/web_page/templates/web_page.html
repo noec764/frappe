@@ -33,6 +33,12 @@
 {% endblock %}
 
 {% block style %}
+<style>
+{{ style or "" }}
+</style>
+{% endblock %}
+
+{% block script %}
 	{%- if script -%}
 	<script>{{ script }}</script>
 	{%- endif -%}
@@ -40,8 +46,4 @@
 	{%- for script in page_builder_scripts -%}
 	<script>{{ script }}</script>
 	{%- endfor -%}
-{% endblock %}
-
-{% block script %}
-    <script>{{ script or "" }}</script>
 {% endblock %}
