@@ -592,6 +592,9 @@ def get_extension(filename, extn, content):
 		if '?' in extn:
 			extn = extn.split('?', 1)[0]
 
+		if extn == "jpg":
+			extn = "jpeg"
+
 		mimetype = mimetypes.guess_type(filename + "." + extn)[0]
 
 	if mimetype is None or not mimetype.startswith("image/") and content:
