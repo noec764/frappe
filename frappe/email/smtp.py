@@ -228,7 +228,6 @@ class SMTPServer:
 				raise frappe.OutgoingEmailError(err_msg)
 
 			if self.use_tls:
-				self._sess.ehlo()
 				self._sess.starttls()
 				self._sess.ehlo()
 
