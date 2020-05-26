@@ -418,6 +418,10 @@ export default class ChartWidget extends Widget {
 		}
 
 		dialog.show();
+		//Set query report object so that it can be used while fetching filter values in the report
+		frappe.query_report = new frappe.views.QueryReport({'filters': dialog.fields_list});
+		frappe.query_reports[this.chart_doc.report_name].onload
+				&& frappe.query_reports[this.chart_doc.report_name].onload(frappe.query_report);
 		dialog.set_values(this.filters);
 	}
 
