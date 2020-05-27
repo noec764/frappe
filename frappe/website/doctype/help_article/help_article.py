@@ -4,7 +4,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.website.website_generator import WebsiteGenerator
-from frappe.utils import is_markdown, markdown
+from frappe.utils import is_markdown, markdown, cint
 from frappe.website.utils import get_comment_list
 from frappe import _
 
@@ -30,6 +30,9 @@ class HelpArticle(WebsiteGenerator):
 		cat.save()
 
 	def get_context(self, context):
+		if self.login_required and frappe.session.user=='Guest':
+			frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
+
 		if is_markdown(context.content):
 			context.content = markdown(context.content)
 		context.login_required = True
@@ -45,21 +48,30 @@ class HelpArticle(WebsiteGenerator):
 
 def get_list_context(context=None):
 	filters = dict(published=1)
+	introduction = False
 
-	category = frappe.db.get_value("Help Category", { "route": frappe.local.path })
+	category = frappe.db.get_value("Help Category", { "route": frappe.local.path }, ["name", "category_description", "login_required"], as_dict=True)
 
 	if category:
-		filters['category'] = category
+		if cint(category.get("login_required")) and frappe.session.user=='Guest':
+			frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
+
+		filters['category'] = category.get("name")
+		introduction = category.get("category_description")
+
+	if frappe.session.user == "Guest":
+		filters['login_required'] = 0
 
 	list_context = frappe._dict(
-		title = category or _("Knowledge Base"),
+		title = category.get("name") if category else _("Knowledge Base"),
 		get_level_class = get_level_class,
 		show_sidebar = True,
 		sidebar_items = get_sidebar_items(),
 		hide_filters = True,
 		filters = filters,
 		category = frappe.local.form_dict.category,
-		no_breadcrumbs = True
+		no_breadcrumbs = True,
+		introduction=introduction
 	)
 
 
@@ -78,15 +90,20 @@ def get_level_class(level):
 
 def get_sidebar_items():
 	def _get():
+		conditions = ""
+		if frappe.session.user == "Guest":
+			conditions = " and login_required=0"
+
 		return frappe.db.sql("""select
-				concat(category_name, " (", help_articles, ")") as title,
+				category_name as title,
 				concat('/', route) as route
 			from
 				`tabHelp Category`
 			where
 				ifnull(published,0)=1 and help_articles > 0
+			{conditions}
 			order by
-				help_articles desc""", as_dict=True)
+				help_articles desc""".format(conditions=conditions), as_dict=True)
 
 	return frappe.cache().get_value("knowledge_base:category_sidebar", _get)
 
@@ -99,4 +116,3 @@ def clear_cache():
 def clear_website_cache(path=None):
 	frappe.cache().delete_value("knowledge_base:category_sidebar")
 	frappe.cache().delete_value("knowledge_base:faq")
-

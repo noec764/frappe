@@ -4,6 +4,10 @@
 	top: 0;
 }
 
+.sidebar-column {
+	border-right: 1px solid #d1d8dd;
+}
+
 .sidebar-item a {
 	display: block;
 	padding: 0.25rem 0;
@@ -15,4 +19,8 @@
 
 .sidebar-item a.active {
 	color: $primary;
+}
+
+.sidebar-item a:hover {
+	color: $secondary;
 }

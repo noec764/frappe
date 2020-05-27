@@ -140,8 +140,8 @@ def get_website_settings():
 
 	translated_messages = {}
 	translated_messages.update(frappe.translate.get_dict('template'))
-	for file in context.web_include_js:
-		translated_messages.update(frappe.translate.get_dict('jsfile', file))
+	for filename in context.web_include_js:
+		translated_messages.update(frappe.translate.get_dict('jsfile', filename))
 
 	context.translated_messages = frappe.as_json(translated_messages)
 

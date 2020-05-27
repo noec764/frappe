@@ -35,7 +35,7 @@ def get_data():
 			"description": "Auto Repeat, Assignment Rule, Milestone Tracking and Event Streaming."
 		},
 		{
-			"module_name": "Users and Permissions",
+			"module_name": "Users",
 			"category": "Administration",
 			"label": _("Users and Permissions"),
 			"color": "#00b076",
