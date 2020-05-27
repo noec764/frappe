@@ -134,7 +134,7 @@ def get_dict(fortype, name=None):
 			# get user specific translation data
 			user_translations = get_user_translations(frappe.local.lang)
 		except Exception:
-			user_translations = None
+			user_translations = {}
 
 		if user_translations:
 			message_dict.update(user_translations)
@@ -212,7 +212,7 @@ def get_reduced_dict(lang):
 		# get user specific translation data
 		user_translations = get_user_translations(lang)
 	except Exception:
-		user_translations = None
+		user_translations = {}
 
 	if user_translations:
 		frappe.local.lang_reduced_dict.update(user_translations)
