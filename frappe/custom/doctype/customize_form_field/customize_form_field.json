@@ -11,6 +11,8 @@
         "label",
         "fieldtype",
         "fieldname",
+        "show_seconds",
+        "show_days",
         "reqd",
         "unique",
         "in_list_view",
@@ -79,7 +81,7 @@
             "label": "Type",
             "oldfieldname": "fieldtype",
             "oldfieldtype": "Select",
-            "options": "Attach\nAttach Image\nBarcode\nButton\nCheck\nCode\nColor\nColumn Break\nCurrency\nData\nDate\nDatetime\nDynamic Link\nFloat\nFold\nGeolocation\nHeading\nHTML\nHTML Editor\nImage\nInt\nLink\nLong Text\nMarkdown Editor\nPassword\nPercent\nRating\nRead Only\nSection Break\nSelect\nSignature\nSmall Text\nTable\nTable MultiSelect\nText\nText Editor\nTime",
+            "options": "Attach\nAttach Image\nBarcode\nButton\nCheck\nCode\nColor\nColumn Break\nCurrency\nData\nDate\nDatetime\nDuration\nDynamic Link\nFloat\nFold\nGeolocation\nHeading\nHTML\nHTML Editor\nImage\nInt\nLink\nLong Text\nMarkdown Editor\nPassword\nPercent\nRating\nRead Only\nSection Break\nSelect\nSignature\nSmall Text\nTable\nTable MultiSelect\nText\nText Editor\nTime",
             "reqd": 1,
             "search_index": 1
         },
@@ -391,6 +393,24 @@
             "label": "In Preview"
         },
         {
+            "default": "1",
+            "depends_on": "eval:doc.fieldtype === \"Duration\";",
+            "fieldname": "show_days",
+            "fieldtype": "Check",
+            "label": "Show Days",
+            "show_days": 1,
+            "show_seconds": 1
+           },
+           {
+            "default": "1",
+            "depends_on": "eval:doc.fieldtype === \"Duration\";",
+            "fieldname": "show_seconds",
+            "fieldtype": "Check",
+            "label": "Show Seconds",
+            "show_days": 1,
+            "show_seconds": 1
+           },
+        {
             "default": "0",
             "depends_on": "eval:doc.fieldtype=='Section Break'",
             "fieldname": "hide_border",
@@ -401,7 +421,7 @@
     "idx": 1,
     "istable": 1,
     "links": [],
-    "modified": "2020-04-27 11:39:26.389300",
+    "modified": "2020-05-15 23:45:46.810869",
     "modified_by": "Administrator",
     "module": "Custom",
     "name": "Customize Form Field",
