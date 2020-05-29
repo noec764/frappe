@@ -63,7 +63,6 @@
   "column_break_18",
   "disable_standard_email_footer",
   "hide_footer_in_auto_email_reports",
-  "create_contacts_from_incoming_emails",
   "chat",
   "enable_chat",
   "use_socketio_to_upload_file"
@@ -409,12 +408,6 @@
    "options": "Email Template"
   },
   {
-   "default": "0",
-   "fieldname": "create_contacts_from_incoming_emails",
-   "fieldtype": "Check",
-   "label": "Create contacts from incoming emails"
-  },
-  {
    "default": "4",
    "description": "Will run scheduled jobs only once a day for inactive sites. Default 4 days if set to 0.",
    "fieldname": "dormant_days",
@@ -464,7 +457,7 @@
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2020-05-06 09:51:30.726856",
+ "modified": "2020-05-25 09:51:30.726856",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",

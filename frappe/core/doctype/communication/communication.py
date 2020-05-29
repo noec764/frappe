@@ -259,7 +259,12 @@ class Communication(Document):
 
 	# Timeline Links
 	def set_timeline_links(self):
-		contacts = get_contacts([self.sender, self.recipients, self.cc, self.bcc])
+		contacts = []
+		if (self.email_account and frappe.db.get_value("Email Account", self.email_account, "create_contact")) or \
+			frappe.flags.in_test:
+
+			contacts = get_contacts([self.sender, self.recipients, self.cc, self.bcc])
+
 		for contact_name in contacts:
 			if contact_name is not None:
 				self.add_link('Contact', contact_name)
@@ -353,8 +358,7 @@ def get_contacts(email_strings):
 		email = get_email_without_link(email)
 		contact_name = get_contact_name(email)
 
-		if not contact_name and email and cint(frappe.db.get_single_value("System Settings", \
-			"create_contacts_from_incoming_emails", True)):
+		if not contact_name and email:
 			email_parts = email.split("@")
 			first_name = frappe.unscrub(email_parts[0])
 

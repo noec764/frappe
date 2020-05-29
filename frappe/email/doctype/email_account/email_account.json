@@ -29,6 +29,7 @@
         "default_incoming",
         "email_sync_option",
         "initial_sync_count",
+        "create_contact",
         "section_break_12",
         "enable_automatic_linking",
         "section_break_13",
@@ -408,11 +409,17 @@
             "fieldname": "use_ssl_for_outgoing",
             "fieldtype": "Check",
             "label": "Use SSL for Outgoing"
+        },
+        {
+            "default": "0",
+            "fieldname": "create_contact",
+            "fieldtype": "Check",
+            "label": "Create Contacts from Incoming Emails"
         }
     ],
     "icon": "fa fa-inbox",
     "links": [],
-    "modified": "2019-12-18 15:56:39.744520",
+    "modified": "2020-05-11 15:18:43.931499",
     "modified_by": "Administrator",
     "module": "Email",
     "name": "Email Account",
