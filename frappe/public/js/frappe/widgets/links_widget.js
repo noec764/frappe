@@ -28,6 +28,9 @@ export default class LinksWidget extends Widget {
 
 		const get_link_for_item = item => {
 			if (is_link_disabled(item)) {
+				const incomplete_dependencies = item.incomplete_dependencies.map(value => {
+					return __(value)
+				}).join(", ")
 				return `<span class="link-content ellipsis disabled-link">${
 					item.label ? item.label : item.name
 				}</span>
@@ -36,7 +39,7 @@ export default class LinksWidget extends Widget {
 							<h3 class="popover-title" style="display: none;"></h3>
 							<div class="popover-content" style="padding: 12px;">
 								<div class="small text-muted">${__("You need to create these first: ")}</div>
-		 						<div class="small">${item.incomplete_dependencies.join(", ")}</div>
+		 						<div class="small">${incomplete_dependencies}</div>
 							</div>
 						</div>`;
 			}
