@@ -109,7 +109,10 @@ class UserProfile {
 	}
 
 	render_line_chart() {
-		this.line_chart_filters = [['Energy Point Log', 'user', '=', this.user_id, false]];
+		this.line_chart_filters = [
+			['Energy Point Log', 'user', '=', this.user_id, false],
+			['Energy Point Log', 'type', '!=', 'Review', false]
+		];
 		this.line_chart_config = {
 			timespan: 'Last Month',
 			time_interval: 'Daily',
@@ -191,7 +194,10 @@ class UserProfile {
 				],
 				action: (selected_item) => {
 					if (selected_item === 'All') {
-						if (this.line_chart_filters.length > 1) this.line_chart_filters.pop();
+						this.line_chart_filters = [
+							['Energy Point Log', 'user', '=', this.user_id, false],
+							['Energy Point Log', 'type', '!=', 'Review', false]
+						];
 					} else {
 						this.line_chart_filters[1] = ['Energy Point Log', 'type', '=', selected_item, false];
 					}
