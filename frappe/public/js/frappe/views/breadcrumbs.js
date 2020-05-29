@@ -79,13 +79,6 @@ frappe.breadcrumbs = {
 			return;
 		}
 
-		if (!breadcrumbs_added && frappe.get_prev_route() && frappe.get_prev_route()[1]) {
-			const html = `<li><a href="#${frappe.get_prev_route().join("/")}">${__(frappe.get_prev_route()[1])}</a></li>`;
-			$breadcrumbs.append(html);
-			breadcrumbs_added = true;
-			return;
-		}
-
 		// get preferred module for breadcrumbs, based on sent via module
 		var from_module = frappe.breadcrumbs.get_doctype_module(breadcrumbs.doctype);
 
@@ -131,6 +124,13 @@ frappe.breadcrumbs = {
 					.appendTo($breadcrumbs);
 				breadcrumbs_added = true;
 			}
+		}
+
+		if (!breadcrumbs_added && frappe.get_prev_route() && frappe.get_prev_route()[1]) {
+			const html = `<li><a href="#${frappe.get_prev_route().join("/")}">${__(frappe.get_prev_route()[1])}</a></li>`;
+			$breadcrumbs.append(html);
+			breadcrumbs_added = true;
+			return;
 		}
 
 		$("body").removeClass("no-breadcrumbs");
