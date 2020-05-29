@@ -13,5 +13,7 @@
  "name": "Web Page Tour",
  "owner": "Administrator",
  "reference_document": "Web Page",
- "title": "Learn about Web Pages"
+ "show_full_form": 0,
+ "title": "Learn about Web Pages",
+ "validate_action": 0
 }

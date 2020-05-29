@@ -44,7 +44,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Website",
- "modified": "2020-05-29 10:01:53.261966",
+ "modified": "2020-05-28 13:53:10.736212",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
@@ -54,7 +54,7 @@
  "pin_to_top": 0,
  "shortcuts": [
   {
-   "color": "",
+    "color": "#cef6d1",
    "format": "{} Published",
    "label": "Blog Post",
    "link_to": "Blog Post",
@@ -62,6 +62,7 @@
    "type": "DocType"
   },
   {
+    "color": "#cef6d1",
    "format": "{} Active",
    "label": "Blogger",
    "link_to": "Blogger",
@@ -69,8 +70,11 @@
    "type": "DocType"
   },
   {
+    "color": "#cef6d1",
+    "format": "{} Published",
    "label": "Web Page",
    "link_to": "Web Page",
+   "stats_filter": "{ \"published\": 1 }",
    "type": "DocType"
   },
   {

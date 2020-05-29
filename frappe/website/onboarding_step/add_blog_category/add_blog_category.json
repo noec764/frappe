@@ -1,6 +1,6 @@
 {
  "action": "Create Entry",
- "creation": "2020-04-28 22:08:38.555550",
+ "creation": "2020-05-28 22:08:38.555550",
  "docstatus": 0,
  "doctype": "Onboarding Step",
  "idx": 0,
@@ -15,5 +15,5 @@
  "reference_document": "Blog Category",
  "show_full_form": 0,
  "title": "Add Blog Category",
- "validate_action": 1
+ "validate_action": 0
 }
