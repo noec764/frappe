@@ -486,6 +486,7 @@ frappe.ui.form.Toolbar = Class.extend({
 		if(this.frm.save_disabled)
 			return;
 
+		console.log(this.frm.doc)
 		if(this.frm.doc.__unsaved) {
 			this.page.set_indicator(__("Not Saved"), "orange");
 		}
