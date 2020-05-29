@@ -6757,7 +6757,7 @@
         "{0} Google Calendar Events synced.": "{0} événements Google Agenda synchronisés"
     },
     "apps/frappe/frappe/integrations/doctype/google_contacts/google_contacts.js": {
-        "Google Settings": "paramètres Google",
+        "Google Settings": "Paramètres Google",
         "Importing {0} of {1}": "Import de {0} sur {1}",
         "Sync Contacts": "Synchroniser les contacts",
         "Syncing": "Synchronisation en cours",
@@ -6781,7 +6781,7 @@
     "apps/frappe/frappe/integrations/doctype/google_drive/google_drive.js": {
         "Backing up to Google Drive.": "Sauvegarde sur Google Drive en cours",
         "Click on <b>Authorize Google Drive Access</b> to authorize Google Drive Access.": "Cliquez sur <b>Autoriser l'accès à Google Drive</b> pour autoriser l'accès à Google Drive",
-        "Google Settings": "paramètres Google",
+        "Google Settings": "Paramètres Google",
         "Take Backup": "Faire une sauvegarde",
         "To use Google Drive, enable {0}.": "Pour utiliser Google Drive, activez les {0}."
     },
