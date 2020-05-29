@@ -167,7 +167,7 @@
  "icon": "fa fa-map-marker",
  "idx": 5,
  "links": [],
- "modified": "2020-03-04 08:51:06.840867",
+ "modified": "2020-05-29 10:38:31.150946",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address",
@@ -225,6 +225,17 @@
    "report": 1,
    "role": "System Manager",
    "set_user_permissions": 1,
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Customer",
    "share": 1,
    "write": 1
   }

@@ -18936,7 +18936,7 @@
         "Please sign-up or login to begin": "Veuillez vous inscrire ou vous connecter pour commencer",
         "Previous": "Précedent",
         "Print": "Imprimer",
-        "Your information has been submitted": "Vos informations ont été soumises"
+        "Your information has been submitted": "Vos informations ont été enregistrées"
     },
     "apps/frappe/frappe/website/doctype/web_form/web_form.js": {
         "Get Fields": "Obtenir des champs"

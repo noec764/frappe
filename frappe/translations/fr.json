@@ -8989,7 +8989,7 @@
         "Delete": "Supprimer",
         "Save": "Enregistrer",
         "Saved Successfully": "Enregistré avec succès",
-        "Your information has been submitted": "Vos informations ont été soumises"
+        "Your information has been submitted": "Vos informations ont été enregistrées"
     },
     "apps/frappe/frappe/public/js/frappe/web_form/web_form_list.js": {
         "Delete": "Supprimer",
@@ -9660,7 +9660,7 @@
         "Previous": "Précedent",
         "Print": "Imprimer",
         "Save": "Enregistrer",
-        "Your information has been submitted": "Vos informations ont été soumises"
+        "Your information has been submitted": "Vos informations ont été enregistrées"
     },
     "apps/frappe/frappe/website/doctype/web_form/web_form.js": {
         "Get Fields": "Obtenir des champs"
@@ -11532,6 +11532,6 @@
         "Wed": "Mer",
         "Wednesday": "Mercredi",
         "You are not permitted to access this page.": "Vous n'êtes pas autorisé à accéder à cette page.",
-        "Your information has been submitted": "Vos informations ont été soumises"
+        "Your information has been submitted": "Vos informations ont été enregistrées"
     }
 }
