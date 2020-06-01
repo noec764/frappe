@@ -241,11 +241,13 @@ class ShortcutDialog extends WidgetDialog {
 
 		if (this.dialog.get_value("type") == "DocType" && this.filter_group) {
 			let filters = this.filter_group.get_filters();
-			filters.forEach((arr) => {
-				stats_filter[arr[1]] = [arr[2], arr[3]];
-			});
+			if (filters.length) {
+				filters.forEach((arr) => {
+					stats_filter[arr[1]] = [arr[2], arr[3]];
+				});
 
-			data.stats_filter = JSON.stringify(stats_filter);
+				data.stats_filter = JSON.stringify(stats_filter);
+			}
 		}
 
 		data.label = data.label
