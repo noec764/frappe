@@ -2,13 +2,12 @@
 	background-color: #f5f7fa;
 }
 .page-card {
-	max-width: 360px;
+	max-width: 420px;
 	padding: 15px;
 	margin: 70px auto;
-	border: 1px solid #d1d8dd;
 	border-radius: 4px;
 	background-color: #fff;
-	box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 10px;
 }
 .page-card .page-card-head {
 	padding: 10px 15px;
@@ -18,7 +17,7 @@
 }
 .page-card .page-card-head .indicator {
 	color: #36414C;
-	font-size: 14px;
+	font-size: 16px;
 }
 .page-card .page-card-head .indicator::before {
 	margin: 0 6px 0.5px 0px;
@@ -27,7 +26,7 @@
 	margin-top: 30px;
 }
 .page-card p {
-	font-size: 14px;
+	font-size: 16px;
 }
 
 .ellipsis {

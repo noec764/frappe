@@ -99,7 +99,7 @@ def get_dict(fortype, name=None):
 	fortype = fortype.lower()
 	cache = frappe.cache()
 	asset_key = fortype + ":" + (name or "-")
-	translation_assets = cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
+	translation_assets = {} #cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
 
 	if not asset_key in translation_assets:
 		if fortype=="doctype":

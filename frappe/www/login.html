@@ -61,7 +61,7 @@
 
 	{%- if not disable_signup -%}
 		<p class="text-center sign-up-message">
-			<a href="#signup" style="margin-top: -2px;">{{ _("Don't have an account? Sign up") }}</a>
+			<a href="#signup" class="btn btn-secondary" style="margin-top: -2px;">{{ _("Don't have an account? Sign up") }}</a>
 		</p>
 	{%- endif -%}
 	<p class="text-center forgot-password-message">
@@ -74,15 +74,17 @@
 		<div class="page-card-head">
 			<span class="indicator blue" data-text="{{ _('Sign Up') }}"></span>
 		</div>
-		<input type="text" id="signup_fullname"
-			class="form-control" placeholder="{{ _('Full Name') }}" required autofocus>
+		<input type="text" id="signup_firstname"
+			class="form-control" placeholder="{{ _('First Name') }}" required autofocus>
+		<input type="text" id="signup_lastname"
+			class="form-control" placeholder="{{ _('Last Name') }}" required autofocus>
 		<input type="email" id="signup_email"
 			class="form-control" placeholder="{{ _('Email address') }}" required>
 		<button class="btn btn-sm btn-primary btn-block btn-signup" type="submit">{{ _("Sign up") }}</button>
 	</form>
 	</div>
 	<div class='form-footer'>
-		<a href="#login" class="blue">{{ _("Have an account? Login") }}</a>
+		<a href="#login" class="btn btn-info">{{ _("Have an account? Login") }}</a>
 	</div>
 </section>
 
