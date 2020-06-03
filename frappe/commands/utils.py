@@ -5,8 +5,8 @@ import click
 import json, os, sys, subprocess
 from distutils.spawn import find_executable
 import frappe
-from frappe.exceptions import SiteNotSpecifiedError
 from frappe.commands import pass_context, get_site
+from frappe.exceptions import SiteNotSpecifiedError
 from frappe.utils import update_progress_bar, get_bench_path
 from frappe.utils.response import json_handler
 from coverage import Coverage
@@ -49,7 +49,7 @@ def clear_cache(context):
 			frappe.website.render.clear_cache()
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('clear-website-cache')
@@ -64,7 +64,7 @@ def clear_website_cache(context):
 			frappe.website.render.clear_cache()
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('destroy-all-sessions')
@@ -81,7 +81,7 @@ def destroy_all_sessions(context, reason=None):
 			frappe.db.commit()
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('show-config')
@@ -116,7 +116,7 @@ def reset_perms(context):
 					reset_perms(d)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('execute')
@@ -163,7 +163,7 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 			frappe.destroy()
 		if ret:
 			print(json.dumps(ret, default=json_handler))
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 
@@ -199,7 +199,7 @@ def export_doc(context, doctype, docname):
 			frappe.modules.export_doc(doctype, docname)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('export-json')
@@ -217,7 +217,7 @@ def export_json(context, doctype, path, name=None):
 			data_import.export_json(doctype, path, name=name)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('export-csv')
@@ -234,7 +234,7 @@ def export_csv(context, doctype, path):
 			data_import.export_csv(doctype, path)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('export-fixtures')
@@ -250,7 +250,7 @@ def export_fixtures(context, app=None):
 			export_fixtures(app=app)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('import-doc')
@@ -273,7 +273,7 @@ def import_doc(context, path, force=False):
 			data_import.import_doc(path, overwrite=context.force)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('import-csv')
@@ -570,7 +570,7 @@ def request(context, args=None, path=None):
 			print(frappe.response)
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('make-app')
@@ -603,8 +603,6 @@ def set_config(context, key, value, global_ = False, as_dict=False):
 			frappe.init(site=site)
 			update_site_config(key, value, validate=False)
 			frappe.destroy()
-		else:
-			raise SiteNotSpecifiedError
 
 @click.command('version')
 def get_version():
@@ -651,7 +649,7 @@ def rebuild_global_search(context, static_pages=False):
 
 		finally:
 			frappe.destroy()
-	else:
+	if not context.sites:
 		raise SiteNotSpecifiedError
 
 @click.command('auto-deploy')
