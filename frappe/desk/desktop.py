@@ -8,12 +8,25 @@ from json import loads, dumps
 from frappe import _, DoesNotExistError, ValidationError, _dict
 from frappe.boot import get_allowed_pages, get_allowed_reports
 from six import string_types
+from functools import wraps
 from frappe.cache_manager import (
 	build_domain_restricted_doctype_cache,
 	build_domain_restricted_page_cache,
 	build_table_count_cache
 )
 from frappe.desk.notifications import get_notification_for_doctype
+
+def handle_not_exist(fn):
+	@wraps(fn)
+	def wrapper(*args, **kwargs):
+		try:
+			return fn(*args, **kwargs)
+		except DoesNotExistError:
+			if frappe.message_log:
+				frappe.message_log.pop()
+			return []
+
+	return wrapper
 
 class Workspace:
 	def __init__(self, page_name):
@@ -160,6 +173,7 @@ class Workspace:
 				'items': self.get_onboarding_steps()
 			}
 
+	@handle_not_exist
 	def get_cards(self):
 		cards = self.doc.cards
 		if not self.doc.hide_custom:
@@ -230,6 +244,7 @@ class Workspace:
 
 		return new_data
 
+	@handle_not_exist
 	def get_charts(self):
 		all_charts = []
 		if frappe.has_permission("Dashboard Chart", throw=False):
@@ -243,6 +258,7 @@ class Workspace:
 
 		return all_charts
 
+	@handle_not_exist
 	def get_shortcuts(self):
 
 		def _in_active_domains(item):
@@ -273,6 +289,7 @@ class Workspace:
 
 		return items
 
+	@handle_not_exist
 	def get_onboarding_steps(self):
 		steps = []
 		for doc in self.onboarding_doc.get_steps():
@@ -296,21 +313,15 @@ def get_desktop_page(page):
 	Returns:
 		dict: dictionary of cards, charts and shortcuts to be displayed on website
 	"""
-	try:
-		wspace = Workspace(page)
-		wspace.build_workspace()
-		return {
-			'charts': wspace.charts,
-			'shortcuts': wspace.shortcuts,
-			'cards': wspace.cards,
-			'onboarding': wspace.onboarding,
-			'allow_customization': not wspace.doc.disable_user_customization
-		}
-
-	except DoesNotExistError:
-		if frappe.message_log:
-			frappe.message_log.pop()
-		return None
+	wspace = Workspace(page)
+	wspace.build_workspace()
+	return {
+		'charts': wspace.charts,
+		'shortcuts': wspace.shortcuts,
+		'cards': wspace.cards,
+		'onboarding': wspace.onboarding,
+		'allow_customization': not wspace.doc.disable_user_customization
+	}
 
 @frappe.whitelist()
 def get_desk_sidebar_items(flatten=False):
