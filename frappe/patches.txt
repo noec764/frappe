@@ -294,6 +294,7 @@ execute:frappe.delete_doc_if_exists("Web Template", "Section with Left Image", f
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide")
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide Field")
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide Help Link")
+frappe.patches.v13_0.update_date_filters_in_user_settings
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
