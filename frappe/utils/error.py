@@ -124,14 +124,14 @@ def get_snapshot(exception, context=10):
 	if isinstance(evalue, BaseException):
 		for name in dir(evalue):
 			# prevent py26 DeprecationWarning
-			if (name != 'messages' or sys.version_info < (2.6)) and not name.startswith('__'):
+			if name != 'messages' and not name.startswith('__'):
 				value = pydoc.text.repr(getattr(evalue, name))
 
 				s['exception'][name] = frappe.safe_encode(value)
 
 	# add all local values (of last frame) to the snapshot
 	for name, value in locals.items():
-		s['locals'][name] = pydoc.text.repr(value)
+		s['locals'][name] = value if isinstance(value, six.text_type) else pydoc.text.repr(value)
 
 	return s
 
