@@ -443,7 +443,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 	}
 
-	render_header() {
+	render_header(refresh_header=false) {
 		if (refresh_header) {
 			this.$result.find('.list-row-head').remove();
 		}
