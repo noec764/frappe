@@ -4,6 +4,7 @@
 from __future__ import unicode_literals, print_function
 
 from six import iteritems, text_type, string_types, PY2
+from frappe.utils import cstr
 
 """
 	frappe.translate
@@ -99,7 +100,7 @@ def get_dict(fortype, name=None):
 	fortype = fortype.lower()
 	cache = frappe.cache()
 	asset_key = fortype + ":" + (name or "-")
-	translation_assets = {} #cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
+	translation_assets = cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
 
 	if not asset_key in translation_assets:
 		if fortype=="doctype":
@@ -125,7 +126,6 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title, subtitle, success_message from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title, callback_title, callback_message from `tabOnboarding Step`")
-			messages += "null"
 
 		message_dict = make_dict_from_messages(messages)
 		message_dict.update(get_dict_from_hooks(fortype, name))
@@ -161,15 +161,18 @@ def make_dict_from_messages(messages, full_dict=None):
 
 	:param messages: List of untranslated messages
 	"""
-
-	out = dict()
+	out = {}
 	if full_dict==None:
 		full_dict = get_full_dict(frappe.local.lang)
 
 	for m in messages:
-		if m[0] in full_dict:
-			if m[1] and m[1] in full_dict[m[0]]:
-				out[m[1]] = full_dict[m[0]][m[1]]
+		if m[1] in full_dict:
+			out[m[1]] = full_dict[m[1]]
+		# check if msg with context as key exist eg. msg:context
+		if len(m) > 2 and m[2]:
+			key = m[1] + ':::' + m[2]
+			if full_dict.get(key):
+				out[key] = full_dict[key]
 
 	return out
 
@@ -182,45 +185,32 @@ def get_lang_js(fortype, name):
 	return "\n\n$.extend(frappe._messages, %s)" % json.dumps(get_dict(fortype, name))
 
 def get_full_dict(lang):
-	"""Load and return the entire translations dictionary for a language
-	:param lang: Language Code, e.g. `fr`
+	"""Load and return the entire translations dictionary for a language from :meth:`frape.cache`
+
+	:param lang: Language Code, e.g. `hi`
 	"""
 	if not lang:
 		return {}
+
 	# found in local, return!
 	if getattr(frappe.local, 'lang_full_dict', None) and frappe.local.lang_full_dict.get(lang, None):
 		return frappe.local.lang_full_dict
 
 	frappe.local.lang_full_dict = load_lang(lang)
 
-	return frappe.local.lang_full_dict
-
-# TODO: Find a more elegant way combined with `get_full_dict`
-def get_reduced_dict(lang):
-	"""Load and return the entire translations dictionary, reduced for a language
-	:param lang: Language Code, e.g. `fr`
-	"""
-	if not lang:
-		return {}
-	# found in local, return!
-	if getattr(frappe.local, 'lang_reduced_dict', None) and frappe.local.lang_reduced_dict.get(lang, None):
-		return frappe.local.lang_reduced_dict
-
-	frappe.local.lang_reduced_dict = reduce(lambda a,b: a.update(b) or a, list(load_lang(lang).values()), {})
-
 	try:
-		# get user specific translation data
+		# get user specific transaltion data
 		user_translations = get_user_translations(lang)
 	except Exception:
-		user_translations = {}
+		user_translations = None
 
 	if user_translations:
-		frappe.local.lang_reduced_dict.update(user_translations)
+		frappe.local.lang_full_dict.update(user_translations)
 
-	return frappe.local.lang_reduced_dict
+	return frappe.local.lang_full_dict
 
 def load_lang(lang, apps=None):
-	"""Combine all translations from `.json` files in all `apps`.
+	"""Combine all translations from `.csv` files in all `apps`.
 	For derivative languages (es-GT), take translations from the
 	base language (es) and then update translations from the child (es-GT)"""
 
@@ -228,11 +218,10 @@ def load_lang(lang, apps=None):
 		return {}
 
 	out = frappe.cache().hget("lang_full_dict", lang, shared=True)
-
 	if not out:
 		out = {}
 		for app in (apps or frappe.get_all_apps(True)):
-			path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".json")
+			path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".csv")
 			out.update(get_translation_dict_from_file(path, lang, app) or {})
 
 		if '-' in lang:
@@ -247,25 +236,41 @@ def load_lang(lang, apps=None):
 
 def get_translation_dict_from_file(path, lang, app):
 	"""load translation dict from given path"""
-	json_content = {}
+	translation_map = {}
 	if os.path.exists(path):
-		with open(path, 'r') as f:
-			json_content = json.loads(f.read())
+		csv_content = read_csv_file(path)
 
-	return json_content
+		for item in csv_content:
+			if len(item)==3 and item[2]:
+				key = item[0] + ':::' + item[2]
+				translation_map[key] = strip(item[1])
+			elif len(item) in [2, 3]:
+				translation_map[item[0]] = strip(item[1])
+			elif item:
+				raise Exception("Bad translation in '{app}' for language '{lang}': {values}".format(
+					app=app, lang=lang, values=repr(item).encode("utf-8")
+				))
+
+	return translation_map
 
 def get_user_translations(lang):
 	out = frappe.cache().hget('lang_user_translations', lang)
 	if out is None:
 		out = {}
-		for fields in frappe.get_all('Translation',
-			fields=["source_text", "translated_text"], filters={'language': lang}):
-			if fields.source_text and fields.translateds:
-				out.update({fields.source_text: fields.translated_text})
+		user_translations = frappe.get_all('Translation',
+			fields=["source_text", "translated_text", "context"],
+			filters={'language': lang})
+
+		for translation in user_translations:
+			key = translation.source_text
+			value = translation.translated_text
+			if translation.context:
+				key += ':::' + translation.context
+			out[key] = value
+
 		frappe.cache().hset('lang_user_translations', lang, out)
 
 	return out
-
 
 def clear_cache():
 	"""Clear all translation assets from :meth:`frappe.cache`"""
@@ -278,7 +283,7 @@ def clear_cache():
 	cache.delete_key("translation_assets", shared=True)
 	cache.delete_key("lang_user_translations")
 
-def get_messages_for_app(app):
+def get_messages_for_app(app, deduplicate=True):
 	"""Returns all messages (list) for a specified `app`"""
 	messages = []
 	modules = ", ".join(['"{}"'.format(m.title().replace("_", " ")) \
@@ -334,6 +339,9 @@ def get_messages_for_app(app):
 
 	# server_messages
 	messages.extend(get_server_messages(app))
+
+	if deduplicate:
+		messages = deduplicate_messages(messages)
 
 	return messages
 
@@ -583,7 +591,9 @@ def get_messages_from_file(path):
 	apps_path = get_bench_dir()
 	if os.path.exists(path):
 		with open(path, 'r') as sourcefile:
-			return [(os.path.relpath(path, apps_path), message) for message in extract_messages_from_code(sourcefile.read())]
+			data = [(os.path.relpath(path, apps_path), message, context, line) \
+				for line, message, context in  extract_messages_from_code(sourcefile.read())]
+			return data
 	else:
 		return []
 
@@ -603,27 +613,72 @@ def extract_messages_from_code(code):
 	pattern = r"_\(([\"']{,3})(?P<message>((?!\1).)*)\1(\s*,\s*context\s*=\s*([\"'])(?P<py_context>((?!\5).)*)\5)*(\s*,\s*(.)*?\s*(,\s*([\"'])(?P<js_context>((?!\11).)*)\11)*)*\)"
 	for m in re.compile(pattern).finditer(code):
 		message = m.group('message')
+		context = m.group('py_context') or m.group('js_context')
+		pos = m.start()
 
-		if message and is_translatable(message):
-			messages.append(message)
+		if is_translatable(message):
+			messages.append([pos, message, context])
 
-	return messages
+	return add_line_number(messages, code)
 
 def is_translatable(m):
 	if re.search("[a-zA-Z]", m) and not m.startswith("fa fa-") and not m.startswith("fas fa-") and not m.startswith("far fa-") and not m.startswith("uil uil-") and not m.endswith("px") and not m.startswith("eval:"):
 		return True
 	return False
 
+def add_line_number(messages, code):
+	ret = []
+	messages = sorted(messages, key=lambda x: x[0])
+	newlines = [m.start() for m in re.compile('\\n').finditer(code)]
+	line = 1
+	newline_i = 0
+	for pos, message, context in messages:
+		while newline_i < len(newlines) and pos > newlines[newline_i]:
+			line+=1
+			newline_i+= 1
+		ret.append([line, message, context])
+	return ret
 
-def write_json_file(path, app_messages):
-	"""Write translation JSON file.
+def read_csv_file(path):
+	"""Read CSV file and return as list of list
+
+	:param path: File path"""
+	from csv import reader
+
+	if PY2:
+		with codecs.open(path, 'r', 'utf-8') as msgfile:
+			data = msgfile.read()
+
+			# for japanese! #wtf
+			data = data.replace(chr(28), "").replace(chr(29), "")
+			data = reader([r.encode('utf-8') for r in data.splitlines()])
+			newdata = [[text_type(val, 'utf-8') for val in row] for row in data]
+	else:
+		with io.open(path, mode='r', encoding='utf-8', newline='') as msgfile:
+			data = reader(msgfile)
+			newdata = [[ val for val in row ] for row in data]
+	return newdata
+
+def write_csv_file(path, lang_dict):
+	"""Write translation CSV file.
 
 	:param path: File path, usually `[app]/translations`.
 	:param app_messages: Translatable strings for this app.
+	:param lang_dict: Full translated dict.
 	"""
+	from frappe.utils.csvutils import to_csv
+
+	lang_input = {k: v for k, v in sorted(lang_dict.items(), key=lambda item: item[0])}
+	output = []
+	for key, value in lang_input.items():
+		if not value:
+			continue
+		split_key = key.split(":::")
+		context = split_key[1] if len(split_key) > 1 else ""
+		output.append([split_key[0], value, context])
+
 	with open(path, 'w', encoding="utf8", newline=os.linesep) as msgfile:
-		json.dump(app_messages, msgfile, ensure_ascii=False, indent=4, sort_keys=True)
-		msgfile.write(os.linesep)
+		msgfile.write(to_csv(output))
 
 def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, write=True):
 	"""Returns all untranslated strings for a language and writes in a file
@@ -638,64 +693,43 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	clear_cache()
 
 	messages = []
-	untranslated = defaultdict(lambda: defaultdict(dict))
+	untranslated = []
 	if app:
 		messages = get_messages_for_app(app)
 	else:
 		for app in frappe.get_all_apps(True):
 			messages.extend(get_messages_for_app(app))
 
-	messages = messages
+	messages = deduplicate_messages(messages)
 
 	def escape_newlines(s):
 		return (s.replace("\\\n", "|||||")
 				.replace("\\n", "||||")
 				.replace("\n", "|||"))
 
-	full_dict = load_lang(lang, [app])
-	comparison_dict = reduce(lambda a,b: a.update(b) or a, list(full_dict.values()), {})
 	if get_all:
 		print(str(len(messages)) + " messages")
-		for m in messages:
-			untranslated[m[0]][escape_newlines(m[1])] = get_existing_translation(escape_newlines(m[1]), comparison_dict)
-
-		if write:
-			write_json_file(untranslated_file, untranslated)
-		else:
-			return untranslated
-
+		with open(untranslated_file, "w") as f:
+			for m in messages:
+				# replace \n with ||| so that internal linebreaks don't get split
+				f.write((escape_newlines(m[1]) + "," + os.linesep).encode("utf-8"))
 	else:
-		messages_count = 0
-		untranslated_count = 0
+		full_dict = get_full_dict(lang)
 
 		for m in messages:
-			messages_count += 1
-			if m[0] and m[0] not in full_dict:
-				untranslated_count += 1
-				untranslated[m[0]][escape_newlines(m[1])] = get_existing_translation(escape_newlines(m[1]), comparison_dict)
-
-			elif m[0] and m[1] not in full_dict[m[0]]:
-				untranslated_count += 1
-				untranslated[m[0]][escape_newlines(m[1])] = get_existing_translation(escape_newlines(m[1]), comparison_dict)
+			if not full_dict.get(m[1]):
+				untranslated.append(m[1])
 
 		if untranslated:
-			print(str(untranslated_count) + " missing translations of " + str(messages_count))
-			
-			if write:
-				write_json_file(untranslated_file, untranslated)
-			else:
-				return untranslated
-
+			print(str(len(untranslated)) + " missing translations of " + str(len(messages)))
+			with open(untranslated_file, "w") as f:
+				for m in untranslated:
+					# replace \n with ||| so that internal linebreaks don't get split
+					f.write(cstr(frappe.safe_encode(escape_newlines(m) + "," + os.linesep)))
 		else:
 			print("all translated!")
 
-def get_existing_translation(key, comparison_dict):
-	if key in comparison_dict:
-		return comparison_dict[key]
-	else:
-		return ''
-
-def update_translations(lang, translated_data, app, is_file=True):
+def update_translations(lang, translated_file, app):
 	"""Update translations from a source and target file for a given language.
 
 	:param lang: Language code (e.g. `en`).
@@ -704,7 +738,6 @@ def update_translations(lang, translated_data, app, is_file=True):
 	:param app: Select untranslated strings for a particular app"""
 	clear_cache()
 	full_dict = load_lang(lang, [app])
-
 	if full_dict:
 		def restore_newlines(s):
 			return (s.replace("|||||", "\\\n")
@@ -714,22 +747,14 @@ def update_translations(lang, translated_data, app, is_file=True):
 					.replace("|||", "\n")
 					.replace("| | |", "\n"))
 
-		translation_dict = defaultdict(dict)
-		for k in full_dict:
-			for m in full_dict[k]:
-				translation_dict[k][m] = full_dict[restore_newlines(k)][restore_newlines(m)]
+		translation_dict = get_translation_dict_from_file(translated_file, lang, app)
+		for key, value in translation_dict.items():
+			# undo hack in get_untranslated
+			translation_dict[restore_newlines(key)] = restore_newlines(value)
 
-		if is_file:
-			new_translations = frappe._dict(frappe.get_file_json(translated_data))
-		else:
-			new_translations = translated_data
+		full_dict.update(translation_dict)
+		write_translations_file(app, lang, full_dict)
 
-		for k in new_translations:
-			for m in new_translations[k]:
-				if new_translations[k][m] != "":
-					translation_dict[k][restore_newlines(m)] = restore_newlines(new_translations[k][m])
-
-		write_translations_file(app, lang, translation_dict)
 
 def rebuild_all_translation_files():
 	"""Rebuild all translation files: `[app]/translations/[lang].csv`."""
@@ -737,22 +762,18 @@ def rebuild_all_translation_files():
 		for app in frappe.get_all_apps():
 			write_translations_file(app, lang)
 
-def write_translations_file(app, lang, app_messages=None):
+def write_translations_file(app, lang, full_dict=None):
 	"""Write a translation file for a given language.
 
 	:param app: `app` for which translations are to be written.
 	:param lang: Language code.
+	:param full_dict: Full translated language dict (optional).
 	:param app_messages: Source strings (optional).
 	"""
-	if not app_messages:
-		app_messages = get_messages_for_app(app)
-
-	if not app_messages:
-		return
-
 	tpath = frappe.get_pymodule_path(app, "translations")
 	frappe.create_folder(tpath)
-	write_json_file(os.path.join(tpath, lang + ".json"), app_messages)
+	write_csv_file(os.path.join(tpath, lang + ".csv"), full_dict or get_full_dict(lang))
+
 
 def send_translations(translation_dict):
 	"""Append translated dict in `frappe.local.response`"""
@@ -760,6 +781,14 @@ def send_translations(translation_dict):
 		frappe.local.response["__messages"] = {}
 
 	frappe.local.response["__messages"].update(translation_dict)
+
+def deduplicate_messages(messages):
+	ret = []
+	op = operator.itemgetter(1)
+	messages = sorted(messages, key=op)
+	for k, g in itertools.groupby(messages, op):
+		ret.append(next(g))
+	return ret
 
 def get_bench_dir():
 	return os.path.join(frappe.__file__, '..', '..', '..', '..')
@@ -817,83 +846,3 @@ def get_translations(source_text):
 			'source_text': source_text
 		}
 	)
-
-def legacy_csv_files_to_json(apps=None):
-	for app in apps if apps else frappe.get_installed_apps():
-		for lang in get_all_languages():
-			csv_path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".csv")
-			json_path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".json")
-
-			if os.path.exists(csv_path):
-				csv_content = read_csv_file(csv_path)
-				jsonfile = open(json_path, 'w', encoding='utf8')
-
-				result = {}
-
-				for l in csv_content:
-					l[0] = l[0].split(' +', 1)[0]
-
-				for x in csv_content:
-					if x[0] in result:
-						result[x[0]].update({x[1]:x[2]})
-					else:
-						result[x[0]] = {x[1]:x[2]}
-
-				json.dump(result, jsonfile, ensure_ascii=False)
-				jsonfile.write(os.linesep)
-
-				os.remove(csv_path)
-
-def merge_existing_translations_for_language(apps=None, langs=None):
-	for app in apps if apps else frappe.get_installed_apps():
-
-		for lang in langs if langs else get_all_languages():
-			print("Language: ", lang)
-			untranslated = get_untranslated(lang=lang, get_all=False, app=app, write=False)
-			if untranslated:
-				update_translations(lang=lang, translated_data=untranslated, app=app, is_file=False)
-
-def cleanup_translation_files(apps=None, langs=None):
-	for app in apps if apps else frappe.get_installed_apps():
-		messages = []
-		messages.extend(get_messages_for_app(app))
-
-		for lang in langs if langs else get_all_languages():
-			print("Language: ", lang)
-			existing_translations = {}
-			cleaned_translations = defaultdict(lambda: defaultdict(dict))
-			path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".json")
-			existing_translations.update(get_translation_dict_from_file(path, lang, app) or {})
-
-			count = 0
-			if existing_translations:
-				for key in existing_translations:
-					if key in set([x[0] for x in messages]):
-						for t in existing_translations[key]:
-							if t in set([x[1] for x in messages]):
-								count += 1
-
-								cleaned_translations[key][t] = existing_translations[key][t]
-
-				print(str(count) + " clean messages")
-				write_translations_file(app, lang, app_messages=dict(cleaned_translations))
-
-def read_csv_file(path):
-	"""Read CSV file and return as list of list
-
-	:param path: File path"""
-	from csv import reader
-
-	if PY2:
-		with codecs.open(path, 'r', 'utf-8') as msgfile:
-			data = msgfile.read()
-
-			# for japanese! #wtf
-			data = data.replace(chr(28), "").replace(chr(29), "")
-			data = reader([r.encode('utf-8') for r in data.splitlines()])
-			newdata = [[text_type(val, 'utf-8') for val in row] for row in data]
-	else:
-		with io.open(path, mode='r', encoding='utf-8', newline='') as msgfile:
-			data = reader(msgfile)
-			newdata = [[ val for val in row ] for row in data]
-	return newdata

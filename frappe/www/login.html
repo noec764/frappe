@@ -19,7 +19,7 @@
 	<div class="login-content page-card" style="margin-top: 30px;">
 		<form class="form-signin form-login" role="form">
 			<div class="page-card-head">
-				<span class="indicator blue" data-text="{{ _('Login') }}"></span>
+				<span class="indicator blue" data-text="{{ _('Login', context='Login Page') }}"></span>
 			</div>
 
 			<input type="text" id="login_email"
@@ -35,7 +35,7 @@
 			</div>
 
 			<button class="btn btn-sm btn-primary btn-block btn-login" type="submit">
-				{{ _("Login") }}</button>
+				{{ _("Login", context="Login Page") }}</button>
 
 			{% if ldap_settings and ldap_settings.enabled %}
 			<button class="btn btn-sm btn-default btn-block btn-login btn-ldap-login">
