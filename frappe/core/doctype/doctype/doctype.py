@@ -752,7 +752,7 @@ def validate_fields(meta):
 	def check_in_list_view(is_table, d):
 		if d.in_list_view and (d.fieldtype in not_allowed_in_list_view):
 			property_label = 'In Grid View' if is_table else 'In List View'
-			frappe.throw(_("'{0}' not allowed for type {1} in row {2}").format(property_label, d.fieldtype, d.idx))
+			frappe.throw(_("'{0}' not allowed for type {1} in row {2}").format(_(property_label), _(d.fieldtype), d.idx))
 
 
 	def check_in_global_search(d):

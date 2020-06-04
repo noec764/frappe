@@ -640,7 +640,7 @@
     "DocType: Auto Repeat": {
         "Accounts Manager": "Responsable des Comptes",
         "Accounts User": "Comptable",
-        "Amended From": "Modifié Depuis",
+        "Amended From": "Modication du document",
         "Auto Repeat": "Répétition Automatique",
         "Auto Repeat Schedule": "Calendrier de répétitions automatiques",
         "Cancelled": "Annulé",
@@ -2122,7 +2122,7 @@
     },
     "DocType: Data Import": {
         "Action": "Action",
-        "Amended From": "Modifié Depuis",
+        "Amended From": "Modication du document",
         "Attach file for Import": "Joindre un fichier à importer",
         "Core": "Module central",
         "Data Import": "Import de données",
@@ -9145,7 +9145,7 @@
     },
     "DocType: Transaction Log": {
         "Administrator": "Administrateur",
-        "Amended From": "Modifié Depuis",
+        "Amended From": "Modication du document",
         "Chaining Hash": "Hachage de chaînage",
         "Checksum Version": "Version du Checksum",
         "Core": "Module central",

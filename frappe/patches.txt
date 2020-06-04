@@ -285,7 +285,7 @@ frappe.patches.v13_0.set_existing_dashboard_charts_as_public
 frappe.patches.v13_0.set_path_for_homepage_in_web_page_view
 frappe.patches.v13_0.migrate_translation_column_data
 frappe.patches.v13_0.set_read_times
-frappe.patches.v13_0.remove_web_view
+frappe.patches.v13_0.remove_web_view #2020-06-04
 frappe.patches.v13_0.site_wise_logging
 frappe.patches.v13_0.remove_tailwind_from_page_builder
 frappe.patches.v13_0.rename_onboarding
@@ -294,6 +294,9 @@ execute:frappe.delete_doc_if_exists("Web Template", "Section with Left Image", f
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide")
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide Field")
 execute:frappe.delete_doc_if_exists("DocType", "Onboarding Slide Help Link")
+execute:frappe.delete_doc_if_exists("DocType", "Setup Wizard Slide")
+execute:frappe.delete_doc_if_exists("DocType", "Setup Wizard Slide Field")
+execute:frappe.delete_doc_if_exists("DocType", "Setup Wizard Help Link")
 frappe.patches.v13_0.update_date_filters_in_user_settings
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
