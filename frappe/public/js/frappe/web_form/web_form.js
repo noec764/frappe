@@ -24,7 +24,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (this.allow_print && !this.is_new) this.setup_print_button();
 		if (this.allow_delete && !this.is_new) this.setup_delete_button();
 		if (this.is_new) this.setup_cancel_button();
-		this.setup_primary_action();
+		if (this.allow_edit||this.is_new) this.setup_primary_action();
 		$(".link-btn").remove();
 
 		// webform client script

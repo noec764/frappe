@@ -9,6 +9,7 @@ frappe.ready(function() {
 	let webform_name = wrapper.data('web-form');
 	let login_required = parseInt(wrapper.data('login-required'));
 	let allow_delete = parseInt(wrapper.data('allow-delete'));
+	const allow_edit = parseInt(wrapper.data('allow-edit'));
 	let doc_name = query_params.name || '';
 	let is_new = query_params.new;
 
@@ -46,19 +47,14 @@ frappe.ready(function() {
 			parent: wrapper,
 			is_new,
 			web_form_name: webform_name,
+			allow_edit
 		});
 
 		get_data().then(r => {
 			const data = setup_fields(r.message);
 			let web_form_doc = data.web_form;
-
-			if (web_form_doc.doc_name && web_form_doc.allow_edit === 0) {
-				if (!window.location.href.includes("?new=1")) {
-					window.location.replace(window.location.pathname + "?new=1");
-				}
-			}
 			let doc = r.message.doc || build_doc(r.message);
-			web_form.prepare(web_form_doc, r.message.doc && web_form_doc.allow_edit === 1 ? r.message.doc : {});
+			web_form.prepare(web_form_doc, r.message.doc ? r.message.doc : {});
 			web_form.make();
 			web_form.set_default_values();
 		})
@@ -118,6 +114,7 @@ frappe.ready(function() {
 					}
 					df.options.disable_file_browser = true;
 				}
+				df.read_only = !allow_edit;
 			});
 
 			return form_data;
