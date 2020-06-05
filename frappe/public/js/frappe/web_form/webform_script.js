@@ -114,7 +114,7 @@ frappe.ready(function() {
 					}
 					df.options.disable_file_browser = true;
 				}
-				df.read_only = !allow_edit;
+				df.read_only = (!allow_edit && !is_new);
 			});
 
 			return form_data;

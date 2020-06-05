@@ -13,6 +13,7 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 					<i class="uil uil-paperclip"></i>
 					<a class="attached-file-link" target="_blank"></a>
 				</div>
+				${this.get_preview_section()}
 				<div>
 					<a class="btn btn-xs btn-default" data-action="reload_attachment">${__('Reload File')}</a>
 					<a class="btn btn-xs btn-default" data-action="clear_attachment">${__('Clear')}</a>
@@ -26,6 +27,14 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 
 		frappe.utils.bind_actions_with_object(this.$value, this);
 		this.toggle_reload_button();
+
+	},
+	get_preview_section: function() {
+		return `<div class="file-preview">
+			<div class="file-icon border rounded">
+				<img class="attached-file-preview" style="object-fit: cover;"></img>
+			</div>
+		</div>`
 	},
 	clear_attachment: function() {
 		var me = this;
@@ -78,18 +87,29 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 	set_input: function(value, dataurl) {
 		this.value = value;
 		if(this.value) {
-			this.$input.toggle(false);
+			this.$input&&this.$input.toggle(false);
 			if(this.value.indexOf(",")!==-1) {
 				var parts = this.value.split(",");
 				var filename = parts[0];
 				dataurl = parts[1];
 			}
-			this.$value.toggle(true).find(".attached-file-link")
+			this.$value&&this.$value.toggle(true).find(".attached-file-link")
 				.html(filename || this.value)
 				.attr("href", dataurl || this.value);
 		} else {
 			this.$input.toggle(true);
 			this.$value.toggle(false);
+		}
+
+		if (this.value) {
+			if (this.$value) {
+				this.$value.find(".attached-file-preview")
+					.attr("src", dataurl || this.value).attr("alt", filename || this.value);
+			} else if (!this.disabled_preview_section) {
+				this.disabled_preview_section = this.$wrapper.find(".control-input-wrapper").append(this.get_preview_section())
+				this.disabled_preview_section.find(".attached-file-preview")
+					.attr("src", dataurl || this.value).attr("alt", filename || this.value);
+			}
 		}
 	},
 
