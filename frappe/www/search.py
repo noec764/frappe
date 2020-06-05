@@ -28,9 +28,12 @@ def get_search_results(text, scope=None, start=0, as_html=False):
 
 	for d in results:
 		try:
+			if frappe.get_meta(d.doctype).has_field("description"):
+				d.content = frappe.db.get_value(d.doctype, d.name, "description")
 			d.content = html2text(d.content)
 			index = d.content.lower().index(text.lower())
-			d.content = d.content[:index] + '<mark>' + d.content[index:][:len(text)] + '</mark>' + d.content[index + len(text):]
+			d.content = d.content[:index] + '<b>' + d.content[index:][:len(text)] + '</b>' + d.content[index + len(text):]
+			d.content = d.content.replace("|||", "<br>")
 
 			if index < 40:
 				start = 0

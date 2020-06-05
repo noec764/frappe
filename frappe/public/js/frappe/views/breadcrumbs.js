@@ -72,7 +72,7 @@ frappe.breadcrumbs = {
 		}
 
 		if (breadcrumbs.type === 'Custom') {
-			const html = `<li><a href="${breadcrumbs.route}">${breadcrumbs.label}</a></li>`;
+			const html = `<li><a href="${breadcrumbs.route}">${__(breadcrumbs.label)}</a></li>`;
 			$breadcrumbs.append(html);
 			$("body").removeClass("no-breadcrumbs");
 			breadcrumbs_added = true;
@@ -102,12 +102,12 @@ frappe.breadcrumbs = {
 
 			if(frappe.get_module(current_module)) {
 				// if module access exists
-				var module_info = frappe.get_module(current_module),
-					label = module_info ? module_info.label : breadcrumbs.module;
+				const module_info = frappe.get_module(current_module)
+				const label = module_info ? module_info.label : breadcrumbs.module;
 
 				if(module_info && !module_info.blocked && frappe.visible_modules.includes(module_info.module_name)) {
 					$(repl('<li><a href="#workspace/%(module)s">%(label)s</a></li>',
-						{ module: breadcrumbs.module, label: __(breadcrumbs.module) }))
+						{ module: breadcrumbs.module, label: __(label) }))
 						.appendTo($breadcrumbs);
 					breadcrumbs_added = true;
 				}
