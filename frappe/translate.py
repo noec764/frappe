@@ -18,8 +18,8 @@ from frappe.model.utils import render_include, InvalidIncludePath
 from frappe.utils import strip, strip_html_tags, is_html
 from jinja2 import TemplateError
 import itertools, operator
-from collections import defaultdict
 from functools import reduce
+from frappe.utils.csvutils import to_csv
 
 def guess_language(lang_list=None):
 	"""Set `frappe.local.lang` from HTTP headers at beginning of request"""
@@ -666,9 +666,7 @@ def write_csv_file(path, lang_dict):
 	:param app_messages: Translatable strings for this app.
 	:param lang_dict: Full translated dict.
 	"""
-	from frappe.utils.csvutils import to_csv
-
-	lang_input = {k: v for k, v in sorted(lang_dict.items(), key=lambda item: item[0])}
+	lang_input = {k: v for k, v in sorted(lang_dict.items(), key=lambda item: item[0] + item[1])}
 	output = []
 	for key, value in lang_input.items():
 		if not value:
@@ -677,8 +675,8 @@ def write_csv_file(path, lang_dict):
 		context = split_key[1] if len(split_key) > 1 else ""
 		output.append([split_key[0], value, context])
 
-	with open(path, 'w', encoding="utf8", newline=os.linesep) as msgfile:
-		msgfile.write(to_csv(output))
+	with open(path, 'w') as msgfile:
+		msgfile.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator='\n'))
 
 def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, write=True):
 	"""Returns all untranslated strings for a language and writes in a file
@@ -700,7 +698,9 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 		for app in frappe.get_all_apps(True):
 			messages.extend(get_messages_for_app(app))
 
-	messages = deduplicate_messages(messages)
+	contextual_messages = []
+	for m in messages:
+		contextual_messages.append(m[1] + ":::" + m[2] if len(m) > 2 and m[2] else m[1])
 
 	def escape_newlines(s):
 		return (s.replace("\\\n", "|||||")
@@ -708,24 +708,34 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 				.replace("\n", "|||"))
 
 	if get_all:
-		print(str(len(messages)) + " messages")
+		print(str(len(contextual_messages)) + " messages")
+		output = []
+		for m in contextual_messages:
+			# replace \n with ||| so that internal linebreaks don't get split
+			split_key = m.split(":::")
+			context = split_key[1] if len(split_key) > 1 else ""
+			output.append([escape_newlines(split_key[0]), "", context])
+
 		with open(untranslated_file, "w") as f:
-			for m in messages:
-				# replace \n with ||| so that internal linebreaks don't get split
-				f.write((escape_newlines(m[1]) + "," + os.linesep).encode("utf-8"))
+			f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator='\n'))
+
 	else:
 		full_dict = get_full_dict(lang)
 
-		for m in messages:
-			if not full_dict.get(m[1]):
-				untranslated.append(m[1])
+		for m in contextual_messages:
+			if not full_dict.get(m):
+				untranslated.append(m)
 
 		if untranslated:
 			print(str(len(untranslated)) + " missing translations of " + str(len(messages)))
+			output = []
+			for m in untranslated:
+				# replace \n with ||| so that internal linebreaks don't get split
+				split_key = m.split(":::")
+				context = split_key[1] if len(split_key) > 1 else ""
+				output.append([escape_newlines(split_key[0]), "", context])
 			with open(untranslated_file, "w") as f:
-				for m in untranslated:
-					# replace \n with ||| so that internal linebreaks don't get split
-					f.write(cstr(frappe.safe_encode(escape_newlines(m) + "," + os.linesep)))
+				f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator='\n'))
 		else:
 			print("all translated!")
 

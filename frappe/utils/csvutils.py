@@ -6,9 +6,17 @@ import frappe
 from frappe import msgprint, _
 import json
 import csv
+from csv import QUOTE_NONNUMERIC, QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE
 import six
 from six import StringIO, text_type, string_types
 from frappe.utils import encode, cstr, cint, flt, comma_or
+
+QUOTE_MAP = {
+	'QUOTE_NONNUMERIC': QUOTE_NONNUMERIC,
+	'QUOTE_ALL': QUOTE_ALL,
+	'QUOTE_MINIMAL': QUOTE_MINIMAL,
+	'QUOTE_NONE': QUOTE_NONE
+}
 
 def read_csv_content_from_uploaded_file(ignore_encoding=False):
 	if getattr(frappe, "uploaded_file", None):
@@ -93,8 +101,8 @@ def send_csv_to_client(args):
 	frappe.response["doctype"] = args.filename
 	frappe.response["type"] = "csv"
 
-def to_csv(data):
-	writer = UnicodeWriter()
+def to_csv(data, quoting="QUOTE_NONNUMERIC", lineterminator="\r\n"):
+	writer = UnicodeWriter(quoting=quoting, lineterminator=lineterminator)
 	for row in data:
 		writer.writerow(row)
 
@@ -106,10 +114,12 @@ def build_csv_response(data, filename):
 	frappe.response["type"] = "csv"
 
 class UnicodeWriter:
-	def __init__(self, encoding="utf-8"):
+	def __init__(self, encoding="utf-8", quoting="QUOTE_NONNUMERIC" ,lineterminator="\r\n"):
 		self.encoding = encoding
+		self.quoting = QUOTE_MAP.get(quoting)
+		self.lineterminator = lineterminator
 		self.queue = StringIO()
-		self.writer = csv.writer(self.queue, quoting=csv.QUOTE_NONNUMERIC)
+		self.writer = csv.writer(self.queue, quoting=self.quoting, lineterminator=self.lineterminator)
 
 	def writerow(self, row):
 		if six.PY2:

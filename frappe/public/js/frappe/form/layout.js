@@ -611,11 +611,11 @@ frappe.ui.form.Section = Class.extend({
 		var me = this;
 		if(!this.df.collapsible) {
 			$('<div class="col-sm-12"><h6 class="form-section-heading uppercase">'
-				+ __(this.df.label) + '</h6></div>')
+				+ __(this.df.label, null, this.df.parent) + '</h6></div>')
 				.appendTo(this.wrapper);
 		} else {
 			this.head = $('<div class="section-head"><a class="h6 uppercase">'
-				+__(this.df.label)+'</a><span class="octicon octicon-chevron-down collapse-indicator"></span></div>').appendTo(this.wrapper);
+				+__(this.df.label, null, this.df.parent)+'</a><span class="octicon octicon-chevron-down collapse-indicator"></span></div>').appendTo(this.wrapper);
 
 			// show / hide based on status
 			this.collapse_link = this.head.on("click", function() {
@@ -703,7 +703,7 @@ frappe.ui.form.Column = Class.extend({
 			});
 
 		if (this.df.label) {
-			$('<label class="control-label">' + __(this.df.label)
+			$('<label class="control-label">' + __(this.df.label, null, this.df.parent)
 				+ '</label>').appendTo(this.wrapper);
 		}
 	},

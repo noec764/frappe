@@ -153,7 +153,7 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 
 		var icon = "";
 		this.label_span.innerHTML = (icon ? '<i class="'+icon+'"></i> ' : "") +
-			__(this.df.label)  || "&nbsp;";
+			__(this.df.label, null, this.df.parent)  || "&nbsp;";
 		this._label = this.df.label;
 	},
 	set_description: function(description) {
