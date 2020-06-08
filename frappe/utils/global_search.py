@@ -272,6 +272,9 @@ def update_global_search(doc):
 		sync_value_in_queue(value)
 
 def update_global_search_for_all_web_pages():
+	if frappe.conf.get('disable_global_search'):
+		return
+
 	routes_to_index = get_routes_to_index()
 	for route in routes_to_index:
 		add_route_to_global_search(route)
