@@ -37,6 +37,16 @@
 	max-height: calc(100vh - 250px);
 	min-height: 100px;
 	scrollbar-width: thin;
+	overflow-y: scroll !important;
+}
+
+.dt-scrollable::-webkit-scrollbar {
+	width: 5px;
+	background: transparent;
+}
+
+.dt-scrollable::-webkit-scrollbar-thumb {
+	background: #f0f4f7;
 }
 
 table td.dt-cell {
