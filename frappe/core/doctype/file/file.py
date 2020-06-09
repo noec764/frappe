@@ -603,7 +603,7 @@ def get_extension(filename, extn, content):
 		if '?' in extn:
 			extn = extn.split('?', 1)[0]
 
-		if extn == "jpg":
+		if extn.lower() == "jpg":
 			extn = "jpeg"
 
 		mimetype = mimetypes.guess_type(filename + "." + extn)[0]
