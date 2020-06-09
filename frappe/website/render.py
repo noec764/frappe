@@ -221,6 +221,9 @@ def build_page(path):
 		else:
 			html = frappe.get_template(context.template).render(context)
 
+	else:
+		raise frappe.DoesNotExistError
+
 	if '{index}' in html:
 		html = html.replace('{index}', get_toc(context.route))
 

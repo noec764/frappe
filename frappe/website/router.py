@@ -279,9 +279,7 @@ def setup_source(page_info):
 		page_info.base_template = get_base_template(page_info.route)
 
 	if page_info.template.endswith('.html') or page_info.template.endswith('.md'):
-		# set the source only if it contains raw content
-		if '{%- extends' not in source and '{% extends' not in source:
-			html = source
+		html = source
 
 		# load css/js files
 		js, css = '', ''
@@ -305,7 +303,7 @@ def setup_source(page_info):
 	# show table of contents
 	setup_index(page_info)
 
-def get_base_template(page_info, source):
+def get_base_template(path=None):
 	'''
 	Returns the `base_template` for given `path`.
 	The default `base_template` for any web route is `templates/web.html` defined in `hooks.py`.
