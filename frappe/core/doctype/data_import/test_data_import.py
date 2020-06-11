@@ -7,7 +7,6 @@ import frappe, unittest
 from frappe.core.doctype.data_export import exporter
 from frappe.core.doctype.data_import import importer
 from frappe.utils.csvutils import read_csv_content
-from frappe.utils.data import formatdate
 
 class TestDataImport(unittest.TestCase):
 	def test_export(self):
@@ -96,6 +95,6 @@ class TestDataImport(unittest.TestCase):
 		exporter.export_data("Event", all_doctypes=True, template=True, file_type="Excel")
 		from frappe.utils.xlsxutils import read_xlsx_file_from_attached_file
 		content = read_xlsx_file_from_attached_file(fcontent=frappe.response.filecontent)
-		content.append(["", "_test", "Private", formatdate("2020-04-16"), "Event", "blue", "0", formatdate("2020-04-17"), "Open", "", 0, 0, 0, "", "", "", "Description", "", "", ""])
+		content.append(["", "_test", "Private", "05-11-2017 13:51:48", "Event", "blue", "0", "0", "", "Open", "", 0, "", 0, "", "", "1", 0, "", "", 0, 0, 0, 0, 0, 0, 0])
 		importer.upload(content)
 		self.assertTrue(frappe.db.get_value("Event", {"subject": "_test"}, "name"))
