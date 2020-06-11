@@ -31,6 +31,10 @@ class CustomField(Document):
 		# fieldnames should be lowercase
 		self.fieldname = self.fieldname.lower()
 
+	def before_insert(self):
+		meta = frappe.get_meta(self.dt, cached=False)
+		fieldnames = [df.fieldname for df in meta.get("fields")]
+
 	def validate(self):
 		meta = frappe.get_meta(self.dt, cached=False)
 		fieldnames = [df.fieldname for df in meta.get("fields")]
