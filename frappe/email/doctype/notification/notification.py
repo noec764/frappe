@@ -363,6 +363,9 @@ def trigger_notifications(doc, method=None):
 def evaluate_alert(doc, alert, event):
 	from jinja2 import TemplateError
 	try:
+		if frappe.conf.get("mute_notifications"):
+			return
+
 		if isinstance(alert, string_types):
 			alert = frappe.get_doc("Notification", alert)
 
