@@ -37,6 +37,7 @@ def send_slack_message(webhook_url, message, reference_doctype, reference_name):
 			]
 		}
 	]
+
 	data = {"text": message, "attachments": attachments}
 	r = requests.post(slack_url, data=json.dumps(data))
 

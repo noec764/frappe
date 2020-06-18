@@ -6,7 +6,7 @@ frappe.ui.form.on('Server Script', {
 		if(frm.doc.script_type === 'Scheduler Event' && !frm.doc.disabled){
 			frm.add_custom_button('Schedule Script', function() {
 				var d = new frappe.ui.Dialog({
-					title: "Schedule Script Execution",
+					title: __("Schedule Script Execution"),
 					fields: [
 						{
 							fieldname: "event_type",

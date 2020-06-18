@@ -83,6 +83,41 @@ frappe.ui.form.on("Notification", {
 		frappe.notification.setup_fieldname_select(frm);
 		frm.get_field("is_standard").toggle(frappe.boot.developer_mode);
 		frm.trigger('event');
+
+		frm.add_custom_button(__('Test this notification'), function() {
+			const dialog = new frappe.ui.Dialog({
+				title: __("Send a test notification"),
+				fields: [
+					{
+						fieldname: "document",
+						label: __('Select a document'),
+						fieldtype: "Link",
+						options: frm.doc.document_type,
+						mandatory: 1
+					}
+				],
+				primary_action_label: __('Send a notification'),
+				primary_action: () => {
+					const data = dialog.get_values();
+					frappe.call({
+						method: 'frappe.email.doctype.notification.notification.send_test_notification',
+						args: {
+							notification: frm.doc.name,
+							document: data.document
+						}
+					}).then(r => {
+						dialog.hide();
+						if (!r.exc) {
+							frappe.show_alert({message: __("Notification sent"), indicator: "green"})
+						} else {
+							frappe.show_alert({message: __("Error while sending the notification"), indicator: "red"})
+						}
+					})
+				}
+			});
+
+			dialog.show();
+		});
 	},
 	document_type: function(frm) {
 		frappe.notification.setup_fieldname_select(frm);

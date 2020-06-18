@@ -330,7 +330,7 @@ def get_context(context):
 
 		self.message = self.get_template()
 
-		if not is_html(self.message):
+		if not is_html(self.message) and self.channel != "Slack":
 			self.message = frappe.utils.md_to_html(self.message)
 
 @frappe.whitelist()
@@ -367,7 +367,6 @@ def evaluate_alert(doc, alert, event):
 			alert = frappe.get_doc("Notification", alert)
 
 		context = get_context(doc)
-
 		if alert.condition:
 			if not frappe.safe_eval(alert.condition, None, context):
 				return
@@ -400,3 +399,9 @@ def evaluate_alert(doc, alert, event):
 
 def get_context(doc):
 	return {"doc": doc, "nowdate": nowdate, "frappe": frappe._dict(utils=frappe.utils)}
+
+@frappe.whitelist()
+def send_test_notification(notification, document):
+	alert = frappe.get_doc("Notification", notification)
+	doc = frappe.get_doc(alert.document_type, document)
+	alert.send(doc)
