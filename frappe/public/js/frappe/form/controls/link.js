@@ -402,9 +402,9 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 					}
 
 					// turn off value translation
-					if(q.translate_values !== undefined) {
-						this.translate_values = q.translate_values;
-					}
+					// if(q.translate_values !== undefined) {
+					//	 this.translate_values = q.translate_values;
+					// }
 
 					// extend args for custom functions
 					$.extend(args, q);

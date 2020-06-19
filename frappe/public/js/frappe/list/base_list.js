@@ -614,6 +614,7 @@ class FilterArea {
 
 		const doctype_fields = this.list_view.meta.fields;
 		const title_field = this.list_view.meta.title_field;
+		const doctype = this.list_view.doctype;
 
 		fields = fields.concat(doctype_fields.filter(
 			df => (df.fieldname === title_field) || (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype))
@@ -641,7 +642,8 @@ class FilterArea {
 				condition: condition,
 				onchange: () => this.refresh_list_view(),
 				ignore_link_validation: fieldtype === 'Dynamic Link',
-				is_filter: 1
+				is_filter: 1,
+				doctype: doctype
 			};
 		}));
 
