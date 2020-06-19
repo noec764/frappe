@@ -1,6 +1,7 @@
 {% extends "templates/web.html" %}
 
-{% block title %}{{ heading or "Contact Us"}}{% endblock %}
+{% set title = heading or _("Contact Us") %}
+{% block header %}<h1>{{ heading or _("Contact Us") }}</h1>{% endblock %}
 
 {% block page_content %}
 <style>
