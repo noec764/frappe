@@ -15,7 +15,7 @@ frappe._ = function(txt, replace, context = null) {
 
 	let key = txt.replace(/\n/g, "");
 	if (context) {
-		translated_text = frappe._messages[`${key}:${context}`];
+		translated_text = frappe._messages[`${key}:::${context}`];
 	}
 
 	if (!translated_text) {
