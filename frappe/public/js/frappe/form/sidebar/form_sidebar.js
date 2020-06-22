@@ -183,7 +183,7 @@ frappe.ui.form.Sidebar = class {
 	}
 
 	make_viewers() {
-		this.frm.viewers = new frappe.ui.form.Viewers({
+		this.frm.viewers = new frappe.ui.form.SidebarUsers({
 			frm: this.frm,
 			$wrapper: this.sidebar,
 		});

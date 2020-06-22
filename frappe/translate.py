@@ -327,6 +327,11 @@ def get_messages_for_app(app, deduplicate=True):
 					if not isinstance(i, tuple):
 						raise Exception
 
+		# desk pages
+		for name in frappe.db.sql_list("""select name from `tabDesk Page`
+			where module in ({})""".format(modules)):
+			messages.extend(get_messages_from_desk_pages(name))
+
 	# workflow based on app.hooks.fixtures
 	messages.extend(get_messages_from_workflow(app_name=app))
 
@@ -482,6 +487,14 @@ def get_messages_from_onboarding_step(name):
 	for field in ["title", "callback_title", "callback_message"]:
 		if onboarding_step.get(field):
 			messages.append(('Onboarding Step: ' + name, onboarding_step.get(field)))
+	return messages
+
+def get_messages_from_desk_pages(name):
+	desk_page = frappe.get_doc("Desk Page", name)
+	messages = []
+	for shortcut in desk_page.shortcuts:
+		if shortcut.get("format"):
+			messages.append(('Desk Page Shortcut: ' + name, shortcut.get("format")))
 	return messages
 
 def _get_messages_from_page_or_report(doctype, name, module=None):
