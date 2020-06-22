@@ -117,7 +117,7 @@ export default class ListSettings {
 							<i class="fa fa-bars text-muted sortable-handle ${show_sortable_handle}" aria-hidden="true"></i>
 						</div>
 						<div class="col-md-10" style="padding-left:0px;">
-							${me.fields[idx].label}
+							${__(me.fields[idx].label)}
 						</div>
 						<div class="col-md-1 ${can_remove}">
 							<a class="text-muted remove-field" data-fieldname="${me.fields[idx].fieldname}">
@@ -131,14 +131,14 @@ export default class ListSettings {
 		fields_html.html(`
 			<div class="form-group">
 				<div class="clearfix">
-					<label class="control-label" style="padding-right: 0px;">Fields</label>
+					<label class="control-label" style="padding-right: 0px;">${__("Fields")}</label>
 				</div>
 				<div class="control-input-wrapper">
 				${fields}
 				</div>
 				<p class="help-box small text-muted hidden-xs">
 					<a class="add-new-fields text-muted">
-						+ Add / Remove Fields
+						${__("+ Add / Remove Fields")}
 					</a>
 				</p>
 			</div>

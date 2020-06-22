@@ -1605,9 +1605,9 @@ frappe.ui.form.Form = class FrappeForm {
 
 		this.layout.sections.forEach(section => section.collapse(false));
 
-		let steps = frappe.tour[this.doctype].map(step => {
+		let steps = frappe.tour[this.doctype].map((step, index) => {
 			let field = this.get_docfield(step.fieldname);
-			const position = this.get_field_position(field);
+			const position = this.get_field_position(field, index);
 			const selected_elem = this.page.main.find(`.frappe-control[data-fieldname='${step.fieldname}']`)[0];
 			return {
 				element: selected_elem,
@@ -1627,8 +1627,10 @@ frappe.ui.form.Form = class FrappeForm {
 		driver.start();
 	}
 
-	get_field_position(field) {
+	get_field_position(field, index) {
 		if (["Date", "Datetime", "Time"].includes(field.fieldtype)) {
+			return 'bottom'
+		} else if ([0, 1].includes(index)) {
 			return 'bottom'
 		} else {
 			return 'top'
