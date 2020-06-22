@@ -126,6 +126,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title, subtitle, success_message from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title, callback_title, callback_message from `tabOnboarding Step`")
+			messages += frappe.db.sql("select concat('Desk Page Shortcut: ', name), format from `tabDesk Shortcut`")
 
 		message_dict = make_dict_from_messages(messages)
 		message_dict.update(get_dict_from_hooks(fortype, name))
