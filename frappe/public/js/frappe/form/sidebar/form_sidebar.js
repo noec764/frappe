@@ -257,4 +257,4 @@ frappe.ui.form.Sidebar = class {
 		});
 	}
 
-});
+};
