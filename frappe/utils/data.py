@@ -53,7 +53,7 @@ def getdate(string_date=None):
 		), title=frappe._('Invalid Date'))
 
 def get_datetime(datetime_str=None):
-	if not datetime_str:
+	if datetime_str is None:
 		return now_datetime()
 
 	if isinstance(datetime_str, (datetime.datetime, datetime.timedelta)):
