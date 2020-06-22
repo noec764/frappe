@@ -21,7 +21,7 @@ frappe.ui.form.SidebarUsers = class {
 		let new_users = [];
 		let current_users = [];
 
-		const message = type == 'viewers' ? 'viewing this document': 'composing an email';
+		const message = type == 'viewers' ? __('viewing this document'): __('composing an email');
 
 		users.current.forEach(username => {
 			if (username === frappe.session.user) {
