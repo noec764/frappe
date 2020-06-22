@@ -346,9 +346,7 @@ export default class ChartWidget extends Widget {
 			this.chart_doc.chart_type !== "Report" &&
 			this.chart_doc.chart_type !== "Custom";
 		this.filter_button = $(
-			`<div class="filter-chart btn btn-default btn-xs pull-right">${__(
-				"Filter"
-			)}</div>`
+			`<div class="filter-chart btn btn-default btn-xs pull-right">${__("Filter")}</div>`
 		);
 		this.filter_button.appendTo(this.action_area);
 
@@ -615,9 +613,7 @@ export default class ChartWidget extends Widget {
 	}
 
 	update_last_synced() {
-		let last_synced_text = __("Last synced {0}", [
-			comment_when(this.chart_doc.last_synced_on)
-		]);
+		let last_synced_text = __("Last synced {0}", [comment_when(this.chart_doc.last_synced_on)]);
 		this.footer.html(last_synced_text);
 	}
 
