@@ -76,7 +76,7 @@ def update_user_settings_data(user_setting, fieldname, old, new, condition_field
 	if data:
 		update = False
 		data = json.loads(data)
-		for view in ['List', 'Gantt', 'Kanban', 'Calendar', 'Image', 'Inbox', 'Report']:
+		for view in ['List', 'Gantt', 'Kanban', 'Calendar', 'Image', 'Inbox', 'Report', 'Map']:
 			view_settings = data.get(view)
 			if view_settings and view_settings.get("filters"):
 				view_filters = view_settings.get("filters")
