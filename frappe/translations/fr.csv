@@ -19,6 +19,7 @@
 (Mandatory),(Obligatoire),
 ** Failed: {0} to {1}: {2},** Échec: {0} à {1}: {2},
 **Currency** Master,Données de Base **Devise**,
++ Add / Remove Fields,+ Ajouter / Supprimer un champ,
 0 - Draft; 1 - Submitted; 2 - Cancelled,0 - Brouillon; 1 - Soumis; 2 - Annulé,
 0 is highest,0 est le plus élevé,
 "1 Currency = [?] Fraction
