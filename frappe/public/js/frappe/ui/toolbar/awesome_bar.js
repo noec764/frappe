@@ -276,7 +276,7 @@ frappe.search.AwesomeBar = Class.extend({
 					index: 80,
 					default: "Calculator",
 					onclick: function() {
-						frappe.msgprint(formatted_value, "Result");
+						frappe.msgprint(formatted_value, __("Result"));
 					}
 				});
 			} catch(e) {
