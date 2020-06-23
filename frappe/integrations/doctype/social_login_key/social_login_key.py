@@ -104,8 +104,8 @@ class SocialLoginKey(Document):
 			})
 		}
 
-		providers["Frappe"] = {
-			"provider_name": "Frappe",
+		providers["Dodock"] = {
+			"provider_name": "Dodock",
 			"enable_social_login": 1,
 			"custom_base_url": 1,
 			"icon":"/assets/frappe/images/favicon.png",

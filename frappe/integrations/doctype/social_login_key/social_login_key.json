@@ -49,7 +49,7 @@
       "fieldname": "social_login_provider",
       "fieldtype": "Select",
       "label": "Social Login Provider",
-      "options": "Custom\nFacebook\nFrappe\nGitHub\nGoogle\nOffice 365\nSalesforce\nfairlogin",
+      "options": "Custom\nFacebook\nDodock\nGitHub\nGoogle\nOffice 365\nSalesforce\nfairlogin",
       "set_only_once": 1
      },
      {
@@ -157,7 +157,7 @@
       "label": "User ID Property"
      }
     ],
-    "modified": "2019-12-03 13:13:46.989099",
+    "modified": "2020-06-03 13:13:46.989099",
     "modified_by": "Administrator",
     "module": "Integrations",
     "name": "Social Login Key",

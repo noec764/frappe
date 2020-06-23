@@ -9,7 +9,7 @@ import unittest
 
 class TestSocialLoginKey(unittest.TestCase):
 	def test_adding_frappe_social_login_provider(self):
-		provider_name = "Frappe"
+		provider_name = "Dodock"
 		social_login_key = make_social_login_key(
 			social_login_provider=provider_name
 		)
