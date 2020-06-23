@@ -329,6 +329,20 @@ frappe.ui.form.Toolbar = Class.extend({
 				});
 			}
 		}
+
+		// Tour
+		if(Array.isArray(frappe.tour[this.frm.doctype])) {
+			this.page.add_menu_item(__("Show tour"), function(){
+				setTimeout(() => {
+					me.frm.show_tour(() => {
+						frappe.show_alert({
+							message: __("You're all set !"),
+							indicator: "green"
+						})
+					});
+				}, 500);
+			}, true);
+		}
 	},
 	can_repeat: function() {
 		return this.frm.meta.allow_auto_repeat
