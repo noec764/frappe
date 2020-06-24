@@ -170,11 +170,11 @@ class Dashboard {
 	set_dropdown() {
 		this.page.clear_menu();
 
-		this.page.add_menu_item('Edit...', () => {
+		this.page.add_menu_item(__('Edit...'), () => {
 			frappe.set_route('Form', 'Dashboard', frappe.dashboard.dashboard_name);
 		}, 1);
 
-		this.page.add_menu_item('New...', () => {
+		this.page.add_menu_item(__('New...'), () => {
 			frappe.new_doc('Dashboard');
 		}, 1);
 
@@ -182,7 +182,7 @@ class Dashboard {
 			dashboards.map(dashboard => {
 				let name = dashboard.name;
 				if(name != this.dashboard_name){
-					this.page.add_menu_item(name, () => frappe.set_route("dashboard", name));
+					this.page.add_menu_item(__(name), () => frappe.set_route("dashboard", name));
 				}
 			});
 		});
