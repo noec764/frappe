@@ -137,6 +137,7 @@ frappe.views.TreeView = Class.extend({
 	},
 	make_tree: function() {
 		$(this.parent).find(".tree").remove();
+		this.before_render();
 
 		this.tree = new frappe.ui.Tree({
 			parent: this.body,
@@ -156,6 +157,10 @@ frappe.views.TreeView = Class.extend({
 
 		cur_tree = this.tree;
 		this.post_render();
+	},
+
+	before_render: function() {
+		frappe.model.user_settings.save(this.doctype, 'last_view', 'Tree');
 	},
 
 	post_render: function() {
