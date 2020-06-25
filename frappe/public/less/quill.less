@@ -1,15 +1,27 @@
-@import "variables.less";
-@import (less) "quill/dist/quill.snow.css";
-@import (less) "quill/dist/quill.bubble.css";
-@import (less) "../js/frappe/form/controls/quill-mention/quill.mention.css";
+@import 'variables.less';
+@import (less) 'quill/dist/quill.snow.css';
+@import (less) 'quill/dist/quill.bubble.css';
+@import (less) '../js/frappe/form/controls/quill-mention/quill.mention.css';
 
-.ql-toolbar.ql-snow, .ql-container.ql-snow {
+.ql-toolbar.ql-snow,
+.ql-container.ql-snow {
 	border-color: @border-color;
 	font-family: inherit;
 }
 
 .ql-editor {
-	h1, h2, h3, h4, h5 {
+	white-space: normal;
+}
+
+.ql-editor {
+	font-family: @font-stack;
+	line-height: 1.6;
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
 		margin-top: 0.5em;
 		margin-bottom: 0.25em;
 	}
@@ -124,19 +136,6 @@
 	font-size: 13px;
 	margin-top: 0px;
 	margin-bottom: 0px;
-}
-
-.ql-editor ol {
-	padding-left: 2.5em;
-}
-
- .ql-editor li[data-list=ordered] {
-	list-style-type: decimal;
-	padding-left: 0;
-
- 	&::before {
-		content: none;
-	}
 }
 
 .ql-template-blot:after {
