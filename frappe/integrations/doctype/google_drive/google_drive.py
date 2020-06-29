@@ -222,14 +222,14 @@ def upload_system_backup_to_google_drive():
 	return _("Google Drive Backup Successful.")
 
 def daily_backup():
-	if cint(frappe.db.get_single_value("Google Drive", "enabled")):
-		if frappe.db.get_single_value("Google Drive", "frequency") == "Daily":
-			upload_system_backup_to_google_drive()
+	drive_settings = frappe.db.get_singles_dict('Google Drive')
+	if drive_settings.enable and drive_settings.frequency == "Daily":
+		upload_system_backup_to_google_drive()
 
 def weekly_backup():
-	if cint(frappe.db.get_single_value("Google Drive", "enabled")):
-		if frappe.db.get_single_value("Google Drive", "frequency") == "Weekly":
-			upload_system_backup_to_google_drive()
+	drive_settings = frappe.db.get_singles_dict('Google Drive')
+	if drive_settings.enable and drive_settings.frequency == "Weekly":
+		upload_system_backup_to_google_drive()
 
 def get_absolute_path(filename):
 	file_path = os.path.join(get_backups_path()[2:], filename)
