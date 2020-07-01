@@ -347,7 +347,7 @@ def get_contacts(email_strings):
 	email_addrs = []
 
 	for email_string in email_strings:
-		if email_string:
+		if email_string and isinstance(email_string, str):
 			for email in email_string.split(","):
 				parsed_email = parseaddr(email)[1]
 				if parsed_email:
