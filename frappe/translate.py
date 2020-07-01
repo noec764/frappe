@@ -769,15 +769,16 @@ def update_translations(lang, translated_file, app):
 					.replace("| | | | |", "\\\n")
 					.replace("||||", "\\n")
 					.replace("| | | |", "\\n")
-					.replace("|||", "\n")
-					.replace("| | |", "\n"))
+					.replace("|||", "\\n")
+					.replace("| | |", "\\n"))
 
 		translation_dict = get_translation_dict_from_file(translated_file, lang, app)
+		newdict = {}
 		for key, value in translation_dict.items():
 			# undo hack in get_untranslated
-			translation_dict[restore_newlines(key)] = restore_newlines(value)
+			newdict[restore_newlines(key)] = restore_newlines(value)
 
-		full_dict.update(translation_dict)
+		full_dict.update(newdict)
 		write_translations_file(app, lang, full_dict)
 
 
