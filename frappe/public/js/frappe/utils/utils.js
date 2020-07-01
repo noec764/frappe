@@ -606,7 +606,7 @@ Object.assign(frappe.utils, {
 
 		// emails can be separated by comma or newline
 		txt.split(/[,\n](?=(?:[^"]|"[^"]*")*$)/g).forEach(function(email) {
-			email = email.trim();
+			email = email.match(/\<(.*?)\>/) ? email.match(/\<(.*?)\>/)[1] : email.trim()
 			if (email) {
 				email_list.push(email);
 			}
