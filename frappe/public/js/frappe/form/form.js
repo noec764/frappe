@@ -1607,17 +1607,19 @@ frappe.ui.form.Form = class FrappeForm {
 
 		let steps = frappe.tour[this.doctype].map((step, index) => {
 			let field = this.get_docfield(step.fieldname);
-			const position = this.get_field_position(field, index);
-			const selected_elem = this.page.main.find(`.frappe-control[data-fieldname='${step.fieldname}']`)[0];
-			return {
-				element: selected_elem,
-				popover: {
-					title: step.title || field.label,
-					description: step.description,
-					position: step.position || position
-				}
-			};
-		})
+			if (field) {
+				const position = this.get_field_position(field, index);
+				const selected_elem = this.page.main.find(`.frappe-control[data-fieldname='${step.fieldname}']`)[0];
+				return {
+					element: selected_elem,
+					popover: {
+						title: step.title || field.label,
+						description: step.description,
+						position: step.position || position
+					}
+				};
+			}
+		}).filter(f => f)
 
 		if (!steps.length) {
 			return

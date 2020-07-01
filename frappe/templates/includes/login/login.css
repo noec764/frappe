@@ -53,7 +53,7 @@
           box-sizing: border-box;
   padding: 8px;
   font-size: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 .form-signin .form-control:focus {
   z-index: 2;

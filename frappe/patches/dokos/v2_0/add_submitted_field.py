@@ -12,6 +12,6 @@ def execute():
 			except IOError:
 				continue
 
-				frappe.reload_doc(doctype.module, "doctype", doctype.name, force=True)
+			frappe.reload_doc(doctype.module, "doctype", doctype.name, force=True)
 		except Exception:
 			pass
