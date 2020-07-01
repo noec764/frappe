@@ -447,6 +447,8 @@ def send_one(email, smtpserver=None, auto_commit=True, now=False):
 	if email.communication:
 		frappe.get_doc('Communication', email.communication).set_delivery_status(commit=auto_commit)
 
+	email_sent_to_any_recipient = None
+
 	try:
 		message = None
 
