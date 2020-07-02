@@ -122,7 +122,7 @@ frappe.breadcrumbs = {
 				const view = frappe.model.user_settings[breadcrumbs.doctype].last_view || 'Tree';
 				if (view == 'Tree' && frappe.boot.treeviews.indexOf(breadcrumbs.doctype) !== -1) {
 					route = view + '/' + breadcrumbs.doctype;
-				} else if (view) {
+				} else if (view && view != 'Tree') {
 					route = 'List/' + breadcrumbs.doctype + '/' + view
 				} else {
 					route = 'List/' + breadcrumbs.doctype;
