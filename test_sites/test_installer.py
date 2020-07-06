@@ -10,10 +10,12 @@ def get_site_config(site_name):
 	return site_config
 
 def main():
-	db_type = 'mariadb'
-	db_port = config.get('db_port', 3306)
-	db_host = config.get('db_host')
 	site_name = test_site
+	site_config = get_site_config(site_name)
+
+	db_type = 'mariadb'
+	db_port = site_config.get('db_port', 3306)
+	db_host = site_config.get('db_host')
 	mariadb_root_username = 'root'
 	mariadb_root_password = 'test_dodock'
 
@@ -34,9 +36,6 @@ def main():
 		db_host=db_host,
 		db_port=db_port,
 	)
-
-
-	site_config = get_site_config(site_name)
 
 	mysql_command = 'mysql -h{db_host} -u{mariadb_root_username} -p{mariadb_root_password} -e '.format(
 		db_host=config.get('db_host'),
