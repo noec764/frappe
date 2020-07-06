@@ -35,6 +35,7 @@ def main():
 		reinstall=True,
 		db_host=db_host,
 		db_port=db_port,
+		install_apps=[]
 	)
 
 	if frappe.redis_server:
