@@ -32,35 +32,10 @@ def main():
 		source_sql=None,
 		force=True,
 		db_type=db_type,
-		reinstall=False,
+		reinstall=True,
 		db_host=db_host,
 		db_port=db_port,
 	)
-
-	mysql_command = 'mysql -h{db_host} -u{mariadb_root_username} -p{mariadb_root_password} -e '.format(
-		db_host=config.get('db_host'),
-		mariadb_root_username=mariadb_root_username,
-		mariadb_root_password=mariadb_root_password
-	)
-
-	# update User's host to '%' required to connect from any container
-	command = mysql_command + "\"UPDATE mysql.user SET Host = '%' where User = '{db_name}'; FLUSH PRIVILEGES;\"".format(
-		db_name=site_config.get('db_name')
-	)
-	os.system(command)
-
-	# Set db password
-	command = mysql_command + "\"ALTER USER '{db_name}'@'%' IDENTIFIED BY '{db_password}'; FLUSH PRIVILEGES;\"".format(
-		db_name=site_config.get('db_name'),
-		db_password=site_config.get('db_password')
-	)
-	os.system(command)
-
-	# Grant permission to database
-	command = mysql_command + "\"GRANT ALL PRIVILEGES ON \`{db_name}\`.* TO '{db_name}'@'%'; FLUSH PRIVILEGES;\"".format(
-		db_name=site_config.get('db_name')
-	)
-	os.system(command)
 
 	if frappe.redis_server:
 		frappe.redis_server.connection_pool.disconnect()
