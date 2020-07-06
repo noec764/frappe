@@ -1,5 +1,6 @@
 import os
 import frappe
+import json
 
 from frappe.commands.site import _new_site
 
