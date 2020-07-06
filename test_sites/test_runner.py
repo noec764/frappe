@@ -1,6 +1,7 @@
 import frappe
 
 from frappe.commands.utils import run_tests
+from frappe.commands import get_site
 
 def main():
 	site = get_site('test_site')
