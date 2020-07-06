@@ -1,46 +1,35 @@
-image: "python:3.6-buster"
-
-services:
-  - name: mariadb
-    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
-  - name: redis
-    alias: redis_queue
-  - name: redis
-    alias: redis_cache
-  - name: redis
-    alias: redis_socketio
-
-
-variables:
-  GIT_STRATEGY: none
-  GIT_CHECKOUT: "false"
-  MYSQL_DATABASE: "test_dodock"
-  MYSQL_ROOT_PASSWORD: "test_dodock"
-
-before_script:
-  - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends locales && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && dpkg-reconfigure --frontend=noninteractive locales && apt-get clean && rm -rf /var/lib/apt/lists/*
-  - export LANG=C.UTF-8
-  - export LC_ALL=C.UTF-8
-  - export LANGUAGE=en_US.UTF-8
-  - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends build-essential cron curl git libffi-dev liblcms2-dev libldap2-dev libmariadbclient-dev libsasl2-dev libssl-dev libtiff5-dev libwebp-dev mariadb-client iputils-ping redis-tools rlwrap software-properties-common sudo tk8.6-dev vim xfonts-75dpi xfonts-base wget fonts-cantarell && apt-get clean && rm -rf /var/lib/apt/lists/* && curl https://deb.nodesource.com/node_10.x/pool/main/n/nodejs/nodejs_10.10.0-1nodesource1_amd64.deb > node.deb && dpkg -i node.deb && rm node.deb && npm install -g yarn
-  - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
-  - dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb && rm wkhtmltox_0.12.5-1.buster_amd64.deb
-  - export PATH=$PATH:/home/dokotest/.local/bin
-  - adduser --disabled-password --gecos "" dokotest
-  - usermod -aG sudo dokotest
-  - echo 'dokotest ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers
-  - su -c "cd /home/dokotest && git clone https://gitlab.com/dokos/docli.git" dokotest
-  - su -c "pip install --user /home/dokotest/docli --no-cache" dokotest
-  - su -c "cd /home/dokotest && bench init dokos-bench --no-backups --no-auto-update --skip-redis-config-generation --skip-assets" dokotest
-  - su -c "cd /home/dokotest/dokos-bench && bench config set-common-config -c redis_queue redis://redis_queue:6379 -c redis_cache redis://redis_cache:6379 -c redis_socketio redis://redis_socketio:6379" dokotest
-
 stages:
-  - Unit Tests
+  - test
 
 unittests:
-  stage: Unit Tests
+  image: "python:3.7-buster"
+
+  stage: test
+
+  services:
+    - name: mariadb
+      command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--character-set-client-handshake=FALSE']
+    - name: redis
+      alias: redis_queue
+    - name: redis
+      alias: redis_cache
+    - name: redis
+      alias: redis_socketio
+
+  variables:
+    MYSQL_DATABASE: "test_dodock"
+    MYSQL_ROOT_PASSWORD: "test_dodock"
+
   script:
-    - su -c "cp -r /home/dokotest/dokos-bench/apps/frappe/test_sites/test_site /home/dokotest/dokos-bench/sites/" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site reinstall --yes --mariadb-root-password test_dodock" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site scheduler disable" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-tests --coverage --app frappe" dokotest
+    - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client
+    - mkdir -p apps
+    - mkdir -p apps/frappe
+    - mv -f * apps/frappe/ || true
+    - mkdir -p sites && echo "frappe" > sites/apps.txt
+    - cp -r apps/frappe/test_sites/test_site sites/
+    - python -m venv env
+    - . env/bin/activate
+    - pip3 install --upgrade pip
+    - pip3 install --no-cache-dir -e apps/frappe/
+    - python apps/frappe/test_sites/test_installer.py || true
+    - python apps/frappe/test_sites/test_runner.py
