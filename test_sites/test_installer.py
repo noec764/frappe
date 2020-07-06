@@ -29,7 +29,6 @@ def main():
 		mariadb_root_password=mariadb_root_password,
 		admin_password='admin',
 		verbose=True,
-		install_apps=install_apps,
 		source_sql=None,
 		force=True,
 		db_type=db_type,
