@@ -62,7 +62,6 @@ class DbManager:
 
 	@staticmethod
 	def restore_database(target, source, user, password):
-		import subprocess
 		from frappe.utils import make_esc
 		esc = make_esc('$ ')
 
@@ -81,7 +80,6 @@ class DbManager:
 		if pipe:
 			print('Creating Database...')
 
-		print(pipe, target, source)
 		command = '{pipe} mysql -u {user} -p{password} -h{host} ' + ('-P{port}' if frappe.db.port else '') + ' {target} {source}'
 		command = command.format(
 			pipe=pipe,
@@ -92,6 +90,4 @@ class DbManager:
 			source=source,
 			port=frappe.db.port
 		)
-		out = subprocess.check_output(command, shell=True)
-		print(out)
-		#os.system(command)
+		os.system(command)

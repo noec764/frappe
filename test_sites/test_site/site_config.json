@@ -10,5 +10,6 @@
  "root_password": "dokosadmin",
  "run_selenium_tests": 1,
  "host_name": "http://test_site:8000",
- "server_script_enabled": 1
+ "server_script_enabled": 1,
+ "install_apps": []
 }
