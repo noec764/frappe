@@ -90,7 +90,4 @@ class DbManager:
 			source=source,
 			port=frappe.db.port
 		)
-		try:
-			os.system(command)
-		except exception:
-			print(frappe.get_traceback())
+		os.system(command)
