@@ -10,7 +10,7 @@ def get_site_config(site_name):
 	return site_config
 
 def main():
-	site_name = test_site
+	site_name = 'test_site'
 	site_config = get_site_config(site_name)
 
 	db_type = 'mariadb'
