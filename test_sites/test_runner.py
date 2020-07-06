@@ -7,7 +7,12 @@ from frappe.commands import get_site
 def main():
 	frappe.init(site='test_site', sites_path="sites")
 
-	frappe.test_runner.main('frappe', verbose=True)
+	ret = frappe.test_runner.main('frappe', verbose=True)
+
+	if len(ret.failures) == 0 and len(ret.errors) == 0:
+		ret = 0
+
+	sys.exit(ret)
 
 	exit(0)
 

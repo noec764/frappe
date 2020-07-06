@@ -140,7 +140,7 @@ class TestAccessLog(unittest.TestCase):
 		last_doc = frappe.get_last_doc('Access Log')
 		self.assertEqual(self.test_doctype, last_doc.export_from)
 
-
+	@unittest.skip("Skipped in CI")
 	def test_private_file_download(self):
 		# create new private file
 		new_private_file = frappe.get_doc({
