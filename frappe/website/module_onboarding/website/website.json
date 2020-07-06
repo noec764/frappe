@@ -10,7 +10,7 @@
  "documentation_url": "https://doc.dokos.io/dokos/website/",
  "idx": 0,
  "is_complete": 0,
- "modified": "2020-05-13 12:32:35.269025",
+ "modified": "2020-06-13 12:32:35.269025",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
@@ -31,6 +31,6 @@
  ],
  "subtitle": "Corporate website, blog, shopping cart and portals.",
  "success_message": "Your website is set up !",
- "title": "Setup your website",
+ "title": "Set up your website",
  "user_can_dismiss": 1
 }
