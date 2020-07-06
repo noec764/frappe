@@ -1,4 +1,5 @@
 import frappe
+import frappe.test_runner
 
 from frappe.commands.utils import run_tests
 from frappe.commands import get_site
