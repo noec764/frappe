@@ -1,10 +1,10 @@
 stages:
-  - test
+  - Unit Tests
 
 unittests:
   image: "python:3.7-buster"
 
-  stage: test
+  stage: Unit Tests
 
   services:
     - name: mariadb
@@ -22,10 +22,12 @@ unittests:
 
   script:
     - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client
+    - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
+    - dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb && rm wkhtmltox_0.12.5-1.buster_amd64.deb
     - mkdir -p apps
     - mkdir -p apps/frappe
     - mv -f * apps/frappe/ || true
-    - mkdir -p sites && echo "frappe" > sites/apps.txt
+    - mkdir -p sites logs && echo "frappe" > sites/apps.txt
     - cp -r apps/frappe/test_sites/test_site sites/
     - python -m venv env
     - . env/bin/activate
