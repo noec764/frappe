@@ -20,7 +20,7 @@ def main():
 	mariadb_root_username = 'root'
 	mariadb_root_password = 'test_dodock'
 
-	frappe.init(site_name, new_site=True)
+	frappe.init(site_name, sites_path="sites", new_site=True)
 
 	_new_site(
 		None,
