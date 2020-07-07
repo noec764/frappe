@@ -17,7 +17,7 @@ class TestEmailBody(unittest.TestCase):
 <div>
 	<h3>Hey John Doe!</h3>
 	<p>This is embedded image you asked for</p>
-	<img embed="public/images/favicon.png" />
+	<img embed="apps/frappe/frappe/public/images/favicon.png" />
 </div>
 '''
 		email_text = '''
@@ -155,9 +155,9 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 			header=['Email Title', 'green']
 		).as_string()
 
-		self.assertTrue('''<span class=3D"indicator indicator-green" style=3D"background-color:#98=
-d85b; border-radius:8px; display:inline-block; height:8px; margin-right:5px=
-; width:8px" bgcolor=3D"#98d85b" height=3D"8" width=3D"8"></span>''' in email_string)
+		self.assertTrue('''<span class=3D"indicator indicator-green" style=3D"background-color:#69=
+eb94; border-radius:8px; display:inline-block; height:8px; margin-right:5px=
+; width:8px" bgcolor=3D"#69eb94" height=3D"8" width=3D"8"></span>''' in email_string)
 		self.assertTrue('<span>Email Title</span>' in email_string)
 
 	def test_get_email_header(self):
