@@ -8,7 +8,7 @@ import frappe
 import os
 import unittest
 from frappe import _
-from frappe.core.doctype.file.file import move_file
+from frappe.core.doctype.file.file import move_file, make_home_folder
 from frappe.utils import get_files_path
 # test_records = frappe.get_test_records('File')
 
