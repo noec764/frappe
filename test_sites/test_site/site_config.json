@@ -15,5 +15,6 @@
  "redis_cache": "redis://redis_cache:6379",
  "redis_queue": "redis://redis_queue:6379",
  "redis_socketio": "redis://redis_socketio:6379",
- "socketio_port": 9000
+ "socketio_port": 9000,
+ "mute_emails": 0
 }

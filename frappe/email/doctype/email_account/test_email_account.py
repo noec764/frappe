@@ -141,7 +141,6 @@ class TestEmailAccount(unittest.TestCase):
 		# parse reply
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.receive(test_mails=test_mails)
-		frappe.db.commit()
 
 		sent = frappe.get_doc("Communication", sent_name)
 
@@ -174,7 +173,7 @@ class TestEmailAccount(unittest.TestCase):
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 
 		# reference document for testing
-		event = frappe.get_doc(dict(doctype='Event', subject='test-message', event_type='Public')).insert()
+		event = frappe.get_doc(dict(doctype='Event', subject='test-message')).insert()
 
 		# send a mail against this
 		frappe.sendmail(recipients='test@example.com', subject='test message for threading',
@@ -189,7 +188,6 @@ class TestEmailAccount(unittest.TestCase):
 		# pull the mail
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.receive(test_mails=test_mails)
-		frappe.db.commit()
 
 		comm_list = frappe.get_all("Communication", filters={"sender":"test_sender@example.com"},
 			fields=["name", "reference_doctype", "reference_name"])
@@ -204,9 +202,7 @@ def cleanup(sender=None):
 		filters.update({"sender": sender})
 
 	names = frappe.get_list("Communication", filters=filters, fields=["name"])
+
 	for name in names:
-		try:
-			frappe.delete_doc_if_exists("Communication", name.name)
-			frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
-		except frappe.exceptions.DoesNotExistError:
-			pass
+		frappe.delete_doc_if_exists("Communication", name.name)
+		frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
