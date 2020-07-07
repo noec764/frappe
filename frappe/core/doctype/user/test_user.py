@@ -146,6 +146,7 @@ class TestUser(unittest.TestCase):
 	# 	# first connection should fail
 	# 	test_request(conn1)
 
+	@unittest.skip("Skipped in CI")
 	def test_site_expiry(self):
 		user = frappe.get_doc('User', 'test@example.com')
 		user.enabled = 1

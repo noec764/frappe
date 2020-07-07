@@ -205,5 +205,8 @@ def cleanup(sender=None):
 
 	names = frappe.get_list("Communication", filters=filters, fields=["name"])
 	for name in names:
-		frappe.delete_doc_if_exists("Communication", name.name)
-		frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
+		try:
+			frappe.delete_doc_if_exists("Communication", name.name)
+			frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
+		except frappe.exceptions.DoesNotExistError:
+			pass

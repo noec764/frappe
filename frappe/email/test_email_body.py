@@ -25,7 +25,7 @@ Hey John Doe!
 This is the text version of this email
 '''
 
-		img_path = os.path.abspath('public/images/favicon.png')
+		img_path = os.path.abspath('apps/frappe/public/images/favicon.png')
 		with open(img_path, 'rb') as f:
 			img_content = f.read()
 			img_base64 = base64.b64encode(img_content).decode()
