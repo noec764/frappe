@@ -30,6 +30,7 @@ unittests:
     - mkdir -p sites logs && echo "frappe" > sites/apps.txt
     - mkdir -p /builds/logs
     - cp -r apps/frappe/test_sites/test_site sites/
+    - mkdir -p test_site/logs
     - python -m venv env
     - . env/bin/activate
     - pip3 install --upgrade pip
