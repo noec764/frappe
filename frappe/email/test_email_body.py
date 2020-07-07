@@ -143,6 +143,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		self.assertTrue(transformed_html in inline_style_in_html(html))
 
 	def test_email_header(self):
+		frappe.flags.mute_emails = False
 		email_html = '''
 <h3>Hey John Doe!</h3>
 <p>This is embedded image you asked for</p>

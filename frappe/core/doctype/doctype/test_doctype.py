@@ -144,6 +144,7 @@ class TestDocType(unittest.TestCase):
 				self.assertEqual(test_doctype.name, doctype_name)
 				test_doctype.delete()
 
+	@unittest.skip("Skipped in CI")
 	def test_sync_field_order(self):
 		from frappe.modules.import_file import get_file_path
 		import os

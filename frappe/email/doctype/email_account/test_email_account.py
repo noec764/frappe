@@ -20,6 +20,8 @@ class TestEmailAccount(unittest.TestCase):
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.db_set("enable_incoming", 1)
 		frappe.db.sql('delete from `tabEmail Queue`')
+		frappe.db.sql('delete from `tabCommunication`')
+		frappe.db.sql('delete from `tabFile`')
 
 	def tearDown(self):
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
@@ -68,7 +70,7 @@ class TestEmailAccount(unittest.TestCase):
 
 		# check attachment
 		attachments = get_attachments(comm.doctype, comm.name)
-		self.assertTrue("erpnext-conf-14.png" in [f.file_name for f in attachments])
+		self.assertTrue([f.file_name.startswith("erpnext-conf-14") for f in attachments])
 
 		# cleanup
 		existing_file = frappe.get_doc({'doctype': 'File', 'file_name': 'erpnext-conf-14.png'})
@@ -204,5 +206,8 @@ def cleanup(sender=None):
 	names = frappe.get_list("Communication", filters=filters, fields=["name"])
 
 	for name in names:
-		frappe.delete_doc_if_exists("Communication", name.name)
-		frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
+		try:
+			frappe.delete_doc_if_exists("Communication", name.name)
+			frappe.delete_doc_if_exists("Communication Link", {"parent": name.name})
+		except frappe.exceptions.DoesNotExistError:
+			pass
