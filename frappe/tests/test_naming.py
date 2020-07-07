@@ -66,6 +66,9 @@ class TestNaming(unittest.TestCase):
 		year = datetime.now().year
 
 		series = 'TEST-{}-'.format(year)
+		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()
+
 		key = 'TEST-.YYYY.-'
 		name = 'TEST-{}-00001'.format(year)
 		frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 1)""", (series,))
@@ -77,6 +80,9 @@ class TestNaming(unittest.TestCase):
 		frappe.db.commit()
 
 		series = 'TEST-{}-'.format(year)
+		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()
+
 		key = 'TEST-.YYYY.-.#####'
 		name = 'TEST-{}-00002'.format(year)
 		frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 2)""", (series,))
@@ -88,6 +94,9 @@ class TestNaming(unittest.TestCase):
 		frappe.db.commit()
 
 		series = 'TEST-'
+		frappe.db.sql("""delete from `tabSeries` where name = %s""", series)
+		frappe.db.commit()
+
 		key = 'TEST-'
 		name = 'TEST-00003'
 		frappe.db.sql("""INSERT INTO `tabSeries` (name, current) values (%s, 3)""", (series,))

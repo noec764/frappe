@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import unittest, os, base64
+import frappe
 from frappe import safe_decode
 from frappe.email.receive import Email
 from frappe.email.email_body import (replace_filename_with_cid,
