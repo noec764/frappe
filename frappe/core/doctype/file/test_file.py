@@ -209,7 +209,7 @@ class TestFile(unittest.TestCase):
 			"doctype": "File",
 			"file_name": _(folder_name),
 			"is_folder": 1,
-			"folder": _(parent_folder)
+			"folder": frappe.db.get_value("File", {"is_home_folder": 1}) if parent_folder == "Home" else parent_folder
 		}).insert()
 
 
