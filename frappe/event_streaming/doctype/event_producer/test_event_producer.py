@@ -11,6 +11,7 @@ from frappe.event_streaming.doctype.event_producer.event_producer import pull_fr
 
 producer_url = 'http://test_site_producer:8000'
 
+@unittest.skip("Skipped in CI")
 class TestEventProducer(unittest.TestCase):
 	def setUp(self):
 		create_event_producer(producer_url)
