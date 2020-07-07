@@ -117,7 +117,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	def test_replace_filename_with_cid(self):
 		original_message = '''
 			<div>
-				<img embed="public/images/favicon.png" alt="test" />
+				<img embed="apps/frappe/frappe/public/images/favicon.png" alt="test" />
 				<img embed="notexists.jpg" />
 			</div>
 		'''

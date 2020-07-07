@@ -30,8 +30,8 @@ class TestAutoRepeat(unittest.TestCase):
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test recurring todo', assigned_by='Administrator')).insert()
 
-		doc = make_auto_repeat(reference_document=todo.name, start_date=today())
-		self.assertEqual(getdate(doc.next_schedule_date), add_days(getdate(today()), 1))
+		doc = make_auto_repeat(reference_document=todo.name, start_date=add_days(getdate(today()), -1))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(today()))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 		frappe.db.commit()
@@ -119,7 +119,7 @@ class TestAutoRepeat(unittest.TestCase):
 
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test next schedule date for daily', assigned_by='Administrator')).insert()
-		doc = make_auto_repeat(frequency='Daily', reference_document=todo.name, start_date=add_days(today(), -2))
+		doc = make_auto_repeat(frequency='Daily', reference_document=todo.name, start_date=add_days(today(), -1))
 		self.assertEqual(getdate(doc.next_schedule_date), current_date)
 
 
