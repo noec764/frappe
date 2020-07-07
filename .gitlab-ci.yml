@@ -28,7 +28,7 @@ unittests:
     - mkdir -p apps/frappe
     - mv -f * apps/frappe/ || true
     - mkdir -p sites logs && echo "frappe" > sites/apps.txt
-    - mkdir -p /builds/logs
+    - mkdir -p ../logs
     - cp -r apps/frappe/test_sites/test_site sites/
     - mkdir -p test_site/logs
     - python -m venv env

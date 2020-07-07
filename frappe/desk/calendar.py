@@ -98,7 +98,6 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 		recurring_events = frappe.get_list(doctype, fields=fields, filters=recurring_filters)
 
 		if recurring_events:
-			events.extend(recurring_events)
 			for recurring_event in recurring_events:
 				events.extend(process_recurring_events(recurring_event, start, end, field_map.start, field_map.end, field_map.rrule))
 
