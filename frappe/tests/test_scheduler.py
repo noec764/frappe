@@ -43,12 +43,14 @@ class TestScheduler(TestCase):
 		frappe.db.commit()
 
 		# 1 job in queue
-		self.assertTrue(job.enqueue())
+		enqueued = job.enqueue()
+		self.assertTrue(enqueued)
 		job.db_set('last_execution', '2010-01-01 00:00:00')
 		frappe.db.commit()
 
+		enqueued = job.enqueue()
 		# 2nd job not loaded
-		self.assertFalse(job.enqueue())
+		self.assertFalse(enqueued)
 		job.delete()
 
 	def test_is_dormant(self):

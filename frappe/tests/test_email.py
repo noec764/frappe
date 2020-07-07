@@ -17,6 +17,7 @@ class TestEmail(unittest.TestCase):
 		frappe.db.sql("""delete from `tabEmail Unsubscribe`""")
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 		frappe.db.sql("""delete from `tabEmail Queue Recipient`""")
+		frappe.db.commit()
 
 	def test_email_queue(self, send_after=None):
 		frappe.sendmail(recipients=['test@example.com', 'test1@example.com'],
