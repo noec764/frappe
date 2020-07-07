@@ -171,6 +171,9 @@ class TestFile(unittest.TestCase):
 
 	def setUp(self):
 		self.delete_test_data()
+		if not frappe.db.exists("File", {"is_home_folder": 1}):
+			make_home_folder()
+			frappe.db.commit()
 		self.upload_file()
 
 
