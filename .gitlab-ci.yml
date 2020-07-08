@@ -1,5 +1,6 @@
 stages:
   - Unit Tests
+  - Build Image
 
 unittests:
   image: "python:3.7-buster"
@@ -37,3 +38,20 @@ unittests:
     - pip3 install --no-cache-dir -e apps/frappe/
     - python apps/frappe/test_sites/test_installer.py || true
     - python apps/frappe/test_sites/test_runner.py
+
+
+build:
+  stage: Build Image
+
+  services:
+    - name: docker:19.03.11-dind
+      alias: docker
+
+
+  before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+  script:
+    - docker build -t dodock-worker -f https://gitlab.com/dokos/dokidocker/-/raw/master/build/dodock-worker/Dockerfile .
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
