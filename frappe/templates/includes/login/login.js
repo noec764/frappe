@@ -34,8 +34,8 @@ login.bind_events = function() {
 		args.cmd = "frappe.core.doctype.user.user.sign_up";
 		args.email = ($("#signup_email").val() || "").trim();
 		args.redirect_to = frappe.utils.sanitise_redirect(frappe.utils.get_url_arg("redirect-to"));
-		args.first_name = ($("#signup_firstname").val() || "").trim();
-		args.last_name = ($("#signup_lastname").val() || "").trim();
+		args.first_name = frappe.utils.xss_sanitise(($("#signup_firstname").val() || "").trim());
+		args.last_name = frappe.utils.xss_sanitise(($("#signup_lastname").val() || "").trim());
 		if(!args.email || !validate_email(args.email) || !args.full_name) {
 			login.set_indicator('{{ _("Valid email and name required") }}', 'red');
 			return false;
