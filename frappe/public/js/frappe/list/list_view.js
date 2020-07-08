@@ -528,6 +528,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get_header_html() {
+		if (!this.columns) {
+			return;
+		}
+
 		if (this.columns) {
 			const subject_field = this.columns[0].df;
 			let subject_html = `
@@ -1148,7 +1152,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 					});
 					this.toggle_result_area();
 					this.render_list();
-					if (this.$checks.length) {
+					if (this.$checks && this.$checks.length) {
 						this.set_rows_as_checked();
 					}
 				});
