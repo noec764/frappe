@@ -47,6 +47,7 @@ build:
     - name: docker:19.03.11-dind
       alias: docker
 
+  image: docker
 
   before_script:
     - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
