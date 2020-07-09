@@ -49,7 +49,7 @@ frappe.ui.form.SuccessAction = class SuccessAction {
 					message: message,
 					body: html,
 					indicator: 'green',
-				}, setting.setting.action_timeout || 7);
+				}, setting.action_timeout || 7);
 			});
 	}
 
