@@ -29,9 +29,9 @@ frappe.ui.form.on('Dashboard Chart', {
 						{args: values}
 					).then(()=> {
 						let dashboard_route_html =
-							`<a href = "#dashboard/${values.dashboard}">${values.dashboard}</a>`;
+							`<a href = "#dashboard/${values.dashboard}">${__(values.dashboard)}</a>`;
 						let message =
-							__(`Dashboard Chart ${values.chart_name} add to Dashboard ` + dashboard_route_html);
+							__("Dashboard Chart {0} added to Dashboard {1}", [values.chart_name, dashboard_route_html]);
 
 						frappe.msgprint(message);
 					});
@@ -181,12 +181,32 @@ frappe.ui.form.on('Dashboard Chart', {
 
 	timespan: function(frm) {
 		const time_interval_options = {
-			"Select Date Range": ["Quarterly", "Monthly", "Weekly", "Daily"],
-			"All Time": ["Yearly", "Monthly"],
-			"Last Year": ["Quarterly", "Monthly", "Weekly", "Daily"],
-			"Last Quarter": ["Monthly", "Weekly", "Daily"],
-			"Last Month": ["Weekly", "Daily"],
-			"Last Week": ["Daily"]
+			"Select Date Range": [
+				{"label": __("Quarterly"), "value": "Quarterly"},
+				{"label": __("Monthly"), "value": "Monthly"},
+				{"label": __("Weekly"), "value": "Weekly"},
+				{"label": __("Daily"), "value": "Daily"}
+			],
+			"All Time": [
+				{"label": __("Yearly"), "value": "Yearly"},
+				{"label": __("Monthly"), "value": "Monthly"}
+			],
+			"Last Year": [
+				{"label": __("Quarterly"), "value": "Quarterly"},
+				{"label": __("Monthly"), "value": "Monthly"},
+				{"label": __("Weekly"), "value": "Weekly"},
+				{"label": __("Daily"), "value": "Daily"}
+			],
+			"Last Quarter": [
+				{"label": __("Monthly"), "value": "Monthly"},
+				{"label": __("Weekly"), "value": "Weekly"},
+				{"label": __("Daily"), "value": "Daily"}
+			],
+			"Last Month": [
+				{"label": __("Weekly"), "value": "Weekly"},
+				{"label": __("Daily"), "value": "Daily"}
+			],
+			"Last Week": [{"label": __("Daily"), "value": "Daily"}]
 		};
 		if (frm.doc.timespan) {
 			frm.set_df_property('time_interval', 'options', time_interval_options[frm.doc.timespan]);
@@ -349,7 +369,7 @@ frappe.ui.form.on('Dashboard Chart', {
 						}
 					}
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 			frappe.dashboards.filters_dialog = dialog;
 

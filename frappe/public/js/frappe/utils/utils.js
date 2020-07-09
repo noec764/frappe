@@ -685,19 +685,19 @@ Object.assign(frappe.utils, {
 
 		if (route[2] === 'Report' || route[0] === 'query-report') {
 			const doctype = __(route[3] || route[1])
-			return __("{0} Report", [doctype]);
+			return __("{0} Report", [__(doctype)]);
 		}
 		if (route[0] === 'List') {
 			const doctype = __(route[1])
-			return __("{0} List", [doctype]);
+			return __("{0} List", [__(doctype)]);
 		}
 		if (route[0] === 'modules') {
 			const doctype = __(route[1])
-			return __("{0} Modules", [doctype]);
+			return __("{0} Modules", [__(doctype)]);
 		}
 		if (route[0] === 'dashboard') {
 			const doctype = __(route[1])
-			return __("{0} Dashboard", [doctype]);
+			return __("{0} Dashboard", [__(doctype)]);
 		}
 		return __(frappe.utils.to_title_case(route[0], true));
 	},

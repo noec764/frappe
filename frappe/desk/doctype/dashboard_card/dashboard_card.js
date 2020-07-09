@@ -153,7 +153,7 @@ frappe.ui.form.on('Dashboard Card', {
 						frm.trigger('show_filters');
 					}
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 			dialog.show();
 			dialog.set_values(filters);

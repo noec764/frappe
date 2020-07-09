@@ -143,7 +143,7 @@ frappe.ui.form.on('Package Document Type', {
 						_show_filters(flt, table);
 						dialog.hide();
 					},
-					primary_action_label: "Set"
+					primary_action_label: __("Set")
 				});
 
 				let filter_group = new frappe.ui.FilterGroup({

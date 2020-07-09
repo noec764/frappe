@@ -33,7 +33,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	}
 
 	setup_dashboard_page() {
-		const dashboard_name = __('{0} Dashboard', [this.doctype]);
+		const dashboard_name = __('{0} Dashboard', [__(this.doctype)]);
 		const chart_wrapper_html = `<div class="dashboard-view"></div>`;
 
 		this.$frappe_list.html(chart_wrapper_html);
