@@ -84,7 +84,7 @@ class EmailAccount(Document):
 		if self.enable_incoming and self.append_to:
 			valid_doctypes = [d[0] for d in get_append_to()]
 			if self.append_to not in valid_doctypes:
-				frappe.throw(_("Append To can be one of {0}").format(comma_or(valid_doctypes)))
+				frappe.throw(_("Append To can be one of {0}").format(comma_or([_(x) for x in valid_doctypes])))
 
 	def on_update(self):
 		"""Check there is only one default of each type."""

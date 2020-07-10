@@ -144,7 +144,7 @@ def check_record(d):
 
 			if docfield.fieldtype=='Select' and val and docfield.options:
 				if val not in docfield.options.split('\n'):
-					frappe.throw(_("{0} must be one of {1}").format(_(docfield.label), comma_or(docfield.options.split("\n"))))
+					frappe.throw(_("{0} must be one of {1}").format(_(docfield.label), comma_or([_(x) for x in docfield.options.split("\n")])))
 
 			if val and docfield.fieldtype=='Date':
 				d[key] = parse_date(val)
