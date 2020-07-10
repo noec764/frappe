@@ -389,6 +389,12 @@ def get_messages_from_doctype(name):
 		messages.extend(get_messages_from_file(doctype_file_path + "_calendar.js"))
 		messages.extend(get_messages_from_file(doctype_file_path + "_dashboard.html"))
 
+		system_country = frappe.get_system_settings("country")
+		if system_country:
+			doctype_regional_file_path = frappe.get_module_path(meta.module, "doctype", meta.name, "regional", system_country)
+			messages.extend(get_messages_from_file(doctype_regional_file_path + ".js"))
+			messages.extend(get_messages_from_file(doctype_regional_file_path + "_list.js"))
+
 	# workflow based on doctype
 	messages.extend(get_messages_from_workflow(doctype=name))
 
