@@ -659,6 +659,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			}
 			this.datatable = new DataTable(this.$report[0], datatable_options);
 		}
+		this.datatable.bodyScrollable.style.removeProperty('height');
+		this.datatable.bodyScrollable.style.height = Math.max(data.length, 40) + "vw";
 
 		if (typeof this.report_settings.initial_depth == "number") {
 			this.datatable.rowmanager.setTreeDepth(this.report_settings.initial_depth);
