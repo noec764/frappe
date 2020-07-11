@@ -58,6 +58,7 @@ frappe.views.pageview = {
 				frappe.container.change_to('workspace');
 				frappe.workspace.route();
 				frappe.utils.set_title(__('Desk'));
+				$(document).trigger("workspace-change");
 				return;
 			}
 		}
