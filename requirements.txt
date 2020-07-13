@@ -35,7 +35,7 @@ oauthlib==3.1.0
 openpyxl==2.6.4
 passlib==1.7.2
 pdfkit==0.6.1
-pandas==0.25.3
+pandas==1.0.5
 Pillow==6.2.2
 premailer==3.6.1
 psycopg2-binary==2.8.4
