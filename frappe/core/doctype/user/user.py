@@ -44,13 +44,13 @@ class User(Document):
 			[{"name": m.get("module_name"), "label": _(m.get("module_name"))} \
 			for m in get_modules_from_all_apps()])
 
-
 	def before_insert(self):
 		self.flags.in_insert = True
 		throttle_user_creation()
 
 	def after_insert(self):
 		create_notification_settings(self.name)
+		self.add_default_roles()
 
 	def validate(self):
 		self.check_demo()
@@ -524,6 +524,13 @@ class User(Document):
 
 		return [i.strip() for i in self.restrict_ip.split(",")]
 
+	def add_default_roles(self):
+		# set default signup role as per Portal Settings
+		default_role = frappe.db.get_value("Portal Settings", None, "default_role")
+		if default_role:
+			self.add_roles(default_role)
+
+
 @frappe.whitelist()
 def get_timezones():
 	import pytz
@@ -795,11 +802,6 @@ def sign_up(email, first_name, last_name, redirect_to):
 		user.flags.ignore_permissions = True
 		user.flags.ignore_password_policy = True
 		user.insert()
-
-		# set default signup role as per Portal Settings
-		default_role = frappe.db.get_value("Portal Settings", None, "default_role")
-		if default_role:
-			user.add_roles(default_role)
 
 		if redirect_to:
 			frappe.cache().hset('redirect_after_login', user.name, redirect_to)

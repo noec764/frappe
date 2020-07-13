@@ -61,7 +61,8 @@
 
 	{%- if not disable_signup -%}
 		<p class="text-center sign-up-message">
-			<a href="#signup" class="btn btn-secondary" style="margin-top: -2px;">{{ _("Don't have an account? Sign up") }}</a>
+			{% set url = "#signup" if not custom_signup else "{}?new=True".format(custom_signup) %}
+			<a href="{{ url }}" class="btn btn-secondary" style="margin-top: -2px;">{{ _("Don't have an account? Sign up") }}</a>
 		</p>
 	{%- endif -%}
 	<p class="text-center forgot-password-message">
@@ -70,7 +71,7 @@
 </section>
 <section class='for-signup {{ "signup-disabled" if disable_signup else "" }}'>
 	<div class="login-content page-card" style="margin-top: 20px;">
-	{%- if not disable_signup -%}
+	{%- if not disable_signup and not custom_signup -%}
 		<form class="form-signin form-signup hide" role="form">
 			<div class="page-card-head">
 				<span class="indicator blue" data-text="{{ _('Sign Up') }}"></span>

@@ -11,7 +11,7 @@ frappe.ready(function() {
 	let allow_delete = parseInt(wrapper.data('allow-delete'));
 	const allow_edit = parseInt(wrapper.data('allow-edit'));
 	let doc_name = query_params.name || '';
-	let is_new = query_params.new;
+	let is_new = query_params.new || parseInt(wrapper.data('always-new'));
 
 	if (login_required) show_login_prompt();
 	else if (is_list) show_grid();
@@ -119,7 +119,8 @@ frappe.ready(function() {
 					}
 					df.options.disable_file_browser = true;
 				}
-				df.read_only = (!allow_edit && !is_new);
+
+				df.read_only = (!is_new || !allow_edit);
 			});
 
 			return form_data;

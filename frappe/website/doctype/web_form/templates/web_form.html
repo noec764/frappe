@@ -21,7 +21,10 @@
 {% endblock %}
 
 {% macro container_attributes() %}
-data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-required="{{ frappe.utils.cint(login_required and frappe.session.user=='Guest') }}" data-is-list="{{ frappe.utils.cint(is_list) }}" data-allow-delete="{{ allow_delete }} data-allow-edit="{{ allow_edit }}"
+data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}"
+	data-login-required="{{ frappe.utils.cint(login_required and frappe.session.user=='Guest') }}"
+	data-is-list="{{ frappe.utils.cint(is_list) }}" data-allow-delete="{{ allow_delete }}"
+	data-allow-edit="{{ allow_edit }}" data-always-new="{{ always_new }}"
 {% endmacro %}
 
 {% block page_content %}

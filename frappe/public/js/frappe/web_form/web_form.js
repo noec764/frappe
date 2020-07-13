@@ -56,39 +56,41 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		intro_wrapper.innerHTML = intro;
 	}
 
-	add_button(name, type, action, wrapper_class=".web-form-actions") {
+	add_button(id, name, type, action, wrapper_class=".web-form-actions") {
 		const button = document.createElement("button");
 		button.classList.add("btn", "btn-" + type, "btn-sm", "ml-2");
 		button.innerHTML = name;
 		button.onclick = action;
 		document.querySelector(wrapper_class).appendChild(button);
+		this[id] = button;
 	}
 
-	add_button_to_footer(name, type, action) {
-		this.add_button(name, type, action, '.web-form-footer');
+	add_button_to_footer(id, name, type, action) {
+		this.add_button(id, name, type, action, '.web-form-footer');
 	}
 
-	add_button_to_header(name, type, action) {
-		this.add_button(name, type, action, '.web-form-actions');
+	add_button_to_header(id, name, type, action) {
+		this.add_button(id, name, type, action, '.web-form-actions');
 	}
 
 	setup_primary_action() {
-		this.add_button_to_header(this.button_label || __("Save"), "primary", () =>
+		this.add_button_to_header('header_save_btn', this.button_label || __("Save"), "primary", () =>
 			this.save()
 		);
 
-		this.add_button_to_footer(this.button_label || __("Save"), "primary", () =>
+		this.add_button_to_footer('footer_save_btn', this.button_label || __("Save"), "primary", () =>
 			this.save()
 		);
 	}
 
 	setup_cancel_button() {
-		this.add_button_to_header(__("Cancel"), "light", () => this.cancel());
+		this.add_button_to_header('cancel_btn', __("Cancel"), "light", () => this.cancel());
 	}
 
 	setup_delete_button() {
 		this.add_button_to_header(
-			'<i class="fa fa-trash" aria-hidden="true"></i>',
+			'mobile_delete_btn',
+			'<i class="uil uil-trash-alt" aria-hidden="true"></i>',
 			"light",
 			() => this.delete()
 		);
@@ -96,6 +98,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	setup_print_button() {
 		this.add_button_to_header(
+			'print_btn',
 			'<i class="uil uil-print" aria-hidden="true"></i>',
 			"light",
 			() => this.print()
