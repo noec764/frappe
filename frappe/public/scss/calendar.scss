@@ -1,197 +1,70 @@
 @import "variables";
-@import '~@fullcalendar/core/main.css';
+@import '~@fullcalendar/common/main.css';
 @import '~@fullcalendar/list/main.css';
 @import '~@fullcalendar/daygrid/main.css';
 @import '~@fullcalendar/timegrid/main.css';
 
-body .fc {
+.fc {
 	font-size: $text-medium;
-}
 
-.fc-title {
-	font-size: 1.5rem;
-}
-
-.fc-toolbar {
-	padding: 15px;
-	margin-bottom: 0px !important;
-	h2 {
-		font-size: 12pt !important;
+	.fc-toolbar.fc-header-toolbar {
+		margin-top: 1.5em;
+		padding: 0 1.5em;
+		h2 {
+			font-size: 1.2em !important;
+		}
 	}
-}
 
-.fc-list-view {
-	border-width: 0px;
-	border-style: None;
-}
-
-.fc-view-container {
-	margin-left: -1px;
-	margin-right: -1px;
-}
-
-th.fc-widget-header {
-	background-color: $panel-bg;
-	color: #8C99A5;
-}
-
-.fc-unthemed th,
-.fc-unthemed td,
-.fc-unthemed hr,
-.fc-unthemed thead,
-.fc-unthemed tbody,
-.fc-unthemed .fc-row,
-.fc-unthemed .fc-popover {
-	border-color: $border-color !important;
-}
-
-.fc-unthemed .fc-today {
-	background-color: #FFF !important;
-
-	.fc-day-number {
-		background-color: $brand-primary;
-		min-width: 20px;
-		border-radius: 50%;
-		color: #fff;
-		text-align: center;
+	.fc-view-harness {
+		margin-left: -1px;
+		margin-right: -1px;
 	}
-}
 
-.fc-unthemed .fc-list-empty {
-	background-color: #FFF;
-}
+	.fc-theme-standard th,
+	.fc-theme-standard td,
+	.fc-theme-standard hr,
+	.fc-theme-standard thead,
+	.fc-theme-standard tbody {
+		border-color: $border-color;
+	}
 
-.fc-unthemed .fc-divider,
-.fc-unthemed .fc-popover .fc-header,
-.fc-unthemed .fc-list-heading td {
-	background: #dfe8ff;
-}
+	th.fc-col-header-cell.fc-day {
+		text-align: right !important;
+		padding: 10px 12px 10px 0 !important;
+		text-transform: uppercase;
+		font-size: 12px;
+		background-color: #f7fafc;
+		color: #8c99a5;
+	}
 
-.fc-highlight {
-	background-color: $light-yellow !important;
-}
-
-.fc-event {
-	border: None;
-	background-color: #E8DDFF;
-	margin: 1px 0;
-	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.07);
-	margin-bottom: 2px;
-}
-
-.fc-scroller {
-	scrollbar-width: 5px;
-	scrollbar-color: #dfe8ff #fff;
-}
-
-.fc-scroller::-webkit-scrollbar {
-	width: 5px;
-	background-color: #fff;
-}
-
-.fc-scroller::-webkit-scrollbar-thumb {
-	background-color: #dfe8ff;
-}
-
-@media (max-width: $screen-xs) {
-	.fc-scroller {
+	.fc-button {
 		height: auto !important;
-	}
-}
-
-.fc-day-top {
-	padding: 12px 12px 0 0 !important;
-}
-
-th.fc-day-header {
-	text-align: right !important;
-	padding: 10px 12px 10px 0 !important;
-	text-transform: uppercase;
-	font-size: 12px;
-}
-
-.fc.fc-unthemed .fc-toolbar {
-	padding: 15px;
-}
-
-.fc-event-container .fc-content {
-	padding: 3px;
-}
-
-.fc-left h2 {
-	font-size: 14px;
-}
-
-.fc-center {
-	font-size: $text-small !important;
-}
-
-.fc-time-grid .fc-slats .fc-minor td {
-	border-top-style: unset;
-}
-
-.fc button {
-	height: auto !important;
-	font-size: $text-small !important;
-	outline: none !important;
-	line-height: 10pt !important;
-	.fc-icon {
-		top: -1px !important;
 		font-size: $text-small !important;
+		outline: none !important;
+		line-height: 10pt !important;
+		.fc-icon {
+			top: -1px !important;
+			font-size: $text-small !important;
+		}
 	}
-}
 
-.fc-button-primary {
-	color: #fff !important;
-	background-color: #6195FF !important;
-	border-color: #4884ff !important;
-}
-
-.fc-button-primary:hover:enabled {
-	color: #fff;
-	background-color: #2e73ff;
-	border-color: #1562ff;
-}
-
-.fc-state-active {
-	box-shadow: none !important;
-	background: #cfdce5 !important;
-}
-
-.fc-day-grid-event {
-	border: none !important;
-	margin: 5px 4px 0 !important;
-	padding: 1px 5px !important;
-}
-
-@mixin fc-bg-color($color) {
-	$light: #{$color}-light;
-	$extra-light: #{$color}-extra-light;
-	$dark: #{$color}-dark;
-
-	background-color: $extra-light !important;
-	color: $dark !important;
-
-	&.fc-start {
-		border-left: 3px solid $light !important;
+	.fc-scroller {
+		scrollbar-width: 5px;
+		scrollbar-color: #dfe8ff #fff;
 	}
-}
 
-.fc-bg-orange {
-	@include fc-bg-color(orange);
-}
-.fc-bg-red {
-	@include fc-bg-color(red);
-}
-.fc-bg-skyblue {
-	@include fc-bg-color(skyblue);
-}
-.fc-bg-green {
-	@include fc-bg-color(green);
-}
-.fc-bg-blue {
-	@include fc-bg-color(blue);
-}
-.fc-bg-yellow {
-	@include fc-bg-color(yellow);
+	.fc-scroller::-webkit-scrollbar {
+		width: 5px;
+		background-color: #fff;
+	}
+
+	.fc-scroller::-webkit-scrollbar-thumb {
+		background-color: #dfe8ff;
+	}
+
+	@media (max-width: $screen-xs) {
+		.fc-scroller {
+			height: auto !important;
+		}
+	}
 }

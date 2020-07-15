@@ -1,0 +1,52 @@
+@import '~@fullcalendar/common/main.css';
+@import '~@fullcalendar/list/main.css';
+@import '~@fullcalendar/daygrid/main.css';
+@import '~@fullcalendar/timegrid/main.css';
+
+.fc,
+.fc-toolbar.fc-header-toolbar {
+	font-size: 1em;
+}
+
+.fc-theme-standard th,
+.fc-theme-standard td,
+.fc-theme-standard hr,
+.fc-theme-standard thead,
+.fc-theme-standard tbody {
+	border-color: #E2E6E9;
+}
+
+th.fc-col-header-cell.fc-day {
+	text-align: right;
+	padding: 10px 12px 10px 0;
+	text-transform: uppercase;
+	font-size: 12px;
+	background-color: #f7fafc;
+	color: #8c99a5;
+}
+
+.fc .fc-button,
+.fc .fc-button .fc-icon {
+	height: auto;
+	font-size: 0.8em;
+	outline: none;
+	line-height: inherit;
+}
+
+.fc .fc-event {
+	cursor: pointer;
+}
+
+.fc-scroller {
+	scrollbar-width: 5px;
+	scrollbar-color: #dfe8ff #fff;
+}
+
+.fc-scroller::-webkit-scrollbar {
+	width: 5px;
+	background-color: #fff;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+	background-color: #dfe8ff;
+}

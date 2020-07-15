@@ -358,7 +358,7 @@
 		"public/less/controls.less",
 		"node_modules/frappe-datatable/dist/frappe-datatable.css"
 	],
-	"frappe/css/email.css": [
+	"css/email.css": [
 		"public/less/email.less"
 	],
 	"js/social.min.js": [
@@ -369,5 +369,11 @@
 	],
 	"js/data_import_tools.min.js": [
 		"public/js/frappe/data_import/index.js"
+	],
+	"js/events-portal.min.js": [
+		"public/js/frappe/events_portal/index.js"
+	],
+	"css/website-calendar.min.css": [
+		"public/scss/website-calendar.scss"
 	]
 }

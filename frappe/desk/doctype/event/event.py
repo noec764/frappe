@@ -20,6 +20,15 @@ from frappe.integrations.doctype.google_calendar.google_calendar import get_goog
 weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 communication_mapping = {"": "Event", "Event": "Event", "Meeting": "Meeting", "Call": "Phone", "Sent/Received Email": "Email", "Other": "Other"}
 
+FIELD_MAP = {
+	"id": "name",
+	"start": "starts_on",
+	"end": "ends_on",
+	"allDay": "all_day",
+	"title": "subject",
+	"description": "description"
+}
+
 class Event(Document):
 	def validate(self):
 		if not self.starts_on:
@@ -400,3 +409,15 @@ def delete_event_in_google_calendar(doc, method=None):
 	except HttpError as err:
 		frappe.msgprint(_("Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}."\
 			).format(doc.name, err.resp.status))
+
+@frappe.whitelist()
+def get_prepared_events(start, end):
+	events = get_events(start, end)
+
+	for event in events:
+		for field in FIELD_MAP:
+			event.update({
+				field: event.get(FIELD_MAP[field])
+			})
+
+	return events

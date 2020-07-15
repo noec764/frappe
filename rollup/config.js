@@ -3,16 +3,16 @@ const fs = require('fs');
 const chalk = require('chalk');
 const log = console.log; // eslint-disable-line
 
-const multi_entry = require('rollup-plugin-multi-entry');
-const commonjs = require('rollup-plugin-commonjs');
-const node_resolve = require('rollup-plugin-node-resolve');
+const multi_entry = require('@rollup/plugin-multi-entry');
+const commonjs = require('@rollup/plugin-commonjs');
+const node_resolve = require('@rollup/plugin-node-resolve');
 const postcss = require('rollup-plugin-postcss');
-const buble = require('rollup-plugin-buble');
+const buble = require('@rollup/plugin-buble');
 const { terser } = require('rollup-plugin-terser');
 const vue = require('rollup-plugin-vue');
 const frappe_html = require('./frappe-html-plugin');
-const visualizer = require('rollup-plugin-visualizer');
 const less_loader = require('./less-loader');
+const replace = require('@rollup/plugin-replace');
 
 const production = process.env.FRAPPE_ENV === 'production';
 
@@ -45,6 +45,10 @@ function get_rollup_options_for_js(output_file, input_files) {
 
 	const plugins = [
 		// enables array of inputs
+		replace({
+			'process.env.NODE_ENV': JSON.stringify(production ? 'production' : 'development'),
+			'process.env.VUE_ENV': JSON.stringify('browser')
+		}),
 		multi_entry(),
 		// .html -> .js
 		frappe_html(),
@@ -52,7 +56,10 @@ function get_rollup_options_for_js(output_file, input_files) {
 		ignore_css(),
 		// .vue -> .js,
 		vue({
-			exclude: ['node_modules/**']
+			exclude: ['node_modules/**'],
+			template: {
+				isProduction: production
+			}
 		}),
 		// ES6 -> ES5
 		buble({
@@ -60,24 +67,17 @@ function get_rollup_options_for_js(output_file, input_files) {
 			transforms: {
 				dangerousForOf: true,
 				classes: false,
-				modules: true
+				modules: true,
+				asyncAwait: false
 			},
 			exclude: [path.resolve(bench_path, '**/*.css'), path.resolve(bench_path, '**/*.less')]
 		}),
-		node_resolve({
+		node_resolve.nodeResolve({
 			customResolveOptions: {
 				paths: node_resolve_paths
 			}
 		}),
-		commonjs({
-			namedExports: {
-				'node_modules/@fullcalendar/core/main.js': ['Calendar'],
-				'frappe/public/js/lib/rrule/rrule-tz.min.js': ['RRule', 'ENGLISH']
-			}
-		}),
-		!production && visualizer({
-			filename: path.resolve(bench_path, 'stats', output_file + ".html"),
-		}),
+		commonjs(),
 		production && terser()
 	];
 

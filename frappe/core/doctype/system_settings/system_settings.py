@@ -75,3 +75,7 @@ def load():
 		"timezones": get_all_timezones(),
 		"defaults": defaults
 	}
+
+@frappe.whitelist(allow_guest=True)
+def get_timezone():
+	return frappe.db.get_single_value("System Settings", "time_zone")

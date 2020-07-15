@@ -10,7 +10,8 @@ window.cur_frm = null;
 
 $.extend(frappe, {
 	boot: {
-		lang: 'en'
+		lang: 'en',
+		timeZone: 'UTC'
 	},
 	_assets_loaded: [],
 	require: async function(links, callback) {
@@ -377,6 +378,15 @@ $.extend(frappe, {
 			// Start observing an element
 			io.observe(el);
 		});
+	},
+	get_user_lang: function() {
+		frappe.call({
+			method: "frappe.get_user_lang",
+		}).then(r => {
+			if (r && r.message) {
+				frappe.boot.lang = r.message || 'en'
+			}
+		})
 	}
 });
 
@@ -424,6 +434,10 @@ $(document).ready(function() {
 	$("#website-login").toggleClass("hide", logged_in ? true : false);
 	$("#website-post-login").toggleClass("hide", logged_in ? false : true);
 	$(".logged-in").toggleClass("hide", logged_in ? false : true);
+
+	if (logged_in) {
+		frappe.get_user_lang();
+	}
 
 	frappe.bind_navbar_search();
 

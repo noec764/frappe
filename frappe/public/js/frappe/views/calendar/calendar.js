@@ -110,10 +110,10 @@ frappe.views.Calendar = class {
 
 	get_default_options() {
 		return new Promise ((resolve) => {
-			let defaultView = localStorage.getItem('cal_defaultView');
+			let initialView = localStorage.getItem('cal_initialView');
 			let weekends = localStorage.getItem('cal_weekends');
 			let defaults = {
-				'defaultView': defaultView && ["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(defaultView) ? defaultView : "dayGridMonth",
+				'initialView': initialView && ["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView) ? initialView : "dayGridMonth",
 				'weekends': weekends ? weekends : true
 			};
 			resolve(defaults);
@@ -154,7 +154,6 @@ frappe.views.Calendar = class {
 
 		this.fullcalendar = new Calendar(this.$cal[0], this.cal_options);
 		this.fullcalendar.render();
-		this.set_css();
 	}
 
 	setup_view_mode_button(defaults) {
@@ -175,39 +174,17 @@ frappe.views.Calendar = class {
 		const btn_group = me.$wrapper.find(".fc-button-group");
 		btn_group.on("click", ".fc-button", function() {
 			const value = ($(this).hasClass('fc-timeGridWeek-button')) ? 'timeGridWeek' : (($(this).hasClass('fc-timeGridDay-button')) ? 'timeGridDay' : 'dayGridMonth');
-			me.set_localStorage_option("cal_defaultView", value);
+			me.set_localStorage_option("cal_initialView", value);
 		});
 
 		me.$wrapper.on("click", ".btn-weekend", function() {
 			me.cal_options.weekends = !me.cal_options.weekends;
 			me.fullcalendar.setOption('weekends', me.cal_options.weekends);
 			me.set_localStorage_option("cal_weekends", me.cal_options.weekends);
-			me.set_css();
 			me.setup_view_mode_button(me.cal_options);
 		});
 	}
 
-	set_css() {
-		// flatify buttons
-		this.$wrapper.find("button.fc-button-primary")
-			.removeClass("fc-button-primary")
-			.addClass("btn btn-default");
-
-		this.$wrapper.find(".fc-button-group").addClass("btn-group");
-
-		this.$wrapper.find('.fc-prev-button span')
-			.attr('class', '').addClass('uil uil-angle-left');
-		this.$wrapper.find('.fc-next-button span')
-			.attr('class', '').addClass('uil uil-angle-right');
-
-		const btn_group = this.$wrapper.find(".fc-button-group");
-		btn_group.find(".fc-state-active").addClass("active");
-
-		btn_group.find(".btn").on("click", function() {
-			btn_group.find(".btn").removeClass("active");
-			$(this).addClass("active");
-		});
-	}
 	field_map() {
 		return {
 			"id": "name",
@@ -236,7 +213,7 @@ frappe.views.Calendar = class {
 		this.cal_options = {
 			locale: frappe.boot.lang || "en",
 			plugins: [ interactionPlugin, timeGridPlugin, dayGridPlugin ],
-			header: {
+			headerToolbar: {
 				left: 'title',
 				center: '',
 				right: 'prev,today,next dayGridMonth,timeGridWeek,timeGridDay'
@@ -245,7 +222,7 @@ frappe.views.Calendar = class {
 			selectable: true,
 			selectMirror: true,
 			forceEventDuration: true,
-			defaultView: defaults.defaultView,
+			initialView: defaults.initialView,
 			weekends: defaults.weekends,
 			nowIndicator: true,
 			events: function(parameters, callback) {

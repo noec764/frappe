@@ -1720,3 +1720,7 @@ def mock(type, size=1, locale='en'):
 	from frappe.chat.util import squashify
 
 	return squashify(results)
+
+@whitelist()
+def get_user_lang():
+	return translate.get_user_lang()
