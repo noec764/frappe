@@ -101,7 +101,7 @@ frappe.dashboard_utils = {
 
 	get_year(date_str) {
 		return date_str.substring(0, date_str.indexOf('-'));
-	}
+	},
 
 	remove_common_static_filter_values(static_filters, dynamic_filters) {
 		if (dynamic_filters) {
