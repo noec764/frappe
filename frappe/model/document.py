@@ -419,6 +419,12 @@ class Document(BaseDocument):
 		elif not draft_name and self.flags.name_set and not force and not set_name:
 			return
 
+		# If autoname has set as Prompt (name)
+		if self.get("__newname"):
+			self.name = self.get("__newname")
+			self.flags.name_set = True
+			return
+
 		if set_name:
 			self.name = set_name
 		else:
