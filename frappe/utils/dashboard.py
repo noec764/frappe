@@ -5,7 +5,9 @@ import frappe
 from frappe import _
 from functools import wraps
 from frappe.utils import add_to_date, cint, get_link_to_form
-from frappe.modules.import_file import import_doc
+from frappe.modules.import_file import import_file_by_path
+import os
+from os.path import join
 
 def cache_source(function):
 	@wraps(function)
@@ -72,6 +74,26 @@ def get_from_date_from_timespan(to_date, timespan):
 		years = -50
 	return add_to_date(to_date, years=years, months=months, days=days, as_datetime=True)
 
+def get_dashboards_with_link(docname, doctype):
+	dashboards = []
+	links = []
+
+	if doctype == 'Dashboard Chart':
+		links = frappe.get_all('Dashboard Chart Link',
+			fields = ['parent'],
+			filters = {
+				'chart': docname
+			})
+	elif doctype == 'Number Card':
+		links = frappe.get_all('Number Card Link',
+			fields = ['parent'],
+			filters = {
+				'card': docname
+			})
+
+	dashboards = [link.parent for link in links]
+	return dashboards
+
 def sync_dashboards(app=None):
 	"""Import, overwrite fixtures from `[app]/fixtures`"""
 	if not cint(frappe.db.get_single_value('System Settings', 'setup_complete')):
@@ -84,17 +106,9 @@ def sync_dashboards(app=None):
 	for app_name in apps:
 		print("Updating Dashboard for {app}".format(app=app_name))
 		for module_name in frappe.local.app_modules.get(app_name) or []:
-			config = get_config(app_name, module_name)
-			if config:
-				frappe.flags.in_import = True
-				try:
-					make_records(config.charts, "Dashboard Chart")
-					make_records(config.number_cards, "Number Card")
-					make_records(config.dashboards, "Dashboard")
-				except Exception as e:
-					frappe.log_error(e, _("Dashboard Import Error"))
-				finally:
-					frappe.flags.in_import = False
+			frappe.flags.in_import = True
+			make_records_in_module(app_name, module_name)
+			frappe.flags.in_import = False
 
 def make_records(config, doctype):
 	if not config:
