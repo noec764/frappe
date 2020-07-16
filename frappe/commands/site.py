@@ -672,6 +672,8 @@ def start_recording(context):
 	for site in context.sites:
 		frappe.init(site=site)
 		frappe.recorder.start()
+	if not context.sites:
+		raise SiteNotSpecifiedError
 
 
 @click.command('stop-recording')
@@ -680,7 +682,32 @@ def stop_recording(context):
 	for site in context.sites:
 		frappe.init(site=site)
 		frappe.recorder.stop()
+	if not context.sites:
+		raise SiteNotSpecifiedError
 
+@click.command('ngrok')
+@pass_context
+def start_ngrok(context):
+	from pyngrok import ngrok
+
+	site = get_site(context)
+	frappe.init(site=site)
+
+	port = frappe.conf.http_port or frappe.conf.webserver_port
+	public_url = ngrok.connect(port=port, options={
+		'host_header': site
+	})
+	print(f'Public URL: {public_url}')
+	print('Inspect logs at http://localhost:4040')
+
+	ngrok_process = ngrok.get_ngrok_process()
+	try:
+		# Block until CTRL-C or some other terminating event
+		ngrok_process.proc.wait()
+	except KeyboardInterrupt:
+		print("Shutting down server...")
+		frappe.destroy()
+		ngrok.kill()
 
 commands = [
 	add_system_manager,
@@ -708,5 +735,6 @@ commands = [
 	browse,
 	start_recording,
 	stop_recording,
-	add_to_hosts
+	add_to_hosts,
+	start_ngrok
 ]
