@@ -8,21 +8,16 @@
 	font-size: 1em;
 }
 
-.fc-theme-standard th,
-.fc-theme-standard td,
-.fc-theme-standard hr,
-.fc-theme-standard thead,
-.fc-theme-standard tbody {
-	border-color: #E2E6E9;
-}
-
 th.fc-col-header-cell.fc-day {
 	text-align: right;
 	padding: 10px 12px 10px 0;
 	text-transform: uppercase;
 	font-size: 12px;
-	background-color: #f7fafc;
-	color: #8c99a5;
+	border: none;
+}
+
+.fc .fc-timegrid-axis {
+	border: none;
 }
 
 .fc .fc-button,
@@ -33,8 +28,52 @@ th.fc-col-header-cell.fc-day {
 	line-height: inherit;
 }
 
+.fc .fc-button-primary {
+	background-color: #fff;
+	color: #2C3E50;
+}
+
 .fc .fc-event {
 	cursor: pointer;
+}
+
+.fc-toolbar-title {
+	display: inline-block;
+	vertical-align: bottom;
+	padding: 0 1rem;
+}
+
+.fc .fc-scrollgrid,
+.fc .fc-timegrid-slot-minor {
+	border: none;
+}
+
+.fc .fc-scrollgrid-section > td,
+.fc .fc-scrollgrid-section-liquid > td {
+	border-right: none;
+}
+
+.fc .fc-timegrid-divider {
+	padding: 0;
+}
+
+.fc .fc-timegrid-slot-label:after {
+	content: "";
+	width: 3rem;
+	height: 1rem;
+	background-color:white;
+	position: absolute;
+}
+
+.fc tbody>tr:first-child>td .fc-timegrid-slot-label-cushion {
+	display: none;
+}
+
+.fc-direction-ltr .fc-timegrid-slot-label-frame {
+	text-align: left;
+	display: block;
+	position: relative;
+	top: -15px;
 }
 
 .fc-scroller {
@@ -49,4 +88,16 @@ th.fc-col-header-cell.fc-day {
 
 .fc-scroller::-webkit-scrollbar-thumb {
 	background-color: #dfe8ff;
+}
+
+@media (max-width: 991px) {
+	.fc .fc-toolbar.fc-header-toolbar,
+	.fc .fc-toolbar-title {
+		font-size: 0.8em;
+	}
+
+	.fc-timeGridWeek-button,
+	.fc-listDay-button {
+		display: none;
+	}
 }

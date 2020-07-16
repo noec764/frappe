@@ -224,7 +224,7 @@ frappe.palette = [
 ]
 
 frappe.is_mobile = function() {
-	return $(document).width() < 768;
+	return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) || $(document).width() < 768;
 }
 
 frappe.utils.xss_sanitise = function (string, options) {
