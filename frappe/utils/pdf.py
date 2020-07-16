@@ -139,7 +139,7 @@ def read_options_from_html(html):
 		except:
 			pass
 
-	return soup.prettify(), options
+	return str(soup), options
 
 def prepare_header_footer(soup):
 	options = {}
