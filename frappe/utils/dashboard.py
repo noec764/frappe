@@ -110,27 +110,19 @@ def sync_dashboards(app=None):
 			make_records_in_module(app_name, module_name)
 			frappe.flags.in_import = False
 
-def make_records(config, doctype):
-	if not config:
-		return
+def make_records_in_module(app, module):
+	dashboards_path = frappe.get_module_path(module, "{module}_dashboard".format(module=module))
+	charts_path = frappe.get_module_path(module, "dashboard chart")
+	cards_path = frappe.get_module_path(module, "number card")
 
-	try:
-		for item in config:
-			item["doctype"] = doctype
-			import_doc(item)
-			frappe.db.commit()
-	except frappe.DuplicateEntryError:
-		pass
+	paths = [dashboards_path, charts_path, cards_path]
+	for path in paths:
+		make_records(path)
 
-def get_config(app, module):
-	try:
-		module_dashboards = frappe.get_module('{app}.{module}.dashboard_fixtures'.format(app=app, module=module))
-		if hasattr(module_dashboards, 'get_data'):
-			return frappe._dict(module_dashboards.get_data())
-		return None
-	except ImportError:
-		return None
-	except Exception as e:
-		print(_("Failed to import dashboard fixtures for module {module}").format(module=module))
-		frappe.log_error(e, _("Dashboard Fixture Import Error"))
-		return None
+def make_records(path, filters=None):
+	if os.path.isdir(path):
+		for fname in os.listdir(path):
+			if os.path.isdir(join(path, fname)):
+				if fname == '__pycache__':
+					continue
+				import_file_by_path("{path}/{fname}/{fname}.json".format(path=path, fname=fname))
