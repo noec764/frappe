@@ -120,7 +120,7 @@ frappe.ready(function() {
 					df.options.disable_file_browser = true;
 				}
 
-				df.read_only = (!is_new || !allow_edit);
+				df.read_only = (!is_new && !allow_edit);
 			});
 
 			return form_data;

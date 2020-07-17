@@ -45,7 +45,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {%- endmacro %}
 
 {% macro sidebar() %}
-<div class="sidebar-column col-sm-{{ columns }} mt-5">
+<div class="sidebar-column col-{{ columns }} mt-5">
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
@@ -59,7 +59,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 		{%- if not sidebar_right -%}
 		{{ sidebar() }}
 		{%- endif -%}
-		<div class="main-column col-sm-{{ 12 - columns }}">
+		<div class="main-column col-{{ 12 - columns }}">
 			{{ main_content() }}
 		</div>
 		{%- if sidebar_right -%}

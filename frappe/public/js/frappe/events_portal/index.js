@@ -4,6 +4,7 @@
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
 frappe.ready(function() {
@@ -42,11 +43,11 @@ class EventsPortalView {
 	calendar_options() {
 		return {
 			eventClassNames: "events-calendar",
-			initialView: "dayGridMonth",
+			initialView: frappe.is_mobile() ? "listDay" : "dayGridMonth",
 			headerToolbar: {
-				left: "dayGridMonth,timeGridWeek",
-				center: "title",
-				right: "prev,next today",
+				left: frappe.is_mobile() ? 'today' : 'dayGridMonth,timeGridWeek',
+				center: "prev,title,next",
+				right: frappe.is_mobile() ? "" : "prev,next today",
 			},
 			weekends: true,
 			buttonText: {
@@ -58,11 +59,11 @@ class EventsPortalView {
 			plugins: [
 				dayGridPlugin,
 				timeGridPlugin,
-				interactionPlugin
+				interactionPlugin,
+				listPlugin
 			],
 			locale: frappe.boot.lang || 'en',
 			timeZone: 'UTC',
-			initialDate: moment().add(1,'d').format("YYYY-MM-DD"),
 			events: this.getEvents,
 			eventClick: this.eventClick,
 			selectable: true,
@@ -91,7 +92,8 @@ class EventsPortalView {
 				"fieldname": "event_description"
 			}]
 		});
-		dialog.fields_dict.event_description.$wrapper.html(event.event.extendedProps.description);
+		const description = event.event.extendedProps.description ? event.event.extendedProps.description : `<div>${__("No description")}</div>`
+		dialog.fields_dict.event_description.$wrapper.html(description);
 		dialog.show()
 	}
 
