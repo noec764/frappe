@@ -138,7 +138,6 @@ def get_context(context):
 		if self.is_standard:
 			self.use_meta_fields()
 
-		context.always_new = self.is_always_new
 		context.allow_edit = self.allow_edit
 		if not frappe.session.user == "Guest":
 			if self.allow_multiple:

@@ -1,4 +1,13 @@
 frappe.ui.form.on('Website Settings', {
+	setup: function(frm) {
+		frm.set_query("custom_signup", function () {
+			return {
+				filters: {
+					published: 1
+				}
+			}
+		});
+	},
 	refresh: function(frm) {
 		frm.add_custom_button(__('View Website'), () => {
 			window.open('/', '_blank');
@@ -106,5 +115,10 @@ frappe.tour['Website Settings'] = [
 		fieldname: "disable_signup",
 		title: __("Disable Signup for your site"),
 		description: __("Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it."),
+	},
+	{
+		fieldname: "custom_signup",
+		title: __("Custom signup webform"),
+		description: __("Link a webform containing a custom signup form that will replace the standard signup form."),
 	}
 ];

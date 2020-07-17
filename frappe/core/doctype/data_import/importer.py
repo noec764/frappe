@@ -974,7 +974,7 @@ class Column:
 				self.date_format = '%Y-%m-%d'
 				self.warnings.append({
 					'col': self.column_number,
-					'message': _("Date format could not determined from the values in this column. Defaulting to yyyy-mm-dd."),
+					'message': _("Date format could not be determined from the values in this column. Defaulting to yyyy-mm-dd."),
 					'type': 'info'
 				})
 

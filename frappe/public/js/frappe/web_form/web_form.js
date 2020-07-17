@@ -59,6 +59,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	add_button(id, name, type, action, wrapper_class=".web-form-actions") {
 		const button = document.createElement("button");
 		button.classList.add("btn", "btn-" + type, "btn-sm", "ml-2");
+		button.id = id;
 		button.innerHTML = name;
 		button.onclick = action;
 		document.querySelector(wrapper_class).appendChild(button);
