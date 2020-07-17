@@ -282,6 +282,7 @@ execute:frappe.delete_doc_if_exists('DocType', 'GSuite Templates')
 execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Account')
 execute:frappe.delete_doc_if_exists('DocType', 'GCalendar Settings')
 frappe.patches.v12_0.remove_parent_and_parenttype_from_print_formats
+frappe.patches.v12_0.remove_example_email_thread_notify
 frappe.patches.v12_0.set_correct_url_in_files
 frappe.patches.v13_0.website_theme_custom_scss
 frappe.patches.v13_0.set_existing_dashboard_charts_as_public
