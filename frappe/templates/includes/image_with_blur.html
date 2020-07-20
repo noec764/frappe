@@ -2,8 +2,7 @@
 {%- if res and res['base64'].startswith('data:') -%}
 <img src="{{ res['base64'] }}" class="image-with-blur {{ resolve_class(class) }}"
 	data-src="{{ src or '' }}" alt="{{ alt or '' }}"
-	width="{{ res['width'] }}" height="{{ res['height'] }}"
-	style="width: {{ res['width'] }}px; height: {{ res['height'] }}px;" />
+	width="{{ res['width'] }}" height="{{ res['height'] }}" />
 {%- else -%}
 <img src="{{ src or '' }}" class="{{ resolve_class(class) }}" alt="{{ alt or '' }}" />
 {%- endif -%}
