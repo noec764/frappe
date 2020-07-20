@@ -232,7 +232,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 				["name", "parent", "parenttype", "docstatus"], as_dict=True):
 				linked_doctype = item.parenttype if item.parent else link_dt
 
-				ignore_linked_doctypes = doc.get('ignore_linked_doctypes') or []				
+				ignore_linked_doctypes = doc.get('ignore_linked_doctypes') or []
 				if linked_doctype in DOCTYPES_TO_SKIP or (linked_doctype in ignore_linked_doctypes and method == 'Cancel'):
 					# don't check for communication and todo!
 					continue

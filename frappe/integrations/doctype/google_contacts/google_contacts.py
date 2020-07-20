@@ -156,6 +156,7 @@ def sync_contacts_from_google_contacts(g_contact):
 				syncToken=sync_token, pageSize=2000, requestSyncToken=True, personFields="names,emailAddresses,organizations,phoneNumbers").execute()
 
 		except HttpError as err:
+			frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 			frappe.throw(_("Google Contacts - Could not sync contacts from Google Contacts {0}, error code {1}.").format(account.name, err.resp.status))
 
 		for contact in contacts.get("connections", []):
@@ -225,6 +226,7 @@ def insert_contacts_to_google_contacts(doc, method=None):
 			"emailAddresses": emailAddresses}).execute()
 		frappe.db.set_value("Contact", doc.name, "google_contacts_id", contact.get("resourceName"))
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(_("Google Contacts - Could not insert contact in Google Contacts {0}, error code {1}.").format(account.name, err.resp.status))
 
 def update_contacts_to_google_contacts(doc, method=None):
@@ -270,6 +272,7 @@ def update_contacts_to_google_contacts(doc, method=None):
 			updatePersonFields="names,emailAddresses,organizations,phoneNumbers").execute()
 		frappe.msgprint(_("Contact Synced with Google Contacts."))
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(_("Google Contacts - Could not update contact in Google Contacts {0}, error code {1}.").format(account.name, err.resp.status))
 
 def get_indexed_value(d, index, key):

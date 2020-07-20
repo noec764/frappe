@@ -341,6 +341,7 @@ def insert_event_in_google_calendar(doc, method=None):
 		frappe.publish_realtime('event_synced', {"message": _("Event Synced with Google Calendar.")}, \
 			user=frappe.session.user)
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(_("Google Calendar - Could not insert event in Google Calendar {0}, error code {1}."\
 			).format(account.name, err.resp.status))
 
@@ -381,6 +382,7 @@ def update_event_in_google_calendar(doc, method=None):
 		frappe.publish_realtime('event_synced', {"message": _("Event Synced with Google Calendar.")}, \
 			user=frappe.session.user)
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(_("Google Calendar - Could not update Event {0} in Google Calendar, error code {1}."\
 			).format(doc.name, err.resp.status))
 
@@ -407,6 +409,7 @@ def delete_event_in_google_calendar(doc, method=None):
 		google_calendar.events().update(calendarId=doc.google_calendar_id, \
 			eventId=doc.google_calendar_event_id, body=event).execute()
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(_("Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}."\
 			).format(doc.name, err.resp.status))
 

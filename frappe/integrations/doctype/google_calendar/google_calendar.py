@@ -172,6 +172,7 @@ def check_google_calendar(account, google_calendar):
 			frappe.db.set_value("Google Calendar", account.name, "google_calendar_id", created_calendar.get("id"))
 			frappe.db.commit()
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(_("Google Calendar - Could not create Calendar for {0}, error code {1}.").format(account.name, err.resp.status))
 
 def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
