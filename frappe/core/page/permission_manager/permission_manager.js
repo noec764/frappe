@@ -257,14 +257,11 @@ frappe.PermissionEngine = Class.extend({
 			.attr("data-permlevel", d.permlevel)
 			.attr("data-doctype", d.parent);
 
-		checkbox.find("label")
-			.css("text-transform", "capitalize");
-
 		return checkbox;
 	},
 
 	setup_if_owner: function(d, role_cell) {
-		this.add_check(role_cell, d, "if_owner", "Only If Creator")
+		this.add_check(role_cell, d, "if_owner", __("Only If Creator"))
 			.removeClass("col-md-4")
 			.css({"margin-top": "15px"});
 	},
