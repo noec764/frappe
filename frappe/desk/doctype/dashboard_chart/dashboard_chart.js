@@ -176,7 +176,7 @@ frappe.ui.form.on('Dashboard Chart', {
 		let filters = frm.doc.filters_json.length > 2 ? JSON.parse(frm.doc.filters_json) : null;
 
 		if (frm.doc.dynamic_filters_json.length > 2) {
-			filters = {...filters, ...JSON.parse(frm.doc.dynamic_filters_json)};
+			filters = frappe.dashboard_utils.get_all_filters(frm.doc);
 		}
 
 		frappe.xcall(
@@ -189,7 +189,6 @@ frappe.ui.form.on('Dashboard Chart', {
 		).then(data => {
 			let report_has_chart = Boolean(data.chart);
 
-			frm.set_value('use_report_chart', 0);
 			frm.set_df_property('use_report_chart', 'hidden', !report_has_chart);
 
 			if (!frm.doc.use_report_chart) {
