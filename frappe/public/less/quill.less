@@ -78,7 +78,7 @@
 	}
 }
 
-.ql-editor .mention {
+.ql-editor:not(.read-mode) .mention {
 	height: auto;
 	width: auto;
 	border-radius: 10px;
@@ -138,4 +138,8 @@
 	font-family: 'unicons';
 	content: "\ec63";
 	font-weight: 400; 
+}
+
+.ql-editor.read-mode {
+	padding: 0;
 }

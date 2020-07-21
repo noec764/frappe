@@ -1,7 +1,8 @@
-@import "variables";
-@import "/assets/frappe/css/fonts/fontawesome/css/all.css";
-@import "/assets/frappe/css/fonts/unicons/css/unicons.css";
-@import "~bootstrap/scss/bootstrap";
+@import '~quill/dist/quill.core';
+@import 'variables';
+@import '/assets/frappe/css/fonts/fontawesome/css/all.css';
+@import '/assets/frappe/css/fonts/unicons/css/unicons.css';
+@import '~bootstrap/scss/bootstrap';
 @import 'base';
 @import 'multilevel-dropdown';
 @import 'website-image';
@@ -11,6 +12,20 @@
 @import 'sidebar';
 @import 'portal';
 @import 'doc';
+
+.ql-editor.read-mode {
+	padding: 0;
+	line-height: 1.6;
+
+	h1,
+	h2,
+	h3,
+	h4,
+	h5 {
+		margin-top: 0.5em;
+		margin-bottom: 0.25em;
+	}
+}
 
 .container {
 	padding-left: 1.25rem;
