@@ -2,13 +2,13 @@
 @import 'variables';
 @import '/assets/frappe/css/fonts/fontawesome/css/all.css';
 @import '/assets/frappe/css/fonts/unicons/css/unicons.css';
-@import '~bootstrap/scss/bootstrap';
-@import 'base';
+@import "~bootstrap/scss/bootstrap";
 @import 'multilevel-dropdown';
 @import 'website-image';
 @import 'page-builder';
 @import 'blog';
 @import 'markdown';
+@import "global";
 @import 'sidebar';
 @import 'portal';
 @import 'doc';
@@ -309,22 +309,6 @@ h5.modal-title {
 	float: right;
 }
 
-.btn-primary-light {
-	@include button-variant(
-		$background: $primary-light,
-		$border: $primary-light,
-		$hover-background: lighten($primary-light, 1%),
-		$hover-border: $primary-light,
-		$active-background: lighten($primary-light, 1%),
-		$active-border: darken($primary-light, 12.5%)
-	);
-
-	color: darken($primary, 5%);
-	&:hover {
-		color: darken($primary, 5%);
-	}
-}
-
 .image-with-blur {
 	transition: filter 300ms ease-in-out;
 	filter: blur(1.5rem);
@@ -369,7 +353,7 @@ h5.modal-title {
 	max-width: 400px;
 	min-width: 200px;
 	max-height: 200px;
-	background-color: $light-yellow;
+	// background-color: $light-yellow;
 	border: 1px solid $border-color;
 
 	// word-break: break-all;
@@ -411,9 +395,9 @@ h5.modal-title {
 			font-weight: bold;
 			color: $text-light;
 
-			&:hover {
+			/*&:hover {
 				background-color: darken($light-yellow, 5%);
-			}
+			}*/
 
 			&:last-child {
 				border-right: none;
@@ -481,7 +465,7 @@ h5.modal-title {
 		}
 
 		&> li:hover, &> li[aria-selected=true] {
-			background-color: $btn-bg;
+			//background-color: $btn-bg;
 			color: $text-color;
 			text-shadow: none;
 		}
@@ -495,11 +479,11 @@ h5.modal-title {
 		}
 	}
 
-	@media (max-width: $screen-sm) {
+	/*@media (max-width: $screen-sm) {
 		&>ul {
 			top: 26px;
 		}
-	}
+	}*/
 }
 
 .website-list .result {
@@ -523,92 +507,4 @@ h5.modal-title {
 	&:hover {
 		background-color: #f8faff;
 	}
-}
-
-.indicator,
-.indicator-right {
-    background:none;
-    vertical-align:middle;
-    font-size: 12px;
-    font-weight:bold;
-    color:#6c7680;
-}
-
-.indicator::before,
-.indicator-right::after {
-    content:'';
-    display:inline-block;
-    height:8px;
-    width:8px;
-    border-radius:8px;
-}
-
-.indicator::before {
-	margin:0px 4px 0px 0px;
-}
-
-.indicator-right::after {
-	margin:0 0 0 4px;
-}
-
-.indicator.grey::before,
-.indicator-right.grey::after {
-    background: $btn-bg;
-}
-.indicator.blue::before,
-.indicator-right.blue::after {
-    background: $indicator-blue;
-}
-.indicator.red::before,
-.indicator-right.red::after {
-    background: $indicator-red;
-}
-.indicator.green::before,
-.indicator-right.green::after {
-    background: $indicator-green;
-}
-.indicator.orange::before,
-.indicator-right.orange::after {
-    background: $indicator-orange;
-}
-.indicator.purple::before,
-.indicator-right.purple::after {
-    background: $indicator-purple;
-}
-.indicator.darkgrey::before,
-.indicator-right.darkgrey::after {
-    background: $indicator-darkgrey;
-}
-
-.indicator.black::before,
-.indicator-right.black::after {
-    background: $text-color;
-}
-
-.indicator.yellow::before,
-.indicator-right.yellow::after {
-    background: $indicator-yellow;
-}
-
-.indicator.light-blue::before,
-.indicator-right.light-blue::after {
-    background: $indicator-light-blue;
-}
-
-.indicator.lightblue::before,
-.indicator-right.lightblue::after {
-    background: $indicator-light-blue;
-}
-
-.modal-header .indicator {
-	margin-top: 7.5px;
-	margin-right: 3px;
-}
-
-.indicator.blink {
-	animation: blink 1s linear infinite;
-}
-
- @keyframes blink {
-	50% { opacity: 0.5; }
 }

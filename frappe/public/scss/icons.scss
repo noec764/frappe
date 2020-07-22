@@ -1,0 +1,55 @@
+.icon {
+	display: inline-block;
+	font-size: 0;
+	width: 20px;
+	height: 20px;
+	margin: 0 auto;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+	fill: var(--icon-fill);
+	stroke: var(--icon-stroke);
+}
+
+#icon-search {
+	stroke: var(--gray-700);
+}
+
+/* like icon */
+use.like-icon {
+	cursor: pointer;
+	stroke: var(--gray-500);
+}
+
+.liked {
+	use.like-icon {
+		stroke: none;
+		fill: var(--red-500);
+	}
+}
+
+.icon-xs {
+	width: 12px;
+	height: 12px;
+}
+
+.icon-sm {
+	width: 16px;
+	height: 16px;
+}
+
+.icon-base,
+.icon-md {
+	width: 20px;
+	height: 20px;
+}
+
+.icon-lg {
+	width: 24px;
+	height: 24px;
+}
+
+.icon-xl {
+	width: 75px;
+	height: 75px;
+}

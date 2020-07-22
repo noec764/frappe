@@ -1,0 +1,93 @@
+$form-left-padding: var(--padding-xl);
+
+.form-control {
+	border: 1px #d1d7dd;
+	border-style: none none solid;
+	border-radius: 4px 4px 0 0;
+	background-color: $control-bg;
+	color: $text-color;
+	box-shadow: none;
+	border-radius: $border-radius;
+	font-size: var(--text-md);
+}
+
+.form-section .section-body {
+	width: 100%;
+	@extend .row;
+	margin: 0;
+}
+
+.form-section {
+	margin: 0px;
+
+	.form-section-description {
+		margin-bottom: 10px;
+	}
+
+	.section-head {
+		width: 100%;
+		padding: var(--padding-md);
+		margin: 0;
+		font-size: var(--text-lg);
+		font-weight: 500;
+		color: var(--heading-color);
+		cursor: pointer;
+
+		.collapse-indicator {
+			color: $text-muted;
+			margin-left: 10px;
+			position: relative;
+			bottom: -1px;
+		}
+
+		.collapse-indicator.octicon-chevron-up {
+			bottom: -2px;
+		}
+	}
+	.section-head.collapsed {
+		margin-bottom: 0px;
+	}
+}
+
+.form-section.frappe-card {
+	margin: var(--margin-lg) 0px;
+	@include card();
+}
+
+.form-dashboard {
+	.section-head {
+		font-size: var(--text-xl);
+	}
+}
+
+.control-label,
+.grid-heading-row {
+  color: var(--gray-700);
+  font-size: 14px;
+}
+
+.form-inner-toolbar {
+	padding-top: var(--padding-md);
+	padding-left: $form-left-padding;
+	text-align: right;
+}
+
+.form-control.bold {
+	color: #000;
+	font-weight: 500;
+}
+
+.like-disabled-input {
+	margin-bottom: 7px;
+	border-radius: $border-radius;
+	min-height: 30px;
+	font-weight: 400;
+	background-color: $control-bg;
+	padding: var(--padding-xs) var(--padding-sm);
+}
+
+.layout-main-section {
+	.form-page {
+		padding-left: $form-left-padding;
+	}
+}

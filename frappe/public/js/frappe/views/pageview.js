@@ -1,8 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
-import Desktop from './desktop/desktop.js';
-
 frappe.provide('frappe.views.pageview');
 frappe.provide("frappe.standard_pages");
 frappe.provide("frappe.desk_view");
@@ -43,24 +41,6 @@ frappe.views.pageview = {
 	show: function(name) {
 		if(!name) {
 			name = (frappe.boot ? frappe.boot.home_page : window.page_name);
-
-			if(name === "workspace") {
-				if(!frappe.workspace) {
-					let page = frappe.container.add_page('workspace');
-					let container = $('<div class="container"></div>').appendTo(page);
-					container = $('<div></div>').appendTo(container);
-
-					frappe.workspace = new Desktop({
-						wrapper: container
-					})
-				}
-
-				frappe.container.change_to('workspace');
-				frappe.workspace.route();
-				frappe.utils.set_title(__('Desk'));
-				$(document).trigger("workspace-change");
-				return;
-			}
 		}
 		frappe.model.with_doctype("Page", function() {
 			frappe.views.pageview.with_page(name, function(r) {
@@ -76,10 +56,11 @@ frappe.views.pageview = {
 	}
 };
 
-frappe.views.Page = Class.extend({
-	init: function(name) {
+frappe.views.Page = class Page {
+	constructor(name) {
 		this.name = name;
 		var me = this;
+
 		// web home page
 		if(name==window.page_name) {
 			this.wrapper = document.getElementById('page-' + name);
@@ -107,20 +88,22 @@ frappe.views.Page = Class.extend({
 		}
 
 		this.trigger_page_event('on_page_load');
+
 		// set events
 		$(this.wrapper).on('show', function() {
 			window.cur_frm = null;
 			me.trigger_page_event('on_page_show');
 			me.trigger_page_event('refresh');
 		});
-	},
-	trigger_page_event: function(eventname) {
+	}
+
+	trigger_page_event(eventname) {
 		var me = this;
 		if(me.wrapper[eventname]) {
 			me.wrapper[eventname](me.wrapper);
 		}
 	}
-});
+};
 
 const notFoundIcons = ["not_found.svg", "404.svg", "empty.svg", "taken.svg", "no_data.svg"]
 const notPermittedIcons = ["security.svg", "safe.svg", "vault.svg", "secure_data.svg"]

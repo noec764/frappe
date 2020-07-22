@@ -91,7 +91,6 @@
 		"public/js/lib/leaflet/leaflet.draw.css",
 		"public/js/lib/leaflet/L.Control.Locate.css",
 		"public/js/lib/leaflet/easy-button.css",
-		"public/css/bootstrap.css",
 		"public/css/fonts/fontawesome/css/all.css",
 		"public/css/octicons/octicons.css",
 		"public/css/fonts/unicons/css/unicons.css",
@@ -100,12 +99,10 @@
 		"public/less/flex.less",
 		"public/less/indicator.less",
 		"public/less/avatar.less",
-		"public/less/navbar.less",
 		"public/less/notifications.less",
 		"public/less/sidebar.less",
 		"public/less/page.less",
 		"public/less/tree.less",
-		"public/less/desktop.less",
 		"public/less/link_preview.less",
 		"public/less/form.less",
 		"public/less/mobile.less",
@@ -115,6 +112,7 @@
 		"public/less/chat.less",
 		"public/less/filters.less",
 		"public/less/social.less",
+		"public/scss/main.scss",
 		"node_modules/frappe-charts/dist/frappe-charts.min.css",
 		"node_modules/driver.js/dist/driver.min.css",
 		"public/less/driver.less"
@@ -133,7 +131,7 @@
 		"public/js/lib/awesomplete/awesomplete.min.js",
 		"public/js/lib/Sortable.min.js",
 		"public/js/lib/jquery/jquery.hotkeys.js",
-		"public/js/lib/bootstrap.min.js",
+		"node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
 		"node_modules/vue/dist/vue.js",
 		"node_modules/moment/min/moment-with-locales.min.js",
 		"node_modules/moment-timezone/builds/moment-timezone-with-data.min.js",
@@ -283,8 +281,7 @@
 		"public/less/list.less",
 		"public/scss/calendar.scss",
 		"public/less/role_editor.less",
-		"public/less/gantt.less",
-		"public/less/tags.less"
+		"public/less/gantt.less"
 	],
 	"js/list.min.js": [
 		"public/js/frappe/ui/listing.html",
@@ -304,6 +301,7 @@
 		"public/js/frappe/list/list_view.js",
 		"public/js/frappe/list/list_factory.js",
 
+		"public/js/frappe/list/views.js",
 		"public/js/frappe/list/list_sidebar.js",
 		"public/js/frappe/list/list_sidebar.html",
 		"public/js/frappe/list/list_sidebar_stat.html",

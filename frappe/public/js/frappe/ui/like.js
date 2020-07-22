@@ -16,7 +16,7 @@ frappe.ui.get_liked_by = function(doc) {
 }
 
 frappe.ui.toggle_like = function($btn, doctype, name, callback) {
-	var add = $btn.hasClass("not-liked") ? "Yes" : "No";
+ 	var add = $btn.hasClass("not-liked") ? "Yes" : "No";
 	// disable click
 	$btn.css('pointer-events', 'none');
 
@@ -38,9 +38,9 @@ frappe.ui.toggle_like = function($btn, doctype, name, callback) {
 					+'"][data-doctype="'+ doctype.replace(/"/g, '\"')+'"]');
 
 				if(add==="Yes") {
-					action_buttons.removeClass("not-liked text-extra-muted");
+					action_buttons.removeClass("not-liked").addClass("liked");
 				} else {
-					action_buttons.addClass("not-liked text-extra-muted");
+					action_buttons.addClass("not-liked").removeClass("liked");
 				}
 
 				// update in locals (form)
@@ -85,26 +85,30 @@ frappe.ui.click_toggle_like = function() {
 	return false;
 }
 
-frappe.ui.setup_like_popover = function($parent, selector, check_not_liked=true) {
+frappe.ui.setup_like_popover = ($parent, selector, check_not_liked=true) => {
 	if (frappe.dom.is_touchscreen()) {
 		return;
 	}
 
-	$parent.on("mouseover", selector, function() {
-		var $wrapper = $(this);
-
-		$wrapper.popover({
+	$parent.on('mouseover', selector, function() {
+		const target_element = $(this);
+		target_element.popover({
 			animation: true,
-			placement: "right",
-			content: function() {
-				var liked_by = $wrapper.attr('data-liked-by');
+			placement: 'right',
+			trigger: 'manual',
+			template:`<div class="liked-by-popover popover">
+				<div class="arrow"></div>
+				<div class="popover-body popover-content"></div>
+			</div>`,
+			content: () => {
+				let liked_by = target_element.parents(".liked-by").attr('data-liked-by');
 				liked_by = liked_by ? decodeURI(liked_by) : '[]';
 				liked_by = JSON.parse(liked_by);
 
-				var user = frappe.session.user;
+				const user = frappe.session.user;
 				// hack
 				if (check_not_liked) {
-					if ($wrapper.find(".not-liked").length) {
+					if (target_element.parents(".liked-by").find(".not-liked").length) {
 						if (liked_by.indexOf(user)!==-1) {
 							liked_by.splice(liked_by.indexOf(user), 1);
 						}
@@ -118,16 +122,46 @@ frappe.ui.setup_like_popover = function($parent, selector, check_not_liked=true)
 				if (!liked_by.length) {
 					return "";
 				}
-				return frappe.render_template("liked_by", {"liked_by": liked_by});
+
+				let liked_by_list = $(`<ul class="list-unstyled"></ul>`);
+
+				// to show social profile of the user
+				let link_base = '#social/profile/';
+
+				liked_by.forEach(user => {
+					// append user list item
+					liked_by_list.append(`
+						<li data-user=${user}>${frappe.avatar(user, "avatar-xs")}
+							<span>${frappe.user.full_name(user)}</span>
+						</li>
+					`);
+				});
+
+				liked_by_list.children('li').click(ev => {
+					let user = ev.currentTarget.dataset.user;
+					target_element.popover('hide');
+					frappe.set_route(link_base + user);
+				});
+
+				return liked_by_list;
 			},
 			html: true,
 			container: 'body'
 		});
 
-		$wrapper.popover('show');
+		target_element.popover('show');
+
+		$(".popover").on("mouseleave", () => {
+			target_element.popover('hide');
+		});
+
+		target_element.on('mouseout', () => {
+			setTimeout(() => {
+				if (!$('.popover:hover').length) {
+					target_element.popover('hide');
+				}
+			}, 100);
+		});
 	});
 
-	$parent.on("mouseout", selector, function() {
-		$(this).popover('destroy');
-	});
-}
+};

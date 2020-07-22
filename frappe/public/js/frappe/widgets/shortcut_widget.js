@@ -1,8 +1,10 @@
 import Widget from "./base_widget.js";
 import { generate_route } from "./utils";
 
+const indicator_colors = ["Grey", "Green", "Red", "Orange", "Pink", "Yellow", "Blue", "Cyan", "Teal"]
 export default class ShortcutWidget extends Widget {
 	constructor(opts) {
+		opts.shadow = true;
 		super(opts);
 	}
 
@@ -63,17 +65,6 @@ export default class ShortcutWidget extends Widget {
 		return null;
 	}
 
-	set_title() {
-		if (this.icon) {
-			this.title_field[0].innerHTML = `<div>
-				<i class="${this.icon}" style=""></i>
-				${this.label || this.name}
-				</div>`;
-		} else {
-			super.set_title();
-		}
-	}
-
 	set_count(count) {
 		const get_label = () => {
 			if (this.format) {
@@ -84,14 +75,8 @@ export default class ShortcutWidget extends Widget {
 
 		this.action_area.empty();
 		const label = get_label();
-		const buttons = $(`<div class="small pill">${label}</div>`);
-		if (this.color) {
-			buttons.css("background-color", this.color);
-			buttons.css(
-				"color",
-				frappe.ui.color.get_contrast_color(this.color)
-			);
-		}
+		let color = indicator_colors.includes(this.color) ? this.color.toLowerCase() : 'grey';
+		const buttons = $(`<div class="indicator-pill ${color}">${label}</div>`);
 
 		buttons.appendTo(this.action_area);
 	}

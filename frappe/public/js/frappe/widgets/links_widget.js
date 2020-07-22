@@ -3,6 +3,7 @@ import { generate_route } from "./utils";
 
 export default class LinksWidget extends Widget {
 	constructor(opts) {
+		opts.icon = opts.icon || 'file';
 		super(opts);
 	}
 
@@ -48,17 +49,17 @@ export default class LinksWidget extends Widget {
 				return `<span class="link-content help-video-link ellipsis" data-youtubeid="${item.youtube_id}">
 						${item.label ? item.label : item.name}</span>`;
 
-			return `<a data-route="${generate_route(item)}" class="link-content ellipsis">
-					${item.label ? item.label : item.name}</a>`;
+				return `<span class="link-content ellipsis">
+					${item.label ? item.label : item.name}</span>`;
 		};
 
 		this.link_list = this.links.map(item => {
-			return $(`<div class="link-item flush-top small ${
+			return $(`<a href="${generate_route(item)}" class="link-item ${
 				item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">
 					${get_link_for_item(item)}
 					${item.open_count ? `<span class="badge open-count-badge">${item.open_count}</span>` : ''}
-			</div>`);
+			</a>`);
 		});
 
 		this.link_list.forEach(link => link.appendTo(this.body));

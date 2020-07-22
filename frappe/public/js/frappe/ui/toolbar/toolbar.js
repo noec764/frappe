@@ -11,14 +11,14 @@ frappe.utils.make_event_emitter(frappe.sidebar_update);
 
 frappe.ui.toolbar.Toolbar = Class.extend({
 	init: function() {
-		$('header').append(frappe.render_template("navbar", {
-			avatar: frappe.avatar(frappe.session.user)
+		$('header').replaceWith(frappe.render_template("navbar", {
+			avatar: frappe.avatar(frappe.session.user, 'avatar-medium')
 		}));
 		$('.dropdown-toggle').dropdown();
 
 		let awesome_bar = new frappe.search.AwesomeBar();
 		awesome_bar.setup("#navbar-search");
-		awesome_bar.setup("#modal-search");
+		// awesome_bar.setup("#modal-search");
 
 		this.setup_notifications();
 
@@ -226,7 +226,7 @@ frappe.ui.toolbar.clear_cache = frappe.utils.throttle(function() {
 	frappe.xcall('frappe.sessions.clear').then(message => {
 		frappe.show_alert({
 			message: message,
-			indicator: 'green'
+			indicator: 'info'
 		});
 		location.reload(true);
 	});

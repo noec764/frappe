@@ -54,6 +54,7 @@
    "options": "Desk Chart"
   },
   {
+    "depends_on": "eval:!doc.extends_another_page || !doc.is_standard || frappe.boot.developer_mode",
    "fieldname": "shortcuts",
    "fieldtype": "Table",
    "label": "Shortcuts",

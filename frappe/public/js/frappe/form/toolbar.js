@@ -77,7 +77,7 @@ frappe.ui.form.Toolbar = Class.extend({
 	},
 	show_unchanged_document_alert: function() {
 		frappe.show_alert({
-			indicator: "yellow",
+			indicator: "info",
 			message: __("Unchanged")
 		});
 	},
@@ -210,6 +210,16 @@ frappe.ui.form.Toolbar = Class.extend({
 		var allow_print_for_draft = cint(print_settings.allow_print_for_draft);
 		var allow_print_for_cancelled = cint(print_settings.allow_print_for_cancelled);
 
+		// Navigate
+		if (!this.frm.is_new() && !issingle) {
+			this.page.add_action_icon("left", function() {
+				me.frm.navigate_records(1);
+			}, 'prev-doc');
+			this.page.add_action_icon("right", function() {
+				me.frm.navigate_records(0);
+			}, 'next-doc');
+		}
+
 		// email
 		if(frappe.model.can_email(null, me.frm) && me.frm.doc.docstatus < 2) {
 			this.page.add_menu_item(__("Email"), function() {
@@ -307,24 +317,15 @@ frappe.ui.form.Toolbar = Class.extend({
 			});
 		}
 
-		// Navigate
-		if(!this.frm.is_new() && !issingle) {
-			this.page.add_action_icon("uil uil-angle-left prev-doc", function() {
-				me.frm.navigate_records(1);
-			});
-			this.page.add_action_icon("uil uil-angle-right next-doc", function() {
-				me.frm.navigate_records(0);
-			});
-		}
-
 		// Print
 		if(!is_submittable || docstatus == 1  ||
 			(allow_print_for_cancelled && docstatus == 2)||
 			(allow_print_for_draft && docstatus == 0)) {
-			if(frappe.model.can_print(null, me.frm) && !issingle) {
+			if (frappe.model.can_print(null, me.frm) && !issingle) {
 				this.page.add_menu_item(__("Print"), function() {
-					me.frm.print_doc();}, true);
-				this.print_icon = this.page.add_action_icon("uil uil-print", function() {
+					me.frm.print_doc();
+				}, true);
+				this.print_icon = this.page.add_action_icon("printer", function() {
 					me.frm.print_doc();
 				});
 			}

@@ -571,3 +571,13 @@ def update_onboarding_step(name, field, value):
 		value: Value to be updated
 	"""
 	frappe.db.set_value("Onboarding Step", name, field, value)
+
+@frappe.whitelist()
+def reset_customization(page):
+	"""Reset desk page customizations for a user
+	Args:
+		page (string): Name of the page to be reset
+	"""
+	original_page = frappe.get_doc("Desk Page", page)
+	page_doc = get_custom_workspace_for_user(page)
+	page_doc.delete()

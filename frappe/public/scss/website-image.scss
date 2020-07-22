@@ -1,5 +1,3 @@
-@import "variables";
-
 img {
 	position: relative;
 }
@@ -26,8 +24,6 @@ img:after {
 	justify-content: center;
 	border-radius: $border-radius;
 	border: 1px solid $border-color;
-	width: 1.5rem;
-	height: 1.5rem;
 }
 
 .website-image-placeholder {

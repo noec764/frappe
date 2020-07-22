@@ -1,121 +1,114 @@
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
+<header class="navbar navbar-expand sticky-top" role="navigation">
 	<div class="container">
-		<div class="navbar-header navbar-desk">
-			<a class="navbar-brand toggle-modules visible-xs visible-sm">
-				<i class="uil uil-ellipsis-v"></i>
-			</a>
-			<a class="navbar-brand toggle-sidebar visible-xs visible-sm">
-				<i class="uil uil-ellipsis-h"></i>
-			</a>
-			<a class="navbar-brand navbar-home hidden-xs hidden-sm" href="/">
-				<img class="app-logo" src="{{ frappe.app.logo_url }}">
-			</a>
-			<ul class="nav navbar-nav" id="navbar-breadcrumbs">
-			</ul>
-		</div>
-		<div class="navbar-center ellipsis" style="display: none;"></div>
-
-		<ul class="nav navbar-nav navbar-right">
-			<li class="visible-xs">
-				<a class="navbar-search-button" href="#" data-toggle="modal" data-target="#search-modal"><i class="octicon octicon-search"></i></a>
-			</li>
-			<li class="dropdown dropdown-navbar-user dropdown-mobile">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-					onclick="return false;">
-				{{ avatar }}
-				<span class="ellipsis toolbar-user-fullname hidden-xs hidden-sm">
-					{%= __("Settings") %}</span>
-				<b class="caret hidden-xs hidden-sm"></b></a>
-				<ul class="dropdown-menu" id="toolbar-user" role="menu">
-					<li><a href="#user-profile">
-						{%= __("My Profile") %}</a></li>
-					<li><a href="#Form/User/{%= encodeURIComponent(frappe.session.user) %}">
-						{%= __("My Settings") %}</a></li>
-					<li><a href="/index" target="_blank" rel="noopener noreferrer">
-						{%= __("View Website") %}</a></li>
-					<li><a href="#background_jobs">
-						{%= __("Background Jobs") %}</a></li>
-					<li class="visible-xs visible-sm"><a onclick="return frappe.ui.toolbar.clear_cache();">
-						{%= __("Reload") %}</a></li>
-					<li class="divider"></li>
-					<li><a href="#" onclick="return frappe.app.logout();">
-						{%= __("Logout") %}</a></li>
-				</ul>
-			</li>
-
-			<li class="dropdown dropdown-help dropdown-mobile">
-				<a class="dropdown-toggle" data-toggle="dropdown" href="#"
-					onclick="return false;" style="height: 40px;">
-					<span class="ellipsis hidden-xs hidden-sm" style="line-height: 24px;">{{ __("Help") }}</span>
-					<b class="hidden-xs hidden-sm caret"></b>
-					<span class="visible-xs visible-sm"><i class="uil uil-question-circle"></i></span>
-				</a>
-				<ul class="dropdown-menu" id="toolbar-help" role="menu">
-					<li id="help-links"></li>
-					<li class="divider"></li>
-					<li class="divider documentation-links"></li>
-					<li><a href="#" onclick="return frappe.ui.toolbar.show_about();">
-						{%= __("About") %}</a></li>
-					<li><a href="#" onclick="return frappe.ui.toolbar.show_shortcuts(event);">
-							{%= __("Keyboard Shortcuts") %}</a></li>
-				</ul>
-			</li>
-
-			<!-- frappe.chat -->
-			<!-- "placeholder, to display or not to display." -->
-			<li class="frappe-chat-dropdown"></li>
-			<!-- end frappe.chat -->
-			
-			<li class="navbar-reload hidden-xs hidden-sm">
-				<a class="dropdown-toggle refresh-btn" data-toggle="dropdown" onclick="return frappe.ui.toolbar.clear_cache();">
-					<div class="refresh-icon">
-						<i class="uil uil-refresh"></i>
-					</div>
-				</a>
-			</li>
-
-			<li class="dropdown dropdown-notifications dropdown-mobile">
-				<span class="notifications-indicator"><i class="fas fa-circle"></i></span>
+		<a class="navbar-brand navbar-home" href="#">
+			<img class="d-inline-block align-top app-logo" src="{{ frappe.app.logo_url }}">
+		</a>
+		<ul class="nav navbar-nav d-none d-sm-flex" id="navbar-breadcrumbs"></ul>
+		<div class="collapse navbar-collapse justify-content-end">
+			<form class="form-inline fill-width justify-content-end" role="search" onsubmit="return false;">
+				<div class="input-group search-bar text-muted">
+					<input
+					id="navbar-search"
+					type="text"
+					class="form-control"
+					placeholder="{%= __("Search or type a command (Ctrl + G)") %}"
+					aria-haspopup="true"
+					>
+					<span class="search-icon">
+						<svg class="icon icon-sm"><use xlink:href="#icon-search"></use></svg>
+					</span>
+				</div>
+			</form>
+			<ul class="navbar-nav ml-lg-4">
+				<li class="nav-item dropdown dropdown-notifications dropdown-mobile">
+					<span class="notifications-indicator"><i class="fa fa-circle"></i></span>
 					<a
-						class="dropdown-toggle notifications-icon"
+						class="nav-link notifications-icon text-muted"
 						data-toggle="dropdown"
 						aria-haspopup="true"
 						aria-expanded="true"
 						href="#"
 						onclick="return false;">
-						<span><i class="uil uil-bell" aria-hidden="true"></i></span>
+						<span>
+							<svg class="icon"><use xlink:href="#icon-notification"></use></svg>
+						</span>
 					</a>
-					<ul
-						class="dropdown-menu notifications-list"
-						role="menu">
-					</ul>
-				</li>
-		</ul>
-
-		<div id="search-modal" class="modal fade" role="dialog">
-			<div class="modal-dialog" style="height: 50px;">
-				<div class="modal-content">
-					<div class="modal-header">
-						<form role="search" onsubmit="return false;">
-							<div class="input-group" style="width: 100%">
-								<input id="modal-search" type="text" class="form-control"
-								placeholder="{%= __("Search or type a command") %}" aria-haspopup="true">
-								<button type="reset" class="close" data-dismiss="modal"><i class="octicon octicon-x"></i></button>
+					<div class="dropdown-menu notifications-list dropdown-menu-right" role="menu">
+						<div class="notification-list-header">
+							<div class="header-items"></div>
+							<div class="header-actions"></div>
+						</div>
+						<div class="notification-list-body">
+							<div class="notifcation-reel">
+								<div class="panel-notifications"></div>
+								<div class="panel-events"></div>
 							</div>
-						</form>
+						</div>
 					</div>
-				</div>
-			</div>
-		</div>
-
-		<div class="hidden-xs">
-			<form class="navbar-form navbar-right" role="search" onsubmit="return false;">
-			  <div class="form-group form-group-sm ui-front">
-				<input id="navbar-search" type="text" class="form-control"
-					placeholder="{%= __("Search or type a command") %} {%= __("(Ctrl + G)") %}" aria-haspopup="true">
-				<span class="octicon octicon-search navbar-search-icon"></span>
-			  </div>
-			</form>
+				</li>
+				<li class="nav-item dropdown dropdown-message dropdown-mobile">
+					<a
+						class="nav-link notifications-icon text-muted"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="true"
+						href="#"
+						onclick="return false;">
+						<span>
+							<svg class="icon"><use xlink:href="#icon-small-message"></use></svg>
+						</span>
+					</a>
+				</li>
+				<li class="vertical-bar ml-lg-2 d-none d-sm-block"></li>
+				<li class="nav-item dropdown dropdown-help dropdown-mobile ml-lg-2">
+					<a class="nav-link dropdown-toggle d-none d-lg-block" data-toggle="dropdown" href="#" onclick="return false;">
+						{{ __("Help") }}
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" id="toolbar-help" role="menu">
+						<div class="divider documentation-links"></div>
+						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.show_about();">
+							{%= __("About") %}
+						</a>
+						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.show_shortcuts(event);">
+							{%= __("Keyboard Shortcuts") %}
+						</a>
+					</div>
+				</li>
+				<li class="nav-item dropdown dropdown-navbar-user dropdown-mobile ml-lg-2">
+					<a class="nav-link" data-toggle="dropdown" href="#" onclick="return false;">
+						{{ avatar }}
+						<!-- {%= __("Settings") %} -->
+						<!-- <span class="ellipsis toolbar-user-fullname d-none d-sm-none d-md-block navbar-text"></span> -->
+					</a>
+					<div class="dropdown-menu dropdown-menu-right" id="toolbar-user" role="menu">
+						<a class="dropdown-item" href="#user-profile">
+							{%= __("My Profile") %}
+						</a>
+						<a class="dropdown-item" href="#Form/User/{%= encodeURIComponent(frappe.session.user) %}">
+							{%= __("My Settings") %}
+						</a>
+						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.setup_session_defaults();">
+							{%= __("Session Defaults") %}
+						</a>
+						<a class="dropdown-item navbar-reload" href="" onclick="return frappe.ui.toolbar.clear_cache();">
+							{%= __("Reload") %}
+						</a>
+						<a class="dropdown-item" href="/index" target="_blank" rel="noopener noreferrer">
+							{%= __("View Website") %}
+						</a>
+						<a class="dropdown-item navbar-toggle-full-width" href="#" onclick="return false">
+							{%= __("Toggle Full Width") %}
+						</a>
+						<a class="dropdown-item" href="#background_jobs">
+							{%= __("Background Jobs") %}
+						</a>
+						<div class="divider"></div>
+						<a class="dropdown-item" href="#" onclick="return frappe.app.logout();">
+							{%= __("Logout") %}
+						</a>
+					</div>
+				</li>
+			</ul>
 		</div>
 	</div>
-</div>
+</header>

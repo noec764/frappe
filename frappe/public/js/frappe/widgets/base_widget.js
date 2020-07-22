@@ -24,19 +24,19 @@ export default class Widget {
 		this.in_customize_mode = true;
 		this.action_area.empty();
 
+		options.allow_sorting &&
+			this.add_custom_button(
+				frappe.utils.icon('drag', 'xs'),
+				null,
+				"drag-handle",
+			);
+
 		options.allow_delete &&
 			this.add_custom_button(
-				'<i class="uil uil-trash" aria-hidden="true"></i>',
+				frappe.utils.icon('delete', 'xs'),
 				() => this.delete(),
 				"",
 				`${__('Delete')}`
-			);
-
-		options.allow_sorting &&
-			this.add_custom_button(
-				'<i class="uil uil-arrows-h" aria-hidden="true"></i>',
-				null,
-				"drag-handle",
 			);
 
 		if (options.allow_hiding) {
@@ -62,7 +62,7 @@ export default class Widget {
 
 		options.allow_edit &&
 			this.add_custom_button(
-				'<i class="uil uil-edit" aria-hidden="true"></i>',
+				frappe.utils.icon("edit", "xs"),
 				() => this.edit()
 			);
 
@@ -87,20 +87,25 @@ export default class Widget {
 	}
 
 	make_widget() {
-		this.widget = $(`<div class="widget ${
-			this.hidden ? "hidden" : ""
-		}" data-widget-name="${this.name ? this.name : ''}">
+		this.widget = $(`<div class="widget
+			${ this.hidden ? "hidden" : " " }
+			${ this.shadow ? "widget-shadow" : " " }
+		" data-widget-name="${this.name ? this.name : ''}">
 			<div class="widget-head">
-				<div class="widget-title ellipsis"></div>
+				<div>
+					<div class="widget-title ellipsis"></div>
+					<div class="widget-subtitle"></div>
+				</div>
 				<div class="widget-control"></div>
 			</div>
 			<div class="widget-body">
-		    </div>
-		    <div class="widget-footer">
-		    </div>
+			</div>
+			<div class="widget-footer">
+			</div>
 		</div>`);
 
 		this.title_field = this.widget.find(".widget-title");
+		this.subtitle_field = this.widget.find(".widget-subtitle");
 		this.body = this.widget.find(".widget-body");
 		this.action_area = this.widget.find(".widget-control");
 		this.head = this.widget.find(".widget-head");
@@ -109,10 +114,19 @@ export default class Widget {
 	}
 
 	set_title(max_chars) {
-		this.title_field[0].innerHTML = max_chars ? frappe.ellipsis(this.label, max_chars) : this.label;
-		if (max_chars) {
-			this.title_field[0].setAttribute('title', this.label);
+		let base = this.label || this.name;
+		let title = max_chars ? frappe.ellipsis(base, max_chars) : base;
+
+		if (this.icon) {
+			let icon = frappe.utils.icon(this.icon)
+			this.title_field[0].innerHTML = `${icon} <span>${title}</span>`;
+		} else {
+			this.title_field[0].innerHTML = title
+			if (max_chars) {
+				this.title_field[0].setAttribute('title', this.label);
+			}
 		}
+		this.subtitle && this.subtitle_field.html(this.subtitle);
 	}
 
 	add_custom_button(html, action, class_name = "", title="") {

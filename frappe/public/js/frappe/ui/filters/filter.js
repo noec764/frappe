@@ -69,8 +69,8 @@ frappe.ui.Filter = class {
 			frappe.render_template('edit_filter', {
 				conditions: this.conditions,
 			})
-		).appendTo(this.parent.find('.filter-edit-area'));
-
+		)
+		this.parent && this.filter_edit_area.appendTo(this.parent.find('.filter-edit-area'));
 		this.make_select();
 		this.set_events();
 		this.setup();
@@ -81,6 +81,7 @@ frappe.ui.Filter = class {
 			parent: this.filter_edit_area.find('.fieldname-select-area'),
 			doctype: this.parent_doctype,
 			filter_fields: this.filter_fields,
+			input_class: 'input-xs',
 			select: (doctype, fieldname) => {
 				this.set_field(doctype, fieldname);
 			},
@@ -92,14 +93,8 @@ frappe.ui.Filter = class {
 	}
 
 	set_events() {
-		this.filter_edit_area.find('a.remove-filter').on('click', () => {
+		this.filter_edit_area.find('span.remove-filter').on('click', () => {
 			this.remove();
-		});
-
-		this.filter_edit_area.find('.set-filter-and-run').on('click', () => {
-			this.filter_edit_area.removeClass('new-filter');
-			this.on_change();
-			this.update_filter_tag();
 		});
 
 		this.filter_edit_area.find('.condition').change(() => {
@@ -167,9 +162,8 @@ frappe.ui.Filter = class {
 
 	remove() {
 		this.filter_edit_area.remove();
-		this.$filter_tag && this.$filter_tag.remove();
 		this.field = null;
-		this.on_change(true);
+		// this.on_change(true);
 	}
 
 	set_values(doctype, fieldname, condition, value) {
@@ -269,7 +263,11 @@ frappe.ui.Filter = class {
 		let old_text = this.field ? this.field.get_value() : null;
 		this.hide_invalid_conditions(df.fieldtype, df.original_type);
 		this.toggle_nested_set_conditions(df);
-		let field_area = this.filter_edit_area.find('.filter-field').empty().get(0);
+		let field_area = this.filter_edit_area
+			.find('.filter-field')
+			.empty()
+			.get(0);
+		df.input_class = 'input-xs';
 		let f = frappe.ui.form.make_control({
 			df: df,
 			parent: field_area,
@@ -301,8 +299,17 @@ frappe.ui.Filter = class {
 			this.hidden,
 		];
 	}
+
 	get_selected_value() {
 		return this.utils.get_selected_value(this.field, this.get_condition());
+	}
+
+	add_condition_help(condition) {
+		const description = ['in', 'not in'].includes(condition)
+			? __('values separated by commas')
+			: __('use % as wildcard');
+
+		this.filter_edit_area.find('.filter-description').html(description);
 	}
 
 	get_condition() {
@@ -361,14 +368,6 @@ frappe.ui.Filter = class {
 				<i class="uil uil-times text-muted"></i>
 			</button>
 		</div>`);
-	}
-
-	add_condition_help(condition) {
-		const description = ['in', 'not in'].includes(condition)
-			? __('values separated by commas')
-			: __('use % as wildcard');
-
-		this.filter_edit_area.find('.filter-description').html(description);
 	}
 
 	hide_invalid_conditions(fieldtype, original_type) {
@@ -465,7 +464,7 @@ frappe.ui.filter_utils = {
 
 		// scrub
 		if (df.fieldname == 'docstatus') {
-			df.fieldtype = 'Select',
+			df.fieldtype = 'Select';
 			df.options = [
 				{ value: 0, label: __('Draft') },
 				{ value: 1, label: __('Submitted') },

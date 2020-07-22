@@ -1,0 +1,18 @@
+.breadcrumb {
+	padding-left: 0;
+	padding-right: 0;
+	background-color: white;
+}
+
+#navbar-breadcrumbs {
+	font-size: var(--text-sm);
+	a {
+		font-size: var(--text-md);
+		margin-right: 5px;
+		&:before {
+			content: '/';
+			display: inline-block;
+			margin-right: 10px;
+		}
+	}
+}

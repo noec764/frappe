@@ -60,6 +60,11 @@ def get_bootinfo():
 	doclist.extend(get_meta_bundle("Page"))
 	bootinfo.home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
 
+	# Check for Map View
+	from frappe.utils import cint
+	google_settings = frappe.db.get_value("Google Settings", None, ["enable", "api_key"])
+	bootinfo.google_api_enabled = cint(google_settings[1]) and google_settings[0]
+
 	# ipinfo
 	if frappe.session.data.get('ipinfo'):
 		bootinfo.ipinfo = frappe.session['data']['ipinfo']

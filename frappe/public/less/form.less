@@ -12,24 +12,14 @@
 
 .print-toolbar {
 	margin: 0px;
-	padding: 10px 0px;
-	border-bottom: 1px solid @border-color;
+	// padding: 10px 0px;
+	// border-bottom: 1px solid @border-color;
 
 	> div {
 		padding-right: 0px;
 	}
 	> div:last-child {
 		padding-right: 15px;
-	}
-}
-
-.form-inner-toolbar {
-	padding: 10px 15px 0px;
-	background-color: @light-bg;
-	text-align: right;
-
-	.btn {
-		margin-bottom: 10px;
 	}
 }
 
@@ -124,10 +114,6 @@
 	}
 }
 
-.form-dashboard {
-	background-color: @light-bg;
-}
-
 .form-dashboard-wrapper {
 	margin: -15px 0px;
 }
@@ -160,6 +146,7 @@
 		// excessive whitespace around the chart
 		.chart-container {
 			margin: 0px;
+			width: 1024px !important;
 		}
 
  		// don't show the less..more legend
@@ -284,7 +271,7 @@ h6.uppercase, .h6.uppercase {
 
 .form-section {
 	margin: 0px;
-	padding: 15px;
+	// padding: 15px;
 
 
 	.form-section-description {
@@ -328,8 +315,10 @@ h6.uppercase, .h6.uppercase {
 	padding-top: 0px;
 }
 
-.form-section:not(:first-child) {
-	border-top: 1px solid @border-color;
+.form-page {
+	.visible-section + :not(:first-child) {
+		border-top: 1px solid @border-color;
+	}
 }
 
 
@@ -341,22 +330,7 @@ h6.uppercase, .h6.uppercase {
 	display: none !important;
 }
 
-.shaded-section {
-	//background-color: @light-bg;
-}
-
 .modal {
-	.form-layout {
-		margin: -15px;
-	}
-
-	.form-grid .form-layout {
-		margin: 0px;
-	}
-
-	.form-section {
-		padding: 15px 7px;
-	}
 	.hide-border {
 		padding-top: 0;
 	}

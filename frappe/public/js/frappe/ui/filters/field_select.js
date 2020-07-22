@@ -9,7 +9,7 @@ frappe.ui.FieldSelect = Class.extend({
 		this.$input = $('<input class="form-control">')
 			.appendTo(this.parent)
 			.on("click", function () { $(this).select(); });
-		this.select_input = this.$input.get(0);
+		this.input_class && this.$input.addClass(this.input_class);
 		this.awesomplete = new Awesomplete(this.select_input, {
 			minChars: 0,
 			maxItems: 99,

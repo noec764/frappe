@@ -8,7 +8,7 @@ frappe.ui.form.Review = class Review {
 		this.parent = parent;
 		this.frm = frm;
 		this.points = frappe.boot.points;
-		this.make_review_container();
+		this.review_list_wrapper = this.parent;
 		this.add_review_button();
 		this.update_reviewers();
 	}
@@ -20,24 +20,18 @@ frappe.ui.form.Review = class Review {
 			this.points = data;
 		});
 	}
-	make_review_container() {
-		this.parent.append(`
-			<ul class="list-unstyled sidebar-menu">
-				<li class="h6 reviews-label">${__('Reviews')}</li>
-				<li class="review-list"></li>
-			</ul>
-		`);
-		this.review_list_wrapper = this.parent.find('.review-list');
-	}
 	add_review_button() {
-
-		this.review_list_wrapper.append(`
-			<span class="avatar avatar-small avatar-empty btn-add-review" title="${__('Add Review')}">
-				<i class="octicon octicon-plus text-muted"></i>
-			</span>
+		this.add_review_button_wrapper = $(`
+			<li>
+				<div class="add-review-btn cursor-pointer" title="${__('Add Review')}">
+					${frappe.utils.icon('add')}
+				</div>
+			</li>
 		`);
 
-		const review_button = this.review_list_wrapper.find('.btn-add-review');
+		this.add_review_button_wrapper.appendTo(this.parent);
+
+		const review_button = this.add_review_button_wrapper.find('.add-review-btn');
 
 		if (!this.points.review_points) {
 			review_button.click(false);
@@ -78,7 +72,6 @@ frappe.ui.form.Review = class Review {
 	}
 	show_review_dialog() {
 		const user_options = this.get_involved_users();
-		const doc_owner = this.frm.doc.owner;
 		const review_dialog = new frappe.ui.Dialog({
 			'title': __('Add Review'),
 			'fields': [{
@@ -146,15 +139,14 @@ frappe.ui.form.Review = class Review {
 		const review_logs = this.frm.get_docinfo().energy_point_logs
 			.filter(log => ['Appreciation', 'Criticism'].includes(log.type));
 
-		this.review_list_wrapper.find('.review-pill').remove();
+		this.parent.find('.review').remove();
 		review_logs.forEach(log => {
 			let review_pill = $(`
-				<span class="review-pill">
-					${frappe.avatar(log.owner)}
-					${frappe.energy_points.get_points(log.points)}
-				</span>
+				<li class="review ${log.points < 0 ? 'criticism': 'appreciation'}">
+					${log.points > 0 ? '+': ''}${log.points}
+				</li>
 			`);
-			this.review_list_wrapper.prepend(review_pill);
+			review_pill.insertBefore(this.add_review_button_wrapper);
 			this.setup_detail_popover(review_pill, log);
 		});
 	}

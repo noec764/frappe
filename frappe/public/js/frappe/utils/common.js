@@ -39,11 +39,28 @@ frappe.avatar = function (user, css_class, title, image_url = null) {
 			abbr = abbr.substr(0, 1);
 		}
 		return `<span class="avatar ${css_class}" title="${title}">
-			<div class="standard-image" style="background-color: ${user_info.color};">
+			<div class="avatar-frame standard-image" style="background-color: ${user_info.color};">
 				${abbr}</div>
 		</span>`;
 	}
 };
+
+frappe.avatar_group = function(users,  limit=4, css_class="avatar avatar-small") {
+	let extra_count = users.length - limit;
+	let html = users.slice(0, limit).map((user) => frappe.avatar(user, css_class)).join('')
+	if (extra_count > 0) {
+		return `<div class="avatar-group small">
+			<span class="avatar avatar avatar-small">
+				<div class="avatar-frame standard-image avatar-extra-count">
+					+${extra_count}
+				</div>
+			</span>
+			${html}
+		</div>`;
+	} else {
+		return `<div class="avatar-group">${html}</div>`;
+	}
+}
 
 frappe.ui.scroll = function(element, animate, additional_offset) {
 	var header_offset = $(".navbar").height() + $(".page-head").height();

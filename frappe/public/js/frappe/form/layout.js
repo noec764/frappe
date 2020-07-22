@@ -110,7 +110,7 @@ frappe.ui.form.Layout = Class.extend({
 		this.fields.unshift({
 			fieldtype: 'Section Break',
 			fieldname: '_form_dashboard',
-			label: __('Dashboard'),
+			label: __('Overview'),
 			cssClass: 'form-dashboard',
 			collapsible: 1,
 			//hidden: 1
@@ -233,32 +233,28 @@ frappe.ui.form.Layout = Class.extend({
 		// refresh sections
 		this.refresh_sections();
 
-		// collapse sections
-		if(this.frm) {
+		
+		if (this.frm) {
+			// collapse sections
 			this.refresh_section_collapse();
 		}
 	},
 
 	refresh_sections: function() {
-		var cnt = 0;
+		// hide invisible sections
 
-		// hide invisible sections and set alternate background color
 		this.wrapper.find(".form-section:not(.hide-control)").each(function() {
-			var $this = $(this).removeClass("empty-section")
-				.removeClass("visible-section")
-				.removeClass("shaded-section");
-			if(!$this.find(".frappe-control:not(.hide-control)").length
-				&& !$this.hasClass('form-dashboard')) {
-				// nothing visible, hide the section
-				$this.addClass("empty-section");
+			const section = $(this).removeClass("empty-section visible-section");
+			if (section.find(".frappe-control:not(.hide-control)").length) {
+				section.addClass("visible-section");
 			} else {
-				$this.addClass("visible-section");
-				if(cnt % 2) {
-					$this.addClass("shaded-section");
-				}
-				cnt++;
+				// nothing visible, hide the section
+				section.addClass("empty-section");
 			}
 		});
+
+		this.frm && this.frm.dashboard.refresh();
+
 	},
 
 	refresh_fields: function(fields) {
@@ -559,7 +555,6 @@ frappe.ui.form.Layout = Class.extend({
 
 frappe.ui.form.Section = Class.extend({
 	init: function(layout, df) {
-		var me = this;
 		this.layout = layout;
 		this.df = df || {};
 		this.fields_list = [];
@@ -583,7 +578,7 @@ frappe.ui.form.Section = Class.extend({
 			this.layout.page = $('<div class="form-page"></div>').appendTo(this.layout.wrapper);
 		}
 
-		this.wrapper = $('<div class="row form-section">')
+		this.wrapper = $(`<div class="row form-section ${this.layout.card_layout ? "frappe-card" : "" }">`)
 			.appendTo(this.layout.page);
 		this.layout.sections.push(this);
 
@@ -608,21 +603,14 @@ frappe.ui.form.Section = Class.extend({
 		this.body = $('<div class="section-body">').appendTo(this.wrapper);
 	},
 	make_head: function() {
-		var me = this;
-		if(!this.df.collapsible) {
-			$('<div class="col-sm-12"><h6 class="form-section-heading uppercase">'
-				+ __(this.df.label, null, this.df.parent) + '</h6></div>')
-				.appendTo(this.wrapper);
-		} else {
-			this.head = $('<div class="section-head"><a class="h6 uppercase">'
-				+__(this.df.label, null, this.df.parent)+'</a><span class="octicon octicon-chevron-down collapse-indicator"></span></div>').appendTo(this.wrapper);
-
+		this.head = $(`<div class="section-head">${__(this.df.label)}</div>`);
+		this.head.appendTo(this.wrapper);
+		if (this.df.collapsible) {
 			// show / hide based on status
-			this.collapse_link = this.head.on("click", function() {
-				me.collapse();
+			this.collapse_link = this.head.on("click", () => {
+				this.collapse();
 			});
-
-			this.indicator = this.head.find(".collapse-indicator");
+			this.indicator = this.head.find('.collapse-indicator');
 		}
 	},
 	refresh: function() {

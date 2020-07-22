@@ -87,9 +87,9 @@ frappe.form.formatters = {
 	},
 	Check: function(value) {
 		if(value) {
-			return '<i class="octicon octicon-check" style="margin-right: 3px;"></i>';
+			return `<input type="checkbox" class="disabled-selected">`
 		} else {
-			return '<i class="far fa-square disabled-check"></i>';
+			return `<input type="checkbox" class="disabled-deselected">`;
 		}
 	},
 	Link: function(value, docfield, options, doc) {
@@ -120,7 +120,7 @@ frappe.form.formatters = {
 			return repl('<a onclick="%(onclick)s">%(value)s</a>',
 				{onclick: docfield.link_onclick.replace(/"/g, '&quot;'), value:value});
 		} else if(docfield && doctype) {
-			return `<a class="grey"
+			return `<a
 				href="#Form/${encodeURIComponent(doctype)}/${encodeURIComponent(original_value)}"
 				data-doctype="${doctype}"
 				data-name="${original_value}">

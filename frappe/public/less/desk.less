@@ -49,74 +49,6 @@ a[disabled="disabled"] {
 	margin-top: 3px;
 }
 
-/* alert */
-
-
-#alert-container {
-	position: fixed;
-	bottom: 0px;
-	right: 20px;
-	z-index: 1050;
-}
-
-#alert-container .desk-alert {
-	box-shadow: 0 0px 5px rgba(0, 0, 0, 0.1);
-	max-width: 400px;
-	min-width: 200px;
-	max-height: 200px;
-	background-color: @light-yellow;
-	border: 1px solid @border-color;
-
-	// word-break: break-all;
-	overflow-y: auto;
-	position: relative;
-	transform: translateX(calc(100% + 20px));
-	transition: transform 300ms ease;
-	padding: 0px;
-
-	.alert-message {
-		padding: 10px 40px 10px 10px;
-
-		.indicator::before {
-			margin-bottom: 1px;
-		}
-	}
-
-	.close {
-		position: absolute;
-		top: 10px;
-		right: 10px;
-		color: inherit;
-		opacity: 1;
-		font-size: inherit;
-	}
-
-	.next-action-container {
-		display: flex;
-
-		.next-action {
-			border: none;
-			background: none;
-			width: 100%;
-			border-top: 1px solid @border-color;
-			border-right: 1px solid @border-color;
-			padding: 7px;
-			outline: none;
-			font-size: 12px;
-			font-weight: bold;
-			color: @text-light;
-
-			&:hover {
-				background-color: darken(@light-yellow, 5%);
-			}
-
-			&:last-child {
-				border-right: none;
-			}
-		}
-	}
-}
-
 .missing-image {
 	background-color: @light-bg;
 	line-height: 140px;
@@ -207,7 +139,7 @@ textarea.form-control {
 }
 
 .modal-title {
-	margin-top: 5px;
+	margin: auto 0px;
 }
 
 .modal-message {
@@ -812,53 +744,6 @@ li.user-progress {
 
 @checkbox-height: 14px;
 
-// custom font awesome checkbox
-input[type="checkbox"] {
-	position: relative;
-	height: 0px !important;
-
-	&:before {
-		position: absolute;
-		font-family: 'unicons';
-		content: '\eaa2';
-		visibility: visible;
-		font-style: normal;
-		font-weight: normal;
-		font-variant: normal;
-		text-transform: none;
-		line-height: @checkbox-height;
-		margin-top: -10px;
-		display: inline-block !important;
-		font-size: @checkbox-height;
-		color: @text-extra-muted;
-		.transition(150ms color);
-		left: 0px;
-		cursor: pointer;
-	}
-
-	&:focus:before {
-		color: @text-muted;
-	}
-
-	&:checked:before {
-		content: '\e9b4';
-		font-size: @checkbox-height - 1px;
-		color: @checkbox-color;
-		cursor: pointer;
-	}
-
-	&:checked:focus:before {
-		box-shadow: inset 0 0 1px 2px @text-muted;
-		padding: 0px 1px;
-		border-radius: 3px;
-		height: @checkbox-height - 1px;
-	}
-
-	&:focus {
-		outline: none;
-	}
-}
-
 // Will not be required after commonifying lists with empty state
 .multiselect-empty-state{
 	min-height: 300px;
@@ -1113,14 +998,6 @@ img.img-loading:after {
 	white-space: nowrap;
 }
 
-// popover
-.popover {
-	border-radius: 4px;
-	.popover-content {
-		padding: 12px;
-	}
-}
-
 body.full-width {
 	@media (min-width: @screen-md) {
 		.container {
@@ -1205,12 +1082,12 @@ body.no-sidebar {
 	padding-top: 60px;
 }
 
-#body_div {
+#body {
 	transition: margin-left .5s;
 }
 
 @media (min-width: @screen-xs) and (max-width: @screen-md) {
-	#body_div {
+	#body {
 		padding-left: 50px;
 	}
 }

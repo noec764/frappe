@@ -210,6 +210,7 @@ frappe.views.Calendar = class {
 
 	setup_options(defaults) {
 		const me = this;
+		defaults.meridiem = 'false';
 		this.cal_options = {
 			locale: frappe.boot.lang || "en",
 			plugins: [ interactionPlugin, timeGridPlugin, dayGridPlugin ],
@@ -222,6 +223,8 @@ frappe.views.Calendar = class {
 			selectable: true,
 			selectMirror: true,
 			forceEventDuration: true,
+			displayEventTime: true,
+			displayEventEnd: true,
 			initialView: defaults.initialView,
 			weekends: defaults.weekends,
 			nowIndicator: true,
