@@ -17,7 +17,7 @@ frappe.ui.misc.about = function() {
 		<h4>${ __("Installed Apps") }</h4>
 		<div id='about-app-versions'>${ __("Loading versions...") }</div>
 		<hr>\
-		<p class='text-muted'>&copy; Dokos SAS and contributors </p>
+		<p class='text-muted'>&copy; ${ __("Dokos SAS and contributors")}</p>
 		</div>`);
 
 		frappe.ui.misc.about_dialog = d;

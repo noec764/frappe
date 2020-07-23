@@ -254,7 +254,7 @@ frappe.ui.FilterGroup = class {
 		return $(`
 			<div class="filter-area">
 				<div class="filter-edit-area text-center">
-					<span class="text-muted empty-filters">No filters selected</span>
+					<span class="text-muted empty-filters">${__("No filters selected")}</span>
 				</div>
 				<hr class="divider"></hr>
 				<div class="filter-action-buttons">

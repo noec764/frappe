@@ -10,7 +10,7 @@ frappe.views.Views = class Views {
 	add_view_to_menu(view, action) {
 		let $el = this.page.add_custom_menu_item(
 			this.parent,
-			view,
+			__(view),
 			action,
 			true,
 		);
@@ -138,7 +138,7 @@ frappe.views.Views = class Views {
 		views_wrapper.find('.list-sidebar-label').html(`${__(view)}`);
 		const $dropdown = views_wrapper.find('.views-dropdown');
 
-		let placeholder = `Select ${view}`;
+		let placeholder = __("Select {0}", [__(view)]);
 		let html = ``;
 
 		if (!items || !items.length) {
@@ -150,7 +150,7 @@ frappe.views.Views = class Views {
 				if (item.name == frappe.get_route().slice(-1)[0]) {
 					placeholder = item.name;
 				}
-				html += `<li><a class="dropdown-item" href="#${item.route}">${item.name}</a></li>`;
+				html += `<li><a class="dropdown-item" href="#${item.route}">${__(item.name)}</a></li>`;
 			});
 		}
 

@@ -2,6 +2,7 @@ frappe.provide('frappe.views');
 
 frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	get view_name() {
+		// __("Dashboard")
 		return 'Dashboard';
 	}
 
@@ -15,6 +16,11 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 
 	render() {
 
+	}
+
+	setup_page() {
+		this.hide_page_form = true;
+		super.setup_page();
 	}
 
 	setup_view() {
@@ -37,14 +43,9 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	setup_dashboard_page() {
 		const chart_wrapper_html = `<div class="dashboard-view"></div>`;
 
-		// <button class="restricted-button">
-		// 			<span class="octicon octicon-lock"></span>
-		// 			<span>${__('Restricted')}</span>
-		// 		</button>
 		this.$frappe_list.html(chart_wrapper_html);
 		this.page.clear_secondary_action();
 		this.$dashboard_page = this.$page.find('.layout-main-section-wrapper').addClass('dashboard-page');
-		this.$page.find('.page-form').hide();
 		this.page.main.removeClass('frappe-card');
 
 		this.$dashboard_wrapper = this.$page.find('.dashboard-view');
@@ -190,7 +191,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				${__('Customize')}
 			</button></p>`;
 
-		const empty_state_image = '/assets/frappe/images/ui-states/empty.png';
+		const empty_state_image = '/assets/frappe/images/ui-states/empty-dashboard.png';
 
 		const empty_state_html = `<div class="msg-box no-border empty-dashboard">
 			<div>

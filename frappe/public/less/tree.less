@@ -17,6 +17,10 @@
 	cursor: pointer;
 	display: inline-block;
 	padding: 1px;
+
+	a:not([href]) {
+		color: @text-color;
+	}
 }
 
 .tree-link .node-parent {
@@ -84,7 +88,7 @@
 		left: -13px;
 		height: ~"calc(100% - 15px)";
 		width: 3px;
-		background: #fff;
+		background: #f5f7fa;
 	}
 }
 

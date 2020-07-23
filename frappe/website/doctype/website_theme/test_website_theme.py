@@ -19,7 +19,7 @@ class TestWebsiteTheme(unittest.TestCase):
 		theme = frappe.get_doc(dict(
 			doctype = 'Website Theme',
 			theme = 'test-theme',
-			google_font = 'Inter',
+			google_font = 'Roboto',
 			custom_scss = 'body { font-size: 16.5px; }'
 		)).insert()
 

@@ -7,7 +7,7 @@ export default class GridRow {
 		this.columns = {};
 		this.columns_list = [];
 		$.extend(this, opts);
-		this.row_check_html = '<input type="checkbox" class="grid-row-check pull-left">';
+		this.row_check_html = '<input type="checkbox" class="grid-row-check float-left">';
 		this.make();
 	}
 	make() {

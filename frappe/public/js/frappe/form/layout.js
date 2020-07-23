@@ -603,10 +603,11 @@ frappe.ui.form.Section = Class.extend({
 		this.body = $('<div class="section-body">').appendTo(this.wrapper);
 	},
 	make_head: function() {
-		this.head = $(`<div class="section-head">${__(this.df.label)}</div>`);
+		this.head = $(`<div class="section-head">${__(this.df.label, null, this.df.parent)}</a></div>`);
 		this.head.appendTo(this.wrapper);
 		if (this.df.collapsible) {
 			// show / hide based on status
+			$(`<span class="collapse-indicator">${frappe.utils.icon('select')}</span>`).appendTo(this.head);
 			this.collapse_link = this.head.on("click", () => {
 				this.collapse();
 			});
@@ -643,8 +644,8 @@ frappe.ui.form.Section = Class.extend({
 
 		this.body.toggleClass("hide", hide);
 		this.head.toggleClass("collapsed", hide);
-		this.indicator.toggleClass("octicon-chevron-down", hide);
-		this.indicator.toggleClass("octicon-chevron-up", !hide);
+		// this.indicator.toggleClass("octicon-chevron-down", hide);
+		// this.indicator.toggleClass("octicon-chevron-up", !hide);
 
 		// refresh signature fields
 		this.fields_list.forEach((f) => {

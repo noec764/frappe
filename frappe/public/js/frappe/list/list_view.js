@@ -45,6 +45,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get view_name() {
+		// __("List")
 		return "List";
 	}
 

@@ -266,11 +266,10 @@ Object.assign(frappe.utils, {
 		if (y < 0) {
 			y = 0;
 		}
-
 		// already there
-		if (y == element_to_be_scrolled.scrollTop()) {
-			return;
-		}
+		// if (y == element_to_be_scrolled.scrollTop()) {
+		// 	return;
+		// }
 
 		if (animate !== false) {
 			element_to_be_scrolled.animate({ scrollTop: y });
@@ -1023,7 +1022,7 @@ Object.assign(frappe.utils, {
 
 	icon(icon_name, size="sm", icon_class) {
 		return `<svg class="icon icon-${size}">
-			<use class="${icon_class}" xlink:href="#icon-${icon_name}"></use>
+			<use class="${icon_class || icon_name}" href="#icon-${icon_name}"></use>
 		</svg>`;
 	}
 });

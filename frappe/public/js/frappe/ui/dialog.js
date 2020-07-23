@@ -32,8 +32,10 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		this.wrapper = this.$wrapper.find('.modal-dialog')
 			.get(0);
 		if ( this.size == "small" )
-			$(this.wrapper).addClass("modal-sm");
+			$(this.wrapper).addClass("modal-md");
 		else if ( this.size == "large" )
+			$(this.wrapper).addClass("modal-xl");
+		else
 			$(this.wrapper).addClass("modal-lg");
 
 		this.make_head();

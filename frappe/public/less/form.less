@@ -285,17 +285,6 @@ h6.uppercase, .h6.uppercase {
 	.section-head {
 		margin: 0px 0px 15px 15px;
 		cursor: pointer;
-
-		.collapse-indicator {
-			color: @text-extra-muted;
-			margin-left: 10px;
-			position: relative;
-			bottom: -1px;
-		}
-
-		.collapse-indicator.octicon-chevron-up {
-			bottom: -2px;
-		}
 	}
 	.section-head.collapsed {
 		margin-bottom: 0px;
@@ -395,6 +384,10 @@ h6.uppercase, .h6.uppercase {
 	.gmail_extra {
 		display: none;
 	}
+
+	.timeline-content-show {
+		background-color: #fff;
+	}
 }
 
 .timeline-item[data-communication-type="Comment"] {
@@ -489,7 +482,7 @@ h6.uppercase, .h6.uppercase {
 			padding-right: 77px;
 		}
 		.asset-details {
-			display: inline-block;
+			display: inline-flex;
 			width: 100%;
 			.btn-link {
 				border: 0;
@@ -498,6 +491,10 @@ h6.uppercase, .h6.uppercase {
 				&:hover {
 					text-decoration: none;
 				}
+			}
+
+			.author-wrap {
+				display: inline-flex;
 			}
 		}
 		.commented-on-small {
@@ -667,6 +664,7 @@ h6.uppercase, .h6.uppercase {
 		background-color: @light-bg;
 		padding: 7px 15px;
 		border-bottom: 1px solid @light-border-color;
+		line-height: 2rem;
 	}
 
 	.comment-input-container {

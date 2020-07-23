@@ -23,6 +23,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 	}
 
 	get view_name() {
+		// __("Kanban")
 		return 'Kanban';
 	}
 
@@ -55,6 +56,12 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 
 	before_refresh() {
 
+	}
+
+	setup_page() {
+		this.hide_page_form = true;
+		this.hide_card_layout = true;
+		super.setup_page();
 	}
 
 	setup_view() {
@@ -260,6 +267,7 @@ frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
 	}
 
 	function get_fields_for_dialog(kanban_options, show_existing=false) {
+		// __('Create New Board')
 		kanban_options.push('Create New Board');
 
 		let fields = [

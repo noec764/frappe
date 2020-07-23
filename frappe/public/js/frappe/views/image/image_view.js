@@ -5,6 +5,7 @@ frappe.provide("frappe.views");
 
 frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 	get view_name() {
+		// __("Image")
 		return 'Image';
 	}
 

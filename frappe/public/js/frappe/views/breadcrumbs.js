@@ -24,6 +24,7 @@ frappe.breadcrumbs = {
 		'Setup': 'Settings',
 		'Event Streaming': 'Tools',
 		'Automation': 'Tools',
+		'Desk': 'Tools'
 	},
 
 	set_doctype_module: function(doctype, module) {

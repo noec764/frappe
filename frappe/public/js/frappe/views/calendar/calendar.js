@@ -25,6 +25,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	toggle_result_area() {}
 
 	get view_name() {
+		// __("Calendar")
 		return 'Calendar';
 	}
 
@@ -215,9 +216,9 @@ frappe.views.Calendar = class {
 			locale: frappe.boot.lang || "en",
 			plugins: [ interactionPlugin, timeGridPlugin, dayGridPlugin ],
 			headerToolbar: {
-				left: 'title',
-				center: '',
-				right: 'prev,today,next dayGridMonth,timeGridWeek,timeGridDay'
+				left: 'dayGridMonth,timeGridWeek,timeGridDay',
+				center: 'prev,title,next',
+				right: 'today'
 			},
 			editable: true,
 			selectable: true,

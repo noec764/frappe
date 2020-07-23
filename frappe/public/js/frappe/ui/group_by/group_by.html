@@ -10,7 +10,7 @@
 							data-doctype="{{parent_doctype}}"
 							value="{{group_by_conditions[parent_doctype][val].fieldname}}"
 						>
-							{{ group_by_conditions[parent_doctype][val].label }}
+							{{ __(group_by_conditions[parent_doctype][val].label) }}
 							({{ parent_doctype }})
 						</option>
 						{% } else { %}
@@ -18,7 +18,7 @@
 							data-doctype="{{parent_doctype}}"
 							value="{{group_by_conditions[parent_doctype][val].fieldname}}"
 						>
-							{{ group_by_conditions[parent_doctype][val].label }}
+							{{ __(group_by_conditions[parent_doctype][val].label) }}
 						</option>
 						{% } %}
 					{% } %}
@@ -55,7 +55,7 @@
 		<div class="groupby-actions pull-left col-sm-1">
 			<span class="remove-group-by">
 				<svg class="icon icon-sm">
-					<use xlink:href="#icon-close"></use>
+					<use xlink:href="#icon-close-alt"></use>
 				</svg>
 			</span>
 		</div>

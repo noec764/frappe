@@ -325,8 +325,11 @@ h6.uppercase,
   padding-right: 77px;
 }
 .timeline-item.user-content .comment-header .asset-details {
-  display: inline-block;
+  display: inline-flex;
   width: 100%;
+}
+.author-wrap {
+  display: inline-flex;
 }
 .timeline-item.user-content .comment-header .asset-details .btn-link {
   border: 0;

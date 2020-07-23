@@ -179,7 +179,7 @@ frappe.views.BaseList = class BaseList {
 			'Map': 'map'
 		}
 
-		this.views_menu = this.page.add_custom_button_group(__(`View as {0}`, [this.view_name]), icon_map[this.view_name] || 'list');
+		this.views_menu = this.page.add_custom_button_group(__(`View as {0}`, [__(this.view_name)]), icon_map[this.view_name] || 'list');
 		this.views_list = new frappe.views.Views({
 			doctype: this.doctype,
 			parent: this.views_menu,
@@ -501,17 +501,19 @@ class FilterArea {
 	constructor(list_view) {
 		this.list_view = list_view;
 		this.list_view.page.page_form.append(`<div class="standard-filter-section flex"></div>`);
-		this.standard_filters_wrapper = this.list_view.page.page_form.find('.standard-filter-section');
-		this.list_view.$filter_section = $('<div class="filter-section">').appendTo(
-			this.list_view.page.page_form
-		);
+		const filter_area = this.list_view.hide_page_form
+			? this.list_view.page.custom_actions
+			: this.list_view.page.page_form;
+		this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(
+			filter_area
+		)
 		this.$filter_list_wrapper = this.list_view.$filter_section;
 		this.trigger_refresh = true;
 		this.setup();
 	}
 
 	setup() {
-		this.make_standard_filters();
+		if (!this.list_view.hide_page_form) this.make_standard_filters();
 		this.make_filter_list();
 	}
 
@@ -653,6 +655,7 @@ class FilterArea {
 	}
 
 	make_standard_filters() {
+		this.standard_filters_wrapper = this.list_view.page.page_form.find('.standard-filter-section');
 		let fields = [
 			{
 				fieldtype: "Data",
@@ -757,7 +760,7 @@ class FilterArea {
 
 	make_filter_list() {
 		$(`<div class="filter-selector">
-			<button class="btn btn-default btn-xs filter-button">
+			<button class="btn btn-default btn-sm filter-button">
 				<span class="filter-icon">
 					<svg class="icon icon-sm">
 						<use xlink:href="#icon-filter"></use>

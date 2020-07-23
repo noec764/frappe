@@ -9,7 +9,7 @@ $gray-200: #EEF0F2;
 $gray-100: #F4F5F6;
 $gray-50 : #F9FAFA;
 
-$primary: #2490EF;
+$primary: #6195ff;
 $black: #000;
 $white: #fff;
 $light: $gray-50 !default;
@@ -73,6 +73,17 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--gray-100: #{$gray-100};
 	--gray-50: #{$gray-50};
 
+	--dark-gray-900: #131720;
+	--dark-gray-800: #1a202c;
+	--dark-gray-700: #2d3748;
+	--dark-gray-600: #4a5568;
+	--dark-gray-500: #718096;
+	--dark-gray-400: #a0aec0;
+	--dark-gray-300: #cbd5e0;
+	--dark-gray-200: #e2e8f0;
+	--dark-gray-100: #edf2f7;
+	--dark-gray-50: #f7fafc;
+
 	--red-900: #631D1D;
 	--red-800: #802121;
 	--red-700: #9B2C2C;
@@ -104,7 +115,7 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--orange-300: #FDAE8C;
 	--orange-200: #FECDB8;
 	--orange-100: #FFEAE1;
-	--orange-050: #FFF5F0;
+	--orange-50: #FFF5F0;
 
 	--purple-900: #343360;
 	--purple-800: #45438F;
@@ -140,12 +151,16 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--text-xl: 18px;
 	--text-2xl: 22px;
 
+	--shadow-sm: 0 1px 1px 0 #e6ebf1;
 	--shadow-sm: 0 1px 2px 0 #e6ebf1;
 	--shadow-md: 0 1px 3px 0 #e6ebf1;
 	--shadow-base:  0px 4px 8px rgba(25, 39, 52, 0.06), 0px 0px 4px rgba(25, 39, 52, 0.12);
 	--shadow-lg:  0px 8px 14px rgba(25, 39, 52, 0.08), 0px 2px 6px rgba(25, 39, 52, 0.04);
 	--shadow-xl: 0px 18px 22px rgba(25, 39, 52, 0.1), 0px 1px 10px rgba(0, 0, 0, 0.06), 0px 0.5px 5px rgba(25, 39, 52, 0.04);
-	--card-shadow: var(--shadow-sm);
+
+	--modal-shadow: var(--shadow-md);
+	--card-shadow: var(--shadow-md);
+	--btn-shadow: var(--shadow-sm);
 
 	// Type Colors
 	--text-muted: var(--gray-600);
@@ -201,7 +216,7 @@ $theme-colors: (
   "danger": #ff4136
 );
 
-$brand-gradient: linear-gradient(180deg, #2C9AF1 0%, var(--blue-500) 100%);
+$brand-gradient: linear-gradient(180deg, #6195ff 0%, var(--blue-500) 100%);
 
 $navbar-height: 60px;
 $page-head-height: 68px;

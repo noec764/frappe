@@ -58,7 +58,7 @@ export default class LinksWidget extends Widget {
 				item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">
 					${get_link_for_item(item)}
-					${item.open_count ? `<span class="badge open-count-badge">${item.open_count}</span>` : ''}
+					${item.open_count ? `<span class="badge badge-info">${item.open_count}</span>` : ''}
 			</a>`);
 		});
 

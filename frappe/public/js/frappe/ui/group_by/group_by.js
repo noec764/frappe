@@ -16,9 +16,9 @@ frappe.ui.GroupBy = class {
 
 	init_group_by_popover() {
 		const sql_aggregate_functions = [
-			{ name: 'count', label: 'Count' },
-			{ name: 'sum', label: 'Sum' },
-			{ name: 'avg', label: 'Average' },
+			{ name: 'count', label: __('Count') },
+			{ name: 'sum', label: __('Sum') },
+			{ name: 'avg', label: __('Average') },
 		];
 
 		const group_by_template = $(
@@ -233,7 +233,7 @@ frappe.ui.GroupBy = class {
 	make_group_by_button() {
 		this.page.wrapper.find('.sort-selector').before(
 			$(`<div class="group-by-selector">
-				<button class="btn btn-default btn-xs group-by-button ellipsis">
+				<button class="btn btn-default btn-sm group-by-button ellipsis">
 					<span class="group-by-icon">
 						<svg class="icon icon-sm">
 							<use xlink:href="#icon-group-by"></use>

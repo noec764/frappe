@@ -371,7 +371,7 @@ export default class OnboardingWidget extends Widget {
 		let success_message = this.success || __("You seem good to go!");
 		let success_state_image =
 			this.success_state_image ||
-			"/assets/frappe/images/ui-states/success-color.png";
+			"/assets/frappe/images/ui-states/success.png";
 		let documentation = "";
 		if (this.docs_url) {
 			documentation = __(

@@ -11,7 +11,6 @@
   "for_user",
   "extends",
   "module",
-  "category",
   "restrict_to_domain",
   "onboarding",
   "icon",
@@ -54,7 +53,7 @@
    "options": "Desk Chart"
   },
   {
-    "depends_on": "eval:!doc.extends_another_page || !doc.is_standard || frappe.boot.developer_mode",
+   "depends_on": "eval:!doc.extends_another_page || !doc.is_standard || frappe.boot.developer_mode",
    "fieldname": "shortcuts",
    "fieldtype": "Table",
    "label": "Shortcuts",
@@ -91,14 +90,6 @@
    "fieldtype": "Table",
    "label": "Cards",
    "options": "Desk Card"
-  },
-  {
-   "fieldname": "category",
-   "fieldtype": "Select",
-   "label": "Category",
-   "options": "Modules\nDomains\nPlaces\nAdministration",
-   "read_only_depends_on": "eval:doc.extends_another_page == 1",
-   "search_index": 1
   },
   {
    "default": "0",
@@ -206,16 +197,16 @@
    "options": "Module Onboarding"
   },
   {
-    "default": "0",
-    "description": "Checking this will hide custom doctypes and reports cards in Links section",
-    "fieldname": "hide_custom",
-    "fieldtype": "Check",
-    "label": "Hide Custom DocTypes and Reports"
+   "default": "0",
+   "description": "Checking this will hide custom doctypes and reports cards in Links section",
+   "fieldname": "hide_custom",
+   "fieldtype": "Check",
+   "label": "Hide Custom DocTypes and Reports"
   }
  ],
  "links": [],
- "modified": "2020-05-18 19:17:27.206646",
- "modified_by": "Administrator",
+ "modified": "2020-07-23 15:37:24.067946",
+ "modified_by": "thierry@dokos.io",
  "module": "Desk",
  "name": "Desk Page",
  "owner": "Administrator",
