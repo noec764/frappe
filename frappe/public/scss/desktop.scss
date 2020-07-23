@@ -362,13 +362,15 @@ html, body {
 
 	&.links-widget-box {
 		.link-item {
-			display: block;
+			display: flex;
 			text-decoration: none;
 			color: var(--text-color);
 			padding: var(--padding-xs);
 			margin: var(--margin-xs) 0px;
 			border-radius: var(--border-radius-md);
 			cursor: pointer;
+			line-height: 1;
+
 
 			&:hover {
 				background-color: var(--bg-color);

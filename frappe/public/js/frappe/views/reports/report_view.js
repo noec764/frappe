@@ -195,6 +195,8 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			return;
 		}
 		this.setup_datatable(this.data);
+		this.datatable.bodyScrollable.style.removeProperty('height');
+		this.datatable.bodyScrollable.style.height = Math.max(this.data.length, 40) + "vw";
 	}
 
 	render_count() {
