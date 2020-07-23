@@ -2,14 +2,14 @@
 	<div>
 		<div
 			class="v-sidebar-menu hidden-sm hidden-xs"
-			:class="[!isCollapsed ? 'vsm-default' : 'vsm-collapsed']"
+			:class="[!isCollapsed ? 'dodock-sidebar-default' : 'dodock-sidebar-collapsed']"
 			:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '', !showBottomButton ? {'padding-bottom': '20px'} : '']"
 			@mouseenter="mouseEnter"
 			@mouseleave="mouseLeave"
 			@wheel="onWheel"
 			@scroll="onWheel"
 		>
-			<div class="vsm-list" id="sidebard-modules-list" ref="sidebarList">
+			<div class="dodock-sidebar-list" id="sidebard-modules-list" ref="sidebarList">
 				<template v-for="(item, index) in modules">
 					<item
 						:key="index"
@@ -25,7 +25,7 @@
 				@click="scrollUpDown"
 			/>
 		</div>
-		<div v-if="mobileDisplay && !isCollapsed" class="vsm-list-overlay" @click="mobileCollapse"></div>
+		<div v-if="mobileDisplay && !isCollapsed" class="dodock-sidebar-list-overlay" @click="mobileCollapse"></div>
 	</div>
 </template>
 
