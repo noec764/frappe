@@ -25,9 +25,7 @@ UPDATE = "Update Existing Records"
 
 
 class Importer:
-	def __init__(
-		self, doctype, data_import=None, file_path=None, import_type=None, console=False
-	):
+	def __init__(self, doctype, data_import=None, file_path=None, import_type=None, console=False):
 		self.doctype = doctype
 		self.console = console
 
