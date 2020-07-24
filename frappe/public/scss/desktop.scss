@@ -1,3 +1,8 @@
+@font-face {
+	font-family: 'Varela Round';
+	src: url('/assets/frappe/css/fonts/varela-round/VarelaRound-Regular.ttf');
+}
+
 html, body {
 	background-color: var(--bg-color);
 	font-family: 'Varela Round', 'Roboto', sans-serif;
