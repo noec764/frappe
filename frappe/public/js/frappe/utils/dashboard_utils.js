@@ -25,10 +25,10 @@ frappe.dashboard_utils = {
 			if (filter.fieldnames) {
 				options_html = filter.options.map((option, i) =>
 					`<li>
-						<a class="dropdown-item" data-fieldname="${filter.fieldnames[i]}">${option}</a>
+						<a class="dropdown-item" data-fieldname="${filter.fieldnames[i]}" data-value="${option.value || option}">${option.label || option}</a>
 					</li>`).join('');
 			} else {
-				options_html = filter.options.map( option => `<li><a class="dropdown-item">${option}</a></li>`).join('');
+				options_html = filter.options.map( option => `<li><a class="dropdown-item" data-value="${option.value || option}">${option.label || option}</a></li>`).join('');
 			}
 
 			let dropdown_html = chart_filter_html + `<ul class="dropdown-menu">${options_html}</ul></div>`;

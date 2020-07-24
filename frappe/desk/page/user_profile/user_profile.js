@@ -244,7 +244,7 @@ class UserProfile {
 				],
 				fieldnames: ['type', 'reference_doctype', 'rule'],
 				action: (selected_item, fieldname) => {
-					let title = selected_item + ' Distribution';
+					let title = __('{0} Distribution', [__(selected_item)]);
 					this.render_percentage_chart(fieldname, title);
 				}
 			},
