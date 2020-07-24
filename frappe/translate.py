@@ -631,7 +631,7 @@ def extract_messages_from_code(code):
 		pass
 
 	messages = []
-	pattern = r"_\(([\"']{,3})(?P<message>((?!\1).)*)\1(\s*,\s*context\s*=\s*([\"'])(?P<py_context>((?!\5).)*)\5)*(\s*,\s*(.)*?\s*(,\s*([\"'])(?P<js_context>((?!\11).)*)\11)*)*\)"
+	pattern = r"_\(\s*([\"']{,3}\s*)(?P<message>((?!\1).)*)\1(\s*,\s*context\s*=\s*([\"'])(?P<py_context>((?!\5).)*)\5)*(\s*,\s*(.)*?\s*(,\s*([\"'])(?P<js_context>((?!\11).)*)\11)*)*\s*\)"
 	for m in re.compile(pattern).finditer(code):
 		message = m.group('message')
 		context = m.group('py_context') or m.group('js_context')
