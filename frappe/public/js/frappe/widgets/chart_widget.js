@@ -272,7 +272,6 @@ export default class ChartWidget extends Widget {
 			return result.chart.data;
 		} else {
 			let y_fields = [];
-			console.log(this.chart_doc)
 			this.chart_doc.y_axis.map(field => {
 				y_fields.push(field.y_field);
 			});
