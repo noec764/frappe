@@ -63,8 +63,8 @@
 
 .control-label,
 .grid-heading-row {
-  color: var(--gray-700);
-  font-size: 14px;
+	color: var(--text-light);
+	font-size: var(--text-sm);
 }
 
 .form-inner-toolbar {
@@ -73,7 +73,6 @@
 }
 
 .form-control.bold {
-	color: #000;
 	font-weight: 500;
 }
 

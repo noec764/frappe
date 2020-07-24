@@ -1,5 +1,4 @@
 $primaryColor: #6195FF;
-$baseBg: #fff;
 $darkenBg: #f5f7fa;
 $lightenBg: #e0e0e0;
 
@@ -166,7 +165,7 @@ $dropDownBg: #e3e3e3;
 }
 
 .v-sidebar-menu {
-	background-color: $baseBg;
+	background-color: var(--fg-color);
 	& .dodock-sidebar-link {
 		color: $itemColor;
 	}
