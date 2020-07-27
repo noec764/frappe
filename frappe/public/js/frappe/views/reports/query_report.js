@@ -168,6 +168,9 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	add_card_to_dashboard() {
 		let field_options = frappe.report_utils.get_field_options_from_report(this.columns, this.raw_data);
+		const dashboard_field = frappe.dashboard_utils.get_dashboard_link_field();
+		const set_standard = frappe.boot.developer_mode;
+
 		const dialog = new frappe.ui.Dialog({
 			title: __('Create Card'),
 			fields: [
@@ -192,12 +195,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					label: __('Add to Dashboard'),
 					fieldtype: 'Section Break'
 				},
-				{
-					fieldname: 'dashboard',
-					label: __('Choose Dashboard'),
-					fieldtype: 'Link',
-					options: 'Dashboard',
-				},
+				dashboard_field,
 				{
 					fieldname: 'cb_2',
 					fieldtype: 'Column Break'
@@ -213,7 +211,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				if (!values.label) {
 					values.label = `${values.report_function} of ${toTitle(values.report_field)}`;
 				}
-				this.create_number_card(values, values.dashboard, values.label);
+				this.create_number_card(values, values.dashboard, values.label, set_standard);
 				dialog.hide();
 			}
 		});
@@ -224,27 +222,26 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	add_chart_to_dashboard() {
 		if (this.chart_fields || this.chart_options) {
+			const dashboard_field = frappe.dashboard_utils.get_dashboard_link_field();
+			const set_standard = frappe.boot.developer_mode;
+
 			const dialog = new frappe.ui.Dialog({
 				title: __('Create Chart'),
 				fields: [
 					{
-						fieldname: 'dashboard',
-						label: 'Choose Dashboard',
-						fieldtype: 'Link',
-						options: 'Dashboard',
-					},
-					{
 						fieldname: 'dashboard_chart_name',
 						label: 'Chart Name',
 						fieldtype: 'Data',
-					}
+					},
+					dashboard_field
 				],
 				primary_action_label: __('Add'),
 				primary_action: (values) => {
 					this.create_dashboard_chart(
 						this.chart_fields || this.chart_options,
 						values.dashboard,
-						values.dashboard_chart_name
+						values.dashboard_chart_name,
+						set_standard
 					);
 					dialog.hide();
 				}
@@ -256,12 +253,13 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		}
 	}
 
-	create_number_card(values, dashboard_name, card_name) {
+	create_number_card(values, dashboard_name, card_name, set_standard) {
 		let args = {
 			'dashboard': dashboard_name || null,
 			'type': 'Report',
 			'report_name': this.report_name,
 			'filters_json': JSON.stringify(this.get_filter_values()),
+			set_standard: set_standard,
 		};
 		Object.assign(args, values);
 
@@ -274,7 +272,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		);
 	}
 
-	create_dashboard_chart(chart_args, dashboard_name, chart_name) {
+	create_dashboard_chart(chart_args, dashboard_name, chart_name, set_standard) {
 
 		let args = {
 			'dashboard': dashboard_name || null,
@@ -283,7 +281,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			'type': chart_args.chart_type || frappe.model.unscrub(chart_args.type),
 			'color': chart_args.color,
 			'filters_json': JSON.stringify(this.get_filter_values()),
-			'custom_options': {}
+			'custom_options': {},
+			'set_standard': set_standard,
 		};
 
 		for (let key in chart_args) {
@@ -1552,7 +1551,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		$(".page-head-content").removeClass('border-bottom');
 
 		let page_form = this.page.main.find('.page-form');
-		this.$status = $(`<div class="form-message text-muted small"></div>`)
+		this.$status = $(`<div class="form-message small"></div>`)
 			.hide().insertAfter(page_form);
 
 		this.$summary = $(`<div class="report-summary"></div>`)
