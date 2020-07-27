@@ -46,6 +46,7 @@ class UserProfile {
 		this.user = frappe.user_info(this.user_id);
 		this.page.set_title(this.user.fullname);
 		this.setup_user_search();
+		this.main_section.addClass("frappe-card");
 		this.main_section.empty().append(frappe.render_template('user_profile'));
 		this.energy_points = 0;
 		this.review_points = 0;
