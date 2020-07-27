@@ -30,6 +30,7 @@
   "birth_date",
   "interest",
   "banner_image",
+  "desk_theme",
   "column_break_26",
   "phone",
   "location",
@@ -622,13 +623,19 @@
    {
     "fieldname": "section_break_63",
     "fieldtype": "Column Break"
+   },
+   {
+    "fieldname": "desk_theme",
+    "fieldtype": "Select",
+    "label": "Desk Theme",
+    "options": "Light\nDark"
    }
  ],
  "icon": "fa fa-user",
  "idx": 413,
  "image_field": "user_image",
  "max_attachments": 5,
- "modified": "2020-07-18 02:31:18.550537",
+ "modified": "2020-07-27 18:44:44.307883",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",

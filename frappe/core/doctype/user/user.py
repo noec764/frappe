@@ -1127,3 +1127,8 @@ def generate_keys(user):
 
 		return {"api_secret": api_secret}
 	frappe.throw(frappe._("Not Permitted"), frappe.PermissionError)
+
+@frappe.whitelist()
+def switch_theme(theme):
+	if theme in ["Dark", "Light"]:
+		frappe.db.set_value("User", frappe.session.user, "desk_theme", theme) 
