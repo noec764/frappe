@@ -643,7 +643,7 @@ export default class ChartWidget extends Widget {
 			return
 		}
 		let last_synced_text = __("Last synced {0}", [comment_when(this.chart_doc.last_synced_on)]);
-		this.subtitle_field.html(last_synced_text);
+		this.footer.html(last_synced_text);
 	}
 
 	update_chart_object() {
@@ -680,13 +680,15 @@ export default class ChartWidget extends Widget {
 	}
 
 	update_default_date_filters(report_filters, chart_filters) {
-		report_filters.map(f => {
-			if (['Date', 'DateRange'].includes(f.fieldtype) && f.default) {
-				if (f.reqd || chart_filters[f.fieldname]) {
-					chart_filters[f.fieldname] = f.default;
+		if (report_filters) {
+			report_filters.map(f => {
+				if (['Date', 'DateRange'].includes(f.fieldtype) && f.default) {
+					if (f.reqd || chart_filters[f.fieldname]) {
+						chart_filters[f.fieldname] = f.default;
+					}
 				}
-			}
-		});
+			});
+		}
 
 		return chart_filters;
 	}
