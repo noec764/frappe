@@ -215,6 +215,9 @@ select.input-xs {
 	font-weight: 600;
 }
 
+.text-color {
+	color: var(--text-color);
+}
 
 /* dropdowns */
 
@@ -291,4 +294,8 @@ input[type="checkbox"] {
 		border-radius: 4px;
 		line-height: 10px;
 	}
+}
+
+.frappe-card {
+	@include card();
 }
