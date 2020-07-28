@@ -29,6 +29,11 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		return 'Calendar';
 	}
 
+	setup_page() {
+		this.hide_page_form = true;
+		super.setup_page();
+	}
+
 	setup_defaults() {
 		super.setup_defaults();
 		this.page_title = __('{0} Calendar', [this.page_title]);
