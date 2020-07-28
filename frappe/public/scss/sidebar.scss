@@ -479,6 +479,11 @@ body[data-route^="Module"] .main-menu {
 	top: 0;
 }
 
+.sidebar-column {
+	border-right: 1px solid $border-color;
+}
+
+
 .sidebar-item a {
 	display: block;
 	padding: 0.25rem 0.5rem;
@@ -503,6 +508,10 @@ body[data-route^="Module"] .main-menu {
 .sidebar-item a.active {
 	color: $primary;
 	background-color: $primary-light;
+}
+
+.sidebar-item a:hover {
+	color: $secondary;
 }
 
 .sidebar-item-icon {
