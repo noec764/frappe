@@ -59,7 +59,7 @@
 		.image-view-item:hover {
 			// box-shadow: none;
 			border: none;
-			background-color: var(--control-bg);
+			background-color: var(--highlight-color);
 
 			.list-row-checkbox {
 				&:before {
