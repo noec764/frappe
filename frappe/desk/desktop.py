@@ -375,7 +375,7 @@ def get_desk_sidebar_items(flatten=False, cache=True):
 
 		# pages sorted based on pinned to top and then by name
 		all_pages = frappe.get_all("Desk Page",
-			fields=["name", "category", "icon", "color", "pin_to_top", "pin_to_bottom"],
+			fields=["name", "icon", "color", "pin_to_top", "pin_to_bottom"],
 			filters=filters, ignore_permissions=True)
 		# Filter Page based on Permission
 		pages = []

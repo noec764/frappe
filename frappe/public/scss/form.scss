@@ -24,17 +24,16 @@
 	}
 
 	.section-head {
+		@extend .head-title;
 		width: 100%;
 		padding: var(--padding-md);
 		margin: 0;
-		font-size: var(--text-lg);
-		font-weight: 500;
-		color: var(--heading-color);
 		cursor: pointer;
 
 		.collapse-indicator {
 			float: right;
 		}
+
 	}
 	.section-head.collapsed {
 		margin-bottom: 0px;

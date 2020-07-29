@@ -7,8 +7,8 @@
 {% block page_content %}
 <article itemscope itemtype="http://schema.org/BlogPost">
 	<div>
-		<h6 class='text-muted'>By {{ author }} on {{ frappe.format_date(creation) }}</h6>
-		<span class="indicator {{ level_class }}">{{ level }}</span>
+		<h6 class='text-muted'>{{ _("By {0} on {1}").format(author, frappe.format_date(creation)) }}</h6>
+		<span class="indicator-pill {{ level_class }}">{{ _(level) }}</span>
 	</div>
 
 	<div class="from-markdown my-4" itemprop="articleBody">
@@ -19,26 +19,22 @@
 		{{ _("More articles on {0}").format(category.name) }}</a></p>
 </article>
 <div class="help-article-feedback mb-4">
-	<hr />
 	<div class="feedback-view ">
-		<div class="text-muted small mr-2 mb-2">{{ _("Was this article helpful?") }}</div>
+		<div class="text-muted small mr-2 mb-2">{{ _("Was this article helpful ?") }}</div>
 		<button class="feedback btn btn-outline-primary btn-sm" data-value="Yes" style="width: 50px;">{{ _("Yes") }}</button>
 		<button class="feedback btn btn-outline-primary btn-sm" data-value="No" style="width: 50px;">{{ _("No") }}</button>
 		<span class="feedback-msg small hidden">{{ _("Thank you for your feedback!") }}</span>
 	</div>
 </div>
 <div class="help-article-comments">
-	<hr>
-	<a href="/{{ category.route }}">
-		{{ _("More articles on {0}").format(category.name) }}
-	</a>
-	<hr>
+	<hr/>
+	<div>
+		<h5>{{ _("Comments") }}</h5>
+		{% include 'templates/includes/comments/comments.html' %}
+	</div>
 </div>
 
-<div>
-	<h5>Comments</h5>
-	{% include 'templates/includes/comments/comments.html' %}
-</div>
+
 {% endblock %}
 
 <script>
