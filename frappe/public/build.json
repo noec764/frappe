@@ -1,6 +1,6 @@
 {
 	"css/frappe-web-b4.css": [
-		"public/scss/website.scss",
+		"public/scss/standard_website.scss",
 		"public/less/indicator.less"
 	],
 	"css/frappe-chat-web.css": [

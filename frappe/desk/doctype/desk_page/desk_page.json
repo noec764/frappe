@@ -64,7 +64,7 @@
    "fieldtype": "Link",
    "label": "Restrict to Domain",
    "options": "Domain",
-   "read_only_depends_on": "eval:doc.extends_another_page == 0",
+   "read_only_depends_on": "eval:doc.extends_another_page",
    "search_index": 1
   },
   {
@@ -205,7 +205,7 @@
   }
  ],
  "links": [],
- "modified": "2020-07-23 15:37:24.067946",
+ "modified": "2020-07-29 14:05:56.925967",
  "modified_by": "thierry@dokos.io",
  "module": "Desk",
  "name": "Desk Page",

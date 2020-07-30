@@ -456,7 +456,7 @@ frappe.views.ListRenderer = Class.extend({
 	get_indicator_html: function (doc) {
 		var indicator = frappe.get_indicator(doc, this.doctype);
 		if (indicator) {
-			return `<span class='indicator ${indicator[1]} filterable'
+			return `<span class='indicator-pill ${indicator[1]} filterable'
 				data-filter='${indicator[2]}'>
 				${__(indicator[0])}
 			<span>`;
@@ -468,7 +468,7 @@ frappe.views.ListRenderer = Class.extend({
 		if (!indicator) {
 			return '';
 		}
-		return `<span class='indicator ${indicator[1]}' title='${__(indicator[0])}'></span>`;
+		return `<span class='indicator-pill ${indicator[1]}' title='${__(indicator[0])}'></span>`;
 	},
 	prepare_data: function (data) {
 		if (data.modified) {

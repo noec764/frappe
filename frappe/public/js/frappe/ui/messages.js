@@ -229,7 +229,7 @@ frappe.msgprint = function(msg, title, is_minimizable) {
 
 	// show / hide indicator
 	if(data.indicator) {
-		frappe.msg_dialog.indicator.removeClass().addClass('indicator ' + data.indicator);
+		frappe.msg_dialog.indicator.removeClass().addClass('indicator-pill ' + data.indicator);
 	} else {
 		frappe.msg_dialog.indicator.removeClass().addClass('hidden');
 	}
