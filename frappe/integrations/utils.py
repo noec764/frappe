@@ -123,8 +123,8 @@ def get_gateway_controller(doctype, docname):
 
 class PaymentGatewayController(Document):
 	def finalize_request(self, reference_no=None):
-		redirect_to = self.data.get('redirect_to') or 'payment-success'
-		redirect_message = self.data.get('redirect_message') or None
+		redirect_to = self.data.get('redirect_to')
+		redirect_message = self.data.get('redirect_message')
 
 		if self.flags.status_changed_to in ["Completed", "Autorized", "Pending"] and self.reference_document:
 			custom_redirect_to = None
@@ -152,19 +152,11 @@ class PaymentGatewayController(Document):
 			"status": self.integration_request.status
 		}
 
-	def change_integration_request_status(self, status, type, error):
+	def change_integration_request_status(self, status, error_type, error):
 		if hasattr(self, "integration_request"):
 			self.flags.status_changed_to = status
 			self.integration_request.db_set('status', status, update_modified=True)
-			self.integration_request.db_set(type, error, update_modified=True)
+			self.integration_request.db_set(error_type, error, update_modified=True)
 
-	def change_linked_integration_requests_status(self, status):
-		try:
-			linked_docs = frappe.get_all("Integration Request",\
-				filters={"reference_doctype": self.reference_document.doctype,\
-					"reference_docname": self.reference_document.name})
-
-			for linked_doc in linked_docs:
-				frappe.db.set_value("Integration Request", linked_doc.name, "status", status)
-		except Exception:
-			frappe.log_error(frappe.get_traceback(), _("Integration request status update error"))
+		if hasattr(self, "update_reference_document_status"):
+			self.update_reference_document_status(status)
