@@ -351,6 +351,10 @@ frappe.views.Calendar = class {
 				d.end = frappe.datetime.add_days(d.start, 1);
 			}
 
+			if (d.status && me.status_color) {
+				d.borderColor = me.status_color[d.status];
+			}
+
 			me.fix_end_date_for_event_render(d);
 			me.prepare_colors(d);
 
