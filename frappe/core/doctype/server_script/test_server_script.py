@@ -54,9 +54,8 @@ class TestServerScript(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		docs = frappe.get_all("Server Script")
-		for doc in docs:
-			frappe.delete_doc("Server Script", doc.name)
+		frappe.db.commit()
+		frappe.db.sql('truncate `tabServer Script`')
 
 	def setUp(self):
 		frappe.cache().delete_value('server_script_map')
