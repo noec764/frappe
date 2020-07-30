@@ -6,7 +6,7 @@
 .avatar-frame {
 	display: inline-block;
 	width: 100%;
-	padding: 50%;
+	height: 100%;
 	// TODO: Remove
 	// background-color: var(--pink-200);
 	background-size: cover;
@@ -90,7 +90,7 @@
 }
 
 .avatar-group {
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 	flex-direction: row-reverse;
 	&.right {
@@ -100,25 +100,42 @@
 		justify-content: flex-end;
 	}
 
-	.avatar {
-		position: relative;
+	.avatar-action {
+		display: none;
+		margin-left: var(--margin-sm);
+		.icon {
+			use {
+				stroke: var(--grey-500);
+			}
+		}
+	}
 
+	// .avatar-small {
+	// 	width: 24px;
+	// 	height: 24px;
+	// }
+
+	&:hover {
+		.avatar {
+			margin-left: 12px;
+		}
+
+		.avatar-action {
+			display: block;
+		}
+	}
+
+	.avatar {
 		.avatar-frame {
 			border: 1px solid $white;
 		}
-
-		&:hover {
-			z-index: 1;
-		}
 	}
+
 	.avatar-extra-count {
-		font-size: var(--text-md);
-		font-weight: 500;
-		color: $white;
-		background-color: var(--blue-500);
+		font-size: var(--text-sm);
 	}
 
-	.avatar+.avatar {
+	.avatar + .avatar {
 		margin-right: -0.3rem;
 	}
 }

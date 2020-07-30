@@ -32,8 +32,17 @@
 
 	--sidebar-select-color: var(--gray-800);
 
+	--kanban-bg-color: var(--gray-800);
+	--kanban-card-color: var(--bg-color);
+
 	--shadow-inset: var(--fg-color);
 	--border-color: var(--gray-700);
 	--dark-border-color: var(--gray-600);
 	--highlight-color: var(--gray-700);
+
+	.frappe-card {
+		.btn-default {
+			background-color: var(--bg-color);
+		}
+	}
 }

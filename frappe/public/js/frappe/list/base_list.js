@@ -179,7 +179,7 @@ frappe.views.BaseList = class BaseList {
 			'Map': 'map'
 		}
 
-		this.views_menu = this.page.add_custom_button_group(__(`View as {0}`, [__(this.view_name)]), icon_map[this.view_name] || 'list');
+		this.views_menu = this.page.add_custom_button_group(__(`{0} View`, [__(this.view_name)]), icon_map[this.view_name] || 'list');
 		this.views_list = new frappe.views.Views({
 			doctype: this.doctype,
 			parent: this.views_menu,

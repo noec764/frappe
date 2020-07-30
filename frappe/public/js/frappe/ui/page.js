@@ -601,14 +601,14 @@ frappe.ui.Page = Class.extend({
 	add_custom_button_group: function(label, icon) {
 		let dropdown_label = `<span class="hidden-xs">
 			<span class="custom-btn-group-label">${__(label)}</span>
-			<span class="caret"></span>
+			${frappe.utils.icon('select', 'xs')}
 		</span>`;
 
 		if (icon) {
 			dropdown_label = `<span class="hidden-xs">
 				${frappe.utils.icon(icon)}
 				<span class="custom-btn-group-label">${__(label)}</span>
-				<span class="caret"></span>
+				${frappe.utils.icon('select', 'xs')}
 			</span>
 			<span class="visible-xs">
 				${frappe.utils.icon(icon)}
