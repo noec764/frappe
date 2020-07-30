@@ -100,7 +100,7 @@ login.reset_sections = function(hide) {
 		$("section.for-signup").toggle(false);
 	}
 	$('section:not(.signup-disabled) .indicator').each(function() {
-		$(this).removeClass().addClass('indicator-pill').addClass('blue')
+		$(this).removeClass().addClass('indicator-pill modal-title').addClass('blue')
 			.text($(this).attr('data-text'));
 	});
 }
@@ -141,7 +141,7 @@ login.call = function(args, callback) {
 
 login.set_indicator = function(message, color) {
 	$('section:visible .indicator')
-		.removeClass().addClass('indicator-pill').addClass(color).text(message)
+		.removeClass().addClass('indicator-pill modal-title').addClass(color).text(message)
 }
 
 login.set_invalid = function(message) {

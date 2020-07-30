@@ -153,7 +153,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 				let results = r.message || [];
 				let dropdown_html;
 				if (results.length == 0) {
-					dropdown_html = `<div class="dropdown-item">No results found</div>`;
+					dropdown_html = `<div class="dropdown-item">${__("No results found") }</div>`;
 				} else {
 					dropdown_html = results.map(r => {
 						return `<a class="dropdown-item" href="/${r.path}">

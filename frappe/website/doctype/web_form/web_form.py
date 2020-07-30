@@ -540,7 +540,7 @@ def get_form_data(doctype, docname=None, web_form_name=None):
 
 	out = frappe._dict()
 	out.web_form = web_form
-
+	print(web_form.web_form_fields[2].__dict__)
 	if frappe.session.user != 'Guest' and not docname and not web_form.allow_multiple:
 		docname = frappe.db.get_value(doctype, {"owner": frappe.session.user}, "name")
 

@@ -156,7 +156,7 @@ frappe.msgprint = function(msg, title, is_minimizable) {
 			frappe.msg_dialog.msg_area.empty();
 		}
 
-		frappe.msg_dialog.indicator = frappe.msg_dialog.header.find('.indicator');
+		frappe.msg_dialog.indicator = frappe.msg_dialog.header.find('.indicator-pill');
 	}
 
 	// setup and bind an action to the primary button
@@ -229,7 +229,7 @@ frappe.msgprint = function(msg, title, is_minimizable) {
 
 	// show / hide indicator
 	if(data.indicator) {
-		frappe.msg_dialog.indicator.removeClass().addClass('indicator-pill ' + data.indicator);
+		frappe.msg_dialog.indicator.removeClass().addClass('indicator-pill modal-title').addClass(data.indicator);
 	} else {
 		frappe.msg_dialog.indicator.removeClass().addClass('hidden');
 	}
