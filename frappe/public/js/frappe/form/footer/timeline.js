@@ -606,8 +606,7 @@ frappe.ui.form.Timeline = class Timeline {
 							const field_display_status = frappe.perm.get_field_display_status(df, null,
 								me.frm.perm);
 							if (field_display_status === 'Read' || field_display_status === 'Write') {
-								parts.push(__('{0} from {1} to {2}', [
-									__(df.label),
+								parts.push(__('{0} from {1} to {2}', [__(df.label),
 									me.format_content_for_timeline(p[1]),
 									me.format_content_for_timeline(p[2])
 								]));
@@ -641,9 +640,7 @@ frappe.ui.form.Timeline = class Timeline {
 								null, me.frm.perm);
 
 							if (field_display_status === 'Read' || field_display_status === 'Write') {
-								parts.push(__('{0} from {1} to {2} in row #{3}', [
-									frappe.meta.get_label(me.frm.fields_dict[row[0]].grid.doctype,
-										p[0]),
+								parts.push(__('{0} from {1} to {2} in row #{3}', [__(frappe.meta.get_label(me.frm.fields_dict[row[0]].grid.doctype, p[0])),
 									me.format_content_for_timeline(p[1]),
 									me.format_content_for_timeline(p[2]),
 									row[1]
@@ -676,7 +673,7 @@ frappe.ui.form.Timeline = class Timeline {
 								me.frm.perm);
 
 							if (field_display_status === 'Read' || field_display_status === 'Write') {
-								return frappe.meta.get_label(me.frm.doctype, p[0])
+								return __(frappe.meta.get_label(me.frm.doctype, p[0]))
 							}
 						}
 					});
