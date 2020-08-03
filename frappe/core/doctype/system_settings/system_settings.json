@@ -421,7 +421,7 @@
    "label": "Desk Logo"
   },
   {
-   "default": "HH:mm:ss",
+   "default": "HH:mm",
    "fieldname": "time_format",
    "fieldtype": "Select",
    "label": "Time Format",

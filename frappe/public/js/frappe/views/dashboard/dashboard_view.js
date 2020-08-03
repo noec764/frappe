@@ -9,7 +9,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	setup_defaults() {
 		return super.setup_defaults()
 			.then(() => {
-				this.page_title = __('{0} Dashboard', [this.doctype]);
+				this.page_title = __('{0} Dashboard', [__(this.doctype)]);
 				this.dashboard_settings = frappe.get_user_settings(this.doctype)['dashboard_settings'] || null;
 			});
 	}
@@ -277,7 +277,13 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					fieldname: 'new_or_existing',
 					fieldtype: 'Select',
 					label: 'Choose an existing chart or create a new chart',
-					options: ['New Chart', 'Existing Chart'],
+					options: [{
+						'value': 'New Chart',
+						'label': __('New Chart')
+					},{
+						'value': 'Existing Chart',
+						'label': __('Existing Chart')
+					}],
 					reqd: 1,
 				},
 				{
