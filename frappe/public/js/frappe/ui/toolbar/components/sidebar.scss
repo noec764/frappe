@@ -43,24 +43,18 @@
 	& .dodock-sidebar-item {
 		position: relative;
 		& > .dodock-sidebar-link {
-		& > .dodock-sidebar-icon {
-			height: 30px;
-			line-height: 30px;
-			width: 30px;
-			text-align: center;
-			border-radius: 3px;
-			& > .selected-module {
-				border-radius: 4px;
-				display: inline-block;
-				color: #fff;
-				background-color: var(--primary-color);
+			& > .dodock-sidebar-icon {
+				height: 30px;
+				line-height: 30px;
+				width: 30px;
+				text-align: center;
+				border-radius: 3px;
 			}
-		}
-		&:after {
-			content: '';
-			display: block;
-			clear: both;
-		}
+			&:after {
+				content: '';
+				display: block;
+				clear: both;
+			}
 		}
 	}
 	& .dodock-sidebar-link {
@@ -131,10 +125,10 @@
 	}
 	&.dodock-sidebar-default {
 		& .dodock-sidebar-link:hover {
-			color: var(--fg-color);
+			color: white;
 			background-color: var(--primary-color);
 			& .dodock-sidebar-icon {
-				color: var(--fg-color) !important;
+				color: white !important;
 			}
 		}
 	}
@@ -143,11 +137,4 @@
 		background-color: var(--fg-color);
 		outline-color: var(--fg-color);
 	}
-}
-
-.dodock-sidebar-list-overlay {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	z-index: 998;
 }

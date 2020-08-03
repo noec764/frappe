@@ -26,7 +26,6 @@
 				@click="scrollUpDown"
 			/>
 		</div>
-		<div v-if="mobileDisplay && !isCollapsed" class="dodock-sidebar-list-overlay" @click="mobileCollapse"></div>
 	</div>
 </template>
 
