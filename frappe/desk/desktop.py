@@ -375,7 +375,7 @@ def get_desk_sidebar_items(flatten=False, cache=True):
 
 		# pages sorted based on pinned to top and then by name
 		all_pages = frappe.get_all("Desk Page",
-			fields=["name", "icon", "color", "pin_to_top", "pin_to_bottom"],
+			fields=["name", "category", "icon", "color", "pin_to_top", "pin_to_bottom"],
 			filters=filters, ignore_permissions=True)
 		# Filter Page based on Permission
 		pages = []
@@ -392,8 +392,12 @@ def get_desk_sidebar_items(flatten=False, cache=True):
 	if flatten:
 		return pages
 
-	sidebar_items = [{"label": _(p["name"]), **p} for p in pages]
-	sidebar_items = sort_items(sidebar_items, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
+	sidebar_items = {}
+
+	for category in ["Modules", "Domains", "Places", "Administration"]:
+		_category = (f"{category}",) if category != "Modules" else (f"{category}", '')
+		_sidebar_items = [{"label": _(p["name"]), **p} for p in pages if (p.category or '') in _category]
+		sidebar_items[category] = sort_items(_sidebar_items, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
 
 	return sidebar_items
 

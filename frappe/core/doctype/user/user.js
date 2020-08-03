@@ -292,6 +292,7 @@ frappe.ModuleEditor = Class.extend({
 			} else {
 				me.frm.add_child("block_modules", {"module": module});
 			}
+			me.frm.dirty();
 		});
 	}
 });

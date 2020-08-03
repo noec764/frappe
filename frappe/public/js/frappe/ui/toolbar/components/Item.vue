@@ -1,6 +1,6 @@
 <template>
 	<div
-		class="dodock-sidebar-item first-item"
+		class="dodock-sidebar-item"
 		@mouseenter="mouseEnter($event)"
 		@touchend="touchEnd($event)"
 		@click="itemClick"

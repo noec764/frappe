@@ -10,13 +10,18 @@
 			@scroll="onWheel"
 		>
 			<div class="dodock-sidebar-list" id="sidebard-modules-list" ref="sidebarList">
-				<template v-for="(item, index) in modules">
-					<item
-						:key="index"
-						:item="item"
-						:is-collapsed="isCollapsed"
-						@itemClick="itemClick"
-					/>
+				<template v-for="(mod, mod_index) in moduleCategories">
+					<div v-if="modules[mod]&&modules[mod].length" class="dodock-sidebar-divider" :class="[!isCollapsed ? '' : 'collapsed']" :key="mod + mod_index">
+						<span>{{ __(mod) }}</span>
+					</div>
+					<template v-for="(item, index) in modules[mod]">
+						<item
+							:key="item.name + index"
+							:item="item"
+							:is-collapsed="isCollapsed"
+							@itemClick="itemClick"
+						/>
+					</template>
 				</template>
 			</div>
 			<button
@@ -39,13 +44,15 @@ export default {
 	data () {
 		return {
 			isCollapsed: true,
-			modules: [],
+			modules: {},
+			modules_list: [],
 			width: '200px',
 			widthCollapsed: '50px',
 			mobileDisplay: false,
 			goToTop: false,
 			isMounted: false,
-			timer: null
+			timer: null,
+			moduleCategories: ['Modules', 'Domains', 'Places', 'Administration']
 		}
 	},
 	created() {
@@ -59,7 +66,7 @@ export default {
 		},
 		showBottomButton() {
 			if (this.isMounted) {
-				return (this.modules.length * 50) > (this.$refs.sidebarList.clientHeight - 35);
+				return (this.modules_list.length * 50) > (this.$refs.sidebarList.clientHeight - 35);
 			}
 		}
 	},
@@ -88,7 +95,11 @@ export default {
 			.then(r => {
 				this.modules = r
 
-				const maxLength = this.modules.reduce((acc, item) => {
+				this.modules_list = this.moduleCategories.map(c => {
+					return this.modules[c];
+				}).flat();
+
+				const maxLength = this.modules_list.reduce((acc, item) => {
 					return item.label.length > acc ? item.label.length : acc;
 				}, 0)
 
