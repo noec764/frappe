@@ -53,7 +53,7 @@
     "superagent": "^3.8.2",
     "touch": "^3.1.0",
     "vue": "^2.6.11",
-    "vue-good-table": "^2.18.1",
+    "vue-good-table": "^2.20.0",
     "vue-router": "^2.0.0"
   },
   "devDependencies": {
