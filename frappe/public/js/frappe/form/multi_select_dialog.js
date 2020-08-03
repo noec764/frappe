@@ -42,7 +42,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 			title: __("Select {0}", [(this.doctype == '[Select]') ? __("value") : __(doctype_plural)]),
 			fields: fields,
 			primary_action_label: this.primary_action_label || __("Get Items"),
-			secondary_action_label: __("Make {0}", [me.doctype]),
+			secondary_action_label: __("Make {0}", [__(me.doctype)]),
 			primary_action: function () {
 				let filters_data = me.get_custom_filters();
 				me.action(me.get_checked_values(), cur_dialog.get_values(), me.args, filters_data);
@@ -304,7 +304,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 
 		if ($.isArray(this.setters)) {
 			for (let df of this.setters) {
-				filters[df.fieldname] = me.dialog.fields_dict[df.fieldname].get_value() || undefined;
+				filters[df.fieldname] = me.dialog.fields_dict[df.fieldname].get_value() || df.value || undefined;
 				me.args[df.fieldname] = filters[df.fieldname];
 				filter_fields.push(df.fieldname);
 			}
