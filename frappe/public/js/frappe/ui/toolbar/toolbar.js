@@ -94,8 +94,8 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 			}
 		});
 
-		header.find(".toggle-modules").on("click", function() {
-			frappe.sidebar_update.trigger('toggle_mobile_menu')
+		header.find(".navbar-home").on("click", function() {
+			frappe.is_mobile() && frappe.sidebar_update.trigger('toggle_mobile_menu')
 		});
 	},
 

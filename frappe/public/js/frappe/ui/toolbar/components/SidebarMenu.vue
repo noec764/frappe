@@ -15,6 +15,7 @@
 						:key="index"
 						:item="item"
 						:is-collapsed="isCollapsed"
+						@itemClick="itemClick"
 					/>
 				</template>
 			</div>
@@ -40,7 +41,7 @@ export default {
 		return {
 			isCollapsed: true,
 			modules: [],
-			width: '250px',
+			width: '200px',
 			widthCollapsed: '50px',
 			mobileDisplay: false,
 			goToTop: false,
@@ -50,12 +51,12 @@ export default {
 	},
 	created() {
 		frappe.sidebar_update.on('toggle_mobile_menu', () => {
-			this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand()
+			this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand();
 		})
 	},
 	computed: {
 		sidebarWidth () {
-			return this.isCollapsed ? this.widthCollapsed : this.width
+			return this.mobileDisplay ? '100%' : (this.isCollapsed ? this.widthCollapsed : this.width)
 		},
 		showBottomButton() {
 			if (this.isMounted) {
@@ -125,6 +126,9 @@ export default {
 			this.timer = setTimeout(() => {
 				this.isCollapsed = true;
 			}, 1000);
+		},
+		itemClick() {
+			this.mobileDisplay && (this.mobileDisplay = !this.mobileDisplay);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 		class="dodock-sidebar-item first-item"
 		@mouseenter="mouseEnter($event)"
 		@touchend="touchEnd($event)"
+		@click="itemClick"
 	>
 		<a
 			class="dodock-sidebar-link"
@@ -48,6 +49,9 @@ export default {
 			if (this.isCollapsed) {
 				this.$parent.$emit('touchEndItem')
 			}
+		},
+		itemClick() {
+			this.$emit('itemClick');
 		}
 	}
 }
