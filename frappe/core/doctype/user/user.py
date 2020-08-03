@@ -41,7 +41,7 @@ class User(Document):
 	def onload(self):
 		from frappe.config import get_modules_from_all_apps
 		self.set_onload('all_modules',\
-			[{"name": m.get("module_name"), "label": _(m.get("module_name"))} \
+			[{"name": m.get("module_name"), "label": m.get("label")} \
 			for m in get_modules_from_all_apps()])
 
 	def before_insert(self):
@@ -51,6 +51,7 @@ class User(Document):
 	def after_insert(self):
 		create_notification_settings(self.name)
 		self.add_default_roles()
+		self.hide_modules()
 
 	def validate(self):
 		self.check_demo()
@@ -492,6 +493,9 @@ class User(Document):
 		"""Returns list of modules blocked for that user"""
 		return [d.module for d in self.block_modules] if self.block_modules else []
 
+	def add_blocked_module(self, module):
+		self.append('block_modules', dict(module=module))
+
 	def validate_user_email_inbox(self):
 		""" check if same email account added in User Emails twice """
 
@@ -529,6 +533,18 @@ class User(Document):
 		default_role = frappe.db.get_value("Portal Settings", None, "default_role")
 		if default_role:
 			self.add_roles(default_role)
+
+	def hide_modules(self):
+		active_domains = frappe.get_active_domains()
+		hidden_modules = []
+		for domain in active_domains:
+			domain_data = frappe.get_domain_data(domain)
+			hidden_modules.extend(domain_data.get("hidden_modules", []))
+
+		for module in hidden_modules:
+			if module:
+				self.add_blocked_module(module)
+		self.save()
 
 
 @frappe.whitelist()
