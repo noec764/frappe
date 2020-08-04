@@ -409,7 +409,7 @@ export default class ChartWidget extends Widget {
 	setup_filter_dialog(fields) {
 		let me = this;
 		let dialog = new frappe.ui.Dialog({
-			title: __(`Set Filters for ${this.chart_doc.chart_name}`),
+			title: __("Set Filters for {0}", [this.chart_doc.chart_name]),
 			fields: fields,
 			primary_action: function() {
 				let values = this.get_values();
@@ -420,7 +420,7 @@ export default class ChartWidget extends Widget {
 					me.fetch_and_update_chart();
 				}
 			},
-			primary_action_label: "Set"
+			primary_action_label: __("Set")
 		});
 
 		dialog.show();

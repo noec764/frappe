@@ -4,7 +4,6 @@ import sys
 import frappe
 from frappe.utils import cint
 from frappe.commands import pass_context, get_site
-from frappe.commands import pass_context, get_site
 
 def _is_scheduler_enabled():
 	enable_scheduler = False
