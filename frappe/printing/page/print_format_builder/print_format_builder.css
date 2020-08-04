@@ -81,3 +81,11 @@
 	border-top: 0px;
 	margin-left: 160px;
 }
+
+.select-columns {
+	padding-top: 0;
+}
+
+.edit-heading {
+	margin-bottom: 1em;
+}
