@@ -6204,10 +6204,10 @@ void-elements@^2.0.1:
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
-vue-good-table@^2.18.1:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.18.1.tgz#1d8f19bd82e04bf43822c980c30cde0515640641"
-  integrity sha512-W9D5M87GgzgQowtWVARqxSwSvHx0MKnKV5d9Zlz5Fx3XfuJWm4lufZUpWlTwKTbLWoG4cLjHd6N0m55S9Ild3Q==
+vue-good-table@^2.20.0:
+  version "2.20.0"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.20.0.tgz#fb2e70758cd86b4ec1aa985369a8b58528cbe81c"
+  integrity sha512-KBOX0GUOOgpT5CPTr2HD0Po/j+GNjGiutF2OCaxhgB/897x40t1M5JlxUjHp2+F/0iZ9YtCZqc123e4CR6rC6w==
   dependencies:
     date-fns "^2.0.0-beta.4"
     diacriticless "1.0.1"
@@ -6216,6 +6216,7 @@ vue-good-table@^2.18.1:
     lodash.filter "^4.6.0"
     lodash.foreach "^4.5.0"
     lodash.isequal "^4.5.0"
+    vue-select "^3.1.0"
 
 vue-router@^2.0.0:
   version "2.8.1"
@@ -6226,6 +6227,11 @@ vue-runtime-helpers@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vue-runtime-helpers/-/vue-runtime-helpers-1.1.2.tgz#446b7b820888ab0c5264d2c3a32468e72e4100f3"
   integrity sha512-pZfGp+PW/IXEOyETE09xQHR1CKkR9HfHZdnMD/FVLUNI+HxYTa82evx5WrF6Kz4s82qtqHvMZ8MZpbk2zT2E1Q==
+
+vue-select@^3.1.0:
+  version "3.10.7"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.10.7.tgz#58d756a7159bf923ce99abf74c5d6309ea998136"
+  integrity sha512-6rvIYBNEp9y0xK/sq2ZzDCxKA2BoVNliyctOeMtzarQzvpLlab7l8zvqr2jhGZOxozp7jd2AvZxpF3Ivems2wQ==
 
 vue-template-compiler@^2.6.11:
   version "2.6.11"
