@@ -21,6 +21,11 @@ from frappe.modules.utils import sync_customizations
 from frappe.database import setup_database
 from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 
+APP_MAP = {
+	'dodock': 'frappe',
+	'dokos': 'erpnext'
+}
+
 def install_db(root_login="root", root_password=None, db_name=None, source_sql=None,
 	admin_password=None, verbose=True, force=0, site_config=None, reinstall=False,
 	db_password=None, db_type=None, db_host=None, db_port=None, no_mariadb_socket=False):
@@ -48,6 +53,7 @@ def install_db(root_login="root", root_password=None, db_name=None, source_sql=N
 
 
 def install_app(name, verbose=False, set_as_patched=True):
+	name = APP_MAP.get(name, name)
 	frappe.flags.in_install = name
 	frappe.flags.ignore_in_install = False
 
