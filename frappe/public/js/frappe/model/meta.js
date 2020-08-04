@@ -207,11 +207,8 @@ $.extend(frappe.meta, {
 			}
 		});
 
-		if (print_format_list.length > 1) {
-			print_format_list.shift();
-		}
-
 		if(default_print_format && default_print_format != "Standard") {
+			print_format_list.shift();
 			var index = print_format_list.indexOf(default_print_format);
 			print_format_list.splice(index, 1).sort();
 			print_format_list.unshift(default_print_format);
