@@ -608,7 +608,7 @@ class FilterArea {
 
 			if (
 				fields_dict[fieldname] &&
-				(condition === "=" || condition === "like")
+				(condition === "=" || condition === "like" || condition === "descendants of")
 			) {
 				// standard filter
 				out.promise = out.promise.then(() =>
@@ -676,18 +676,23 @@ class FilterArea {
 
 		const doctype_fields = this.list_view.meta.fields;
 		const title_field = this.list_view.meta.title_field;
+		const standard_filter_fields = doctype_fields
+			.filter(
+				(df) =>
+					df.fieldname === title_field ||
+					(df.in_standard_filter &&
+						frappe.model.is_value_type(df.fieldtype))
+			)
 
 		fields = fields.concat(
-			doctype_fields
-				.filter(
-					(df) =>
-						df.fieldname === title_field ||
-						(df.in_standard_filter &&
-							frappe.model.is_value_type(df.fieldtype))
-				)
-				.map((df) => {
+				standard_filter_fields.map(df => {
+					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
+						return Object.assign(df, {condition: "descendants of"})
+					}
+					return df
+				}).map((df) => {
 					let options = df.options;
-					let condition = "=";
+					let condition = df.condition || "=";
 					let fieldtype = df.fieldtype;
 					if (
 						[
