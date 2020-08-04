@@ -674,7 +674,6 @@ frappe.ui.Page = Class.extend({
 		})
 		f.refresh();
 		$(f.wrapper)
-			.addClass('col-md-2')
 			.attr("title", __(df.label)).tooltip();
 
 		// html fields in toolbar are only for display
