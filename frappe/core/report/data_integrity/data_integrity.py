@@ -34,7 +34,7 @@ def get_data(filters=None):
 
 		if doc._seal is None or doc._submitted is None:
 			comment = _("This document is not sealed")
-			result.append([doc.name, format_datetime(doc._submitted) or "", doc.owner,\
+			result.append([doc.name, get_datetime(doc._submitted) or "", doc.owner,\
 				"Out", comment, "", "", "", ""])
 			continue
 
@@ -50,7 +50,7 @@ def get_data(filters=None):
 			integrity = "Yes" if seal == doc._seal else "No"
 			comment = _("Data integrity verified") if integrity == "Yes" else _("Data integrity could not be verified")
 
-			result.append([doc.name, format_datetime(doc._submitted), doc.owner,\
+			result.append([doc.name, get_datetime(doc._submitted), doc.owner,\
 				integrity, comment, seal, doc._seal, doc._seal_version])
 
 	return result
@@ -103,7 +103,7 @@ def get_columns(filters=None):
 		{
 			"label": _("Submission Date"),
 			"fieldname": "submission_date",
-			"fieldtype": "Data",
+			"fieldtype": "Datetime",
 			"width": 150
 		},
 		{
@@ -145,6 +145,7 @@ def get_columns(filters=None):
 	]
 	return columns
 
+@frappe.whitelist()
 def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user = frappe.session.user
 	user_perms = frappe.utils.user.UserPermissions(user)
