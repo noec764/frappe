@@ -142,7 +142,8 @@ def add_preload_headers(response):
 		preload = []
 		soup = BeautifulSoup(response.data, "lxml")
 		for elem in soup.find_all('script', src=re.compile(".*")):
-			preload.append(("script", elem.get("src")))
+			if not elem.get("src").startswith("http"):
+				preload.append(("script", elem.get("src")))
 
 		for elem in soup.find_all('link', rel="stylesheet"):
 			preload.append(("style", elem.get("href")))
