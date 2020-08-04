@@ -111,7 +111,7 @@ frappe.ui.Notifications = class Notifications {
 	}
 
 	make_tab_view(item) {
-		let tabView = new item.view(item.el);
+		let tabView = new item.view(item.el, this);
 		this.tabs[item.id] = tabView;
 	}
 
@@ -231,9 +231,10 @@ frappe.ui.notifications = {
 };
 
 class BaseNotificaitonsView {
-	constructor(wrapper) {
+	constructor(wrapper, parent) {
 		// wrapper, max_length
 		this.wrapper = wrapper;
+		this.parent = parent;
 		this.max_length = 20;
 		this.container = $(`<div></div>`).appendTo(this.wrapper);
 		this.make();
@@ -397,55 +398,67 @@ class NotificationsView extends BaseNotificaitonsView {
 
 class EventsView extends BaseNotificaitonsView {
 	make() {
+		this.calendar = this.parent.notifications_settings.default_calendar || "Event";
 		let today = frappe.datetime.get_today();
-		frappe.xcall('frappe.desk.doctype.event.event.get_events', {
-			start: today,
-			end: today
-		}).then(event_list => {
-			this.render_events_html(event_list);
+		frappe.model.with_doctype(this.calendar, () => {
+			const meta = frappe.get_meta(this.calendar);
+			const calendar_options = eval(meta.__calendar_js);
+			const events_method = calendar_options.get_events_method || 'frappe.desk.calendar.get_events';
+			const fields_map = calendar_options.field_map;
+			const end_date = events_method == 'frappe.desk.calendar.get_events' ? frappe.datetime.add_days(today, 1) : today;
+
+			frappe.xcall(events_method, {
+				doctype: this.calendar,
+				start: today,
+				end: end_date,
+				field_map: fields_map,
+				user: frappe.session.user,
+				filters: []
+			}).then(event_list => {
+				this.render_events_html(event_list, fields_map);
+			});
+
 		});
 	}
 
-	render_events_html(event_list) {
+	render_events_html(event_list, field_map) {
 		let html = '';
 		if (event_list.length) {
 			let get_event_html = (event) => {
 				let time = __("All Day");
 				if (!event.all_day) {
-					let start_time = frappe.datetime.get_time(event.starts_on);
-					let days_diff = frappe.datetime.get_day_diff(event.ends_on, event.starts_on)
-					let end_time = frappe.datetime.get_time(event.ends_on);
+					const start = event.starts_on || event[field_map["start"]];
+					const end = event.ends_on || event[field_map["end"]];
+					let start_time = frappe.datetime.get_time(start);
+					let end_time = frappe.datetime.get_time(end);
+					let days_diff = frappe.datetime.get_day_diff(end, start)
 					if (days_diff > 1) {
 						end_time = __("Rest of the day");
 					}
 					time = `${start_time} - ${end_time}`;
 				}
 
-				// REDESIGN-TODO: Add Participants to get_events query
-				let particpants = '';
-				if (event.particpants) {
-					particpants = frappe.avatar_group(event.particpants, 3)
-				}
+				const color = event.color || event[field_map["color"]] || "#6195ff";
 
-				// REDESIGN-TODO: Add location to calendar field
-				let location = '';
-				if (event.location) {
-					location = `, ${event.location}`;
+				// REDESIGN-TODO: Add Participants to get_events query
+				let participants = '';
+				if (event.participants) {
+					participants = frappe.avatar_group(event.participants, 3)
 				}
 
 				return `<a class="recent-item event" href="#Form/Event/${event.name}">
-					<div class="event-border" style="border-color: ${event.color}"></div>
+					<div class="event-border" style="border-color: ${color}"></div>
 					<div class="event-item">
-						<div class="event-subject">${event.subject}</div>
-						<div class="event-time">${time}${location}</div>
-						${particpants}
+						<div class="event-subject">${event.title || event[field_map["title"]]}</div>
+						<div class="event-time">${time}</div>
+						${participants}
 					</div>
 				</a>`;
 			};
 			html = event_list.map(get_event_html).join('');
 		} else {
 			html = `<li class="recent-item text-center">
-					<span class="text-muted">${__('No Events Today')}</span>
+					<span class="text-muted">${__('No Planned Events')}</span>
 				</li>`;
 		}
 
