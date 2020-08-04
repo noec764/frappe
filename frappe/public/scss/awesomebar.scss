@@ -29,6 +29,7 @@
 		border: 1px solid var(--border-color);
 		padding: 0;
 		color: var(--text-light);
+		z-index: 1041;
 
 		&> li {
 			cursor: pointer;
