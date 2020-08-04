@@ -130,6 +130,9 @@ def time_diff(string_ed_date, string_st_date):
 def time_diff_in_seconds(string_ed_date, string_st_date):
 	return time_diff(string_ed_date, string_st_date).total_seconds()
 
+def time_diff_in_minutes(string_ed_date, string_st_date):
+	return round(float(time_diff(string_ed_date, string_st_date).total_seconds()) / 60, 2)
+
 def time_diff_in_hours(string_ed_date, string_st_date):
 	return round(float(time_diff(string_ed_date, string_st_date).total_seconds()) / 3600, 6)
 
