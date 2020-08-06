@@ -49,6 +49,7 @@ frappe.views.BaseList = class BaseList {
 
 		this.fields = [];
 		this.filters = [];
+		this.nested_set_conditions = ['descendants of', 'not descendants of', 'ancestors of', 'not ancestors of']
 		this.sort_by = "modified";
 		this.sort_order = "desc";
 
@@ -388,8 +389,25 @@ frappe.views.BaseList = class BaseList {
 		// filters might have a fifth param called hidden,
 		// we don't want to pass that server side
 		return this.filter_area
-			? this.filter_area.get().map((filter) => filter.slice(0, 4))
+			? this.filter_area.get()
+			.filter(f => !this.nested_set_conditions.includes(f[2]))
+			.map((filter) => filter.slice(0, 4))
 			: [];
+	}
+
+	get_or_filters_for_args() {
+		const nested_filters = this.filter_area ? this.filter_area.get()
+			.filter(f => this.nested_set_conditions.includes(f[2]))
+			.map((filter) => filter.slice(0, 4))
+			: [];
+
+		const or_filter = nested_filters.length ? nested_filters.map(f => {
+			const n = f.slice()
+			n.splice(2, 1, "=")
+			return n
+		}) : []
+
+		return nested_filters.length ? nested_filters.concat(or_filter) : []
 	}
 
 	get_filter_value(fieldname) {
@@ -402,6 +420,7 @@ frappe.views.BaseList = class BaseList {
 			doctype: this.doctype,
 			fields: this.get_fields(),
 			filters: this.get_filters_for_args(),
+			or_filters: this.get_or_filters_for_args(),
 			order_by: this.sort_selector.get_sql_string(),
 			start: this.start,
 			page_length: this.page_length,

@@ -41,6 +41,8 @@ def get_form_params():
 
 	if isinstance(data.get("filters"), string_types):
 		data["filters"] = json.loads(data["filters"])
+	if isinstance(data.get("or_filters"), string_types):
+		data["or_filters"] = json.loads(data["or_filters"])
 	if isinstance(data.get("fields"), string_types):
 		data["fields"] = json.loads(data["fields"])
 	if isinstance(data.get("docstatus"), string_types):
