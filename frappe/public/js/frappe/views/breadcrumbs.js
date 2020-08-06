@@ -6,7 +6,6 @@ frappe.breadcrumbs = {
 
 	preferred: {
 		"File": "",
-		"Video": "",
 		"User": "Users",
 		"Dashboard": "Customization",
 		"Dashboard Chart": "Customization",
