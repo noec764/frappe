@@ -1687,6 +1687,9 @@ def get_version(doctype, name, limit=None, head=False, raise_err=True):
 def ping():
 	return "pong"
 
+@whitelist()
+def get_user_lang():
+	return translate.get_user_lang()
 
 def safe_encode(param, encoding='utf-8'):
 	try:
@@ -1724,7 +1727,3 @@ def mock(type, size=1, locale='en'):
 def validate_and_sanitize_search_inputs(fn):
 	from frappe.desk.search import validate_and_sanitize_search_inputs as func
 	return func(fn)
-
-@whitelist()
-def get_user_lang():
-	return translate.get_user_lang()

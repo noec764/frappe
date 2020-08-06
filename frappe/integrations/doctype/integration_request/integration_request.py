@@ -13,7 +13,7 @@ class IntegrationRequest(Document):
 			self.name = self.flags._name
 
 	def update_status(self, params, status):
-		data = json.loads(self.data)
+		data = frappe.parse_json(self.data)
 		data.update(params)
 
 		self.data = json.dumps(data, indent=4)
