@@ -220,6 +220,7 @@ html, body {
 			margin-left: -10px;
 
 			.frappe-chart {
+				max-width: 100%;
 				line.line-horizontal {
 					stroke: var(--border-color) !important;
 				}

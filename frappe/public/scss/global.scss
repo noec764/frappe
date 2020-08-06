@@ -51,6 +51,16 @@ a {
 	@extend .d-sm-none;
 }
 
+.hidden-sm {
+	@extend .d-none;
+	@extend .d-lg-block;
+}
+
+.visible-sm {
+	@extend .d-sm-block;
+	@extend .d-lg-none;
+}
+
 footer {
 	flex-shrink: 0;
 }
