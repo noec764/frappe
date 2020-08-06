@@ -69,5 +69,6 @@ urllib3==1.25.8
 watchdog==0.8.0
 Werkzeug==0.16.1
 Whoosh==2.7.4
+wrapt==1.10.11
 xlrd==1.2.0
 zxcvbn-python==4.4.24
