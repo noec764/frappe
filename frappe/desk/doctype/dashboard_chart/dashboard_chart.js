@@ -23,7 +23,6 @@ frappe.ui.form.on('Dashboard Chart', {
 		frm.chart_filters = null;
 
 		if (!frappe.boot.developer_mode && frm.doc.is_standard) {
-			frm.set_df_property('chart_options_section', 'hidden', 1);
 			frm.disable_form();
 		}
 
@@ -56,10 +55,6 @@ frappe.ui.form.on('Dashboard Chart', {
 		frm.trigger('set_heatmap_year_options');
 		if (frm.doc.report_name) {
 			frm.trigger('set_chart_report_filters');
-		}
-
-		if (!frappe.boot.developer_mode) {
-			frm.set_df_property("custom_options", "hidden", 1);
 		}
 	},
 
