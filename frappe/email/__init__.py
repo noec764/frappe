@@ -60,6 +60,7 @@ def relink(name, reference_doctype=None, reference_name=None):
 			name = %s""", (reference_doctype, reference_name, name))
 
 @frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def get_communication_doctype(doctype, txt, searchfield, start, page_len, filters):
 	from frappe.modules import load_doctype_module
 	com_doctypes = []

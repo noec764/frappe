@@ -146,6 +146,7 @@ def get_columns(filters=None):
 	return columns
 
 @frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user = frappe.session.user
 	user_perms = frappe.utils.user.UserPermissions(user)
