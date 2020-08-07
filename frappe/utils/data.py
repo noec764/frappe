@@ -181,7 +181,7 @@ def nowdate():
 	return now_datetime().strftime(DATE_FORMAT)
 
 def today():
-	return nowdate()
+	return now_datetime().strftime(DATE_FORMAT)
 
 def nowtime():
 	"""return current time in hh:mm"""

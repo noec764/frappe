@@ -37,7 +37,7 @@ class CustomField(Document):
 
 	def validate(self):
 		meta = frappe.get_meta(self.dt, cached=False)
-		fieldnames = [df.fieldname for df in meta.get("fields")]
+		fieldnames = [df.fieldname for df in meta.get("fields") if df.name!=self.name]
 
 		if self.insert_after=='append':
 			self.insert_after = fieldnames[-1]
