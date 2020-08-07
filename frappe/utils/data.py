@@ -175,6 +175,9 @@ def now():
 
 def nowdate():
 	"""return current date as yyyy-mm-dd"""
+	if frappe.flags.current_date:
+		return getdate(frappe.flags.current_date).strftime(DATE_FORMAT)
+
 	return now_datetime().strftime(DATE_FORMAT)
 
 def today():
