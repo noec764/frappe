@@ -18,7 +18,7 @@ frappe.ui.form.on = frappe.ui.form.on_change = function(doctype, fieldname, hand
 		var handler_list = frappe.ui.form.get_event_handler_list(doctype, fieldname);
 		let _handler = (...args) => {
 			try {
-				handler(...args);
+				return handler(...args);
 			} catch (error) {
 				console.error(handler);
 				throw error;
