@@ -128,7 +128,7 @@ frappe.activity.Feed = Class.extend({
 			} else {
 				pdate = frappe.datetime.global_date_format(date);
 			}
-			data.date_sep = pdate;
+			data.date_sep = __(pdate);
 			data.date_class = pdate=='Today' ? "date-indicator blue" : "date-indicator";
 		} else {
 			data.date_sep = null;
@@ -177,6 +177,10 @@ frappe.views.Activity = class Activity extends frappe.views.BaseList {
 		this.doctype = 'Communication';
 		this.method = 'frappe.desk.page.activity.activity.get_feed';
 
+	}
+
+	setup_view_menu() {
+		//
 	}
 
 	setup_filter_area() {

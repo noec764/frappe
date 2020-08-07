@@ -8,7 +8,7 @@ frappe.pages['permission-manager'].on_page_load = (wrapper) => {
 
 	frappe.breadcrumbs.add("Setup");
 
-	$("<div class='perm-engine' style='min-height: 200px; padding: 15px;'></div>").appendTo(page.main);
+	$("<div class='perm-engine frappe-card' style='min-height: 200px; padding: 15px; margin-top: 20px;'></div>").appendTo(page.main);
 	$(frappe.render_template("permission_manager_help", {})).appendTo(page.main);
 	wrapper.permission_engine = new frappe.PermissionEngine(wrapper);
 
@@ -358,7 +358,7 @@ frappe.PermissionEngine = Class.extend({
 
 	show_add_rule: function() {
 		var me = this;
-		$("<button class='btn btn-default btn-primary btn-sm'><i class='uil uil-plus'></i> "
+		$("<button class='btn btn-primary btn-sm'><i class='uil uil-plus'></i> "
 			+__("Add A New Rule")+"</button>")
 			.appendTo($("<p class='permission-toolbar'>").appendTo(this.body))
 			.click(function() {
