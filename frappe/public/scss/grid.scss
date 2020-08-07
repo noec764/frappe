@@ -76,11 +76,11 @@
 }
 
 .editable-form .grid-static-col.invalid {
-	background-color: var(--red-500);
+	background-color: var(--orange-100);
 }
 
 .validated-form .grid-static-col.error {
-	background-color: var(--red-500);
+	background-color: var(--orange-100);
 }
 
 .grid-static-col {
@@ -145,12 +145,12 @@
 		.has-error .form-control {
 			z-index: 1;
 			&:focus {
-				border-color: var(--red-500);
+				border-color: var(--orange-400);
 			}
 		}
 
 		input.form-control.invalid {
-			background-color: var(--red-500);
+			background-color: var(--orange-100);
 		}
 
 		input[data-fieldtype="Int"], input[data-fieldtype="Float"], input[data-fieldtype="Currency"] {

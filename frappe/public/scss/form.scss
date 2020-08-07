@@ -1,5 +1,6 @@
 .form-control {
-	border: 1px #d1d7dd;
+	border-width: 1px;
+	border-color: #d1d7dd;
 	border-style: none none solid;
 	border-radius: 4px 4px 0 0;
 	background-color: $control-bg;
@@ -7,6 +8,13 @@
 	box-shadow: none;
 	border-radius: $border-radius;
 	font-size: var(--text-md);
+}
+
+.frappe-control.has-error {
+	.form-control {
+		border-color: var(--orange-400);
+		background-color: var(--orange-100);
+	}
 }
 
 .form-section .section-body {
