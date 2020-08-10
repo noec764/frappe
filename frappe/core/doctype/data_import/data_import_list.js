@@ -17,6 +17,7 @@ frappe.listview_settings['Data Import'] = {
 	get_indicator: function(doc) {
 		var colors = {
 			'Pending': 'orange',
+			'Not Started': 'orange',
 			'Partial Success': 'orange',
 			'Success': 'green',
 			'In Progress': 'orange',
