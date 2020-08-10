@@ -316,7 +316,8 @@ frappe.get_modal = function(title, content) {
 			<div class="modal-content">
 				<div class="modal-header">
 					<div class="fill-width flex">
-						<h4 class="indicator-pill modal-title" style="font-weight: bold;">${title}</h4>
+						<span class="indicator hidden"></span>
+						<h4 class="modal-title" style="font-weight: bold;">${title}</h4>
 					</div>
 					<div>
 						<div class="text-right buttons">

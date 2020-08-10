@@ -170,7 +170,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	}
 	set_indicator() {
 		if (this.indicator) {
-			this.header.find('.indicator-pill').removeClass().addClass('indicator-pill modal-title').addClass('this.indicator');
+			this.header.find('.indicator').removeClass().addClass('indicator-pill modal-title').addClass(this.indicator);
 		}
 	}
 	show() {

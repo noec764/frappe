@@ -156,7 +156,7 @@ frappe.msgprint = function(msg, title, is_minimizable) {
 			frappe.msg_dialog.msg_area.empty();
 		}
 
-		frappe.msg_dialog.indicator = frappe.msg_dialog.header.find('.indicator-pill');
+		frappe.msg_dialog.indicator = frappe.msg_dialog.header.find('.indicator');
 	}
 
 	// setup and bind an action to the primary button

@@ -215,8 +215,8 @@ frappe.search.SearchDialog = Class.extend({
 		var me = this;
 		var $search_results = $(frappe.render_template("search")).addClass('hide');
 		var $sidebar = $search_results.find(".search-sidebar").empty();
-		var sidebar_item_html = '<li class="module-sidebar-item list-link" data-category="{1}">' +
-			'<a><span class="ellipsis">{0}</span><i class="octicon octicon-chevron-right"' +
+		var sidebar_item_html = '<li class="module-sidebar-item list-link nav-item" data-category="{1}">' +
+			'<a><span class="ellipsis nav-link">{0}</span><i class="octicon octicon-chevron-right"' +
 			'></a></li>';
 
 		this.modal_state = 0;
