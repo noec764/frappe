@@ -129,7 +129,7 @@ frappe.ui.form.on('Dashboard Card', {
 		var filters_set = false;
 		fields.map( f => {
 			if (filters[f.fieldname]) {
-				const filter_row = $(`<tr><td>${f.label}</td><td>${filters[f.fieldname] || ""}</td></tr>`);
+				const filter_row = $(`<tr><td>${__(f.label)}</td><td>${__(filters[f.fieldname]) || ""}</td></tr>`);
 				table.find('tbody').append(filter_row);
 				filters_set = true;
 			}
