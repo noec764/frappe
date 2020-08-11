@@ -229,7 +229,7 @@ frappe.msgprint = function(msg, title, is_minimizable) {
 
 	// show / hide indicator
 	if(data.indicator) {
-		frappe.msg_dialog.indicator.removeClass().addClass('indicator-pill modal-title').addClass(data.indicator);
+		frappe.msg_dialog.indicator.removeClass().addClass('indicator ' + data.indicator);
 	} else {
 		frappe.msg_dialog.indicator.removeClass().addClass('hidden');
 	}
@@ -353,53 +353,43 @@ frappe.hide_progress = function() {
 
 // Floating Message
 frappe.show_alert = function(message, seconds=7, actions={}) {
-	let indicator_icon_map = {
-		'orange': "solid-warning",
-		'yellow': "solid-warning",
-		'blue': "solid-success",
-		'green': "solid-success",
-		'red': "solid-red"
-	};
-
-	if (typeof message==='string') {
+	if(typeof message==='string') {
 		message = {
 			message: message
 		};
 	}
-
-	if (!$('#dialog-container').length) {
+	if(!$('#dialog-container').length) {
 		$('<div id="dialog-container"><div id="alert-container"></div></div>').appendTo('body');
 	}
 
-	let icon;
-	if (message.indicator) {
-		icon = indicator_icon_map[message.indicator.toLowerCase()] || 'solid-' + message.indicator;
-	} else {
-		icon = 'solid-info'
+	let body_html;
+
+	if (message.body) {
+		body_html = message.body;
 	}
 
 	const div = $(`
 		<div class="alert desk-alert">
-			<div class="alert-message-container">
-				<div class="alert-title-container">
-					<div>${frappe.utils.icon(icon, 'lg')}</div>
-					<div class="alert-message">${message.message}</div>
-				</div>
-				<div class="alert-subtitle">${message.subtitle || '' }</div>
-			</div>
+			<div class="alert-message small"></div>
 			<div class="alert-body" style="display: none"></div>
-			<a class="close">${frappe.utils.icon('close-alt')}</a>
+			<a class="close">&times;</a>
 		</div>`);
 
-	div.hide().appendTo("#alert-container").show();
-
-	if (message.body) {
-		div.find('.alert-body').show().html(message.body);
+	if(message.indicator) {
+		div.find('.alert-message').append(`<span class="indicator ${message.indicator}"></span>`);
 	}
 
+	div.find('.alert-message').append(message.message);
+
+	if (body_html) {
+		div.find('.alert-body').show().html(body_html);
+	}
+
+	div.hide().appendTo("#alert-container").show()
+		.css('transform', 'translateX(0)');
+
 	div.find('.close, button').click(function() {
-		div.addClass('out')
-		setTimeout(() => div.remove(), 800);
+		div.remove();
 		return false;
 	});
 
@@ -407,17 +397,7 @@ frappe.show_alert = function(message, seconds=7, actions={}) {
 		div.find(`[data-action=${key}]`).on('click', actions[key]);
 	});
 
-	if (seconds > 2) {
-		// Delay for animation
-		seconds = seconds - 0.8
-	}
-
-	setTimeout(() => {
-		div.addClass('out')
-		setTimeout(() => div.remove(), 800);
-		return false;
-	}, seconds * 1000)
-	
+	div.delay(seconds * 1000).fadeOut(300);
 	return div;
 }
 
