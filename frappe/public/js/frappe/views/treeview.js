@@ -67,9 +67,10 @@ frappe.views.TreeView = Class.extend({
 		this.set_title();
 
 		this.page.main.css({
-			"min-height": "300px",
-			"padding-bottom": "25px"
+			"min-height": "300px"
 		});
+
+		this.page.main.addClass('frappe-card');
 
 		if(this.opts.show_expand_all) {
 			this.page.add_inner_button(__('Expand All'), function() {

@@ -8,10 +8,7 @@ frappe.ui.form.ControlComment = frappe.ui.form.ControlTextEditor.extend({
 		this.comment_wrapper = !this.no_wrapper ? $(`
 				<div class="comment-input-wrapper">
 					<div class="comment-input-header">
-					<span class="small text-muted">${__("Add a comment")}</span>
-					<button class="btn btn-default btn-comment btn-xs pull-right">
-						${__("Comment")}
-					</button>
+						<span>${__("Add a comment")}</span>
 				</div>
 				<div class="comment-input-container">
 					<div class="frappe-control"></div>
@@ -19,6 +16,9 @@ frappe.ui.form.ControlComment = frappe.ui.form.ControlTextEditor.extend({
 						${__("Ctrl+Enter to add comment")}
 					</div>
 				</div>
+				<button class="btn btn-default btn-comment btn-xs">
+					${__("Comment")}
+				</button>
 			</div>
 		`) : $('<div class="frappe-control"></div>');
 
