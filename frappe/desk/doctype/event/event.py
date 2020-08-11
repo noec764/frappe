@@ -112,6 +112,23 @@ class Event(Document):
 
 		communication.save(ignore_permissions=True)
 
+	def add_participant(self, contact):
+		"""Add a single participant to event participants
+		Args:
+			contact (string): Contact name
+		"""
+		self.append("event_participants", {
+			"contact": contact,
+		})
+
+	def add_participants(self, participants):
+		"""Add participant entry
+		Args:
+			participants ([Array]): Array of contact names
+		"""
+		for participant in  participants:
+			self.add_participant(participant)
+
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
 	deleted_participant = frappe.get_doc(reference_doctype, reference_docname)
