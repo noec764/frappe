@@ -806,6 +806,7 @@ Object.assign(frappe.utils, {
 		};
 	},
 	get_form_link: function(doctype, name, html = false, display_text = null) {
+		console.log(doctype, name, html)
 		display_text = display_text || name;
 		doctype = encodeURIComponent(doctype);
 		name = encodeURIComponent(name);
@@ -813,6 +814,7 @@ Object.assign(frappe.utils, {
 		if (html) {
 			return `<a href="${route}">${display_text}</a>`;
 		}
+		console.log(route)
 		return route;
 	},
 	get_route_label(route_str) {

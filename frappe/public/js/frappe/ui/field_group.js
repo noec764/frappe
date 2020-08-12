@@ -92,6 +92,7 @@ frappe.ui.FieldGroup = frappe.ui.form.Layout.extend({
 				if (f.df.reqd
 					&& f.df.fieldtype === 'Text Editor'
 					&& is_null(strip_html(cstr(v))))
+					errors.push(__(f.df.label));
 
 				if (!is_null(v)) ret[f.df.fieldname] = v;
 			}

@@ -27,6 +27,10 @@ frappe.ui.form.Share = Class.extend({
 		this.parent.find(".avatar").on("click", () => {
 			this.frm.share_doc();
 		});
+
+		this.parent.find(".share-doc-btn").on("click", () => {
+			this.frm.share_doc();
+		});
 	},
 	show: function() {
 		var me = this;
@@ -35,7 +39,6 @@ frappe.ui.form.Share = Class.extend({
 		});
 
 		this.dialog = d;
-		this.dirty = false;
 
 		frappe.call({
 			method: "frappe.share.get_users",
@@ -52,7 +55,7 @@ frappe.ui.form.Share = Class.extend({
 
 		d.onhide = function() {
 			// reload comments
-			if(me.dirty) me.frm.reload_docinfo();
+			me.frm.sidebar.reload_docinfo();
 		}
 
 		d.show();
@@ -128,7 +131,6 @@ frappe.ui.form.Share = Class.extend({
 							delete me.shared[i];
 						}
 					})
-					me.dirty = true;
 					me.shared.push(r.message);
 					me.render_shared();
 					me.frm.shared.refresh();
@@ -173,7 +175,6 @@ frappe.ui.form.Share = Class.extend({
 						me.shared.push(r.message);
 					}
 
-					me.dirty = true;
 					me.render_shared();
 					me.frm.shared.refresh();
 				}
