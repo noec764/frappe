@@ -16,6 +16,10 @@
 	.form-control {
 		background-color: transparent;
 	}
+
+	.form-section .section-head.collapsed {
+		border-top: 0.5px solid var(--border-color);
+	}
 }
 
 .grid-row:last-child {

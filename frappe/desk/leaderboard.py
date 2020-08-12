@@ -1,12 +1,15 @@
 
 from __future__ import unicode_literals, print_function
 import frappe
+from frappe import _
 from frappe.utils import get_fullname
 
 def get_leaderboards():
 	leaderboards = {
 		'User': {
-			'fields': ['points'],
+			'fields': [
+				{'fieldname': 'points', 'label': _('Points')}
+			],
 			'method': 'frappe.desk.leaderboard.get_energy_point_leaderboard',
 			'company_disabled': 1
 		}

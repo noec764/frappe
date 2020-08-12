@@ -55,3 +55,8 @@
 	max-width: 75px;
 }
 
+
+.leaderboard-item.active {
+	background-color: white;
+	border-radius: 5px;
+}

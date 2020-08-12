@@ -18,7 +18,7 @@ class Leaderboard {
 		});
 		this.parent = parent;
 		this.page = this.parent.page;
-		this.page.sidebar.html(`<ul class="module-sidebar-nav overlay-sidebar nav nav-pills nav-stacked"></ul>`);
+		this.page.sidebar.html(`<ul class="module-sidebar-nav overlay-sidebar nav flex-column"></ul>`);
 		this.$sidebar_list = this.page.sidebar.find('ul');
 
 		this.get_leaderboard_config();
@@ -36,9 +36,9 @@ class Leaderboard {
 				this.doctypes.push(doctype);
 				this.filters[doctype] = this.leaderboard_config[doctype].fields.map(field => {
 					if (typeof field ==='object') {
-						return field.label || field.fieldname;
+						return field;
 					}
-					return field;
+					return {"fieldname": field, "label": __(field)};
 				});
 			}
 			this.timespans = [
@@ -55,7 +55,7 @@ class Leaderboard {
 			this.options = {
 				selected_doctype: _initial_doctype,
 				selected_filter: _initial_filter,
-				selected_filter_item: _initial_filter[0],
+				selected_filter_item: _initial_filter[0].fieldname,
 				selected_timespan: _initial_timespan,
 			};
 
@@ -66,7 +66,7 @@ class Leaderboard {
 
 	make() {
 
-		this.$container = $(`<div class="leaderboard page-main-content">
+		this.$container = $(`<div class="leaderboard page-main-content frappe-card mt-2">
 			<div class="leaderboard-graph"></div>
 			<div class="leaderboard-list"></div>
 		</div>`).appendTo(this.page.main);
@@ -112,7 +112,7 @@ class Leaderboard {
 
 		this.type_select = this.page.add_select(__("Field"),
 			this.options.selected_filter.map(d => {
-				return {"label": __(frappe.model.unscrub(d)), value: d };
+				return {"label": d.label, value: d.fieldname };
 			})
 		);
 
@@ -122,6 +122,7 @@ class Leaderboard {
 				this.date_range_field.show();
 			} else {
 				this.date_range_field.hide();
+				this.make_request();
 			}
 		});
 
@@ -132,7 +133,7 @@ class Leaderboard {
 	}
 
 	create_date_range_field() {
-		let timespan_field = $(this.parent).find(`.frappe-control[data-original-title='Timespan']`);
+		let timespan_field = $(this.parent).find(`.frappe-control[data-original-title=${__('Timespan')}]`);
 		this.date_range_field = $(`<div class="from-date-field"></div>`).insertAfter(timespan_field).hide();
 
 		let date_field = frappe.ui.form.make_control({
@@ -162,17 +163,17 @@ class Leaderboard {
 			this.options.selected_company = frappe.defaults.get_default("company");
 			this.options.selected_doctype = doctype;
 			this.options.selected_filter = this.filters[doctype];
-			this.options.selected_filter_item = this.filters[doctype][0];
+			this.options.selected_filter_item = this.filters[doctype][0].fieldname;
 
 			this.type_select.empty().add_options(
 				this.options.selected_filter.map(d => {
-					return {"label": __(frappe.model.unscrub(d)), value: d };
+					return {label: d.label, value: d.fieldname };
 				})
 			);
 			if (this.leaderboard_config[this.options.selected_doctype].company_disabled) {
-				$(this.parent).find("[data-original-title=Company]").hide();
+				$(this.parent).find(`[data-original-title=${__("Company")}]`).hide();
 			} else {
-				$(this.parent).find("[data-original-title=Company]").show();
+				$(this.parent).find(`[data-original-title=${__("Company")}]`).show();
 			}
 
 			this.$sidebar_list.find("li").removeClass("active");
@@ -283,10 +284,10 @@ class Leaderboard {
 
 	render_list_header() {
 		const _selected_filter = this.options.selected_filter
-			.map(i => frappe.model.unscrub(i));
+			.map(i => i.label);
 		const fields = ["rank", "name", this.options.selected_filter_item];
 		const filters = fields.map(filter => {
-			const col = frappe.model.unscrub(filter);
+			const col = filter.label || __(frappe.model.unscrub(filter));
 			return (
 				`<div class="leaderboard-item list-item_content ellipsis text-muted list-item__content--flex-2
 					header-btn-base ${filter}
@@ -363,8 +364,8 @@ class Leaderboard {
 	}
 
 	get_sidebar_item(item) {
-		return $(`<li class="strong module-sidebar-item">
-			<a class="module-link">
+		return $(`<li class="strong nav-item leaderboard-item">
+			<a class="nav-link">
 			<span doctype-value="${item}">${ __(item) }</span></a>
 		</li>`);
 	}
