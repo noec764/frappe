@@ -100,7 +100,6 @@ login.reset_sections = function(hide) {
 		$("section.for-signup").toggle(false);
 	}
 	$('section:not(.signup-disabled) .indicator').each(function() {
-		console.log(this)
 		$(this).removeClass().addClass('indicator-pill blue modal-title').text($(this).attr('data-text'));
 	});
 }
