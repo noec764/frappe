@@ -44,13 +44,12 @@
 	<li class="divider visible-sm visible-xs"></li>
 	<li style="position: relative;">
 		<a class="sidebar-comments badge-hover">
-			<i class="uil uil-comments"></i>
 			<span>{%= __("Comments") %}</span>
 			<span class="badge n-comments">0</span>
 		</a>
 	</li>
 	{% if(frappe.help.has_help(doctype)) { %}
-	<li><a class="help-link list-link" data-doctype="{{ doctype }}"><i class="uil uil-question-circle"></i> {{ __("Help") }}</a></li>
+	<li><a class="help-link list-link" data-doctype="{{ doctype }}">{{ __("Help") }}</a></li>
 	{% } %}
 </ul>
 <ul class="list-unstyled sidebar-menu form-assignments">
@@ -87,11 +86,12 @@
 		{%= __("Reviews") %}
 	</li>
 </ul>
-<ul class="list-unstyled sidebar-menu">
-	<li class="sidebar-label">
+<ul class="list-unstyled sidebar-menu form-shared">
+	<li class="sidebar-label form-shared-label">
 		<svg class="icon icon-sm"><use href="#icon-share"></use></svg>
 		{%= __("Shared With") %}
 	</li>
+	<li class="form-shared-items"></li>
 </ul>
 <ul class="list-unstyled sidebar-menu hidden">
 	<li class="sidebar-label viewers-label">{%= __("Currently Viewing") %}</li>
@@ -135,5 +135,6 @@
 	{{ frappe.get_form_sidebar_extension() }}
 {% } %}
 <ul class="list-unstyled visible-xs visible-sm">
-	<li class="close-sidebar"><i class="uil uil-times-square"></i> {%= __("Close") %}</li>
+
+	<li class="close-sidebar">Close</li>
 </ul>

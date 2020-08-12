@@ -19,7 +19,7 @@ frappe.ui.form.Sidebar = class {
 	make() {
 		var sidebar_content = frappe.render_template("form_sidebar", {doctype: this.frm.doctype, frm:this.frm});
 
-		this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden-xs hidden-sm"></div>')
+		this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden"></div>')
 			.html(sidebar_content)
 			.appendTo(this.page.sidebar.empty());
 
@@ -73,9 +73,9 @@ frappe.ui.form.Sidebar = class {
 
 	refresh() {
 		if (this.frm.doc.__islocal) {
-			this.sidebar.toggle(false);
+			this.sidebar.addClass("hidden");
 		} else {
-			this.sidebar.toggle(true);
+			this.sidebar.removeClass("hidden").addClass("hidden-xs hidden-sm");
 			this.frm.assign_to.refresh();
 			this.frm.attachments.refresh();
 			this.frm.shared.refresh();
