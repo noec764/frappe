@@ -1,7 +1,7 @@
 <header class="navbar navbar-expand sticky-top" role="navigation">
 	<div class="container">
 		<a class="navbar-brand navbar-home" href="#">
-			<img class="d-inline-block align-top app-logo" src="{{ frappe.app.logo_url }}">
+			<img class="d-inline-block align-top app-logo" style="width: {{navbar_settings.logo_width || 24}}px" src="{{ frappe.app.logo_url }}">
 		</a>
 		<ul class="nav navbar-nav d-none d-sm-flex" id="navbar-breadcrumbs"></ul>
 		<div class="collapse navbar-collapse justify-content-end">
@@ -66,12 +66,17 @@
 					</a>
 					<div class="dropdown-menu dropdown-menu-right" id="toolbar-help" role="menu">
 						<div class="divider documentation-links"></div>
-						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.show_about();">
-							{%= __("About") %}
-						</a>
-						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.show_shortcuts(event);">
-							{%= __("Keyboard Shortcuts") %}
-						</a>
+						{% for item in navbar_settings.help_dropdown %}
+							{% if (!item.hidden) { %}
+								{% if (item.route) { %}
+									<a class="dropdown-item" href="{{ item.route }}">{%= __(item.item_label) %}</a>
+								{% } else if (item.action) { %}
+									<a class="dropdown-item" href="#" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
+								{% } else { %}
+									<div class="divider"></div>
+								{% } %}
+							{% } %}
+						{% endfor %}
 					</div>
 				</li>
 				<li class="nav-item dropdown dropdown-navbar-user dropdown-mobile ml-lg-2">
@@ -81,28 +86,17 @@
 						<!-- <span class="ellipsis toolbar-user-fullname d-none d-sm-none d-md-block navbar-text"></span> -->
 					</a>
 					<div class="dropdown-menu dropdown-menu-right" id="toolbar-user" role="menu">
-						<a class="dropdown-item" href="#user-profile">
-							{%= __("My Profile") %}
-						</a>
-						<a class="dropdown-item" href="#Form/User/{%= encodeURIComponent(frappe.session.user) %}">
-							{%= __("My Settings") %}
-						</a>
-						<a class="dropdown-item" href="#" onclick="return frappe.ui.toolbar.setup_session_defaults();">
-							{%= __("Session Defaults") %}
-						</a>
-						<a class="dropdown-item navbar-reload" href="" onclick="return frappe.ui.toolbar.clear_cache();">
-							{%= __("Reload") %}
-						</a>
-						<a class="dropdown-item" href="/index" target="_blank" rel="noopener noreferrer">
-							{%= __("View Website") %}
-						</a>
-						<a class="dropdown-item" href="#background_jobs">
-							{%= __("Background Jobs") %}
-						</a>
-						<div class="divider"></div>
-						<a class="dropdown-item" href="#" onclick="return frappe.app.logout();">
-							{%= __("Logout") %}
-						</a>
+						{% for item in navbar_settings.settings_dropdown %}
+							{% if (!item.hidden) { %}
+								{% if (item.route) { %}
+									<a class="dropdown-item" href="{{ item.route }}">{%= __(item.item_label) %}</a>
+								{% } else if (item.action) { %}
+									<a class="dropdown-item" href="#" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
+								{% } else { %}
+									<div class="divider"></div>
+								{% } %}
+							{% } %}
+						{% endfor %}
 					</div>
 				</li>
 			</ul>

@@ -12,7 +12,6 @@
   "time_zone",
   "is_first_startup",
   "enable_onboarding",
-  "desk_logo",
   "setup_complete",
   "date_and_number_format",
   "date_format",
@@ -416,11 +415,6 @@
    "label": "Run Jobs only Daily if Inactive For (Days)"
   },
   {
-   "fieldname": "desk_logo",
-   "fieldtype": "Attach Image",
-   "label": "Desk Logo"
-  },
-  {
    "default": "HH:mm",
    "fieldname": "time_format",
    "fieldtype": "Select",
@@ -455,17 +449,17 @@
    "label": "Keep logs for the last 30 days only"
   },
   {
-    "default": "1",
-    "fieldname": "attach_view_link",
-    "fieldtype": "Check",
-    "label": "Send document Web View link in email"
+   "default": "1",
+   "fieldname": "attach_view_link",
+   "fieldtype": "Check",
+   "label": "Send document Web View link in email"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2020-07-02 16:13:00.166382",
- "modified_by": "Administrator",
+ "modified": "2020-08-12 14:41:48.188243",
+ "modified_by": "thierry@dokos.io",
  "module": "Core",
  "name": "System Settings",
  "owner": "Administrator",

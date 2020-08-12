@@ -435,17 +435,15 @@ frappe.Application = Class.extend({
 	},
 
 	set_app_logo_url: function() {
-		if (frappe.boot.sysdefaults.desk_logo) {
-			return new Promise(resolve => {
-				this.add_app_logo_url_to_frappe([frappe.boot.sysdefaults.desk_logo]);
-				resolve();
-			})
-		} else {
-			return frappe.call('frappe.client.get_hooks', { hook: 'app_logo_url' })
-				.then(r => {
-					this.add_app_logo_url_to_frappe(r.message);
-				});
-		}
+		return frappe.call('frappe.core.doctype.navbar_settings.navbar_settings.get_app_logo')
+			.then(r => {
+				frappe.app.logo_url = r.message;
+				if (window.cordova) {
+					let host = frappe.request.url;
+					host = host.slice(0, host.length - 1);
+					frappe.app.logo_url = host + frappe.app.logo_url;
+				}
+			});
 	},
 
 	add_app_logo_url_to_frappe: function(logo_url) {
