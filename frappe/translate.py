@@ -118,6 +118,7 @@ def get_dict(fortype, name=None):
 		elif fortype=="boot":
 			messages = get_messages_from_include_files()
 			messages += get_all_messages_from_js_files()
+			messages += frappe.db.sql("select concat('Navbar Item: ', item_label), item_label from `tabNavbar Item`")
 			messages += frappe.db.sql("select concat('Print Format: ', name), name from `tabPrint Format`")
 			messages += frappe.db.sql("select concat('DocType: ', name), name from tabDocType")
 			messages += frappe.db.sql("select concat('Role: ', name), name from tabRole")
