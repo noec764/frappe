@@ -156,7 +156,7 @@ frappe.search.utils = {
 			// eg. Price List List should be only Price List
 			let skip_list = type === 'List' && target.endsWith('List');
 			let label = me.bolden_match_part(__(target), keywords);
-			label += skip_list ? '' : ` ${__(type)}`;
+			label = skip_list ? label : `${__(type)} : ${label}`;
 
 			return {
 				type: type,

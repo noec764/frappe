@@ -87,6 +87,7 @@ frappe.views.TreeView = Class.extend({
 		}
 	},
 	set_title: function() {
+		// __("Tree")
 		this.page.set_title(this.opts.title || __('{0} Tree', [__(this.doctype)]));
 	},
 	onload: function() {
