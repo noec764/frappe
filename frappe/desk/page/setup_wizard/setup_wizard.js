@@ -32,7 +32,8 @@ frappe.setup = {
 
 frappe.pages['setup-wizard'].on_page_load = function(wrapper) {
 	let requires = (frappe.boot.setup_wizard_requires || []);
-
+	$(wrapper).addClass("d-flex");
+	$(wrapper).css("height", "80vh");
 
 	frappe.require(requires, function() {
 		frappe.call({
@@ -51,8 +52,8 @@ frappe.pages['setup-wizard'].on_page_load = function(wrapper) {
 						$footer.find('.next-btn').removeClass('btn-default')
 							.addClass('btn-primary');
 						$footer.find('.text-right').prepend(
-							$(`<a class="complete-btn btn btn-sm primary">
-						${__("Complete Setup")}</a>`));
+							$(`<button class="complete-btn btn btn-sm primary">
+						${__("Complete Setup")}</button>`));
 
 					}
 				}
@@ -96,7 +97,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	make() {
 		super.make();
-		this.container.addClass("container setup-wizard-slide with-form");
+		this.container.addClass("container setup-wizard-slide with-form m-auto w-50");
 		this.$next_btn.addClass('action');
 		this.$complete_btn = this.$footer.find('.complete-btn').addClass('action');
 		this.setup_keyboard_nav();
@@ -160,6 +161,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		}
 		this.in_refresh_slides = true;
 
+		this.translate_buttons();
 		this.update_values();
 		frappe.setup.slides = [];
 		frappe.setup.run_event("before_load");
@@ -291,13 +293,13 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	get_message(title, message="") {
-		const loading_html = `<div class="progress-chart" style ="width: 150px;">
-			<div class="progress" style="margin-top: 70px; margin-bottom: 0px">
+		const loading_html = `<div class="progress-chart">
+			<div class="progress">
 				<div class="progress-bar" style="width: 2%; background-color: #6195FF;"></div>
 			</div>
 		</div>`;
 
-		return $(`<div class="slides-wrapper setup-wizard-slide setup-in-progress">
+		return $(`<div class="slides-wrapper setup-wizard-slide setup-in-progress frappe-card m-auto">
 			<div class="content text-center">
 				<p class="title lead">${title}</p>
 				<div class="state-icon-container">${loading_html}</div>

@@ -21,7 +21,7 @@ frappe.ui.Slide = class Slide {
 
 		this.$body = $(`<div class="slide-body">
 			<div class="content text-center">
-				<p class="title lead">${this.title}</p>
+				<p class="title lead">${__(this.title)}</p>
 			</div>
 			<div class="form-wrapper">
 				<div class="form"></div>
@@ -33,6 +33,7 @@ frappe.ui.Slide = class Slide {
 			</div>
 		</div>`).appendTo(this.$wrapper);
 
+		this.$title = this.$body.find(".title");
 		this.$content = this.$body.find(".content");
 		this.$form = this.$body.find(".form");
 		this.$primary_btn = this.slides_footer.find('.primary');
@@ -252,7 +253,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	make() {
-		this.container = $('<div>').addClass("slides-wrapper").attr({"tabindex": -1})
+		this.container = $('<div>').addClass("slides-wrapper frappe-card").attr({"tabindex": -1})
 			.appendTo(this.parent);
 		this.$slide_progress = $(`<div>`).addClass(`slides-progress text-center text-extra-muted`)
 			.appendTo(this.container);
@@ -338,10 +339,10 @@ frappe.ui.Slides = class Slides {
 	make_prev_next_buttons() {
 		$(`<div class="row">
 			<div class="col-sm-4 text-left prev-div">
-				<a class="prev-btn btn btn-default btn-sm" tabindex="0">${__("Previous")}</a>
+				<button class="prev-btn btn btn-default btn-sm" tabindex="0">${__("Previous")}</button>
 			</div>
 			<div class="col-sm-8 text-right next-div">
-				<a class="next-btn btn btn-default btn-sm" tabindex="0">${__("Next")}</a>
+				<button class="next-btn btn btn-default btn-sm" tabindex="0">${__("Next")}</button>
 			</div>
 		</div>`).appendTo(this.$footer);
 
@@ -354,6 +355,11 @@ frappe.ui.Slides = class Slides {
 					this.show_slide(this.current_id + 1);
 				}
 			});
+	}
+
+	translate_buttons() {
+		this.$prev_btn.text(__("Previous"));
+		this.$next_btn.text(__("Next"));
 	}
 
 	bind_progress_dots() {

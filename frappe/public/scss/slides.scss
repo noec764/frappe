@@ -1,0 +1,67 @@
+.slides-wrapper {
+	&:focus {
+		outline: none;
+	}
+
+	.fa-circle {
+		font-size: 10px;
+		margin: 0px 2px;
+		&.active {
+			color: #6195FF;
+		}
+		&.link {
+			cursor: pointer;
+		}
+	}
+	.slide-wrapper {
+		&:focus {
+			outline: none;
+		}
+	}
+	.form {
+		margin-top: 30px;
+		.form-layout {
+			margin-top: 0px;
+			margin-bottom: 0px;
+		}
+		.form-section {
+			padding: 0px 7px;
+			border: none;
+		}
+	}
+	.add-more {
+		margin-bottom: 30px;
+	}
+	.lead {
+		margin-top: 20px;
+		font-weight: 500;
+	}
+	.success-state {
+		margin-bottom: 20px;
+	}
+	.next-steps-links {
+		.title {
+			text-transform: uppercase;
+			color: #647181;
+			font-size: 11px;
+		}
+
+	}
+	.btn-primary {
+		font-weight: bold;
+	}
+	.slide-footer {
+		margin: 15px 0px;
+		padding: 0px 7px;
+
+		.btn:not(:last-child) {
+			margin-right: 3px;
+		}
+
+		a.make-btn.disabled {
+			background-color: #b1bdca;
+			color: #fff;
+			border-color: #b1bdca;
+		}
+	}
+}
