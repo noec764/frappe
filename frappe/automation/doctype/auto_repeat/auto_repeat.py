@@ -38,6 +38,14 @@ class AutoRepeat(Document):
 		frappe.db.set_value(self.reference_doctype, self.reference_document, 'auto_repeat', '')
 		frappe.get_doc(self.reference_doctype, self.reference_document).notify_update()
 
+		for log in frappe.get_all("Auto Repeat Log", filters={"auto_repeat": self.name}, fields=["name", "docstatus"]):
+			if log.docstatus == 1:
+				l = frappe.get_doc("Auto Repeat Log", log.name)
+				l.flags.ignore_permissions = True
+				l.cancel()
+
+			frappe.delete_doc("Auto Repeat Log", l.name, force=True)
+
 	def set_dates(self):
 		doc_before_save = self.get_doc_before_save()
 		if self.disabled:
