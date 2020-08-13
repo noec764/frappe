@@ -1,6 +1,8 @@
 // Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
+import { get_version_timeline_content } from "./version_timeline_content_builder";
+
 frappe.ui.form.NewTimeline = class {
 	constructor(opts) {
 		Object.assign(this, opts);
@@ -47,10 +49,11 @@ frappe.ui.form.NewTimeline = class {
 		this.timeline_items.push(...this.get_communication_timeline_contents());
 		this.timeline_items.push(...this.get_comment_timeline_contents());
 		this.timeline_items.push(...this.get_energy_point_timeline_contents());
-		// shared
-		// milestones
-		// versions
+		this.timeline_items.push(...this.get_share_timeline_contents());
+		this.timeline_items.push(...this.get_version_timeline_contents());
+
 		// attachments
+		// milestones
 	}
 
 	add_timeline_item(item) {
@@ -114,7 +117,7 @@ frappe.ui.form.NewTimeline = class {
 		let comment_timeline_contents = [];
 		(this.doc_info.comments || []).forEach(comment => {
 			comment_timeline_contents.push({
-				icon: 'mail',
+				icon: 'small-message',
 				creation: comment.creation,
 				content: comment.content,
 			});
@@ -125,13 +128,28 @@ frappe.ui.form.NewTimeline = class {
 	get_version_timeline_contents() {
 		let version_timeline_contents = [];
 		(this.doc_info.versions || []).forEach(version => {
-			version_timeline_contents.push({
-				icon: 'mail',
-				creation: version.creation,
-				content: version.content,
+			const contents = get_version_timeline_content(version, this.frm);
+			contents.forEach((content) => {
+				version_timeline_contents.push({
+					icon: 'edit',
+					creation: version.creation,
+					content: content,
+				});
 			});
 		});
 		return version_timeline_contents;
+	}
+
+	get_share_timeline_contents() {
+		let share_timeline_contents = [];
+		(this.doc_info.shared || []).forEach(share => {
+			share_timeline_contents.push({
+				icon: 'share',
+				creation: share.creation,
+				content: __("{0} shared this document with {1}", [share.owner.bold(), share.everyone ? 'everyone' : share.user.bold()]),
+			});
+		});
+		return share_timeline_contents;
 	}
 
 	get_energy_point_timeline_contents() {
