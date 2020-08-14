@@ -507,6 +507,12 @@ def get_messages_from_desk_pages(name):
 			messages.append(('Desk Shortcut: ' + name, shortcut.get("format")))
 		if shortcut.get("label"):
 			messages.append(('Desk Shortcut: ' + name, shortcut.get("label")))
+
+	for card in desk_page.cards:
+		for element in frappe.parse_json(card.links):
+			if element.get("label"):
+				messages.append(('Desk Card: ' + name, element.get("label")))
+
 	return messages
 
 def _get_messages_from_page_or_report(doctype, name, module=None):
