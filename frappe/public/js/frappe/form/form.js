@@ -419,7 +419,6 @@ frappe.ui.form.Form = class FrappeForm {
 
 			// clear layout message
 			this.layout.show_message();
-
 			frappe.run_serially([
 				// header must be refreshed before client methods
 				// because add_custom_button
@@ -1015,7 +1014,7 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	rename_doc() {
-		frappe.model.rename_doc(this.doctype, this.docname);
+		frappe.model.rename_doc(this.doctype, this.docname, () => this.refresh_header());
 	}
 
 	share_doc() {
