@@ -9,8 +9,13 @@ frappe.ui.form.on("Email Group", "refresh", function(frm) {
 		}, __("View"));
 
 		frm.add_custom_button(__("Import Subscribers"), function() {
-			frappe.prompt({fieldtype:"Select", options: frm.doc.__onload.import_types,
-				label:__("Import Email From"), fieldname:"doctype", reqd:1},
+			frappe.prompt(
+				{
+					fieldtype:"Select",
+					options: frm.doc.__onload.import_types,
+					label:__("Import Email From"),
+					fieldname:"doctype", reqd:1
+				},
 				function(data) {
 					frappe.call({
 						method: "frappe.email.doctype.email_group.email_group.import_from",

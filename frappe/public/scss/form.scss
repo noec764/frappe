@@ -1,8 +1,7 @@
 .form-control {
 	border-width: 1px;
-	border-color: #d1d7dd;
+	border-color: var(--gray-400);
 	border-style: none none solid;
-	border-radius: 4px 4px 0 0;
 	background-color: $control-bg;
 	color: $text-color;
 	box-shadow: none;
@@ -104,7 +103,10 @@
 			margin-bottom: var(--margin-xs);
 		}
 		.ql-editor {
-			background-color: var(--gray-200);
+			background-color: var(--gray-100);
+			border-color: var(--gray-400);
+			border-style: none none solid;
+			border-width: 1px;
 		}
 	}
 
