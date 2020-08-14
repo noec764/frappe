@@ -127,7 +127,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title, subtitle, success_message from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title, callback_title, callback_message from `tabOnboarding Step`")
-			messages += frappe.db.sql("select concat('Desk Page Shortcut: ', name), format from `tabDesk Shortcut`")
+			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
 
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
 		message_dict.update(get_dict_from_hooks(fortype, name))
@@ -504,7 +504,9 @@ def get_messages_from_desk_pages(name):
 	messages = []
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
-			messages.append(('Desk Page Shortcut: ' + name, shortcut.get("format")))
+			messages.append(('Desk Shortcut: ' + name, shortcut.get("format")))
+		if shortcut.get("label"):
+			messages.append(('Desk Shortcut: ' + name, shortcut.get("label")))
 	return messages
 
 def _get_messages_from_page_or_report(doctype, name, module=None):
