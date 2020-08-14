@@ -8,10 +8,12 @@ $timeline-item-left-margin: var(--margin-xl);
 	position: absolute;
 	top: unquote("clamp(0px, 50% - #{$indicator-size}/2, 15px)");
 	left: calc(-1 * (#{$indicator-size}/2));
-	background-color: var(--gray-600);
+	background-color: white;
+	border: 1px solid var(--pacific-blue-400);
 	display: inline-flex;
 	align-items: center;
-	--icon-stroke: var(--gray-50);
+	--icon-stroke: var(--pacific-blue-400);
+	--icon-fill: var(--pacific-blue-400);
 }
 
 .new-timeline {
@@ -35,7 +37,8 @@ $timeline-item-left-margin: var(--margin-xl);
 			@include timeline-indicator(10px);
 		}
 		.action-btn {
-			margin-left: var(--margin-md)
+			margin-left: var(--margin-md);
+			background-color: var(--card-bg);
 		}
 		.action-btn:first-child {
 			margin-left: $timeline-item-left-margin;
