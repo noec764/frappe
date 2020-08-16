@@ -125,8 +125,9 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Module: ', name), name from `tabModule Def`")
 			messages += frappe.db.sql("select concat('Page: ', name), name from `tabPage`")
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
-			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title, subtitle, success_message from `tabModule Onboarding`")
-			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title, callback_title, callback_message from `tabOnboarding Step`")
+			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title from `tabModule Onboarding`")
+			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
+			messages += frappe.db.sql("select concat('Desk Page: ', name), label from `tabDesk Page`")
 			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
 
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
@@ -502,6 +503,8 @@ def get_messages_from_onboarding_step(name):
 def get_messages_from_desk_pages(name):
 	desk_page = frappe.get_doc("Desk Page", name)
 	messages = []
+	if desk_page.get("label"):
+		messages.append(('Desk Page: ' + name, desk_page.get("label")))
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
 			messages.append(('Desk Shortcut: ' + name, shortcut.get("format")))

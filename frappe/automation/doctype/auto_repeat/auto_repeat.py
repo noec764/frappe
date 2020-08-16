@@ -9,7 +9,7 @@ from frappe.desk.form import assign_to
 from frappe.utils.jinja import validate_template
 from dateutil.relativedelta import relativedelta
 from frappe.utils.user import get_system_managers
-from frappe.utils import cstr, getdate, split_emails, add_days, get_last_day, get_first_day, month_diff, add_years, nowdate, cint, now_datetime
+from frappe.utils import cstr, getdate, split_emails, add_days, get_last_day, get_first_day, month_diff, add_years, nowdate, cint, now_datetime, add_months
 from frappe.model.document import Document
 from frappe.core.doctype.communication.email import make
 from frappe.utils.background_jobs import get_jobs
