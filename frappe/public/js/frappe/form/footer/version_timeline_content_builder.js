@@ -114,7 +114,7 @@ function get_version_timeline_content(version_doc, frm) {
 						frm.perm);
 
 					if (field_display_status === 'Read' || field_display_status === 'Write') {
-						return frappe.meta.get_label(frm.doctype, p[0]);
+						return __(frappe.meta.get_label(frm.doctype, p[0]));
 					}
 				}
 			});
@@ -131,9 +131,9 @@ function get_version_timeline_content(version_doc, frm) {
 	// creation by updater reference
 	if (data.creation && data.created_by) {
 		if (updater_reference_link) {
-			out.push(get_version_comment(version_doc, __('{0} created {1}', [get_user_link(version_doc), updater_reference_link])));
+			out.push(get_version_comment(version_doc, __('{0} created {1}', [get_user_link(version_doc), updater_reference_link], 'timeline')));
 		} else {
-			out.push(get_version_comment(version_doc, __('{0} created', [get_user_link(version_doc)])));
+			out.push(get_version_comment(version_doc, __('{0} created', [get_user_link(version_doc)], 'timeline')));
 		}
 	}
 
