@@ -1,6 +1,5 @@
 // Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
-
 import { get_version_timeline_content } from "./version_timeline_content_builder";
 
 frappe.ui.form.NewTimeline = class {
@@ -17,6 +16,7 @@ frappe.ui.form.NewTimeline = class {
 
 		this.timeline_wrapper.append(this.timeline_actions_wrapper);
 		this.timeline_wrapper.append(this.timeline_items_wrapper);
+
 		this.parent.replaceWith(this.timeline_wrapper);
 		this.timeline_items = [];
 		this.render_timeline_items();
@@ -82,13 +82,11 @@ frappe.ui.form.NewTimeline = class {
 
 	get_timeline_item(item) {
 		const timeline_item = $(`<div class="timeline-item">`);
+
 		if (item.icon) {
 			timeline_item.append(`
-				<div class="timeline-item">
-					<div class="timeline-indicator">
-						${frappe.utils.icon(item.icon, 'md')}
-					</div>
-					<div class="timeline-content ${item.card ? 'frappe-card' : ''}"></div>
+				<div class="timeline-indicator">
+					${frappe.utils.icon(item.icon, 'md')}
 				</div>
 			`);
 		} else if (item.timeline_indicator) {
@@ -96,7 +94,6 @@ frappe.ui.form.NewTimeline = class {
 		}
 
 		timeline_item.append(`<div class="timeline-content ${item.card ? 'frappe-card' : ''}">`);
-
 		timeline_item.find('.timeline-content').append(item.content);
 		if (!item.hide_timestamp && !item.card) {
 			timeline_item.find('.timeline-content').append(`&nbsp;-&nbsp;<span>${comment_when(item.creation)}</span>`);
@@ -126,7 +123,6 @@ frappe.ui.form.NewTimeline = class {
 	get_communication_timeline_contents() {
 		let communication_timeline_contents = [];
 		(this.doc_info.communications|| []).forEach(communication => {
-			communication_content.find(".timeline-email-content").append(communication.content);
 			communication_timeline_contents.push({
 				icon: 'mail',
 				creation: communication.creation,
