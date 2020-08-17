@@ -52,10 +52,7 @@ body[data-route^="Module"] .main-menu {
 	.sidebar-label {
 		margin-bottom: var(--margin-sm);
 		font-weight: 500;
-		color: var(--text-light);
-		text-transform: uppercase;
-		letter-spacing: 0.04rem;
-		font-size: var(--text-xs);
+		color: var(--text-color);
 	}
 }
 
