@@ -12,6 +12,7 @@ $timeline-item-left-margin: var(--margin-xl);
 	border: 1px solid var(--pacific-blue-400);
 	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	--icon-stroke: var(--pacific-blue-400);
 	--icon-fill: var(--pacific-blue-400);
 }
