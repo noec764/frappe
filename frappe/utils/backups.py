@@ -7,7 +7,9 @@ from __future__ import print_function, unicode_literals
 
 import os
 import json
+from calendar import timegm
 from datetime import datetime
+from glob import glob
 
 import frappe
 from frappe import _, conf
@@ -79,7 +81,6 @@ class BackupGenerator:
 			self.backup_path_private_files = last_private_file
 			self.site_config_backup_path = site_config_backup_path
 
-
 	def set_backup_file_name(self):
 		#Generate a random name using today's date and a 8 digit random number
 		for_db = self.todays_date + "-" + self.site_slug + "-database.sql.gz"
@@ -95,26 +96,47 @@ class BackupGenerator:
 			self.backup_path_private_files = os.path.join(backup_path, for_private_files)
 
 	def get_recent_backup(self, older_than):
-		file_list = os.listdir(get_backup_path())
-		backup_path_files = None
-		backup_path_db = None
-		backup_path_private_files = None
-		site_config_backup_path = None
+		backup_path = get_backup_path()
 
-		for this_file in file_list:
-			this_file = cstr(this_file)
-			this_file_path = os.path.join(get_backup_path(), this_file)
-			if not is_file_old(this_file_path, older_than):
-				if "-private-files" in this_file_path:
-					backup_path_private_files = this_file_path
-				elif "-files" in this_file_path:
-					backup_path_files = this_file_path
-				elif "-database" in this_file_path:
-					backup_path_db = this_file_path
-				elif "site_config" in this_file_path:
-					site_config_backup_path = this_file_path
+		file_type_slugs = {
+			"database": "*-{}-database.sql.gz",
+			"public": "*-{}-files.tar",
+			"private": "*-{}-private-files.tar",
+			"config": "*-{}-site_config_backup.json",
+		}
 
-		return (backup_path_db, backup_path_files, backup_path_private_files, site_config_backup_path)
+		def backup_time(file_path):
+			file_name = file_path.split(os.sep)[-1]
+			file_timestamp = file_name.split("-")[0]
+			return timegm(datetime.strptime(file_timestamp, "%Y%m%d_%H%M%S").utctimetuple())
+
+		def get_latest(file_pattern):
+			file_pattern = os.path.join(backup_path, file_pattern.format(self.site_slug))
+			file_list = glob(file_pattern)
+			if file_list:
+				return max(file_list, key=backup_time)
+
+		def old_enough(file_path):
+			if file_path:
+				if not os.path.isfile(file_path) or is_file_old(file_path, older_than):
+					return None
+				return file_path
+
+		latest_backups = {
+			file_type: get_latest(pattern)
+			for file_type, pattern in file_type_slugs.items()
+		}
+
+		recent_backups = {
+			file_type: old_enough(file_name) for file_type, file_name in latest_backups.items()
+		}
+
+		return (
+			recent_backups.get("database"),
+			recent_backups.get("public"),
+			recent_backups.get("private"),
+			recent_backups.get("config"),
+		)
 
 	def zip_files(self):
 		for folder in ("public", "private"):
@@ -128,10 +150,11 @@ class BackupGenerator:
 				print('Backed up files', os.path.abspath(backup_path))
 
 	def copy_site_config(self):
-		site_config_backup_path = os.path.join(get_backup_path(),
+		site_config_backup_path = os.path.join(
+			get_backup_path(),
 			"{time_stamp}-{site_slug}-site_config_backup.json".format(
-			time_stamp=self.todays_date,
-			site_slug=self.site_slug))
+				time_stamp=self.todays_date,
+				site_slug=self.site_slug))
 		site_config_path = os.path.join(frappe.get_site_path(), "site_config.json")
 		site_config = {}
 		if os.path.exists(site_config_path):
@@ -200,21 +223,30 @@ def get_backup():
 	"""
 	delete_temp_backups()
 	odb = BackupGenerator(frappe.conf.db_name, frappe.conf.db_name,\
-						frappe.conf.db_password, db_host = frappe.db.host,\
-						db_type=frappe.conf.db_type, db_port=frappe.conf.db_port)
+						  frappe.conf.db_password, db_host = frappe.db.host,\
+							db_type=frappe.conf.db_type, db_port=frappe.conf.db_port)
 	odb.get_backup()
 	recipient_list = odb.send_email()
 	frappe.msgprint(_("Download link for your backup will be emailed on the following email address: {0}").format(', '.join(recipient_list)))
+
 
 @frappe.whitelist()
 def fetch_latest_backups():
 	"""Fetches paths of the latest backup taken in the last 30 days
 	Only for: System Managers
+
 	Returns:
 		dict: relative Backup Paths
 	"""
 	frappe.only_for("System Manager")
-	odb = BackupGenerator(frappe.conf.db_name, frappe.conf.db_name, frappe.conf.db_password, db_host=frappe.db.host, db_type=frappe.conf.db_type, db_port=frappe.conf.db_port)
+	odb = BackupGenerator(
+		frappe.conf.db_name,
+		frappe.conf.db_name,
+		frappe.conf.db_password,
+		db_host=frappe.db.host,
+		db_type=frappe.conf.db_type,
+		db_port=frappe.conf.db_port,
+	)
 	database, public, private, config = odb.get_recent_backup(older_than=24 * 30)
 
 	return {
@@ -223,6 +255,7 @@ def fetch_latest_backups():
 		"private": private,
 		"config": config
 	}
+
 
 def scheduled_backup(older_than=6, ignore_files=False, backup_path_db=None, backup_path_files=None, backup_path_private_files=None, force=False, verbose=False):
 	"""this function is called from scheduler
@@ -234,13 +267,13 @@ def scheduled_backup(older_than=6, ignore_files=False, backup_path_db=None, back
 def new_backup(older_than=6, ignore_files=False, backup_path_db=None, backup_path_files=None, backup_path_private_files=None, force=False, verbose=False):
 	delete_temp_backups(older_than = frappe.conf.keep_backups_for_hours or 24)
 	odb = BackupGenerator(frappe.conf.db_name, frappe.conf.db_name,\
-						  frappe.conf.db_password,
-						  backup_path_db=backup_path_db, backup_path_files=backup_path_files,
-						  backup_path_private_files=backup_path_private_files,
-						  db_host = frappe.db.host,
-						  db_port = frappe.db.port,
-						  db_type = frappe.conf.db_type,
-						  verbose=verbose)
+							frappe.conf.db_password,
+							backup_path_db=backup_path_db, backup_path_files=backup_path_files,
+							backup_path_private_files=backup_path_private_files,
+							db_host = frappe.db.host,
+							db_port = frappe.db.port,
+							db_type = frappe.conf.db_type,
+							verbose=verbose)
 	odb.get_backup(older_than, ignore_files, force=force)
 	return odb
 
@@ -317,15 +350,19 @@ if __name__ == "__main__":
 
 	if cmd == "is_file_old":
 		odb = BackupGenerator(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5] or "localhost", db_type=db_type, db_port=db_port)
+		is_file_old(odb.db_file_name)
 
 	if cmd == "get_backup":
 		odb = BackupGenerator(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5] or "localhost", db_type=db_type, db_port=db_port)
+		odb.get_backup()
 
 	if cmd == "take_dump":
 		odb = BackupGenerator(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5] or "localhost", db_type=db_type, db_port=db_port)
+		odb.take_dump()
 
 	if cmd == "send_email":
 		odb = BackupGenerator(sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5] or "localhost", db_type=db_type, db_port=db_port)
+		odb.send_email("abc.sql.gz")
 
 	if cmd == "delete_temp_backups":
 		delete_temp_backups()
