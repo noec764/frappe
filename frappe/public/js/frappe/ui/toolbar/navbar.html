@@ -71,7 +71,7 @@
 								{% if (item.route) { %}
 									<a class="dropdown-item" href="{{ item.route }}">{%= __(item.item_label) %}</a>
 								{% } else if (item.action) { %}
-									<a class="dropdown-item" href="#" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
+									<a class="dropdown-item" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
 								{% } else { %}
 									<div class="divider"></div>
 								{% } %}
@@ -80,7 +80,7 @@
 					</div>
 				</li>
 				<li class="nav-item dropdown dropdown-navbar-user dropdown-mobile ml-lg-2">
-					<a class="nav-link" data-toggle="dropdown" href="#" onclick="return false;">
+					<a class="nav-link" data-toggle="dropdown" onclick="return false;">
 						{{ avatar }}
 						<!-- {%= __("Settings") %} -->
 						<!-- <span class="ellipsis toolbar-user-fullname d-none d-sm-none d-md-block navbar-text"></span> -->
@@ -91,7 +91,7 @@
 								{% if (item.route) { %}
 									<a class="dropdown-item" href="{{ item.route }}">{%= __(item.item_label) %}</a>
 								{% } else if (item.action) { %}
-									<a class="dropdown-item" href="#" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
+									<a class="dropdown-item" onclick="return {{ item.action }}">{%= __(item.item_label) %}</a>
 								{% } else { %}
 									<div class="divider"></div>
 								{% } %}

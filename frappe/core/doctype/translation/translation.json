@@ -18,6 +18,8 @@
   {
    "fieldname": "language",
    "fieldtype": "Link",
+   "hide_days": 1,
+   "hide_seconds": 1,
    "in_standard_filter": 1,
    "label": "Language",
    "options": "Language",
@@ -25,34 +27,40 @@
   },
   {
    "fieldname": "section_break_4",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "hide_days": 1,
+   "hide_seconds": 1
   },
   {
    "description": "If your data is in HTML, please copy paste the exact HTML code with the tags.",
    "fieldname": "source_text",
    "fieldtype": "Code",
+   "hide_days": 1,
+   "hide_seconds": 1,
    "label": "Source Text"
   },
   {
    "fieldname": "column_break_6",
-   "fieldtype": "Column Break"
+   "fieldtype": "Column Break",
+   "hide_days": 1,
+   "hide_seconds": 1
   },
   {
    "fieldname": "translated_text",
    "fieldtype": "Code",
-   "in_list_view": 1,
+   "hide_days": 1,
+   "hide_seconds": 1,
    "label": "Translated Text"
   },
   {
    "fieldname": "context",
    "fieldtype": "Data",
-   "label": "Context",
-   "show_days": 1,
-   "show_seconds": 1
+   "in_list_view": 1,
+   "label": "Context"
   }
  ],
  "links": [],
- "modified": "2020-06-04 17:48:03.128532",
+ "modified": "2020-08-18 11:50:49.597329",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Translation",

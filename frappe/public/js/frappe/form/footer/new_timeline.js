@@ -178,10 +178,7 @@ frappe.ui.form.NewTimeline = class {
 			share_timeline_contents.push({
 				icon: 'share',
 				creation: share.creation,
-				content: __("{0} shared this document with {1}", [
-					this.get_user_link(share.owner),
-					share.everyone ? 'everyone' : this.get_user_link(share.user)
-				]),
+				content: __("{0} shared this document with {1}", [this.get_user_link(share.owner), share.everyone ? 'everyone' : this.get_user_link(share.user)]),
 			});
 		});
 		return share_timeline_contents;
