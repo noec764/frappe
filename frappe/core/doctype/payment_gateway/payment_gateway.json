@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "gateway",
+  "disabled",
   "gateway_settings",
   "gateway_controller",
   "column_break_4",
@@ -61,11 +62,17 @@
   {
    "fieldname": "column_break_9",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "disabled",
+   "fieldtype": "Check",
+   "label": "Disabled"
   }
  ],
  "in_create": 1,
  "links": [],
- "modified": "2020-01-30 13:26:36.595705",
+ "modified": "2020-08-18 12:09:22.723404",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Payment Gateway",
