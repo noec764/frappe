@@ -250,7 +250,7 @@ frappe.ui.toolbar.route_to_user = function() {
 frappe.ui.toolbar.view_website = function() {
 	let website_tab = window.open();
 	website_tab.opener = null;
-	website_tab.location = '/index';
+	website_tab.location = '/me';
 };
 
 frappe.ui.toolbar.setup_session_defaults = function() {
