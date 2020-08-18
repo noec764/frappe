@@ -16,11 +16,8 @@
 	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-select">
 		<path d="M4.5 3.636L6.136 2l1.637 1.636M4.5 8.364L6.136 10l1.637-1.636" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
-	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-down">
-		<g fill="#112B42">
-		<path opacity=".5" d="M3 5h6L6 2 3 5z"></path>
-		<path d="M6 10l3-3H3l3 3z"></path>
-		</g>
+	<symbol id="icon-down" viewBox="0 0 32 32">
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2" d="M6 11l10 10 10-10"></path>
 	</symbol>
 	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-both">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M6 2l3 3H3l3-3zm3 5l-3 3-3-3h6z" fill="#112B42"></path>
@@ -92,10 +89,10 @@
 		<path d="M10 6.002L1 6m6.7-2.998l3 3-3 3" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
 	<symbol viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" id="icon-arrow-up-right">
-		<path d="M.85 7.15l6.3-6.3m-5.472 0H7.15v5.472" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
+		<path d="M.85 7.15l6.3-6.3m-5.472 0H7.15v5.472" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
 	<symbol viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg" id="icon-arrow-down-left">
-		<path d="M7.15.85l-6.3 6.3m5.472 0H.85V1.678" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
+		<path d="M7.15.85l-6.3 6.3m5.472 0H.85V1.678" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-review">
 		<path d="M7.33 3.71c.2-.662 1.14-.662 1.34 0l.68 2.243a.7.7 0 0 0 .67.497h2.437c.667 0 .956.844.43 1.253l-1.975 1.533a.7.7 0 0 0-.239.763l.763 2.424c.204.65-.544 1.178-1.088.77L8.42 11.746a.7.7 0 0 0-.84 0l-1.928 1.447c-.544.409-1.292-.12-1.088-.77L5.327 10a.7.7 0 0 0-.239-.763L3.114 7.703c-.527-.409-.238-1.253.43-1.253H5.98a.7.7 0 0 0 .67-.497l.68-2.242z"
@@ -109,19 +106,19 @@
 		<path d="M5.75 8l1.5 1.5 3-3" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-printer">
-		<g id="Icon / Printer" stroke="var(--icon-stroke)">
+		<g id="Icon / Printer">
 			<g id="Group 308">
 				<g id="Vector">
 					<mask id="path-2-inside-1" fill="white">
 						<path d="M4 5.5V3C4 2.17157 4.67157 1.5 5.5 1.5H10.5C11.3284 1.5 12 2.17157 12 3V5.5"/>
 					</mask>
-					<path d="M4 5C3.72386 5 3.5 5.22386 3.5 5.5C3.5 5.77614 3.72386 6 4 6V5ZM12 6C12.2761 6 12.5 5.77614 12.5 5.5C12.5 5.22386 12.2761 5 12 5V6ZM12 5H4V6H12V5ZM3 5.5C3 6.05228 3.44772 6.5 4 6.5C4.55228 6.5 5 6.05228 5 5.5H3ZM11 5.5C11 6.05228 11.4477 6.5 12 6.5C12.5523 6.5 13 6.05228 13 5.5H11ZM5 5.5V3H3V5.5H5ZM5.5 2.5H10.5V0.5H5.5V2.5ZM11 3V5.5H13V3H11ZM10.5 2.5C10.7761 2.5 11 2.72386 11 3H13C13 1.61929 11.8807 0.5 10.5 0.5V2.5ZM5 3C5 2.72386 5.22386 2.5 5.5 2.5V0.5C4.11929 0.5 3 1.61929 3 3H5Z" fill="#12283A" stroke-width="0" mask="url(#path-2-inside-1)"/>
+					<path d="M4 5C3.72386 5 3.5 5.22386 3.5 5.5C3.5 5.77614 3.72386 6 4 6V5ZM12 6C12.2761 6 12.5 5.77614 12.5 5.5C12.5 5.22386 12.2761 5 12 5V6ZM12 5H4V6H12V5ZM3 5.5C3 6.05228 3.44772 6.5 4 6.5C4.55228 6.5 5 6.05228 5 5.5H3ZM11 5.5C11 6.05228 11.4477 6.5 12 6.5C12.5523 6.5 13 6.05228 13 5.5H11ZM5 5.5V3H3V5.5H5ZM5.5 2.5H10.5V0.5H5.5V2.5ZM11 3V5.5H13V3H11ZM10.5 2.5C10.7761 2.5 11 2.72386 11 3H13C13 1.61929 11.8807 0.5 10.5 0.5V2.5ZM5 3C5 2.72386 5.22386 2.5 5.5 2.5V0.5C4.11929 0.5 3 1.61929 3 3H5Z" fill="var(--icon-stroke)" stroke-width="0" mask="url(#path-2-inside-1)"/>
 				</g>
 				<g id="Vector_2">
 					<mask id="path-4-inside-2" fill="white">
 						<path d="M3.7 11.5H4.9H11.8H13.3C13.9627 11.5 14.5 10.9628 14.5 10.3V7.2C14.5 5.98497 13.515 5 12.3 5H3.7C2.48497 5 1.5 5.98497 1.5 7.2V10.3C1.5 10.9628 2.03726 11.5 2.7 11.5H3.7Z"/>
 					</mask>
-					<path d="M4.9 10.5H3.7V12.5H4.9V10.5ZM2.5 10.3V7.2H0.5V10.3H2.5ZM3.7 6H12.3V4H3.7V6ZM13.5 7.2V10.3H15.5V7.2H13.5ZM13.3 10.5H11.8V12.5H13.3V10.5ZM2.7 12.5H3.7V10.5H2.7V12.5ZM11.8 10.5H4.9V12.5H11.8V10.5ZM0.5 10.3C0.5 11.515 1.48497 12.5 2.7 12.5V10.5C2.58954 10.5 2.5 10.4105 2.5 10.3H0.5ZM13.5 10.3C13.5 10.4105 13.4105 10.5 13.3 10.5V12.5C14.515 12.5 15.5 11.515 15.5 10.3H13.5ZM12.3 6C12.9627 6 13.5 6.53726 13.5 7.2H15.5C15.5 5.43269 14.0673 4 12.3 4V6ZM2.5 7.2C2.5 6.53726 3.03726 6 3.7 6V4C1.93269 4 0.5 5.43269 0.5 7.2H2.5Z" fill="#12283A" mask="url(#path-4-inside-2)"  stroke-width="0"/>
+					<path d="M4.9 10.5H3.7V12.5H4.9V10.5ZM2.5 10.3V7.2H0.5V10.3H2.5ZM3.7 6H12.3V4H3.7V6ZM13.5 7.2V10.3H15.5V7.2H13.5ZM13.3 10.5H11.8V12.5H13.3V10.5ZM2.7 12.5H3.7V10.5H2.7V12.5ZM11.8 10.5H4.9V12.5H11.8V10.5ZM0.5 10.3C0.5 11.515 1.48497 12.5 2.7 12.5V10.5C2.58954 10.5 2.5 10.4105 2.5 10.3H0.5ZM13.5 10.3C13.5 10.4105 13.4105 10.5 13.3 10.5V12.5C14.515 12.5 15.5 11.515 15.5 10.3H13.5ZM12.3 6C12.9627 6 13.5 6.53726 13.5 7.2H15.5C15.5 5.43269 14.0673 4 12.3 4V6ZM2.5 7.2C2.5 6.53726 3.03726 6 3.7 6V4C1.93269 4 0.5 5.43269 0.5 7.2H2.5Z" fill="var(--icon-stroke)" mask="url(#path-4-inside-2)"  stroke-width="0"/>
 				</g>
 				<path id="Vector_3" d="M4.5 9.5L11.5 9.5V12C11.5 12.5523 11.0523 13 10.5 13H5.5C4.94772 13 4.5 12.5523 4.5 12V9.5Z" fill="var(--fg-color)" stroke-linecap="round" stroke-linejoin="round"/>
 			</g>
@@ -217,12 +214,13 @@
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M6.936 2a2 2 0 0 0-2 2v.649h1V4a1 1 0 0 1 1-1h5.566a1 1 0 0 1 1 1v4.595a1 1 0 0 1-1 1h-.642v1h.642a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.936zM3.5 5.402a2 2 0 0 0-2 2v4.595a2 2 0 0 0 2 2h5.566a2 2 0 0 0 2-2V7.402a2 2 0 0 0-2-2H3.5zm-1 2a1 1 0 0 1 1-1h5.566a1 1 0 0 1 1 1v4.595a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V7.402z"
 		fill="#12283A"></path>
 	</symbol>
-	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-duplicate">
-		<path d="M9 6.5v3a1 1 0 0 1-1 1H2.5a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h3m2-1.5h3v2.625M5 7l5.5-5.5" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
+	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-duplicate">
+		<path fill-rule="evenodd" clip-rule="evenodd" d="M6.936 2a2 2 0 0 0-2 2v.649h1V4a1 1 0 0 1 1-1h5.566a1 1 0 0 1 1 1v4.595a1 1 0 0 1-1 1h-.642v1h.642a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H6.936zM3.5 5.402a2 2 0 0 0-2 2v4.595a2 2 0 0 0 2 2h5.566a2 2 0 0 0 2-2V7.402a2 2 0 0 0-2-2H3.5zm-1 2a1 1 0 0 1 1-1h5.566a1 1 0 0 1 1 1v4.595a1 1 0 0 1-1 1H3.5a1 1 0 0 1-1-1V7.402z"
+		stroke="none" fill="#192734"></path>
 	</symbol>
 	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-drag">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M4.875 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1.5-3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm6.75-6a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM8.625 12a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm1.5-6a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
-		fill="#ACB5BD" stroke="none" stroke-width="0"></path>
+		fill="#ACB5BD" stroke-width="0"></path>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-drag-1">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M6.9 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0 10a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM5.4 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM12.15 3a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm-1.5 11.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zm1.5-6.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z"
@@ -237,8 +235,12 @@
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-dot-vertical">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M8 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm0 4a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm1 3a1 1 0 1 1-2 0 1 1 0 0 1 2 0z" fill="#12283A"></path>
 	</symbol>
-	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-delete">
-		<path d="M3 3.5v9.059c0 1.072.746 1.941 1.667 1.941h6.666c.921 0 1.667-.869 1.667-1.941V3.5m-11 0h12m-9 0v-1a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M8 6.9v4.286M10.5 6.9v4.29m-5-4.29v4.286" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
+	<symbol id="icon-delete" viewBox="0 0 32 32" fill="none">
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M7 7v18.118c0 2.145 1.492 3.882 3.333 3.882h11.333c1.842 0 3.333-1.737 3.333-3.882v-18.118"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M5 7h22"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M10 7v-1c0-1.657 1.343-3 3-3h6c1.657 0 3 1.343 3 3v1"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M18.8 14.4v8.571"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M13.2 14.4v8.571"></path>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-create">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M4.146 11.217a.5.5 0 1 0 .708.708l3.182-3.182 3.181 3.182a.5.5 0 1 0 .708-.708l-3.182-3.18 3.182-3.182a.5.5 0 1 0-.708-.708l-3.18 3.181-3.183-3.182a.5.5 0 0 0-.708.708l3.182 3.182-3.182 3.181z" fill="#70818F"></path>
@@ -259,10 +261,10 @@
 		<path d="M14 7.66625L8.68679 12.8875C7.17736 14.3708 4.64151 14.3708 3.13208 12.8875C1.62264 11.4042 1.62264 8.91224 3.13208 7.42892L7.84151 2.80099C8.9283 1.733 10.6189 1.733 11.7057 2.80099C12.7925 3.86897 12.7925 5.53028 11.7057 6.59827L7.35849 10.8109C6.75472 11.4042 5.78868 11.4042 5.24528 10.8109C4.64151 10.2176 4.64151 9.26823 5.24528 8.73424L8.86792 5.17429" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round"/>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-assign">
-		<path d="M8.80039 10H6.40039C5.33952 10 4.32211 10.4214 3.57196 11.1716C2.82182 11.9217 2.40039 12.9391 2.40039 14H9.60039" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M7.60029 7.6C9.14669 7.6 10.4003 6.3464 10.4003 4.8C10.4003 3.2536 9.14669 2 7.60029 2C6.0539 2 4.80029 3.2536 4.80029 4.8C4.80029 6.3464 6.0539 7.6 7.60029 7.6Z" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M12.0005 10V13.2" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"/>
-		<path d="M10.4004 11.6H13.6004" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M8.80039 10H6.40039C5.33952 10 4.32211 10.4214 3.57196 11.1716C2.82182 11.9217 2.40039 12.9391 2.40039 14H9.60039" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M7.60029 7.6C9.14669 7.6 10.4003 6.3464 10.4003 4.8C10.4003 3.2536 9.14669 2 7.60029 2C6.0539 2 4.80029 3.2536 4.80029 4.8C4.80029 6.3464 6.0539 7.6 7.60029 7.6Z" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M12.0005 10V13.2" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M10.4004 11.6H13.6004" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-add">
 		<path d="M8 3v10M3 8h10" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -358,7 +360,7 @@
 		<path d="M3 4.5V18a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V7a.5.5 0 0 0-.5-.5h-9.108a.5.5 0 0 1-.357-.15l-2.16-2.2A.5.5 0 0 0 8.516 4H3.5a.5.5 0 0 0-.5.5z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="square"></path>
 		<path d="M3 10.5h18" stroke="var(--icon-stroke)"></path>
 	</symbol>
-	<symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="icon-organisation">
+	<symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="icon-oranisation">
 		<path d="M6.273 21H3v-6.364a1 1 0 0 1 1-1h2.273M17.727 21H21v-6.364a1 1 0 0 0-1-1h-2.273M15.727 3H8.273a2 2 0 0 0-2 2v16h11.454V5a2 2 0 0 0-2-2z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="square"></path>
 		<path d="M9.545 6.273h1m3.091 0h1M9.545 9.545h1m3.091 0h1m-5.091 3.273h1m3.091 0h1M9.545 16.09h1m3.091 0h1M12 21v-1.636" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round"></path>
 	</symbol>
@@ -459,6 +461,9 @@
 		<path d="M8.024 6.5H3a.5.5 0 0 0-.5.5v8a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V9.5A.5.5 0 0 0 17 9h-6.783a.5.5 0 0 1-.417-.224L8.441 6.724a.5.5 0 0 0-.417-.224z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="square"></path>
 		<path d="M3.88 4.5v-1a.5.5 0 0 1 .5-.5h11.24a.5.5 0 0 1 .5.5V7" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
 	</symbol>
+	<symbol viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg" id="icon-primitive-dot">
+		<path d="M9.5 6a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"></path>
+	</symbol>
 	<symbol viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" id="icon-image">
 		<path d="M11.5 2.5H5A1.5 1.5 0 0 0 3.5 4v12A1.5 1.5 0 0 0 5 17.5h10a1.5 1.5 0 0 0 1.5-1.5V7.5l-5-5z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
 		<path d="M5.876 15.4a.2.2 0 0 1-.166-.312l1.841-2.735a.2.2 0 0 1 .291-.045l1.224.98a.2.2 0 0 0 .283-.034l1.973-2.527a.2.2 0 0 1 .329.019l2.663 4.35a.2.2 0 0 1-.171.304H5.876z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="square"
@@ -485,19 +490,6 @@
 		<path d="M9.273 10v2.91c0 1.204 1.953 2.18 4.364 2.18 2.41 0 4.363-.976 4.363-2.18V10" stroke="var(--icon-stroke)" stroke-miterlimit="10"></path>
 		<path d="M9.273 12.91v2.908c0 1.205 1.953 2.182 4.364 2.182 2.41 0 4.363-.977 4.363-2.182V12.91" stroke="var(--icon-stroke)" stroke-miterlimit="10"></path>
 		<path d="M13.637 12.182c2.41 0 4.363-.977 4.363-2.182s-1.953-2.182-4.363-2.182S9.273 8.795 9.273 10s1.954 2.182 4.364 2.182z" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="square"></path>
-	</symbol>
-	<symbol viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" id="icon-keyboard">
-		<rect x="2.5" y="4" width="15" height="12" rx="2" stroke="var(--icon-stroke)"></rect>
-		<circle cx="5.8" cy="7.65" r=".65" fill="#192734"></circle>
-		<circle cx="7.9" cy="7.65" r=".65" fill="#192734"></circle>
-		<circle cx="10" cy="7.65" r=".65" fill="#192734"></circle>
-		<circle cx="12.1" cy="7.65" r=".65" fill="#192734"></circle>
-		<circle cx="14.2" cy="7.65" r=".65" fill="#192734"></circle>
-		<path d="M6.5 13h7" stroke="var(--icon-stroke)" stroke-linecap="round" stroke-linejoin="round"></path>
-		<circle cx="6.85" cy="9.75" r=".65" fill="#192734"></circle>
-		<circle cx="8.95" cy="9.75" r=".65" fill="#192734"></circle>
-		<circle cx="11.05" cy="9.75" r=".65" fill="#192734"></circle>
-		<circle cx="13.15" cy="9.75" r=".65" fill="#192734"></circle>
 	</symbol>
 	<symbol viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" id="icon-liabilities">
 		<path d="M8.588 17H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8.5a2 2 0 0 1 2 2v5.5" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -534,10 +526,6 @@
 		stroke="none">
 		</path>
 	</symbol>
-	<!-- <symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-heart-active">
-	<path d="M12.706 1.15a3.784 3.784 0 0 0-5.434 0c-.104.106-.183.227-.272.34-.089-.113-.168-.234-.272-.34a3.784 3.784 0 0 0-5.434 0C.73 1.727.495 2.704.5 3.78c.015 3.468 3 5.85 5.745 7.886.45.334 1.06.334 1.51 0 2.746-2.035 5.73-4.418 5.745-7.886.005-1.077-.231-2.054-.794-2.63z"
-		stroke="none" fill="#E24C4C"></path>
-	</symbol> -->
 	<symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="icon-solid-error">
 		<path fill-rule="evenodd" clip-rule="evenodd" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22ZM8.0429 8.04289C8.43342 7.65237 9.06659 7.65237 9.45711 8.04289L12.0011 10.5869L14.5451 8.04294C14.9356 7.65242 15.5688 7.65242 15.9593 8.04294C16.3499 8.43347 16.3499 9.06663 15.9593 9.45716L13.4154 12.0011L15.9593 14.5451C16.3499 14.9356 16.3499 15.5688 15.9593 15.9593C15.5688 16.3499 14.9357 16.3499 14.5451 15.9593L12.0011 13.4154L9.45711 15.9594C9.06659 16.3499 8.43342 16.3499 8.0429 15.9594C7.65237 15.5689 7.65237 14.9357 8.0429 14.5452L10.5869 12.0011L8.0429 9.45711C7.65237 9.06658 7.65237 8.43342 8.0429 8.04289Z" fill="#F56B6B" stroke="none"/>
 	</symbol>
@@ -580,8 +568,21 @@
 		<path d="M10.5589 14.8213L4.693 9.77014L10.5589 5.04483V7.97057V8.47518L11.0635 8.47055C14.6022 8.43809 17.598 10.8976 18.3297 14.213C16.5316 12.3421 13.9036 11.4411 11.0589 11.4411H10.5589V11.9411V14.8213Z" stroke="#A6B1B9" stroke-miterlimit="10"/>
 		<path d="M8.14703 15.9117L1 9.75733L8.14703 4" stroke="#A6B1B9" stroke-miterlimit="10"/>
 	</symbol>
+	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-keyboard" viewBox="0 0 42 32">
+		<path fill="none" stroke="#192734" style="stroke: var(--color1, #192734)" stroke-linejoin="miter" stroke-linecap="butt" stroke-miterlimit="4" stroke-width="2.4615" d="M7.385 2.462h27.077c2.719 0 4.923 2.204 4.923 4.923v17.231c0 2.719-2.204 4.923-4.923 4.923h-27.077c-2.719 0-4.923-2.204-4.923-4.923v-17.231c0-2.719 2.204-4.923 4.923-4.923z"></path>
+		<path d="M12.8 11.323c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M17.723 11.323c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M15.262 16.246c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M22.646 11.323c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M20.185 16.246c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M27.569 11.323c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M25.108 16.246c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M32.492 11.323c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path d="M30.031 16.246c0 0.816-0.661 1.477-1.477 1.477s-1.477-0.661-1.477-1.477c0-0.816 0.661-1.477 1.477-1.477s1.477 0.661 1.477 1.477z"></path>
+		<path fill="none" stroke="#192734" style="stroke: var(--color1, #192734)" stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="4" stroke-width="2.4615" d="M12.308 22.154h17.231"></path>
+	</symbol>
 	<symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="icon-map">
-		<path fill="#192734" d="M21.32,5.05l-6-2h-.07a.7.7,0,0,0-.14,0h-.23l-.13,0h-.07L9,5,3.32,3.05a1,1,0,0,0-.9.14A1,1,0,0,0,2,4V18a1,1,0,0,0,.68.95l6,2h0a1,1,0,0,0,.62,0h0L15,19.05,20.68,21A1.19,1.19,0,0,0,21,21a.94.94,0,0,0,.58-.19A1,1,0,0,0,22,20V6A1,1,0,0,0,21.32,5.05ZM8,18.61,4,17.28V5.39L8,6.72Zm6-1.33-4,1.33V6.72l4-1.33Zm6,1.33-4-1.33V5.39l4,1.33Z"/></svg>
+		<path fill="#192734" d="M21.32,5.05l-6-2h-.07a.7.7,0,0,0-.14,0h-.23l-.13,0h-.07L9,5,3.32,3.05a1,1,0,0,0-.9.14A1,1,0,0,0,2,4V18a1,1,0,0,0,.68.95l6,2h0a1,1,0,0,0,.62,0h0L15,19.05,20.68,21A1.19,1.19,0,0,0,21,21a.94.94,0,0,0,.58-.19A1,1,0,0,0,22,20V6A1,1,0,0,0,21.32,5.05ZM8,18.61,4,17.28V5.39L8,6.72Zm6-1.33-4,1.33V6.72l4-1.33Zm6,1.33-4-1.33V5.39l4,1.33Z"/></path>
 	</symbol>
 	<view xmlns="http://www.w3.org/2000/svg" id="icon-right-view" viewBox="0 0 16 16"/>
 	<use xmlns="http://www.w3.org/2000/svg" href="#icon-right" width="16" height="16" x="0" y="0"/>

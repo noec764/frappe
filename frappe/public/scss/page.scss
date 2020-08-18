@@ -10,10 +10,6 @@
 	background-color: var(--bg-color);
 }
 
-.custom-actions {
-	display: flex;
-}
-
 .page-actions {
 	align-items: center;
 	.btn {
@@ -55,18 +51,6 @@
 	z-index: 2;
 	.page-head-content {
 		height: $page-head-height;
-	}
-}
-
-.menu-shorcut {
-	padding: 0 8px;
-	height: 20px;
-	background: var(--gray-600);
-	border-radius: 4px;
-
-	span {
-		color: $white;
-		line-height: 20px;
 	}
 }
 
