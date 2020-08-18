@@ -84,18 +84,16 @@ frappe.ui.form.Control = Class.extend({
 			&& this.refresh_input
 			&& this.refresh_input();
 
-		var value = this.get_value();
-
-		this.show_translatable_button(value);
+		this.show_translatable_button();
 	},
-	show_translatable_button(value) {
+	show_translatable_button() {
 		// Disable translation non-string fields or special string fields
 		if (!frappe.model
 			|| !this.frm
 			|| !this.doc
 			|| !this.df.translatable
 			|| !frappe.model.can_write('Translation')
-			|| !value) return;
+			|| !this.get_value()) return;
 
 		// Disable translation in website
 		if (!frappe.views || !frappe.views.TranslationManager) return;
@@ -114,7 +112,7 @@ frappe.ui.form.Control = Class.extend({
 				if (!this.doc.__islocal) {
 					new frappe.views.TranslationManager({
 						'df': this.df,
-						'source_text': value,
+						'source_text': this.get_value(),
 						'target_language': this.doc.language,
 						'doc': this.doc
 					});
