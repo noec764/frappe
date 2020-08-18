@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Server Script', {
 	refresh: function(frm) {
-		if(frm.doc.script_type === 'Scheduler Event' && !frm.doc.disabled){
+		if (frm.doc.script_type === 'Scheduler Event' && !frm.doc.disabled) {
 			frm.add_custom_button('Schedule Script', function() {
 				var d = new frappe.ui.Dialog({
 					title: __("Schedule Script Execution"),
@@ -33,7 +33,7 @@ frappe.ui.form.on('Server Script', {
 		}
 	},
 
-	schedule_script(frm, data){
+	schedule_script(frm, data) {
 		frm.call({
 			method: "frappe.core.doctype.server_script.server_script.setup_scheduler_events",
 			args: {

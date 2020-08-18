@@ -38,19 +38,109 @@ data_fieldtypes = (
 	'Duration'
 )
 
-no_value_fields = ('Section Break', 'Column Break', 'HTML', 'Table', 'Table MultiSelect', 'Button', 'Image',
-	'Fold', 'Heading')
-display_fieldtypes = ('Section Break', 'Column Break', 'HTML', 'Button', 'Image', 'Fold', 'Heading')
-numeric_fieldtypes = ('Currency', 'Int', 'Long Int', 'Float', 'Percent', 'Check')
-default_fields = ('doctype','name','owner','creation','modified','modified_by',
-	'parent','parentfield','parenttype','idx','docstatus')
-optional_fields = ("_user_tags", "_comments", "_assign", "_liked_by", "_seen", "_printed", "_seal",
-	"_seal_version", "_submitted", "_submitted_by")
-table_fields = ('Table', 'Table MultiSelect')
-core_doctypes_list = ('DocType', 'DocField', 'DocPerm', 'DocType Action', 'DocType Link', 'User', 'Role', 'Has Role',
-	'Page', 'Module Def', 'Print Format', 'Report', 'Customize Form',
-	'Customize Form Field', 'Property Setter', 'Custom Field', 'Custom Script')
-data_field_options = ('Email', 'Name', 'Phone')
+no_value_fields = (
+	'Section Break',
+	'Column Break',
+	'HTML',
+	'Table',
+	'Table MultiSelect',
+	'Button',
+	'Image',
+	'Fold',
+	'Heading'
+)
+
+display_fieldtypes = (
+	'Section Break',
+	'Column Break',
+	'HTML',
+	'Button',
+	'Image',
+	'Fold',
+	'Heading')
+
+numeric_fieldtypes = (
+	'Currency',
+	'Int',
+	'Long Int',
+	'Float',
+	'Percent',
+	'Check'
+)
+
+data_field_options = (
+	'Email',
+	'Name',
+	'Phone'
+)
+
+default_fields = (
+	'doctype',
+	'name',
+	'owner',
+	'creation',
+	'modified',
+	'modified_by',
+	'parent',
+	'parentfield',
+	'parenttype',
+	'idx',
+	'docstatus'
+)
+
+optional_fields = (
+	"_user_tags",
+	"_comments",
+	"_assign",
+	"_liked_by",
+	"_seen",
+	"_printed",
+	"_seal",
+	"_seal_version",
+	"_submitted",
+	"_submitted_by"
+)
+
+table_fields = (
+	'Table',
+	'Table MultiSelect'
+)
+
+core_doctypes_list = (
+	'DocType',
+	'DocField',
+	'DocPerm',
+	'DocType Action',
+	'DocType Link',
+	'User',
+	'Role',
+	'Has Role',
+	'Page',
+	'Module Def',
+	'Print Format',
+	'Report',
+	'Customize Form',
+	'Customize Form Field',
+	'Property Setter',
+	'Custom Field',
+	'Custom Script'
+)
+
+log_types = (
+	'Version',
+	'Error Log',
+	'Scheduled Job Log',
+	'Event Sync Log',
+	'Event Update Log',
+	'Access Log',
+	'View Log',
+	'Activity Log',
+	'Energy Point Log',
+	'Notification Log',
+	'Email Queue',
+	'DocShare',
+	'Document Follow'
+)
 
 def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=[]):
 	if not tarfields:
