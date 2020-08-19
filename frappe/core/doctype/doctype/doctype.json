@@ -76,6 +76,7 @@
   "links",
   "web_view",
   "has_web_view",
+  "index_web_pages_for_search",
   "allow_guest_to_view",
   "column_break_53",
   "route",
@@ -578,6 +579,12 @@
     "fieldname": "email_settings_sb",
     "fieldtype": "Section Break",
     "label": "Email Settings"
+   },
+   {
+	"default": "1",
+	"fieldname": "index_web_pages_for_search",
+	"fieldtype": "Check",
+	"label": "Index Web Pages for Search"
    }
  ],
  "idx": 6,
@@ -658,7 +665,7 @@
 		"link_fieldname": "reference_doctype"
 	   }
  ],
- "modified": "2020-08-06 12:59:32.369093",
+ "modified": "2020-07-21 16:20:57.028802",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",

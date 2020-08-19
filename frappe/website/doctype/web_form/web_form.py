@@ -345,6 +345,9 @@ def get_context(context):
 			frappe.throw(_('Mandatory Information missing:') + '<br><br>'
 				+ '<br>'.join(['{0} ({1})'.format(d.label, d.fieldtype) for d in missing]))
 
+	def allow_website_search_indexing(self):
+		return False
+
 	def has_web_form_permission(self, doctype, name, ptype='read'):
 		if frappe.session.user=="Guest":
 			return False

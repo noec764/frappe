@@ -283,11 +283,6 @@ setup_wizard_exception = [
 before_write_file = "frappe.limits.validate_space_limit"
 
 before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
-after_migrate = [
-	'frappe.modules.full_text_search.build_index_for_all_routes'
-]
-
-before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
 
 otp_methods = ['OTP App','Email','SMS']
 
