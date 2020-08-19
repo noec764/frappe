@@ -93,6 +93,8 @@ frappe.ui.Page = Class.extend({
 
 		this.$sub_title_area = this.wrapper.find("h6");
 
+		this.$docname_area = this.wrapper.find(".name-text");
+
 		if(this.title)
 			this.set_title(this.title);
 
@@ -116,7 +118,7 @@ frappe.ui.Page = Class.extend({
 		this.actions_btn_group = this.page_actions.find(".actions-btn-group");
 
 		this.standard_actions = this.page_actions.find(".standard-actions");
-		this.custom_actions = this.page_actions.find(".custom-actions");
+		this.custom_actions = this.wrapper.find(".custom-actions");
 
 		this.page_form = $('<div class="page-form row hide"></div>').prependTo(this.main);
 		this.inner_toolbar = this.custom_actions;
@@ -578,6 +580,11 @@ frappe.ui.Page = Class.extend({
 		this.$sub_title_area.html(txt).toggleClass("hide", !!!txt);
 	},
 
+	set_document_name: function(txt) {
+		if(!txt) txt = "";
+		this.$docname_area.html(txt);
+	},
+
 	get_main_icon: function(icon) {
 		return this.$title_area.find(".title-icon")
 			.html('<i class="'+icon+' fa-fw"></i> ')
@@ -625,7 +632,7 @@ frappe.ui.Page = Class.extend({
 			</div>
 		`);
 
-		this.custom_actions.removeClass('hide').append(custom_btn_group);
+		this.standard_actions.prepend(custom_btn_group);
 
 		return custom_btn_group.find('.dropdown-menu');
 	},

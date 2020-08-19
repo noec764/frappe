@@ -277,7 +277,8 @@ select.input-xs {
 /* checkbox */
 input[type="checkbox"] {
 	position: relative;
-	visibility: hidden;
+	// Not working on Firefox
+	//visibility: hidden;
 	cursor: pointer;
 
 	&:before {

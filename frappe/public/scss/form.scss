@@ -1,3 +1,10 @@
+.custom-actions {
+	&> div,
+	&>button {
+		margin: 2px
+	}
+}
+
 .form-control {
 	border-width: 1px;
 	border-color: var(--gray-400);
