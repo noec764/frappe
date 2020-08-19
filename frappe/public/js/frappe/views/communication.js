@@ -336,11 +336,11 @@ frappe.views.CommunicationComposer = Class.extend({
 		// select print format
 		$(fields.select_print_format.wrapper).toggle(false);
 
-		if (cur_frm) {
+		if (this.frm) {
 			$(fields.select_print_format.input)
 				.empty()
-				.add_options(cur_frm.print_preview.print_formats)
-				.val(cur_frm.print_preview.print_formats[0]);
+				.add_options(this.frm.print_preview.print_formats)
+				.val(this.frm.print_preview.print_formats[0]);
 		} else {
 			$(fields.attach_document_print.wrapper).toggle(false);
 		}
