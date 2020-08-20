@@ -691,7 +691,7 @@ class EmailAccount(Document):
 			sent_folders = [x for x in folders if "sent" in str(x).lower()]
 			if sent_folders:
 				sent_folder = str([x for x in sent_folders[0].decode().split('"') if x][-1])
-				email_server.imap.append(f'"{sent_folder}"', "\\Seen", imaplib.Time2Internaldate(time.time()), message)
+				email_server.imap.append(f'"{sent_folder}"', "\\Seen", imaplib.Time2Internaldate(time.time()), message.encode())
 
 @frappe.whitelist()
 def get_append_to(doctype=None, txt=None, searchfield=None, start=None, page_len=None, filters=None):
