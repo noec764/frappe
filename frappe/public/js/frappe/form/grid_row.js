@@ -191,7 +191,7 @@ export default class GridRow {
 			// REDESIGN-TODO: Make translation contextual, this No is Number
 			var txt = (this.doc ? this.doc.idx : __("No."));
 			this.row_index = $(
-				`<div class="row-index sortable-handle col col-xs-1f flex align-items-center">
+				`<div class="row-index sortable-handle col col-xs-1 flex align-items-center">
 					${this.row_check_html}
 				<span class="hidden-xs ml-1">${txt}</span></div>`)
 				.appendTo(this.row)
