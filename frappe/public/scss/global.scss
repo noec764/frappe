@@ -276,7 +276,7 @@ select.input-xs {
 	margin: 0px;
 }
 
-$checkbox-size: 100%;
+$checkbox-size: 14px;
 
 .checkbox {
 	label {
@@ -301,8 +301,11 @@ $checkbox-size: 100%;
 
 /* checkbox */
 input[type="checkbox"] {
+	width: $checkbox-size;
+	height: $checkbox-size;
 	position: relative;
 	font-size: calc(#{$checkbox-size} - 1px);
+	margin-right: 5px;
 
 	&:before {
 		width: $checkbox-size;
@@ -317,6 +320,7 @@ input[type="checkbox"] {
 		//box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
 		border-radius: 2px;
 		background: var(--fg-color);
+		cursor: pointer;
 	}
 
 	&:checked:before {
@@ -329,6 +333,7 @@ input[type="checkbox"] {
 		background-color: var(--indicator-blue-bg);
 		box-shadow: none;
 		border: 1px solid var(--indicator-blue);
+		cursor: pointer;
 	}
 
 
@@ -339,6 +344,7 @@ input[type="checkbox"] {
 		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 		border-radius: 2px;
 		content: '';
+		cursor: default;
 	}
 
 	&.disabled-selected:before {
@@ -351,6 +357,7 @@ input[type="checkbox"] {
 		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 		border-radius: 2px;
 		line-height: 10px;
+		cursor: default;
 	}
 }
 
