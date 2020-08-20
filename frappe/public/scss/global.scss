@@ -143,16 +143,18 @@ img {
 .btn-secondary {
 	background-color: var(--control-bg);
 	color: var(--text-color);
-	&:hover, &:active {
+	&:hover, &:active, &:focus {
 		background: var(--gray-300);
+		color: var(--text-color);
 	}
 }
 
 .btn-default {
 	background-color: var(--fg-color);
 	color: var(--text-color);
-	&:hover, &:active {
+	&:hover, &:active, &:focus {
 		background: var(--gray-200);
+		color: var(--text-color);
 	}
 }
 
@@ -161,7 +163,7 @@ img {
 }
 
 .btn-danger {
-	background-color: var(--red-400);
+	background-color: var(--red-400) !important;
 }
 
 h1, h2, h3 {
@@ -274,16 +276,17 @@ select.input-xs {
 	margin: 0px;
 }
 
+$checkbox-size: 100%;
+
 /* checkbox */
 input[type="checkbox"] {
 	position: relative;
-	// Not working on Firefox
-	//visibility: hidden;
+	font-size: calc(#{$checkbox-size} - 1px);
 	cursor: pointer;
 
 	&:before {
-		width: 14px;
-		height: 14px;
+		width: $checkbox-size;
+		height: $checkbox-size;
 		display: block;
 		text-align: center;
 		line-height: 11px;
@@ -291,16 +294,21 @@ input[type="checkbox"] {
 		visibility: visible;
 		border: 1px solid var(--gray-400);
 		box-sizing: border-box;
-		box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
-		border-radius: 4px;
+		//box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+		border-radius: 2px;
 		background: var(--fg-color);
 	}
 
 	&:checked:before {
-		content: url("data: image/svg+xml;utf8, <svg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4.00001L2.66667 5.80001L7 1.20001' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
-		background: linear-gradient(180deg, #4AC3F8 -124.51%, #2490EF 100%);
+		//content: url("data: image/svg+xml;utf8, <svg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4.00001L2.66667 5.80001L7 1.20001' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+		//background: linear-gradient(180deg, #4AC3F8 -124.51%, #2490EF 100%);
+		content: '\e9c3';
+		font-family: 'unicons';
+		font-size: 1em;
+		color: var(--indicator-blue);
+		background-color: var(--indicator-blue-bg);
 		box-shadow: none;
-		border: none;
+		border: 1px solid var(--indicator-blue);
 	}
 
 
