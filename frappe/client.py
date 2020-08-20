@@ -73,7 +73,6 @@ def get_value(doctype, fieldname, filters=None, as_dict=True, debug=False, paren
 		frappe.throw(_("No permission for {0}").format(doctype), frappe.PermissionError)
 
 	filters = get_safe_filters(filters)
-
 	try:
 		fields = json.loads(fieldname)
 	except (TypeError, ValueError):
@@ -84,6 +83,8 @@ def get_value(doctype, fieldname, filters=None, as_dict=True, debug=False, paren
 	# and did not just result in an empty string or dict
 	if not filters:
 		filters = None
+	elif isinstance(filters, str):
+		filters = {"name": filters}
 
 	value = frappe.get_list(doctype, filters=filters, fields=fields, debug=debug, limit=1)
 	if as_dict:
