@@ -9,8 +9,8 @@ frappe.provide('frappe.search');
 frappe.provide('frappe.sidebar_update')
 frappe.utils.make_event_emitter(frappe.sidebar_update);
 
-frappe.ui.toolbar.Toolbar = Class.extend({
-	init: function() {
+frappe.ui.toolbar.Toolbar = class {
+	constructor() {
 		$('header').replaceWith(frappe.render_template("navbar", {
 			avatar: frappe.avatar(frappe.session.user, 'avatar-medium'),
 			navbar_settings: frappe.boot.navbar_settings
@@ -24,9 +24,9 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 		this.setup_notifications();
 
 		this.make();
-	},
+	}
 
-	make: function() {
+	make() {
 		this.setup_modules_menu();
 		this.setup_sidebar();
 		this.setup_help();
@@ -34,9 +34,9 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 		this.bind_events();
 
 		$(document).trigger('toolbar_setup');
-	},
+	}
 
-	bind_events: function() {
+	bind_events() {
 		// clear all custom menus on page change
 		$(document).on("page-change", function() {
 			$("header .navbar .custom-menu").remove();
@@ -49,7 +49,7 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 				search_modal.find('#modal-search').focus();
 			}, 300);
 		});
-	},
+	}
 
 	setup_modules_menu() {
 		smoothscroll.polyfill();
@@ -57,9 +57,9 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 			el: '#modules-menu',
 			render: h => h(SidebarMenu)
 		});
-	},
+	}
 
-	setup_sidebar: function() {
+	setup_sidebar() {
 		var header = $('header');
 
 		header.find(".toggle-sidebar").on("click", function() {
@@ -98,9 +98,9 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 		header.find(".navbar-home").on("click", function() {
 			frappe.is_mobile() && frappe.sidebar_update.trigger('toggle_mobile_menu')
 		});
-	},
+	}
 
-	setup_help: function() {
+	setup_help() {
 		frappe.provide('frappe.help');
 		frappe.help.show_results = show_results;
 
@@ -172,12 +172,12 @@ frappe.ui.toolbar.Toolbar = Class.extend({
 				e.preventDefault();
 			}
 		}
-	},
+	}
 
-	setup_notifications: function() {
+	setup_notifications() {
 		this.notifications = new frappe.ui.Notifications();
 	}
-});
+};
 
 $.extend(frappe.ui.toolbar, {
 	add_dropdown_button: function(parent, label, click, icon) {

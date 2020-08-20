@@ -32,12 +32,7 @@
 	margin-left: 150px;
 }
 
-.notifications-indicator {
-	font-size: 7px;
-	position: absolute;
-	top: 4px;
-	right: 8px;
-	// color: @indicator-orange;
+.notifications-unseen {
 	display: none;
 }
 
@@ -53,11 +48,12 @@
 
 .notifications-list {
 	min-width: 480px;
-	padding: 0px 10px;
+	padding: 0 0 0 10px;
 	min-height: 560px;
 	border: none;
 	position: absolute;
 	box-shadow: 0px 1px 4px rgba(17, 43, 66, 0.1), 0px 2px 6px rgba(17, 43, 66, 0.08);
+	overflow-x: hidden;
 
 	.notification-list-header {
 		margin: 0px 10px;
@@ -117,6 +113,7 @@
 	font-size: var(--text-md);
 	line-height: 20px;
 	color: var(--text-light);
+	max-width: 455px;
 
 	&:first-child {
 		margin-top: 10px;
@@ -159,10 +156,10 @@
 		&::before {
 			content: '';
 			display:inline-block;
-			@include size(4px, 4px);
+			@include size(7px, 4px);
 			margin-top: 16px;
 			border-radius: 10px;
-			margin-right: 5px;
+			margin-right: var(--margin-xs);
 		}
 	}
 

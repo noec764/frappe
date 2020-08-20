@@ -44,6 +44,10 @@
 		}
 	}
 
+	.modal {
+		--control-bg: var(--gray-800);
+	}
+
 	.ql-editor.read-mode {
 		span, p, u {
 			background-color: inherit !important;
