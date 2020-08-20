@@ -10,7 +10,7 @@ frappe.search.SearchDialog = Class.extend({
 	},
 
 	make: function() {
-		var d = new frappe.ui.Dialog();
+		var d = new frappe.ui.Dialog({size:'large'});
 		$(d.header).html($(frappe.render_template("search_header")));
 		this.search_dialog = d;
 		this.$search_modal = $(d.$wrapper).addClass('search-dialog');
