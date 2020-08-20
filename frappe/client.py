@@ -383,19 +383,6 @@ def check_parent_permission(parent, child_doctype):
 	# Either parent not passed or the user doesn't have permission on parent doctype of child table!
 	raise frappe.PermissionError
 
-def get_safe_filters(filters):
-	try:
-		filters = json.loads(filters)
-
-		if isinstance(filters, (integer_types, float)):
-			filters = frappe.as_unicode(filters)
-
-	except (TypeError, ValueError):
-		# filters are not passesd, not json
-		pass
-
-	return filters
-
 @frappe.whitelist()
 def is_document_amended(doctype, docname):
 	if frappe.permissions.has_permission(doctype):
