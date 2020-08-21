@@ -330,7 +330,7 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 			let doctype = filter[0];
 			let fieldname = filter[1];
 			let docfield = frappe.meta.get_docfield(doctype, fieldname);
-			let label = docfield ? docfield.label : frappe.model.unscrub(fieldname);
+			let label = docfield ? __(docfield.label) : __(frappe.model.unscrub(fieldname));
 
 			if (docfield && docfield.fieldtype === 'Check') {
 				filter[3] = filter[3] ? __('Yes'): __('No');
@@ -345,7 +345,7 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 				? __('empty')
 				: String(filter[3]);
 
-			return [__(label).bold(), filter[2], value.bold()].join(' ');
+			return [__(label).bold(), __(filter[2]), __(value).bold()].join(' ');
 		}
 
 		let filter_string = filter_array
