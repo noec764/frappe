@@ -100,7 +100,7 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 
 	get_meta_html(email) {
 		const attachment = email.has_attachment ?
-			`<span class="fa fa-paperclip fa-large" title="${__('Has Attachments')}"></span>` : '';
+			`<span class="uil uil-paperclip" title="${__('Has Attachments')}"></span>` : '';
 
 		const form_link = frappe.utils.get_form_link(email.reference_doctype, email.reference_name);
 		const link = email.reference_doctype && email.reference_doctype !== this.doctype ?

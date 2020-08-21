@@ -1,11 +1,9 @@
 <template>
-	<div class="dropdown">
+	<div>
 		<span class="caret cursor-pointer dropdown-toggle" data-toggle="dropdown"></span>
-		<ul class="dropdown-menu">
-			<li v-for="option in options" :key="option.label">
-				<a @click="option.action">{{option.label}}</a>
-			</li>
-		</ul>
+		<div class="dropdown-menu dropdown-menu-right">
+			<a class="dropdown-item" @click="option.action" v-for="option in options" :key="option.label">{{option.label}}</a>
+		</div>
 	</div>
 </template>
 <script>
@@ -15,9 +13,6 @@ export default {
 </script>
 <style lang="less" scoped>
 .dropdown-menu {
-	min-width: 100px;
-	left: auto;
-	right: 0;
 	a {
 		padding: 12px;
 		font-size: 10px;

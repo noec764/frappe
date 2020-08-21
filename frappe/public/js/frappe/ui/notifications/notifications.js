@@ -219,7 +219,7 @@ frappe.ui.notifications = {
 	}
 };
 
-class BaseNotificaitonsView {
+class BaseNotificationsView {
 	constructor(wrapper, parent) {
 		// wrapper, max_length
 		this.wrapper = wrapper;
@@ -238,7 +238,7 @@ class BaseNotificaitonsView {
 	}
 }
 
-class NotificationsView extends BaseNotificaitonsView {
+class NotificationsView extends BaseNotificationsView {
 	make() {
 		this.setup_notification_listeners();
 		this.get_notifications_list(this.max_length).then(list => {
@@ -402,7 +402,7 @@ class NotificationsView extends BaseNotificaitonsView {
 	}
 }
 
-class EventsView extends BaseNotificaitonsView {
+class EventsView extends BaseNotificationsView {
 	make() {
 		this.calendar = this.parent.notifications_settings.default_calendar || "Event";
 		let today = frappe.datetime.get_today();

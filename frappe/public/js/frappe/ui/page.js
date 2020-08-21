@@ -432,7 +432,7 @@ frappe.ui.Page = Class.extend({
 						${label}
 						${frappe.utils.icon('select', 'xs')}
 					</button>
-					<div role="menu" class="dropdown-menu"></div>
+					<div role="menu" class="dropdown-menu dropdown-menu-right"></div>
 				</div>`
 			).appendTo(this.inner_toolbar);
 		}
@@ -630,7 +630,7 @@ frappe.ui.Page = Class.extend({
 				<button type="button" class="btn btn-default btn-sm" data-toggle="dropdown" aria-expanded="false">
 					${dropdown_label}
 				</button>
-				<ul class="dropdown-menu" role="menu"></ul>
+				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
 			</div>
 		`);
 

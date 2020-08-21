@@ -1,9 +1,10 @@
 <template>
-	<div class="flex flex-column">
-		<a class="leaderboard-link"
-			@click.prevent="go_to_user_list()">
-			{{ __('Leaderboard') }}
-		</a>
+	<div class="flex flex-column frappe-card">
+		<div class="leaderboard-link">
+			<a @click.prevent="go_to_user_list()">
+				{{ __('Leaderboard') }}
+			</a>
+		</div>
 		<div class="links" v-if="frequently_visited_list.length">
 			<div class="muted-title">
 				{{ __('Frequently Visited Links') }}
@@ -57,7 +58,8 @@ export default {
 	text-transform: capitalize;
 }
 .leaderboard-link {
-	.route-link;
+	margin: 0px 10px 10px 0;
+	text-transform: capitalize;
 	margin-bottom: 15px;
 }
 .stats {

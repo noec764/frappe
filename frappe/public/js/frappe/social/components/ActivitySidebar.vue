@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="frappe-card">
 		<div class="muted-title">{{ __('Upcoming Events') }}</div>
 		<div class="event" v-for="event in events" :key="event.name">
 			<span class="bold">{{ get_time(event.starts_on) }}</span>
@@ -35,7 +35,7 @@ export default {
 			})
 		},
 		open_chat() {
-			if (console.log(Boolean(parseInt(frappe.sys_defaults.enable_chat)))) {
+			if (Boolean(parseInt(frappe.sys_defaults.enable_chat))) {
 				setTimeout(frappe.chat.widget.toggle);
 			} else {
 				frappe.msgprint(__("Activate the chat in system settings"))
