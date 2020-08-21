@@ -6,6 +6,12 @@
 	--border-opacity: 1;
 	border: 0 solid #e2e8f0 /* 2;; */;
 	border-bottom-width: 1px;
+	padding: 0;
+
+	.navbar-nav {
+		margin-right: 0;
+	}
+
 	.container {
 		padding: 0rem 1rem;
 	}

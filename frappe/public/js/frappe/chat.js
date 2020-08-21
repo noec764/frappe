@@ -2059,7 +2059,7 @@ frappe.Chat.Widget.MediaProfile
 			)
 
 			return (
-				h("div", { class: "media", style: position.class === "media-right" ? { "text-align": "right" } : null },
+				h("div", { class: "media align-items-center", style: position.class === "media-right" ? { "text-align": "right" } : null },
 					position.class === "media-left" ? avatar : null,
 					h("div", { class: "media-body py-2" },
 						h("div", { class: "media-heading ellipsis small", style: `max-width: ${props.width_title || "100%"} display: inline-block` }, props.title),

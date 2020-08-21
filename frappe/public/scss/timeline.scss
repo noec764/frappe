@@ -1,6 +1,6 @@
 $timeline-item-icon-size: 34px;
 $timeline-item-left-margin: var(--margin-xl);
-$threshold: 25;
+$threshold: 40;
 
 @mixin timeline-indicator($indicator-size) {
 	width: $indicator-size;
@@ -31,20 +31,25 @@ $threshold: 25;
 		border-left: 1px solid var(--dark-border-color);
 		bottom: -150px; // arbitrary
 	}
-
+	.timeline-dot {
+		@include timeline-indicator(16px);
+		&:before {
+			content: ' ';
+			background: var(--gray-600);
+			border-radius: 50%;
+			height: 4px;
+			width: 4px;
+		}
+	}
 	.timeline-actions {
 		margin-bottom: var(--margin-md);
 		padding: var(--padding-sm);
 		position: relative;
-		&:before {
-			content: ' ';
-			@include timeline-indicator(10px);
-		}
 		.action-btn {
 			margin-left: var(--margin-md);
 			background-color: var(--card-bg);
 		}
-		.action-btn:first-child {
+		.action-btn:first-of-type {
 			margin-left: $timeline-item-left-margin;
 		}
 	}

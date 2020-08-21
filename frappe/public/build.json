@@ -266,8 +266,6 @@
 	],
 	"css/list.min.css": [
 		"public/less/list.less",
-		"public/scss/calendar.scss",
-		"public/less/role_editor.less",
 		"public/less/gantt.less"
 	],
 	"js/list.min.js": [

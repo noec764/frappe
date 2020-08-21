@@ -73,12 +73,7 @@ frappe.warn = function(title, message_html, proceed_action, primary_label, is_mi
 		minimizable: is_minimizable
 	});
 
-	d.footer = $(`<div class="modal-footer"></div>`).insertAfter($(d.modal_body));
-
-	d.get_close_btn().appendTo(d.footer);
-	d.get_primary_btn().appendTo(d.footer);
-
-	d.footer.find('.btn-primary').removeClass('btn-primary').addClass('btn-danger');
+	d.standard_actions.find('.btn-primary').removeClass('btn-primary').addClass('btn-danger');
 
 	d.show();
 	return d;
@@ -421,7 +416,7 @@ frappe.show_alert = function(message, seconds=7, actions={}) {
 		setTimeout(() => div.remove(), 800);
 		return false;
 	}, seconds * 1000)
-	
+
 	return div;
 }
 

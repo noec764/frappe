@@ -371,12 +371,16 @@ input[type="checkbox"] {
 }
 
 kbd {
-	background-color: var(--gray-500);
+	background-color: var(--control-bg);
 	font-family: Inter;
-	color: var(--fg-color);
+	color: var(--text-light);
 	line-height: 1.2em;
 	height: 20px;
 	padding: 4px 8px;
+}
+
+.table {
+	color: var(--text-color);
 }
 
 .appreciation {
@@ -387,4 +391,13 @@ kbd {
 .criticism {
 	background-color: var(--criticism-bg) !important;
 	color: var(--criticism-color) !important;
+}
+
+.frappe-timestamp {
+	cursor: default;
+}
+
+.dropdown-menu {
+	margin-top: var(--margin-xs);
+	box-shadow: var(--shadow-sm);
 }

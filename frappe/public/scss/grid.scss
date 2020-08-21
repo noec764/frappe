@@ -12,10 +12,6 @@
 	padding: 0px 15px;
 	border-bottom: 1px solid var(--border-color);
 	@include transition(.2s);
-
-	.form-section .section-head.collapsed {
-		border-top: 0.5px solid var(--border-color);
-	}
 }
 
 .grid-row:last-child {
@@ -31,7 +27,7 @@
 }
 
 .grid-body {
-	background-color: #fff;
+	background-color: var(--fg-color);
 }
 
 .form-grid .data-row {
@@ -236,7 +232,7 @@
 }
 
 @mixin base-grid(){
-	background-color: white;
+	background-color: var(--modal-bg);
 	position: relative;
 	transition: opacity .2s ease;
 }
@@ -320,7 +316,7 @@
 
 .grid-footer {
 	padding: 10px 0px;
-	background-color: #fff;
+	background-color: var(--fg-color);
 
 	.btn {
 		background-color: var(--control-bg);

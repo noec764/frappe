@@ -157,6 +157,8 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--text-xl: 18px;
 	--text-2xl: 22px;
 
+	--navbar-height: 60px;
+
 	--text-bold: 500;
 
 	--shadow-xs: 0 1px 1px 0 #e6ebf1;
@@ -242,13 +244,15 @@ $page-head-height: 68px;
 $body-color: var(--text-light);
 $input-placeholder-color: var(--text-light);
 $component-active-color: var(--fg-color);
+$component-active-bg: $gray-600;
 $modal-content-bg: var(--modal-bg);
+$link-color: var(--text-color);
 
 // dropdown
 $dropdown-bg: var(--fg-color);
 $dropdown-border-color: var(--dark-border-color);
 $dropdown-link-color: var(--text-color);
-$dropdown-link-hover-color: var(--text-light);
+$dropdown-link-hover-color: var(--text-color);
 $dropdown-link-hover-bg: var(--fg-hover-color);
 $dropdown-link-disabled-color: var(--gray-600);
 $dropdown-header-color: var(--gray-600);

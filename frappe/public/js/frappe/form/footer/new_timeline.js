@@ -12,7 +12,11 @@ frappe.ui.form.NewTimeline = class {
 	make() {
 		this.timeline_wrapper = $(`<div class="new-timeline">`);
 		this.timeline_items_wrapper = $(`<div class="timeline-items">`);
-		this.timeline_actions_wrapper = $(`<div class="timeline-actions">`);
+		this.timeline_actions_wrapper = $(`
+			<div class="timeline-actions">
+				<div class="timeline-dot"></div>
+			</div>
+		`);
 
 		this.timeline_wrapper.append(this.timeline_actions_wrapper);
 		this.timeline_wrapper.append(this.timeline_items_wrapper);
@@ -24,6 +28,7 @@ frappe.ui.form.NewTimeline = class {
 	}
 
 	refresh() {
+		this.doc_info = this.frm.get_docinfo() || {};
 		this.render_timeline_items();
 	}
 
@@ -52,21 +57,10 @@ frappe.ui.form.NewTimeline = class {
 		this.timeline_items.push(...this.get_communication_timeline_contents());
 		this.timeline_items.push(...this.get_comment_timeline_contents());
 		this.timeline_items.push(...this.get_energy_point_timeline_contents());
-		this.timeline_items.push(...this.get_share_timeline_contents());
 		this.timeline_items.push(...this.get_version_timeline_contents());
-		this.timeline_items.push(...this.get_creation_timeline_content());
+		this.timeline_items.push(...this.get_share_timeline_contents());
 		// attachments
 		// milestones
-	}
-
-	get_creation_timeline_content() {
-		if (this.frm && this.frm.doc) {
-			return [{
-				icon: 'edit',
-				creation: this.frm.doc.creation,
-				content: __("{0} created", [this.get_user_link(this.frm.doc.owner)]),
-			}];
-		}
 	}
 
 	get_user_link(user) {
@@ -91,12 +85,14 @@ frappe.ui.form.NewTimeline = class {
 			`);
 		} else if (item.timeline_indicator) {
 			timeline_item.append(item.timeline_indicator);
+		} else {
+			timeline_item.append(`<div class="timeline-dot">`);
 		}
 
 		timeline_item.append(`<div class="timeline-content ${item.card ? 'frappe-card' : ''}">`);
 		timeline_item.find('.timeline-content').append(item.content);
 		if (!item.hide_timestamp && !item.card) {
-			timeline_item.find('.timeline-content').append(`&nbsp;-&nbsp;<span>${comment_when(item.creation)}</span>`);
+			timeline_item.find('.timeline-content').append(`<div>${comment_when(item.creation)}</div>`);
 		}
 		return timeline_item;
 	}
@@ -153,8 +149,8 @@ frappe.ui.form.NewTimeline = class {
 	}
 
 	get_comment_timeline_content(doc) {
-		const comment_content = frappe.render_template('timeline_message_box', { doc });
-		return comment_content;
+		const comment_content = $(frappe.render_template('timeline_message_box', { doc }));
+		this.setup_comment_actions(comment_content, doc);
 	}
 
 	get_version_timeline_contents() {
@@ -163,7 +159,6 @@ frappe.ui.form.NewTimeline = class {
 			const contents = get_version_timeline_content(version, this.frm);
 			contents.forEach((content) => {
 				version_timeline_contents.push({
-					icon: 'edit',
 					creation: version.creation,
 					content: content,
 				});
@@ -174,11 +169,10 @@ frappe.ui.form.NewTimeline = class {
 
 	get_share_timeline_contents() {
 		let share_timeline_contents = [];
-		(this.doc_info.shared || []).forEach(share => {
+		(this.doc_info.share_logs || []).forEach(share => {
 			share_timeline_contents.push({
-				icon: 'share',
 				creation: share.creation,
-				content: __("{0} shared this document with {1}", [this.get_user_link(share.owner), share.everyone ? 'everyone' : this.get_user_link(share.user)]),
+				content: share.content,
 			});
 		});
 		return share_timeline_contents;
@@ -240,6 +234,67 @@ frappe.ui.form.NewTimeline = class {
 		} else {
 			return this.frm.doc.email_id || this.frm.doc.email || "";
 		}
+	}
+
+	setup_comment_actions(comment_wrapper, doc) {
+		let edit_wrapper = $(`<div class="comment-edit-box">`).hide();
+		let edit_box = this.make_editable(edit_wrapper);
+		let content_wrapper = comment_wrapper.find('.content');
+
+		edit_box.set_value(doc.content);
+
+		edit_box.on_submit = (value) => {
+			content_wrapper.empty();
+			content_wrapper.append(value);
+			edit_button.prop("disabled", true);
+			edit_box.quill.enable(false);
+
+			doc.content = value;
+			this.update_comment(doc.name, value)
+				.then(edit_button.toggle_edit_mode)
+				.finally(() => {
+					edit_button.prop("disabled", false);
+					edit_box.quill.enable(true);
+				});
+		};
+
+		content_wrapper.after(edit_wrapper);
+
+		let edit_button = $(`<button class="btn btn-link action-btn">${__("Edit")}</a>`).click(() => {
+			edit_button.edit_mode ? edit_box.submit() : edit_button.toggle_edit_mode();
+		});
+
+		edit_button.toggle_edit_mode = () => {
+			edit_button.edit_mode = !edit_button.edit_mode;
+			edit_button.text(edit_button.edit_mode ? __('Save') : __('Edit'));
+			edit_wrapper.toggle(edit_button.edit_mode);
+			content_wrapper.toggle(!edit_button.edit_mode);
+		};
+
+		comment_wrapper.find('.actions').append(edit_button);
+		comment_wrapper.find('.actions').append(`<btn class="btn-link action-btn">${frappe.utils.icon('close', 'sm', 'close')}</btn>`);
+	}
+
+	make_editable(container) {
+		return frappe.ui.form.make_control({
+			parent: container,
+			df: {
+				fieldtype: 'Comment',
+				fieldname: 'comment',
+				label: 'Comment'
+			},
+			// mentions: this.get_names_for_mentions(),
+			render_input: true,
+			only_input: true,
+			no_wrapper: true
+		});
+	}
+
+	update_comment(name, content) {
+		return frappe.xcall('frappe.desk.form.utils.update_comment', { name, content })
+			.then(() => {
+				frappe.utils.play_sound('click');
+			});
 	}
 
 	get_last_email() {

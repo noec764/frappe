@@ -129,9 +129,10 @@ export default class Widget {
 		this.subtitle && this.subtitle_field.html(this.subtitle);
 	}
 
-	add_custom_button(html, action, class_name = "", title="") {
+	add_custom_button(html, action, class_name = "", title="", btn_type) {
+		if (!btn_type) btn_type = 'btn-secondary';
 		let button = $(
-			`<button class="btn btn-default btn-xs ${class_name}" title="${title}">${html}</button>`
+			`<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`
 		);
 		button.click(event => {
 			event.stopPropagation();
