@@ -224,6 +224,24 @@ def add_standard_navbar_items():
 
 	standard_help_items = [
 		{
+			'item_label': 'Documentation',
+			'item_type': 'Route',
+			'action': 'https://doc.dokos.io',
+			'is_standard': 1
+		},
+		{
+			'item_label': 'Community',
+			'item_type': 'Route',
+			'action': 'https://community.dokos.io',
+			'is_standard': 1
+		},
+		{
+			'item_label': 'Report an issue',
+			'item_type': 'Route',
+			'action': 'https://gitlab.com/dokos/dokos/issues',
+			'is_standard': 1
+		},
+		{
 			'item_type': 'Separator',
 			'is_standard': 1
 		},
