@@ -2,7 +2,7 @@
 // don't remove this line (used in test)
 
 window.disable_signup = {{ disable_signup and "true" or "false" }};
-window.custom_signup = "{{ custom_signup }}";
+window.custom_signup = {{ custom_signup }};
 
 window.login = {};
 
