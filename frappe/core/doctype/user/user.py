@@ -567,7 +567,7 @@ def get_all_roles(arg=None):
 		"restrict_to_domain": ("in", active_domains)
 	}, order_by="name")
 
-	return [ {"name": role.get("name"), "label":_(role.get("name"))} for role in roles ]
+	return [role.name for role in roles]
 
 @frappe.whitelist()
 def get_roles(arg=None):
