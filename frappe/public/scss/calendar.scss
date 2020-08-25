@@ -15,5 +15,38 @@
 		border-right: none;
 		border-top: none;
 		border-bottom: none;
+		border-color: transparent;
+
+		&.green {
+			border-color: var(--indicator-green);
+		}
+
+		&.blue {
+			border-color: var(--indicator-blue);
+		}
+
+		&.yellow {
+			border-color: var(--indicator-yellow);
+		}
+
+		&.grey {
+			border-color: var(--indicator-gray);
+		}
+
+		&.darkgrey {
+			border-color: var(--indicator-dark-gray);
+		}
+
+		&.red {
+			border-color: var(--indicator-red);
+		}
+
+		&.orange {
+			border-color: var(--indicator-orange);
+		}
+	}
+
+	.fc-view-harness {
+		min-height: 100vh;
 	}
 }

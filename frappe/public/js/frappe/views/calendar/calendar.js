@@ -324,6 +324,7 @@ frappe.views.Calendar = class {
 		return (events || []).map(d => {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
+			d.classNames = []
 
 			// do not allow submitted/cancelled events to be moved / extended
 			if(d.docstatus && d.docstatus > 0) {
@@ -352,7 +353,8 @@ frappe.views.Calendar = class {
 			}
 
 			if (d.status && me.status_color) {
-				d.borderColor = me.status_color[d.status];
+				d.borderColor = null;
+				d.classNames.push(me.status_color[d.status]);
 			}
 
 			me.fix_end_date_for_event_render(d);
@@ -365,25 +367,15 @@ frappe.views.Calendar = class {
 	}
 
 	prepare_colors(d) {
-		let color, color_name;
-		if(this.get_css_class) {
-			color_name = this.color_map[this.get_css_class(d)] || 'blue';
+		let color;
 
-			if (color_name.startsWith("#")) {
-				color_name = frappe.ui.color.validate_hex(color_name) ?
-					color_name : 'blue';
-			}
-
-			d.backgroundColor = frappe.ui.color.get(color_name, 'default');
-			d.textColor = frappe.ui.color.get(color_name, 'dark');
-		} else {
-			color = d.color;
-			if (!frappe.ui.color.validate_hex(color) || !color) {
-				color = frappe.ui.color.get('blue', 'default');
-			}
-			d.backgroundColor = color;
-			d.textColor = frappe.ui.color.get_contrast_color(color);
+		color = d.color;
+		if (!frappe.ui.color.validate_hex(color) || !color) {
+			color = frappe.ui.color.get('blue', 'default');
 		}
+		d.backgroundColor = color;
+		d.textColor = frappe.ui.color.get_contrast_color(color);
+
 		return d;
 	}
 
