@@ -390,9 +390,11 @@ frappe.search.SearchDialog = Class.extend({
 	},
 
 	toggle_minimize: function() {
+		this.search_dialog.$wrapper.prev('.modal-backdrop').toggle();
 		let modal = this.search_dialog.$wrapper.closest('.modal').toggleClass('modal-minimize');
 		modal.attr('tabindex') ? modal.removeAttr('tabindex') : modal.attr('tabindex', -1);
-		this.get_minimize_btn().find('i').toggleClass('octicon-chevron-down').toggleClass('octicon-chevron-up');
+		const icon = this.is_minimized ? 'expand' : 'collapse';
+		this.get_minimize_btn().html(frappe.utils.icon(icon));
 		this.search_dialog.is_minimized = !this.search_dialog.is_minimized;
 		this.on_minimize_toggle && this.on_minimize_toggle(this.search_dialog.is_minimized);
 		this.search_dialog.header.find('.modal-title').toggleClass('cursor-pointer');
