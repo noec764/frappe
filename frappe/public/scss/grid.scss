@@ -315,12 +315,15 @@
 }
 
 .grid-footer {
-	padding: 10px 0px;
+	padding: var(--padding-sm) 0px;
 	background-color: var(--fg-color);
 
 	.btn {
 		background-color: var(--control-bg);
 		box-shadow: none;
+	}
+	.grid-download, .grid-upload {
+		margin-left: var(--margin-sm);
 	}
 }
 
@@ -373,4 +376,9 @@ a.next-page {
 
 .grid-label {
 	margin-right: 8px; margin-bottom: 4px;
+}
+
+.form-clickable-section {
+	border-top: 1px solid var(--border-color);
+	padding: var(--padding-sm) var(--padding-md);
 }

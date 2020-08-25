@@ -43,6 +43,9 @@
 		padding: var(--padding-sm) var(--padding-md);
 		margin: 0;
 		cursor: pointer;
+		&:first-child {
+			margin-top: var(--margin-sm);
+		}
 
 		.collapse-indicator {
 			float: right;
@@ -51,10 +54,6 @@
 	}
 	.section-head.collapsed {
 		margin-bottom: 0px;
-	}
-
-	.form-group {
-		margin-bottom: 0;
 	}
 }
 
@@ -270,4 +269,8 @@
 
 .form-message {
 	padding: var(--padding-md) var(--padding-xl);
+}
+
+.frappe-control[data-fieldtype="Table"] {
+	margin-bottom: 0px
 }
