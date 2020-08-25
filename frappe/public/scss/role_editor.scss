@@ -16,9 +16,9 @@ table.user-perm {
 
 .unit-checkbox {
 	.label-area {
+		cursor: pointer;
 		&:hover {
 			text-decoration: underline;
-			cursor: pointer;
 		}
 	}
 }
