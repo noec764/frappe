@@ -28,7 +28,6 @@ frappe.ui.form.NewTimeline = class {
 	}
 
 	refresh() {
-		this.doc_info = this.frm.get_docinfo() || {};
 		this.render_timeline_items();
 	}
 
@@ -108,7 +107,6 @@ frappe.ui.form.NewTimeline = class {
 				</div>
 			`;
 			view_timeline_contents.push({
-				icon: 'view',
 				creation: view.creation,
 				content: view_content,
 			});
@@ -131,7 +129,7 @@ frappe.ui.form.NewTimeline = class {
 
 	get_communication_timeline_content(doc) {
 		let communication_content =  $(frappe.render_template('timeline_message_box', { doc }));
-		this.setup_reply(communication_content);
+		this.setup_reply(communication_content, doc);
 		return communication_content;
 	}
 
@@ -151,6 +149,7 @@ frappe.ui.form.NewTimeline = class {
 	get_comment_timeline_content(doc) {
 		const comment_content = $(frappe.render_template('timeline_message_box', { doc }));
 		this.setup_comment_actions(comment_content, doc);
+		return comment_content;
 	}
 
 	get_version_timeline_contents() {
@@ -195,26 +194,32 @@ frappe.ui.form.NewTimeline = class {
 		return energy_point_timeline_contents;
 	}
 
-	setup_reply(communication_box) {
+	setup_reply(communication_box, communication_doc) {
 		let actions = communication_box.find('.actions');
-		let reply = $(`<a class="action-btn reply">${frappe.utils.icon('reply', 'md')}</a>`).click(e => {
-			this.compose_mail(true);
+		let reply = $(`<a class="action-btn reply">${frappe.utils.icon('reply', 'md')}</a>`).click(() => {
+			this.compose_mail(communication_doc);
 		});
-		let reply_all = $(`<a class="action-btn reply-all">${frappe.utils.icon('reply-all', 'md')}</a>`).click(e => {
-			this.compose_mail(true);
+		let reply_all = $(`<a class="action-btn reply-all">${frappe.utils.icon('reply-all', 'md')}</a>`).click(() => {
+			this.compose_mail(communication_doc, true);
 		});
 		actions.append(reply);
 		actions.append(reply_all);
 	}
 
-	compose_mail(is_a_reply=false) {
+	compose_mail(communication_doc=null, reply_all=false) {
 		const args = {
 			doc: this.frm.doc,
 			frm: this.frm,
 			recipients: this.get_recipient(),
-			is_a_reply: is_a_reply,
-			title: is_a_reply ? __('Reply') : null,
+			is_a_reply: Boolean(communication_doc),
+			title: communication_doc ? __('Reply') : null,
+			last_email: communication_doc
 		};
+
+		if (communication_doc && reply_all) {
+			args.cc = communication_doc.cc;
+			args.bcc = communication_doc.bcc;
+		}
 
 		if (this.frm.doctype === "Communication") {
 			args.txt = "";
@@ -225,6 +230,7 @@ frappe.ui.form.NewTimeline = class {
 			const comment_value = frappe.markdown(this.frm.comment_box.get_value());
 			args.txt = strip_html(comment_value) ? comment_value : '';
 		}
+
 		new frappe.views.CommunicationComposer(args);
 	}
 
@@ -271,8 +277,14 @@ frappe.ui.form.NewTimeline = class {
 			content_wrapper.toggle(!edit_button.edit_mode);
 		};
 
+		let delete_button = $(`
+			<button class="btn btn-link action-btn icon-btn">
+				${frappe.utils.icon('close', 'sm', 'close')}
+			</button>
+		`).click(() => this.delete_comment(doc.name));
+
 		comment_wrapper.find('.actions').append(edit_button);
-		comment_wrapper.find('.actions').append(`<btn class="btn-link action-btn">${frappe.utils.icon('close', 'sm', 'close')}</btn>`);
+		comment_wrapper.find('.actions').append(delete_button);
 	}
 
 	make_editable(container) {
@@ -297,7 +309,38 @@ frappe.ui.form.NewTimeline = class {
 			});
 	}
 
-	get_last_email() {
-		return;
+	get_last_email(from_recipient) {
+		let last_email = null;
+		let communications = this.frm.get_docinfo().communications || [];
+		let email = this.get_recipient();
+		// REDESIGN TODO: What is this? Check again
+		(communications.sort((a, b) =>  a.creation > b.creation ? -1 : 1 )).forEach(c => {
+			if (c.communication_type === 'Communication' && c.communication_medium === "Email") {
+				if (from_recipient) {
+					if (c.sender.indexOf(email)!==-1) {
+						last_email = c;
+						return false;
+					}
+				} else {
+					last_email = c;
+					return false;
+				}
+			}
+
+		});
+
+		return last_email;
+	}
+
+	delete_comment(comment_name) {
+		frappe.confirm(__('Delete comment?'), () => {
+			return frappe.xcall("frappe.client.delete", {
+				doctype: "Comment",
+				name: comment_name
+			}).then(() => {
+				frappe.utils.play_sound("delete");
+				this.refresh();
+			});
+		});
 	}
 };
