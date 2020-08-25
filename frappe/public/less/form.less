@@ -126,6 +126,11 @@
 		.chart-legend {
 			display: none;
 		}
+
+		.domain-name,
+		.subdomain-name {
+			fill: var(--heading-color);
+		}
 	}
 
 	@media (max-width: @screen-sm) {
@@ -186,13 +191,13 @@
 		margin-bottom: 0px;
 	}
 
-	.form-control {
+	/* .form-control {
 		background-color: @blue-background-color;
 	}
 
 	.form-control input{
 		background-color: @blue-background-color;
-	}
+	} */
 }
 
 .form-section.frappe-card.hide-border {
@@ -237,10 +242,10 @@
 }
 
 .address-box {
-	background-color: @light-bg;
+	background-color: var(--control-bg);
 	padding: 15px;
 	margin: 15px 0px;
-	border: 1px solid @border-color;
+	border: 1px solid var(--gray-400);
 	border-radius: 3px;
 	font-size: 12px;
 }

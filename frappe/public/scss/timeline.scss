@@ -29,7 +29,7 @@ $threshold: 40;
 		top: 0;
 		position: absolute;
 		border-left: 1px solid var(--dark-border-color);
-		bottom: -150px; // arbitrary
+		bottom: -110px; // arbitrary
 	}
 	.timeline-dot {
 		@include timeline-indicator(16px);

@@ -64,4 +64,8 @@
 	--appreciation-bg: var(--dark-green-600);
 	--criticism-color: var(--red-100);
 	--criticism-bg: var(--red-600);
+
+	.form-control:focus {
+		color: white;
+	}
 }
