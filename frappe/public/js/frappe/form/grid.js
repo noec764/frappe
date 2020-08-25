@@ -93,10 +93,12 @@ export default class Grid {
 						</a>
 					</div>
 				</div>
-			</div>`;
+			</div>
+			<p class="text-muted small grid-description"></p>`;
 
 		this.wrapper = $(template).appendTo(this.parent);
 		$(this.parent).addClass('form-group');
+		this.set_grid_description();
 
 		frappe.utils.bind_actions_with_object(this.wrapper, this);
 
@@ -115,6 +117,15 @@ export default class Grid {
 		this.setup_check();
 		if(this.df.on_setup) {
 			this.df.on_setup(this);
+		}
+	}
+
+	set_grid_description() {
+		let description_wrapper = $(this.parent).find('.grid-description');
+		if (this.df.description) {
+			description_wrapper.text(__(this.df.description));
+		} else {
+			description_wrapper.hide();
 		}
 	}
 
