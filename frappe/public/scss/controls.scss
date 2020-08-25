@@ -23,6 +23,10 @@
 	display: inline;
 }
 
+.awesomplete .input-with-feedback {
+	background-color: var(--control-bg);
+}
+
 .multiselect-list {
 	.status-text {
 		line-height: 1.2;

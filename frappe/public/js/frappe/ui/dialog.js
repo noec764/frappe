@@ -217,12 +217,10 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	}
 
 	toggle_minimize() {
-		this.$wrapper.prev('.modal-backdrop').toggle();
 		let modal = this.$wrapper.closest('.modal').toggleClass('modal-minimize');
 		modal.attr('tabindex') ? modal.removeAttr('tabindex') : modal.attr('tabindex', -1);
+		this.get_minimize_btn().find('i').toggleClass('octicon-chevron-down').toggleClass('octicon-chevron-up');
 		this.is_minimized = !this.is_minimized;
-		const icon = this.is_minimized ? 'expand' : 'collapse';
-		this.get_minimize_btn().html(frappe.utils.icon(icon));
 		this.on_minimize_toggle && this.on_minimize_toggle(this.is_minimized);
 		this.header.find('.modal-title').toggleClass('cursor-pointer');
 	}
