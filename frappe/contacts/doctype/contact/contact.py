@@ -63,6 +63,12 @@ class Contact(Document):
 			if link.link_doctype==doctype and link.link_name== name:
 				return True
 
+	def get_link_to_doctype(self, doctype):
+		for link in self.links:
+			if link.link_doctype==doctype:
+				return link.link_doctype, link.link_name
+		return None, None
+
 	def has_common_link(self, doc):
 		reference_links = [(link.link_doctype, link.link_name) for link in doc.links]
 		for link in self.links:
