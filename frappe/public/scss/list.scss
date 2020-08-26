@@ -10,13 +10,17 @@
 	}
 
 	.msg-box {
-		margin-bottom: 8em;
+		margin-bottom: 4em;
+		font-size: var(--text-sm);
 		// To compensate for percieved centering
 
 		.null-state {
-			height: 15rem !important;
-			max-height: 150px;
+			height: 85px;
 			width: auto;
+			margin-bottom: var(--margin-md);
+			img {
+				fill: var(--fg-color);
+			}
 		}
 
 		.meta-description {
@@ -74,9 +78,9 @@ body.no-list-sidebar {
 	flex-direction: column;
 	outline: none;
 
-	// &:focus {
-	//		background-color: $light-yellow;
-	// }
+	&:focus {
+		background-color: var(--yellow-highlight-color);
+	}
 }
 
 .list-row {

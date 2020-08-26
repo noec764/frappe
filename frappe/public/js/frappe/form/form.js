@@ -729,7 +729,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		// if user can cancel all linked docs, add action to the dialog
 		if (can_cancel) {
-			d.set_primary_action("Cancel All", () => {
+			d.set_primary_action(__("Cancel All"), () => {
 				d.hide();
 				frappe.call({
 					method: "frappe.desk.form.linked_with.cancel_all_linked_docs",

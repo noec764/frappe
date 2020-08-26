@@ -37,6 +37,7 @@
 	--border-color: var(--gray-700);
 	--dark-border-color: var(--gray-600);
 	--highlight-color: var(--gray-700);
+	--yellow-highlight-color: var(--yellow-700);
 
 	.frappe-card {
 		.btn-default {
@@ -60,10 +61,10 @@
 			color: inherit !important;
 		}
 	}
-	--appreciation-color: var(--dark-green-100);
+/* 	--appreciation-color: var(--dark-green-100);
 	--appreciation-bg: var(--dark-green-600);
 	--criticism-color: var(--red-100);
-	--criticism-bg: var(--red-600);
+	--criticism-bg: var(--red-600); */
 
 	.form-control:focus {
 		color: white;

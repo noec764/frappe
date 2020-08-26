@@ -231,7 +231,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	set_primary_action() {
 		if (this.can_create) {
 			this.page.set_primary_action(
-				`+ ${__("Add")} ${__(this.doctype)}`,
+				`${__("Add")} ${__(this.doctype)}`,
 				() => {
 					if (this.settings.primary_action) {
 						this.settings.primary_action();
@@ -239,7 +239,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 						this.make_new_doc();
 					}
 				},
-				"octicon octicon-plus"
+				"add"
 			);
 		} else {
 			this.page.clear_primary_action();
@@ -425,7 +425,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			: __("Create your first {0}", [__(this.doctype)]);
 		let empty_state_image =
 			this.settings.empty_state_image ||
-			"/assets/frappe/images/ui-states/empty.png";
+			"/assets/frappe/images/ui-states/list-empty-state.svg";
 
 		const new_button = this.can_create
 			? `<p><button class="btn btn-primary btn-sm btn-new-doc">

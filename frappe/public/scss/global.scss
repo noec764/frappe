@@ -41,24 +41,28 @@ a {
 
 .btn-xs { @extend .btn-sm; }
 
-.hidden-xs {
-	@extend .d-none;
-	@extend .d-sm-block;
+.hidden-xs, .hidden-sm {
+	@include media-breakpoint-between(xs, sm) {
+		display: none !important;
+	}
+}
+
+.hidden-md {
+	@include media-breakpoint-between(xs, md) {
+		display: none !important;
+	}
 }
 
 .visible-xs {
-	@extend .d-block;
-	@extend .d-sm-none;
-}
-
-.hidden-sm {
-	@extend .d-none;
-	@extend .d-lg-block;
+	@include media-breakpoint-up(sm) {
+		display: none !important;
+	}
 }
 
 .visible-sm {
-	@extend .d-sm-block;
-	@extend .d-lg-none;
+	@include media-breakpoint-up(md) {
+		display: none !important;
+	}
 }
 
 footer {
@@ -98,6 +102,8 @@ img {
 	border: none;
 	border-radius: $border-radius;
 	box-shadow: var(--btn-shadow);
+	font-size: var(--text-xs);
+	padding: 0.3rem 0.6rem;
 	&.icon-btn {
 		padding: 0px;
 		min-width: 28px;
@@ -252,11 +258,6 @@ select.input-xs {
 	display: none;
 }
 
-// .dropdown-menu > li > a {
-// 	padding: 14px;
-// 	white-space: normal;
-// }
-
 .dropdown-item {
 	border-radius: 4px;
 	padding: 0.75rem;
@@ -384,12 +385,12 @@ kbd {
 }
 
 .appreciation {
-	background-color: var(--appreciation-bg) !important;
+	background-color: var(--appreciation-bg);
 	color: var(--appreciation-color) !important;
 }
 
 .criticism {
-	background-color: var(--criticism-bg) !important;
+	background-color: var(--criticism-bg);
 	color: var(--criticism-color) !important;
 }
 

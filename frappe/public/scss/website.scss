@@ -1,3 +1,4 @@
+@import 'variables';
 @import 'mixins';
 @import '/assets/frappe/css/fonts/fontawesome/css/all.css';
 @import '/assets/frappe/css/fonts/unicons/css/unicons.css';
@@ -96,15 +97,6 @@
 
 	.nav-item {
 		padding: 0rem 1rem;
-	}
-
-	.dropdown-item {
-		color: $light;
-
-		&:hover {
-			background-color: $dark;
-			color: $primary;
-		}
 	}
 }
 

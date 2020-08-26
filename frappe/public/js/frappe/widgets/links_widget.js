@@ -54,7 +54,7 @@ export default class LinksWidget extends Widget {
 		};
 
 		this.link_list = this.links.map(item => {
-			return $(`<a href="${generate_route(item)}" class="link-item ${
+			return $(`<a href="${generate_route(item)}" class="link-item ellipsis ${
 				item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">
 					${get_link_for_item(item)}
