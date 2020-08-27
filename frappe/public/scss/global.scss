@@ -175,9 +175,17 @@ button.btn.dropdown-toggle:after {
 	background-color: var(--red-400) !important;
 }
 
+h1, h2, h3, h4 {
+	color: var(--text-color);
+	margin-bottom: var(--margin-md)
+}
+
 h1, h2, h3 {
-	color: $text-color;
 	font-weight: bold;
+}
+
+p {
+	margin-bottom: var(--margin-sm)
 }
 
 .small {
