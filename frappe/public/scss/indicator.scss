@@ -140,8 +140,27 @@
 	}
 }
 
+.indicator-pill.gray,
+.indicator-pill-right.gray,
+.indicator-pill-round.gray {
+	background: var(--indicator-gray-bg);
+	color: var(--indicator-gray);
+	&::before, &::after {
+		background: var(--indicator-gray);
+	}
+}
+
 .indicator-pill.darkgrey,
 .indicator-pill-right.darkgrey {
+	background: var(--indicator-dark-gray-bg);
+	color: var(--indicator-dark-gray);
+	&::before, &::after {
+		background: var(--indicator-dark-gray);
+	}
+}
+
+.indicator-pill.darkgray,
+.indicator-pill-right.darkgray {
 	background: var(--indicator-dark-gray-bg);
 	color: var(--indicator-dark-gray);
 	&::before, &::after {
