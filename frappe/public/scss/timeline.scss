@@ -36,7 +36,7 @@ $threshold: 40;
 		@include timeline-indicator(16px);
 		&:before {
 			content: ' ';
-			background: var(--gray-600);
+			background: var(--pacific-blue-400);
 			border-radius: 50%;
 			height: 4px;
 			width: 4px;
