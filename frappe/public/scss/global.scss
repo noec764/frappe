@@ -109,6 +109,10 @@ img {
 	}
 }
 
+button.btn.dropdown-toggle:after {
+	content: none;
+}
+
 .btn-secondary-dark {
 	@include button-variant(
 		$background: $gray-500,
