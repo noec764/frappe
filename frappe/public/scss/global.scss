@@ -149,16 +149,16 @@ button.btn.dropdown-toggle:after {
 	}
 }
 
-.btn-secondary {
+.btn.btn-secondary {
 	background-color: var(--control-bg);
 	color: var(--text-color);
 	&:hover, &:active, &:focus {
-		background: var(--gray-300);
+		background-color: var(--gray-300);
 		color: var(--text-color);
 	}
 }
 
-.btn-default {
+.btn.btn-default {
 	background-color: var(--fg-color);
 	color: var(--text-color);
 	&:hover, &:active, &:focus {
@@ -167,11 +167,11 @@ button.btn.dropdown-toggle:after {
 	}
 }
 
-.btn-primary {
+.btn.btn-primary {
 	background-color: $primary;
 }
 
-.btn-danger {
+.btn.btn-danger {
 	background-color: var(--red-400) !important;
 }
 
