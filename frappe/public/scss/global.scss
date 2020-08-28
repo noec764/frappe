@@ -413,3 +413,16 @@ kbd {
 	margin-top: var(--margin-xs);
 	box-shadow: var(--shadow-sm);
 }
+
+.btn-link {
+	box-shadow: none !important;
+	outline: none;
+	.icon {
+		text-decoration: none !important;
+	}
+}
+
+.center-content {
+	display: grid;
+	place-items: center;
+}

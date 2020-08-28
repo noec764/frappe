@@ -14,9 +14,7 @@ $threshold: 40;
 	left: calc(-1 * (#{$indicator-size}/2));
 	background-color: white;
 	border: 1px solid var(--pacific-blue-400);
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
+	@extend .center-content;
 	--icon-stroke: var(--pacific-blue-400);
 	--icon-fill: var(--pacific-blue-400);
 }
