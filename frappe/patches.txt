@@ -15,7 +15,7 @@ execute:frappe.reload_doc('core', 'doctype', 'custom_docperm')
 execute:frappe.reload_doc('core', 'doctype', 'docperm') #2018-05-29
 execute:frappe.reload_doc('core', 'doctype', 'comment')
 frappe.patches.v8_0.drop_is_custom_from_docperm
-execute:frappe.reload_doc('core', 'doctype', 'module_def') #2017-09-22
+execute:frappe.reload_doc('core', 'doctype', 'module_def') #2020-08-28
 execute:frappe.reload_doc('core', 'doctype', 'version') #2017-04-01
 execute:frappe.reload_doc('email', 'doctype', 'document_follow')
 execute:frappe.reload_doc('core', 'doctype', 'communication_link') #2019-10-02
@@ -312,7 +312,6 @@ frappe.patches.v13_0.add_standard_navbar_items
 frappe.patches.v13_0.generate_theme_files_in_public_folder
 frappe.patches.v13_0.increase_password_length
 frappe.patches.v13_0.rename_notification_fields
-execute:frappe.reload_doc("core", "doctype", "module_def")
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
