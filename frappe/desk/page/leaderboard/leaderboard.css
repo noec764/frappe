@@ -56,9 +56,14 @@
 }
 
 
-.leaderboard-item.active {
+.leaderboard-sidebar .desk-sidebar-item.active {
 	background-color: white;
 	border-radius: 5px;
+	box-shadow: var(--shadow-sm);
+}
+
+.leaderboard-sidebar .nav-link {
+	padding: 0.5rem;
 }
 
 .leaderboard .result {

@@ -43,14 +43,21 @@ class Leaderboard {
 				});
 			}
 			this.timespans = [
-				"This Week", "This Month", "This Quarter", "This Year",
-				"Last Week", "Last Month", "Last Quarter", "Last Year",
-				"All Time", "Select Date Range"
+				{label: __("This Week"), value: "This Week"},
+				{label: __("This Month"), value: "This Month"},
+				{label: __("This Quarter"), value: "This Quarter"},
+				{label: __("This Year"), value: "This Year"},
+				{label: __("Last Week"), value: "Last Week"},
+				{label: __("Last Month"), value: "Last Month"},
+				{label: __("Last Quarter"), value: "Last Quarter"},
+				{label: __("Last Year"), value: "Last Year"},
+				{label: __("All Time"), value: "All Time"},
+				{label: __("Select Date Range"), value: "Select Date Range"}
 			];
 
 			// for saving current selected filters
 			const _initial_doctype = frappe.get_route()[1] || this.doctypes[0];
-			const _initial_timespan = this.timespans[0];
+			const _initial_timespan = this.timespans[0].value;
 			const _initial_filter = this.filters[_initial_doctype];
 
 			this.options = {
@@ -104,11 +111,7 @@ class Leaderboard {
 			}
 		});
 
-		this.timespan_select = this.page.add_select(__("Timespan"),
-			this.timespans.map(d => {
-				return {"label": __(d), value: d };
-			})
-		);
+		this.timespan_select = this.page.add_select(__("Timespan"), this.timespans);
 		this.create_date_range_field();
 
 		this.type_select = this.page.add_select(__("Field"),

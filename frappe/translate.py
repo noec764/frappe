@@ -113,6 +113,8 @@ def get_dict(fortype, name=None):
 			messages = get_messages_from_include_files()
 		elif fortype=="jsfile":
 			messages = get_messages_from_file(name)
+		elif fortype=="pyfile":
+			messages = get_messages_from_file(name)
 		elif fortype=="template":
 			messages = get_all_messages_from_template_files()
 		elif fortype=="boot":
