@@ -24,10 +24,35 @@ frappe.ui.form.NewTimeline = class {
 		this.timeline_items = [];
 		this.render_timeline_items();
 		this.setup_timeline_actions();
+		this.setup_document_email_link();
 	}
 
 	refresh() {
 		this.render_timeline_items();
+	}
+
+	setup_document_email_link() {
+		let doc_info = this.doc_info || this.frm.get_docinfo();
+
+		if (doc_info.document_email) {
+			const link = `<a class="document-email-link">${doc_info.document_email}</a>`;
+			const message = __("Send an email to {0} to link it here", [link.bold()]);
+
+			this.document_email_link_wrapper = $(`
+				<div class="document-email-link-container">
+					<div class="timeline-dot"></div>
+					<span>${message}</span>
+				</div>
+			`);
+			this.timeline_wrapper.prepend(this.document_email_link_wrapper);
+
+			this.document_email_link_wrapper
+				.find('.document-email-link')
+				.on("click", e => {
+					let text = $(e.target).text();
+					frappe.utils.copy_to_clipboard(text);
+				});
+		}
 	}
 
 	setup_timeline_actions() {
