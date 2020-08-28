@@ -20,7 +20,7 @@ def rename_field(doctype, old_fieldname, new_fieldname):
 		return
 
 	if not meta.issingle and not frappe.db.has_column(doctype, old_fieldname):
-		print(_("Rename_field '{0}' not found in table for '{1}'").format(_(old_fieldname), _(doctype)))
+		print(_("Rename field '{0}' not found in table for '{1}'").format(_(old_fieldname), _(doctype)))
 		# never had the field?
 		return
 

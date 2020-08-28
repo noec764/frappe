@@ -11,7 +11,7 @@ frappe.views.calendar["Event"] = {
 	},
 	status_color: {
 		"Public": "green",
-		"Private": "darkgrey"
+		"Private": "darkgray"
 	},
 	get_events_method: "frappe.desk.doctype.event.event.get_events"
 }
