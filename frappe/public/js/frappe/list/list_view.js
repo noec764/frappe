@@ -946,7 +946,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	get_indicator_dot(doc) {
 		const indicator = frappe.get_indicator(doc, this.doctype);
 		if (!indicator) return "";
-		return `<span class='indicator-pill ${indicator[1]}' title='${__(
+		return `<span class='indicator ${indicator[1]}' title='${__(
 			indicator[0]
 		)}'></span>`;
 	}

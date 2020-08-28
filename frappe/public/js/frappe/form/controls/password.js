@@ -34,7 +34,7 @@ frappe.ui.form.ControlPassword = frappe.ui.form.ControlData.extend({
 
 					feedback.crack_time_display = r.message.crack_time_display;
 
-					var indicators = ['grey', 'red', 'orange', 'yellow', 'green'];
+					var indicators = ['gray', 'red', 'orange', 'yellow', 'green'];
 					me.set_strength_indicator(indicators[score]);
 
 				}

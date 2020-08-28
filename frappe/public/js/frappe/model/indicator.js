@@ -81,14 +81,14 @@ frappe.get_indicator = function(doc, doctype) {
 		if(doc.enabled) {
 			return [__('Enabled'), 'blue', 'enabled,=,1'];
 		} else {
-			return [__('Disabled'), 'grey', 'enabled,=,0'];
+			return [__('Disabled'), 'gray', 'enabled,=,0'];
 		}
 	}
 
 	// based on disabled
 	if(frappe.meta.has_field(doctype, 'disabled')) {
 		if(doc.disabled) {
-			return [__('Disabled'), 'grey', 'disabled,=,1'];
+			return [__('Disabled'), 'gray', 'disabled,=,1'];
 		} else {
 			return [__('Enabled'), 'blue', 'disabled,=,0'];
 		}

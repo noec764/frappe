@@ -775,7 +775,7 @@ frappe.provide("frappe.views");
 			});
 			if(!indicators) {
 				//
-				indicators = ['green', 'blue', 'orange', 'grey'];
+				indicators = ['green', 'blue', 'orange', 'gray'];
 			}
 			callback(indicators);
 		});

@@ -41,14 +41,20 @@ a {
 
 .btn-xs { @extend .btn-sm; }
 
-.hidden-xs, .hidden-sm {
-	@include media-breakpoint-between(xs, sm) {
+.hidden-xs {
+	@include media-breakpoint-down(xs) {
+		display: none !important;
+	}
+}
+
+.hidden-sm {
+	@include media-breakpoint-down(sm) {
 		display: none !important;
 	}
 }
 
 .hidden-md {
-	@include media-breakpoint-between(xs, md) {
+	@include media-breakpoint-down(md) {
 		display: none !important;
 	}
 }
