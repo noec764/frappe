@@ -307,7 +307,14 @@
 }
 
 .grid-header-toolbar {
-	display: flow-root;
+	display: flex;
+	justify-content: space-between;
+	.row-actions {
+		button:not(:last-child) {
+			margin-left: var(--margin-xs);
+			margin-bottom: var(--margin-xs);
+		}
+	}
 }
 
 .grid-buttons {
@@ -356,6 +363,10 @@
 	padding: var(--padding-md) var(--padding-sm) var(--padding-xs) var(--padding-sm);
 	span {
 		margin-right: var(--margin-xs);
+	}
+
+	button {
+		margin-left: var(--margin-xs);
 	}
 }
 

@@ -42,21 +42,20 @@ export default class GridRowForm {
 				<div class="toolbar grid-header-toolbar">
 					<span class="panel-title">
 						${ __("Editing Row") } #<span class="grid-form-row-index"></span></span>
-					<div class="btn btn-secondary btn-xs pull-right grid-collapse-row" style="margin-left: 7px;">
-						${frappe.utils.icon('down')}</div>
 					<span class="row-actions">
-						<button class="btn btn-secondary btn-xs pull-right grid-move-row hidden-xs"
-							style="margin-left: 7px;">
-							${ __("Move") }</button>
-						<button class="btn btn-secondary btn-xs pull-right grid-duplicate-row hidden-xs"
-							style="margin-left: 7px;">
+						<button class="btn btn-secondary btn-sm pull-right grid-collapse-row">
+							${frappe.utils.icon('down')}
+						</button>
+						<button class="btn btn-secondary btn-sm pull-right grid-move-row hidden-xs">
+							${ __("Move") }
+						</button>
+						<button class="btn btn-secondary btn-sm pull-right grid-duplicate-row hidden-xs">
 							${frappe.utils.icon('duplicate')}
 							${ __("Duplicate") }
-						<button class="btn btn-secondary btn-xs pull-right grid-insert-row hidden-xs"
-							style="margin-left: 7px;">
+						</button>
+						<button class="btn btn-secondary btn-sm pull-right grid-insert-row hidden-xs">
 							${ __("Insert Above") }</button>
-							<button class="btn btn-secondary btn-xs pull-right grid-insert-row-below hidden-xs"
-							style="margin-left: 7px;">
+						<button class="btn btn-secondary btn-sm pull-right grid-insert-row-below hidden-xs">
 							${ __("Insert Below") }</button>
 						<button class="btn btn-danger btn-xs pull-right grid-delete-row">
 							${frappe.utils.icon('delete', 'sm')}
@@ -66,13 +65,15 @@ export default class GridRowForm {
 			</div>
 			<div class="grid-form-body">
 				<div class="form-area"></div>
-				<div class="grid-footer-toolbar hidden-xs">
-					<span> ${frappe.utils.icon("keyboard", "xs")} </span>
-					<span class="text-medium"> ${ __("Keyboard Shortcuts") }: </span>
-					<kbd>${ __("Ctrl + Up") }</kbd> . <kbd>${ __("Ctrl + Down") }</kbd> . <kbd>${ __("ESC") }</kbd>
-					<button class="btn btn-secondary btn-xs hidden-sm pull-right grid-append-row"
-						style="margin-left: 7px;">
-						${ __("Insert at Bottom") }</button>
+				<div class="grid-footer-toolbar hidden-xs flex justify-between">
+					<div class="grid-shortcuts">
+						<span> ${frappe.utils.icon("keyboard", "md")} </span>
+						<span class="text-medium"> ${ __("Shortcuts") }: </span>
+						<kbd>${ __("Ctrl + Up") }</kbd> . <kbd>${ __("Ctrl + Down") }</kbd> . <kbd>${ __("ESC") }</kbd>
+					</div>
+					<button class="btn btn-secondary btn-sm pull-right grid-append-row">
+						${ __("Insert Below") }
+					</button>
 				</div>
 			</div>`;
 
