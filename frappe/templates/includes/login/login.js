@@ -100,7 +100,7 @@ login.reset_sections = function(hide) {
 		$("section.for-signup").toggle(false);
 	}
 	$('section:not(.signup-disabled) .indicator').each(function() {
-		$(this).removeClass().addClass('indicator-pill blue modal-title').text($(this).attr('data-text'));
+		$(this).removeClass().addClass('indicator blue modal-title').text($(this).attr('data-text'));
 	});
 }
 
@@ -140,7 +140,7 @@ login.call = function(args, callback) {
 
 login.set_indicator = function(message, color) {
 	$('section:visible .indicator')
-		.removeClass().addClass('indicator-pill modal-title').addClass(color).text(message)
+		.removeClass().addClass('indicator modal-title').addClass(color).text(message)
 }
 
 login.set_invalid = function(message) {
