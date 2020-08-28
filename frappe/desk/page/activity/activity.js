@@ -96,7 +96,7 @@ frappe.activity.Feed = Class.extend({
 
 		$(row)
 			.append(frappe.render_template("activity_row", data))
-			.find("a").addClass("grey");
+			.find("a").addClass("gray");
 	},
 	scrub_data: function(data) {
 		data.by = frappe.user.full_name(data.owner);
