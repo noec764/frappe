@@ -756,7 +756,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 		let warning_message = `
 			<p>
-				${__(`Are you sure you want to generate a new report? {} with the same filters already in the queue:`, [no_of_reports_html])}
+				${__(`Are you sure you want to generate a new report? {} with the same filters already in the queue.`, [no_of_reports_html])}
 			</p>`;
 
 		let get_item_html = item => `<a class="underline" href="#Form/Prepared Report/${item.name}">${item.name}</a>`;
