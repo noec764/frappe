@@ -14,8 +14,8 @@
 	--indicator-gray: var(--gray-600);
 	--indicator-gray-bg: var(--gray-200);
 
-	--indicator-dark-gray: var(--gray-700);
-	--indicator-dark-gray-bg: var(--gray-400);
+	--indicator-darkgray: var(--gray-700);
+	--indicator-darkgray-bg: var(--gray-400);
 
 	--indicator-red: var(--red-500);
 	--indicator-red-bg: var(--red-50);
@@ -37,8 +37,8 @@
 	--indicator-gray: var(--gray-100);
 	--indicator-gray-bg: var(--gray-600);
 
-	--indicator-dark-gray: var(--gray-500);
-	--indicator-dark-gray-bg: var(--gray-900);
+	--indicator-darkgray: var(--gray-500);
+	--indicator-darkgray-bg: var(--gray-900);
 
 	--indicator-red: var(--red-50);
 	--indicator-red-bg: var(--red-500);
@@ -159,7 +159,7 @@
 	@include indicator-color('gray');
 }
 
-.indicator-pill.gray
+.indicator-pill.gray,
 .indicator-pill-right.gray,
 .indicator-pill-round.gray {
 	@include indicator-pill-color('gray');
@@ -169,7 +169,7 @@
 	@include indicator-color('darkgray');
 }
 
-.indicator-pill.darkgray
+.indicator-pill.darkgray,
 .indicator-pill-right.darkgray,
 .indicator-pill-round.darkgray {
 	@include indicator-pill-color('darkgray');
