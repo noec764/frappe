@@ -103,8 +103,7 @@ def get_context(context):
 		doc_list = frappe.get_all(self.document_type,
 			fields='name',
 			filters=[
-				{ self.date_changed: ('>=', reference_date_start) },
-				{ self.date_changed: ('<=', reference_date_end) }
+				{ self.date_changed: ('between', (reference_date_start, reference_date_end)) }
 			])
 
 		for d in doc_list:
