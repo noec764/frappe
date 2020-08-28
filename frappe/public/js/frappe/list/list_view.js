@@ -804,7 +804,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	get_meta_html(doc) {
 		let html = "";
 
-		let settings_button = ''
+		let settings_button = null;
 		if (this.settings.button && this.settings.button.show(doc)) {
 			settings_button = `
 			<span>
@@ -838,10 +838,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		html += `
 			<div class="level-item list-row-activity">
-				${settings_button}
-				<span class="padding-right">
-					${assigned_to}
-				</span>
+				${settings_button || assigned_to}
 				${modified}
 				${comment_count}
 			</div>
