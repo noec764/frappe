@@ -96,7 +96,8 @@ class ScheduledJobType(Document):
 				frappe.db.commit()
 			return
 		if not self.scheduler_log:
-			self.scheduler_log = frappe.get_doc(dict(doctype = 'Scheduled Job Log', scheduled_job_type=self.name, status=status)).insert(ignore_permissions=True)
+			self.scheduler_log = frappe.get_doc(dict(doctype = 'Scheduled Job Log', scheduled_job_type=self.name)).insert(ignore_permissions=True)
+		self.scheduler_log.db_set('status', status)
 		if status == 'Failed':
 			self.scheduler_log.db_set('details', frappe.get_traceback())
 		if status == 'Start':
