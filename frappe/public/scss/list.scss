@@ -64,7 +64,7 @@ body.no-list-sidebar {
 	-webkit-transition: color 0.2s;
 	font-size: var(--text-md);
 
-	&:hover {
+	&:hover:not(.list-row-head) {
 		background-color: var(--highlight-color);
 	}
 	&:last-child {
@@ -127,6 +127,7 @@ body.no-list-sidebar {
 }
 
 .list-row-head {
+	cursor: default;
 
 	.list-subject {
 		font-weight: normal;
