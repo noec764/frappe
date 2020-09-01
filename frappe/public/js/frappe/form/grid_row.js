@@ -306,7 +306,7 @@ export default class GridRow {
 			});
 
 		$col.field_area = $('<div class="field-area"></div>').appendTo($col).toggle(false);
-		$col.static_area = $('<div class="static-area ellipsis"></div>').appendTo($col).html(frappe.utils.escape_html(txt));
+		$col.static_area = $('<div class="static-area ellipsis"></div>').appendTo($col).html(txt);
 		$col.df = df;
 		$col.column_index = ci;
 
@@ -600,7 +600,7 @@ export default class GridRow {
 		// reset static value
 		var column = this.columns[fieldname];
 		if (column) {
-			column.static_area.html(frappe.utils.escape_html(txt) || "");
+			column.static_area.html(txt || "");
 			if (df && df.reqd) {
 				column.toggleClass('error', !!(txt===null || txt===''));
 			}
