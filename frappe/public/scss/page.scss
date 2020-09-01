@@ -115,9 +115,10 @@ $page-bottom-margin: 60px;
 }
 
 .layout-main-section {
-	.frappe-list {
+	.frappe-list, .report-wrapper {
 		padding: 0 var(--padding-xs);
 	}
+
 	.result, .no-result, .freeze {
 		min-height: #{"calc(100vh - 284px)"};
 	}
@@ -125,8 +126,8 @@ $page-bottom-margin: 60px;
 	.msg-box {
 		margin-bottom: 4em;
 		font-size: var(--text-sm);
-		// To compensate for perceived centering
 
+		// To compensate for perceived centering
 		.null-state {
 			height: 85px;
 			width: auto;
