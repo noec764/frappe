@@ -99,6 +99,11 @@ $threshold: 40;
 				overflow: auto;
 				max-height: 80vw;
 			}
+
+			.actions > * {
+				color: var(--text-muted);
+			}
+
 			.action-btn {
 				padding-top: 0;
 				padding-bottom: 0;
