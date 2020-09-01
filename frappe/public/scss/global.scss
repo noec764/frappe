@@ -297,8 +297,6 @@ select.input-xs {
 	margin: 0px;
 }
 
-$checkbox-size: 12px;
-
 .checkbox {
 	label {
 		display: inline-flex;
@@ -321,15 +319,15 @@ $checkbox-size: 12px;
 
 /* checkbox */
 input[type="checkbox"] {
-	width: $checkbox-size;
-	height: $checkbox-size;
+	width: var(--custom-checkbox-size);
+	height: var(--custom-checkbox-size);
 	position: relative;
-	font-size: calc(#{$checkbox-size} - 1px);
+	font-size: calc(var(--custom-checkbox-size) - 1px);
 	margin-right: 5px;
 
 	&:before {
-		width: $checkbox-size;
-		height: $checkbox-size;
+		width: var(--custom-checkbox-size);
+		height: var(--custom-checkbox-size);
 		display: block;
 		text-align: center;
 		line-height: 11px;
@@ -383,8 +381,12 @@ input[type="checkbox"] {
 
 // Firefox doesn't support pseudo elements on checkbox
 @supports (-moz-appearance: none) or (-ms-ime-align:auto) {
+	:root {
+		--custom-checkbox-size: 0px;
+	}
 	input[type="checkbox"] {
-		width: $checkbox-size !important
+		width: var(--base-checkbox-size) !important;
+		height: var(--base-checkbox-size);
 	}
 }
 

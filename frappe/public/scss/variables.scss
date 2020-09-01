@@ -136,14 +136,14 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 
 
 	--padding-xs: 5px;
-	--padding-sm: 10px;
+	--padding-sm: 8px;
 	--padding-md: 15px;
 	--padding-lg: 20px;
 	--padding-xl: 30px;
 	--padding-2xl: 40px;
 
 	--margin-xs: 5px;
-	--margin-sm: 10px;
+	--margin-sm: 8px;
 	--margin-md: 15px;
 	--margin-lg: 20px;
 	--margin-xl: 30px;
@@ -206,6 +206,9 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--border-radius: 6px;
 	--border-radius-md: 8px;
 	--border-radius-lg: 12px;
+
+	--base-checkbox-size: 12px;
+	--custom-checkbox-size: 12px;
 
 	--primary-color: #{$primary};
 
