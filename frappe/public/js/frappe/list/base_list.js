@@ -189,6 +189,7 @@ frappe.views.BaseList = class BaseList {
 			page: this.page,
 			list_view: this,
 			sidebar: this.list_sidebar,
+			icon_map: icon_map
 		});
 	}
 
