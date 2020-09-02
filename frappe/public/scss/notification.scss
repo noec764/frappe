@@ -48,12 +48,11 @@
 
 .notifications-list {
 	min-width: 480px;
-	padding: 0 0 0 10px;
+	padding: 0px 10px;
 	min-height: 560px;
 	border: none;
 	position: absolute;
 	box-shadow: 0px 1px 4px rgba(17, 43, 66, 0.1), 0px 2px 6px rgba(17, 43, 66, 0.08);
-	overflow-x: hidden;
 
 	.notification-list-header {
 		margin: 0px 10px;
@@ -65,34 +64,26 @@
 		// margin: 10px 0px;
 		max-height: 500px;
 		overflow-y: auto;
-		@include size(200%, 100%);
-		flex: 1;
 
-		.notification-reel {
+		.panel-events, .panel-notifications {
 			@include size(100%, null);
-			@include flex(flex, space-between, null, null);
-			transition: 0.5s;
+		}
 
-			.panel-events, .panel-notifications {
-				@include size(50%, null);
+		.notification-null-state {
+			min-height: 300px;
+			@include flex(flex, null, center, null);
+			place-content: center;
+
+			.title {
+				margin-top: var(--margin-lg);
+				font-size: var(--text-base);
+				font-weight: 600;
 			}
 
-			.notification-null-state {
-				min-height: 300px;
-				@include flex(flex, null, center, null);
-				place-content: center;
-
-				.title {
-					margin-top: var(--margin-lg);
-					font-size: var(--text-base);
-					font-weight: 600;
-				}
-
-				.subtitle {
-					margin-top: var(--margin-sm);
-					font-size: var(--text-md);
-					color: var(--text-muted);
-				}
+			.subtitle {
+				margin-top: var(--margin-sm);
+				font-size: var(--text-md);
+				color: var(--text-muted);
 			}
 		}
 	}
@@ -138,7 +129,7 @@
 	}
 
 	&:not(.no-hover):hover {
-		color: var(--text-light);
+		color: var(--text-muted);
 		text-decoration: none;
 		background-color: var(--fg-hover-color);
 	}
