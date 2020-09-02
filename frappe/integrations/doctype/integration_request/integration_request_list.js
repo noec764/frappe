@@ -11,9 +11,9 @@ frappe.listview_settings['Integration Request'] = {
 		} else if (doc.status == "Failed") {
 			return [__("Failed"), "orange", "status,=,Failed"];
 		} else if (doc.status == "Not Handled") {
-			return [__("Not Handled"), "darkgray", "status,=,Not Handled"];
+			return [__("Not Handled"), "gray", "status,=,Not Handled"];
 		} else {
-			return [__("Queued"), "gray", "status,=,Queued"];
+			return [__("Queued"), "darkgray", "status,=,Queued"];
 		}
 	}
 };
