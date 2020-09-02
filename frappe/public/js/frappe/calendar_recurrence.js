@@ -3,11 +3,10 @@ import { RRule, ENGLISH } from '../lib/rrule/rrule-tz.min.js';
 // 'en' is implied, don't add it to this array
 const availableLanguages = ['fr']
 frappe.CalendarRecurrence = class {
-	constructor(frm, show) {
-		this.frm = frm;
-		this.show = show;
+	constructor(opts) {
+		Object.assign(this, opts)
 		this.currentRule = {}
-		this.start_day = moment(this.frm.doc.starts_on)
+		this.start_day = moment(this.start_field ? this.frm.doc[this.start_field] : this.frm.doc.starts_on)
 
 		if (availableLanguages.includes(frappe.boot.lang)) {
 			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`, () => {
@@ -222,7 +221,7 @@ frappe.CalendarRecurrence = class {
 
 				if (values.freq == 'monthly' && values.monthly_options) {
 					if (values.monthly_options == "by_day") {
-						Object.assign(rule_obj, {bymonthday: [moment(me.frm.doc.starts_on).date()]})
+						Object.assign(rule_obj, {bymonthday: [moment(me.start_day).date()]})
 					} else {
 						const weekday_map = me.weekday_map()
 						Object.assign(rule_obj, {
