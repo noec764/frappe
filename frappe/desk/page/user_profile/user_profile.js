@@ -94,7 +94,8 @@ class UserProfile {
 			type: 'heatmap',
 			countLabel: __('Energy Points'),
 			data: {},
-			discreteDomains: 0,
+			discreteDomains: 1,
+			height: 150
 		});
 		this.update_heatmap_data();
 		this.create_heatmap_chart_filters();
@@ -127,7 +128,6 @@ class UserProfile {
 		};
 
 		this.line_chart = new frappe.Chart( '.performance-line-chart', {
-			title: __('Energy Points'),
 			type: 'line',
 			height: 200,
 			data: {
@@ -161,7 +161,6 @@ class UserProfile {
 		}).then(chart => {
 			if (chart.labels.length) {
 				this.percentage_chart = new frappe.Chart( '.performance-percentage-chart', {
-					title: title,
 					type: 'percentage',
 					data: {
 						labels: chart.labels,
@@ -172,9 +171,9 @@ class UserProfile {
 						height: 11,
 						depth: 1
 					},
-					height: 160,
+					height: 200,
 					maxSlices: 8,
-					colors: ['#5e64ff', '#743ee2', '#ff5858', '#ffa00a', '#feef72', '#28a745', '#98d85b', '#a9a7ac'],
+					colors: ['purple', 'blue', 'cyan', 'teal', 'pink', 'red', 'orange', 'yellow'],
 				});
 			} else {
 				this.wrapper.find('.percentage-chart-container').hide();
@@ -231,7 +230,7 @@ class UserProfile {
 				}
 			},
 		];
-		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.line-chart-container', 1);
+		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.line-chart-options', 1);
 	}
 
 	create_percentage_chart_filters() {
@@ -250,7 +249,7 @@ class UserProfile {
 				}
 			},
 		];
-		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.percentage-chart-container');
+		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.percentage-chart-options');
 	}
 
 	create_heatmap_chart_filters() {
@@ -263,7 +262,7 @@ class UserProfile {
 				}
 			},
 		];
-		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.heatmap-container');
+		frappe.dashboard_utils.render_chart_filters(filters, 'chart-filter', '.heatmap-options');
 	}
 
 	edit_profile() {
