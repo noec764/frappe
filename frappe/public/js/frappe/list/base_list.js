@@ -177,6 +177,7 @@ frappe.views.BaseList = class BaseList {
 			'Calendar': 'calendar',
 			'Gantt': 'gantt',
 			'Kanban': 'kanban',
+			'Dashboard': 'dashboard',
 			'Map': 'map'
 		}
 
