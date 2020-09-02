@@ -5,6 +5,7 @@ from html2text import html2text
 from RestrictedPython import compile_restricted, safe_globals
 import RestrictedPython.Guards
 import frappe
+from frappe import _
 import frappe.utils
 import frappe.utils.data
 from frappe.website.utils import (get_shade, get_toc, get_next_link)
