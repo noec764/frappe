@@ -39,39 +39,49 @@ frappe.avatar = function (user, css_class, title, image_url=null, remove_avatar=
 			abbr = abbr.substr(0, 1);
 		}
 		return `<span class="avatar ${css_class}" title="${title}">
-			<div class="avatar-frame standard-image" style="background-color: ${user_info.color};">
-				${abbr}</div>
+			<div class="avatar-frame standard-image"
+				style="background-color: var(${user_info.color[0]}); color: var(${user_info.color[1]})">
+					${abbr}
+			</div>
 		</span>`;
 	}
 };
 
-frappe.avatar_group = function(users, limit=4, css_class='avatar avatar-small', align='right', icon, action) {
-	let extra_count = users.length - limit - 1;
+frappe.avatar_group = function(users, limit=4, options={}) {
 	let icon_html = '';
 	const display_users = users.slice(0, limit);
-	const extra_users = users.slice(limit, users.length);
+	const extra_users = users.slice(limit);
 
-	let html = display_users.map(user => frappe.avatar(user, css_class)).join('');
-	if (extra_count > 0) {
+	let html = display_users.map(user => frappe.avatar(user, 'avatar-small ' + options.css_class)).join('');
+	if (extra_users.length === 1) {
+		html += frappe.avatar(extra_users[0], 'avatar-small ' + options.css_class);
+	} else if (extra_users.length > 1) {
 		html = `
-			<span class="${css_class}">
-				<div class="avatar-frame standard-image avatar-extra-count" title="${extra_users.join(', ')}">
-					+${extra_count}
+			<span class="avatar avatar-small ${options.css_class}">
+				<div class="avatar-frame standard-image avatar-extra-count"
+					title="${extra_users.map(u => frappe.user_info(u).fullname).join(', ')}">
+					+${extra_users.length}
 				</div>
 			</span>
 			${html}
 		`;
 	}
 
-	if (icon) icon_html = `<span class="avatar-action">${frappe.utils.icon(icon)}</span>`;
+	if (options.action_icon) {
+		icon_html = `<span class="avatar avatar-small avatar avatar-small">
+			<div class="avatar-frame avatar-action">
+					${frappe.utils.icon(options.action_icon, 'md')}
+			</div>
+		</span>`;
+	}
 
 	const $avatar_group =
-		$(`<div class="avatar-group ${align}">
+		$(`<div class="avatar-group ${options.align || 'right'} ${options.overlap != false ? 'overlap': ''}">
 			${icon_html}
 			${html}
 		</div>`);
 
-	$avatar_group.find('.avatar-action').on('click', action);
+	$avatar_group.find('.avatar-action').on('click', options.action);
 	return $avatar_group;
 };
 
@@ -85,14 +95,21 @@ frappe.ui.scroll = function(element, animate, additional_offset) {
 	}
 };
 
+frappe.palette = [
+	['--orange-100', '--orange-600'],
+	['--pink-50', '--pink-500'],
+	['--blue-50', '--blue-500'],
+	['--green-50', '--green-500'],
+	['--dark-green-50', '--dark-green-500'],
+	['--red-50', '--red-500'],
+	['--yellow-50', '--yellow-500'],
+	['--purple-50', '--purple-500'],
+	['--gray-50', '--gray-500']
+]
+
 frappe.get_palette = function(txt) {
-	return '#fafbfc';
-	// //return '#8D99A6';
-	// if(txt==='Administrator') return '#36414C';
-	// // get color palette selection from md5 hash
-	// var idx = cint((parseInt(md5(txt).substr(4,2), 16) + 1) / 5.33);
-	// if(idx > 47) idx = 47;
-	// return frappe.palette[idx][0]
+	var idx = cint((parseInt(md5(txt).substr(4,2), 16) + 1) / 5.33);
+	return frappe.palette[idx%8];
 }
 
 frappe.get_abbr = function(txt, max_length) {
@@ -202,57 +219,6 @@ frappe.get_cookies = function getCookies() {
 	return cookies;
 }
 
-frappe.palette = [
-	['#FFC4C4', 0],
-	['#FFE8CD', 0],
-	['#FFD2C2', 0],
-	['#FF8989', 0],
-	['#FFD19C', 0],
-	['#FFA685', 0],
-	['#FF4D4D', 1],
-	['#FFB868', 0],
-	['#FF7846', 1],
-	['#A83333', 1],
-	['#A87945', 1],
-	['#A84F2E', 1],
-	['#D2D2FF', 0],
-	['#F8D4F8', 0],
-	['#DAC7FF', 0],
-	['#A3A3FF', 0],
-	['#F3AAF0', 0],
-	['#B592FF', 0],
-	['#7575FF', 0],
-	['#EC7DEA', 0],
-	['#8E58FF', 1],
-	['#4D4DA8', 1],
-	['#934F92', 1],
-	['#5E3AA8', 1],
-	['#EBF8CC', 0],
-	['#FFD7D7', 0],
-	['#D2F8ED', 0],
-	['#D9F399', 0],
-	['#FFB1B1', 0],
-	['#A4F3DD', 0],
-	['#C5EC63', 0],
-	['#FF8989', 1],
-	['#77ECCA', 0],
-	['#7B933D', 1],
-	['#A85B5B', 1],
-	['#49937E', 1],
-	['#FFFACD', 0],
-	['#D2F1FF', 0],
-	['#CEF6D1', 0],
-	['#FFF69C', 0],
-	['#A6E4FF', 0],
-	['#9DECA2', 0],
-	['#FFF168', 0],
-	['#78D6FF', 0],
-	['#6BE273', 0],
-	['#A89F45', 1],
-	['#4F8EA8', 1],
-	['#428B46', 1]
-]
-
 frappe.is_mobile = function() {
 	return (typeof window.orientation !== "undefined") || (navigator.userAgent.indexOf('IEMobile') !== -1) || $(document).width() < 768;
 }
@@ -320,7 +286,7 @@ frappe.utils.sanitise_redirect = (url) => {
 	url = frappe.utils.strip_url(url);
 
 	return is_external(url) ? "" : sanitise_javascript(frappe.utils.xss_sanitise(url, {strategies: ["js"]}));
-}
+};
 
 frappe.utils.strip_url = (url) => {
 	// strips invalid characters from the beginning of the URL

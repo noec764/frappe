@@ -100,8 +100,12 @@
 	}
 
 	.avatar-action {
-		display: none;
-		margin-left: var(--margin-xs);
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--control-bg);
 		.icon {
 			use {
 				stroke: var(--text-muted);
@@ -128,6 +132,10 @@
 		transition: margin .1s ease-in-out;
 		.avatar-frame {
 			border: 1px solid var(--fg-color);
+		}
+
+		&:not(.avatar-extra-count):hover {
+			z-index: 99;
 		}
 	}
 
