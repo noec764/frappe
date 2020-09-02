@@ -1,3 +1,8 @@
+@mixin size($w, $h) {
+	width: $w;
+	height: $h;
+}
+
 .navbar {
 	perspective: 3200px;
 }
@@ -63,13 +68,31 @@
 		@include size(200%, 100%);
 		flex: 1;
 
-		.notifcation-reel {
+		.notification-reel {
 			@include size(100%, null);
 			@include flex(flex, space-between, null, null);
 			transition: 0.5s;
 
 			.panel-events, .panel-notifications {
 				@include size(50%, null);
+			}
+
+			.notification-null-state {
+				min-height: 300px;
+				@include flex(flex, null, center, null);
+				place-content: center;
+
+				.title {
+					margin-top: var(--margin-lg);
+					font-size: var(--text-base);
+					font-weight: 600;
+				}
+
+				.subtitle {
+					margin-top: var(--margin-sm);
+					font-size: var(--text-md);
+					color: var(--text-muted);
+				}
 			}
 		}
 	}
@@ -78,11 +101,11 @@
 		border: none;
 
 		.notifications-category {
-			padding: 15px 0px;
+			padding: var(--padding-md) 0px;
 			margin-bottom: -1px;
-			margin-right: 20px;
+			margin-right: var(--margin-lg);
 			color: var(--text-light);
-			font-weight: 500;
+			font-weight: var(--text-bold);
 			cursor: pointer;
 
 			&.active {

@@ -17,7 +17,7 @@ frappe.ui.Notifications = class Notifications {
 		this.header_items = this.dropdown_list.find('.header-items');
 		this.header_actions = this.dropdown_list.find('.header-actions');
 		this.body = this.dropdown_list.find('.notification-list-body');
-		this.reel = this.dropdown_list.find('.notifcation-reel')
+		this.reel = this.dropdown_list.find('.notification-reel');
 		this.panel_events = this.dropdown_list.find('.panel-events');
 		this.panel_notifications = this.dropdown_list.find('.panel-notifications')
 
@@ -342,10 +342,13 @@ class NotificationsView extends BaseNotificationsView {
 						<div class="full-log-btn">${__('See all Activity')}</div>
 					</a>`);
 			} else {
-				this.container.append($(`<li class="recent-item text-center activity-status">
-					<span class="text-muted">
-						${__('No activity')}
-					</span></li>`));
+				this.container.append($(`<div class="notification-null-state">
+				<div class="text-center">
+					<img src="/assets/frappe/images/ui-states/notification-empty-state.svg" alt="Generic Empty State" class="null-state">
+					<div class="title">No New notifications</div>
+					<div class="subtitle">
+						${__('Looks like you haven’t received any notifications.')}
+				</div></div></div>`));
 			}
 		}
 	}
@@ -469,10 +472,13 @@ class EventsView extends BaseNotificationsView {
 			html = event_list.map(get_event_html).join('');
 		} else {
 			html = `
-				<div class="empty-state center-content">
-					<img src="/assets/frappe/images/ui-states/event-empty-state.svg"></img>
-					${__('No Events Today')}
-				</div>
+				<div class="notification-null-state">
+					<div class="text-center">
+					<img src="/assets/frappe/images/ui-states/event-empty-state.svg" alt="Generic Empty State" class="null-state">
+					<div class="title">No Upcoming Events</div>
+					<div class="subtitle">
+						${__('There are no upcoming events for you.')}
+				</div></div></div>
 			`;
 		}
 
