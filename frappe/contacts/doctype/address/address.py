@@ -94,7 +94,7 @@ class Address(Document):
 
 	def get_coordinates(self):
 		if frappe.db.get_single_value("Google Settings", "enable") and frappe.db.get_single_value("Google Settings", "api_key"):
-			address = get_condensed_address(self)
+			address = get_condensed_address_for_gelocalisation(self)
 
 			gmaps = googlemaps.Client(key=frappe.db.get_single_value("Google Settings", "api_key"))
 			geocode_result = gmaps.geocode(json.dumps(address))
@@ -315,6 +315,11 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 def get_condensed_address(doc):
 	fields = ["address_title", "address_line1", "address_line2", "city", "county", "state", "country"]
 	return ", ".join([doc.get(d) for d in fields if doc.get(d)])
+
+def get_condensed_address_for_gelocalisation(doc):
+	import unicodedata
+	fields = ["address_line1", "address_line2", "pincode", "city", "county", "state", "country"]
+	return ", ".join([unicodedata.normalize('NFKC', doc.get(d)).encode('ascii', 'ignore') for d in fields if doc.get(d)])
 
 def update_preferred_address(address, field):
 	frappe.db.set_value('Address', address, field, 0)
