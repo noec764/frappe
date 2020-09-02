@@ -27,9 +27,6 @@ frappe.throw = function(msg) {
 frappe.confirm = function(message, confirm_action, reject_action) {
 	var d = new frappe.ui.Dialog({
 		title: __("Confirm"),
-		fields: [
-			{fieldtype:"HTML", options:`<p class="frappe-confirm-message">${message}</p>`}
-		],
 		primary_action_label: __("Yes"),
 		primary_action: () => {
 			confirm_action && confirm_action();
