@@ -93,7 +93,7 @@ frappe.ui.form.QuickEntryForm = Class.extend({
 
 	validate_for_prompt_autoname: function() {
 		if(this.meta.autoname && this.meta.autoname.toLowerCase()==='prompt') {
-			this.mandatory = [{fieldname:'__newname', label:__('{0} Name', [this.meta.name]),
+			this.mandatory = [{fieldname:'__newname', label:__('{0} Name', [__(this.meta.name)]),
 				reqd: 1, fieldtype:'Data'}].concat(this.mandatory);
 		}
 	},
