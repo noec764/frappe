@@ -954,7 +954,7 @@ def attach_files_to_document(doc, event):
 				attached_to_name=doc.name,
 				attached_to_doctype=doc.doctype,
 				attached_to_field=df.fieldname,
-				folder="Home/Attachments",
+				folder=frappe.db.get_value("File", {"is_attachments_folder": 1}),
 			).insert()
 		except Exception:
 			frappe.log_error(title=_("Error Attaching File"))

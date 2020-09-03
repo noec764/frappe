@@ -272,7 +272,7 @@ def upload(rows = None, submit_after_import=None, ignore_encoding_errors=False, 
 			"attached_to_name": docname,
 			"attached_to_doctype": doctype,
 			"attached_to_field": 0,
-			"folder": "Home/Attachments"})
+			"folder": frappe.db.get_value("File", {"is_attachments_folder": 1})})
 		_file.save()
 
 
@@ -497,7 +497,7 @@ def upload(rows = None, submit_after_import=None, ignore_encoding_errors=False, 
 				"file_name": file_name,
 				"attached_to_doctype": "Data Import Legacy",
 				"attached_to_name": data_import_doc.name,
-				"folder": "Home/Attachments",
+				"folder": frappe.db.get_value("File", {"is_attachments_folder": 1}),
 				"content": file_data})
 			_file.save()
 			data_import_doc.error_file = _file.file_url

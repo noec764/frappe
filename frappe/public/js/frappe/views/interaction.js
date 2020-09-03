@@ -128,7 +128,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		}
 
 		let args = {
-			folder: 'Home/Attachments',
+			folder: frappe.boot.attachments_folder,
 			on_success: attachment => this.attachments.push(attachment)
 		};
 
@@ -136,7 +136,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			args = {
 				doctype: this.frm.doctype,
 				docname: this.frm.docname,
-				folder: 'Home/Attachments',
+				folder: frappe.boot.attachments_folder,
 				on_success: attachment => {
 					this.frm.attachments.attachment_uploaded(attachment);
 					this.render_attach();

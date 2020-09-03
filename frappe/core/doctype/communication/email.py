@@ -400,7 +400,7 @@ def add_attachments(name, attachments):
 				"file_url": attach.file_url,
 				"attached_to_doctype": "Communication",
 				"attached_to_name": name,
-				"folder": "Home/Attachments",
+				"folder": frappe.db.get_value("File", {"is_attachments_folder": 1}),
 				"is_private": attach.is_private
 			})
 			_file.save(ignore_permissions=True)

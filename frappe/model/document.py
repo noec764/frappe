@@ -369,7 +369,7 @@ class Document(BaseDocument):
 				"file_name": attach_item.file_name,
 				"attached_to_name": self.name,
 				"attached_to_doctype": self.doctype,
-				"folder": "Home/Attachments"})
+				"folder": frappe.db.get_value("File", {"is_attachments_folder": 1})})
 			_file.save()
 
 

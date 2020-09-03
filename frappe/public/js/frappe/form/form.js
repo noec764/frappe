@@ -242,7 +242,7 @@ frappe.ui.form.Form = class FrappeForm {
 					doctype: me.doctype,
 					docname: me.docname,
 					files: dataTransfer.files,
-					folder: 'Home/Attachments',
+					folder: frappe.boot.attachments_folder,
 					on_success(file_doc) {
 						me.attachments.attachment_uploaded(file_doc);
 					}
