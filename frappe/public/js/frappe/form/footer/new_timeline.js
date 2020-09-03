@@ -31,30 +31,6 @@ frappe.ui.form.NewTimeline = class {
 		this.render_timeline_items();
 	}
 
-	setup_document_email_link() {
-		let doc_info = this.doc_info || this.frm.get_docinfo();
-
-		if (doc_info.document_email) {
-			const link = `<a class="document-email-link">${doc_info.document_email}</a>`;
-			const message = __("Send an email to {0} to link it here", [link.bold()]);
-
-			this.document_email_link_wrapper = $(`
-				<div class="document-email-link-container">
-					<div class="timeline-dot"></div>
-					<span>${message}</span>
-				</div>
-			`);
-			this.timeline_wrapper.prepend(this.document_email_link_wrapper);
-
-			this.document_email_link_wrapper
-				.find('.document-email-link')
-				.on("click", e => {
-					let text = $(e.target).text();
-					frappe.utils.copy_to_clipboard(text);
-				});
-		}
-	}
-
 	setup_timeline_actions() {
 		this.add_action_button(__('New Email'), () => this.compose_mail());
 		this.setup_new_event_button();
@@ -85,17 +61,43 @@ frappe.ui.form.NewTimeline = class {
 		};
 
 		if (has_communications()) {
-			this.timeline_actions_wrapper.append(`
-				<div class="custom-control custom-switch communication-switch">
-					<input type="checkbox" class="custom-control-input" id="only-communication-switch">
-					<label class="custom-control-label" for="only-communication-switch">
-						${__('Show Only Communications')}
-					</label>
-				</div>`)
+			this.timeline_actions_wrapper
+				.append(`
+					<div class="custom-control custom-switch communication-switch">
+						<input type="checkbox" class="custom-control-input" id="only-communication-switch">
+						<label class="custom-control-label" for="only-communication-switch">
+							${__('Show Only Communications')}
+						</label>
+					</div>
+				`)
 				.find('.custom-control-input')
 				.change(e => {
 					this.only_communication = e.target.checked;
 					this.render_timeline_items();
+				});
+		}
+	}
+
+	setup_document_email_link() {
+		let doc_info = this.doc_info || this.frm.get_docinfo();
+
+		if (doc_info.document_email) {
+			const link = `<a class="document-email-link">${doc_info.document_email}</a>`;
+			const message = __("Send an email to {0} to link it here", [link.bold()]);
+
+			this.document_email_link_wrapper = $(`
+				<div class="document-email-link-container">
+					<div class="timeline-dot"></div>
+					<span>${message}</span>
+				</div>
+			`);
+			this.timeline_wrapper.prepend(this.document_email_link_wrapper);
+
+			this.document_email_link_wrapper
+				.find('.document-email-link')
+				.on("click", e => {
+					let text = $(e.target).text();
+					frappe.utils.copy_to_clipboard(text);
 				});
 		}
 	}
@@ -126,6 +128,9 @@ frappe.ui.form.NewTimeline = class {
 			this.timeline_items.push(...this.get_version_timeline_contents());
 			this.timeline_items.push(...this.get_share_timeline_contents());
 			this.timeline_items.push(...this.get_like_timeline_contents());
+			this.timeline_items.push(...this.get_custom_timeline_contents());
+			this.timeline_items.push(...this.get_assignment_timeline_contents());
+			this.timeline_items.push(...this.get_attachment_timeline_contents());
 		}
 		// attachments
 		// milestones
@@ -241,26 +246,62 @@ frappe.ui.form.NewTimeline = class {
 
 	get_share_timeline_contents() {
 		let share_timeline_contents = [];
-		(this.doc_info.share_logs || []).forEach(share => {
+		(this.doc_info.share_logs || []).forEach(share_log => {
 			share_timeline_contents.push({
-				creation: share.creation,
-				content: share.content,
+				creation: share_log.creation,
+				content: share_log.content,
 			});
 		});
 		return share_timeline_contents;
 	}
 
+	get_assignment_timeline_contents() {
+		let assignment_timeline_contents = [];
+		(this.doc_info.assignment_logs || []).forEach(assignment_log => {
+			assignment_timeline_contents.push({
+				creation: assignment_log.creation,
+				content: assignment_log.content,
+			});
+		});
+		return assignment_timeline_contents;
+	}
+
+	get_attachment_timeline_contents() {
+		let attachment_timeline_contents = [];
+		(this.doc_info.attachment_logs || []).forEach(attachment_log => {
+			attachment_timeline_contents.push({
+				creation: attachment_log.creation,
+				content: `${this.get_user_link(attachment_log.owner)} ${attachment_log.content}`,
+			});
+		});
+		return attachment_timeline_contents;
+	}
+
 	get_like_timeline_contents() {
 		let like_timeline_contents = [];
-		(this.doc_info.like_logs || []).forEach(like => {
+		(this.doc_info.like_logs || []).forEach(like_log => {
 			like_timeline_contents.push({
 				icon: 'heart',
 				icon_size: 'sm',
-				creation: like.creation,
-				content: __('{0} Liked', [this.get_user_link(like.owner)]),
+				creation: like_log.creation,
+				content: __('{0} Liked', [this.get_user_link(like_log.owner)]),
 			});
 		});
 		return like_timeline_contents;
+	}
+
+	get_custom_timeline_contents() {
+		let custom_timeline_contents = [];
+		(this.doc_info.additional_timeline_content || []).forEach(custom_item => {
+			custom_timeline_contents.push({
+				icon: 'call',
+				icon_size: 'sm',
+				card: true,
+				creation: custom_item.creation,
+				content: custom_item.content || frappe.render_template(custom_item.template, custom_item.template_data),
+			});
+		});
+		return custom_timeline_contents;
 	}
 
 	get_energy_point_timeline_contents() {
