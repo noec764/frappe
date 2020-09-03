@@ -16,7 +16,6 @@
   "address",
   "sync_with_google_contacts",
   "cb00",
-  "status",
   "salutation",
   "designation",
   "gender",
@@ -85,15 +84,6 @@
   {
    "fieldname": "cb00",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "Passive",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "Passive\nOpen\nReplied"
   },
   {
    "fieldname": "salutation",
@@ -248,7 +238,7 @@
  "idx": 1,
  "image_field": "image",
  "index_web_pages_for_search": 1,
- "modified": "2020-08-27 14:12:09.906719",
+ "modified": "2020-08-28 14:12:09.906719",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Contact",
