@@ -29,6 +29,8 @@ def safe_exec(script, _globals=None, _locals=None):
 	# execute script compiled by RestrictedPython
 	exec(compile_restricted(script), exec_globals, _locals) # pylint: disable=exec-used
 
+	return exec_globals, _locals
+
 def get_safe_globals():
 	datautils = frappe._dict()
 	if frappe.db:
@@ -49,6 +51,7 @@ def get_safe_globals():
 		# make available limited methods of frappe
 		json=json,
 		dict=dict,
+		log=frappe.log,
 		frappe=frappe._dict(
 			flags=frappe._dict(),
 
@@ -102,7 +105,8 @@ def get_safe_globals():
 		scrub=scrub,
 		guess_mimetype=mimetypes.guess_type,
 		html2text=html2text,
-		dev_server=1 if os.environ.get('DEV_SERVER', False) else 0
+		dev_server=1 if os.environ.get('DEV_SERVER', False) else 0,
+		run_script=run_script
 	)
 
 	add_module_properties(frappe.exceptions, out.frappe, lambda obj: inspect.isclass(obj) and issubclass(obj, Exception))
@@ -144,6 +148,10 @@ def read_sql(query, *args, **kwargs):
 		return frappe.db.sql(query, *args, **kwargs)
 	else:
 		raise frappe.PermissionError(_('Only SELECT SQL allowed in scripting'))
+
+def run_script(script):
+	'''run another server script'''
+	return frappe.get_doc('Server Script', script).execute_method()
 
 def _getitem(obj, key):
 	# guard function for RestrictedPython

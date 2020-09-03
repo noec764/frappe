@@ -139,7 +139,8 @@ log_types = (
 	'Notification Log',
 	'Email Queue',
 	'DocShare',
-	'Document Follow'
+	'Document Follow',
+	'Console Log'
 )
 
 def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=[]):

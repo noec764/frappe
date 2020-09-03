@@ -130,7 +130,7 @@ CREATE TABLE "tabDocType Action" (
   "label" varchar(140) NOT NULL,
   "group" varchar(140) DEFAULT NULL,
   "action_type" varchar(140) NOT NULL,
-  "action" varchar(140) NOT NULL,
+  "action" text NOT NULL,
   PRIMARY KEY ("name")
 ) ;
 
