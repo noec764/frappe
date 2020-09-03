@@ -116,7 +116,7 @@
 	"css/printview.css": [
 		"public/css/bootstrap.css",
 		"public/css/fonts/fontawesome/css/all.css",
-		"public/less/print.less"
+		"public/scss/print.scss"
 	],
 	"concat:js/libs.min.js": [
 		"public/js/lib/awesomplete/awesomplete.min.js",
