@@ -31,6 +31,9 @@
 .ql-container.ql-snow {
 	border-bottom-left-radius: var(--border-radius-sm);;
 	border-bottom-right-radius: var(--border-radius-sm);;
+	border-width: 1px;
+    border-color: var(--gray-400);
+    border-style: none none solid;
 }
 
 .ql-snow .ql-editor {
