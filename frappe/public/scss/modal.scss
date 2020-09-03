@@ -116,4 +116,12 @@ h5.modal-title {
 	a:not(.btn) {
 		text-decoration: underline;
 	}
-} 
+}
+
+/* Awesomesearch */
+
+.search-results {
+	.layout-main-section .result {
+		min-height: unset;
+	}
+}
