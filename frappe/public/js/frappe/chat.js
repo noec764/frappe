@@ -2702,7 +2702,7 @@ frappe.chat.render = (render = true, force = false) => {
 					href="#"
 					onclick="return false;">
 					<span>
-						<svg class="icon"><use xlink:href="#icon-small-message"></use></svg>
+						<svg class="icon"><use href="#icon-small-message"></use></svg>
 					</span>
 				</a>
 			`)
