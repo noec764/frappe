@@ -165,3 +165,11 @@
 .mention>span {
 	margin: 0 3px;
 }
+
+.print-format {
+	.ql-snow {
+		.ql-editor.read-mode {
+			min-height: 0;
+		}
+	}
+}
