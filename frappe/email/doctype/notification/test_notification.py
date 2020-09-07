@@ -237,7 +237,6 @@ class TestNotification(unittest.TestCase):
 	def test_notification_by_child_table_field(self):
 		contact = frappe.new_doc('Contact')
 		contact.first_name = 'John Doe'
-		contact.middle_name = 'Johnnie'
 		contact.append('email_ids', {
 			'email_id': 'test2@example.com',
 			'is_primary': 1
@@ -248,6 +247,7 @@ class TestNotification(unittest.TestCase):
 		})
 
 		contact.insert()
+		frappe.db.commit()
 
 		email_queue = frappe.get_doc('Email Queue', {'reference_doctype': 'Contact',
 			'reference_name': contact.name})
