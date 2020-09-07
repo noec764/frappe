@@ -319,7 +319,7 @@ def get_condensed_address(doc):
 def get_condensed_address_for_gelocalisation(doc):
 	import unicodedata
 	fields = ["address_line1", "address_line2", "pincode", "city", "county", "state", "country"]
-	return ", ".join([unicodedata.normalize('NFKC', doc.get(d)).encode('ascii', 'ignore') for d in fields if doc.get(d)])
+	return ", ".join([unicodedata.normalize('NFKC', doc.get(d)).encode('ascii', 'ignore').decode('utf-8') for d in fields if doc.get(d)])
 
 def update_preferred_address(address, field):
 	frappe.db.set_value('Address', address, field, 0)
