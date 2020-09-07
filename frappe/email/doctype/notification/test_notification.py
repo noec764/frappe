@@ -31,8 +31,7 @@ class TestNotification(unittest.TestCase):
 			notification.name = 'Contact Status Update'
 			notification.subject = 'Contact Status Update'
 			notification.document_type = 'Contact'
-			notification.event = 'Value Change'
-			notification.value_changed = 'status'
+			notification.event = 'New'
 			notification.message = 'Test Contact Update'
 			notification.append('recipients', {
 				'receiver_by_document_field': 'email_id,email_ids'
@@ -238,7 +237,7 @@ class TestNotification(unittest.TestCase):
 	def test_notification_by_child_table_field(self):
 		contact = frappe.new_doc('Contact')
 		contact.first_name = 'John Doe'
-		contact.status = 'Open'
+		contact.middle_name = 'Johnnie'
 		contact.append('email_ids', {
 			'email_id': 'test2@example.com',
 			'is_primary': 1
@@ -248,11 +247,7 @@ class TestNotification(unittest.TestCase):
 			'email_id': 'test1@example.com'
 		})
 
-		contact.save()
-
-		#change status of contact
-		contact.status = 'Replied'
-		contact.save()
+		contact.insert()
 
 		email_queue = frappe.get_doc('Email Queue', {'reference_doctype': 'Contact',
 			'reference_name': contact.name})
