@@ -458,4 +458,4 @@ class AutoRepeatScheduler:
 
 	def get_next_scheduled_date(self):
 		already_generated = self.get_already_generated()
-		return min([x for x in self.get_schedule() if getdate(x) > getdate(self.current_date) and getdate(x) not in already_generated])
+		return min([getdate(x) for x in self.get_schedule() if getdate(x) > getdate(self.current_date) and getdate(x) not in already_generated])
