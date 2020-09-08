@@ -66,7 +66,8 @@ def get_bootinfo():
 	# Check for Map View
 	from frappe.utils import cint
 	google_settings = frappe.db.get_value("Google Settings", None, ["enable", "api_key"])
-	bootinfo.google_api_enabled = cint(google_settings[1]) and google_settings[0]
+	if google_settings:
+		bootinfo.google_api_enabled = cint(google_settings[1]) and google_settings[0]
 
 	# ipinfo
 	if frappe.session.data.get('ipinfo'):
