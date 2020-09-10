@@ -128,6 +128,7 @@ def reset_perms(context):
 def execute(context, method, args=None, kwargs=None, profile=False):
 	"Execute a function"
 	for site in context.sites:
+		ret = ""
 		try:
 			frappe.init(site=site)
 			frappe.connect()
@@ -149,7 +150,10 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 				pr = cProfile.Profile()
 				pr.enable()
 
-			ret = frappe.get_attr(method)(*args, **kwargs)
+			try:
+				ret = frappe.get_attr(method)(*args, **kwargs)
+			except Exception:
+				ret = frappe.safe_eval(method + "(*args, **kwargs)", eval_globals=globals(), eval_locals=locals())
 
 			if profile:
 				pr.disable()
