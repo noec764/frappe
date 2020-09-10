@@ -22,7 +22,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		}
 	}
 
-	toggle_result_area() {}
+	toggle_result_area() { }
 
 	get view_name() {
 		// __("Calendar")
@@ -115,7 +115,7 @@ frappe.views.Calendar = class {
 	}
 
 	get_default_options() {
-		return new Promise ((resolve) => {
+		return new Promise((resolve) => {
 			let initialView = localStorage.getItem('cal_initialView');
 			let weekends = localStorage.getItem('cal_weekends');
 			let defaults = {
@@ -137,15 +137,15 @@ frappe.views.Calendar = class {
 
 		// add links to other calendars
 		me.page.clear_user_actions();
-		$.each(frappe.boot.calendars, function(i, doctype) {
-			if(frappe.model.can_read(doctype)) {
-				me.page.add_menu_item(__(doctype), function() {
+		$.each(frappe.boot.calendars, function (i, doctype) {
+			if (frappe.model.can_read(doctype)) {
+				me.page.add_menu_item(__(doctype), function () {
 					frappe.set_route("List", doctype, "Calendar");
 				});
 			}
 		});
 
-		$(this.parent).on("show", function() {
+		$(this.parent).on("show", function () {
 			me.fullcalendar.refetchEvents()
 		});
 	}
@@ -156,7 +156,7 @@ frappe.views.Calendar = class {
 		this.$cal = $("<div>").appendTo(this.$wrapper);
 		this.footnote_area = frappe.utils.set_footnote(this.footnote_area, this.$wrapper,
 			__("Select or drag across time slots to create a new event."));
-		this.footnote_area.css({"border-top": "0px"});
+		this.footnote_area.css({ "border-top": "0px" });
 
 		this.fullcalendar = new Calendar(this.$cal[0], this.cal_options);
 		this.fullcalendar.render();
@@ -178,12 +178,12 @@ frappe.views.Calendar = class {
 	bind() {
 		const me = this;
 		const btn_group = me.$wrapper.find(".fc-button-group");
-		btn_group.on("click", ".fc-button", function() {
+		btn_group.on("click", ".fc-button", function () {
 			const value = ($(this).hasClass('fc-timeGridWeek-button')) ? 'timeGridWeek' : (($(this).hasClass('fc-timeGridDay-button')) ? 'timeGridDay' : 'dayGridMonth');
 			me.set_localStorage_option("cal_initialView", value);
 		});
 
-		me.$wrapper.on("click", ".btn-weekend", function() {
+		me.$wrapper.on("click", ".btn-weekend", function () {
 			me.cal_options.weekends = !me.cal_options.weekends;
 			me.fullcalendar.setOption('weekends', me.cal_options.weekends);
 			me.set_localStorage_option("cal_weekends", me.cal_options.weekends);
@@ -219,7 +219,7 @@ frappe.views.Calendar = class {
 		defaults.meridiem = 'false';
 		this.cal_options = {
 			locale: frappe.boot.lang || "en",
-			plugins: [ interactionPlugin, timeGridPlugin, dayGridPlugin ],
+			plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin],
 			headerToolbar: {
 				left: 'dayGridMonth,timeGridWeek,timeGridDay',
 				center: 'prev,title,next',
@@ -234,7 +234,7 @@ frappe.views.Calendar = class {
 			initialView: defaults.initialView,
 			weekends: defaults.weekends,
 			nowIndicator: true,
-			events: function(parameters, callback) {
+			events: function (parameters, callback) {
 				return frappe.xcall(me.get_events_method || "frappe.desk.calendar.get_events",
 					me.get_args(parameters.start, parameters.end)
 				).then(r => {
@@ -243,21 +243,22 @@ frappe.views.Calendar = class {
 					callback(events);
 				});
 			},
-			eventClick: function(info) {
+			eventClick: function (info) {
 				// edit event description or delete
-				const doctype = info.event.doctype || me.doctype;
-				if(frappe.model.can_read(doctype)) {
+				console.log(info)
+				const doctype = info.event.doctype || info.event.extendedProps.doctype || me.doctype;
+				if (frappe.model.can_read(doctype)) {
 					frappe.set_route("Form", doctype, info.event.id);
 				}
 			},
-			eventDrop: function(info) {
+			eventDrop: function (info) {
 				me.update_event(info);
 			},
-			eventResize: function(info) {
+			eventResize: function (info) {
 				me.update_event(info);
 			},
-			select: function(selectionInfo) {
-				if (selectionInfo.view.type==="dayGridMonth" && (selectionInfo.end - selectionInfo.start)===86400000) {
+			select: function (selectionInfo) {
+				if (selectionInfo.view.type === "dayGridMonth" && (selectionInfo.end - selectionInfo.start) === 86400000) {
 					// detect single day click in month view
 					return;
 				}
@@ -265,11 +266,11 @@ frappe.views.Calendar = class {
 
 				event[me.field_map.start] = me.get_system_datetime(selectionInfo.start);
 
-				if(me.field_map.end) {
+				if (me.field_map.end) {
 					event[me.field_map.end] = me.get_system_datetime(selectionInfo.end);
 				}
 
-				if(me.field_map.allDay) {
+				if (me.field_map.allDay) {
 					event[me.field_map.allDay] = selectionInfo.allDay;
 
 					if (selectionInfo.allDay) {
@@ -279,8 +280,8 @@ frappe.views.Calendar = class {
 
 				frappe.set_route("Form", me.doctype, event.name);
 			},
-			dateClick: function(info) {
-				if(info.view.type === 'dayGridMonth') {
+			dateClick: function (info) {
+				if (info.view.type === 'dayGridMonth') {
 					me.fullcalendar.changeView('timeGridDay');
 					me.fullcalendar.gotoDate(info.date);
 
@@ -299,7 +300,7 @@ frappe.views.Calendar = class {
 			allDayText: __("All day")
 		};
 
-		if(this.options) {
+		if (this.options) {
 			$.extend(this.cal_options, this.options);
 		}
 	}
@@ -320,22 +321,22 @@ frappe.views.Calendar = class {
 
 	prepare_events(events) {
 		const me = this;
-
+		console.log(me)
 		return (events || []).map(d => {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
 			d.classNames = []
 
 			// do not allow submitted/cancelled events to be moved / extended
-			if(d.docstatus && d.docstatus > 0) {
+			if (d.docstatus && d.docstatus > 0) {
 				d.editable = false;
 			}
 
-			$.each(me.field_map, function(target, source) {
+			$.each(me.field_map, function (target, source) {
 				d[target] = d[source];
 			});
 
-			if(!me.field_map.allDay) {
+			if (!me.field_map.allDay && !me.no_all_day) {
 				d.allDay = true;
 			}
 
@@ -385,13 +386,13 @@ frappe.views.Calendar = class {
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
 			args: me.get_update_args(info.event),
-			callback: function(r) {
-				if(r.exc) {
+			callback: function (r) {
+				if (r.exc) {
 					frappe.show_alert(__("Unable to update event"));
 					info.revert();
 				}
 			},
-			error: function() {
+			error: function () {
 				info.revert();
 			}
 		});
@@ -405,10 +406,10 @@ frappe.views.Calendar = class {
 
 		args[this.field_map.start] = me.get_system_datetime(event.start);
 
-		if(this.field_map.allDay)
+		if (this.field_map.allDay)
 			args[this.field_map.allDay] = event.allDay;
 
-		if(this.field_map.end) {
+		if (this.field_map.end) {
 			if (!event.end) {
 				event.end = event.start.add(1, "hour");
 			}
