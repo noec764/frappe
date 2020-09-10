@@ -200,6 +200,7 @@
 			color: var(--text-light);
 			padding: 0 var(--padding-xs);
 			border-radius: var(--border-radius);
+			display: inline-flex;
 			.badge-link:hover:not([disabled='disabled']), .report-link:hover:not([disabled='disabled']) {
 				text-decoration: underline;
 			}
