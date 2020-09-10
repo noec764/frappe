@@ -104,6 +104,9 @@
 }
 
 .form-dashboard {
+	.section-body:first-child {
+		margin-top: 0;
+	}
 	.section-head {
 		font-size: var(--text-xl);
 		padding-left: 0;
