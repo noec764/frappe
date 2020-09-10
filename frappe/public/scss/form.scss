@@ -2,6 +2,12 @@
 	&> div,
 	&>button {
 		margin: 2px;
+	}
+}
+
+.custom-actions,
+.inner-group-button {
+	button {
 		padding: 0.2rem 0.5rem;
 	}
 }
