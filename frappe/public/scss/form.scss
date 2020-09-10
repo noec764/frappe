@@ -189,12 +189,12 @@
 	}
 	.document-link {
 		margin-bottom: var(--margin-xs);
-		.badge-link {
-			font-size: var(--text-xs);
+		.document-link-badge {
+			font-size: var(--text-sm);
 			color: var(--text-light);
 			padding: 0 var(--padding-xs);
 			border-radius: var(--border-radius);
-			&:hover:not([disabled='disabled']) {
+			.badge-link:hover:not([disabled='disabled']) {
 				text-decoration: underline;
 			}
 		}
