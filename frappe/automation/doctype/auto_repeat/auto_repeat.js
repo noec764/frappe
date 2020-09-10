@@ -102,7 +102,8 @@ frappe.auto_repeat.render_schedule = function(frm) {
 			frm.dashboard.add_section(
 				frappe.render_template("auto_repeat_schedule", {
 					schedule_details : r.message || []
-				})
+				}),
+				__('Auto Repeat Schedule')
 			);
 			frm.dashboard.show();
 		});
