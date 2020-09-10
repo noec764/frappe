@@ -245,7 +245,6 @@ frappe.views.Calendar = class {
 			},
 			eventClick: function (info) {
 				// edit event description or delete
-				console.log(info)
 				const doctype = info.event.doctype || info.event.extendedProps.doctype || me.doctype;
 				if (frappe.model.can_read(doctype)) {
 					frappe.set_route("Form", doctype, info.event.id);
@@ -321,7 +320,6 @@ frappe.views.Calendar = class {
 
 	prepare_events(events) {
 		const me = this;
-		console.log(me)
 		return (events || []).map(d => {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
