@@ -30,8 +30,8 @@
 	}
 }
 
-body.no-list-sidebar {
-	[data-page-route^="List/"] {
+.no-list-sidebar {
+	&[data-page-route^="List/"], [data-page-route^="List/"]{
 		@include media-breakpoint-up(md) {
 			.layout-side-section {
 				display: none;

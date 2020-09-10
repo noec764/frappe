@@ -156,6 +156,8 @@ frappe.views.BaseList = class BaseList {
 		this.$page = $(this.parent);
 		this.page.main.addClass('frappe-card');
 		this.page.page_form.removeClass("row").addClass("flex justify-between");
+		this.hide_page_form && this.page.page_form.hide();
+		this.hide_sidebar && this.$page.addClass('no-list-sidebar');
 		this.setup_page_head();
 	}
 
@@ -236,6 +238,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_side_bar() {
+		if (this.hide_sidebar) return;
 		this.list_sidebar = new frappe.views.ListSidebar({
 			doctype: this.doctype,
 			stats: this.stats,
