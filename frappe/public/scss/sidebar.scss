@@ -389,7 +389,7 @@ body[data-route^="Module"] .main-menu {
 		padding: 0;
 		border: 1px dashed var(--dark-border-color);
 		box-shadow: none;
-		background-color: transparent;
+		//background-color: transparent;
 		.icon use {
 			stroke: var(--text-muted);
 		}
