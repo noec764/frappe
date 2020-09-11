@@ -162,11 +162,11 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	}
 
 	disable_primary_action() {
-		this.get_primary_btn().addClass('disabled');
+		this.get_primary_btn().addClass('disabled').prop("disabled", true);
 	}
 
 	enable_primary_action() {
-		this.get_primary_btn().removeClass('disabled');
+		this.get_primary_btn().removeClass('disabled').prop("disabled", false);
 	}
 
 	make_head() {
