@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from . import __version__ as app_version
+from frappe import _
 
 
 app_name = "frappe"
@@ -120,6 +121,10 @@ has_permission = {
 	"File": "frappe.core.doctype.file.file.has_permission",
 	"Prepared Report": "frappe.core.doctype.prepared_report.prepared_report.has_permission"
 }
+
+standard_portal_menu_items = [
+	{"title": _("Events"), "route": "/events", "reference_doctype": "Event", "role": "Customer"}
+]
 
 has_website_permission = {
 	"Address": "frappe.contacts.doctype.address.address.has_website_permission"
