@@ -40,7 +40,7 @@ def get_random(doctype, filters=None, doc=False):
 		condition = ""
 
 	out = frappe.db.sql("""select name from `tab%s` %s
-		order by RAND() limit 0,1""" % (doctype, condition), debug=True)
+		order by RAND() limit 0,1""" % (doctype, condition))
 
 	out = out and out[0][0] or None
 
