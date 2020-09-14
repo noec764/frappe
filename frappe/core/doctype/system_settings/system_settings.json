@@ -42,6 +42,7 @@
   "password_settings",
   "logout_on_password_reset",
   "force_user_to_reset_password",
+  "password_reset_limit",
   "column_break_31",
   "enable_password_policy",
   "minimum_password_score",
@@ -424,6 +425,13 @@
    "label": "Time Format",
    "options": "HH:mm:ss\nHH:mm",
    "reqd": 1
+  },
+  {
+   "default": "3",
+   "description": "Hourly rate limit for generating password reset links",
+   "fieldname": "password_reset_limit",
+   "fieldtype": "Int",
+   "label": "Password Reset Link Generation Limit"
   },
   {
    "default": "1",

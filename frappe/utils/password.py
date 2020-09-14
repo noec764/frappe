@@ -87,6 +87,12 @@ def delete_login_failed_cache(user):
 	frappe.cache().hdel('login_failed_count', user)
 	frappe.cache().hdel('locked_account_time', user)
 
+def delete_password_reset_cache(user=None):
+	if user:
+		frappe.cache().hdel('password_reset_link_count', user)
+	else:
+		frappe.cache().delete_key('password_reset_link_count')
+
 def update_password(user, pwd, doctype='User', fieldname='password', logout_all_sessions=False):
 	'''
 		Update the password for the User
