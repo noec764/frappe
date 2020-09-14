@@ -43,6 +43,7 @@ class Notification(Document):
 		self.validate_forbidden_types()
 		self.validate_condition()
 		self.validate_standard()
+		self.validate_twilio_settings()
 		frappe.cache().hdel('notifications', self.document_type)
 
 	def on_update(self):
@@ -72,6 +73,11 @@ def get_context(context):
 				self.reload()
 			else:
 				frappe.throw(_('Cannot edit Standard Notification. To edit, please disable this and duplicate it'))
+
+	def validate_twilio_settings(self):
+		if self.enabled and self.channel == "WhatsApp" \
+			and not frappe.db.get_single_value("Twilio Settings", "enabled"):
+			frappe.throw(_("Please enable Twilio settings to send WhatsApp messages"))
 
 	def validate_condition(self):
 		temp_doc = frappe.new_doc(self.document_type)

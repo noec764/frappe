@@ -70,7 +70,7 @@
   },
   {
    "depends_on": "eval:doc.channel=='Slack'",
-   "description": "To use Slack Channel, add a <a href=\"\\#Form/Slack Webhook URL\">Slack Webhook URL</a>.",
+   "description": "To use Slack Channel, add a <a href=\"#List/Slack%20Webhook%20URL/List\">Slack Webhook URL</a>.",
    "fieldname": "slack_webhook_url",
    "fieldtype": "Link",
    "label": "Slack Channel",
@@ -278,7 +278,8 @@
 	"description": "To use WhatsApp for Business, initialize <a href=\"#Form/Twilio Settings\">Twilio Settings</a>.",
 	"fieldname": "twilio_number",
 	"fieldtype": "Link",
-	"label": "Twilio Number",
+  "label": "Twilio Number",
+  "mandatory_depends_on": "eval: doc.channel==='WhatsApp'",
 	"options": "Twilio Number Group"
    },
   {
@@ -301,7 +302,7 @@
  ],
  "icon": "fa fa-envelope",
  "links": [],
- "modified": "2020-09-01 18:36:22.550891",
+ "modified": "2020-09-03 10:33:23.084590",
  "modified_by": "Administrator",
  "module": "Email",
  "name": "Notification",
