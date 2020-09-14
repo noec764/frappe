@@ -56,8 +56,8 @@ def get_pdf(html, options=None, output=None):
 				frappe.throw(_("PDF generation failed because of broken image links"))
 		else:
 			raise
-		finally:
-			cleanup(options)
+	finally:
+		cleanup(options)
 
 	if "password" in options:
 		password = options["password"]

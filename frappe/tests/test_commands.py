@@ -24,7 +24,7 @@ class BaseTestCommands:
 		self.stderr = clean(self._proc.stderr)
 		self.returncode = clean(self._proc.returncode)
 
-
+@unittest.skip("Skipped in CI")
 class TestCommands(BaseTestCommands, unittest.TestCase):
 	def test_execute(self):
 		# test 1: execute a command expecting a numeric output
