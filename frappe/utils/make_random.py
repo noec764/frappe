@@ -29,17 +29,18 @@ def add_random_children(doc, fieldname, rows, randomize, unique=None):
 			doc.append(fieldname, d)
 
 def get_random(doctype, filters=None, doc=False):
+	from frappe.model.db_query import DatabaseQuery
 	condition = []
 	if filters:
-		for key, val in filters.items():
-			condition.append("%s='%s'" % (key, str(val).replace("'", "\'")))
+		DatabaseQuery(doctype).build_filter_conditions(filters, condition, ignore_permissions=True)
+
 	if condition:
 		condition = " where " + " and ".join(condition)
 	else:
 		condition = ""
 
 	out = frappe.db.sql("""select name from `tab%s` %s
-		order by RAND() limit 0,1""" % (doctype, condition))
+		order by RAND() limit 0,1""" % (doctype, condition), debug=True)
 
 	out = out and out[0][0] or None
 
