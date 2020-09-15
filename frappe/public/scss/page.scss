@@ -49,7 +49,7 @@ $page-bottom-margin: 60px;
 }
 
 .page-head {
-	z-index: 2;
+	z-index: 5;
 	position: sticky;
 	top: var(--navbar-height);
 	background: var(--bg-color);

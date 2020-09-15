@@ -66,7 +66,7 @@ frappe.ui.form.Dashboard = Class.extend({
 		}
 	},
 
-	add_section: function(html) {
+	add_section: function(html, section_head) {
 		let section = $(`<div class="form-dashboard-section custom"></div>`);
 		if (section_head) {
 			section.append(`<div class="section-head">${section_head}</div>`);
