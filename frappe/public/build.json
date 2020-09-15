@@ -320,8 +320,7 @@
 	"css/web_form.css": [
 		"website/css/web_form.css",
 		"public/css/octicons/octicons.css",
-		"public/less/controls.less",
-		"node_modules/frappe-datatable/dist/frappe-datatable.css"
+		"public/scss/web_form.scss"
 	],
 	"css/email.css": [
 		"public/less/email.less"
