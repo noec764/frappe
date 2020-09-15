@@ -171,6 +171,8 @@
 	.ql-snow {
 		.ql-editor.read-mode {
 			min-height: 0;
+			background-color: transparent;
+			overflow: hidden;
 		}
 	}
 }
