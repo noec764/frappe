@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import unicode_literals, absolute_import, print_function
-import click
-import json, os, sys, subprocess
+import json
+import os
+import subprocess
+import sys
 from distutils.spawn import find_executable
+
+import click
+
 import frappe
-from frappe.commands import pass_context, get_site
+from frappe.commands import get_site, pass_context
 from frappe.exceptions import SiteNotSpecifiedError
-from frappe.utils import update_progress_bar, get_bench_path
-from frappe.utils.response import json_handler
-from coverage import Coverage
-import cProfile, pstats
-from six import StringIO
+from frappe.utils import get_bench_path, update_progress_bar
 
 @click.command('build')
 @click.option('--app', help='Build assets for app')
@@ -147,6 +147,7 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 				kwargs = {}
 
 			if profile:
+				import cProfile
 				pr = cProfile.Profile()
 				pr.enable()
 
@@ -156,6 +157,9 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 				ret = frappe.safe_eval(method + "(*args, **kwargs)", eval_globals=globals(), eval_locals=locals())
 
 			if profile:
+				import pstats
+				from six import StringIO
+
 				pr.disable()
 				s = StringIO()
 				pstats.Stats(pr, stream=s).sort_stats('cumulative').print_stats(.5)
@@ -166,6 +170,7 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 		finally:
 			frappe.destroy()
 		if ret:
+			from frappe.utils.response import json_handler
 			print(json.dumps(ret, default=json_handler))
 	if not context.sites:
 		raise SiteNotSpecifiedError
@@ -478,6 +483,8 @@ def run_tests(context, app=None, module=None, doctype=None, test=(),
 	frappe.flags.skip_test_records = skip_test_records
 
 	if coverage:
+		from coverage import Coverage
+
 		# Generate coverage report only for app that is being tested
 		source_path = os.path.join(get_bench_path(), 'apps', app or 'frappe')
 		cov = Coverage(source=[source_path], omit=[
@@ -667,7 +674,7 @@ def rebuild_global_search(context, static_pages=False):
 @pass_context
 def auto_deploy(context, app, migrate=False, restart=False, remote='upstream'):
 	'''Pull and migrate sites that have new version'''
-	from frappe.utils.gitutils import get_app_branch
+	from frappe.utils.change_log import get_app_branch
 	from frappe.utils import get_sites
 
 	branch = get_app_branch(app)
