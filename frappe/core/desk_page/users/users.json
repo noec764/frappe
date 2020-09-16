@@ -16,6 +16,7 @@
    "links": "[\n    {\n        \"description\": \"Set Permissions on Document Types and Roles\",\n        \"icon\": \"fa fa-lock\",\n        \"label\": \"Role Permissions Manager\",\n        \"name\": \"permission-manager\",\n        \"type\": \"page\"\n    },\n    {\n        \"description\": \"Restrict user for specific document\",\n        \"icon\": \"fa fa-lock\",\n        \"label\": \"User Permissions\",\n        \"name\": \"User Permission\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Set custom roles for page and report\",\n        \"label\": \"Role Permission for Page and Report\",\n        \"name\": \"Role Permission for Page and Report\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"dependencies\": [\n            \"User\"\n        ],\n        \"description\": \"Check which Documents are readable by a User\",\n        \"doctype\": \"User\",\n        \"icon\": \"fa fa-eye-open\",\n        \"is_query_report\": true,\n        \"label\": \"Permitted Documents For User\",\n        \"name\": \"Permitted Documents For User\",\n        \"type\": \"report\"\n    },\n    {\n        \"dependencies\": [\n            \"DocShare\"\n        ],\n        \"description\": \"Report of all document shares\",\n        \"doctype\": \"DocShare\",\n        \"icon\": \"fa fa-share\",\n        \"label\": \"Document Share Report\",\n        \"name\": \"Document Share Report\",\n        \"type\": \"report\"\n    }\n]"
   }
  ],
+ "category": "Administration",
  "charts": [],
  "color": "#e8525b",
  "creation": "2020-03-02 15:12:16.754449",
@@ -29,8 +30,8 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Users",
- "modified": "2020-08-03 12:17:00.076678",
- "modified_by": "Administrator",
+ "modified": "2020-09-16 10:23:22.346360",
+ "modified_by": "thierry@dokos.io",
  "module": "Core",
  "name": "Users",
  "owner": "Administrator",
