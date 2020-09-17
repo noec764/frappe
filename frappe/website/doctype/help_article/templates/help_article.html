@@ -37,6 +37,7 @@
 
 {% endblock %}
 
+{% block script %}
 <script>
 	frappe.ready(function() {
 		frappe.set_search_path("/kb");
@@ -45,7 +46,7 @@
 				article: "{{ reference_name or name }}",
 				helpful: this.getAttribute("data-value"),
 			}
-	
+
 			frappe.call({
 				btn: this,
 				method: "frappe.website.doctype.help_article.help_article.add_feedback",
@@ -59,3 +60,4 @@
 		});
 	});
 </script>
+{% endblock %}

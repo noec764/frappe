@@ -406,7 +406,7 @@ frappe.setup_search = function (target, search_scope) {
 					<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 				</svg>
 			</div>
-			<input type="search" class="form-control" placeholder="Search the docs (Press / to focus)" />
+			<input type="search" class="form-control" placeholder="${__("Search the docs (Press / to focus)")} />
 			<div class="overflow-hidden shadow dropdown-menu w-100" aria-labelledby="dropdownMenuSearch">
 			</div>
 		</div>`);
