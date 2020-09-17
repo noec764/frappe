@@ -318,7 +318,6 @@
 		"public/js/frappe/web_form/webform_script.js"
 	],
 	"css/web_form.css": [
-		"website/css/web_form.css",
 		"public/css/octicons/octicons.css",
 		"public/scss/web_form.scss"
 	],

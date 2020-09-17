@@ -17,7 +17,7 @@ frappe.ready(function() {
 	else if (is_list) show_grid();
 	else show_form(webform_doctype, webform_name, is_new);
 
-	document.querySelector("body").style.display = "block";
+	document.querySelector("body").style.display = "flex";
 
 	function show_login_prompt() {
 		const login_required = new frappe.ui.Dialog({

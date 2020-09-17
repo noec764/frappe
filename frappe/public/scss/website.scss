@@ -17,6 +17,13 @@
 @import 'login';
 @import 'avatar';
 
+body {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	background-color: var(--bg-color);
+}
+
 .container {
 	padding-left: 1.25rem;
 	padding-right: 1.25rem;
@@ -51,7 +58,12 @@
 }
 
 .navbar-light {
-	border-bottom: 1px solid $border-color;
+	box-shadow: inset 0px -1px 0px var(--shadow-inset);
+	border-color: rgba(237, 242, 247, var(--border-opacity)) !important;
+	--border-opacity: 1;
+	border: 0 solid #e2e8f0;
+	border-bottom-width: 1px;
+	background: var(--fg-color);
 }
 
 .navbar-light .navbar-nav .nav-link {
@@ -115,12 +127,13 @@
 .breadcrumb-container {
 	margin-top: 1rem;
 	padding-top:  0.25rem;
+	padding-left: 2rem;
 }
 
 .breadcrumb {
 	padding: 0;
 	font-size: $font-size-sm;
-	background-color: white;
+	background-color: transparent;
 }
 
 a.card {
@@ -146,8 +159,10 @@ a.card {
 // footer
 
 .web-footer {
-	padding: 5rem 0;
+	padding: 2rem 0;
 	min-height: 140px;
+	width: 100%;
+	margin-top: auto;
 	.row {
 		margin: 0;
 	}

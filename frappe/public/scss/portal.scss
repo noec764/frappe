@@ -6,8 +6,12 @@
 	padding: 0 2rem;
 }
 
-.website-list .result {
-	margin-top: 2rem;
+.website-list .result,
+.portal-calendar,
+#datatable,
+article {
+	padding: var(--padding-md);
+	@extend .frappe-card;
 }
 
 .web-list-item {
@@ -36,4 +40,14 @@
 	.web-list-item {
 		padding: 0.75rem 0;
 	}
+}
+
+// TODO: fix this
+svg.icon {
+	height: 0;
+}
+
+.more-block {
+	float: right;
+	margin: 1rem 0;
 }

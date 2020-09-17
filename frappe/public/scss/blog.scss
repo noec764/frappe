@@ -9,6 +9,11 @@
 	}
 }
 
+.website-list .result.blog-list {
+	background-color: transparent;
+	box-shadow: none;
+}
+
 .blog-card {
 	margin-bottom: 2rem;
 	position: relative;
@@ -89,7 +94,7 @@
 
 		.blog-header {
 			margin-bottom: 3rem;
-			margin-top: 3rem;
+			//margin-top: 3rem;
 		}
 	}
 }

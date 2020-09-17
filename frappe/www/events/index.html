@@ -5,11 +5,11 @@
 {% endblock -%}
 
 {% block title %}{{ _("Events") }}{% endblock %}
-{% block header %}<h1>{{ _("Events") }}</h1>{% endblock %}
+{% block header %}<h2>{{ _("Events") }}</h2>{% endblock %}
 
 {% block page_content %}
 <!-- no-cache -->
-<div id="events-portal"></div>
+<div id="events-portal" class="portal-calendar"></div>
 {% endblock %}
 
 {%- block script -%}

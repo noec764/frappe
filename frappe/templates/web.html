@@ -6,7 +6,7 @@
 {% macro main_content() %}
 <div class="page-content-wrapper">
 	<!-- breadcrumbs -->
-	<div class="page-breadcrumbs">
+	<div class="page-breadcrumbs container">
 		{% block breadcrumbs %}
 			{% include 'templates/includes/breadcrumbs.html' %}
 		{% endblock %}
@@ -45,7 +45,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {%- endmacro %}
 
 {% macro sidebar() %}
-<div class="sidebar-column col-{{ columns }} mt-5">
+<div class="sidebar-column col-{{ columns }}">
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
