@@ -376,6 +376,10 @@ def get_messages_from_doctype(name):
 			if not "icon" in options[0]:
 				messages.extend(options)
 
+	# translations of actions
+	for d in meta.get("actions"):
+		messages.extend([d.label])
+
 	# translations of roles
 	for d in meta.get("permissions"):
 		if d.role:
