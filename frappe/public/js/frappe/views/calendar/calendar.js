@@ -296,7 +296,9 @@ frappe.views.Calendar = class {
 				week: __("Week"),
 				day: __("Day")
 			},
-			allDayText: __("All day")
+			allDayContent: function() {
+				return __("All Day");
+			}
 		};
 
 		if (this.options) {

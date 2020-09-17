@@ -67,7 +67,9 @@ class EventsPortalView {
 			events: this.getEvents,
 			eventClick: this.eventClick,
 			selectable: true,
-			allDayContent: __("All Day")
+			allDayContent: function() {
+				return __("All Day");
+			}
 		}
 	}
 
