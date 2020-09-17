@@ -130,3 +130,6 @@ def get_active_theme():
 def get_scss(doc):
 	return frappe.render_template('frappe/website/doctype/website_theme/website_theme_template.scss', doc.as_dict())
 
+def sync_website_theme():
+	for style in frappe.get_all("Website Theme", filters={"custom": 0}):
+		frappe.get_doc("Website Theme", style.name).generate_bootstrap_theme()

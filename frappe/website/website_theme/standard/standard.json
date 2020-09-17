@@ -9,12 +9,12 @@
  "doctype": "Website Theme",
  "font_properties": "400,500,600,700,800",
  "idx": 27,
- "modified": "2020-06-22 09:27:54.676119",
+ "modified": "2020-09-17 15:19:45.248347",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Standard",
  "owner": "Administrator",
  "theme": "Standard",
  "theme_scss": "$enable-shadows: false;\n$enable-gradients: false;\n$enable-rounded: true;\n\n// Bootstrap Variable Overrides\n\n\n@import \"frappe/public/scss/website\";\n\n\n\n// Custom Theme\n",
- "theme_url": "/assets/css/standard_style.css"
+ "theme_url": "/files/website_theme/standard_style.css"
 }

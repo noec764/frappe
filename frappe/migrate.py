@@ -20,6 +20,7 @@ from frappe.core.doctype.language.language import sync_languages
 from frappe.modules.utils import sync_customizations
 from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 from frappe.search.website_search import build_index_for_all_routes
+from frappe.website.doctype.website_theme.website_theme import sync_website_theme
 
 
 def migrate(verbose=True, rebuild_website=False, skip_failing=False, skip_search_index=False):
@@ -73,6 +74,7 @@ def migrate(verbose=True, rebuild_website=False, skip_failing=False, skip_search
 		sync_dashboards()
 		sync_customizations()
 		sync_languages()
+		sync_website_theme()
 
 		frappe.get_doc('Portal Settings', 'Portal Settings').sync_menu()
 
