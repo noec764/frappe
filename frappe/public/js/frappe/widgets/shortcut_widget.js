@@ -1,10 +1,8 @@
 import Widget from "./base_widget.js";
 import { generate_route } from "./utils";
 
-const indicator_colors = ["Gray", "Green", "Red", "Orange", "Pink", "Yellow", "Blue", "Cyan", "Teal"]
 export default class ShortcutWidget extends Widget {
 	constructor(opts) {
-		opts.shadow = true;
 		super(opts);
 	}
 
@@ -15,6 +13,7 @@ export default class ShortcutWidget extends Widget {
 			label: this.label,
 			format: this.format,
 			link_to: this.link_to,
+			doc_view: this.doc_view,
 			color: this.color,
 			restrict_to_domain: this.restrict_to_domain,
 			stats_filter: this.stats_filter,
@@ -32,6 +31,7 @@ export default class ShortcutWidget extends Widget {
 				type: this.type,
 				is_query_report: this.is_query_report,
 				doctype: this.ref_doctype,
+				doc_view: this.doc_view
 			});
 
 			let filters = this.get_doctype_filter();
@@ -46,6 +46,7 @@ export default class ShortcutWidget extends Widget {
 		if (this.in_customize_mode) return;
 
 		this.widget.addClass("shortcut-widget-box");
+
 		let filters = this.get_doctype_filter();
 		if (this.type == "DocType" && filters) {
 			frappe.db
@@ -65,6 +66,17 @@ export default class ShortcutWidget extends Widget {
 		return null;
 	}
 
+	set_title() {
+		if (this.icon) {
+			this.title_field[0].innerHTML = `<div>
+				<i class="${this.icon}" style=""></i>
+				${this.label || this.name}
+				</div>`;
+		} else {
+			super.set_title();
+		}
+	}
+
 	set_count(count) {
 		const get_label = () => {
 			if (this.format) {
@@ -75,8 +87,13 @@ export default class ShortcutWidget extends Widget {
 
 		this.action_area.empty();
 		const label = get_label();
-		let color = indicator_colors.includes(this.color) ? this.color.toLowerCase() : 'gray';
-		const buttons = $(`<div class="indicator-pill ${color}">${label}</div>`);
+		const buttons = $(`<div class="small pill">${label}</div>`);
+		if (this.color) {
+			let bg_color = count ? this.color: '#EEEEEE';
+			let text_color = count ? frappe.ui.color.get_contrast_color(bg_color): '#8D99A6';
+			buttons.css("background-color", bg_color);
+			buttons.css("color", text_color);
+		}
 
 		buttons.appendTo(this.action_area);
 	}
