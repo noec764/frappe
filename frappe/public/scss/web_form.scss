@@ -3,6 +3,9 @@
 @import 'controls';
 @import 'quill';
 @import 'frappe-datatable';
+@import 'awesomebar';
+@import 'modal';
+@import 'icons';
 
 #web-form {
 	padding: 2rem;
@@ -92,10 +95,16 @@ body {
 	padding: 15px;
 }
 
+.form-in-grid {
+	.grid-form-heading .row-actions,
+	.grid-footer-toolbar {
+		display: none !important;
+	}
+}
+
 .form-clickable-section {
 	border-top: 1px solid #d1d8dd;
 	padding: 10px 15px;
-	background-color: #F7FAFC;
 }
 
 .table > tbody > tr > td {
@@ -127,4 +136,36 @@ table {
 .like-disabled-input.for-description {
 	font-weight: normal;
 	font-size: 12px;
+}
+
+#freeze {
+	z-index: 1020;
+	bottom: 0;
+	opacity: 0;
+
+	&.dark {
+		background-color: #334143;
+	}
+
+	.freeze-message-container {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.freeze-message {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 100%;
+		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		text-align: center;
+	}
+
+	&.in {
+		opacity: 0.5;
+	}
 }

@@ -548,6 +548,7 @@ export default class GridRow {
 		// this.form_panel.toggle(true);
 		frappe.dom.freeze("", "dark");
 		if (cur_frm) cur_frm.cur_grid = this;
+		if (frappe.web_form) frappe.web_form.cur_grid = this;
 		this.wrapper.addClass("grid-row-open");
 		if (!frappe.dom.is_element_in_viewport(this.wrapper)
 			&& !frappe.dom.is_element_in_modal(this.wrapper)) {

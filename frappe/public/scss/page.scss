@@ -127,7 +127,8 @@ $page-bottom-margin: 60px;
 		padding: 0 var(--padding-xs);
 	}
 
-	.result, .no-result, .freeze {
+	//.result,
+	.no-result, .freeze {
 		min-height: #{"calc(100vh - 284px)"};
 	}
 

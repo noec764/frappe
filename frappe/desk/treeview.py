@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 
 @frappe.whitelist()
-def get_all_nodes(doctype, label, parent, tree_method, **filters):
+def get_all_nodes(doctype, parent, tree_method, **filters):
 	'''Recursively gets all data from tree nodes'''
 
 	if 'cmd' in filters:
@@ -20,7 +20,7 @@ def get_all_nodes(doctype, label, parent, tree_method, **filters):
 		frappe.throw(_("Not Permitted"), frappe.PermissionError)
 
 	data = tree_method(doctype, parent, **filters)
-	out = [dict(parent=label, data=data)]
+	out = [dict(parent=parent, data=data)]
 
 	if 'is_root' in filters:
 		del filters['is_root']

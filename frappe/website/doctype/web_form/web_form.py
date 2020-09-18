@@ -16,7 +16,7 @@ from frappe.custom.doctype.customize_form.customize_form import docfield_propert
 from frappe.desk.form.meta import get_code_files_via_hooks
 from frappe.integrations.utils import get_payment_gateway_controller
 from frappe.modules.utils import export_module_json, get_doc_module
-from frappe.utils import cstr
+from frappe.utils import cstr, getdate
 from frappe.website.utils import get_comment_list
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -569,6 +569,11 @@ def get_form_data(doctype, docname=None, web_form_name=None):
 				field.options,
 				field.allow_read_on_all_link_options
 			)
+
+		if field.default == "__user":
+			field.default = frappe.session.user
+		if field.default == "Today":
+			field.default = getdate()
 
 	return out
 

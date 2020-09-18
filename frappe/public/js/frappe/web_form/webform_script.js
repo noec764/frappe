@@ -53,7 +53,7 @@ frappe.ready(function() {
 		get_data().then(r => {
 			const data = setup_fields(r.message);
 			let web_form_doc = data.web_form;
-			let doc = r.message.doc || build_doc(r.message);
+			//let doc = r.message.doc || build_doc(r.message);
 			web_form.prepare(web_form_doc, r.message.doc ? r.message.doc : {});
 			web_form.make();
 			web_form.set_default_values();
@@ -62,7 +62,9 @@ frappe.ready(function() {
 		function build_doc(form_data) {
 			let doc = {};
 			form_data.web_form.web_form_fields.forEach(df => {
-				if (df.default) return doc[df.fieldname] = df.default;
+				if (df.default) {
+					return doc[df.fieldname] = df.default;
+				}
 			});
 			return doc;
 		}
