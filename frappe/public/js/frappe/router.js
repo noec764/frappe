@@ -109,6 +109,10 @@ frappe.get_route = function(route) {
 		return false;
 	}
 
+	if (route && route[0]==='undefined') {
+		return false;
+	}
+
 	return route;
 }
 

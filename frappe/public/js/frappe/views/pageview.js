@@ -3,8 +3,6 @@
 
 frappe.provide('frappe.views.pageview');
 frappe.provide("frappe.standard_pages");
-frappe.provide("frappe.desk_view");
-frappe.utils.make_event_emitter(frappe.desk_view);
 
 frappe.views.pageview = {
 	with_page: function(name, callback) {
