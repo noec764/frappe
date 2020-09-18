@@ -33,7 +33,7 @@ h1 {
 
 h2 {
 	font-size: $font-size-xl;
-	font-weight: bold;
+	font-weight: 700;
 	margin-bottom: 0.75rem;
 
 	@include media-breakpoint-up(sm) {
@@ -41,5 +41,18 @@ h2 {
 	}
 	@include media-breakpoint-up(md) {
 		font-size: $font-size-3xl;
+	}
+}
+
+h3 {
+	font-size: $font-size-base;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+
+	@include media-breakpoint-up(sm) {
+		font-size: $font-size-lg;
+	}
+	@include media-breakpoint-up(md) {
+		font-size: $font-size-xl;
 	}
 }

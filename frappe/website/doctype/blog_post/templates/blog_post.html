@@ -33,14 +33,14 @@
 		<!-- end blog content -->
 	</article>
 	{%- if enable_cta -%}
-		{{ web_blocks([
+		{{ web_block(
 				{
-					'template': "Section With Small CTA",
-					'values': cta,
-					'add_container': 0,
-					'add_top_padding': 0,
-					'add_bottom_padding': 0,
-					'css_class': "my-5"
+					"Section With Small CTA",
+					values=cta,
+					add_container=0,
+					add_top_padding=0,
+					add_top_padding=0,
+					css_class="my-5"
 				}
 			])
 		}}

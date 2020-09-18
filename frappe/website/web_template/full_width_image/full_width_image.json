@@ -22,5 +22,6 @@
  "name": "Full Width Image",
  "owner": "Administrator",
  "standard": 1,
- "template": ""
+ "template": "",
+ "type": "Section"
 }
