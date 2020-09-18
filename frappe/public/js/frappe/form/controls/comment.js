@@ -17,7 +17,7 @@ frappe.ui.form.ControlComment = frappe.ui.form.ControlTextEditor.extend({
 					</div>
 				</div>
 				<button class="btn btn-default btn-comment btn-xs">
-					${__("Comment")}
+					${__("Save Comment")}
 				</button>
 			</div>
 		`) : $('<div class="frappe-control"></div>');
