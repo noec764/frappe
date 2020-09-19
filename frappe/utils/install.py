@@ -222,19 +222,19 @@ def add_standard_navbar_items():
 		{
 			'item_label': 'Documentation',
 			'item_type': 'Route',
-			'action': 'https://doc.dokos.io',
+			'route': 'https://doc.dokos.io',
 			'is_standard': 1
 		},
 		{
 			'item_label': 'Community',
 			'item_type': 'Route',
-			'action': 'https://community.dokos.io',
+			'route': 'https://community.dokos.io',
 			'is_standard': 1
 		},
 		{
 			'item_label': 'Report an issue',
 			'item_type': 'Route',
-			'action': 'https://gitlab.com/dokos/dokos/issues',
+			'route': 'https://gitlab.com/dokos/dokos/issues',
 			'is_standard': 1
 		},
 		{
@@ -251,6 +251,8 @@ def add_standard_navbar_items():
 		}
 	]
 
+	navbar_settings.settings_dropdown = []
+	navbar_settings.help_dropdown = []
 	for item in standard_navbar_items:
 		navbar_settings.append('settings_dropdown', item)
 

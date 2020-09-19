@@ -8,6 +8,8 @@ def execute():
 	frappe.reload_doc('core', 'doctype', 'navbar_item')
 	add_standard_navbar_items()
 
-	desk_logo = frappe.db.get_single_value("System Settings", "desk_logo")
-	if desk_logo:
-		frappe.db.set_value('Navbar Settings', 'Navbar Settings', 'app_logo', desk_logo)
+	meta = frappe.get_meta("System Settings")
+	if meta.has_field("desk_logo"):
+		desk_logo = frappe.db.get_single_value("System Settings", "desk_logo")
+		if desk_logo:
+			frappe.db.set_value('Navbar Settings', 'Navbar Settings', 'app_logo', desk_logo)
