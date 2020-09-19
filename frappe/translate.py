@@ -131,6 +131,8 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
 			messages += frappe.db.sql("select concat('Desk Page: ', name), label from `tabDesk Page`")
 			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
+			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
+			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
 
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
 		message_dict.update(get_dict_from_hooks(fortype, name))
@@ -337,6 +339,15 @@ def get_messages_for_app(app, deduplicate=True):
 		for name in frappe.db.sql_list("""select name from `tabDesk Page`
 			where module in ({})""".format(modules)):
 			messages.extend(get_messages_from_desk_pages(name))
+
+
+	if app == "frappe":
+		# Web templates
+		for name in frappe.db.sql_list("""select name from `tabWeb Template`"""):
+			messages.append(('Web Template: ' + name, name))
+
+		for label in frappe.db.sql_list("""select label from `tabWeb Template Field`"""):
+			messages.append(('Web Template Field: ' + label, label))
 
 	# workflow based on app.hooks.fixtures
 	messages.extend(get_messages_from_workflow(app_name=app))
