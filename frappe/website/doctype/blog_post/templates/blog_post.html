@@ -34,16 +34,13 @@
 	</article>
 	{%- if enable_cta -%}
 		{{ web_block(
-				{
-					"Section With Small CTA",
-					values=cta,
-					add_container=0,
-					add_top_padding=0,
-					add_top_padding=0,
-					css_class="my-5"
-				}
-			])
-		}}
+			"Section With Small CTA",
+			values=cta,
+			add_container=0,
+			add_top_padding=0,
+			add_bottom_padding=0,
+			css_class="my-5"
+		) }}
 	{%- endif -%}
 	<div class="blog-footer">
 		<div>
