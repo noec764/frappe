@@ -131,7 +131,9 @@ def get_cookie_options():
 
 		# Remove port from request.host
 		# https://werkzeug.palletsprojects.com/en/0.16.x/wrappers/#werkzeug.wrappers.BaseRequest.host
-		domain = frappe.local.request.host.split(":", 1)[0]
+		domain = ""
+		if hasattr(frappe.local, 'request'):
+			domain = frappe.local.request.host.split(":", 1)[0]
 		with open(cookiejar, "w") as f:
 			f.write("sid={}; Domain={};\n".format(frappe.session.sid, domain))
 
