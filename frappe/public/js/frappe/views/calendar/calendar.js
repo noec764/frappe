@@ -30,7 +30,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	}
 
 	setup_page() {
-		this.hide_page_form = true;
+		this.hide_page_form = false;
 		super.setup_page();
 	}
 
@@ -49,7 +49,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	}
 
 	setup_view() {
-
+		this.sort_selector.wrapper.hide();
 	}
 
 	before_render() {
