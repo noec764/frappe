@@ -102,6 +102,12 @@ body {
 	}
 }
 
+.form-control {
+	border-width: 1px;
+	border-color: var(--gray-400);
+	border-style: none none solid;
+}
+
 .form-clickable-section {
 	border-top: 1px solid #d1d8dd;
 	padding: 10px 15px;
