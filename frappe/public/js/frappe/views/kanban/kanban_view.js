@@ -59,6 +59,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 	}
 
 	setup_page() {
+		this.hide_sidebar = true;
 		this.hide_page_form = true;
 		this.hide_card_layout = true;
 		super.setup_page();
@@ -190,7 +191,7 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 };
 
 
-frappe.views.KanbanView.get_kanbans = function(doctype) {
+frappe.views.KanbanView.get_kanbans = function (doctype) {
 	let kanbans = [];
 
 	return get_kanban_boards()
@@ -198,7 +199,7 @@ frappe.views.KanbanView.get_kanbans = function(doctype) {
 			if (kanban_boards) {
 				kanban_boards.forEach(board => {
 					let route = ['List', board.reference_doctype, 'Kanban', board.name].join('/');
-					kanbans.push({name: board.name, route: route});
+					kanbans.push({ name: board.name, route: route });
 				});
 			}
 
@@ -212,7 +213,7 @@ frappe.views.KanbanView.get_kanbans = function(doctype) {
 }
 
 
-frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
+frappe.views.KanbanView.show_kanban_dialog = function (doctype, show_existing) {
 	let dialog = null;
 
 	frappe.views.KanbanView.get_kanbans(doctype).then(kanbans => {
@@ -229,7 +230,7 @@ frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
 				field_name,
 				project
 			},
-			callback: function(r) {
+			callback: function (r) {
 				var kb = r.message;
 				if (kb.filters) {
 					frappe.provide('frappe.kanban_filters');
@@ -243,7 +244,7 @@ frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
 	function new_kanban_dialog(kanbans, show_existing) {
 		if (dialog) return dialog;
 
-		const fields = get_fields_for_dialog(kanbans.map(kanban=> kanban.name), show_existing);
+		const fields = get_fields_for_dialog(kanbans.map(kanban => kanban.name), show_existing);
 
 		let primary_action_label = __('Save');
 
@@ -266,7 +267,7 @@ frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
 		return dialog;
 	}
 
-	function get_fields_for_dialog(kanban_options, show_existing=false) {
+	function get_fields_for_dialog(kanban_options, show_existing = false) {
 		// __('Create New Board')
 		kanban_options.push('Create New Board');
 
@@ -316,7 +317,7 @@ frappe.views.KanbanView.show_kanban_dialog = function(doctype, show_existing) {
 				fieldtype: 'Select',
 				fieldname: 'field_name',
 				label: __('Columns based on'),
-				options: select_fields.map(df => ({label: df.label, value: df.fieldname})),
+				options: select_fields.map(df => ({ label: df.label, value: df.fieldname })),
 				default: select_fields[0],
 				mandatory_depends_on: 'eval: doc.selected_kanban == "Create New Board"',
 			});
