@@ -24,7 +24,7 @@ from frappe.website.doctype.website_theme.website_theme import sync_website_them
 
 
 def migrate(verbose=True, rebuild_website=False, skip_failing=False, skip_search_index=False):
-	'''Migrate all apps to the latest version, will:
+	'''Migrate all apps to the current version, will:
 	- run before migrate hooks
 	- run patches
 	- sync doctypes (schema)

@@ -1,25 +1,10 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-# called from wnf.py
-# lib/wnf.py --install [rootpassword] [dbname] [source]
+import json
+import os
 
-from __future__ import unicode_literals, print_function
-
-from six.moves import input
-
-import os, json, subprocess, shutil
-import click
 import frappe
-import frappe.database
-import importlib
-from frappe import _
-from frappe.model.sync import sync_for
-from frappe.utils.fixtures import sync_fixtures
-from frappe.website import render
-from frappe.modules.utils import sync_customizations
-from frappe.database import setup_database
-from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 
 APP_MAP = {
 	'dodock': 'frappe',
@@ -29,6 +14,8 @@ APP_MAP = {
 def install_db(root_login="root", root_password=None, db_name=None, source_sql=None,
 	admin_password=None, verbose=True, force=0, site_config=None, reinstall=False,
 	db_password=None, db_type=None, db_host=None, db_port=None, no_mariadb_socket=False):
+	import frappe.database
+	from frappe.database import setup_database
 
 	if not db_type:
 		db_type = frappe.conf.db_type or 'mariadb'
@@ -53,6 +40,11 @@ def install_db(root_login="root", root_password=None, db_name=None, source_sql=N
 
 
 def install_app(name, verbose=False, set_as_patched=True):
+	from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
+	from frappe.utils.fixtures import sync_fixtures
+	from frappe.model.sync import sync_for
+	from frappe.modules.utils import sync_customizations
+
 	name = APP_MAP.get(name, name)
 	frappe.flags.in_install = name
 	frappe.flags.ignore_in_install = False
@@ -73,7 +65,7 @@ def install_app(name, verbose=False, set_as_patched=True):
 		raise Exception("App not in apps.txt")
 
 	if name in installed_apps:
-		frappe.msgprint(_("App {0} already installed").format(name))
+		frappe.msgprint(frappe._("App {0} already installed").format(name))
 		return
 
 	print("\nInstalling {0}...".format(name))
@@ -116,19 +108,22 @@ def add_to_installed_apps(app_name, rebuild_website=True):
 		installed_apps.append(app_name)
 		frappe.db.set_global("installed_apps", json.dumps(installed_apps))
 		frappe.db.commit()
-		post_install(rebuild_website)
+		if frappe.flags.in_install:
+			post_install(rebuild_website)
 
 def remove_from_installed_apps(app_name):
 	installed_apps = frappe.get_installed_apps()
 	if app_name in installed_apps:
 		installed_apps.remove(app_name)
-		frappe.db.set_value("DefaultValue", {"defkey": "installed_apps"}, "defvalue", json.dumps(installed_apps))
+		frappe.db.set_global("installed_apps", json.dumps(installed_apps))
+		frappe.get_single("Installed Applications").update_versions()
 		frappe.db.commit()
 		if frappe.flags.in_install:
 			post_install()
 
 def remove_app(app_name, dry_run=False, yes=False, no_backup=False, force=False):
 	"""Remove app and all linked to the app's module with the app from a site."""
+	import click
 
 	# dont allow uninstall app if not installed unless forced
 	if not force:
@@ -151,11 +146,11 @@ def remove_app(app_name, dry_run=False, yes=False, no_backup=False, force=False)
 	frappe.flags.in_uninstall = True
 	drop_doctypes = []
 
-	# remove modules, doctypes, roles
-	for module_name in frappe.get_module_list(app_name):
-		for doctype in frappe.get_list("DocType", filters={"module": module_name},
-			fields=["name", "issingle"]):
-			print("removing DocType {0}...".format(doctype.name))
+	modules = (x.name for x in frappe.get_all("Module Def", filters={"app_name": app_name}))
+	for module_name in modules:
+		print("Deleting Module '{0}'".format(module_name))
+		for doctype in frappe.get_list("DocType", filters={"module": module_name}, fields=["name", "issingle"]):
+			print("* removing DocType '{0}'...".format(doctype.name))
 
 			if not dry_run:
 				frappe.delete_doc("DocType", doctype.name)
@@ -169,7 +164,7 @@ def remove_app(app_name, dry_run=False, yes=False, no_backup=False, force=False)
 
 		for doctype in doctypes_with_linked_modules:
 			for record in frappe.get_list(doctype, filters={"module": module_name}):
-				print("removing {0} {1}...".format(doctype, record.name))
+				print("* removing {0} '{1}'...".format(doctype, record.name))
 				if not dry_run:
 					frappe.delete_doc(doctype, record.name)
 
@@ -184,24 +179,25 @@ def remove_app(app_name, dry_run=False, yes=False, no_backup=False, force=False)
 			if not dry_run:
 				frappe.delete_doc("Data Migration Plan", plan.name)
 
-		print("removing Module {0}...".format(module_name))
+		print("* removing Module Def '{0}'...".format(module_name))
 		if not dry_run:
 			frappe.delete_doc("Module Def", module_name)
 
-	remove_from_installed_apps(app_name)
-
 	if not dry_run:
-		# drop tables after a commit
-		frappe.db.commit()
+		remove_from_installed_apps(app_name)
 
 		for doctype in set(drop_doctypes):
+			print("* dropping Table for '{0}'...".format(doctype))
 			frappe.db.sql("drop table `tab{0}`".format(doctype))
 
+		frappe.db.commit()
 		click.secho("Uninstalled App {0} from Site {1}".format(app_name, frappe.local.site), fg="green")
 
 	frappe.flags.in_uninstall = False
 
 def post_install(rebuild_website=False):
+	from frappe.website import render
+
 	if rebuild_website:
 		render.clear_cache()
 
@@ -323,6 +319,8 @@ def add_module_defs(app):
 		d.save(ignore_permissions=True)
 
 def remove_missing_apps():
+	import importlib
+
 	apps = ('frappe_subscription', 'shopping_cart')
 	installed_apps = json.loads(frappe.db.get_global("installed_apps") or "[]")
 	for app in apps:
@@ -335,6 +333,8 @@ def remove_missing_apps():
 				frappe.db.set_global("installed_apps", json.dumps(installed_apps))
 
 def extract_sql_gzip(sql_gz_path):
+	import subprocess
+
 	try:
 		# kdvf - keep, decompress, verbose, force
 		original_file = sql_gz_path
@@ -347,6 +347,9 @@ def extract_sql_gzip(sql_gz_path):
 	return decompressed_file
 
 def extract_tar_files(site_name, file_path, folder_name):
+	import subprocess
+	import shutil
+
 	# Need to do frappe.init to maintain the site locals
 	frappe.init(site=site_name)
 	abs_site_path = os.path.abspath(frappe.get_site_path())
