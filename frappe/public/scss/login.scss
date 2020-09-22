@@ -60,6 +60,9 @@
 			padding: 6px;
 			font-size: 14px;
 			margin-bottom: 10px;
+			border-width: 1px;
+			border-color: var(--gray-400);
+			border-style: none none solid;
 		}
 		.form-control:focus {
 			z-index: 2;
