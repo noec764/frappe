@@ -1,3 +1,9 @@
+.form-grid {
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	color: var(--text-color);
+}
+
 .form-grid.error {
 	border-color: var(--red-500);
 }
@@ -11,14 +17,18 @@
 .grid-row {
 	padding: 0px var(--padding-md);
 	border-bottom: 1px solid var(--border-color);
-	@include transition(.2s);
+	@include transition(0.2s);
+	// REDESIGN TODO: Fix border bottom for last item
+	&:last-child {
+		border-bottom-left-radius: var(--border-radius);
+		border-bottom-right-radius: var(--border-radius);
+		border: none;
+	}
 }
 
-.grid-row:last-child {
-	border: none;
-}
-
-.rows .grid-row .data-row, .rows .grid-row .grid-footer-toolbar, .grid-form-heading {
+.rows .grid-row .data-row,
+.rows .grid-row .grid-footer-toolbar,
+.grid-form-heading {
 	cursor: pointer;
 }
 
@@ -59,12 +69,19 @@
 	font-size: $font-size-sm;
 }
 
-.grid-empty, .list-loading {
-	padding: var(--padding-sm);
+.grid-empty,
+.list-loading {
+	@include flex(flex, center, center, column);
+	padding: var(--padding-lg) var(--padding-sm);
 	color: var(--text-muted);
+
+	img {
+		margin-bottom: var(--margin-sm);
+	}
 }
 
-.grid-static-col, .row-index {
+.grid-static-col,
+.row-index {
 	height: 39px;
 	padding: var(--padding-sm) var(--padding-md);
 	max-height: 200px;
@@ -99,11 +116,15 @@
 	.col {
 		padding-left: var(--padding-sm);
 		padding-right: var(--padding-sm);
+		border-right: 1px solid var(--border-color);
 		// overflow: hidden;
 	}
 }
 
 .grid-body {
+	.col:last-child {
+		border: none;
+	}
 	.btn-open-row {
 		display: flex;
 		padding-top: var(--padding-sm);
@@ -157,7 +178,9 @@
 			background-color: var(--orange-100);
 		}
 
-		input[data-fieldtype="Int"], input[data-fieldtype="Float"], input[data-fieldtype="Currency"] {
+		input[data-fieldtype="Int"],
+		input[data-fieldtype="Float"],
+		input[data-fieldtype="Currency"] {
 			text-align: right;
 		}
 	}
@@ -239,10 +262,10 @@
 	}
 }
 
-@mixin base-grid(){
+@mixin base-grid() {
 	background-color: var(--modal-bg);
 	position: relative;
-	transition: opacity .2s ease;
+	transition: opacity 0.2s ease;
 }
 
 .form-in-grid {
@@ -347,7 +370,8 @@
 	display: inline-block;
 }
 
-.prev-page, .next-page {
+.prev-page,
+.next-page {
 	.icon {
 		width: 10px;
 	}
@@ -368,7 +392,8 @@
 }
 
 .grid-footer-toolbar {
-	padding: var(--padding-md) var(--padding-sm) var(--padding-xs) var(--padding-sm);
+	padding: var(--padding-md) var(--padding-sm) var(--padding-xs)
+		var(--padding-sm);
 	span {
 		margin-right: var(--margin-xs);
 	}
