@@ -8,7 +8,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 
 	setup_defaults() {
 		super.setup_defaults();
-		this.page_title = this.page_title + ' ' + __('Map');
+		this.page_title = __('{0} Map', [this.page_title]);
 	}
 
 	get_fields() {
@@ -28,7 +28,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	}
 
 	setup_view() {
-
+		this.sort_selector.wrapper.hide();
 	}
 
 	prepare_data(data) {
@@ -49,7 +49,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		this.map_id = frappe.dom.get_unique_id();
 		this.map_area = $(
 			`<div class="map-wrapper border">
-				<div id=${this.map_id} style="min-height: ${this.$result.innerHeight()}px; z-index: 1; max-width:100%"></div>
+				<div id=${this.map_id} style="min-height: calc(100vh - 284px); z-index: 1; max-width:100%"></div>
 			</div>`
 		);
 		this.map_area.prependTo(this.$result);

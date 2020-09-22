@@ -622,8 +622,8 @@
 	<symbol viewBox="0 0 8 7" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-check">
 		<path d="M1 4.00001L2.66667 5.80001L7 1.20001" stroke="var(--icon-stroke)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
-	<symbol viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" id="icon-map">
-		<path fill="#192734" d="M21.32,5.05l-6-2h-.07a.7.7,0,0,0-.14,0h-.23l-.13,0h-.07L9,5,3.32,3.05a1,1,0,0,0-.9.14A1,1,0,0,0,2,4V18a1,1,0,0,0,.68.95l6,2h0a1,1,0,0,0,.62,0h0L15,19.05,20.68,21A1.19,1.19,0,0,0,21,21a.94.94,0,0,0,.58-.19A1,1,0,0,0,22,20V6A1,1,0,0,0,21.32,5.05ZM8,18.61,4,17.28V5.39L8,6.72Zm6-1.33-4,1.33V6.72l4-1.33Zm6,1.33-4-1.33V5.39l4,1.33Z"/></path>
+	<symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="icon-map">
+		<path stroke="var(--icon-stroke)" d="M11,11.9V17a1,1,0,0,0,2,0V11.9a5,5,0,1,0-2,0ZM12,4A3,3,0,1,1,9,7,3,3,0,0,1,12,4Zm4.21,10.42a1,1,0,1,0-.42,2C18.06,16.87,19,17.68,19,18c0,.58-2.45,2-7,2s-7-1.42-7-2c0-.32.94-1.13,3.21-1.62a1,1,0,1,0-.42-2C4.75,15.08,3,16.39,3,18c0,2.63,4.53,4,9,4s9-1.37,9-4C21,16.39,19.25,15.08,16.21,14.42Z" fill="none" />
 	</symbol>
 	<symbol viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-change">
 		<path d="M13.2818 11.5388H2.59961" stroke="var(--icon-stroke)" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
