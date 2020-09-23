@@ -149,12 +149,12 @@
  "issingle": 0,
  "istable": 0,
  "max_attachments": 0,
- "modified": "2019-09-05 19:48:53.119567",
+ "modified": "2020-09-18 17:26:09.703215",
  "modified_by": "faris@erpnext.com",
  "module": "Desk",
  "name": "List Filter",
  "name_case": "",
- "owner": "faris@erpnext.com",
+ "owner": "Administrator",
  "permissions": [
   {
    "amend": 0,
