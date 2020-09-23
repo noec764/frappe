@@ -46,7 +46,6 @@ class WebTemplate(Document):
 	def render(self, values):
 		values = values or "{}"
 		values = frappe.parse_json(values)
-		return get_rendered_template(self.name, values)
 
 		if self.standard:
 			module_path = get_module_path(self.module or "Website")
