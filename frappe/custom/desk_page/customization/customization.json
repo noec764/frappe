@@ -3,7 +3,7 @@
   {
    "hidden": 0,
    "label": "Dashboards",
-   "links": "[\n    {\n        \"label\": \"Dashboard\",\n        \"name\": \"Dashboard\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Dashboard Chart\",\n        \"name\": \"Dashboard Chart\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Dashboard Chart Source\",\n        \"name\": \"Dashboard Chart Source\",\n        \"type\": \"doctype\"\n    }\n]"
+   "links": "[\n    {\n        \"label\": \"Dashboard\",\n        \"name\": \"Dashboard\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Dashboard Chart\",\n        \"name\": \"Dashboard Chart\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Number Card\",\n        \"name\": \"Dashboard Chart\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"label\": \"Dashboard Chart Source\",\n        \"name\": \"Dashboard Chart Source\",\n        \"type\": \"doctype\"\n    }\n]"
   },
   {
    "hidden": 0,
@@ -30,7 +30,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Customization",
- "modified": "2020-08-03 14:22:26.568849",
+ "modified": "2020-09-23 18:22:58.295205",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",

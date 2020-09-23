@@ -259,7 +259,7 @@ class DesktopPage {
 					allow_delete: this.allow_customization,
 					allow_hiding: false,
 					allow_edit: true,
-					max_widget_count: 2,
+					max_widget_count: 6,
 				},
 				widgets: this.data.charts.items
 			});

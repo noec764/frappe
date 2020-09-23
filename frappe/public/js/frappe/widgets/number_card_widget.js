@@ -26,7 +26,7 @@ export default class NumberCardWidget extends Widget {
 	}
 
 	set_title() {
-		$(this.title_field).html(`<div class="number-label">${this.card_doc.label}</div>`);
+		$(this.title_field).html(`<div class="number-label">${__(this.card_doc.label)}</div>`);
 	}
 
 	make_card() {

@@ -31,7 +31,7 @@ frappe.ui.form.on('Number Card', {
 	},
 
 	create_add_to_dashboard_button: function(frm) {
-		frm.add_custom_button('Add Card to Dashboard', () => {
+		frm.add_custom_button(__('Add Card to Dashboard'), () => {
 			const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
 				frm.doc.name,
 				'Number Card',

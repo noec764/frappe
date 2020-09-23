@@ -114,7 +114,7 @@ export default class Widget {
 	}
 
 	set_title(max_chars) {
-		let base = this.label || this.name;
+		let base = __(this.label) || __(this.name);
 		let title = max_chars ? frappe.ellipsis(base, max_chars) : base;
 
 		if (this.icon) {

@@ -32,7 +32,7 @@ class WidgetDialog {
 
 	get_title() {
 		// DO NOT REMOVE: Comment to load translation
-		// __("New Chart") __("New Shortcut") __("Edit Chart") __("Edit Shortcut")
+		// __("Add Chart") __("Add Shortcut") __("Edit Chart") __("Edit Shortcut")
 
 		let action = this.editing ? "Edit" : "Add";
 		return __(`${action} ${frappe.model.unscrub(this.type)}`);
@@ -105,14 +105,14 @@ class ChartDialog extends WidgetDialog {
 			{
 				fieldtype: "Link",
 				fieldname: "chart_name",
-				label: "Chart Name",
+				label: __("Chart Name"),
 				options: "Dashboard Chart",
 				reqd: 1,
 			},
 			{
 				fieldtype: "Data",
 				fieldname: "label",
-				label: "Label",
+				label: __("Label"),
 			},
 		];
 	}
@@ -143,7 +143,7 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Select",
 				fieldname: "type",
-				label: "Type",
+				label: __("Type"),
 				reqd: 1,
 				options: "DocType\nReport\nPage\nDashboard",
 				onchange: () => {
@@ -159,7 +159,7 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Data",
 				fieldname: "label",
-				label: "Label",
+				label: __("Label"),
 			},
 			{
 				fieldtype: "Column Break",
@@ -168,7 +168,7 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Dynamic Link",
 				fieldname: "link_to",
-				label: "Link To",
+				label: __("Link To"),
 				reqd: 1,
 				options: "type",
 				onchange: () => {
@@ -189,7 +189,7 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Section Break",
 				fieldname: "filters_section_break",
-				label: "Count Filter",
+				label: __("Count Filter"),
 				hidden: 1,
 			},
 			{
@@ -204,13 +204,13 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Section Break",
 				fieldname: "count_section_break",
-				label: "Count Customizations",
+				label: __("Count Customizations"),
 				hidden: 1,
 			},
 			{
 				fieldtype: "Color",
 				fieldname: "color",
-				label: "Color",
+				label: __("Color"),
 			},
 			{
 				fieldtype: "Column Break",
@@ -219,8 +219,8 @@ class ShortcutDialog extends WidgetDialog {
 			{
 				fieldtype: "Data",
 				fieldname: "format",
-				label: "Format",
-				description: "For Example: {} Open",
+				label: __("Format"),
+				description: __("For Example: {} Open"),
 			},
 		];
 	}
@@ -263,14 +263,14 @@ class NumberCardDialog extends WidgetDialog {
 		fields = [
 			{
 				fieldtype: 'Select',
-				label: 'Choose Existing Card or create New Card',
+				label: __('Choose Existing Card or create New Card'),
 				fieldname: 'new_or_existing',
 				options: ['New Card', 'Existing Card']
 			},
 			{
 				fieldtype: 'Link',
 				fieldname: 'card',
-				label: 'Number Cards',
+				label: __('Number Cards'),
 				options: 'Number Card',
 				get_query: () => {
 					return {
@@ -288,13 +288,13 @@ class NumberCardDialog extends WidgetDialog {
 				depends_on: 'eval: doc.new_or_existing == "New Card"'
 			},
 			{
-				label: 'Label',
+				label: __('Label'),
 				fieldname: 'label',
 				fieldtype: 'Data',
 				mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"'
 			},
 			{
-				label: 'Doctype',
+				label: __('Doctype'),
 				fieldname: 'document_type',
 				fieldtype: 'Link',
 				options: 'DocType',
@@ -306,7 +306,7 @@ class NumberCardDialog extends WidgetDialog {
 				hidden: 1
 			},
 			{
-				label: 'Color',
+				label: __('Color'),
 				fieldname: 'color',
 				fieldtype: 'Color'
 			},
@@ -315,14 +315,14 @@ class NumberCardDialog extends WidgetDialog {
 				fieldname: "cb_1",
 			},
 			{
-				label: 'Function',
+				label: __('Function'),
 				fieldname: 'function',
 				fieldtype: 'Select',
 				options: ['Count', 'Sum', 'Average', 'Minimum', 'Maximum'],
 				mandatory_depends_on: 'eval: doc.new_or_existing == "New Card"'
 			},
 			{
-				label: 'Function Based On',
+				label: __('Function Based On'),
 				fieldname: 'aggregate_function_based_on',
 				fieldtype: 'Select',
 				depends_on: "eval: doc.function !== 'Count'",
@@ -331,7 +331,7 @@ class NumberCardDialog extends WidgetDialog {
 			{
 				fieldtype: "Section Break",
 				fieldname: "sb_1",
-				label: 'Add Filters',
+				label: __('Add Filters'),
 				depends_on: 'eval: doc.new_or_existing == "New Card"'
 			},
 			{
@@ -374,7 +374,7 @@ class NumberCardDialog extends WidgetDialog {
 							return;
 						}
 					}
-					aggregate_function_fields.push({label: df.label, value: df.fieldname});
+					aggregate_function_fields.push({label: __(df.label), value: df.fieldname});
 				}
 			});
 		}

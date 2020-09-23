@@ -133,6 +133,8 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
 			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
 			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
+			messages += frappe.db.sql("select concat('Number Card: ', name), label from `tabNumber Card`")
+			messages += frappe.db.sql("select concat('Dashboard Chart: ', name), chart_name from `tabDashboard Chart`")
 
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
 		message_dict.update(get_dict_from_hooks(fortype, name))

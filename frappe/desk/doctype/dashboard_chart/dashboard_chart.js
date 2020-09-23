@@ -26,7 +26,7 @@ frappe.ui.form.on('Dashboard Chart', {
 			frm.disable_form();
 		}
 
-		frm.add_custom_button('Add Chart to Dashboard', () => {
+		frm.add_custom_button(__('Add Chart to Dashboard'), () => {
 			const dialog = frappe.dashboard_utils.get_add_to_dashboard_dialog(
 				frm.doc.name,
 				'Dashboard Chart',
@@ -453,7 +453,7 @@ frappe.ui.form.on('Dashboard Chart', {
 					}
 					frm.trigger('set_dynamic_filters_in_table');
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 
 			dialog.show();
