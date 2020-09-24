@@ -1704,7 +1704,7 @@ def get_version(doctype, name, limit=None, head=False, raise_err=True):
 def ping():
 	return "pong"
 
-@whitelist()
+@whitelist(allow_guest=True)
 def get_user_lang():
 	return translate.get_user_lang()
 

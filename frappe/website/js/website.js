@@ -564,9 +564,7 @@ $(document).ready(function() {
 	$("#website-post-login").toggleClass("hide", logged_in ? false : true);
 	$(".logged-in").toggleClass("hide", logged_in ? false : true);
 
-	if (logged_in) {
-		frappe.get_user_lang();
-	}
+	frappe.get_user_lang();
 
 	frappe.bind_navbar_search();
 
