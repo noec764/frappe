@@ -49,7 +49,7 @@
 	}
 }
 
-.frappe-control:not([data-fieldtype='MultiSelectPills']) {
+.frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype="Table MultiSelect"]) {
 	&.has-error {
 		input {
 			border: 1px solid var(--orange-400);

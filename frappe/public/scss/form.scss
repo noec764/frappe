@@ -27,6 +27,9 @@
 	.form-control {
 		border-color: var(--orange-400);
 		background-color: var(--orange-100);
+		.input-with-feedback {
+			background-color: var(--orange-100);
+		}
 	}
 }
 
