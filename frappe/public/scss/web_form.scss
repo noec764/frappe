@@ -10,6 +10,10 @@
 #web-form {
 	padding: 2rem;
 	@include card();
+
+	.form-section {
+		margin: 0
+	}
 }
 
 .introduction {
