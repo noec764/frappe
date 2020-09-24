@@ -445,10 +445,10 @@ def get_timespan_date_range(timespan):
 
 	return date_range_map.get(timespan)
 
-def global_date_format(date, format="long"):
+def global_date_format(date, format="long", lang=frappe.local.lang):
 	"""returns localized date in the form of January 1, 2012"""
 	date = getdate(date)
-	formatted_date = babel.dates.format_date(date, locale=(frappe.local.lang or "en").replace("-", "_"), format=format)
+	formatted_date = babel.dates.format_date(date, locale=(lang or "en").replace("-", "_"), format=format)
 	return formatted_date
 
 def has_common(l1, l2):
