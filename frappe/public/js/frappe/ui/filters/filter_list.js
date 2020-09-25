@@ -98,8 +98,8 @@ frappe.ui.FilterGroup = class {
 		const filters_applied = this.filters.length > 0;
 		const button_label = filters_applied
 			? this.filters.length > 1
-			? __(`{0} filters`, [this.filters.length])
-			: __(`{0} filter`, [this.filters.length])
+				? __(`{0} filters`, [this.filters.length])
+				: __(`{0} filter`, [this.filters.length])
 			: __('Filter');
 
 
@@ -122,6 +122,12 @@ frappe.ui.FilterGroup = class {
 		this.wrapper.find('.clear-filters').on('click', () => {
 			this.toggle_empty_filters(true);
 			this.clear_filters();
+		});
+
+		this.wrapper.find('.apply-filters').on('click', () => {
+			this.toggle_empty_filters(false);
+			this.update_filters();
+			this.on_change();
 		});
 	}
 
@@ -275,9 +281,14 @@ frappe.ui.FilterGroup = class {
 					<div class="text-muted add-filter">
 						${__('+ Add a Filter')}
 					</div>
-					<button class="btn btn-secondary-dark btn-xs clear-filters">
-						${__('Clear Filters')}
-					</button>
+					<div>
+						<button class="btn btn-secondary-dark btn-xs clear-filters">
+							${__('Clear Filters')}
+						</button>
+						<button class="btn btn-primary btn-xs apply-filters">
+							${__('Apply Filters')}
+						</button>
+					</div>
 				</div>
 			</div>`
 		);
