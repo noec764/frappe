@@ -34,7 +34,7 @@ def get_context(context):
 	context["title"] = "Login"
 	context["provider_logins"] = []
 	context["disable_signup"] = frappe.utils.cint(frappe.db.get_single_value("Website Settings", "disable_signup"))
-	context["custom_signup"] = None
+	context["custom_signup"] = False
 	custom_signup_page = frappe.db.get_single_value("Website Settings", "custom_signup")
 	if custom_signup_page:
 		context["custom_signup"] = frappe.db.get_value("Web Form", custom_signup_page, "route")

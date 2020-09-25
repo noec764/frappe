@@ -1,8 +1,7 @@
 // login.js
 // don't remove this line (used in test)
 
-window.disable_signup = {{ disable_signup and "true" or "false" }};
-window.custom_signup = "{{ custom_signup or 'false' }}";
+window.custom_signup = "{{ custom_signup }}";
 
 window.login = {};
 
@@ -121,7 +120,7 @@ login.forgot = function() {
 
 login.signup = function() {
 	login.reset_sections();
-	window.custom_signup ? window.location = `${custom_signup}?new=True` : $(".for-signup").toggle(true);
+	window.custom_signup === "False" ? $(".for-signup").toggle(true) : window.location = `${custom_signup}?new=True`;
 }
 
 
