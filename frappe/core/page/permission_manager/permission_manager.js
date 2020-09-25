@@ -114,7 +114,7 @@ frappe.PermissionEngine = Class.extend({
 		});
 
 		// show standard permissions
-		var $d = $(d.wrapper).find(".frappe-confirm-message").append("<hr><h4>Standard Permissions:</h4><br>");
+		var $d = $(d.wrapper).find(".frappe-confirm-message").append(`<hr><h4>${__("Standard Permissions")}:</h4><br>`);
 		var $wrapper = $("<p></p>").appendTo($d);
 		$.each(data.message, function(i, d) {
 			d.rights = [];
@@ -123,11 +123,12 @@ frappe.PermissionEngine = Class.extend({
 					d.rights.push(__(toTitle(r.replace("_", " "))));
 				}
 			});
+
 			d.rights = d.rights.join(", ");
-			$wrapper.append(repl('<div class="row">\
-				<div class="col-xs-5"><b>%(role)s</b>, Level %(permlevel)s</div>\
-				<div class="col-xs-7">%(rights)s</div>\
-			</div><br>', d));
+			$wrapper.append(`<div class="row">\
+				<div class="col-xs-5"><b>${__(d.role)}</b>, ${__("Level")} ${d.permlevel || 0}</div>\
+				<div class="col-xs-7">${d.rights}</div>\
+			</div><br>`);
 		});
 
 	},
