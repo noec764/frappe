@@ -17,7 +17,10 @@ $enable-rounded: {{ button_rounded_corners and "true" or "false" }};
 // Bootstrap Variable Overrides
 {{ custom_overrides or '' }}
 
-@import "frappe/public/scss/website";
+// Import themes from installed apps
+{%- for import_path in website_theme_scss %}
+@import "{{ import_path }}";
+{%- endfor %}
 
 {% if font_size -%}
 body {
