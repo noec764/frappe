@@ -7,13 +7,12 @@ frappe.ui.form.on("Website Theme", {
 	},
 
 	refresh(frm) {
-		console.log("Hello")
 		frm.clear_custom_buttons();
 		frm.toggle_display(["module", "custom"], frappe.boot.developer_mode);
 
 		frm.trigger("set_default_theme_button_and_indicator");
 		frm.trigger("make_app_theme_selector");
-		console.log(!frm.doc.custom && !frappe.boot.developer_mode)
+
 		if (!frm.doc.custom && !frappe.boot.developer_mode) {
 			frm.set_read_only();
 			frm.disable_save();
@@ -57,7 +56,6 @@ frappe.ui.form.on("Website Theme", {
 		let $body = $("<div>").insertAfter($wrapper);
 		let ignored_apps = (frm.doc.ignored_apps || []).map(d => d.app);
 		frm.events.get_installed_apps(frm).then(apps => {
-			console.log(!frm.doc.custom && !frappe.boot.developer_mode)
 			let form = new frappe.ui.FieldGroup({
 				fields: [
 					{
