@@ -166,6 +166,8 @@ class DatabaseQuery(object):
 
 		self.set_field_tables()
 
+		# TODO: Fix this part
+		"""
 		fields = []
 
 		for field in self.fields:
@@ -178,6 +180,9 @@ class DatabaseQuery(object):
 				fields.append("`{0}`".format(field))
 
 		args.fields = ", ".join(fields)
+		"""
+
+		args.fields = ', '.join(self.fields)
 
 		self.set_order_by(args)
 
