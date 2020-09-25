@@ -80,7 +80,7 @@ def get_home_page():
 
 			# portal default
 			if not home_page:
-				home_page = frappe.db.get_value("Portal Settings", None, "default_portal_home")
+				home_page = frappe.db.get_value("Portal Settings", None, "default_portal_home") or "me"
 
 		# by hooks
 		if not home_page:
