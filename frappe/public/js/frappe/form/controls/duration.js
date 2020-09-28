@@ -24,6 +24,8 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 	},
 
 	build_numeric_input: function(label, hidden, max) {
+		// For translations
+		// __("days"), __("hours"), __("minutes"), __("seconds")
 		let $duration_input = $(`
 			<input class="input-sm duration-input" data-duration="${label}" type="number" min="0" value="0">
 		`);
