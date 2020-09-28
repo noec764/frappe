@@ -51,6 +51,14 @@ class WebTemplate(Document):
 					if self.template:
 						template_file.write(self.template)
 
+	def get_template_folder(self):
+		"""Return the absolute path to the template's folder."""
+		module = self.module or "Website"
+		module_path = get_module_path(module)
+		doctype, docname = scrub_dt_dn(self.doctype, self.name)
+
+		return os.path.join(module_path, doctype, docname)
+
 	def get_template_path(self):
 		"""Return the absolute path to the template's HTML file."""
 		folder = self.get_template_folder()
