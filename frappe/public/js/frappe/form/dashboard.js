@@ -405,8 +405,9 @@ frappe.ui.form.Dashboard = Class.extend({
 
 	},
 	set_badge_count: function(doctype, open_count, count, names) {
-		var $link = $(this.transactions_area)
+		const $link = $(this.transactions_area)
 			.find('.document-link[data-doctype="'+doctype+'"]');
+		const $badge = $link.find('.document-link-badge');
 
 		if(open_count) {
 			$link.find('.open-notification')
@@ -422,9 +423,9 @@ frappe.ui.form.Dashboard = Class.extend({
 
 		if(this.data.internal_links[doctype]) {
 			if(names && names.length) {
-				$link.attr('data-names', names ? names.join(',') : '');
+				$badge.attr('data-names', names ? names.join(',') : '');
 			} else {
-				$link.find('a').attr('disabled', true);
+				$badge.find('a').attr('disabled', true);
 			}
 		}
 	},
