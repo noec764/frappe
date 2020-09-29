@@ -448,6 +448,8 @@ frappe.ui.form.Toolbar = Class.extend({
 		return status;
 	},
 	set_page_actions: function(status) {
+		// Translations
+		// __("Amend"), __("Save"), __("Submit"), __("Update")
 		var me = this;
 		this.page.clear_actions();
 
