@@ -146,7 +146,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					this.after_save && this.after_save();
 
 					// args doctype and docname added to link doctype in file manager
-					frappe.call({
+					/*frappe.call({
 						type: 'POST',
 						method: "frappe.handler.upload_file",
 						args: {
@@ -154,7 +154,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 							doctype: response.message.doctype,
 							docname: response.message.name
 						}
-					});
+					});*/
 				}
 			},
 			always: function() {
