@@ -123,6 +123,18 @@ class ChartDialog extends WidgetDialog {
 	}
 }
 
+const indicator_colors = [
+	{label: __("Gray"), value: "Gray"},
+	{label: __("Green"), value: "Green"},
+	{label: __("Red"), value: "Red"},
+	{label: __("Orange"), value: "Orange"},
+	{label: __("Pink"), value: "Pink"},
+	{label: __("Yellow"), value: "Yellow"},
+	{label: __("Blue"), value: "Blue"},
+	{label: __("Cyan"), value: "Cyan"},
+	{label: __("Teal"), value: "Teal"}
+]
+
 class ShortcutDialog extends WidgetDialog {
 	constructor(opts) {
 		super(opts);
@@ -208,9 +220,10 @@ class ShortcutDialog extends WidgetDialog {
 				hidden: 1,
 			},
 			{
-				fieldtype: "Color",
+				fieldtype: "Select",
 				fieldname: "color",
 				label: __("Color"),
+				options: indicator_colors
 			},
 			{
 				fieldtype: "Column Break",
