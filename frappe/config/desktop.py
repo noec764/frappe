@@ -45,7 +45,7 @@ def get_data():
 			"description": "Setup roles and permissions for users on documents."
 		},
 		{
-			"module_name": "Customization",
+			"module_name": "Custom",
 			"category": "Administration",
 			"label": _("Customization"),
 			"color": "#ff7c61",
