@@ -175,4 +175,7 @@ def after_migrate():
 	website_theme_list = frappe.get_list('Website Theme')
 	for website_theme in website_theme_list:
 		website_theme_doc = frappe.get_doc('Website Theme', website_theme.name)
-		website_theme_doc.validate()
+		if website_theme_doc.custom:
+			website_theme_doc.save()
+		else:
+			website_theme_doc.validate()
