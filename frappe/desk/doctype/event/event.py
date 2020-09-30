@@ -245,7 +245,6 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 						AND `tabDocShare`.user=%(user)s
 				)
 			)
-		AND `tabEvent`.status='Open'
 		ORDER BY `tabEvent`.starts_on""".format(
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
