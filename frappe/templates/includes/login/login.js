@@ -106,21 +106,25 @@ login.reset_sections = function(hide) {
 login.login = function() {
 	login.reset_sections();
 	$(".for-login").toggle(true);
+	$("#login_email").focus();
 }
 
 login.steptwo = function() {
 	login.reset_sections();
 	$(".for-login").toggle(true);
+	$("#login_email").focus();
 }
 
 login.forgot = function() {
 	login.reset_sections();
 	$(".for-forgot").toggle(true);
+	$("#forgot_email").focus();
 }
 
 login.signup = function() {
 	login.reset_sections();
 	window.custom_signup === "False" ? $(".for-signup").toggle(true) : window.location = `${custom_signup}?new=True`;
+	$("#signup_fullname").focus();
 }
 
 
