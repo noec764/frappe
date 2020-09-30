@@ -421,6 +421,9 @@ frappe.setup_search = function (target, search_scope) {
 	let offsetIndex = 0;
 
 	$(document).on('keypress', e => {
+		if ($(e.target).is('textarea, input, select')) {
+			return;
+		}
 		if (e.key === '/') {
 			e.preventDefault();
 			$input.focus();
