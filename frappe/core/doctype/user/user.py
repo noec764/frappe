@@ -1067,7 +1067,7 @@ def throttle_user_creation():
 
 @frappe.whitelist()
 def get_role_profile(role_profile):
-	roles = frappe.get_doc('Role Profile', {'role_profile': role_profile})
+	roles = frappe.get_doc('Role Profile', role_profile)
 	return roles.roles
 
 def update_roles(role_profile):
