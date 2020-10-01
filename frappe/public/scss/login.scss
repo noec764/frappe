@@ -39,7 +39,9 @@
 					grid-template-columns: 1fr 1fr 1fr;
 					grid-gap: var(--padding-sm);
 				}
+
 				.btn-social {
+					font-size: var(--text-sm);
 					box-shadow: none;
 					.provider-icon {
 						margin-right: var(--padding-xs);
