@@ -121,7 +121,7 @@ frappe.ui.form.AssignToDialog = Class.extend({
 				let args = me.dialog.get_values();
 
 				if (args && args.assign_to) {
-					me.dialog.set_message("Assigning...");
+					me.dialog.set_message(__("Assigning..."));
 
 					frappe.call({
 						method: me.method,

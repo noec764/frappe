@@ -1,3 +1,4 @@
+@import 'desk/variables';
 @import 'website/variables';
 @import 'website/mixins';
 @import 'desk/controls';
@@ -108,7 +109,7 @@ body {
 
 .form-control {
 	border-width: 1px;
-	border-color: var(--gray-400);
+	border-color: $gray-400;
 	border-style: none none solid;
 }
 

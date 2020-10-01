@@ -1,13 +1,13 @@
-$gray-50: #F9FAFA !default;
-$gray-100: #F4F5F6 !default;
-$gray-200: #EEF0F2 !default;
-$gray-300: #E2E6E9 !default;
-$gray-400: #C8CFD5 !default;
-$gray-500: #A6B1B9 !default;
-$gray-600: #74808B !default;
-$gray-700: #4C5A67 !default;
-$gray-800: #313B44 !default;
 $gray-900: #192734 !default;
+$gray-800: #313B44 !default;
+$gray-700: #4C5A67 !default;
+$gray-600: #74808B !default;
+$gray-500: #A6B1B9 !default;
+$gray-400: #C8CFD5 !default;
+$gray-300: #E2E6E9 !default;
+$gray-200: #EEF0F2 !default;
+$gray-100: #F8FAFF !default;
+$gray-50 : #F9FAFA !default;
 
 $blue-900: #1A4469 !default;
 $blue-800: #154875 !default;
@@ -95,7 +95,9 @@ $body-color: white !default;
 $border-radius: 6px !default;
 $border-radius-md: 8px !default;
 $border-color: $gray-100 !default;
+$border-opacity: 1 !default;
 $card-shadow: 0 1px 3px 0 #e6ebf1 !default;
+$shadow-inset: #E2E6E9 !default;
 $card-bg: white !default;
 
 $padding-xs: 5px !default;

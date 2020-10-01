@@ -1,5 +1,10 @@
-navbar-light {
-	border-bottom: 1px solid $border-color;
+.navbar {
+	background: white;
+	box-shadow: inset 0px -1px 0px $shadow-inset;
+}
+
+.navbar-search {
+	background-color: white;
 }
 
 .navbar-brand {
