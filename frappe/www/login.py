@@ -38,14 +38,14 @@ def get_context(context):
 	custom_signup_page = frappe.db.get_single_value("Website Settings", "custom_signup")
 	if custom_signup_page:
 		context["custom_signup"] = frappe.db.get_value("Web Form", custom_signup_page, "route")
-	providers = [i.name for i in frappe.get_all("Social Login Key", filters={"enable_social_login":1})]
+	providers = [i.name for i in frappe.get_all("Social Login Key", filters={"enable_social_login":1}, order_by="name")]
 	for provider in providers:
 		try:
 			client_id, base_url = frappe.get_value("Social Login Key", provider, ["client_id", "base_url"])
 			client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
 			provider_name = frappe.get_value("Social Login Key", provider, "provider_name")
 
-			if provider_name in ["Google", "Facebook", "Dodock", "GitHub", "Office 365"]:
+			if provider_name in ["Google", "Facebook", "Frappe", "GitHub", "Office 365", "Salesforce", "fairlogin"]:
 				icon_url = frappe.get_value("Social Login Key", provider, "icon")
 				icon = "<img src='{0}' alt={1}>".format(icon_url, provider_name)
 			else:
