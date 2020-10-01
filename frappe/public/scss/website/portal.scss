@@ -10,7 +10,7 @@
 .portal-calendar,
 #datatable,
 article {
-	padding: var(--padding-md);
+	padding: $padding-md;
 	@extend .frappe-card;
 }
 
@@ -19,7 +19,7 @@ article {
 	padding: 0.75rem 1.25rem;
 	margin-bottom: -1px;
 	background-color: #fff;
-	border-top: 1px solid var(--border-color);
+	border-top: 1px solid $border-color;
 
 	&:first-child {
 		border-top-left-radius: 0.25rem;

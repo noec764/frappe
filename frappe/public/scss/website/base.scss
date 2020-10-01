@@ -9,6 +9,10 @@ body {
 	color: $body-color;
 }
 
+.frappe-card {
+	@include card();
+}
+
 img {
 	max-width: 100%;
 	height: auto;

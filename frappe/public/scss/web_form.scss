@@ -1,10 +1,10 @@
-@import 'variables';
-@import 'mixins';
-@import 'controls';
-@import 'quill';
-@import 'frappe-datatable';
-@import 'awesomebar';
-@import 'modal';
+@import 'website/variables';
+@import 'website/mixins';
+@import 'desk/controls';
+@import 'desk/quill';
+@import 'desk/frappe-datatable';
+@import 'desk/awesomebar';
+@import 'desk/modal';
 @import 'icons';
 
 #web-form {

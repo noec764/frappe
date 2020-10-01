@@ -1,0 +1,23 @@
+@mixin flex($dis, $x, $y, $dir) {
+	display: $dis;
+	justify-content: $x;
+	align-items: $y;
+	flex-direction: $dir;
+}
+
+@mixin card(
+	$radius: $border-radius-md,
+	$shadow: $card-shadow,
+	$padding: $padding-sm,
+	$background-color: $card-bg
+) {
+	border-radius: $radius;
+	box-shadow: $shadow;
+	padding: $padding;
+	background-color: $background-color;
+}
+
+@mixin transition($property: all, $duration: 0.2s, $timing-fn: linear) {
+	transition: $property $duration $timing-fn;
+	-webkit-transition: $property $duration $timing-fn;
+}
