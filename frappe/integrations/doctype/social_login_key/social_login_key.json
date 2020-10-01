@@ -82,6 +82,7 @@
       "label": "Identity Details"
      },
      {
+      "depends_on": "eval:!['Facebook', 'Frappe', 'Github', 'Google', 'Office 365'].includes(doc.social_login_provider)",
       "fieldname": "icon",
       "fieldtype": "Data",
       "label": "Icon"
@@ -157,7 +158,9 @@
       "label": "User ID Property"
      }
     ],
-    "modified": "2020-06-03 13:13:46.989099",
+    "index_web_pages_for_search": 1,
+    "links": [],
+    "modified": "2020-09-30 13:40:57.597276",
     "modified_by": "Administrator",
     "module": "Integrations",
     "name": "Social Login Key",
