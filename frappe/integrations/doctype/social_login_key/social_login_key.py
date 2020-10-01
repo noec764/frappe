@@ -37,7 +37,7 @@ class SocialLoginKey(Document):
 	def set_icon(self):
 		icon_map = {
 			"Google": "google.svg",
-			"Frappe": "frappe.svg",
+			"Dodock": "dodock.svg",
 			"Facebook": "facebook.svg",
 			"Office 365": "office_365.svg",
 			"GitHub": "github.svg"
