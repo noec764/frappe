@@ -339,9 +339,8 @@ def get_messages_for_app(app, deduplicate=True):
 
 		# desk pages
 		for name in frappe.db.sql_list("""select name from `tabDesk Page`
-			where module in ({})""".format(modules)):
+			where module in ({}) and is_standard=1""".format(modules)):
 			messages.extend(get_messages_from_desk_pages(name))
-
 
 	if app == "frappe":
 		# Web templates
@@ -525,8 +524,12 @@ def get_messages_from_onboarding_step(name):
 def get_messages_from_desk_pages(name):
 	desk_page = frappe.get_doc("Desk Page", name)
 	messages = []
-	if desk_page.get("label"):
-		messages.append(('Desk Page: ' + name, desk_page.get("label")))
+
+	for field in ("label", "charts_label", "shortcuts_label", "cards_label"):
+		if desk_page.get(field):
+			messages.append(('Desk Page: ' + name, desk_page.get(field)))
+
+
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
 			messages.append(('Desk Shortcut: ' + name, shortcut.get("format")))

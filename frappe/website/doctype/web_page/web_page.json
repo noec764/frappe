@@ -300,7 +300,7 @@
     "label": "Context"
    },
    {
-    "description": "<p>Set context before rendering a template. Example:</p><p>\n</p><div><pre><code>\ncontext.project = frappe.get_doc(\"Project\", frappe.form_dict.name)\n</code></pre></div>",
+    "description": "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(\"Project\", frappe.form_dict.name)</code></pre></div>",
     "fieldname": "context_script",
     "fieldtype": "Code",
     "label": "Context Script",
@@ -314,7 +314,7 @@
   "is_published_field": "published",
   "links": [],
   "max_attachments": 20,
-  "modified": "2020-09-21 16:32:53.568573",
+  "modified": "2020-09-23 16:32:53.568573",
   "modified_by": "Administrator",
   "module": "Website",
   "name": "Web Page",
