@@ -140,16 +140,17 @@ frappe.ui.LinkPreview = class {
 
 	init_preview_popover(preview_data) {
 		let popover_content = this.get_popover_html(preview_data);
+
 		this.element.popover({
 			container: 'body',
 			html: true,
 			content: popover_content,
 			trigger: 'manual',
-			placement: 'top auto',
+			placement: 'auto',
 			animation: false,
 		});
 
-		const $popover = this.element.data('bs.popover').tip();
+		const $popover = $('.popover');
 
 		$popover.addClass('link-preview-popover');
 		$popover.toggleClass('control-field-popover', this.is_link);
