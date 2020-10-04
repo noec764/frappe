@@ -10,6 +10,17 @@
 	--gray-800: #{$gray-800};
 	--gray-900: #{$gray-900};
 
+	--blue-50: #{$blue-50};
+	--blue-100: #{$blue-100};
+	--blue-200: #{$blue-200};
+	--blue-300: #{$blue-300};
+	--blue-400: #{$blue-400};
+	--blue-500: #{$blue-500};
+	--blue-600: #{$blue-600};
+	--blue-700: #{$blue-700};
+	--blue-800: #{$blue-800};
+	--blue-900: #{$blue-900};
+
 	--black: #{$black};
 	--primary: #{$primary};
 	--primary-light: #{$primary-light};
@@ -25,4 +36,30 @@
 	--font-size-4xl: #{$font-size-4xl};
 	--font-size-5xl: #{$font-size-5xl};
 	--font-size-6xl: #{$font-size-6xl};
+
+	--border-radius-xs: #{$border-radius-xs};
+	--border-radius-sm: #{$border-radius};
+	--border-radius: #{$border-radius};
+	--border-radius-md: #{$border-radius-md};
+	--border-radius-lg: #{$border-radius-lg};
+	--border-radius-xl: #{$border-radius-xl};
+
+	--shadow-base: #{$shadow-base};
+
+	--margin-xs: #{$margin-xs};
+	--margin-sm: #{$margin-xs};
+	--margin-md: #{$margin-xs};
+	--margin-lg: #{$margin-xs};
+	--margin-xl: #{$margin-xs};
+
+	--padding-xs: #{$padding-xs};
+	--padding-sm: #{$margin-xs};
+	--padding-md: #{$margin-md};
+	--padding-lg: #{$margin-lg};
+	--padding-xl: #{$margin-xl};
+	--padding-2xl: #{$margin-2xl};
+
+	--text-light: #{$text-light};
+	--text-color: #{$text-color};
+	--control-bg: #{$control-bg};
 }

@@ -20,18 +20,18 @@
 
 			.sign-up-message {
 				margin-top: var(--margin-md);
-				color: var(--text-light);
-				font-size: var(--text-md);
+				color: var(--font-size-light);
+				font-size: var(--font-size-base);
 
 				a {
-					font-size: var(--text-md);
+					font-size: var(--font-size-base);
 					color: var(--primary);
 				}
 			}
 
 			.social-logins {
 				margin: var(--margin-md) 0;
-				font-size: var(--text-md);
+				font-size: var(--font-size-base);
 
 				.social-login-buttons {
 					display: flex;
@@ -51,7 +51,7 @@
 					}
 
 					.btn-social {
-						font-size: var(--text-sm);
+						font-size: var(--font-size-sm);
 						box-shadow: none;
 
 						&.btn-salesforce {
@@ -83,8 +83,8 @@
 			.forgot-password-message {
 				text-align: right;
 				> * {
-					color: var(--text-light);
-					font-size: var(--text-sm);
+					color: var(--font-size-light);
+					font-size: var(--font-size-sm);
 				}
 			}
 
@@ -135,7 +135,7 @@
 		.page-card-head {
 			margin: 0 auto;
 			text-align: center;
-			font-size: var(--text-xl);
+			font-size: var(--font-size-xl);
 			font-weight: 600;
 			margin-bottom: var(--margin-xl);
 

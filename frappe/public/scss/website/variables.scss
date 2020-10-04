@@ -92,12 +92,17 @@ $custom-control-indicator-bg: white;
 $body-bg: #f5f7fa !default;
 $body-color: white !default;
 
+$border-radius-xs: 4px !default;
 $border-radius: 6px !default;
 $border-radius-md: 8px !default;
+$border-radius-lg: 10px !default;
+$border-radius-xl: 12px !default;
+
 $border-color: $gray-100 !default;
 $border-opacity: 1 !default;
 $card-shadow: 0 1px 3px 0 #e6ebf1 !default;
 $shadow-inset: #E2E6E9 !default;
+$shadow-base: 0px 4px 8px rgba(25, 39, 52, 0.06), 0px 0px 4px rgba(25, 39, 52, 0.12) !default;
 $card-bg: white !default;
 
 $padding-xs: 5px !default;
@@ -107,12 +112,19 @@ $padding-lg: 20px !default;
 $padding-xl: 30px !default;
 $padding-2xl: 40px !default;
 
+$margin-xs: 5px !default;
+$margin-sm: 8px !default;
+$margin-md: 15px !default;
+$margin-lg: 20px !default;
+$margin-xl: 30px !default;
+$margin-2xl: 40px !default;
 
 $text-muted: $gray-600 !default;
 $text-light: $gray-700 !default;
 $text-color: $gray-900 !default;
 $heading-color: $gray-900 !default;
 $text-secondary-color: $blue-900 !default;
+$control-bg: white !default;
 
 $grid-breakpoints: (
 	xs: 0,
