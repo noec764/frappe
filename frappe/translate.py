@@ -777,7 +777,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 			context = split_key[1] if len(split_key) > 1 else ""
 			output.append([escape_newlines(split_key[0]), "", context])
 
-		with open(untranslated_file, "w") as f:
+		with open(untranslated_file, "wb") as f:
 			f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator='\n'))
 
 	else:
@@ -795,7 +795,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 				split_key = m.split(":::")
 				context = split_key[1] if len(split_key) > 1 else ""
 				output.append([escape_newlines(split_key[0]), "", context])
-			with open(untranslated_file, "w") as f:
+			with open(untranslated_file, "wb") as f:
 				f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator='\n'))
 		else:
 			print("all translated!")
