@@ -230,5 +230,6 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		this.get_minimize_btn().html(frappe.utils.icon(icon));
 		this.on_minimize_toggle && this.on_minimize_toggle(this.is_minimized);
 		this.header.find('.modal-title').toggleClass('cursor-pointer');
+		$('body').toggleClass('modal-open');
 	}
 };

@@ -398,6 +398,7 @@ frappe.search.SearchDialog = Class.extend({
 		this.search_dialog.is_minimized = !this.search_dialog.is_minimized;
 		this.on_minimize_toggle && this.on_minimize_toggle(this.search_dialog.is_minimized);
 		this.search_dialog.header.find('.modal-title').toggleClass('cursor-pointer');
+		$('body').toggleClass('modal-open');
 	},
 
 	// Search objects
