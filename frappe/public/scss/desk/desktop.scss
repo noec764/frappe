@@ -10,6 +10,7 @@ body {
 }
 
 .desk-sidebar {
+	font-size: var(--text-base);
 	.sidebar-section .sidebar-label {
 		margin-bottom: var(--margin-md);
 		margin-top: var(--margin-sm);
@@ -52,6 +53,7 @@ body {
 }
 
 .widget-group {
+	font-size: var(--text-base);
 	margin-bottom: var(--margin-2xl);
 
 	.widget-group-head {
@@ -385,7 +387,7 @@ body {
 			display: flex;
 			text-decoration: none;
 			color: var(--text-color);
-			padding: var(--padding-xs);
+			padding: var(--padding-xs) 0;
 			border-radius: var(--border-radius-md);
 			cursor: pointer;
 			line-height: 1;
