@@ -1,3 +1,5 @@
+@import "./desk/variables";
+
 .for-login,
 .for-forgot,
 .for-signup {
@@ -20,18 +22,18 @@
 
 			.sign-up-message {
 				margin-top: var(--margin-md);
-				color: var(--font-size-light);
-				font-size: var(--font-size-base);
+				color: var(--text-light);
+				font-size: var(--text-md);
 
 				a {
-					font-size: var(--font-size-base);
+					font-size: var(--text-md);
 					color: var(--primary);
 				}
 			}
 
 			.social-logins {
 				margin: var(--margin-md) 0;
-				font-size: var(--font-size-base);
+				font-size: var(--text-md);
 
 				.social-login-buttons {
 					display: flex;
@@ -51,7 +53,7 @@
 					}
 
 					.btn-social {
-						font-size: var(--font-size-sm);
+						font-size: var(--text-sm);
 						box-shadow: none;
 
 						&.btn-salesforce {
@@ -75,55 +77,35 @@
 				border: none;
 				background-color: var(--control-bg);
 				margin-bottom: 10px;
-				border-width: 1px;
-				border-color: var(--gray-400);
-				border-style: none none solid;
 			}
 
 			.forgot-password-message {
 				text-align: right;
 				> * {
-					color: var(--font-size-light);
-					font-size: var(--font-size-sm);
+					color: var(--text-light);
+					font-size: var(--text-sm);
 				}
 			}
 
+			.field-icon {
+				left: 9px;
+				top: 7px;
+				position: absolute;
+				z-index: 2;
+			}
+
+			.email-field,
 			.password-field {
 				position: relative;
 
 				input {
 					padding-left: 35px;
-				}
-
-				.password-icon {
-					left: 9px;
-					top: 7px;
-					position: absolute;
-					z-index: 2;
-					cursor: pointer;
-					font-size: 12px;
+					font-size: var(--text-md);
 				}
 
 				.toggle-password {
 					right: 9px;
-					top: 8px;
-					position: absolute;
-					z-index: 2;
-					cursor: pointer;
-					font-size: 12px;
-				}
-			}
-
-			.email-field {
-				position: relative;
-
-				input {
-					padding-left: 35px;
-				}
-
-				.email-icon {
-					left: 9px;
-					top: 7px;
+					top: 9px;
 					position: absolute;
 					z-index: 2;
 					cursor: pointer;
@@ -135,7 +117,7 @@
 		.page-card-head {
 			margin: 0 auto;
 			text-align: center;
-			font-size: var(--font-size-xl);
+			font-size: var(--text-xl);
 			font-weight: 600;
 			margin-bottom: var(--margin-xl);
 
@@ -144,7 +126,8 @@
 				margin-bottom: var(--margin-lg, 20px);
 			}
 
-			h3 {
+			h4 {
+				font-size: var(--text-xl);
 				color: var(--text-color);
 			}
 		}
