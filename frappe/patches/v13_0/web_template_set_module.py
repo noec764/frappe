@@ -7,6 +7,7 @@ import frappe
 def execute():
 	"""Set default module for standard Web Template, if none."""
 	frappe.reload_doc('website', 'doctype', 'Web Template')
+	frappe.reload_doc('website', 'doctype', 'Web Template Field')
 	standard_templates = frappe.get_list('Web Template', {'standard': 1})
 	for template in standard_templates:
 		doc = frappe.get_doc('Web Template', template.name)
