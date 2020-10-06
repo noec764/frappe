@@ -80,7 +80,10 @@ class WebTemplate(Document):
 
 		return template
 
-	def render(self, values="{}"):
+	def render(self, values=None):
+		if not values:
+			values = {}
+
 		values = frappe.parse_json(values)
 		values.update({"values": values})
 		template = self.get_template(self.standard)
