@@ -1,7 +1,10 @@
+.list-jobs {
+	font-size: var(--text-base);
+}
+
 .table {
 	margin-bottom: 0px;
 	margin-top: 0px;
-	font-size: var(--text-base);
 }
 
 thead {
@@ -27,10 +30,27 @@ thead > tr > th:last-child {
 
 .job-name {
 	font-size: var(--text-md);
-	background-color: var(--control-bg);
-	padding: var(--padding-xs) var(--padding-sm);
-	border-radius: var(--border-radius-md);
 	font-family: "Courier New", Courier, monospace;
+	/* background-color: var(--control-bg); */
+	/* padding: var(--padding-xs) var(--padding-sm); */
+	/* border-radius: var(--border-radius-md); */
+}
+
+.background-job-row:hover {
+	background-color: var(--bg-color);
+}
+
+.no-background-jobs {
+	min-height: 320px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.no-background-jobs > img {
+	margin-bottom: var(--margin-md);
+	max-height: 100px;
 }
 
 .footer {
