@@ -51,7 +51,7 @@ frappe.ui.form.Toolbar = Class.extend({
 		title = __(title);
 		this.page.set_title(title);
 
-		if (!this.frm.meta.issingle) {
+		if (!this.frm.meta.issingle || this.frm.meta.title_field) {
 			this.page.set_document_name(this.frm.docname);
 		}
 
