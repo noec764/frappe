@@ -727,8 +727,9 @@ def has_permission(doc, ptype=None, user=None):
 	if ptype == 'create':
 		has_access = frappe.has_permission('File', 'create', user=user)
 
-	if not doc.is_private or doc.owner in [user, 'Guest'] or user == 'Administrator':
-		has_access = True
+	if doc.owner in [user, 'Guest'] or user == 'Administrator':
+		if not (doc.owner == "Guest" and doc.is_private):
+			has_access = True
 
 	if doc.attached_to_doctype and doc.attached_to_name:
 		attached_to_doctype = doc.attached_to_doctype
@@ -749,7 +750,7 @@ def has_permission(doc, ptype=None, user=None):
 		except frappe.DoesNotExistError:
 			# if parent doc is not created before file is created
 			# we cannot check its permission so we will use file's permission
-			pass
+			has_access = frappe.has_permission('File', ptype, user=user)
 
 	return has_access
 
