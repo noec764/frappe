@@ -172,10 +172,10 @@ def after_migrate():
 	Necessary to reflect possible changes in the imported SCSS files. Called at
 	the end of every `bench migrate`.
 	"""
-	website_theme = frappe.db.get_single_value('Website Settings', 'website_theme')
-	if website_theme == 'Standard':
-		return
-
-	doc = frappe.get_doc('Website Theme', website_theme)
-	doc.generate_bootstrap_theme()
-	doc.save()
+	website_theme_list = frappe.get_list('Website Theme')
+	for website_theme in website_theme_list:
+		website_theme_doc = frappe.get_doc('Website Theme', website_theme.name)
+		if website_theme_doc.custom:
+			website_theme_doc.save()
+		else:
+			website_theme_doc.validate()
