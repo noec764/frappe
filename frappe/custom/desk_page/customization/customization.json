@@ -8,7 +8,7 @@
   {
    "hidden": 0,
    "label": "Form Customization",
-   "links": "[\n    {\n        \"description\": \"Change field properties (hide, readonly, permission etc.)\",\n        \"label\": \"Customize Form\",\n        \"name\": \"Customize Form\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add fields to forms.\",\n        \"label\": \"Custom Field\",\n        \"name\": \"Custom Field\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add custom javascript to forms.\",\n        \"label\": \"Custom Script\",\n        \"name\": \"Custom Script\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add custom forms.\",\n        \"label\": \"DocType\",\n        \"name\": \"DocType\",\n        \"type\": \"doctype\"\n    }\n]"
+   "links": "[\n    {\n        \"description\": \"Change field properties (hide, readonly, permission etc.)\",\n        \"label\": \"Customize Form\",\n        \"name\": \"Customize Form\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add fields to forms.\",\n        \"label\": \"Custom Field\",\n        \"name\": \"Custom Field\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add custom javascript to forms.\",\n        \"label\": \"Custom Script\",\n        \"name\": \"Custom Script\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add custom python to forms.\",\n        \"label\": \"Server Script\",\n        \"name\": \"Server Script\",\n        \"type\": \"doctype\"\n    },\n    {\n        \"description\": \"Add custom forms.\",\n        \"label\": \"DocType\",\n        \"name\": \"DocType\",\n        \"type\": \"doctype\"\n    }\n]"
   },
   {
    "hidden": 0,
@@ -30,7 +30,7 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Customization",
- "modified": "2020-09-23 18:22:58.295205",
+ "modified": "2020-10-09 17:34:43.452148",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",
