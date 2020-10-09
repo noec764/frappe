@@ -315,6 +315,9 @@ def format_time(time_string=None, format_string=None):
 	if not time_string:
 		return ''
 
+	if time_string == "0":
+		time_string = "00:00"
+
 	time_ = get_time(time_string)
 	if not format_string:
 		format_string = get_user_time_format()
