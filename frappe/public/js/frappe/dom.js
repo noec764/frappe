@@ -295,10 +295,10 @@ frappe.unscrub = function(txt) {
 	return frappe.model.unscrub(txt);
 };
 
-frappe.get_data_pill = (label, target_id=null, remove_action=null) => {
+frappe.get_data_pill = (label, target_id=null, remove_action=null, link=null) => {
 	let data_pill_wrapper = $(`
 		<div class="data-pill btn">
-			<span class="pill-label ellipsis">${label}</span>
+			<span class="pill-label ellipsis">${link || label}</span>
 		</div>
 	`);
 

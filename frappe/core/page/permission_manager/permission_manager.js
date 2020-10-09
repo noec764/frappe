@@ -2,7 +2,7 @@ frappe.pages['permission-manager'].on_page_load = (wrapper) => {
 	var page = frappe.ui.make_app_page({
 		parent: wrapper,
 		title: __('Role Permissions Manager'),
-		icon: "uil uil-padlock",
+		icon: "uil uil-lock-alt",
 		single_column: true
 	});
 

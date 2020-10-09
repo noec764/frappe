@@ -99,7 +99,7 @@ frappe.ui.form.on("Customize Form", {
 
 			frm.add_custom_button(__('Set Permissions'), function() {
 				frappe.set_route('permission-manager', frm.doc.doc_type);
-			}, "uil uil-padlock", "btn-default");
+			}, "uil uil-lock-alt", "btn-default");
 
 			if(frappe.boot.developer_mode) {
 				frm.add_custom_button(__('Export Customizations'), function() {

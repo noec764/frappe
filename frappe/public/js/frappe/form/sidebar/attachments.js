@@ -62,6 +62,9 @@ frappe.ui.form.Attachments = Class.extend({
 		var me = this;
 
 		let file_label = `
+			<a href=${frappe.utils.get_form_link("File", fileid)}>
+				<i class="${attachment.is_private ? "uil uil-lock-alt text-info" : "uil uil-lock-open-alt text-warning"}"></i>
+			</a>
 			<a href="${file_url}" target="_blank" title="${file_name}" class="ellipsis" style="max-width: calc(100% - 43px);">
 				<span>${file_name}</span>
 			</a>`;

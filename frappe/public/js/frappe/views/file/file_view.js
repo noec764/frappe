@@ -169,7 +169,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		d.subject_html = `
 			${frappe.utils.icon(icon_class)}
 			<span>${title}</span>
-			${d.is_private ? '<i class="uil uil-padlock fa-fw text-warning"></i>' : ''}
+			${d.is_private ? '<i class="uil uil-lock-alt text-info"></i>' : ''}
 		`;
 		return d;
 	}
