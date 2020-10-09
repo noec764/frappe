@@ -266,6 +266,9 @@
 		.inline-graph-bar-inner.dark {
 			background-color: var(--primary-color);
 		}
+		.inline-graph-bar-inner.warn {
+			background-color: var(--orange-500);
+		}
 
 	}
 	.inline-graph-half:first-child {
