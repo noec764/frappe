@@ -24,7 +24,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 			fields: this.get_group_by_dropdown_fields(),
 		});
 
-		d.set_primary_action('Save', ({ group_by_fields }) => {
+		d.set_primary_action(__('Save'), ({ group_by_fields }) => {
 			frappe.model.user_settings.save(
 				this.doctype,
 				'group_by_fields',
@@ -34,6 +34,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 				? ['assigned_to', 'owner', ...group_by_fields]
 				: ['assigned_to', 'owner'];
 			this.render_group_by_items();
+			this.setup_dropdown();
 			d.hide();
 		});
 
@@ -199,9 +200,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		};
 		let standard_html = `
 			<div class="dropdown-search">
-				<input type="text" placeholder="${__(
-					'Search'
-				)}" data-element="search" class="dropdown-search-input form-control input-xs">
+				<input type="text" placeholder="${__('Search')}" data-element="search" class="dropdown-search-input form-control input-xs">
 			</div>
 		`;
 
