@@ -145,7 +145,7 @@ frappe.views.Views = class Views {
 
 		if (!items || !items.length) {
 			html = `<div class="empty-state">
-						${__('No {} Found', [view])}
+						${__('No {} Found', [__(view)])}
 				</div>`;
 		} else {
 			items.map(item => {
