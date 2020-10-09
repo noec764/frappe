@@ -282,9 +282,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	setup_freeze_area() {
 		this.$freeze = $(
-			`<div class="freeze flex justify-center align-center text-muted">${__(
-				"Loading"
-			)}...</div>`
+			`<div class="freeze flex justify-center align-center text-muted">${__("Loading")}...</div>`
 		).hide();
 		this.$result.append(this.$freeze);
 	}

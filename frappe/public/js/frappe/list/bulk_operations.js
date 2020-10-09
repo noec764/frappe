@@ -141,17 +141,31 @@ export default class BulkOperations {
 	}
 
 	edit(docnames, field_mappings, done) {
-		let field_options = Object.keys(field_mappings).sort();
+		const field_options = Object.keys(field_mappings).map(v => {
+			return {label: __(v), value: v}
+		})
+		console.log(field_options)
+
 		const status_regex = /status/i;
 
-		const default_field = field_options.find(value => status_regex.test(value));
+		const default_field = Object.keys(field_mappings).find(value => status_regex.test(value));
 
 		const dialog = new frappe.ui.Dialog({
 			title: __('Edit'),
 			fields: [
 				{
 					'fieldtype': 'Select',
-					'options': field_options,
+					'options': field_options.sort(function(a, b) {
+						const nameA = a.label.toUpperCase();
+						const nameB = b.label.toUpperCase();
+						if (nameA < nameB) {
+							return -1;
+						}
+						if (nameA > nameB) {
+							return 1;
+						}
+						return 0;
+					}),
 					'default': default_field,
 					'label': __('Field'),
 					'fieldname': 'field',
