@@ -189,6 +189,7 @@ class DesktopPage {
 	}
 
 	save_customization() {
+		frappe.dom.freeze();
 		const config = {};
 
 		if (this.sections.charts) config.charts = this.sections.charts.get_widget_config();
@@ -199,14 +200,15 @@ class DesktopPage {
 			page: this.page_name,
 			config: config
 		}).then(res => {
+			frappe.dom.unfreeze();
 			if (res.message) {
 				frappe.show_alert({ message: __("Customizations Saved Successfully"), indicator: "green" });
 				this.reload();
 			} else {
-				frappe.throw({message: __("Something went wrong while saving customizations"), indicator: "red" });
+				frappe.throw({ message: __("Something went wrong while saving customizations"), title: __("Failed") });
 				this.reload();
 			}
-		});
+		})
 	}
 
 	reset_customization() {
