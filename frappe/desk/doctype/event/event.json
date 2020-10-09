@@ -91,6 +91,7 @@
    "reqd": 1
   },
   {
+   "bold": 1,
    "fieldname": "ends_on",
    "fieldtype": "Datetime",
    "label": "Ends on"
@@ -199,17 +200,17 @@
    "label": "Repeat Until"
   },
   {
-    "fieldname": "sender",
-    "fieldtype": "Data",
-    "label": "Sender",
-    "options": "Email",
-    "read_only": 1
+   "fieldname": "sender",
+   "fieldtype": "Data",
+   "label": "Sender",
+   "options": "Email",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2020-01-14 21:47:15.825287",
+ "modified": "2020-10-09 17:06:39.775721",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",

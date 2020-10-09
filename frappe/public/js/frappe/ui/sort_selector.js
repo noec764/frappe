@@ -123,7 +123,7 @@ frappe.ui.SortSelector = Class.extend({
 
 			// bold or mandatory
 			meta.fields.forEach(function(df) {
-				if(df.mandatory || df.bold) {
+				if(df.reqd || df.bold) {
 					_options.push({fieldname: df.fieldname, label: df.label});
 				}
 			});
