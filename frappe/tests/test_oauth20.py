@@ -17,13 +17,13 @@ class TestOAuth20(unittest.TestCase):
 		self.scope = "all openid"
 		self.redirect_uri = "http://localhost"
 
-		# Set Frappe server URL reqired for id_token generation
+		# Set Dodock server URL reqired for id_token generation
 		try:
 			frappe_login_key = frappe.get_doc("Social Login Key", "frappe")
 		except frappe.DoesNotExistError:
 			frappe_login_key = frappe.new_doc("Social Login Key")
 
-		frappe_login_key.get_social_login_provider("Frappe", initialize=True)
+		frappe_login_key.get_social_login_provider("Dodock", initialize=True)
 		frappe_login_key.base_url = frappe.utils.get_url()
 		frappe_login_key.enable_social_login = 0
 		frappe_login_key.save()
