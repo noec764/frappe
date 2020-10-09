@@ -401,7 +401,7 @@ def get_messages_from_doctype(name):
 			messages.append(d.role)
 
 	messages = [message for message in messages if message]
-	messages = [('DocType: ' + name, message) for message in messages if is_translatable(message)]
+	messages = [('DocType: ' + name, message, name) for message in messages if is_translatable(message)]
 
 	# extract from js, py files
 	if not meta.custom:
