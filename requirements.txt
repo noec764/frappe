@@ -19,7 +19,7 @@ GitPython==2.1.15
 google-api-python-client==1.9.3
 google-auth-httplib2==0.0.3
 google-auth-oauthlib==0.4.1
-google-auth==1.19.1
+google-auth==1.21.1
 googlemaps==3.1.1
 gunicorn==19.10.0
 html2text==2016.9.19
@@ -67,7 +67,7 @@ sqlparse==0.2.4
 stripe==2.49.0
 twilio==6.44.2
 unittest-xml-reporting==2.5.2
-urllib3==1.25.9
+urllib3==1.25.10
 watchdog==0.8.0
 Werkzeug==0.16.1
 Whoosh==2.7.4
