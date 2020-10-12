@@ -87,7 +87,6 @@ class TestDB(unittest.TestCase):
 		frappe.flags.in_migrate = False
 		frappe.flags.touched_tables.clear()
 
-	@unittest.skip("Skipped until the corresponding change is fixed")
 	def test_db_keywords_as_fields(self):
 		"""Tests if DB keywords work as docfield names. If they're wrapped with grave accents."""
 		# Using random.choices, picked out a list of 40 keywords for testing

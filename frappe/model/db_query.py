@@ -169,12 +169,10 @@ class DatabaseQuery(object):
 
 		self.set_field_tables()
 
-		# TODO: Fix this part
-		"""
 		fields = []
 
 		for field in self.fields:
-			if (field.strip().startswith(("`", "*")) or "(" in field):
+			if field.strip().startswith(("`", "*", '"', "'")) or "(" in field:
 				fields.append(field)
 			elif "as" in field.lower().split(" "):
 				col, _, new = field.split()[-3:]
@@ -183,9 +181,6 @@ class DatabaseQuery(object):
 				fields.append("`{0}`".format(field))
 
 		args.fields = ", ".join(fields)
-		"""
-
-		args.fields = ', '.join(self.fields)
 
 		self.set_order_by(args)
 
