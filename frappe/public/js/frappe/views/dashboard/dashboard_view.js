@@ -272,7 +272,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 	show_add_chart_dialog() {
 		let fields = this.get_field_options();
 		const dialog = new frappe.ui.Dialog({
-			title: __("Add a {0} Chart", [this.doctype]),
+			title: __("Add a {0} Chart", [__(this.doctype)]),
 			fields: [
 				{
 					fieldname: 'new_or_existing',

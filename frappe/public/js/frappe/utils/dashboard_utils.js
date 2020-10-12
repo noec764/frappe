@@ -255,7 +255,7 @@ frappe.dashboard_utils = {
 					let dashboard_route_html =
 						`<a href = "#dashboard/${values.dashboard}">${values.dashboard}</a>`;
 					let message =
-						__("{0} {1} added to Dashboard {2}", [doctype, values.name, dashboard_route_html]);
+						__("{0} {1} added to Dashboard {2}", [__(doctype), values.name, dashboard_route_html]);
 
 					frappe.msgprint(message);
 				});

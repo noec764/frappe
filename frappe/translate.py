@@ -294,7 +294,7 @@ def clear_cache():
 	cache.delete_key("translation_assets", shared=True)
 	cache.delete_key("lang_user_translations")
 
-def get_messages_for_app(app, deduplicate=True):
+def get_messages_for_app(app, deduplicate=True, context=False):
 	"""Returns all messages (list) for a specified `app`"""
 	messages = []
 	modules = ", ".join(['"{}"'.format(m.title().replace("_", " ")) \
@@ -304,7 +304,7 @@ def get_messages_for_app(app, deduplicate=True):
 	if modules:
 		for name in frappe.db.sql_list("""select name from tabDocType
 			where module in ({})""".format(modules)):
-			messages.extend(get_messages_from_doctype(name))
+			messages.extend(get_messages_from_doctype(name, context))
 
 		# pages
 		for name, title in frappe.db.sql("""select name, title from tabPage
@@ -372,7 +372,7 @@ def get_messages_for_app(app, deduplicate=True):
 
 	return messages
 
-def get_messages_from_doctype(name):
+def get_messages_from_doctype(name, context=True):
 	"""Extract all translatable messages for a doctype. Includes labels, Python code,
 	Javascript code, html templates"""
 	messages = []
@@ -402,7 +402,10 @@ def get_messages_from_doctype(name):
 			messages.append(d.role)
 
 	messages = [message for message in messages if message]
-	messages = [('DocType: ' + name, message, name) for message in messages if is_translatable(message)]
+	if context:
+		messages = [('DocType: ' + name, message, name) for message in messages if is_translatable(message)]
+	else:
+		messages = [('DocType: ' + name, message) for message in messages if is_translatable(message)]
 
 	# extract from js, py files
 	if not meta.custom:
