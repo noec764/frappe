@@ -240,7 +240,7 @@ export default class WebFormList {
 	create_more() {
 		if (this.rows.length >= this.page_length) {
 			const footer = document.querySelector(".list-view-footer");
-			this.addButton(footer, "more", "secondary", false, "More", () =>  this.more());
+			this.addButton(footer, "more", "secondary", false, __("More"), () =>  this.more());
 		}
 	}
 

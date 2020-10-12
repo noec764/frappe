@@ -20,7 +20,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	make() {
 		super.make();
 		this.set_field_values();
-		if (this.introduction_text&&this.introduction_text=="<br>") this.set_form_description(this.introduction_text);
+		if (this.introduction_text&&this.introduction_text!="<div class=\"ql-editor read-mode\"><p><br></p></div>") this.set_form_description(this.introduction_text);
 		if (this.allow_print && !this.is_new) this.setup_print_button();
 		if (this.allow_delete && !this.is_new) this.setup_delete_button();
 		if (this.is_new) this.setup_cancel_button();

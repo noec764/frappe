@@ -13,7 +13,7 @@
 	</div>
 
 	{% block page_container %}
-	<main class="{% if not full_width %}container my-4{% endif %}">
+	<main class="{% if not full_width %}container{% endif %}">
 		<div class="d-flex justify-content-between align-items-center page-header-section">
 			<div class="page-header">
 				{% block header %}{% endblock %}
@@ -45,7 +45,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {%- endmacro %}
 
 {% macro sidebar() %}
-<div class="sidebar-column col-{{ columns }}">
+<div class="sidebar-column col-md-{{ columns }}">
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
@@ -59,7 +59,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 		{%- if not sidebar_right -%}
 		{{ sidebar() }}
 		{%- endif -%}
-		<div class="main-column col-{{ 12 - columns }}">
+		<div class="main-column col-12 col-md-{{ 12 - columns }}">
 			{{ main_content() }}
 		</div>
 		{%- if sidebar_right -%}

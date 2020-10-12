@@ -432,11 +432,16 @@ def delete_event_in_google_calendar(doc, method=None):
 @frappe.whitelist()
 def get_prepared_events(start, end):
 	events = get_events(start, end)
+	webform_route = frappe.db.get_value("Web Form", {"published": 1, "doc_type": "Event"}, "route")
 
 	for event in events:
 		for field in FIELD_MAP:
 			event.update({
 				field: event.get(FIELD_MAP[field])
 			})
+
+		event.update({
+			"route": f"{webform_route}?name={event.name}" if webform_route else None
+		})
 
 	return events

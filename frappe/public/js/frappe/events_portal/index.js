@@ -27,7 +27,6 @@ class EventsPortalView {
 			'/assets/js/control.min.js'
 		], () => {
 			this.build_calendar()
-			this.getTimeZone()
 		});
 	}
 
@@ -63,13 +62,14 @@ class EventsPortalView {
 				listPlugin
 			],
 			locale: frappe.boot.lang || 'en',
-			timeZone: 'UTC',
+			timeZone: frappe.boot.timeZone || 'UTC',
 			events: this.getEvents,
 			eventClick: this.eventClick,
 			selectable: true,
 			allDayContent: function() {
 				return __("All Day");
-			}
+			},
+			height: "auto"
 		}
 	}
 
@@ -94,16 +94,13 @@ class EventsPortalView {
 				"fieldname": "event_description"
 			}]
 		});
+
+		event.event.extendedProps.route&&dialog.set_primary_action(__("See details"), () => {
+			window.location.href = event.event.extendedProps.route;
+		})
+
 		const description = event.event.extendedProps.description ? event.event.extendedProps.description : `<div>${__("No description")}</div>`
 		dialog.fields_dict.event_description.$wrapper.html(description);
 		dialog.show()
 	}
-
-	getTimeZone() {
-		frappe.call("frappe.core.doctype.system_settings.system_settings.get_timezone")
-		.then(r => {
-			this.fullcalendar.setOption("timeZone", r.message);
-		})
-	}
-
 }

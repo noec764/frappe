@@ -1,9 +1,10 @@
 .page-header-section {
-	padding: 2rem;
+	padding: 1.2rem 0;
 }
 
-.page_content {
-	padding: 0 2rem;
+.page_content,
+main {
+	height: 100%;
 }
 
 .website-list .result,
