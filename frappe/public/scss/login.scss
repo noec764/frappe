@@ -74,7 +74,9 @@
 			input[type="text"],
 			input[type="email"],
 			input[type="password"] {
-				border: none;
+				border-width: 1px;
+				border-color: var(--gray-400);
+				border-style: none none solid;
 				background-color: var(--control-bg);
 				margin-bottom: 10px;
 			}
