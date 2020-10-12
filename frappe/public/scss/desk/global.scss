@@ -356,10 +356,10 @@ input[type="checkbox"] {
 		content: '\e9c3';
 		font-family: 'unicons';
 		font-size: 1em;
-		color: var(--indicator-blue);
-		background-color: var(--indicator-blue-bg);
+		color: var(--blue-500);
+		background-color: var(--blue-50);
 		box-shadow: none;
-		border: 1px solid var(--indicator-blue);
+		border: 1px solid var(--blue-500);
 		cursor: pointer;
 	}
 

@@ -33,6 +33,20 @@
 	--red-500: #{$red-500};
 	--red-50: #{$red-50};
 
+	--bg-blue: var(--blue-50);
+	--bg-green: var(--dark-green-50);
+	--bg-yellow: var(--yellow-50);
+	--bg-orange: var(--orange-100);
+	--bg-red: var(--red-50);
+	--bg-gray: var(--gray-50);
+
+	--text-on-blue: var(--blue-500);
+	--text-on-green: var(--dark-green-500);
+	--text-on-yellow: var(--yellow-500);
+	--text-on-orange: var(--orange-500);
+	--text-on-red: var(--red-500);
+	--text-on-gray: var(--gray-600);
+
 	--black: #{$black};
 	--primary: #{$primary};
 	--primary-light: #{$primary-light};

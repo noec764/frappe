@@ -297,6 +297,7 @@
 	padding: var(--padding-md) var(--padding-xl);
 	font-size: var(--text-md, 13px);
 	margin-bottom: var(--margin-md);
+	box-shadow: var(--card-shadow);
 
 	&.blue {
 		@include form-message-background("blue");
