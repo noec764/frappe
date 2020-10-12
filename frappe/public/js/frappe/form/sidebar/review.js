@@ -89,7 +89,7 @@ frappe.ui.form.Review = class Review {
 				fieldtype: 'Int',
 				label: __('Points'),
 				reqd: 1,
-				description: __(`Currently you have ${this.points.review_points} review points`)
+				description: __("Currently you have {0} review points", [this.points.review_points])
 			}, {
 				fieldtype: 'Small Text',
 				fieldname: 'reason',

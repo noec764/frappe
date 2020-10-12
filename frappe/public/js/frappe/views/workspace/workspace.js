@@ -222,7 +222,7 @@ class DesktopPage {
 
 	make_onboarding() {
 		this.onboarding_widget = frappe.widget.make_widget({
-			label: this.data.onboarding.label || __(`Let's Get Started`),
+			title: this.data.cards.label || __("Reports & Masters"),
 			subtitle: this.data.onboarding.subtitle,
 			steps: this.data.onboarding.items,
 			success: this.data.onboarding.success,
