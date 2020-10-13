@@ -315,11 +315,8 @@ def format_time(time_string=None, format_string=None, lang=None):
 	* HH:mm
 	"""
 
-	if not time_string:
+	if not time_string or time_string == "0":
 		return ''
-
-	if time_string == "0":
-		time_string = "00:00"
 
 	if not lang:
 		lang = frappe.local.lang
