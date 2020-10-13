@@ -289,7 +289,13 @@ frappe.views.Calendar = class {
 			},
 			allDayContent: function() {
 				return __("All Day");
-			}
+			},
+			eventDidMount: function(info) {
+				$(info.el).tooltip({
+					title: frappe.utils.html2text(info.event.title),
+					placement: 'auto'
+				})
+			},
 		};
 
 		if (this.options) {
