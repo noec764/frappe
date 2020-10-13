@@ -262,7 +262,7 @@ class LoginManager:
 			return check_password(user, pwd)
 		except frappe.AuthenticationError:
 			self.update_invalid_login(user)
-			self.fail('Incorrect password', user=user)
+			self.fail(_('Incorrect password'), user=user)
 
 	def fail(self, message, user=None):
 		if not user:
@@ -315,7 +315,7 @@ class LoginManager:
 		self.run_trigger('on_logout')
 
 		if user == frappe.session.user:
-			delete_session(frappe.session.sid, user=user, reason="User Manually Logged Out")
+			delete_session(frappe.session.sid, user=user, reason=_("User Manually Logged Out"))
 			self.clear_cookies()
 		else:
 			clear_sessions(user)
