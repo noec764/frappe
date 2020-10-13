@@ -441,7 +441,7 @@ def get_prepared_events(start, end):
 			})
 
 		event.update({
-			"route": f"{webform_route}?name={event.name}" if webform_route else None
+			"route": f'{webform_route}?name={event["name"]}' if webform_route else None
 		})
 
 	return events
