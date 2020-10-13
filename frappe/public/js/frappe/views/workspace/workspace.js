@@ -254,6 +254,7 @@ class DesktopPage {
 				container: this.page,
 				type: "chart",
 				columns: 1,
+				class_name: "widget-charts",
 				hidden: Boolean(this.onboarding_widget),
 				options: {
 					allow_sorting: this.allow_customization,
