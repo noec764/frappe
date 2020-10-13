@@ -200,15 +200,6 @@ frappe.views.Calendar = class {
 		}
 	}
 
-	color_map() {
-		return {
-			"danger": "red",
-			"success": "green",
-			"warning": "orange",
-			"default": "blue"
-		}
-	}
-
 	get_system_datetime(date) {
 		date._offset = (moment(date).tz(frappe.sys_defaults.time_zone)._offset);
 		return frappe.datetime.convert_to_system_tz(date);
