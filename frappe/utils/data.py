@@ -273,7 +273,7 @@ def get_user_time_format():
 
 	return frappe.local.user_time_format or "HH:mm:ss"
 
-def format_date(string_date=None, format_string=None):
+def format_date(string_date=None, format_string=None, lang=None):
 	"""Converts the given string date to :data:`user_date_format`
 	User format specified in defaults
 
@@ -287,6 +287,9 @@ def format_date(string_date=None, format_string=None):
 	if not string_date:
 		return ''
 
+	if not lang:
+		lang = frappe.local.lang
+
 	date = getdate(string_date)
 	if not format_string:
 		format_string = get_user_date_format()
@@ -294,7 +297,7 @@ def format_date(string_date=None, format_string=None):
 	try:
 		formatted_date = babel.dates.format_date(
 			date, format_string,
-			locale=(frappe.local.lang or "").replace("-", "_"))
+			locale=(lang or "").replace("-", "_"))
 	except UnknownLocaleError:
 		format_string = format_string.replace("MM", "%m").replace("dd", "%d").replace("yyyy", "%Y")
 		formatted_date = date.strftime(format_string)
@@ -302,7 +305,7 @@ def format_date(string_date=None, format_string=None):
 
 formatdate = format_date  # For backwards compatibility
 
-def format_time(time_string=None, format_string=None):
+def format_time(time_string=None, format_string=None, lang=None):
 	"""Converts the given string time to :data:`user_time_format`
 	User format specified in defaults
 
@@ -318,18 +321,21 @@ def format_time(time_string=None, format_string=None):
 	if time_string == "0":
 		time_string = "00:00"
 
+	if not lang:
+		lang = frappe.local.lang
+
 	time_ = get_time(time_string)
 	if not format_string:
 		format_string = get_user_time_format()
 	try:
 		formatted_time = babel.dates.format_time(
 			time_, format_string,
-			locale=(frappe.local.lang or "").replace("-", "_"))
+			locale=(lang or "").replace("-", "_"))
 	except UnknownLocaleError:
 		formatted_time = time_.strftime("%H:%M:%S")
 	return formatted_time
 
-def format_datetime(datetime_string, format_string=None):
+def format_datetime(datetime_string, format_string=None, lang=None):
 	"""Converts the given string time to :data:`user_datetime_format`
 	User format specified in defaults
 
@@ -341,6 +347,9 @@ def format_datetime(datetime_string, format_string=None):
 	if not datetime_string:
 		return
 
+	if not lang:
+		lang = frappe.local.lang
+
 	datetime = get_datetime(datetime_string)
 	if not format_string:
 		format_string = (
@@ -348,7 +357,7 @@ def format_datetime(datetime_string, format_string=None):
 			+ ' ' + get_user_time_format())
 
 	try:
-		formatted_datetime = babel.dates.format_datetime(datetime, format_string, locale=(frappe.local.lang or "").replace("-", "_"))
+		formatted_datetime = babel.dates.format_datetime(datetime, format_string, locale=(lang or "").replace("-", "_"))
 	except UnknownLocaleError:
 		formatted_datetime = datetime.strftime('%Y-%m-%d %H:%M:%S')
 	return formatted_datetime
