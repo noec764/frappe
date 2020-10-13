@@ -600,6 +600,7 @@ frappe.ui.Page = Class.extend({
 			txt = '<span class="'+ icon +' text-muted" style="font-size: inherit;"></span> ' + txt;
 		}
 		this.$title_area.find(".title-text").html(txt);
+		this.$title_area.tooltip('dispose');
 		this.$title_area.tooltip({title: txt, placement: 'auto'});
 	},
 
@@ -611,6 +612,7 @@ frappe.ui.Page = Class.extend({
 	set_document_name: function(txt) {
 		if(!txt) txt = "";
 		this.$docname_area.html(txt);
+		this.$docname_area.tooltip('dispose');
 		this.$docname_area.tooltip({title: txt, placement: 'auto'});
 	},
 
