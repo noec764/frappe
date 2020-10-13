@@ -390,7 +390,7 @@ frappe.search.SearchDialog = Class.extend({
 	},
 
 	toggle_minimize: function() {
-		this.search_dialog.$wrapper.prev('.modal-backdrop').toggle();
+		$('.modal-backdrop').toggle();
 		let modal = this.search_dialog.$wrapper.closest('.modal').toggleClass('modal-minimize');
 		modal.attr('tabindex') ? modal.removeAttr('tabindex') : modal.attr('tabindex', -1);
 		const icon = this.is_minimized ? 'expand' : 'collapse';

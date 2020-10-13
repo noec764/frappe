@@ -222,7 +222,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	}
 
 	toggle_minimize() {
-		this.$wrapper.prev('.modal-backdrop').toggle();
+		$('.modal-backdrop').toggle();
 		let modal = this.$wrapper.closest('.modal').toggleClass('modal-minimize');
 		modal.attr('tabindex') ? modal.removeAttr('tabindex') : modal.attr('tabindex', -1);
 		this.is_minimized = !this.is_minimized;
