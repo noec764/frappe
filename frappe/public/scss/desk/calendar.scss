@@ -17,31 +17,31 @@
 		border-color: transparent;
 
 		&.green {
-			border-color: var(--indicator-green);
+			border-color: var(--dark-green-500);
 		}
 
 		&.blue {
-			border-color: var(--indicator-blue);
+			border-color: var(--blue-600);
 		}
 
 		&.yellow {
-			border-color: var(--indicator-yellow);
+			border-color: var(--yellow-500);
 		}
 
 		&.grey {
-			border-color: var(--indicator-gray);
+			border-color: var(--gray-600);
 		}
 
 		&.darkgray {
-			border-color: var(--indicator-dark-gray);
+			border-color: var(--dark-gray-600);
 		}
 
 		&.red {
-			border-color: var(--indicator-red);
+			border-color: var(--red-500);
 		}
 
 		&.orange {
-			border-color: var(--indicator-orange);
+			border-color: var(--orange-500);
 		}
 	}
 
