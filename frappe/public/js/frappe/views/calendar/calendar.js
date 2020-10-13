@@ -345,7 +345,6 @@ frappe.views.Calendar = class {
 			}
 
 			if (d.status && me.status_color) {
-				d.borderColor = null;
 				d.classNames.push(me.status_color[d.status]);
 			}
 
@@ -366,6 +365,7 @@ frappe.views.Calendar = class {
 			color = frappe.ui.color.get('blue', 'default');
 		}
 		d.backgroundColor = color;
+		d.borderColor = color;
 		d.textColor = frappe.ui.color.get_contrast_color(color);
 
 		return d;

@@ -17,31 +17,31 @@
 		border-color: transparent;
 
 		&.green {
-			border-color: var(--dark-green-500);
+			border-color: var(--dark-green-500) !important;
 		}
 
 		&.blue {
-			border-color: var(--blue-600);
+			border-color: var(--blue-600) !important;
 		}
 
 		&.yellow {
-			border-color: var(--yellow-500);
+			border-color: var(--yellow-500) !important;
 		}
 
 		&.grey {
-			border-color: var(--gray-600);
+			border-color: var(--gray-600) !important;
 		}
 
 		&.darkgray {
-			border-color: var(--dark-gray-600);
+			border-color: var(--dark-gray-600) !important;
 		}
 
 		&.red {
-			border-color: var(--red-500);
+			border-color: var(--red-500) !important;
 		}
 
 		&.orange {
-			border-color: var(--orange-500);
+			border-color: var(--orange-500)!important;
 		}
 	}
 
