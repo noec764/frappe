@@ -3,6 +3,12 @@
 
 // }
 
+.frappe-list {
+	.result {
+		overflow-x: auto;
+	}
+}
+
 .freeze-row {
 	.level-left, .level-right, .list-row-col {
 		height: 100%;
