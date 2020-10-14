@@ -12,19 +12,21 @@ from frappe.utils import parse_addr
 class EmailGroup(Document):
 	def onload(self):
 			singles = [d.name for d in frappe.db.get_all("DocType", "name", {"issingle": 1})]
-			self.get("__onload").import_types = [{"value": d.parent, "label": "{0} ({1})".format(_(d.parent), _(d.label))} \
+			import_types = [{"value": d.parent, "label": "{0} ({1})".format(_(d.parent), _(d.label))} \
 				for d in frappe.db.get_all("DocField", ("parent", "label"), {"options": "Email"})
 				if d.parent not in singles]
+			import_types.sort(key=lambda x:x["label"])
+			self.get("__onload").import_types = import_types
 
-	def import_from(self, doctype):
+	def import_from(self, doctype, filters):
 		"""Extract Email Addresses from given doctype and add them to the current list"""
 		meta = frappe.get_meta(doctype)
-		email_field = [d.fieldname for d in meta.fields
-			if d.fieldtype in ("Data", "Small Text", "Text", "Code") and d.options=="Email"][0]
+		email_field = [d.fieldname for d in meta.fields if d.fieldtype in ("Data", "Small Text", "Text", "Code", "Read Only") and d.options=="Email"][0]
 		unsubscribed_field = "unsubscribed" if meta.get_field("unsubscribed") else None
 		added = 0
 
-		for user in frappe.db.get_all(doctype, [email_field, unsubscribed_field or "name"]):
+		frappe.flags.mute_messages = True
+		for user in frappe.db.get_all(doctype, filters=filters, fields=[email_field, unsubscribed_field or "name"], limit=999999):
 			try:
 				email = parse_addr(user.get(email_field))[1] if user.get(email_field) else None
 				if email:
@@ -37,7 +39,8 @@ class EmailGroup(Document):
 
 					added += 1
 			except frappe.UniqueValidationError:
-				pass
+				continue
+		frappe.flags.mute_messages = False
 
 		frappe.msgprint(_("{0} subscribers added").format(added))
 
@@ -57,10 +60,10 @@ class EmailGroup(Document):
 			frappe.delete_doc("Email Group Member", d.name)
 
 @frappe.whitelist()
-def import_from(name, doctype):
+def import_from(name, doctype, filters):
 	nlist = frappe.get_doc("Email Group", name)
 	if nlist.has_permission("write"):
-		return nlist.import_from(doctype)
+		return nlist.import_from(doctype, filters)
 
 @frappe.whitelist()
 def add_subscribers(name, email_list):

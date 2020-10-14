@@ -29,7 +29,7 @@ def get_context(context):
 max_communications_per_hour = 1000
 
 @frappe.whitelist(allow_guest=True)
-def send_message(subject="Website Query", message="", sender=""):
+def send_message(subject=_("Website Query"), message="", sender=""):
 	if not message:
 		frappe.response["message"] = _('Please add a message')
 		return

@@ -70,7 +70,7 @@ class WidgetDialog {
 		}
 
 		let $loading = this.dialog.get_field("filter_area_loading").$wrapper;
-		$(`<span class="text-muted">Loading Filters...</span>`).appendTo($loading);
+		$(`<span class="text-muted">${__("Loading Filters...")}</span>`).appendTo($loading);
 
 		this.filters = [];
 
