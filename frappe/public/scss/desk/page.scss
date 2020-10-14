@@ -24,15 +24,6 @@
 	.btn-primary, .btn-secondary {
 		min-width: 70px;
 	}
-	.btn-primary {
-		display: inline-flex;
-		.icon {
-			use {
-				stroke: white;
-				fill: white;
-			}
-		}
-	}
 	.custom-btn-group {
 		display: inline-flex;
 	}

@@ -179,6 +179,12 @@ button.btn.dropdown-toggle:after {
 .btn.btn-primary {
 	background-color: $primary;
 	white-space: nowrap;
+
+	.icon {
+		use {
+			stroke: white;
+		}
+	}
 }
 
 .btn.btn-danger {
@@ -396,6 +402,25 @@ html.firefox, html.safari {
 	input[type="checkbox"] {
 		width: var(--base-checkbox-size) !important;
 		height: var(--base-checkbox-size);
+	}
+}
+
+.custom-control.custom-switch {
+	font-size: var(--text-md);
+	line-height: 1.6;
+
+	.custom-control-input ~ .custom-control-label {
+		cursor: pointer;
+		&:before {
+			background: var(--gray-500);
+			border: none;
+		}
+	}
+
+	.custom-control-input:checked ~ .custom-control-label {
+		&:before {
+			background: $primary;
+		}
 	}
 }
 
