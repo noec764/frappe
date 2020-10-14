@@ -55,9 +55,10 @@
    "read_only": 1
   }
  ],
+ "in_create": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-08-16 14:57:21.830541",
+ "modified": "2020-10-14 09:25:48.974836",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Auto Repeat Log",
@@ -76,6 +77,7 @@
    "write": 1
   }
  ],
+ "read_only": 1,
  "sort_field": "modified",
  "sort_order": "DESC"
 }
