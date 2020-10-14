@@ -39,9 +39,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		});
 
 		d.$body.prepend(`<div class="filters-search">
-			<input type="text" placeholder="${__(
-				'Search'
-			)}" data-element="search" class="form-control input-xs">
+			<input type="text" placeholder="${__('Search')}" data-element="search" class="form-control input-xs">
 		</div>`);
 
 		this.page.sidebar.find('.add-list-group-by a').on('click', () => {

@@ -59,14 +59,20 @@ frappe.views.KanbanView = class KanbanView extends frappe.views.ListView {
 	}
 
 	setup_page() {
-		this.hide_sidebar = true;
+		//this.hide_sidebar = true;
 		this.hide_page_form = true;
 		this.hide_card_layout = true;
 		super.setup_page();
 	}
 
+	setup_side_bar() {
+		super.setup_side_bar();
+		this.toggle_side_bar();
+	}
+
 	setup_view() {
 		this.setup_realtime_updates();
+		this.list_sidebar&&this.list_sidebar.parent.find(".list-tag-preview").hide();
 	}
 
 	set_fields() {
