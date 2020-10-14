@@ -140,6 +140,26 @@
 	@include indicator-pill-color('red');
 }
 
+.indicator.purple {
+	@include indicator-color('purple');
+}
+
+.indicator-pill.purple,
+.indicator-pill-right.purple,
+.indicator-pill-round.purple {
+	@include indicator-pill-color('purple');
+}
+
+.indicator.lightblue {
+	@include indicator-color('lightblue');
+}
+
+.indicator-pill.lightblue,
+.indicator-pill-right.lightblue,
+.indicator-pill-round.lightblue {
+	@include indicator-pill-color('lightblue');
+}
+
 .indicator.blink {
 	animation: blink 1s linear infinite;
 }

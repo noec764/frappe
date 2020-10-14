@@ -133,7 +133,9 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--pacific-blue-500 : #1599AD;
 	--pacific-blue-400 : #17a2b8;
 	--pacific-blue-300 : #19B5CD;
-
+	--pacific-blue-200 : #4DD4E9;
+	--pacific-blue-100 : #A6EAF4;
+	--pacific-blue-50 : #EDFBFD;
 
 	--padding-xs: 5px;
 	--padding-sm: 8px;
@@ -204,6 +206,8 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--bg-red: var(--red-50);
 	--bg-gray: var(--gray-200);
 	--bg-darkgray: var(--dark-gray-200);
+	--bg-purple: var(--purple-100);
+	--bg-lightblue: var(--pacific-blue-50);
 
 	--text-on-blue: var(--blue-600);
 	--text-on-green: var(--dark-green-500);
@@ -212,6 +216,8 @@ $card-box-shadow: 0px 0px 1px rgba(17, 43, 66, 0.16), 0px 1px 3px rgba(17, 43, 6
 	--text-on-red: var(--red-500);
 	--text-on-gray: var(--gray-600);
 	--text-on-darkgray: var(--dark-gray-600);
+	--text-on-purple: var(--purple-600);
+	--text-on-lightblue: var(--pacific-blue-600);
 
 	// Other Colors
 	--sidebar-select-color: var(--gray-200);
