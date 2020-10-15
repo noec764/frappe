@@ -23,8 +23,6 @@ frappe.views.Workspace = class Workspace {
 
 		if (localStorage.current_workspace) {
 			default_page = localStorage.current_workspace;
-		} else if (this.desktop_settings) {
-			default_page = this.desktop_settings["Modules"][0].name;
 		} else if (frappe.boot.allowed_workspaces) {
 			default_page = frappe.boot.allowed_workspaces[0].name;
 		} else {

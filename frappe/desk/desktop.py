@@ -393,7 +393,9 @@ def get_desk_sidebar_items(flatten=False, cache=True):
 		_cache.set_value("desk_sidebar_items", pages, frappe.session.user)
 
 	if flatten:
-		return pages
+		flatten_output = [{"label": _(p["name"]), **p} for p in pages]
+		sort_items(flatten_output, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
+		return flatten_output
 
 	sidebar_items = {}
 
