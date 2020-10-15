@@ -321,7 +321,7 @@ body {
 						border-radius: var(--border-radius-full);
 
 						&.complete {
-							background-color: var(--primary);
+							background-color: var(--dark-green-400);
 							.icon use {
 								stroke: var(--white);
 							}

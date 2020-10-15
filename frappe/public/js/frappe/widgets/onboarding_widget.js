@@ -19,9 +19,17 @@ export default class OnboardingWidget extends Widget {
 	}
 
 	add_step(step, index) {
+		let label = `<div class="step-index">${ __(index + 1) }</div>`;
+
+		if (step.is_complete) {
+			label = `<div class="step-index complete">${frappe.utils.icon('tick', 'xs')}</div>`;
+		} else if (step.is_skipped) {
+			label = `<div class="step-index skipped">${frappe.utils.icon('tick', 'xs')}</div>`;
+		}
+
 		let $step = $(`<a class="onboarding-step ${status}">
 				<div class="step-title">
-					<div class="step-index">${index + 1}</div>
+					${label}
 					<div>${__(step.title)}</div>
 				</div>
 			</a>`);
@@ -29,7 +37,7 @@ export default class OnboardingWidget extends Widget {
 		step.$step = $step;
 
 		// Add skip button
-		if (!step.is_mandatory && !step.is_complete) {
+		if (!step.is_mandatory && !step.is_complete && !step.is_skipped) {
 			let skip_html = $(
 				`<div class="step-skip">${__("Skip")}</div>`
 			);
@@ -46,10 +54,14 @@ export default class OnboardingWidget extends Widget {
 		return $step;
 	}
 
-	get_handler(step) {
+	show_step(step) {
 		this.active_step && this.active_step.$step.removeClass("active");
 
+		step.$step.addClass("active");
+		this.active_step = step;
+
 		// Setup actions
+		// __("Watch Video"), __("Create Entry"), __("Show Form Tour"), __("Update Settings"), __("View Report"), __("Go to Page")
 		let actions = {
 			"Watch Video": this.show_video,
 			"Create Entry": (step) => {
@@ -69,21 +81,11 @@ export default class OnboardingWidget extends Widget {
 			"Go to Page": this.go_to_page,
 		};
 
-		return actions[step.action]
-	}
-
-	show_step(step) {
-		this.active_step && this.active_step.$step.removeClass("active");
-
-		step.$step.addClass("active");
-
-		this.active_step = step;
-
 		const toggle_content = () => {
 			this.step_body.empty();
 			this.step_footer.empty();
 
-			this.step_body.html(frappe.markdown(step.description) || `<h1>${step.title}</h1>`)
+			this.step_body.html(step.description&&frappe.markdown(__(step.description)) || `<h1>${__(step.title)}</h1>`)
 
 			if (step.intro_video_url) {
 				$(`<button class="btn btn-primary btn-sm">${__('Watch Tutorial')}</button>`)
@@ -92,7 +94,7 @@ export default class OnboardingWidget extends Widget {
 			} else {
 				$(`<button class="btn btn-primary btn-sm">${__(step.action)}</button>`)
 					.appendTo(this.step_footer)
-					.on('click', () => this.get_handler(step.action)(step));
+					.on('click', () => actions[step.action](step));
 			}
 		}
 
@@ -110,8 +112,8 @@ export default class OnboardingWidget extends Widget {
 			})
 
 			$(`<button class="btn btn-primary btn-sm">${__(step.action)}</button>`)
-			.appendTo(this.step_footer)
-			.on('click', () => this.get_handler(step.action)(step));
+				.appendTo(this.step_footer)
+				.on('click', () => actions[step.action](step));
 
 			$(`<button class="btn btn-secondary ml-2 btn-sm">${__('Back')}</button>`)
 				.appendTo(this.step_footer)
@@ -119,6 +121,7 @@ export default class OnboardingWidget extends Widget {
 		}
 
 		toggle_content();
+		// toggle_video();
 	}
 
 	go_to_page(step) {
