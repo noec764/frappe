@@ -12,8 +12,8 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	}
 
 	get_fields() {
-		const fields_to_add = this.meta.fields.filter(f => f.fieldtype === "Geolocation").map(f => f.fieldname)
-		fields_to_add.forEach(fieldname => {
+		this.gelocation_fields = this.meta.fields.filter(f => f.fieldtype === "Geolocation").map(f => f.fieldname)
+		this.gelocation_fields.forEach(fieldname => {
 			this.fields.push([fieldname, this.doctype]);
 		})
 		return super.get_fields();
@@ -135,27 +135,29 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		const me = this;
 		me.editableLayers = new L.FeatureGroup();
 		me.data.forEach(value => {
-			const geometry_value = value.map_location
-			const data_layers = new L.LayerGroup()
-				.addLayer(L.geoJson(JSON.parse(geometry_value),{
-					pointToLayer: function(geoJsonPoint, latlng) {
-						if (geoJsonPoint.properties.point_type == "circle"){
-							return L.circle(latlng, {radius: geoJsonPoint.properties.radius})
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
-						} else if (geoJsonPoint.properties.point_type == "circlemarker") {
-							return L.circleMarker(latlng, {radius: geoJsonPoint.properties.radius})
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
+			me.gelocation_fields.forEach(field => {
+				const geometry_value = value[field]
+				const data_layers = new L.LayerGroup()
+					.addLayer(L.geoJson(JSON.parse(geometry_value),{
+						pointToLayer: function(geoJsonPoint, latlng) {
+							if (geoJsonPoint.properties.point_type == "circle"){
+								return L.circle(latlng, {radius: geoJsonPoint.properties.radius})
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							} else if (geoJsonPoint.properties.point_type == "circlemarker") {
+								return L.circleMarker(latlng, {radius: geoJsonPoint.properties.radius})
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							}
+							else {
+								return L.marker(latlng)
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							}
 						}
-						else {
-							return L.marker(latlng)
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
-						}
-					}
-				}));
-			me.add_non_group_layers(data_layers, me.editableLayers);
+					}));
+				me.add_non_group_layers(data_layers, me.editableLayers);
+			})
 		})
 		try {
 			me.map.flyToBounds(me.editableLayers.getBounds(), {
