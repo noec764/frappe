@@ -29,6 +29,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 
 	setup_view() {
 		this.sort_selector.wrapper.hide();
+		this.list_sidebar&&this.list_sidebar.parent.find(".list-tag-preview").hide();
 	}
 
 	prepare_data(data) {
@@ -188,7 +189,11 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	get_popup(value) {
 		const text = Object.keys(this.list_fields).reduce((prev, f) => {
 			return `${prev}<p><b>${__(this.list_fields[f])}</b>: ${__(value[f])}</p>`
-		}, `<b>${value.name}</b>`)
+		}, `<b>${frappe.utils.get_form_link(
+			this.doctype,
+			value.name,
+			true
+		)}</b>`)
 
 		return text
 	}
