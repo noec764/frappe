@@ -581,7 +581,7 @@ frappe.search.utils = {
 			return str;
 		} else if(this.fuzzy_search(subseq, str) > 6) {
 			var regEx = new RegExp("("+ subseq +")", "ig");
-			return str.replace(regEx, '<b>$1</b>');
+			return str.replace(regEx, '<mark>$1</mark>');
 		} else {
 			var str_orig = str;
 			var str = str.toLowerCase();
@@ -594,9 +594,9 @@ frappe.search.utils = {
 					if(str.charCodeAt(j) === sub_ch) {
 						var str_char = str_orig.charAt(j);
 						if(str_char === str_char.toLowerCase()) {
-							rendered += '<b>' + subseq.charAt(i) + '</b>';
+							rendered += '<mark>' + subseq.charAt(i) + '</mark>';
 						} else {
-							rendered += '<b>' + subseq.charAt(i).toUpperCase() + '</b>';
+							rendered += '<mark>' + subseq.charAt(i).toUpperCase() + '</mark>';
 						}
 						j++;
 						continue outer;
