@@ -2,42 +2,36 @@ import Widget from "./base_widget.js";
 import { generate_route } from "./utils";
 
 export default class OnboardingWidget extends Widget {
-	constructor(opts) {
-		super(opts);
-	}
-
 	make_body() {
-		this.steps.forEach((step) => {
-			this.add_step(step);
+		this.steps_wrapper = $(`<div class="onboarding-steps-wrapper"></div>`).appendTo(this.body);
+		this.step_preview = $(`<div class="onboarding-step-preview">
+			<div class="onboarding-step-body"></div>
+			<div class="onboarding-step-footer"></div>
+		</div>`).appendTo(this.body);
+
+		this.step_body = this.step_preview.find(".onboarding-step-body");
+		this.step_footer = this.step_preview.find(".onboarding-step-footer");
+
+		this.steps.forEach((step, index) => {
+			this.add_step(step, index);
 		});
+		this.show_step(this.steps[0]);
 	}
 
-	add_step(step) {
-		// Make Step
-		let status = "";
-		let icon_class = "uil-circle";
-
-		if (step.is_skipped) {
-			status = "skipped";
-			icon_class = "uil-check-circle";
-		}
-
-		if (step.is_complete) {
-			status = "complete";
-			icon_class = "uil-check-circle";
-		}
-
-		let $step = $(`<div class="onboarding-step ${status}">
-				<i class="uil ${icon_class}" aria-hidden="true" title="${status}"></i>
-				<span id="title">${__(step.title)}</span>
-			</div>`);
+	add_step(step, index) {
+		let $step = $(`<a class="onboarding-step ${status}">
+				<div class="step-title">
+					<div class="step-index">${index + 1}</div>
+					<div>${__(step.title)}</div>
+				</div>
+			</a>`);
 
 		step.$step = $step;
 
 		// Add skip button
 		if (!step.is_mandatory && !step.is_complete) {
 			let skip_html = $(
-				`<span class="ml-5 small text-muted step-skip">${__("Skip")}</span>`
+				`<div class="step-skip">${__("Skip")}</div>`
 			);
 
 			skip_html.appendTo($step);
@@ -46,11 +40,19 @@ export default class OnboardingWidget extends Widget {
 				event.stopPropagation();
 			});
 		}
+		$step.on("click", () => this.show_step(step));
+
+		$step.appendTo(this.steps_wrapper);
+		return $step;
+	}
+
+	get_handler(step) {
+		this.active_step && this.active_step.$step.removeClass("active");
 
 		// Setup actions
 		let actions = {
-			"Watch Video": () => this.show_video(step),
-			"Create Entry": () => {
+			"Watch Video": this.show_video,
+			"Create Entry": (step) => {
 				if (step.is_complete) {
 					frappe.set_route(`#List/${step.reference_document}`);
 				} else {
@@ -61,16 +63,62 @@ export default class OnboardingWidget extends Widget {
 					}
 				}
 			},
-			"Show Form Tour": () => this.show_form_tour(step),
-			"Update Settings": () => this.update_settings(step),
-			"View Report": () => this.open_report(step),
-			"Go to Page": () => this.go_to_page(step),
+			"Show Form Tour": this.show_form_tour,
+			"Update Settings": this.update_settings,
+			"View Report": this.open_report,
+			"Go to Page": this.go_to_page,
 		};
 
-		$step.find("#title").on("click", actions[step.action]);
+		return actions[step.action]
+	}
 
-		$step.appendTo(this.body);
-		return $step;
+	show_step(step) {
+		this.active_step && this.active_step.$step.removeClass("active");
+
+		step.$step.addClass("active");
+
+		this.active_step = step;
+
+		const toggle_content = () => {
+			this.step_body.empty();
+			this.step_footer.empty();
+
+			this.step_body.html(frappe.markdown(step.description) || `<h1>${step.title}</h1>`)
+
+			if (step.intro_video_url) {
+				$(`<button class="btn btn-primary btn-sm">${__('Watch Tutorial')}</button>`)
+					.appendTo(this.step_footer)
+					.on('click', toggle_video);
+			} else {
+				$(`<button class="btn btn-primary btn-sm">${__(step.action)}</button>`)
+					.appendTo(this.step_footer)
+					.on('click', () => this.get_handler(step.action)(step));
+			}
+		}
+
+		const toggle_video = () => {
+			this.step_body.empty();
+
+			this.step_footer.empty();
+
+			const video = $(`<div class="video-player" data-plyr-provider="youtube" data-plyr-embed-id="${step.intro_video_url}"></div>`);
+
+			video.appendTo(this.step_body)
+			new frappe.Plyr(video[0], {
+				hideControls: true,
+				resetOnEnd: true,
+			})
+
+			$(`<button class="btn btn-primary btn-sm">${__(step.action)}</button>`)
+			.appendTo(this.step_footer)
+			.on('click', () => this.get_handler(step.action)(step));
+
+			$(`<button class="btn btn-secondary ml-2 btn-sm">${__('Back')}</button>`)
+				.appendTo(this.step_footer)
+				.on('click', toggle_content);
+		}
+
+		toggle_content();
 	}
 
 	go_to_page(step) {
