@@ -634,4 +634,16 @@
 	<symbol viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-tick">>
 		<path d="M2 9.66667L5.33333 13L14 3" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 	</symbol>
+	<symbol fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="icon-customer">
+		<g stroke="#4C5A67" stroke-miterlimit="10">
+			<path d="M17.718 18.95c-.11-1.953-1.225-2.574-2.855-3.117-1.245-.415-1.588-1.722-1.682-2.416m-2.364-.001c-.092.69-.428 2-1.68 2.417-1.63.543-2.747 1.162-2.857 3.116"></path>
+			<path d="M12 13.636a3.273 3.273 0 01-3.273-3.272v-.819a3.273 3.273 0 016.546 0v.819A3.273 3.273 0 0112 13.636z" stroke-linecap="square"></path>
+			<path d="M12 21a9 9 0 100-18 9 9 0 000 18z" stroke-linecap="square"></path>
+		</g>
+	</symbol>
+	<symbol id="icon-full-page" fill="none" viewBox="0 0 32 32">
+		<path stroke-linejoin="miter" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2" d="M25 6h-18c-1.657 0-3 1.343-3 3v14c0 1.657 1.343 3 3 3h18c1.657 0 3-1.343 3-3v-14c0-1.657-1.343-3-3-3z"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M8.364 17.3v4.364h4.364"></path>
+		<path stroke-linejoin="round" stroke-linecap="round" stroke-miterlimit="10" stroke-width="2" d="M19.272 10.364h4.364v4.364"></path>
+	</symbol>
 </svg>

@@ -11,7 +11,8 @@ def get_leaderboards():
 				{'fieldname': 'points', 'label': _('Points')}
 			],
 			'method': 'frappe.desk.leaderboard.get_energy_point_leaderboard',
-			'company_disabled': 1
+			'company_disabled': 1,
+			'icon': 'users'
 		}
 	}
 	return leaderboards
