@@ -196,15 +196,6 @@ body {
 			padding: var(--padding-xs);
 		}
 
-		.chart-container {
-			.frappe-chart {
-				max-width: 100%;
-				line.line-horizontal {
-					stroke: var(--border-color) !important;
-				}
-			}
-		}
-
 		.btn-xs {
 			box-shadow: none;
 		}
