@@ -19,17 +19,16 @@ export default class OnboardingWidget extends Widget {
 	}
 
 	add_step(step, index) {
-		let label = `<div class="step-index">${ __(index + 1) }</div>`;
+		let status = 'pending';
 
-		if (step.is_complete) {
-			label = `<div class="step-index complete">${frappe.utils.icon('tick', 'xs')}</div>`;
-		} else if (step.is_skipped) {
-			label = `<div class="step-index skipped">${frappe.utils.icon('tick', 'xs')}</div>`;
-		}
+		if (step.is_skipped) status = "skipped";
+		if (step.is_complete) status = "complete";
 
 		let $step = $(`<a class="onboarding-step ${status}">
 				<div class="step-title">
-					${label}
+					<div class="step-index step-pending">${ __(index + 1) }</div>
+					<div class="step-index step-skipped">${frappe.utils.icon('tick', 'xs')}</div>
+					<div class="step-index step-complete">${frappe.utils.icon('tick', 'xs')}</div>
 					<div>${__(step.title)}</div>
 				</div>
 			</a>`);
@@ -379,6 +378,7 @@ export default class OnboardingWidget extends Widget {
 		let callback = () => {
 			step.is_skipped = true;
 			$step.removeClass("complete");
+			$step.removeClass("pending");
 			$step.addClass("skipped");
 		};
 

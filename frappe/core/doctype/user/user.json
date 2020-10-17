@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "creation": "2014-03-11 14:55:00",
@@ -89,8 +90,7 @@
    "label": "Enabled",
    "oldfieldname": "enabled",
    "oldfieldtype": "Check",
-   "read_only": 1,
-   "hidden": 1
+   "read_only": 1
   },
   {
    "depends_on": "enabled",
@@ -585,91 +585,91 @@
    "label": "Send me an energy points summary"
   },
   {
-    "fieldname": "column_break_11",
-    "fieldtype": "Column Break"
-   },
-   {
-    "fieldname": "column_break_26",
-    "fieldtype": "Column Break"
-   },
-   {
-    "fieldname": "section_break_63",
-    "fieldtype": "Column Break"
-   },
-   {
-    "fieldname": "desk_theme",
-    "fieldtype": "Select",
-    "label": "Desk Theme",
-    "options": "Light\nDark"
-   }
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_63",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "desk_theme",
+   "fieldtype": "Select",
+   "label": "Desk Theme",
+   "options": "Light\nDark"
+  }
  ],
  "icon": "fa fa-user",
  "idx": 413,
  "image_field": "user_image",
  "links": [
-	{
-		"group": "Profile",
-		"link_doctype": "Contact",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Profile",
-		"link_doctype": "Chat Profile",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Profile",
-		"link_doctype": "Blogger",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Logs",
-		"link_doctype": "Access Log",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Logs",
-		"link_doctype": "Activity Log",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Logs",
-		"link_doctype": "Energy Point Log",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Logs",
-		"link_doctype": "Route History",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Settings",
-		"link_doctype": "User Permission",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Settings",
-		"link_doctype": "Assignment Rule",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Settings",
-		"link_doctype": "Document Follow",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Activity",
-		"link_doctype": "Communication",
-		"link_fieldname": "user"
-	   },
-	   {
-		"group": "Activity",
-		"link_doctype": "ToDo",
-		"link_fieldname": "owner"
-	   }
+  {
+   "group": "Profile",
+   "link_doctype": "Contact",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Profile",
+   "link_doctype": "Chat Profile",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Profile",
+   "link_doctype": "Blogger",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Access Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Activity Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Energy Point Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Route History",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Settings",
+   "link_doctype": "User Permission",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Settings",
+   "link_doctype": "Assignment Rule",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Settings",
+   "link_doctype": "Document Follow",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Activity",
+   "link_doctype": "Communication",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Activity",
+   "link_doctype": "ToDo",
+   "link_fieldname": "owner"
+  }
  ],
  "max_attachments": 5,
- "modified": "2020-08-26 19:48:49.677800",
+ "modified": "2020-10-16 13:57:18.836393",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
