@@ -724,12 +724,11 @@ def has_permission(doc, ptype=None, user=None):
 	has_access = False
 	user = user or frappe.session.user
 
-	if ptype == 'create':
-		has_access = frappe.has_permission('File', 'create', user=user)
-
 	if doc.owner in [user, 'Guest'] or user == 'Administrator':
-		if not (doc.owner == "Guest" and doc.is_private):
+		if not (user == "Guest" and doc.is_private):
 			has_access = True
+	else:
+		has_access = frappe.has_permission('File', ptype, user=user)
 
 	if doc.attached_to_doctype and doc.attached_to_name:
 		attached_to_doctype = doc.attached_to_doctype

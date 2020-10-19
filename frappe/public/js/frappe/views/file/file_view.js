@@ -31,13 +31,21 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		const route = frappe.get_route();
 		route.splice(-1);
 		const last_folder = route[route.length - 1];
-		if (last_folder === 'File') return;
-
-		frappe.breadcrumbs.add({
-			type: 'Custom',
-			label: __('Home'),
-			route: '#List/File/Home'
-		});
+		const home_index = route.indexOf("Home");
+		const new_route = home_index ? route.slice(home_index + 1) : [];
+		if (last_folder !== 'File' && new_route.length) {
+			frappe.breadcrumbs.add({
+				type: 'Custom',
+				label: __(last_folder),
+				route: `#List/File/Home/${new_route.join("/")}`
+			});
+		} else {
+			frappe.breadcrumbs.add({
+				type: 'Custom',
+				label: __('Home'),
+				route: '#List/File/Home'
+			});
+		}
 	}
 
 	setup_defaults() {
@@ -187,6 +195,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		if (frappe.views.FileView.grid_view) {
 			this.render_grid_view();
 		} else {
+			this.$result.empty();
 			super.render();
 		}
 	}
@@ -198,10 +207,8 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			return `
 				<a href="${this.get_route_url(d)}">
 					<div class="file-wrapper padding flex small">
-						<div class="file-icon text-muted">
-							<span class="${d.icon_class} mega-octicon"></span>
-						</div>
 						<div class="file-title ellipsis">${d._title}</div>
+						<div><img class="img-responsive" src="${d.file_url}"></div>
 					</div>
 				</a>
 			`;

@@ -114,9 +114,22 @@ frappe.breadcrumbs = {
 			}
 		}
 		if(breadcrumbs.doctype && frappe.get_route()[0]==="Form") {
-			if(breadcrumbs.doctype==="User"
+			if (breadcrumbs.doctype==="User"
 				|| frappe.get_doc('DocType', breadcrumbs.doctype).issingle) {
 				// no user listview for non-system managers and single doctypes
+			} else if (breadcrumbs.doctype==="File") {
+				const previous_route = frappe.route_history.length > 1 ? frappe.route_history[frappe.route_history.length - 2] : [];
+				const last_folder = previous_route[previous_route.length - 1];
+				const home_index = previous_route.indexOf("Home");
+				const new_route = home_index ? previous_route.slice(home_index + 1) : [];
+				if (new_route.length) {
+					$(`<li><a href="#List/File/Home/${new_route.join("/")}">${__(last_folder)}</a></li>`)
+						.appendTo($breadcrumbs);
+				} else {
+					$(`<li><a href="#List/File/Home">${__('Home')}</a></li>`)
+						.appendTo($breadcrumbs);
+				}
+				breadcrumbs_added = true;
 			} else {
 				var route;
 				const view = frappe.model.user_settings[breadcrumbs.doctype].last_view || 'Tree';

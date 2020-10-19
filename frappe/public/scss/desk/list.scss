@@ -471,22 +471,22 @@ input.list-check-all, input.list-row-checkbox {
 
 
 
-// .file-grid {
-// 	display: flex;
-// 	flex-wrap: wrap;
-// 	align-content: flex-start;
+.file-grid {
+	display: flex;
+	flex-wrap: wrap;
+	align-content: flex-start;
 
-// 	a {
-// 		height: 100%;
-// 	}
-// }
+	a {
+		height: 100%;
+	}
+}
 
-// .file-wrapper {
-// 	width: 120px;
-// 	flex-direction: column;
-// 	align-items: center;
-// }
+.file-wrapper {
+	width: 120px;
+	flex-direction: column;
+	align-items: center;
+}
 
-// .file-title {
-// 	margin-top: 5px;
-// }
+.file-title {
+	margin-top: 5px;
+}
