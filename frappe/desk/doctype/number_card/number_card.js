@@ -310,7 +310,7 @@ frappe.ui.form.on('Number Card', {
 						frm.trigger('render_filters_table');
 					}
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 
 			if (is_document_type) {
@@ -393,7 +393,7 @@ frappe.ui.form.on('Number Card', {
 					}
 					frm.trigger('set_dynamic_filters_in_table');
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 
 			dialog.show();
