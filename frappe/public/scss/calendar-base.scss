@@ -109,4 +109,12 @@
 			display: none;
 		}
 	}
+
+	.fc-now-indicator {
+		border-color: var(--primary) !important;
+	}
+	
+	.fc-now-indicator-arrow {
+		display: none !important;
+	}
 }
