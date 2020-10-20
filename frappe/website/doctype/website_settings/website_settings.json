@@ -52,6 +52,7 @@
   "indexing_authorization_code",
   "column_break_17",
   "google_analytics_id",
+  "google_analytics_anonymize_ip",
   "misc_section",
   "subdomain",
   "disable_signup",
@@ -413,6 +414,12 @@
    "fieldtype": "Link",
    "label": "Custom signup form",
    "options": "Web Form"
+  },
+  {
+    "default": "1",
+    "fieldname": "google_analytics_anonymize_ip",
+    "fieldtype": "Check",
+    "label": "Google Analytics Anonymize IP"
   }
  ],
  "icon": "fa fa-cog",
@@ -421,7 +428,7 @@
  "issingle": 1,
  "links": [],
  "max_attachments": 10,
- "modified": "2020-09-22 15:39:46.898197",
+ "modified": "2020-09-28 18:47:18.506700",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Settings",
