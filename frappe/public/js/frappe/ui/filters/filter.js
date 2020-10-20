@@ -533,19 +533,33 @@ frappe.ui.filter_utils = {
 
 	get_timespan_options(periods) {
 		const period_map = {
-			Last: ['Week', 'Month', 'Quarter', '6 months', 'Year'],
+			Last: [
+				{label: __('Last Week'), value: 'last week'},
+				{label: __('Last Month'), value: 'last month'},
+				{label: __('Last Quarter'), value: 'last quarter'},
+				{label: __('Last 6 months'), value: 'last 6 months'},
+				{label: __('Last Year'), value: 'last year'}
+			],
 			Today: null,
-			This: ['Week', 'Month', 'Quarter', 'Year'],
-			Next: ['Week', 'Month', 'Quarter', '6 months', 'Year'],
+			This: [
+				{label: __('This Week'), value: 'this week'},
+				{label: __('This Month'), value: 'this month'},
+				{label: __('This Quarter'), value: 'this quarter'},
+				{label: __('This Year'), value: 'this year'}
+			],
+			Next: [
+				{label: __('Next Week'), value: 'next week'},
+				{label: __('Next Month'), value: 'next month'},
+				{label: __('Next Quarter'), value: 'next quarter'},
+				{label: __('Next 6 months'), value: 'next 6 months'},
+				{label: __('Next Year'), value: 'next year'}
+			],
 		};
 		let options = [];
 		periods.forEach((period) => {
 			if (period_map[period]) {
 				period_map[period].forEach((p) => {
-					options.push({
-						label: `${period} ${p}`,
-						value: `${period.toLowerCase()} ${p.toLowerCase()}`,
-					});
+					options.push(p);
 				});
 			} else {
 				options.push({
