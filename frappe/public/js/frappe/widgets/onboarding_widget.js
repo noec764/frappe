@@ -26,7 +26,7 @@ export default class OnboardingWidget extends Widget {
 
 		let $step = $(`<a class="onboarding-step ${status}">
 				<div class="step-title">
-					<div class="step-index step-pending">${ __(index + 1) }</div>
+					<div class="step-index step-pending">${__(index + 1)}</div>
 					<div class="step-index step-skipped">${frappe.utils.icon('tick', 'xs')}</div>
 					<div class="step-index step-complete">${frappe.utils.icon('tick', 'xs')}</div>
 					<div>${__(step.title)}</div>
@@ -84,7 +84,7 @@ export default class OnboardingWidget extends Widget {
 			this.step_body.empty();
 			this.step_footer.empty();
 
-			this.step_body.html(step.description&&frappe.markdown(__(step.description)) || `<h1>${__(step.title)}</h1>`)
+			this.step_body.html(step.description ? frappe.markdown(__(step.description)) : `<h1>${__(step.title)}</h1>`)
 
 			if (step.intro_video_url) {
 				$(`<button class="btn btn-primary btn-sm">${__('Watch Tutorial')}</button>`)
