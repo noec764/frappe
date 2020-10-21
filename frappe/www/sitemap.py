@@ -23,7 +23,7 @@ def get_context(context):
 
 	links = []
 	for route, page in iteritems(get_pages()):
-		if not page.sitemap:
+		if page.sitemap:
 			links.append({
 				"loc": get_url(quote(page.name.encode("utf-8"))),
 				"lastmod": nowdate()
