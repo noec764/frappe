@@ -747,12 +747,14 @@ def money_in_words(number, main_currency = None, fraction_currency=None):
 
 	d = get_defaults()
 	if not main_currency:
-		main_currency = d.get('currency', 'INR')
+		main_currency = d.get('currency', 'EUR')
 	if not fraction_currency:
 		fraction_currency = frappe.db.get_value("Currency", main_currency, "fraction", cache=True) or _("Cent")
 
 	number_format = frappe.db.get_value("Currency", main_currency, "number_format", cache=True) or \
 		frappe.db.get_default("number_format") or "#,###.##"
+
+	currency_title = frappe.db.get_value("Currency", main_currency, "title", cache=True) or main_currency
 
 	fraction_length = get_number_format_info(number_format)[2]
 
@@ -770,12 +772,18 @@ def money_in_words(number, main_currency = None, fraction_currency=None):
 
 	# 0.00
 	if main == '0' and fraction in ['00', '000']:
-		out = "{0} {1}".format(main_currency, _('Zero'))
+		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
+			out = "{0} {1}".format(currency_title, _('Zero'))
+		else:
+			out = "{0} {1}".format(_('Zero'), currency_title)
 	# 0.XX
 	elif main == '0':
 		out = _(in_words(fraction, in_million).title()) + ' ' + fraction_currency
 	else:
-		out = main_currency + ' ' + _(in_words(main, in_million).title())
+		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
+			out = currency_title + ' ' + _(in_words(main, in_million).title())
+		else:
+			out = _(in_words(main, in_million).title()) + ' ' + currency_title
 		if cint(fraction):
 			out = out + ' ' + _('and') + ' ' + _(in_words(fraction, in_million).title()) + ' ' + fraction_currency
 

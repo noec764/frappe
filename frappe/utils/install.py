@@ -162,6 +162,7 @@ def add_country_and_currency(name, country):
 		frappe.get_doc({
 			"doctype": "Currency",
 			"currency_name": country.currency,
+			"title": country.currency_name,
 			"fraction": country.currency_fraction,
 			"symbol": country.currency_symbol,
 			"fraction_units": country.currency_fraction_units,
