@@ -1336,8 +1336,8 @@ class Document(BaseDocument):
 		"""
 		if date_diff(self.get(to_date_field), self.get(from_date_field)) < 0:
 			frappe.throw(_('{0} must be after {1}').format(
-				frappe.bold(self.meta.get_label(to_date_field)),
-				frappe.bold(self.meta.get_label(from_date_field)),
+				frappe.bold(_(self.meta.get_label(to_date_field))),
+				frappe.bold(_(self.meta.get_label(from_date_field))),
 			), frappe.exceptions.InvalidDates)
 
 	def get_assigned_users(self):
