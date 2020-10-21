@@ -565,7 +565,7 @@ class DatabaseQuery(object):
 			not has_any_user_permission_for_doctype(self.doctype, self.user, self.reference_doctype)):
 			only_if_shared = True
 			if not self.shared:
-				frappe.throw(_("No permission to read {0}").format(self.doctype), frappe.PermissionError)
+				frappe.throw(_("No permission to read {0}").format(_(self.doctype)), frappe.PermissionError)
 			else:
 				self.conditions.append(self.get_share_condition())
 
