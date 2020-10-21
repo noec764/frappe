@@ -137,8 +137,10 @@ class TestEmail(unittest.TestCase):
 		frappe.flags.mute_emails = False
 		self.test_email_queue()
 		frappe.db.sql("UPDATE `tabEmail Queue` SET `modified`=(NOW() - INTERVAL '8' day)")
-		from frappe.email.queue import clear_outbox
-		clear_outbox()
+
+		from frappe.email.queue import set_expiry_for_email_queue
+		set_expiry_for_email_queue()
+
 		email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Expired'""", as_dict=1)
 		self.assertEqual(len(email_queue), 1)
 		queue_recipients = [r.recipient for r in frappe.db.sql("""select recipient from `tabEmail Queue Recipient`

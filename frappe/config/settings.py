@@ -17,6 +17,11 @@ def get_data():
 				},
 				{
 					"type": "doctype",
+					"name": "Log Settings",
+					"description": _("Log cleanup and notification configuration")
+				},
+				{
+					"type": "doctype",
 					"name": "Error Log",
 					"description": _("Log of error on automated events (scheduler).")
 				},
