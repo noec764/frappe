@@ -5,8 +5,9 @@
 }
 
 .print-preview-wrapper {
-	padding: var(--padding-xl) 0px;
-	background-color: var(--gray-100);
+	padding: 80px 0;
+	background-color: var(--gray-200);
+	border-radius: var(--border-radius);
 }
 
 .print-toolbar {
@@ -31,3 +32,9 @@
 		background-color: var(--gray-700);
 	}
 } 
+
+.print-preview-sidebar {
+	.clearfix {
+		display: none;
+	}
+}

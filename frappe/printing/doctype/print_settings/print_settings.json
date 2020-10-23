@@ -25,7 +25,8 @@
   "print_style_preview",
   "section_break_8",
   "font",
-  "font_size"
+  "font_size",
+  "print_uom_after_quantity"
  ],
  "fields": [
   {
@@ -155,7 +156,7 @@
    "fieldname": "font",
    "fieldtype": "Select",
    "label": "Font",
-   "options": "Default\nArial\nHelvetica\nVerdana\nMonospace"
+   "options": "Default\nHelvetica Neue\nArial\nHelvetica\nInter\nVerdana\nMonospace"
   },
   {
    "default": "9",
@@ -163,11 +164,17 @@
    "fieldname": "font_size",
    "fieldtype": "Float",
    "label": "Font Size"
+  },
+  {
+    "default": "0",
+    "fieldname": "print_uom_after_quantity",
+    "fieldtype": "Check",
+    "label": "Print UOM after Quantity"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
- "modified": "2020-06-25 10:52:46.753490",
+ "modified": "2020-10-21 23:42:09.471022",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Print Settings",
