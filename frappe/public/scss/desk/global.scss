@@ -182,13 +182,14 @@ button.btn.dropdown-toggle:after {
 
 	.icon {
 		use {
-			stroke: white;
+			stroke: $white;
 		}
 	}
 }
 
 .btn.btn-danger {
 	background-color: var(--red-400) !important;
+	color: $white;
 }
 
 h1, h2, h3, h4 {
