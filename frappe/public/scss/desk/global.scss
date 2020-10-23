@@ -179,12 +179,8 @@ button.btn.dropdown-toggle:after {
 .btn.btn-primary {
 	background-color: $primary;
 	white-space: nowrap;
-
-	.icon {
-		use {
-			stroke: $white;
-		}
-	}
+	--icon-stroke: white;
+	--icon-fill-bg: var(--primary-color);
 }
 
 .btn.btn-danger {
