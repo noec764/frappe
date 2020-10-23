@@ -3,6 +3,7 @@
 
 frappe.last_edited_communication = {};
 frappe.standard_replies = {};
+frappe.separator_element = '<div>---</div>';
 
 frappe.views.CommunicationComposer = Class.extend({
 	init: function(opts) {
@@ -337,10 +338,10 @@ frappe.views.CommunicationComposer = Class.extend({
 		$(fields.select_print_format.wrapper).toggle(false);
 
 		if (this.frm) {
-			$(fields.select_print_format.input)
-				.empty()
-				.add_options(this.frm.print_preview.print_formats)
-				.val(this.frm.print_preview.print_formats[0]);
+			// $(fields.select_print_format.input)
+			// 	.empty()
+			// 	.add_options(this.frm.print_preview.print_formats)
+			// 	.val(this.frm.print_preview.print_formats[0]);
 		} else {
 			$(fields.attach_document_print.wrapper).toggle(false);
 		}
@@ -678,7 +679,7 @@ frappe.views.CommunicationComposer = Class.extend({
 			content = `
 				<div><br></div>
 				${reply}
-				${frappe.separator_element}
+				${frappe.separator_element || ''}
 				<p>${__("On {0}, {1} wrote:", [frappe.datetime.global_date_format(communication_date) , last_email.sender])}</p>
 				<blockquote>
 				${last_email_content}
