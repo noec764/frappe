@@ -25,8 +25,7 @@
   "print_style_preview",
   "section_break_8",
   "font",
-  "font_size",
-  "print_uom_after_quantity"
+  "font_size"
  ],
  "fields": [
   {
@@ -164,12 +163,6 @@
    "fieldname": "font_size",
    "fieldtype": "Float",
    "label": "Font Size"
-  },
-  {
-    "default": "0",
-    "fieldname": "print_uom_after_quantity",
-    "fieldtype": "Check",
-    "label": "Print UOM after Quantity"
   }
  ],
  "icon": "fa fa-cog",
