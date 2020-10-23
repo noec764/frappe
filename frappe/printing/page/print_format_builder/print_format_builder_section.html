@@ -1,12 +1,13 @@
-<div class="print-format-builder-section" data-label="{{ section.label }}" data-page-break="{{ section.pagebreak }}">
+<div class="print-format-builder-section row" data-label="{{ section.label }}">
 	<div class="print-format-builder-section-head col-md-12">
-		<a class="section-settings pull-right
-			btn-default btn-xs" style="padding-top: 3px">
-			<span class="octicon octicon-gear text-muted"></span></a>
-		<span class="octicon octicon-three-bars drag-handle"></span>
+		<div class="section-settings pull-right cursor-pointer">
+			<svg class="icon icon-sm"><use xlink:href="#icon-setting-gear"></use></svg>
+		</div>
+		<span class="drag-handle">
+			<svg class="icon icon-xs"><use xlink:href="#icon-drag"></use></svg>
+		</span>
 		<span class="section-label">{{ section.label || "" }}</span>
 	</div>
-	<div class="row mx-0">
 		{% for(var j=0; j < section.columns.length; j++) {
 			var column = section.columns[j]; %}
 		<div class="col-md-{%= 12 / section.no_of_columns %} section-column">
@@ -19,5 +20,4 @@
 			</div>
 		</div>
 		{% } %}
-	</div>
 </div>

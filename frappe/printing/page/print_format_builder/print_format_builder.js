@@ -209,7 +209,7 @@ frappe.PrintFormatBuilder = Class.extend({
 			// default print heading template
 			this.print_heading_template = '<div class="print-heading">\
 				<h2>'+__(this.print_format.doc_type)
-					+'<br><small>{{ doc.name }}</small>\
+					+'<br><small class="sub-heading">{{ doc.name }}</small>\
 				</h2></div>';
 		}
 
@@ -315,7 +315,7 @@ frappe.PrintFormatBuilder = Class.extend({
 		var me = this;
 
 		// drag from fields library
-		Sortable.create(this.page.sidebar.find(".print-format-builder-fields").get(0),
+		Sortable.create(this.page.sidebar.find(".print-format-builder-sidebar-fields").get(0),
 			{
 				group: {
 					name:'field', put: true, pull:"clone"
@@ -416,10 +416,7 @@ frappe.PrintFormatBuilder = Class.extend({
 							d.hide();
 							section.fadeOut(function() {section.remove()});
 						},
-						input_class: "btn-danger",
-						input_css: {
-							"margin-top": "20px"
-						}
+						input_class: "btn-danger"
 					}
 				],
 			});
