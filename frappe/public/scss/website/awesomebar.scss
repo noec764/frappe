@@ -1,0 +1,62 @@
+.awesomplete {
+	[hidden] {
+		display: none;
+	}
+
+	.visually-hidden {
+		position: absolute;
+		clip: rect(0, 0, 0, 0);
+	}
+
+	&> input {
+		display: block;
+	}
+
+	&> ul:empty {
+		display: none;
+	}
+
+	&> ul {
+		position: absolute;
+		min-width: 100%;
+		list-style: none;
+		background-color: $control-bg;
+		max-height: unquote("min(60vh, 300px)");
+		overflow-y: auto;
+		overflow-x: hidden;
+		border-radius: $btn-border-radius-sm;
+		box-shadow: $shadow-base;
+		border: 1px solid $border-color;
+		left: 0;
+		margin: 0;
+		padding: $padding-xs;
+		z-index: 1041;
+		top: calc(100% + var(--margin-xs));
+
+		&> li {
+			cursor: pointer;
+			font-size: 12px;
+			padding: $padding-sm;
+			color: $text-light;
+			border-radius: $btn-border-radius-sm;
+		}
+
+		&> li .link-option {
+			font-weight: normal;
+		}
+
+		&> li:hover, &> li[aria-selected=true] {
+			background-color: $body-bg;
+			color: $text-color;
+		}
+
+		a:hover {
+			text-decoration: none;
+		}
+
+		p {
+			margin: 3px 0;
+			line-height: 1.4;
+		}
+	}
+}
