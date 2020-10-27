@@ -79,7 +79,7 @@
  "icon": "fa fa-bitcoin",
  "idx": 1,
  "links": [],
- "modified": "2020-10-21 13:30:54.214324",
+ "modified": "2020-10-27 18:23:18.242575",
  "modified_by": "Administrator",
  "module": "Geo",
  "name": "Currency",
@@ -97,6 +97,10 @@
    "role": "System Manager",
    "share": 1,
    "write": 1
+  },
+  {
+   "read": 1,
+   "role": "All"
   }
  ],
  "sort_field": "modified",
