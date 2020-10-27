@@ -187,6 +187,9 @@ def rename_versions(doctype, old, new):
 
 def rename_parent_and_child(doctype, old, new, meta):
 	# rename the doc
+	if frappe.db.exists(doctype, new):
+		frappe.throw(_("Another {0} already exists with the name {1}").format(_(doctype), new))
+
 	frappe.db.sql("UPDATE `tab{0}` SET `name`={1} WHERE `name`={1}".format(doctype, '%s'), (new, old))
 	update_autoname_field(doctype, new, meta)
 	update_child_docs(old, new, meta)
