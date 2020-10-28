@@ -31,7 +31,7 @@ class TestDBUpdate(unittest.TestCase):
 			default = field_def.default if field_def.default is not None else fallback_default
 
 			self.assertEqual(fieldtype, table_column.type)
-			self.assertIn(table_column.default or 'NULL', [default, "'{}'".format(default)])
+			self.assertIn(cstr(table_column.default) or 'NULL', [cstr(default), "'{}'".format(default)])
 
 def get_fieldtype_from_def(field_def):
 	fieldtuple = frappe.db.type_map.get(field_def.fieldtype, ('', 0))
