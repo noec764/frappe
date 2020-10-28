@@ -36,9 +36,17 @@ class DeskPage(Document):
 			'for_user': '',
 		}
 
-		pages = frappe.get_all("Desk Page", fields=["name", "module"], filters=filters, as_list=1)
+		pages = frappe.get_all("Desk Page", fields=["name", "module", "restrict_to_domain"], filters=filters)
 
-		return { page[1]: page[0] for page in pages if page[1] }
+		pages_map = {}
+
+		for page in pages:
+			if page.module and page.module not in pages_map:
+				pages_map[page.module] = page.name
+			elif page.module and page.module in pages_map and (page.name == page.module or not page.restrict_to_domain):
+				pages_map[page.module] = page.name
+
+		return pages_map
 
 def disable_saving_as_standard():
 	return frappe.flags.in_install or \
