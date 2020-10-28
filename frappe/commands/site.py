@@ -672,8 +672,10 @@ def browse(context, site):
 @click.command('start-recording')
 @pass_context
 def start_recording(context):
+	import frappe.recorder
 	for site in context.sites:
 		frappe.init(site=site)
+		frappe.set_user("Administrator")
 		frappe.recorder.start()
 	if not context.sites:
 		raise SiteNotSpecifiedError
@@ -682,8 +684,10 @@ def start_recording(context):
 @click.command('stop-recording')
 @pass_context
 def stop_recording(context):
+	import frappe.recorder
 	for site in context.sites:
 		frappe.init(site=site)
+		frappe.set_user("Administrator")
 		frappe.recorder.stop()
 	if not context.sites:
 		raise SiteNotSpecifiedError
