@@ -82,14 +82,14 @@ frappe.breadcrumbs = {
 		// get preferred module for breadcrumbs, based on sent via module
 		var from_module = frappe.breadcrumbs.get_doctype_module(breadcrumbs.doctype);
 
-		if(from_module) {
+		if (from_module) {
 			breadcrumbs.module = from_module;
 		} else if(frappe.breadcrumbs.preferred[breadcrumbs.doctype]!==undefined) {
 			// get preferred module for breadcrumbs
 			breadcrumbs.module = frappe.breadcrumbs.preferred[breadcrumbs.doctype];
 		}
 
-		if(!breadcrumbs_added && breadcrumbs.module) {
+		if (!breadcrumbs_added && breadcrumbs.module) {
 			if (frappe.breadcrumbs.module_map[breadcrumbs.module]) {
 				breadcrumbs.module = frappe.breadcrumbs.module_map[breadcrumbs.module];
 			}
@@ -100,7 +100,7 @@ frappe.breadcrumbs = {
 				breadcrumbs.module = frappe.boot.module_page_map[breadcrumbs.module];
 			}
 
-			if(frappe.get_module(current_module)) {
+			if (frappe.get_module(current_module)) {
 				// if module access exists
 				const module_info = frappe.get_module(current_module)
 				const label = module_info ? module_info.label : breadcrumbs.module;
@@ -113,9 +113,10 @@ frappe.breadcrumbs = {
 				}
 			}
 		}
-		if(breadcrumbs.doctype && frappe.get_route()[0]==="Form") {
-			if (breadcrumbs.doctype==="User"
-				|| frappe.get_doc('DocType', breadcrumbs.doctype).issingle) {
+
+		let set_list_breadcrumb = (doctype) => {
+			if (doctype==="User"
+				|| frappe.get_doc('DocType', doctype).issingle) {
 				// no user listview for non-system managers and single doctypes
 			} else if (breadcrumbs.doctype==="File") {
 				const previous_route = frappe.route_history.length > 1 ? frappe.route_history[frappe.route_history.length - 2] : [];
@@ -131,7 +132,7 @@ frappe.breadcrumbs = {
 				}
 				breadcrumbs_added = true;
 			} else {
-				var route;
+				let route;
 				const view = frappe.model.user_settings[breadcrumbs.doctype].last_view || 'Tree';
 				if (view == 'Tree' && frappe.boot.treeviews.indexOf(breadcrumbs.doctype) !== -1) {
 					route = view + '/' + breadcrumbs.doctype;
@@ -140,11 +141,22 @@ frappe.breadcrumbs = {
 				} else {
 					route = 'List/' + breadcrumbs.doctype;
 				}
-				$(repl('<li><a href="#%(route)s">%(label)s</a></li>',
-					{route: route, label: __(breadcrumbs.doctype)}))
+				$(`<li><a href="#${route}">${_(doctype)}</a></li>`)
 					.appendTo($breadcrumbs);
 				breadcrumbs_added = true;
 			}
+		}
+
+		if (breadcrumbs.doctype && frappe.get_route()[0] === "Form") {
+			set_list_breadcrumb(breadcrumbs.doctype);
+		}
+
+		if (breadcrumbs.doctype && frappe.get_route()[0] === "print") {
+			set_list_breadcrumb(breadcrumbs.doctype);
+			let docname = frappe.get_route()[2];
+			let form_route = `Form/${breadcrumbs.doctype}/${docname}`;
+			$(`<li><a href="#${form_route}">${docname}</a></li>`)
+				.appendTo($breadcrumbs);
 		}
 
 		if (!breadcrumbs_added && frappe.get_prev_route() && frappe.get_prev_route()[1]) {
