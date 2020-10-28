@@ -141,7 +141,7 @@ frappe.breadcrumbs = {
 				} else {
 					route = 'List/' + breadcrumbs.doctype;
 				}
-				$(`<li><a href="#${route}">${_(doctype)}</a></li>`)
+				$(`<li><a href="#${route}">${__(doctype)}</a></li>`)
 					.appendTo($breadcrumbs);
 				breadcrumbs_added = true;
 			}
