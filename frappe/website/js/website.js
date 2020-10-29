@@ -233,11 +233,10 @@ $.extend(frappe, {
 	freeze: function(msg) {
 		// blur
 		if(!$('#freeze').length) {
-			var freeze = $('<div id="freeze" class="modal-backdrop fade"></div>')
+			const freeze = $('<div id="freeze" class="modal-backdrop fade"></div>')
 				.appendTo("body");
 
-			freeze.html(repl('<div class="freeze-message-container"><div class="freeze-message">%(msg)s</div></div>',
-				{msg: msg || ""}));
+			freeze.html(`<div class="freeze-message-container"><div class="freeze-message">${msg || ""}</div></div>`);
 
 			setTimeout(function() {
 				freeze.addClass("in");

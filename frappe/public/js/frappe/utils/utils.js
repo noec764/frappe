@@ -402,11 +402,11 @@ Object.assign(frappe.utils, {
 			if (has_words(["Pending", "Review", "Medium", "Not Approved"], text)) {
 				style = "warning";
 				colour = "orange";
-			} else if (has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error"], text)) {
+			} else if (has_words(["Open", "Urgent", "High", "Failed", "Rejected", "Error", "Cancelled"], text)) {
 				style = "danger";
 				colour = "red";
 			} else if (has_words(["Closed", "Finished", "Converted", "Completed", "Complete", "Confirmed",
-				"Approved", "Yes", "Active", "Available", "Paid", "Success"], text)) {
+				"Approved", "Yes", "Active", "Available", "Paid", "Success", "Validated"], text)) {
 				style = "success";
 				colour = "green";
 			} else if (has_words(["Submitted"], text)) {

@@ -64,7 +64,7 @@
 									<div class="grid-body">
 										<div class="rows">
 											<div class="grid-row" :class="showing == call.index ? 'grid-row-open' : ''"  v-for="call in paginated(sorted(grouped(request.calls)))" :key="call.index">
-												<div class="data-row row" v-if="showing != call.index" style="display: block;" @click="showing = call.index" >
+												<div class="data-row row" v-if="showing != call.index" @click="showing = call.index" >
 													<div class="row-index col col-xs-1"><span>{{ call.index }}</span></div>
 													<div class="col grid-static-col col-xs-6" data-fieldtype="Code">
 														<div class="static-area"><span>{{ call.query }}</span></div>

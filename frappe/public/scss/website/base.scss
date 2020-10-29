@@ -64,3 +64,36 @@ h3 {
 .hide {
 	display: none !important;
 }
+
+#freeze {
+	z-index: 1020;
+	bottom: 0;
+	opacity: 0;
+
+	&.dark {
+		background-color: #334143;
+	}
+
+	.freeze-message-container {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+
+	.freeze-message {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 100%;
+		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		text-align: center;
+		color: white;
+	}
+
+	&.in {
+		opacity: 0.5;
+	}
+}
