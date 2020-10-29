@@ -205,7 +205,7 @@ frappe.ui.form.PrintView = class {
 		this.additional_settings = {};
 		this.sidebar_dynamic_section.empty();
 		frappe
-			.xcall('frappe.printing.page.print.print.get_settings_to_show', {
+			.xcall('frappe.printing.page.print.print.get_print_settings_to_show', {
 				doctype: this.frm.doc.doctype,
 				docname: this.frm.doc.name
 			})
