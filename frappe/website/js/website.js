@@ -20,6 +20,7 @@ $.extend(frappe, {
 		}
 		for (let link of links) {
 			await this.add_asset_to_head(link);
+			await this.send_translations(link);
 		}
 		callback && callback();
 	},
@@ -43,6 +44,14 @@ $.extend(frappe, {
 				resolve();
 			};
 		});
+	},
+	send_translations(link) {
+		return frappe.call({
+			method: "frappe.translate.get_required_file_messages",
+			args: {
+				file: link
+			}
+		})
 	},
 	hide_message: function() {
 		$('.message-overlay').remove();

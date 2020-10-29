@@ -139,6 +139,8 @@ def get_website_settings(context=None):
 
 	translated_messages = {}
 	translated_messages.update(frappe.translate.get_dict('template'))
+	translated_messages.update(frappe.translate.get_dict('jsfile', 'assets/js/frappe-web.min.js'))
+	translated_messages.update(frappe.translate.get_dict('jsfile', 'assets/js/bootstrap-4-web.min.js'))
 	for filename in context.web_include_js:
 		translated_messages.update(frappe.translate.get_dict('jsfile', filename))
 

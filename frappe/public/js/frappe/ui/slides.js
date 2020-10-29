@@ -21,7 +21,7 @@ frappe.ui.Slide = class Slide {
 
 		this.$body = $(`<div class="slide-body">
 			<div class="content text-center">
-				<h1 class="title slide-title">${this.title}</h1>
+				<h1 class="title slide-title">${__(this.title)}</h1>
 			</div>
 			<div class="form-wrapper">
 				<div class="form"></div>

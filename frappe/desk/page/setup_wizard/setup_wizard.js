@@ -167,6 +167,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		frappe.setup.slides = this.get_setup_slides_filtered_by_domain();
 
 		this.slides = frappe.setup.slides;
+
 		frappe.setup.run_event("after_load");
 
 		// re-render all slide, only remake made slides
