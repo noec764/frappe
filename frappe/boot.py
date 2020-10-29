@@ -95,7 +95,6 @@ def get_bootinfo():
 	bootinfo.frequently_visited_links = frequently_visited_links()
 	bootinfo.link_preview_doctypes = get_link_preview_doctypes()
 	bootinfo.additional_filters_config = get_additional_filters_from_hooks()
-	bootinfo.additional_print_settings = get_additional_print_settings_from_hooks()
 
 	return bootinfo
 
@@ -321,11 +320,3 @@ def get_additional_filters_from_hooks():
 		filter_config.update(frappe.get_attr(hook)())
 
 	return filter_config
-
-def get_additional_print_settings_from_hooks():
-	settings = frappe._dict()
-	hooks = frappe.get_hooks('additional_print_settings')
-	for hook in hooks:
-		settings.update(frappe.get_attr(hook)())
-
-	return settings
