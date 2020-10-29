@@ -6,7 +6,7 @@
 	display: none;
 	.page-card {
 		max-width: 460px;
-		padding: var(--padding-2xl);
+		padding: 50px;
 		margin: 70px auto;
 		border-radius: var(--border-radius-md);
 		background-color: #fff;
@@ -15,6 +15,10 @@
 		form {
 			max-width: 330px;
 			margin: 0 auto;
+
+			.form-group {
+				margin-bottom: var(--margin-sm);
+			}
 		}
 
 		.page-card-actions {
@@ -75,7 +79,8 @@
 
 		.page-card-body {
 			::placeholder, /* Chrome, Firefox, Opera, Safari 10.1+ */
-			::-ms-input-placeholder { /* Microsoft Edge */
+			::-ms-input-placeholder {
+				/* Microsoft Edge */
 				color: var(--text-light);
 				opacity: 1; /* Firefox */
 			}
@@ -104,6 +109,8 @@
 
 			.forgot-password-message {
 				text-align: right;
+				line-height: 1;
+
 				> * {
 					color: var(--text-light);
 					font-size: var(--text-sm);
