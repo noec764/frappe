@@ -9,12 +9,12 @@ frappe.ui.form.on('Help Article', {
 			<div class="row">
 				<div class="col-md-6 col-xs-12">
 					<span class="indicator whitespace-nowrap green">
-						<span>${ __("Helpful") } ${frm.doc.helpful}</span>
+						<span>${ __("Helpful") } ${frm.doc.helpful || 0}</span>
 					</span>
 				</div>
 				<div class="col-md-6 col-xs-12">
 					<span class="indicator whitespace-nowrap red">
-						<span>${ __("Not Helpful") } ${frm.doc.not_helpful}</span>
+						<span>${ __("Not Helpful") } ${frm.doc.not_helpful || 0}</span>
 					</span>
 				</div>
 			</div>
