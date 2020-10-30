@@ -140,7 +140,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nClosed"
+   "options": "Confirmed\nNot Confirmed\nOpen\nClosed\nCancelled"
   },
   {
    "collapsible": 1,
@@ -210,7 +210,7 @@
  "icon": "fa fa-calendar",
  "idx": 1,
  "links": [],
- "modified": "2020-10-09 17:06:39.775721",
+ "modified": "2020-10-29 17:54:29.383919",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
