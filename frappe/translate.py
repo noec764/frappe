@@ -520,7 +520,7 @@ def get_messages_from_module_onboarding(name):
 def get_messages_from_onboarding_step(name):
 	onboarding_step = frappe.get_doc("Onboarding Step", name)
 	messages = []
-	for field in ["title", "callback_title", "callback_message"]:
+	for field in ["title", "callback_title", "callback_message", "action_label", "action"]:
 		if onboarding_step.get(field):
 			messages.append(('Onboarding Step: ' + name, onboarding_step.get(field)))
 	return messages

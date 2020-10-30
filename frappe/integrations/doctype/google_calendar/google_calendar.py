@@ -194,7 +194,7 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
 			events = google_calendar.events().list(calendarId=account.google_calendar_id, maxResults=page_length,
 				singleEvents=False, showDeleted=True, syncToken=sync_token, pageToken=events.get("nextPageToken")).execute()
 		except HttpError as err:
-			msg = _("Google Calendar - Could not fetch event from Google Calendar, error code {0}").format(err.resp.status)
+			msg = _("Google Calendar - Could not fetch event from Google Calendar, error code {0}.").format(err.resp.status)
 
 			if err.resp.status == 410:
 				set_encrypted_password("Google Calendar", account.name, "", "next_sync_token")
