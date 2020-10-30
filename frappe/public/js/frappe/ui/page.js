@@ -659,7 +659,7 @@ frappe.ui.Page = Class.extend({
 
 		let custom_btn_group = $(`
 			<div class="custom-btn-group hide">
-				<button type="button" class="btn btn-default btn-sm ${icon ? "icon-btn" : "ellipsis"}" data-toggle="dropdown" aria-expanded="false">
+				<button type="button" class="btn btn-default btn-sm ellipsis" data-toggle="dropdown" aria-expanded="false">
 					${dropdown_label}
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
