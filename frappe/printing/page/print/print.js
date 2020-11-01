@@ -86,7 +86,7 @@ frappe.ui.form.PrintView = class {
 			{
 				fieldtype: 'Select',
 				fieldname: 'print_format',
-				label: 'Print Format',
+				label: __('Print Format'),
 				options: [this.get_default_option_for_select(__('Select Print Format'))],
 				change: () => this.refresh_print_format(),
 				default: __('Select Print Format')
@@ -97,7 +97,7 @@ frappe.ui.form.PrintView = class {
 			{
 				fieldtype: 'Select',
 				fieldname: 'language',
-				placeholder: 'Language',
+				placeholder: __('Language'),
 				options: [
 					this.get_default_option_for_select(__('Select Language')),
 					...this.get_language_options()
@@ -135,7 +135,6 @@ frappe.ui.form.PrintView = class {
 		if (df.fieldtype == 'Select') {
 			df.input_class = 'btn btn-default btn-sm';
 		}
-		console.log(df)
 		let field = frappe.ui.form.make_control({
 			df: df,
 			parent: is_dynamic ? this.sidebar_dynamic_section : this.sidebar,

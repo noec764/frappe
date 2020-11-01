@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 
 @frappe.whitelist()
 def get_print_settings_to_show(doctype, docname):
@@ -15,6 +16,7 @@ def get_print_settings_to_show(doctype, docname):
 	for fieldname in fields:
 		df = print_settings.meta.get_field(fieldname)
 		df.default = print_settings.get(fieldname)
+		df.label = _(df.label)
 		print_settings_fields.append(df)
 
 	return print_settings_fields
