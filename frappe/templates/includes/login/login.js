@@ -136,7 +136,7 @@ login.call = function(args, callback) {
 		type: "POST",
 		args: args,
 		callback: callback,
-		freeze: true,
+		freeze: false,
 		statusCode: login.login_handlers
 	});
 }

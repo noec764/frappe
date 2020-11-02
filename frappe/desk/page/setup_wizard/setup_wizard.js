@@ -269,7 +269,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.$working_state = this.get_message(
 			__("Setting up your system"),
-			__("Starting dodock ...")).appendTo(this.parent);
+			__("Starting Dodock ...")).appendTo(this.parent);
 
 		this.attach_abort_button();
 
@@ -435,7 +435,7 @@ frappe.setup.slides_settings = [
 				reqd:1
 			},
 			{
-				"fieldname": "email", "label": __("Email Address") + ' (' + __("Will be your login ID") + ')',
+				"fieldname": "email", "label": __("Email Address (Will be your login ID)"),
 				"fieldtype": "Data", "options":"Email"
 			},
 			{
