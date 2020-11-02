@@ -76,7 +76,6 @@ class ScheduledJobType(Document):
 					frappe.get_doc('Server Script', script_name).execute_scheduled_method()
 			else:
 				frappe.get_attr(self.method)()
-			frappe.get_attr(self.method)()
 			frappe.db.commit()
 			self.log_status('Complete')
 		except Exception:
