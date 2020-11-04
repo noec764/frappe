@@ -99,6 +99,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			});
 		}
 
+		if (this.view_name == 'List') this.toggle_paging = true;
+
 		this.patch_refresh_and_load_lib();
 		return this.get_list_view_settings();
 	}
@@ -525,6 +527,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			sort_by: this.sort_selector.sort_by,
 			sort_order: this.sort_selector.sort_order,
 		});
+		this.toggle_paging && this.$paging_area.toggle(false);
 	}
 
 	after_render() {
@@ -535,6 +538,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		`);
 		this.setup_new_doc_event();
 		this.list_sidebar && this.list_sidebar.reload_stats();
+		this.toggle_paging && this.$paging_area.toggle(true);
 	}
 
 	render() {
