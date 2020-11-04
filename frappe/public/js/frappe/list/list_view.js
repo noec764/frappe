@@ -616,7 +616,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	get_header_html_skeleton(left = "", right = "") {
 		return `
-			<header class="level list-row-head text-muted">
+			<header class="level list-row list-row-head text-muted">
 				<div class="level-left list-header-subject">
 					${left}
 				</div>
