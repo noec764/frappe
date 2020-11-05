@@ -53,7 +53,8 @@
    "description": "Smallest circulating fraction unit (coin). For e.g. 1 cent for USD and it should be entered as 0.01",
    "fieldname": "smallest_currency_fraction_value",
    "fieldtype": "Currency",
-   "label": "Smallest Currency Fraction Value"
+   "label": "Smallest Currency Fraction Value",
+   "non_negative": 1
   },
   {
    "description": "A symbol for this currency. For e.g. $",
@@ -79,7 +80,7 @@
  "icon": "fa fa-bitcoin",
  "idx": 1,
  "links": [],
- "modified": "2020-10-27 18:23:18.242575",
+ "modified": "2020-10-29 06:33:12.879978",
  "modified_by": "Administrator",
  "module": "Geo",
  "name": "Currency",
