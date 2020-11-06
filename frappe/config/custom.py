@@ -36,12 +36,6 @@ def get_data():
 					"label": _("Custom Translations"),
 					"name": "Translation",
 					"description": _("Add your own translations")
-				},
-				{
-					"type": "doctype",
-					"label": _("Package"),
-					"name": "Package",
-					"description": _("Import and Export Packages.")
 				}
 			]
 		}
