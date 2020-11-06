@@ -850,7 +850,7 @@ def write_translations_file(app, lang, full_dict=None):
 	frappe.create_folder(tpath)
 	write_csv_file(os.path.join(tpath, lang + ".csv"), full_dict or get_full_dict(lang))
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_required_file_messages(file):
 	filepath = file[1:]
 	translations = get_dict("jsfile", filepath)
