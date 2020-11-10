@@ -182,8 +182,7 @@ def prepare_header_footer(soup):
 	head = soup.find("head").contents
 	styles = soup.find_all("style")
 
-	bootstrap = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/frappe/css/bootstrap.css"))
-	fontawesome = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/frappe/css/fonts/fontawesome/css/all.css"))
+	css = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/css/printview.css"))
 
 	# extract header and footer
 	for html_id in ("header-html", "footer-html"):
@@ -199,8 +198,7 @@ def prepare_header_footer(soup):
 				"styles": styles,
 				"content": content,
 				"html_id": html_id,
-				"bootstrap": bootstrap,
-				"fontawesome": fontawesome
+				"css": css
 			})
 
 			# create temp file
