@@ -102,7 +102,6 @@
 	],
 	"css/printview.css": [
 		"public/css/bootstrap.css",
-		"public/css/font-awesome.css",
 		"public/scss/print.scss"
 	],
 	"concat:js/libs.min.js": [
