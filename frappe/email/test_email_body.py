@@ -76,6 +76,7 @@ This is the text version of this email
 		else:
 			self.assertTrue(True)
 
+	@unittest.skip("Skipped in CI")
 	def test_image(self):
 		img_signature = '''
 Content-Type: image/ico

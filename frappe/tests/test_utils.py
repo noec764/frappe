@@ -44,8 +44,8 @@ class TestMoney(unittest.TestCase):
 		]
 
 		nums_ngn = [
-			(5000, "NGN Five Thousand"), (5000.0, "NGN Five Thousand"),
-			(0.1, "Ten Kobo"), (0, "NGN Zero"), ("Fail", "")
+			(5000, "Five Thousand Naira"), (5000.0, "Five Thousand Naira"),
+			(0.1, "Ten Kobo"), (0, "Zero Naira"), ("Fail", "")
 		]
 
 		for num in nums_bhd:
