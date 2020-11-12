@@ -78,12 +78,11 @@ This is the text version of this email
 
 	def test_image(self):
 		img_signature = '''
-Content-Type: image/png
+Content-Type: image/ico
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
 Content-Disposition: inline; filename="favicon.ico"
 '''
-
 		self.assertTrue(img_signature in self.email_string)
 		self.assertTrue(self.img_base64 in self.email_string)
 

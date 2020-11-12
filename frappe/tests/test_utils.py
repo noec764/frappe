@@ -40,7 +40,7 @@ class TestMoney(unittest.TestCase):
 	def test_money_in_words(self):
 		nums_bhd = [
 			(5000, "Five Thousand Bahraini Dinar"), (5000.0, "Five Thousand Bahraini Dinar"),
-			(0.1, "One Hundred Fils"), (0, "BHD Zero"), ("Fail", "")
+			(0.1, "One Hundred Fils"), (0, "Zero Bahraini Dinar"), ("Fail", "")
 		]
 
 		nums_ngn = [
