@@ -1,14 +1,14 @@
 [data-theme="dark"] {
-	// --gray-50: #{$gray-50};
-	// --gray-100: #F7FAFC;
-	// --gray-200: #EDF2F7;
-	// --gray-300: #E2E8F0;
-	// --gray-400: #CBD5E0;
-	// --gray-500: #A0AEC0;
-	// --gray-600: #718096;
-	// --gray-700: #4A5568;
-	// --gray-800: #2D3748;
-	// --gray-900: #1A202C;
+	--gray-50: #{$gray-50};
+	--gray-100: #F7FAFC;
+	--gray-200: #EDF2F7;
+	--gray-300: #E2E8F0;
+	--gray-400: #CBD5E0;
+	--gray-500: #A0AEC0;
+	--gray-600: #718096;
+	--gray-700: #4A5568;
+	--gray-800: #2D3748;
+	--gray-900: #1A202C;
 
 	// Type Colors
 	--text-muted: var(--gray-300);
@@ -24,6 +24,7 @@
 	// Layout Colors
 	--bg-color: var(--gray-900);
 	--fg-color: var(--gray-800);
+	--navbar-bg: var(--gray-900);
 	--fg-hover-color: var(--gray-700);
 	--card-bg: var(--gray-800);
 	--control-bg: var(--gray-700);
@@ -69,7 +70,8 @@
 		}
 	}
 
-	.modal, .form-in-grid {
+	.modal,
+	.form-in-grid {
 		--control-bg: var(--gray-800);
 		--border-color: var(--gray-600);
 	}
@@ -80,7 +82,10 @@
 	}
 
 	.ql-editor.read-mode {
-		span, p, u, strong {
+		span,
+		p,
+		u,
+		strong {
 			background-color: inherit !important;
 			color: inherit !important;
 		}
