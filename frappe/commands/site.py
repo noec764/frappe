@@ -79,9 +79,7 @@ def restore(context, sql_file_path, mariadb_root_username=None, mariadb_root_pas
 		)
 		sys.exit(1)
 
-	# check if valid SQL file
-	validate_database_sql(decompressed_file_name, _raise=force)
-
+	validate_database_sql(decompressed_file_name, _raise=not force)
 	site = get_site(context)
 	frappe.init(site=site)
 

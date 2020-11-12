@@ -591,4 +591,6 @@ def validate_database_sql(path, _raise=True):
 	if _raise and (missing_table or empty_file):
 		import click
 		click.secho(error_message, fg="red")
+
+	if _raise and to_raise:
 		raise frappe.InvalidDatabaseFile
