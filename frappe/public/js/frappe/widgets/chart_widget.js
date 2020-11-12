@@ -571,7 +571,8 @@ export default class ChartWidget extends Widget {
 			colors: colors,
 			height: this.height,
 			maxSlices: ['Pie', 'Donut'].includes(this.chart_doc.type) ? 6 : 9,
-			axisOptions: {xIsSeries: this.chart_doc.timeseries}
+			axisOptions: {xIsSeries: this.chart_doc.timeseries},
+			tooltipOptions: {}
 		};
 
 		if (this.chart_doc.type == "Heatmap") {

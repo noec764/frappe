@@ -874,6 +874,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 		if (!(options && options.data && options.data.labels && options.data.labels.length > 0)) return;
 
+		options.tooltipOptions = {}
 		if (options.fieldtype) {
 			options.tooltipOptions = {
 				formatTooltipY: d => frappe.format(d, {

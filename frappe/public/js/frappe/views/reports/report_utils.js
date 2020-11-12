@@ -30,7 +30,8 @@ frappe.report_utils = {
 			axisOptions: {
 				shortenYAxisNumbers: 1,
 				xAxisMode: 'tick'
-			}
+			},
+			tooltipOptions: {}
 		};
 
 		function get_column_values(column_name) {

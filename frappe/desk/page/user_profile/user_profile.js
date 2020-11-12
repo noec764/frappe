@@ -139,7 +139,8 @@ class UserProfile {
 			colors: ['purple'],
 			axisOptions: {
 				xIsSeries: 1
-			}
+			},
+			tooltipOptions: {}
 		});
 		this.update_line_chart_data();
 		this.create_line_chart_filters();

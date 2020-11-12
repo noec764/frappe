@@ -519,7 +519,8 @@ frappe.ui.form.Dashboard = Class.extend({
 			truncateLegends: 1,
 			axisOptions: {
 				shortenYAxisNumbers: 1
-			}
+			},
+			tooltipOptions: {}
 		}, args);
 		this.show();
 

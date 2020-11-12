@@ -1179,7 +1179,8 @@ Object.assign(frappe.utils, {
 				xIsSeries: 1,
 				shortenYAxisNumbers: 1,
 				xAxisMode: 'tick'
-			}
+			},
+			tooltipOptions: {}
 		};
 
 		for (let key in custom_options) {
