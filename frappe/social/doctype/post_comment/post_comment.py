@@ -13,7 +13,7 @@ class PostComment(Document):
 		for mention in mentions:
 			if mention == self.owner: continue
 			frappe.publish_realtime('mention', """{} mentioned you!
-				<br><a class="text-muted text-small" href="desk#social/home">Check Social<a>"""
+				<br><a class="text-muted text-small" href="/app/social/home">Check Social<a>"""
 					.format(frappe.utils.get_fullname(self.owner)),
 				user=mention,
 				after_commit=True)

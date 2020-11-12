@@ -145,7 +145,7 @@
      },
      {
       "depends_on": "eval:doc.action == \"Go to Page\"",
-      "description": "Example: #Tree/Account",
+      "description": "Example: /app/Tree/Account",
       "fieldname": "path",
       "fieldtype": "Data",
       "label": "Path",
