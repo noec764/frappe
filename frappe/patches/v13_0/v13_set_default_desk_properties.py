@@ -1,6 +1,6 @@
 
 import frappe
-from ..role import desk_properties
+from frappe.core.doctype.role.role import desk_properties
 
 def execute():
 	for role in frappe.get_all('Role', ['name', 'desk_access']):

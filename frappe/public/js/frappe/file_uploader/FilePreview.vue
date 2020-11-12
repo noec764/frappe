@@ -7,6 +7,7 @@
 				:alt="file.name"
 			>
 			<div class="fallback" v-else v-html="frappe.utils.icon('file', 'md')">
+			</div>
 		</div>
 		<div>
 			<div>

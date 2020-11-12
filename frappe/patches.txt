@@ -332,7 +332,7 @@ execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Tool")
 execute:frappe.delete_doc_if_exists('DocType', 'Twilio Settings')
 execute:frappe.delete_doc_if_exists('DocType', 'Twilio Number Group')
-frappe.core.doctype.role.patches.v13_set_default_desk_properties
+frappe.patches.v13_0.v13_set_default_desk_properties
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
