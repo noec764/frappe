@@ -290,15 +290,15 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					raise_link_exists_exception(doc, reference_doctype, reference_docname, at_position)
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=''):
-	doc_link = '<a href="#Form/{0}/{1}">{1}</a>'.format(doc.doctype, doc.name)
-	reference_link = '<a href="#Form/{0}/{1}">{1}</a>'.format(reference_doctype, reference_docname)
+	doc_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(doc.doctype, doc.name, _(doc.name))
+	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(reference_doctype, reference_docname, _(reference_docname))
 
 	#hack to display Single doctype only once in message
 	if reference_doctype == reference_docname:
 		reference_doctype = ''
 
 	frappe.throw(_('Cannot delete or cancel because {0} {1} is linked with {2} {3} {4}')
-		.format(doc.doctype, doc_link, reference_doctype, reference_link, row), frappe.LinkExistsError)
+		.format(_(doc.doctype), doc_link, _(reference_doctype), reference_link, row), frappe.LinkExistsError)
 
 def delete_dynamic_links(doctype, name):
 	delete_references('ToDo', doctype, name, 'reference_type')

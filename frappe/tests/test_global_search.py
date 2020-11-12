@@ -91,7 +91,7 @@ class TestGlobalSearch(unittest.TestCase):
 		event = frappe.get_doc('Event', event_name)
 		test_subject = event.subject
 		results = global_search.search(test_subject)
-		self.assertEqual(len(results), 1)
+		self.assertEqual(len(results), 2)
 
 		frappe.delete_doc('Event', event_name)
 		global_search.sync_global_search()
