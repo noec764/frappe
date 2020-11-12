@@ -173,7 +173,7 @@ frappe.ui.form.on('User', {
 					found = 1;
 				}
 			}
-			if (!found){
+			if (!found && frappe.user.has_role("System Manager")){
 				frm.add_custom_button(__("Create User Email"), function() {
 					frm.events.create_user_email(frm);
 				});
@@ -212,13 +212,13 @@ frappe.ui.form.on('User', {
 				email: frm.doc.email
 			},
 			callback: function(r) {
-				if (!Array.isArray(r.message)) {
+				if (!Array.isArray(r.message) || !r.message.length) {
 					frappe.route_options = {
 						"email_id": frm.doc.email,
 						"awaiting_password": 1,
 						"enable_incoming": 1
 					};
-					frappe.model.with_doctype("Email Account", function(doc) {
+					frappe.model.with_doctype("Email Account", function() {
 						var doc = frappe.model.get_new_doc("Email Account");
 						frappe.route_flags.linked_user = frm.doc.name;
 						frappe.route_flags.delete_user_from_locals = true;
