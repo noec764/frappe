@@ -6,7 +6,7 @@ frappe.ui.form.on("Google Calendar", {
 		frm.trigger('setup_reference_options');
 
 		if (frm.is_new()) {
-			frm.dashboard.set_headline(__("To use Google Calendar, enable {0}.", [`<a href='#Form/Google Settings'>${__('Google Settings')}</a>`]));
+			frm.dashboard.set_headline(__("To use Google Calendar, enable {0}.", [`<a href='/app/Form/Google Settings'>${__('Google Settings')}</a>`]));
 		}
 
 		frappe.realtime.on("import_google_calendar", (data) => {

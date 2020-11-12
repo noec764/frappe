@@ -158,7 +158,7 @@ frappe.ui.form.LinkedWith = class LinkedWith {
 		return `<div class="list-row-container">
 			<div class="level list-row small">
 				<div class="level-left bold">
-					<a href="#Form/${doctype}/${doc.name}">${doc.name}</a>
+					<a href="/app/Form/${doctype}/${doc.name}">${doc.name}</a>
 				</div>
 			</div>
 		</div>`;

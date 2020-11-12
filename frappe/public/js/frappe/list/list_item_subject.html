@@ -17,7 +17,7 @@
 {% var anchor_title = (_full_title).replace(/["]/g, "&\quot;"); %}
 <a class="grey list-id {{ css_seen }} ellipsis"
 	data-name="{{ _name }}"
-	href="#Form/{{ _doctype_encoded }}/{{ _name_encoded }}"
+	href="/app/Form/{{ _doctype_encoded }}/{{ _name_encoded }}"
     title="{{ anchor_title }}">{{ strip_html(_title) }}</a>
 {% if (_workflow && !_without_workflow) { %}
 <span class="label label-{{ _workflow.style }} filterable"

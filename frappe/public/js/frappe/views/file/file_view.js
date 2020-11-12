@@ -67,13 +67,13 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			frappe.breadcrumbs.add({
 				type: 'Custom',
 				label: __(last_folder),
-				route: `#List/File/Home/${new_route.join("/")}`
+				route: `/app/List/File/Home/${new_route.join("/")}`
 			});
 		} else {
 			frappe.breadcrumbs.add({
 				type: 'Custom',
 				label: __('Home'),
-				route: '#List/File/Home',
+				route: '/app/List/File/Home',
 			});
 		}
 	}
@@ -338,7 +338,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 							acc += '/' + curr;
 						}
 						return acc;
-					}, '#List/File');
+					}, '/app/List/File');
 
 					return `<a href="${route}">${folder}</a>`;
 				})
@@ -380,7 +380,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 	get_route_url(file) {
 		return file.is_folder
-			? '#List/File/' + file.name
+			? '/app/List/File/' + file.name
 			: this.get_form_link(file);
 	}
 

@@ -119,7 +119,7 @@ frappe.ui.Notifications = class Notifications {
 	}
 
 	route_to_settings() {
-		frappe.set_route(`#Form/Notification Settings/${frappe.session.user}`);
+		frappe.set_route(`/app/Form/Notification Settings/${frappe.session.user}`);
 	}
 
 	mark_all_as_read(e) {
@@ -249,7 +249,7 @@ class NotificationsView extends BaseNotificationsView {
 		if (this.container.find('.activity-status')) {
 			this.container.find('.activity-status').replaceWith(
 				`<a class="recent-item text-center text-muted"
-					href="#List/Notification Log">
+					href="/app/List/Notification Log">
 					<div class="full-log-btn">${__('View Full Log')}</div>
 				</a>`
 			);
@@ -336,7 +336,7 @@ class NotificationsView extends BaseNotificationsView {
 					this.container.append(this.get_dropdown_item_html(field));
 				});
 				this.container.append(`<a class="list-footer"
-					href="#List/Notification Log">
+					href="/app/List/Notification Log">
 						<div class="full-log-btn">${__('See all Activity')}</div>
 					</a>`);
 			} else {
@@ -458,7 +458,7 @@ class EventsView extends BaseNotificationsView {
 					participants = frappe.avatar_group(event.participants, 3)
 				}
 
-				return `<a class="recent-item event" href="#Form/${this.calendar}/${event.name}">
+				return `<a class="recent-item event" href="/app/Form/${this.calendar}/${event.name}">
 					<div class="event-border" style="border-color: ${color}"></div>
 					<div class="event-item">
 						<div class="event-subject">${event.title || event[field_map["title"]]}</div>

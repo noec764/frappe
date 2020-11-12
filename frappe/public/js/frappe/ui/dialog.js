@@ -233,3 +233,14 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		$('body').toggleClass('modal-open');
 	}
 };
+
+frappe.ui.hide_open_dialog = () => {
+	// hide open dialog
+	if (window.cur_dialog) {
+		if (!cur_dialog.minimizable) {
+			cur_dialog.hide();
+		} else if (!cur_dialog.is_minimized) {
+			cur_dialog.toggle_minimize();
+		}
+	}
+}

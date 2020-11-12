@@ -693,7 +693,7 @@
    "write": 1
   }
  ],
- "route": "/desk#Form/DocType/DocType",
+ "route": "/app/Form/DocType/DocType",
  "search_fields": "module",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

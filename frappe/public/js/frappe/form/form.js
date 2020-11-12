@@ -1000,7 +1000,7 @@ frappe.ui.form.Form = class FrappeForm {
 			return;
 		}
 
-		frappe.re_route[window.location.hash] = '#Form/' + encodeURIComponent(this.doctype) + '/' + encodeURIComponent(name);
+		frappe.re_route[window.location.hash] = '/app/Form/' + encodeURIComponent(this.doctype) + '/' + encodeURIComponent(name);
 		frappe.set_route('Form', this.doctype, name);
 	}
 
@@ -1516,7 +1516,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 					const escaped_name = encodeURIComponent(value);
 
-					return repl('<a class="indicator %(color)s" href="#Form/%(doctype)s/%(escaped_name)s" data-doctype="%(doctype)s" data-name="%(name)s">%(label)s</a>', {
+					return repl('<a class="indicator %(color)s" href="/app/Form/%(doctype)s/%(escaped_name)s" data-doctype="%(doctype)s" data-name="%(name)s">%(label)s</a>', {
 						color: get_color(doc || {}),
 						doctype: df.options,
 						escaped_name: escaped_name,

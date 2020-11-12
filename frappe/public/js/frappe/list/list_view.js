@@ -877,7 +877,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			? encodeURIComponent(doc.name)
 			: doc.name;
 
-		return "#Form/" + this.doctype + "/" + docname;
+		return "/app/Form/" + this.doctype + "/" + docname;
 	}
 
 	get_seen_class(doc) {

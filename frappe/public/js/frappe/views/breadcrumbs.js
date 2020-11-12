@@ -106,7 +106,7 @@ frappe.breadcrumbs = {
 				const label = module_info ? module_info.label : breadcrumbs.module;
 
 				if(module_info && !module_info.blocked && frappe.visible_modules.includes(module_info.module_name)) {
-					$(repl('<li><a href="#workspace/%(module)s">%(label)s</a></li>',
+					$(repl('<li><a href="/app/workspace/%(module)s">%(label)s</a></li>',
 						{ module: breadcrumbs.module, label: __(label) }))
 						.appendTo($breadcrumbs);
 					breadcrumbs_added = true;
@@ -124,10 +124,10 @@ frappe.breadcrumbs = {
 				const home_index = previous_route.indexOf("Home");
 				const new_route = home_index ? previous_route.slice(home_index + 1) : [];
 				if (new_route.length) {
-					$(`<li><a href="#List/File/Home/${new_route.join("/")}">${__(last_folder)}</a></li>`)
+					$(`<li><a href="/app/List/File/Home/${new_route.join("/")}">${__(last_folder)}</a></li>`)
 						.appendTo($breadcrumbs);
 				} else {
-					$(`<li><a href="#List/File/Home">${__('Home')}</a></li>`)
+					$(`<li><a href="/app/List/File/Home">${__('Home')}</a></li>`)
 						.appendTo($breadcrumbs);
 				}
 				breadcrumbs_added = true;
@@ -141,7 +141,7 @@ frappe.breadcrumbs = {
 				} else {
 					route = 'List/' + breadcrumbs.doctype;
 				}
-				$(`<li><a href="#${route}">${__(doctype)}</a></li>`)
+				$(`<li><a href="/app/${route}">${__(doctype)}</a></li>`)
 					.appendTo($breadcrumbs);
 				breadcrumbs_added = true;
 			}

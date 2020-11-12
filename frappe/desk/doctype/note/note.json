@@ -183,7 +183,7 @@
       "bold": 1, 
       "collapsible": 0, 
       "columns": 0, 
-      "description": "Help: To link to another record in the system, use \"#Form/Note/[Note Name]\" as the Link URL. (don't use \"http://\")", 
+      "description": "Help: To link to another record in the system, use \"/app/Form/Note/[Note Name]\" as the Link URL. (don't use \"http://\")", 
       "fieldname": "content", 
       "fieldtype": "Text Editor", 
       "hidden": 0, 

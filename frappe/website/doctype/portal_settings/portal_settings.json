@@ -48,7 +48,7 @@
 	  "options": "Portal Menu Item"
 	 },
 	 {
-	  "description": "Example: \"/desk\"",
+	  "description": "Example: \"/app\"",
 	  "fieldname": "default_portal_home",
 	  "fieldtype": "Data",
 	  "label": "Default Portal Home"
@@ -56,7 +56,7 @@
 	],
 	"issingle": 1,
 	"links": [],
-	"modified": "2020-08-06 15:43:36.387050",
+	"modified": "2020-11-06 15:43:36.387050",
 	"modified_by": "Administrator",
 	"module": "Website",
 	"name": "Portal Settings",

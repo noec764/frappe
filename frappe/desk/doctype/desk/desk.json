@@ -56,7 +56,7 @@
   }
  ],
  "read_only": 1,
- "route": "/desk#Form/DocType/Desk",
+ "route": "/app/Form/DocType/Desk",
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1

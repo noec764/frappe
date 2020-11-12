@@ -12,7 +12,7 @@ from frappe.cache_manager import build_domain_restricted_doctype_cache, build_do
 @frappe.whitelist()
 def get(module):
 	"""Returns data (sections, list of reports, counts) to render module view in desk:
-	`/desk/#Module/[name]`."""
+	`/app/Module/[name]`."""
 	data = get_data(module)
 
 	out = {
@@ -34,7 +34,7 @@ def get_table_with_counts():
 		return build_table_count_cache()
 
 def get_data(module, build=True):
-	"""Get module data for the module view `desk/#Module/[name]`"""
+	"""Get module data for the module view `desk/Module/[name]`"""
 	doctype_info = get_doctype_info(module)
 	data = build_config_from_file(module)
 
@@ -257,7 +257,7 @@ def config_exists(app, module):
 		return False
 
 def add_setup_section(config, app, module, label, icon):
-	"""Add common sections to `/desk#Module/Setup`"""
+	"""Add common sections to `/app/Module/Setup`"""
 	try:
 		setup_section = get_setup_section(app, module, label, icon)
 		if setup_section:

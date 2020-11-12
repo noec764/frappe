@@ -1,10 +1,10 @@
 context('Control Link', () => {
 	before(() => {
 		cy.login();
-		cy.visit('/desk#workspace/Website');
+		cy.visit('/app/workspace/Website');
 	});
 	beforeEach(() => {
-		cy.visit('/desk#workspace/Website');
+		cy.visit('/app/workspace/Website');
 		cy.create_records({
 			doctype: 'ToDo',
 			description: 'this is a test todo for link'
@@ -76,7 +76,7 @@ context('Control Link', () => {
 			cy.get('.frappe-control[data-fieldname=link] .link-btn')
 				.should('be.visible')
 				.click();
-			cy.location('hash').should('eq', `#Form/ToDo/${todos[0]}`);
+			cy.location('hash').should('eq', `/app/Form/ToDo/${todos[0]}`);
 		});
 	});
 });
