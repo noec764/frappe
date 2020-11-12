@@ -18,7 +18,7 @@ class TestEmailBody(unittest.TestCase):
 <div>
 	<h3>Hey John Doe!</h3>
 	<p>This is embedded image you asked for</p>
-	<img embed="apps/frappe/frappe/public/images/favicon.png" />
+	<img embed="apps/frappe/frappe/public/images/favicon.ico" />
 </div>
 '''
 		email_text = '''
@@ -26,7 +26,7 @@ Hey John Doe!
 This is the text version of this email
 '''
 
-		img_path = os.path.abspath('apps/frappe/frappe/public/images/favicon.png')
+		img_path = os.path.abspath('apps/frappe/frappe/public/images/favicon.ico')
 		with open(img_path, 'rb') as f:
 			img_content = f.read()
 			img_base64 = base64.b64encode(img_content).decode()
@@ -81,7 +81,7 @@ This is the text version of this email
 Content-Type: image/png
 MIME-Version: 1.0
 Content-Transfer-Encoding: base64
-Content-Disposition: inline; filename="favicon.png"
+Content-Disposition: inline; filename="favicon.ico"
 '''
 
 		self.assertTrue(img_signature in self.email_string)
@@ -118,7 +118,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 	def test_replace_filename_with_cid(self):
 		original_message = '''
 			<div>
-				<img embed="apps/frappe/frappe/public/images/favicon.png" alt="test" />
+				<img embed="apps/frappe/frappe/public/images/favicon.ico" alt="test" />
 				<img embed="notexists.jpg" />
 			</div>
 		'''

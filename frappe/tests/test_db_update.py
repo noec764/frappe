@@ -1,6 +1,7 @@
 import unittest
 import frappe
 
+from frappe.utils import cstr
 from frappe.core.utils import find
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 

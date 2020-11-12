@@ -106,7 +106,7 @@ class TestDB(unittest.TestCase):
 
 		# edit by rushabh: added [:1]
 		# don't run every keyword! - if one works, they all do
-		fields = all_keywords[frappe.conf.db_type][:1]
+		fields = all_keywords[frappe.conf.db_type or "mariadb"][:1]
 		test_doctype = "ToDo"
 
 		def add_custom_field(field):
