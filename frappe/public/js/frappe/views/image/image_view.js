@@ -98,8 +98,6 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 				${ frappe.get_abbr(title) }
 			</span>`;
 
-		const user = frappe.session.user;
-
 		let details = this.item_details_html(item);
 
 		const expand_button_html = item._image_url
@@ -119,7 +117,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 					</div>
 				</div>
 				<div class="image-view-body ${_class}">
-					<a  data-name="${encoded_name}"
+					<a data-name="${encoded_name}"
 						title="${encoded_name}"
 						href="${this.get_form_link(item)}"
 					>
@@ -130,17 +128,20 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 							${expand_button_html}
 						</div>
 					</a>
+					${expand_button_html}
 				</div>
-				<div class="image-title">
-					<span class="ellipsis" title="${escaped_title}">
-						<a class="ellipsis" href="${this.get_form_link(
-							item
-						)}" title="${escaped_title}" data-doctype="${
-							this.doctype
-						}" data-name="${item.name}">
-							${title}
-						</a>
-					</span>
+				<div class="image-view-footer">
+					<div class="image-title">
+						<span class="ellipsis" title="${escaped_title}">
+							<a class="ellipsis" href="${this.get_form_link(
+								item
+							)}" title="${escaped_title}" data-doctype="${
+								this.doctype
+							}" data-name="${item.name}">
+								${title}
+							</a>
+						</span>
+					</div>
 				</div>
 				${details}
 			</div>
@@ -173,7 +174,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 		});
 	}
 
-	// get_header_html() {
+	get_header_html() {
 	// 	return this.get_header_html_skeleton(`
 	// 		<div class="list-image-header">
 	// 			<div class="list-image-header-item">
@@ -189,7 +190,7 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 	// 			</div>
 	// 		</div>
 	// 	`);
-	// }
+	}
 
 	setup_gallery() {
 		var me = this;
