@@ -308,7 +308,8 @@
 	],
 	"css/web_form.css": [
 		"public/css/octicons/octicons.css",
-		"public/scss/web_form.scss"
+		"public/scss/web_form.scss",
+		"public/less/controls.less"
 	],
 	"css/email.css": "public/less/email.less",
 	"js/social.min.js": "public/js/frappe/social/social_home.js",

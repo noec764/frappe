@@ -602,14 +602,14 @@ def get_in_list_view_fields(doctype):
 def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=False):
 	web_form_doc = frappe.get_doc("Web Form", web_form_name)
 	doctype_validated = False
-	limited_to_user   = False
+	limited_to_user = False
 	if web_form_doc.login_required:
 		# check if frappe session user is not guest or admin
 		if frappe.session.user != 'Guest':
 			doctype_validated = True
 
 			if not allow_read_on_all_link_options:
-				limited_to_user   = True
+				limited_to_user = True
 
 	else:
 		for field in web_form_doc.web_form_fields:
