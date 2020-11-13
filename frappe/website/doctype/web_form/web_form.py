@@ -596,7 +596,7 @@ def get_in_list_view_fields(doctype):
 			return { 'label': 'Name', 'fieldname': 'name', 'fieldtype': 'Data' }
 		return meta.get_field(fieldname).as_dict()
 
-	return [get_field_df(f) for f in fields]
+	return [dict(get_field_df(f), **{"webform_field": 1}) for f in fields]
 
 @frappe.whitelist(allow_guest=True)
 def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=False):

@@ -53,8 +53,8 @@ frappe.ready(function() {
 		get_data().then(r => {
 			const data = setup_fields(r.message);
 			let web_form_doc = data.web_form;
-			//let doc = r.message.doc || build_doc(r.message);
-			web_form.prepare(web_form_doc, r.message.doc ? r.message.doc : {});
+			let doc = r.message.doc || build_doc(r.message);
+			web_form.prepare(web_form_doc, doc ? doc : {});
 			web_form.make();
 			web_form.set_default_values();
 		})
@@ -97,6 +97,7 @@ frappe.ready(function() {
 						if (field.fieldtype === "Link") {
 							field.only_select = true;
 						}
+						field.read_only = 1;
 					});
 
 					if (df.fieldtype === "Attach") {
@@ -104,6 +105,7 @@ frappe.ready(function() {
 					}
 
 					df.is_web_form = true;
+					df.read_only = df.read_only ? df.read_only : (!is_new && !allow_edit);
 
 					delete df.parent;
 					delete df.parentfield;

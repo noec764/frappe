@@ -269,10 +269,11 @@ export default class Grid {
 		let $rows = $(this.parent).find('.rows');
 
 		this.setup_fields();
-
 		if (this.frm) {
 			this.display_status = frappe.perm.get_field_display_status(this.df, this.frm.doc,
 				this.perm);
+		} else if (this.df.is_web_form) {
+			this.display_status = cint(this.df.read_only) === 1 ? "Read" : "Write";
 		} else {
 			// not in form
 			this.display_status = 'Write';
@@ -312,6 +313,10 @@ export default class Grid {
 		this.form_grid.toggleClass('error', !!(this.df.reqd && !(this.data && this.data.length)));
 
 		this.refresh_remove_rows_button();
+
+		if (this.display_status === 'Read') {
+			this.grid_buttons.hide();
+		}
 
 		this.wrapper.trigger('change');
 	}
@@ -772,7 +777,7 @@ export default class Grid {
 
 	setup_allow_bulk_edit() {
 		const me = this;
-		if (this.frm && this.frm.get_docfield(this.df.fieldname).allow_bulk_edit) {
+		if (this.display_status !== 'Read' && this.frm && this.frm.get_docfield(this.df.fieldname).allow_bulk_edit) {
 			// download
 			this.setup_download();
 

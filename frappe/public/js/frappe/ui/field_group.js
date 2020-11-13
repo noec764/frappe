@@ -147,7 +147,7 @@ frappe.ui.FieldGroup = frappe.ui.form.Layout.extend({
 		}
 	},
 	set_df_property: function (fieldname, prop, value) {
-		const field    = this.get_field(fieldname);
+		const field = this.get_field(fieldname);
 		field.df[prop] = value;
 		field.refresh();
 	}
