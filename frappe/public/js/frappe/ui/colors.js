@@ -3,22 +3,22 @@
 
 frappe.provide("frappe.ui");
 
-frappe.ui.color_map = {
-	red: ["#ffc4c4", "#ff8989", "#ff4d4d", "#a83333"],
-	brown: ["#ffe8cd", "#ffd19c", "#ffb868", "#a87945"],
-	orange: ["#ffd2c2", "#ffa685", "#ff7846", "#a85b5b"],
-	peach: ["#ffd7d7", "#ffb1b1", "#ff8989", "#a84f2e"],
-	yellow: ["#fffacd", "#fff168", "#fff69c", "#a89f45"],
-	yellowgreen: ["#ebf8cc", "#d9f399", "#c5ec63", "#7b933d"],
-	green: ["#cef6d1", "#9deca2", "#6be273", "#428b46"],
-	cyan: ["#d2f8ed", "#a4f3dd", "#77ecca", "#49937e"],
-	skyblue: ["#d2f1ff", "#a6e4ff", "#78d6ff", "#4f8ea8"],
-	blue: ["#d7e4ff", "#9cbcff", "#6195ff", "#003aaf"],
-	purple: ["#dac7ff", "#b592ff", "#8e58ff", "#5e3aa8"],
-	pink: ["#f8d4f8", "#f3aaf0", "#ec7dea", "#934f92"],
-	white: ["#d1d8dd", "#fafbfc", "#ffffff", ""],
-	black: ["#778595", "#6c7680", "#36414c", "#212a33"]
-};
+// frappe.ui.color_map = {
+// 	red: ["#ffc4c4", "#ff8989", "#ff4d4d", "#a83333"],
+// 	brown: ["#ffe8cd", "#ffd19c", "#ffb868", "#a87945"],
+// 	orange: ["#ffd2c2", "#ffa685", "#ff7846", "#a85b5b"],
+// 	peach: ["#ffd7d7", "#ffb1b1", "#ff8989", "#a84f2e"],
+// 	yellow: ["#fffacd", "#fff168", "#fff69c", "#a89f45"],
+// 	yellowgreen: ["#ebf8cc", "#d9f399", "#c5ec63", "#7b933d"],
+// 	green: ["#cef6d1", "#9deca2", "#6be273", "#428b46"],
+// 	cyan: ["#d2f8ed", "#a4f3dd", "#77ecca", "#49937e"],
+// 	skyblue: ["#d2f1ff", "#a6e4ff", "#78d6ff", "#4f8ea8"],
+// 	blue: ["#d7e4ff", "#9cbcff", "#6195ff", "#003aaf"],
+// 	purple: ["#dac7ff", "#b592ff", "#8e58ff", "#5e3aa8"],
+// 	pink: ["#f8d4f8", "#f3aaf0", "#ec7dea", "#934f92"],
+// 	white: ["#d1d8dd", "#fafbfc", "#ffffff", ""],
+// 	black: ["#778595", "#6c7680", "#36414c", "#212a33"]
+// };
 
 frappe.ui.color = {
 	get: function(color_name, shade) {
@@ -34,6 +34,18 @@ frappe.ui.color = {
 			// eslint-disable-next-line
 			console.warn(`'color_name' can be one of ${color_names} and not ${color_name}`);
 		}
+	},
+	get_color_map() {
+		const colors = ['red', 'green', 'blue', 'dark-green', 'yellow', 'gray', 'purple', 'pink', 'orange'];
+		const shades = ['100', '300', '500', '700'];
+		const style = getComputedStyle(document.body);
+		let color_map = {};
+		colors.forEach(color => {
+			color_map[color] = shades.map(shade =>
+				style.getPropertyValue(`--${color}-${shade}`).trim()
+			);
+		});
+		return color_map;
 	},
 	get_color_shade: function(color_name, shade) {
 		const shades = {
@@ -144,3 +156,5 @@ const pSBC=(p,c0,c1,l)=>{
 	if(h)return"rgb"+(f?"a(":"(")+r+","+g+","+b+(f?","+m(a*1000)/1000:"")+")";
 	else return"#"+(4294967296+r*16777216+g*65536+b*256+(f?m(a*255):0)).toString(16).slice(1,f?undefined:-2)
 }
+
+frappe.ui.color_map = frappe.ui.color.get_color_map();
