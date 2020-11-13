@@ -108,7 +108,7 @@ frappe.report_utils = {
 
 	get_report_filters: function(report_name) {
 
-		if (frappe.query_reports[report_name]) {
+		if (frappe.query_reports&&frappe.query_reports[report_name]) {
 			let filters = frappe.query_reports[report_name].filters;
 			return Promise.resolve(filters);
 		}
