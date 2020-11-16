@@ -31,7 +31,7 @@
 		margin: 0;
 		padding: $padding-xs;
 		z-index: 1051;
-		top: calc(100% + var(--margin-xs));
+		//top: calc(100% + var(--margin-xs));
 
 		&> li {
 			cursor: pointer;
