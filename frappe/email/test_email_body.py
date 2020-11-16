@@ -1,5 +1,5 @@
 # Copyright (c) 2017, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# MIT License. See license.txt
 from __future__ import unicode_literals
 
 import unittest, os, base64

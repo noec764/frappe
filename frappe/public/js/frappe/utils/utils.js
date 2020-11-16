@@ -1043,8 +1043,10 @@ Object.assign(frappe.utils, {
 			if (item.link) {
 				route = strip(item.link, "#");
 			} else if (type === "doctype") {
+				let doctype_slug = frappe.router.slug(item.doctype);
+
 				if (frappe.model.is_single(item.doctype)) {
-					route = "Form/" + item.doctype;
+					route = "form/" + doctype_slug;
 				} else {
 					if (!item.doc_view) {
 						if (frappe.model.is_tree(item.doctype)) {
@@ -1058,22 +1060,22 @@ Object.assign(frappe.utils, {
 							if (item.filters) {
 								frappe.route_options = item.filters;
 							}
-							route = "List/" + item.doctype;
+							route = "list/" + doctype_slug;
 							break;
 						case "Tree":
-							route = "Tree/" + item.doctype;
+							route = "tree/" + doctype_slug;
 							break;
 						case "Report Builder":
-							route = "List/" + item.doctype + "/Report";
+							route = "list/" + doctype_slug + "/Report";
 							break;
 						case "Dashboard":
-							route = "List/" + item.doctype + "/Dashboard";
+							route = "list/" + doctype_slug + "/Dashboard";
 							break;
 						case "New":
-							route = "Form/" + item.doctype + "/New " + item.doctype;
+							route = "form/" + doctype_slug + "/New " + item.doctype;
 							break;
 						case "Calendar":
-							route = "List/" + item.doctype + "/Calendar/Default";
+							route = "list/" + doctype_slug + "/Calendar/Default";
 							break;
 						default:
 							frappe.throw({ message: __("Not a valid DocType view:") + item.doc_view, title: __("Unknown View") });
@@ -1083,7 +1085,7 @@ Object.assign(frappe.utils, {
 			} else if (type === "report" && item.is_query_report) {
 				route = "query-report/" + item.name;
 			} else if (type === "report") {
-				route = "List/" + item.doctype + "/Report/" + item.name;
+				route = "List/" + frappe.router.slug(item.doctype) + "/Report/" + item.name;
 			} else if (type === "page") {
 				route = item.name;
 			} else if (type === "dashboard") {
@@ -1108,7 +1110,7 @@ Object.assign(frappe.utils, {
 		// (item.doctype && frappe.model.can_read(item.doctype))) {
 		//     item.shown = true;
 		// }
-		return route;
+		return `/app/${route}`;
 	},
 
 	shorten_number: function (number, country, min_length=4, max_no_of_decimals=2) {
