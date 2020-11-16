@@ -97,7 +97,7 @@ frappe.ready(function() {
 						if (field.fieldtype === "Link") {
 							field.only_select = true;
 						}
-						field.read_only = 1;
+						field.read_only = df.read_only ? df.read_only : (!is_new && !allow_edit);
 					});
 
 					if (df.fieldtype === "Attach") {
