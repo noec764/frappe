@@ -72,6 +72,31 @@ class TestBase64File(unittest.TestCase):
 		content = _file.get_content()
 		self.assertEqual(content, test_content1)
 
+	def test_attachment_limit(self):
+		doctype, docname = make_test_doc()
+		from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+		limit_property = make_property_setter('ToDo', None, 'max_attachments', 1, 'int', for_doctype=True)
+		file1 = frappe.get_doc({
+			"doctype": "File",
+			"file_name": 'test-attachment',
+			"attached_to_doctype": doctype,
+			"attached_to_name": docname,
+			"content": 'test'
+		})
+
+		file1.insert()
+
+		file2 = frappe.get_doc({
+			"doctype": "File",
+			"file_name": 'test-attachment',
+			"attached_to_doctype": doctype,
+			"attached_to_name": docname,
+			"content": 'test2'
+		})
+
+		self.assertRaises(frappe.exceptions.AttachmentLimitReached, file2.insert)
+		limit_property.delete()
+		frappe.clear_cache(doctype='ToDo')
 
 	def tearDown(self):
 		# File gets deleted on rollback, so blank

@@ -14,8 +14,12 @@ export default class FileUploader {
 		upload_notes,
 		allow_multiple,
 		as_dataurl,
-		disable_file_browser
+		disable_file_browser,
+		frm
 	} = {}) {
+
+		frm && frm.attachments.max_reached(true);
+
 		if (!wrapper) {
 			this.make_dialog();
 		} else {
