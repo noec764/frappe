@@ -573,21 +573,27 @@ def validate_database_sql(path, _raise=True):
 		path (str): Path of the decompressed SQL file
 		_raise (bool, optional): Raise exception if invalid file. Defaults to True.
 	"""
-	_raise = False
+	empty_file = False
+	missing_table = True
+
 	error_message = ""
 
 	if not os.path.getsize(path):
 		error_message = f"{path} is an empty file!"
-		_raise = True
+		empty_file = True
 
-	if not _raise:
+	# dont bother checking if empty file
+	if not empty_file:
 		with open(path, "r") as f:
 			for line in f:
 				if 'tabDefaultValue' in line:
-					error_message = "Table `tabDefaultValue` not found in file."
-					_raise = True
+					missing_table = False
+					break
 
-	if error_message and _raise:
+		if missing_table:
+			error_message = "Table `tabDefaultValue` not found in file."
+
+	if _raise and (missing_table or empty_file):
 		import click
 		click.secho(error_message, fg="red")
 		raise frappe.InvalidDatabaseFile
