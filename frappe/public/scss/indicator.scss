@@ -130,6 +130,16 @@
 	@include indicator-pill-color('darkgray');
 }
 
+.indicator.darkgrey {
+	@include indicator-color('darkgray');
+}
+
+.indicator-pill.darkgrey,
+.indicator-pill-right.darkgrey,
+.indicator-pill-round.darkgrey {
+	@include indicator-pill-color('darkgray');
+}
+
 .indicator.red {
 	@include indicator-color('red');
 }
