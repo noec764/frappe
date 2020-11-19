@@ -53,7 +53,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
 		}
 
 		const doc = frappe.get_doc(doctype, name);
-		if (doc && (doc.__islocal || frappe.model.is_recent(doc))) {
+		if (doc && (doc.__islocal || frappe.model.is_fresh(doc))) {
 			// is document available and recent?
 			this.render(doctype_layout, name);
 		} else {
@@ -69,7 +69,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
 				if (name && name==='new') {
 					this.render_new_doc(doctype, name, doctype_layout);
 				} else {
-					frappe.show_not_found(route);
+					frappe.show_not_found(name);
 				}
 				return;
 			}

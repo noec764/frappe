@@ -8,6 +8,7 @@ frappe.ui.form.on('DocType Layout', {
 	},
 
 	document_type(frm) {
+		frm.is_new()&&frm.set_value('fields', [])
 		frm.set_fields_as_options('fields', frm.doc.document_type, null, [], 'fieldname').then(() => {
 			// child table empty? then show all fields as default
 			if (frm.doc.document_type) {
@@ -17,6 +18,7 @@ frappe.ui.form.on('DocType Layout', {
 					}
 				}
 			}
+			frm.refresh_fields()
 		});
 	},
 
