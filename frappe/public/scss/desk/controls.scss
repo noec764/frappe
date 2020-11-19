@@ -64,8 +64,9 @@
 
 .frappe-control[data-fieldtype='MultiSelectPills'] {
 	&.has-error {
-		.control-input-wrapper {
-			box-shadow: 0 0 0 $input-btn-focus-width var(--orange-100);
+		.control-input {
+			border: 1px solid var(--orange-400);
+			border-radius: var(--border-radius);
 		}
 	}
 }

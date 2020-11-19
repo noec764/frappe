@@ -282,7 +282,7 @@ def delete_bulk(doctype, items):
 			frappe.delete_doc(doctype, d)
 			if len(items) >= 5:
 				frappe.publish_realtime("progress",
-					dict(progress=[i+1, len(items)], title=_('Deleting {0}').format(doctype), description=d),
+					dict(progress=[i+1, len(items)], title=_('Deleting {0}').format(_(doctype)), description=d),
 						user=frappe.session.user)
 			# Commit after successful deletion
 			frappe.db.commit()
