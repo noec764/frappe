@@ -375,7 +375,7 @@ input[type="checkbox"] {
 
 
 	&.disabled-deselected:before {
-		background: #FCFCFD;
+		background: $gray-50;
 		border: 0.5px solid var(--gray-400);
 		box-sizing: border-box;
 		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
@@ -389,7 +389,7 @@ input[type="checkbox"] {
 		content: '\e9c3';
 		font-family: 'unicons';
 		color: var(--blue-500);
-		background: $gray-50;
+		background: $gray-500;
 		box-sizing: border-box;
 		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 		border-radius: 2px;
