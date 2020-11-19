@@ -31,9 +31,9 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 
 		this.wrapper = this.$wrapper.find('.modal-dialog')
 			.get(0);
-		if ( this.size == "small" )
+		if (this.size == "small" )
 			$(this.wrapper).addClass("modal-sm");
-		else if ( this.size == "large" )
+		else if (this.size == "large" )
 			$(this.wrapper).addClass("modal-lg");
 
 		this.make_head();
@@ -71,7 +71,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 		}
 
 		if (this.minimizable) {
-			this.header.find('.modal-title').click(() => this.toggle_minimize());
+			this.header.find('.title-section').click(() => this.is_minimized && this.toggle_minimize());
 			this.get_minimize_btn().removeClass('hide').on('click', () => this.toggle_minimize());
 		}
 
@@ -190,6 +190,8 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 			this.$wrapper.removeClass('fade');
 		}
 		this.$wrapper.modal("show");
+
+		this.$wrapper.removeClass('modal-minimize');
 
 		// clear any message
 		this.clear_message();
