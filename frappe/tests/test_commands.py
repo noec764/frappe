@@ -82,7 +82,6 @@ def exists_in_backup(doctypes, file):
 		content = f.read().decode("utf8")
 	return all([predicate.format(doctype).lower() in content.lower() for doctype in doctypes])
 
-
 class BaseTestCommands(unittest.TestCase):
 	def execute(self, command, kwargs=None):
 		site = {"site": frappe.local.site}
@@ -110,7 +109,7 @@ class BaseTestCommands(unittest.TestCase):
 		]).strip()
 		return "{}\n\n{}".format(output, cmd_execution_summary)
 
-
+@unittest.skip("Skipped in CI")
 class TestCommands(BaseTestCommands):
 	def test_execute(self):
 		# test 1: execute a command expecting a numeric output
