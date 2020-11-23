@@ -322,7 +322,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 
 	get_breadcrumbs_html() {
-		const route = frappe.get_route();
+		const route = frappe.router.parse();
 		const folders = route.slice(2);
 
 		return (
