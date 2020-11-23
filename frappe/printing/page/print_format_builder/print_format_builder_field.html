@@ -32,6 +32,9 @@
 	{% } else { %}
 
 		{% if(field.fieldtype==="Table") { %}
+			<span class="drag-handle">
+				<svg class="icon icon-xs"><use xlink:href="#icon-drag"></use></svg>
+			</span>
 			<span class="field-label">{{ __(field.label) }}
 				<span> ({%= __("Table") %})</span>
 			</span>
