@@ -39,7 +39,7 @@ class CustomizeForm(Document):
 		translation = self.get_name_translation()
 		self.label = translation.translated_text if translation else ''
 
-		self.create_auto_repeat_custom_field_if_requried(meta)
+		self.create_auto_repeat_custom_field_if_required(meta)
 
 		# NOTE doc (self) is sent to clientside by run_method
 
@@ -74,10 +74,12 @@ class CustomizeForm(Document):
 			for d in meta.get(fieldname):
 				self.append(fieldname, d)
 
-	def create_auto_repeat_custom_field_if_requried(self, meta):
+	def create_auto_repeat_custom_field_if_required(self, meta):
+		'''
+		Create auto repeat custom field if it's not already present
+		'''
 		if self.allow_auto_repeat:
-			if not meta.has_field("auto_repeat") and not frappe.db.exists('Custom Field', {'fieldname': 'auto_repeat',
-				'dt': self.doc_type}):
+			if not meta.has_field("auto_repeat"):
 				insert_after = self.fields[len(self.fields) - 1].fieldname
 				df = dict(
 					fieldname='auto_repeat',
