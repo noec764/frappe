@@ -53,8 +53,6 @@ class User(Document):
 		self.hide_modules()
 
 	def validate(self):
-		self.check_demo()
-
 		# clear new password
 		self.__new_password = self.new_password
 		self.new_password = ""
@@ -116,10 +114,6 @@ class User(Document):
 	def has_website_permission(self, ptype, user, verbose=False):
 		"""Returns true if current user is the session user"""
 		return self.name == frappe.session.user
-
-	def check_demo(self):
-		if frappe.session.user == 'demo@erpnext.com':
-			frappe.throw(_('Cannot change user details in demo. Please signup for a new account at https://dokos.io'), title=_('Not Allowed'))
 
 	def set_full_name(self):
 		self.full_name = " ".join(filter(None, [self.first_name, self.last_name]))
@@ -367,7 +361,6 @@ class User(Document):
 
 
 	def before_rename(self, old_name, new_name, merge=False):
-		self.check_demo()
 		frappe.clear_cache(user=old_name)
 		self.validate_rename(old_name, new_name)
 
