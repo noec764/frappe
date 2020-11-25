@@ -588,9 +588,9 @@ def validate_database_sql(path, _raise=True):
 		if missing_table:
 			error_message = "Table `tabDefaultValue` not found in file."
 
-	if _raise and (missing_table or empty_file):
+	if error_message:
 		import click
 		click.secho(error_message, fg="red")
 
-	if _raise and to_raise:
+	if _raise and (missing_table or empty_file):
 		raise frappe.InvalidDatabaseFile
