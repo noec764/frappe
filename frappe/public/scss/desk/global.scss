@@ -310,6 +310,10 @@ select.input-xs {
 	overflow: auto;
 	color: $text-color;
 	border-radius: 6px;
+
+	.dropdown-divider {
+		margin: 4px 0;
+	}
 }
 
 .dropdown-menu .divider {
@@ -389,7 +393,8 @@ input[type="checkbox"] {
 		//content: url("data: image/svg+xml;utf8, <svg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 3.8l1.667 1.8L7 1' stroke='lightgrey' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'></path></svg>");
 		content: '\e9c3';
 		font-family: 'unicons';
-		color: var(--blue-500);
+		border: 0.5px solid var(--gray-800);
+		color: var(--gray-800);
 		background: $gray-50;
 		box-sizing: border-box;
 		box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);

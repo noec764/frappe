@@ -195,8 +195,8 @@ def prepare_header_footer(soup):
 			toggle_visible_pdf(content)
 			html = frappe.render_template("templates/print_formats/pdf_header_footer.html", {
 				"head": head,
-				"styles": styles,
 				"content": content,
+				"styles": styles,
 				"html_id": html_id,
 				"css": css
 			})
