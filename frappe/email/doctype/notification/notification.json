@@ -210,7 +210,7 @@
    "label": "Value To Be Set"
   },
   {
-	"depends_on": "eval:in_list(['Email', 'SMS', 'WhatsApp'], doc.channel)",
+    "depends_on": "eval:doc.channel !=\"Slack\"",
    "fieldname": "column_break_5",
    "fieldtype": "Section Break",
    "label": "Recipients"
@@ -302,7 +302,7 @@
  ],
  "icon": "fa fa-envelope",
  "links": [],
- "modified": "2020-09-03 10:33:23.084590",
+ "modified": "2020-11-24 14:25:43.245677",
  "modified_by": "Administrator",
  "module": "Email",
  "name": "Notification",
