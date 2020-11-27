@@ -1,14 +1,15 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-from __future__ import unicode_literals, print_function
+from __future__ import print_function, unicode_literals
+
 import frappe
 from frappe import _, bold
-from frappe.utils import cint, nowdate
-from frappe.model.naming import validate_name
 from frappe.model.dynamic_links import get_dynamic_link_map
-from frappe.utils.password import rename_password
+from frappe.model.naming import validate_name
 from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
+from frappe.utils import cint
+from frappe.utils.password import rename_password
 
 @frappe.whitelist()
 def update_document_title(doctype, docname, title_field=None, old_title=None, new_title=None, new_name=None, merge=False):
@@ -506,63 +507,32 @@ def bulk_rename(doctype, rows=None, via_console = False):
 		return rename_log
 
 def update_linked_doctypes(doctype, docname, linked_to, value, ignore_doctypes=None):
-	"""
-		linked_doctype_info_list = list formed by get_fetch_fields() function
-		docname = Master DocType's name in which modification are made
-		value = Value for the field thats set in other DocType's by fetching from Master DocType
-	"""
-	linked_doctype_info_list = get_fetch_fields(doctype, linked_to, ignore_doctypes)
+	from frappe.model.utils.rename_doc import update_linked_doctypes
+	show_deprecation_warning("update_linked_doctypes")
 
-	for d in linked_doctype_info_list:
-		frappe.db.sql("""
-			update
-				`tab{doctype}`
-			set
-				{linked_to_fieldname} = "{value}"
-			where
-				{master_fieldname} = {docname}
-				and {linked_to_fieldname} != "{value}"
-		""".format(
-			doctype = d['doctype'],
-			linked_to_fieldname = d['linked_to_fieldname'],
-			value = value,
-			master_fieldname = d['master_fieldname'],
-			docname = frappe.db.escape(docname)
-		))
+	return update_linked_doctypes(
+		doctype=doctype,
+		docname=docname,
+		linked_to=linked_to,
+		value=value,
+		ignore_doctypes=ignore_doctypes,
+	)
 
 def get_fetch_fields(doctype, linked_to, ignore_doctypes=None):
-	"""
-		doctype = Master DocType in which the changes are being made
-		linked_to = DocType name of the field thats being updated in Master
+	from frappe.model.utils.rename_doc import get_fetch_fields
+	show_deprecation_warning("get_fetch_fields")
 
-		This function fetches list of all DocType where both doctype and linked_to is found
-		as link fields.
-		Forms a list of dict in the form -
-			[{doctype: , master_fieldname: , linked_to_fieldname: ]
-		where
-			doctype = DocType where changes need to be made
-			master_fieldname = Fieldname where options = doctype
-			linked_to_fieldname = Fieldname where options = linked_to
-	"""
+	return get_fetch_fields(
+		doctype=doctype, linked_to=linked_to, ignore_doctypes=ignore_doctypes
+	)
 
-	master_list = get_link_fields(doctype)
-	linked_to_list = get_link_fields(linked_to)
-	out = []
-
-	from itertools import product
-	product_list = product(master_list, linked_to_list)
-
-	for d in product_list:
-		linked_doctype_info = frappe._dict()
-		if d[0]['parent'] == d[1]['parent'] \
-				and (not ignore_doctypes or d[0]['parent'] not in ignore_doctypes) \
-				and not d[1]['issingle']:
-			linked_doctype_info['doctype'] = d[0]['parent']
-			linked_doctype_info['master_fieldname'] = d[0]['fieldname']
-			linked_doctype_info['linked_to_fieldname'] = d[1]['fieldname']
-			out.append(linked_doctype_info)
-
-	return out
+def show_deprecation_warning(funct):
+	from click import secho
+	message = (
+		f"Function frappe.model.rename_doc.{funct} has been deprecated and "
+		"moved to the frappe.model.utils.rename_doc"
+	)
+	secho(message, fg="yellow")
 
 def add_renaming_log(doctype, old, new):
 	frappe.get_doc({
