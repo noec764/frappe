@@ -7,7 +7,8 @@ import frappe
 from frappe import _
 import datetime
 from frappe.model.document import Document
-from frappe.utils.dashboard import cache_source, get_from_date_from_timespan
+from frappe.utils.dashboard import cache_source
+from frappe.utils.dateutils import get_from_date_from_timespan
 from frappe.utils import nowdate, add_to_date, getdate, get_last_day
 from frappe.desk.doctype.dashboard_chart.dashboard_chart import get_aggregate_function
 
