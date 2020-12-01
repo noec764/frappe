@@ -91,7 +91,7 @@ def login_via_facebook(code, state):
 
 @frappe.whitelist(allow_guest=True)
 def login_via_frappe(code, state):
-	login_via_oauth2("frappe", code, state, decoder=decoder_compat)
+	login_via_oauth2("dodock", code, state, decoder=decoder_compat)
 
 @frappe.whitelist(allow_guest=True)
 def login_via_office365(code, state):
