@@ -144,7 +144,7 @@ frappe.show_message_page = function(opts) {
 			<div class="text-center message-page-content m-auto">\
 				%(img)s\
 				<p class="lead">%(message)s</p>\
-				<a class="btn btn-default btn-sm btn-home" href="#">%(home)s</a>\
+				<a class="btn btn-default btn-sm btn-home" href="/app">%(home)s</a>\
 			</div>\
 		</div>', {
 				img: opts.img || "",
