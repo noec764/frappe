@@ -315,7 +315,9 @@ export default class Grid {
 		this.refresh_remove_rows_button();
 
 		if (this.display_status === 'Read') {
-			this.grid_buttons.hide();
+			this.grid_buttons&&this.grid_buttons.hide();
+		} else {
+			this.grid_buttons&&this.grid_buttons.show();
 		}
 
 		this.wrapper.trigger('change');
