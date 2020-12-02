@@ -297,9 +297,9 @@ frappe.unscrub = function(txt) {
 
 frappe.get_data_pill = (label, target_id=null, remove_action=null, link=null) => {
 	let data_pill_wrapper = $(`
-		<div class="data-pill btn">
+		<button class="data-pill btn">
 			<span class="pill-label ellipsis">${link || label}</span>
-		</div>
+		</button>
 	`);
 
 	if (remove_action) {

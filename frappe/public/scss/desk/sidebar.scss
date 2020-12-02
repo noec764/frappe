@@ -55,7 +55,6 @@ body[data-route^="Module"] .main-menu {
 		display: flex;
 		align-items: center;
 		color: var(--text-color);
-		letter-spacing: 0.04rem;
 		font-size: var(--text-sm);
 		.icon {
 			margin: 0;
@@ -389,18 +388,20 @@ body[data-route^="Module"] .main-menu {
 	display: inline-flex;
 }
 
-.data-pill {
+button.data-pill {
 	.icon {
 		margin-left: var(--margin-xs);
 		margin-right: 0;
 	}
+	display: flex;
+	height: var(--btn-height);
 	background-color: var(--fg-color);
 	border-radius: var(--border-radius);
-	padding: var(--padding-xs) var(--padding-sm);
+	padding: calc(var(--padding-xs) - 2px) var(--padding-sm);
 	color: var(--text-color);
-	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	max-width: 100%;
 }
 
 .add-attachment-btn,
@@ -409,6 +410,7 @@ body[data-route^="Module"] .main-menu {
 .followed-by,
 .add-review-btn 
 .add-assignment-btn {
+	max-width: 100%;
 	display: block;
 }
 
