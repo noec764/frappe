@@ -55,6 +55,8 @@ body[data-route^="Module"] .main-menu {
 		display: flex;
 		align-items: center;
 		color: var(--text-color);
+		letter-spacing: 0.04rem;
+		font-size: var(--text-sm);
 		.icon {
 			margin: 0;
 			margin-right: var(--margin-xs);
