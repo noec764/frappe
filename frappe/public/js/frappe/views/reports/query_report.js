@@ -2,7 +2,7 @@
 // MIT License. See license.txt
 import DataTable from 'frappe-datatable';
 
-frappe.provide('frappe.widget.utils');
+frappe.provide('frappe.utils');
 frappe.provide('frappe.views');
 frappe.provide('frappe.query_reports');
 
@@ -647,7 +647,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	render_summary(data) {
 		data.forEach((summary) => {
-			frappe.widget.utils.build_summary_item(summary).appendTo(this.$summary);
+			frappe.utils.build_summary_item(summary).appendTo(this.$summary);
 		})
 
 		this.$summary.show();
