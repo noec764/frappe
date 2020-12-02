@@ -31,7 +31,6 @@ frappe.ui.form.Sidebar = class {
 		this.make_attachments();
 		this.make_review();
 		this.make_shared();
-		this.make_viewers();
 
 		this.make_tags();
 		this.make_like();
@@ -160,13 +159,6 @@ frappe.ui.form.Sidebar = class {
 		this.frm.shared = new frappe.ui.form.Share({
 			frm: this.frm,
 			parent: this.sidebar.find(".form-shared")
-		});
-	}
-
-	make_viewers() {
-		this.frm.viewers = new frappe.ui.form.SidebarUsers({
-			frm: this.frm,
-			$wrapper: this.sidebar,
 		});
 	}
 
