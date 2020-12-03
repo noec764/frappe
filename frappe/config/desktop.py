@@ -75,18 +75,18 @@ def get_data():
 
 
 		# Administration
-		{
-			"module_name": "Core",
-			"category": "Administration",
-			"_label": _("Developer"),
-			"label": "Developer",
-			"color": "#aec8ff",
-			"icon": "fas fa-laptop-code",
-			"type": "module",
-			"system_manager": 1,
-			"condition": getattr(frappe.local.conf, 'developer_mode', 0),
-			"description": "Doctypes, dev tools and logs."
-		},
+		# {
+		# 	"module_name": "Core",
+		# 	"category": "Administration",
+		# 	"_label": _("Developer"),
+		# 	"label": "Developer",
+		# 	"color": "#aec8ff",
+		# 	"icon": "fas fa-laptop-code",
+		# 	"type": "module",
+		# 	"system_manager": 1,
+		# 	"condition": getattr(frappe.local.conf, 'developer_mode', 0),
+		# 	"description": "Doctypes, dev tools and logs."
+		# },
 
 		# Places
 		{
