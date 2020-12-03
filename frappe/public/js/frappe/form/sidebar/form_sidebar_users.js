@@ -86,6 +86,6 @@ frappe.ui.form.set_users = function(data, type) {
 	});
 
 	if (cur_frm && cur_frm.doc && cur_frm.doc.doctype===doctype && cur_frm.doc.name==docname) {
-		cur_frm.viewers.refresh(true, type);
+		cur_frm.viewers&&cur_frm.viewers.refresh(true, type);
 	}
 };
