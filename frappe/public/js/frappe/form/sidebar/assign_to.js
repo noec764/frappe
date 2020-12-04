@@ -59,7 +59,7 @@ frappe.ui.form.AssignTo = Class.extend({
 		return $(`<li class="assignment-row">`)
 			.append(frappe.get_data_pill(
 				frappe.user.full_name(info.owner),
-				assignee_info.owner,
+				info.owner,
 				remove_action,
 				frappe.avatar(info.owner, "avatar-xs")
 				)

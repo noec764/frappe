@@ -144,7 +144,6 @@ export default class BulkOperations {
 		const field_options = Object.keys(field_mappings).map(v => {
 			return {label: __(v), value: v}
 		})
-		console.log(field_options)
 
 		const status_regex = /status/i;
 

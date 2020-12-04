@@ -93,7 +93,7 @@ frappe.activity.Feed = Class.extend({
 			data.link = frappe.format(data.reference_name, { fieldtype: "Link", options: data.reference_doctype },
 			{ label: __(data.reference_doctype) + " " + __(data.reference_name) });
 		}
-		console.log(data)
+
 		$(row)
 			.append(frappe.render_template("activity_row", data))
 			.find("a").addClass("gray");
