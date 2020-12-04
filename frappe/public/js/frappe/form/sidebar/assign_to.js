@@ -50,18 +50,18 @@ frappe.ui.form.AssignTo = Class.extend({
 		});
 
 	},
-	get_assignment_block(assignee_info) {
+	get_assignment_block(info) {
 		let remove_action = false;
-		if (assignee_info.owner === frappe.session.user || this.frm.perm[0].write) {
+		if (info.owner === frappe.session.user || this.frm.perm[0].write) {
 			remove_action = this.remove.bind(this);
 		}
 
 		return $(`<li class="assignment-row">`)
 			.append(frappe.get_data_pill(
-				assignee_info.fullname,
+				frappe.user.full_name(info.owner),
 				assignee_info.owner,
 				remove_action,
-				frappe.utils.get_form_link("User", assignee_info.owner, true, assignee_info.fullname)
+				frappe.avatar(info.owner, "avatar-xs")
 				)
 			);
 	},
