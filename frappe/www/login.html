@@ -56,8 +56,10 @@
 		<div class="login-content page-card">
 			<form class="form-signin form-login" role="form">
 				<div class="page-card-head">
+					{%- if logo -%}
 					<img class="app-logo" src="{{ logo }}">
-					<h4>{{ _('Login') }}</h4>
+					{% endif %}
+					<h4><span class='indicator'>{{ _('Login') }}</span></h4>
 				</div>
 				<div class="page-card-body">
 					<div class="form-group">
