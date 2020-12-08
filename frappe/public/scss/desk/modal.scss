@@ -132,6 +132,22 @@ h5.modal-title {
 	}
 }
 
+// used in CommunicationComposer
+.modal > .to_section {
+	form {
+		display: flex;
+		align-items: center;
+		.frappe-control:first-child {
+			flex: 1;
+			margin-bottom: 0px;
+		}
+		.frappe-control:last-child {
+			margin-left: 10px;
+			margin-bottom: -20px;
+		}
+	}
+}
+
 /* Awesomesearch */
 
 .search-results {
