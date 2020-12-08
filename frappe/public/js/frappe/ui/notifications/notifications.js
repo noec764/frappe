@@ -247,8 +247,8 @@ class NotificationsView extends BaseNotificationsView {
 	get_dropdown_item_html(field) {
 		let doc_link = this.get_item_link(field);
 
-		// let read_class = field.read ? '' : 'unread';
-		let read_class = 'unread';
+		let read_class = field.read ? '' : 'unread';
+
 		let message = field.subject;
 
 		let title = message.match(/<b class="subject-title">(.*?)<\/b>/);
