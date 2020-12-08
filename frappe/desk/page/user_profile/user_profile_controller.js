@@ -16,7 +16,9 @@ class UserProfile {
 
 		//validate if user
 		if (route.length > 1) {
+			frappe.dom.freeze(__('Loading user profile') + '...');
 			frappe.db.exists('User', this.user_id).then(exists => {
+				frappe.dom.unfreeze();
 				if (exists) {
 					this.make_user_profile();
 				} else {
@@ -395,6 +397,7 @@ class UserProfile {
 	setup_user_activity_timeline() {
 		this.user_activity_timeline = new UserProfileTimeline({
 			parent: this.wrapper.find('.recent-activity-list'),
+			footer: this.wrapper.find('.recent-activity-footer'),
 			user: this.user_id
 		});
 
@@ -440,9 +443,9 @@ class UserProfileTimeline extends BaseTimeline {
 	}
 
 	setup_show_more_activity() {
-		this.show_more_button = $(`<button class="btn btn-default btn-xs show-more-activity">${__('Show More')}</button>`);
+		this.show_more_button = $(`<a class="show-more-activity-btn">${__('Show More Activity')}</a>`);
 		this.show_more_button.hide();
-		this.timeline_wrapper.after(this.show_more_button);
+		this.footer.append(this.show_more_button);
 		this.show_more_button.on('click', () => this.show_more_activity());
 	}
 
