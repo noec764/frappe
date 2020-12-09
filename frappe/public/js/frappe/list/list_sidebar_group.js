@@ -54,7 +54,7 @@ frappe.views.ListGroupBy = class ListGroupBy {
 			<div class="list-group-by-fields">
 			</div>
 			<li class="add-list-group-by sidebar-action">
-				<a class="add-group-by hidden-xs">
+				<a class="add-group-by">
 					${__('Edit Filters')}
 				</a>
 			</li>
