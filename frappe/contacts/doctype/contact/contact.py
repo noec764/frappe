@@ -131,6 +131,13 @@ class Contact(Document):
 		self.phone = ""
 		self.mobile_no = ""
 
+	def after_rename(self, old_name, new_name, merge=False):
+		if merge:
+			for table in ("Contact Email", "Contact Phone", "Dynamic Link"):
+				data = frappe.get_all(table, filters={"parenttype": "Contact", "parent": old_name})
+				for d in data:
+					frappe.db.set_value(table, d.name, "parent", new_name)
+
 def get_default_contact(doctype, name):
 	'''Returns default contact for the given doctype, name'''
 	out = frappe.db.sql('''select parent,
