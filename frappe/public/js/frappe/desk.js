@@ -538,13 +538,7 @@ frappe.Application = Class.extend({
 	},
 
 	add_browser_class() {
-		let browsers = ['Chrome', 'Firefox', 'Safari'];
-		for (let browser of browsers) {
-			if (navigator.userAgent.includes(browser)) {
-				$('html').addClass(browser.toLowerCase());
-				return;
-			}
-		}
+		$('html').addClass(frappe.utils.get_browser().name.toLowerCase());
 	},
 
 	show_notes: function() {
