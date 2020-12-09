@@ -10,7 +10,28 @@ from frappe import _
 
 class EmailTemplate(Document):
 	def validate(self):
-		validate_template(self.response)
+		if self.use_html:
+			validate_template(self.response_html)
+		else:
+			validate_template(self.response)
+
+	def get_formatted_subject(self, doc):
+		return frappe.render_template(self.subject, doc)
+
+	def get_formatted_response(self, doc):
+		if self.use_html:
+			return frappe.render_template(self.response_html, doc)
+
+		return frappe.render_template(self.response, doc)
+
+	def get_formatted_email(self, doc):
+		if isinstance(doc, string_types):
+			doc = json.loads(doc)
+
+		return {
+			"subject" : self.get_formatted_subject(doc),
+			"message" : self.get_formatted_response(doc)
+		}
 
 @frappe.whitelist()
 def get_email_template(template_name, doc):
@@ -19,8 +40,7 @@ def get_email_template(template_name, doc):
 		doc = json.loads(doc)
 
 	email_template = frappe.get_doc("Email Template", template_name)
-	return {"subject" : frappe.render_template(email_template.subject, doc),
-			"message" : frappe.render_template(email_template.response, doc)}
+	return email_template.get_formatted_email(doc)
 
 @frappe.whitelist()
 def get_template_fields(reference):
