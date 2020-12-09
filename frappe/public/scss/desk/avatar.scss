@@ -157,7 +157,6 @@
 .avatar-group {
 	display: inline-flex;
 	align-items: center;
-	flex-direction: row-reverse;
 	cursor: pointer;
 
 	&.right {
@@ -168,31 +167,18 @@
 	}
 
 	.avatar-action {
-		width: 100%;
-		height: 100%;
+		@extend .avatar-small;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		background-color: var(--control-bg);
+		border-radius: 50%;
+		cursor: pointer !important;
+
 		.icon {
 			use {
 				stroke: var(--text-muted);
 			}
-		}
-	}
-
-	// .avatar-small {
-	// 	width: 24px;
-	// 	height: 24px;
-	// }
-
-	&:hover {
-		.avatar {
-			margin-left: 12px;
-		}
-
-		.avatar-action {
-			display: block;
 		}
 	}
 
@@ -201,17 +187,22 @@
 		.avatar-frame {
 			border: 1px solid var(--avatar-frame-border);
 		}
-
-		&:not(.avatar-extra-count):hover {
-			z-index: 99;
-		}
 	}
 
 	.avatar-extra-count {
 		font-size: var(--text-sm);
+		font-weight: 500;
+		color: $white;
+		background-color: var(--blue-500);
 	}
 
-	.avatar + .avatar {
-		margin-right: -0.3rem;
+	.avatar:last-child {
+		margin-right: var(--margin-xs);
+	}
+
+	&.overlap {
+		.avatar + .avatar {
+			margin-left: calc(-1 * var(--margin-sm));
+		}
 	}
 }
