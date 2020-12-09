@@ -21,6 +21,7 @@
    "links": "[\n    {\n        \"type\": \"doctype\",\n        \"name\": \"Event Producer\",\n        \"description\": \"The site you want to subscribe to for consuming events.\",\n        \"label\": \"Event Producer\"\n    },\n    {\n        \"type\": \"doctype\",\n        \"name\": \"Event Consumer\",\n        \"description\": \"The site which is consuming your events.\",\n        \"label\": \"Event Consumer\"\n    },\n    {\n        \"type\": \"doctype\",\n        \"name\": \"Event Update Log\",\n        \"description\": \"Maintains a Log of all inserts, updates and deletions on Event Producer site for documents that have consumers.\",\n        \"label\": \"Event Update Log\"\n    },\n    {\n        \"type\": \"doctype\",\n        \"name\": \"Event Sync Log\",\n        \"description\": \"Maintains a log of every event consumed along with the status of the sync and a Resync button in case sync fails.\",\n        \"label\": \"Event Sync Log\"\n    },\n    {\n        \"type\": \"doctype\",\n        \"name\": \"Document Type Mapping\",\n        \"description\": \"The mapping configuration between two doctypes.\",\n        \"label\": \"Document Type Mapping\"\n    }\n]"
   }
  ],
+ "category": "Modules",
  "charts": [],
  "color": "#e9c46a",
  "creation": "2020-03-02 14:53:24.980279",
@@ -34,9 +35,9 @@
  "idx": 0,
  "is_standard": 1,
  "label": "Tools",
- "modified": "2020-07-21 19:32:18.480700",
+ "modified": "2020-12-09 17:59:11.262273",
  "modified_by": "Administrator",
- "module": "Automation",
+ "module": "Desk",
  "name": "Tools",
  "owner": "Administrator",
  "pin_to_bottom": 0,
