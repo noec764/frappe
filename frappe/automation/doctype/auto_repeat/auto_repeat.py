@@ -328,13 +328,16 @@ def create_repeated_entries(data):
 		disabled = d.disabled
 		schedule_date = getdate(d.next_schedule_date)
 
-		while schedule_date <= getdate(nowdate()) and not disabled:
+		while schedule_date and schedule_date <= getdate(nowdate()) and not disabled:
 			doc = frappe.get_doc('Auto Repeat', d.name)
 			doc.create_documents()
 			schedule_date = AutoRepeatScheduler(doc, schedule_date).get_next_scheduled_date()
 			disabled = frappe.db.get_value('Auto Repeat', doc.name, 'disabled')
-			if schedule_date and not disabled:
+			if not disabled:
 				doc.db_set('next_schedule_date', schedule_date)
+			if not schedule_date:
+				doc.db_set('disabled', True)
+				doc.db_set('status', 'Completed')
 
 #called through hooks
 def set_auto_repeat_as_completed():
@@ -459,4 +462,5 @@ class AutoRepeatScheduler:
 
 	def get_next_scheduled_date(self):
 		already_generated = self.get_already_generated()
-		return min([getdate(x) for x in self.get_schedule() if getdate(x) > getdate(self.current_date) and getdate(x) not in already_generated])
+		next_dates = [getdate(x) for x in self.get_schedule() if getdate(x) > getdate(self.current_date) and getdate(x) not in already_generated]
+		return min(next_dates) if next_dates else None
