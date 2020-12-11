@@ -120,6 +120,7 @@
 
 .like-disabled-input {
 	@extend .form-control;
+	height: auto;
 	margin-bottom: 7px;
 	border-radius: $border-radius;
 	font-weight: 400;
