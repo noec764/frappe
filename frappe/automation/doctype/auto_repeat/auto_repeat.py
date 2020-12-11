@@ -21,6 +21,7 @@ class AutoRepeat(Document):
 	def validate(self):
 		self.update_status()
 		self.validate_reference_doctype()
+		self.validate_submit_after_creation()
 		self.get_reference_title()
 		self.validate_dates()
 		self.validate_email_id()
@@ -74,6 +75,11 @@ class AutoRepeat(Document):
 		title = frappe.db.get_value(self.reference_doctype, self.reference_document, title_field)
 		if self.document_title != title:
 			self.document_title = title
+
+	def validate_submit_after_creation(self):
+		if self.submit_on_creation and not frappe.get_meta(self.reference_doctype).is_submittable:
+			frappe.throw(_('Cannot enable {0} for a non-submittable doctype').format(
+				frappe.bold('Submit on Creation')))
 
 	def validate_dates(self):
 		if frappe.flags.in_patch:
@@ -149,7 +155,7 @@ class AutoRepeat(Document):
 		if new_doc.meta.get_field('auto_repeat'):
 			new_doc.set('auto_repeat', self.name)
 
-		for fieldname in ['naming_series', 'ignore_pricing_rule', 'posting_time', 'select_print_heading', 'remarks', 'owner']:
+		for fieldname in ['naming_series', 'ignore_pricing_rule', 'posting_time', 'select_print_heading', 'user_remark', 'remarks', 'owner']:
 			if new_doc.meta.get_field(fieldname):
 				new_doc.set(fieldname, reference_doc.get(fieldname))
 
