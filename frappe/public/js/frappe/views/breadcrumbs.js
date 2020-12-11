@@ -135,11 +135,9 @@ frappe.breadcrumbs = {
 				let route;
 				const view = frappe.model.user_settings[breadcrumbs.doctype].last_view || 'Tree';
 				if (view == 'Tree' && frappe.boot.treeviews.indexOf(breadcrumbs.doctype) !== -1) {
-					route = view + '/' + breadcrumbs.doctype;
-				} else if (view && view != 'Tree') {
-					route = 'list/' + breadcrumbs.doctype + '/' + view
+					route = `${doctype_route}/view/${view}`;
 				} else {
-					route = 'list/' + breadcrumbs.doctype;
+					route = doctype_route
 				}
 				$(`<li><a href="/app/${route}">${__(doctype)}</a></li>`)
 					.appendTo($breadcrumbs);
@@ -154,7 +152,7 @@ frappe.breadcrumbs = {
 		if (breadcrumbs.doctype && frappe.get_route()[0] === "print") {
 			set_list_breadcrumb(breadcrumbs.doctype);
 			let docname = frappe.get_route()[2];
-			let form_route = `/app/form/${frappe.router.slug(breadcrumbs.doctype)}/${docname}`;
+			let form_route = `/app/${frappe.router.slug(breadcrumbs.doctype)}/${docname}`;
 			$(`<li><a href="${form_route}">${docname}</a></li>`)
 				.appendTo($breadcrumbs);
 		}
