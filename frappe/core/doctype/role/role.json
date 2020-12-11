@@ -16,7 +16,7 @@
 	 "two_factor_auth",
 	 "navigation_settings_section",
 	 "search_bar",
-	 "notification",
+	 "notifications",
 	 "chat",
 	 "list_settings_section",
 	 "list_sidebar",
@@ -86,9 +86,9 @@
 	 },
 	 {
 	  "default": "1",
-	  "fieldname": "notification",
+	  "fieldname": "notifications",
 	  "fieldtype": "Check",
-	  "label": "Notification"
+	  "label": "Notifications"
 	 },
 	 {
 	  "default": "1",
@@ -147,7 +147,7 @@
 	"idx": 1,
 	"index_web_pages_for_search": 1,
 	"links": [],
-	"modified": "2020-11-11 17:29:13.149522",
+	"modified": "2020-12-03 14:08:38.181035",
 	"modified_by": "Administrator",
 	"module": "Core",
 	"name": "Role",

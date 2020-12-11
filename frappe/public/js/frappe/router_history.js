@@ -3,6 +3,7 @@ frappe.route_history_queue = [];
 const routes_to_skip = ['Form', 'social', 'setup-wizard', 'recorder'];
 
 const save_routes = frappe.utils.debounce(() => {
+	if (frappe.session.user === 'Guest') return;
 	const routes = frappe.route_history_queue;
 	frappe.route_history_queue = [];
 	frappe.xcall('frappe.deferred_insert.deferred_insert', {
@@ -11,6 +12,7 @@ const save_routes = frappe.utils.debounce(() => {
 	}).catch(() => {
 		frappe.route_history_queue.concat(routes);
 	});
+
 }, 10000);
 
 frappe.route.on('change', () => {

@@ -20,17 +20,13 @@ frappe.ui.toolbar.Toolbar = class {
 		this.setup_awesomebar();
 
 		this.setup_notifications();
-
+		this.setup_help();
 		this.make();
 	}
 
 	make() {
 		this.setup_modules_menu();
-		// this.setup_sidebar();
-		this.setup_help();
-
 		this.bind_events();
-
 		$(document).trigger('toolbar_setup');
 	}
 
@@ -57,7 +53,14 @@ frappe.ui.toolbar.Toolbar = class {
 		});
 	}
 
-	setup_help() {
+	setup_help () {
+		if (!frappe.boot.desk_settings.notifications) {
+			// hide the help section
+			$('.navbar .vertical-bar').removeClass('d-sm-block');
+			$('.dropdown-help').removeClass('d-lg-block');
+			return;
+		}
+
 		frappe.provide('frappe.help');
 		frappe.help.show_results = show_results;
 
