@@ -126,15 +126,6 @@ frappe.ui.form.Layout = Class.extend({
 			this.fields.unshift({fieldtype: 'Section Break'});
 		}
 
-		this.fields.unshift({
-			fieldtype: 'Section Break',
-			fieldname: '_form_dashboard',
-			cssClass: 'form-dashboard',
-			collapsible: 1,
-			//hidden: 1
-		});
-	},
-
 	replace_field: function(fieldname, df, render) {
 		df.fieldname = fieldname; // change of fieldname is avoided
 		if (this.fields_dict[fieldname] && this.fields_dict[fieldname].df) {
@@ -586,10 +577,6 @@ frappe.ui.form.Section = Class.extend({
 			wrapper: this.wrapper
 		};
 
-		if (this.df.collapsible && this.df.fieldname !== '_form_dashboard') {
-			this.collapse(true);
-		}
-
 		this.refresh();
 	},
 	make: function() {
@@ -597,7 +584,7 @@ frappe.ui.form.Section = Class.extend({
 			this.layout.page = $('<div class="form-page"></div>').appendTo(this.layout.wrapper);
 		}
 
-		let make_card = this.layout.card_layout && this.df.fieldname !== '_form_dashboard';
+		let make_card = this.layout.card_layout;
 		this.wrapper = $(`<div class="row form-section ${ make_card ? "card-section" : "" }">`)
 			.appendTo(this.layout.page);
 		this.layout.sections.push(this);
@@ -661,10 +648,6 @@ frappe.ui.form.Section = Class.extend({
 
 		if (hide===undefined) {
 			hide = !this.body.hasClass("hide");
-		}
-
-		if (this.df.fieldname==='_form_dashboard') {
-			localStorage.setItem('collapseFormDashboard', hide ? 'yes' : 'no');
 		}
 
 		this.body.toggleClass("hide", hide);
