@@ -125,6 +125,7 @@ frappe.ui.form.Layout = Class.extend({
 		if (this.no_opening_section()) {
 			this.fields.unshift({fieldtype: 'Section Break'});
 		}
+	},
 
 	replace_field: function(fieldname, df, render) {
 		df.fieldname = fieldname; // change of fieldname is avoided
