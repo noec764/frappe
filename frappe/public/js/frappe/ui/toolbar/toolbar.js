@@ -142,7 +142,7 @@ frappe.ui.toolbar.Toolbar = class {
 	}
 
 	setup_notifications() {
-		if (frappe.boot.desk_settings.notification) {
+		if (frappe.boot.desk_settings.notifications) {
 			this.notifications = new frappe.ui.Notifications();
 		}
 	}
