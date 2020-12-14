@@ -9,19 +9,24 @@
 	height: auto;
 	padding: 10px;
 	padding-bottom: 5px;
+	.link-field {
+		width: 100%;
+	}
 }
 
 .table-multiselect.form-control input {
+	width: 100%;
 	display: inline-block;
 	outline: none;
 	border: none;
-	padding: 0 var(--padding-xs);
+	padding: 0;
 	margin-bottom: var(--margin-sm);
 	font-size: var(--text-xs);
 	//background-color: var(--control-bg);
 }
 
 .table-multiselect .awesomplete {
+	width: 100%;
 	display: inline;
 }
 
@@ -51,7 +56,7 @@
 	}
 }
 
-.frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype="Table MultiSelect"]) {
+.frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype='Table MultiSelect']) {
 	&.has-error {
 		input {
 			border: 1px solid var(--orange-400);
@@ -63,7 +68,8 @@
 	}
 }
 
-.frappe-control[data-fieldtype='MultiSelectPills'] {
+.frappe-control[data-fieldtype='MultiSelectPills'],
+.frappe-control[data-fieldtype='Table MultiSelect'] {
 	&.has-error {
 		.control-input {
 			border: 1px solid var(--orange-400);
@@ -98,5 +104,11 @@
 	.status-text {
 		line-height: 1.2;
 		vertical-align: top;
+	}
+}
+
+.ace_editor {
+	.ace_gutter {
+		z-index: auto;
 	}
 }
