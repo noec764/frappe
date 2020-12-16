@@ -1,7 +1,7 @@
 context('Form', () => {
 	before(() => {
 		cy.login();
-		cy.visit('/app/workspace/Website');
+		cy.visit('/app/space/Website');
 		cy.window().its('frappe').then(frappe => {
 			frappe.call("frappe.tests.ui_test_helpers.create_contact_records");
 		});
