@@ -102,8 +102,10 @@
 
 .multiselect-list {
 	.status-text {
-		line-height: 1.2;
-		vertical-align: top;
+		// line-height: 1.2;
+		// vertical-align: top;
+		position: absolute;
+		top: 4px;
 	}
 }
 
