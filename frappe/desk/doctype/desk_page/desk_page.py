@@ -38,6 +38,9 @@ class DeskPage(Document):
 
 		pages = frappe.get_all("Desk Page", fields=["name", "module", "restrict_to_domain"], filters=filters)
 
+		# add settings page
+		pages.append({'name': 'Settings', 'module': 'Settings', 'restrict_to_domain': None})
+
 		pages_map = {}
 
 		for page in pages:
