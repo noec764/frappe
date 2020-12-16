@@ -15,4 +15,11 @@
 			margin-right: 5px;
 		}
 	}
+
+	li.disabled {
+		a {
+			color: var(--text-muted);
+			pointer-events: none;
+		}
+	}
 }
