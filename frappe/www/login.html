@@ -56,6 +56,15 @@
 <link type="text/css" rel="stylesheet" href="/assets/css/login.css?ver={{ build_version }}">
 {% endblock %}
 
+{% macro logo_section() %}
+<div class="page-card-head">
+	{%- if logo -%}
+	<img class="app-logo" src="{{ logo }}">
+	{% endif %}
+	<h4><span class='indicator'>{{ _('Login') }}</span></h4>
+</div>
+{% endmacro %}
+
 {% block page_content %}
 <!-- {{ for_test }} -->
 <div>
@@ -68,13 +77,8 @@
 	</noscript>
 	<section class='for-login'>
 		<div class="login-content page-card">
+			{{ logo_section() }}
 			<form class="form-signin form-login" role="form">
-				<div class="page-card-head">
-					{%- if logo -%}
-					<img class="app-logo" src="{{ logo }}">
-					{%- endif -%}
-					<h4><span class='indicator'>{{ _('Login') }}</span></h4>
-				</div>
 				{%- if social_login -%}
 				<div class="page-card-body">
 					<div class="social-logins text-center">
@@ -108,13 +112,8 @@
 
 	<section class='for-email-login'>
 		<div class="login-content page-card">
+			{{ logo_section() }}
 			<form class="form-signin form-login" role="form">
-				<div class="page-card-head">
-					{%- if logo -%}
-					<img class="app-logo" src="{{ logo }}">
-					{% endif %}
-					<h4><span class='indicator'>{{ _('Login') }}</span></h4>
-				</div>
 				{{ email_login_body() }}
 			</form>
 		</div>
@@ -127,14 +126,9 @@
 	</section>
 	<section class='for-signup {{ "signup-disabled" if disable_signup else "" }}'>
 		<div class="login-content page-card">
+			{{ logo_section() }}
 			{%- if not disable_signup and not custom_signup -%}
 			<form class="form-signin form-signup hide" role="form">
-				<div class="page-card-head">
-					{%- if logo -%}
-					<img class="app-logo" src="{{ logo }}">
-					{%- endif -%}
-					<h4><span class='indicator'>{{ _('Sign Up') }}</span></h4>
-				</div>
 				<div class="page-card-body">
 					<div class="form-group">
 						<label class="form-label sr-only" for="signup_firstname">{{ _('First Name') }}</label>
