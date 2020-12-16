@@ -472,7 +472,7 @@ frappe.views.CommunicationComposer = Class.extend({
 			</p>
 		`).appendTo(attach.empty());
 		attach
-			.find(".add-more-attachments a")
+			.find(".add-more-attachments button")
 			.on('click', () => new frappe.ui.FileUploader(args));
 		this.render_attachment_rows();
 	},
