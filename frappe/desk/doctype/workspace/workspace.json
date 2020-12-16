@@ -12,10 +12,9 @@
   "extends",
   "module",
   "category",
+  "icon",
   "restrict_to_domain",
   "onboarding",
-  "icon",
-  "color",
   "column_break_3",
   "extends_another_page",
   "is_standard",
@@ -32,7 +31,7 @@
   "shortcuts",
   "section_break_18",
   "cards_label",
-  "cards"
+  "links"
  ],
  "fields": [
   {
@@ -65,7 +64,7 @@
    "fieldtype": "Link",
    "label": "Restrict to Domain",
    "options": "Domain",
-   "read_only_depends_on": "eval:doc.extends_another_page",
+   "read_only_depends_on": "eval:doc.extends_another_page == 0",
    "search_index": 1
   },
   {
@@ -77,26 +76,14 @@
    "options": "Module Def"
   },
   {
-   "depends_on": "eval:doc.extends_another_page == 0",
-   "fieldname": "icon",
-   "fieldtype": "Data",
-   "label": "Icon"
-  },
-  {
    "fieldname": "column_break_3",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "cards",
-   "fieldtype": "Table",
-   "label": "Cards",
-   "options": "Desk Card"
   },
   {
    "fieldname": "category",
    "fieldtype": "Select",
    "label": "Category",
-   "options": "Modules\nAdministration",
+   "options": "Modules\nDomains\nPlaces\nAdministration",
    "read_only_depends_on": "eval:doc.extends_another_page == 1",
    "search_index": 1
   },
@@ -184,14 +171,8 @@
    "fieldtype": "Link",
    "in_standard_filter": 1,
    "label": "Extends",
-   "options": "Desk Page",
+   "options": "Workspace",
    "search_index": 1
-  },
-  {
-   "depends_on": "eval:doc.extends_another_page == 0",
-   "fieldname": "color",
-   "fieldtype": "Color",
-   "label": "Color"
   },
   {
    "fieldname": "for_user",
@@ -211,13 +192,24 @@
    "fieldname": "hide_custom",
    "fieldtype": "Check",
    "label": "Hide Custom DocTypes and Reports"
+  },
+  {
+   "fieldname": "icon",
+   "fieldtype": "Data",
+   "label": "Icon"
+  },
+  {
+   "fieldname": "links",
+   "fieldtype": "Table",
+   "label": "Links",
+   "options": "Desk Link"
   }
  ],
  "links": [],
- "modified": "2020-09-16 10:12:24.371369",
+ "modified": "2020-12-01 13:36:26.827062",
  "modified_by": "Administrator",
  "module": "Desk",
- "name": "Desk Page",
+ "name": "Workspace",
  "owner": "Administrator",
  "permissions": [
   {
