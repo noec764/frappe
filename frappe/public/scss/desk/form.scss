@@ -119,7 +119,7 @@
 }
 
 .like-disabled-input {
-	min-height: $input-height;
+	min-height: var(--input-height);
 	margin-bottom: 7px;
 	border-radius: $border-radius;
 	font-weight: 400;
