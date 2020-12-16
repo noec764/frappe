@@ -463,11 +463,3 @@ kbd {
 		}
 	}
 }
-
-.chart-container {
-	.frappe-chart {
-		line.line-horizontal, line.line-vertical {
-			stroke: var(--border-color) !important;
-		}
-	}
-}
