@@ -10,7 +10,7 @@ frappe.views.Workspace = class Workspace {
 	show() {
 		let page = this.get_page_to_show();
 		this.page.set_title(__(page));
-		frappe.set_route('workspace', page);
+		frappe.set_route('space', page);
 		this.show_page(page);
 	}
 
@@ -142,7 +142,7 @@ class DesktopPage {
 			this.data = res.message;
 			if (!this.data) {
 				delete localStorage.current_workspace;
-				frappe.set_route("workspace");
+				frappe.set_route("space");
 				return;
 			}
 
