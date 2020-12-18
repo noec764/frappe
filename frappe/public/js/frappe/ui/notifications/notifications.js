@@ -44,7 +44,7 @@ frappe.ui.Notifications = class Notifications {
 				frappe.set_route('Form', 'Notification Settings', frappe.session.user);
 			}).appendTo(this.header_actions)
 			.attr('title', __("Notification Settings"))
-			.tooltip({ delay: { "show": 600, "hide": 100 } });
+			.tooltip({ delay: { "show": 600, "hide": 100}, trigger : "hover"  });
 
 		$(`<span class="mark-all-read pull-right" data-action="mark_all_as_read">
 			${frappe.utils.icon('mark-as-read')}
@@ -52,7 +52,7 @@ frappe.ui.Notifications = class Notifications {
 			.on('click', (e) => this.mark_all_as_read(e))
 			.appendTo(this.header_actions)
 			.attr('title', __("Mark all as read"))
-			.tooltip({ delay: { "show": 600, "hide": 100 } });
+			.tooltip({ delay: { "show": 600, "hide": 100 }, trigger : "hover" });
 
 		this.categories = [
 			{
@@ -193,7 +193,9 @@ class BaseNotificationsView {
 class NotificationsView extends BaseNotificationsView {
 	make() {
 		this.notifications_icon = this.parent.find('.notifications-icon');
-		this.notifications_icon.attr("title", __('Notifications')).tooltip({ delay: { "show": 600, "hide": 100 } });
+		this.notifications_icon.attr("title", __('Notifications')).tooltip(
+			{ delay: { "show": 600, "hide": 100},  trigger : "hover" }
+		);
 
 		this.setup_notification_listeners();
 		this.get_notifications_list(this.max_length).then(list => {
@@ -284,7 +286,7 @@ class NotificationsView extends BaseNotificationsView {
 
 		if (!field.read) {
 			let mark_btn = item_html.find(".mark-as-read")
-			mark_btn.tooltip({ delay: { "show": 600, "hide": 100 } });
+			mark_btn.tooltip({ delay: { "show": 600, "hide": 100 }, trigger : "hover" });
 			mark_btn.on('click', (e) => {
 				e.preventDefault();
 				e.stopImmediatePropagation();
