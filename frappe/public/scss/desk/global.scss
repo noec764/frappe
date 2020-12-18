@@ -244,7 +244,7 @@ select.input-xs {
 		cursor: pointer;
 	}
 	a:active {
-		--icon-stroke: $component-active-color
+		--icon-stroke: #{$component-active-color};
 	}
 }
 
