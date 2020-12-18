@@ -128,14 +128,14 @@ function get_version_timeline_content(version_doc, frm) {
 		}
 	});
 
-	if (data.creation && data.created_by) {
-		// created via automation
-		if (updater_reference_link) {
-			out.push(get_version_comment(version_doc, __('{0} created {1}', [get_user_link(version_doc), updater_reference_link], 'timeline')));
-		} else {
-			out.push(get_version_comment(version_doc, __('{0} created', [get_user_link(version_doc)], 'timeline')));
-		}
-	}
+	// if (data.creation && data.created_by) {
+	// 	// created via automation
+	// 	if (updater_reference_link) {
+	// 		out.push(get_version_comment(version_doc, __('{0} created {1}', [get_user_link(version_doc), updater_reference_link], 'timeline')));
+	// 	} else {
+	// 		out.push(get_version_comment(version_doc, __('{0} created', [get_user_link(version_doc)], 'timeline')));
+	// 	}
+	// }
 
 	return out;
 }
