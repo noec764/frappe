@@ -1243,5 +1243,21 @@ Object.assign(frappe.utils, {
 		}
 
 		return new frappe.Chart(wrapper, chart_args);
+	},
+
+	get_names_for_mentions() {
+		let names_for_mentions = Object.keys(frappe.boot.user_info || [])
+			.filter(user => {
+				return !["Administrator", "Guest"].includes(user)
+					&& frappe.boot.user_info[user].allowed_in_mentions
+					&& frappe.boot.user_info[user].user_type === 'System User';
+			})
+			.map(user => {
+				return {
+					id: frappe.boot.user_info[user].name,
+					value: frappe.boot.user_info[user].fullname,
+				};
+			});
+		return names_for_mentions;
 	}
 });
