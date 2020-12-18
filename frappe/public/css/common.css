@@ -172,50 +172,6 @@ a.badge-hover:active .badge {
 .middle {
   vertical-align: middle;
 }
-.full-center-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-.full-center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-}
-#freeze {
-  z-index: 1020;
-  bottom: 0px;
-  opacity: 0;
-  background-color: #fafbfc;
-}
-#freeze .freeze-message-container {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-}
-#freeze .freeze-message {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  transform: translate(-50%, -50%);
-  -webkit-transform: translate(-50%, -50%);
-  text-align: center;
-  color: #36414C !important;
-}
-#freeze.dark {
-  background-color: #334143;
-}
-#freeze.in {
-  opacity: 0.5;
-}
 a.no-decoration {
   text-decoration: none;
   color: inherit;
