@@ -170,6 +170,7 @@ frappe.ui.Page = Class.extend({
 				} else {
 					sidebar_wrapper.toggle();
 				}
+				$(document.body).trigger('toggleSidebar');
 				this.update_sidebar_icon();
 			});
 		}
