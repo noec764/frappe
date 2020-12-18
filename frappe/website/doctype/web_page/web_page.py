@@ -24,6 +24,7 @@ from frappe.utils.safe_exec import safe_exec
 class WebPage(WebsiteGenerator):
 	def validate(self):
 		self.validate_dates()
+		self.validate_server_scripts()
 		self.set_route()
 		if not self.dynamic_route:
 			self.route = quoted(self.route)
@@ -162,6 +163,10 @@ class WebPage(WebsiteGenerator):
 				self.end_date = None
 
 				frappe.msgprint(_("Clearing end date, as it cannot be in the past for published pages."))
+
+	def validate_server_scripts(self):
+		if self.context_script and not frappe.conf.server_script_enabled:
+			frappe.msgprint(_('Please Enable Server Scripts'))
 
 
 def check_publish_status():
