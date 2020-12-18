@@ -10,8 +10,8 @@ from frappe.boot import get_allowed_pages, get_allowed_reports
 from six import string_types
 from functools import wraps
 from frappe.cache_manager import (
-	build_domain_restriced_doctype_cache,
-	build_domain_restriced_page_cache,
+	build_domain_restricted_doctype_cache,
+	build_domain_restricted_page_cache,
 	build_table_count_cache
 )
 
@@ -53,8 +53,8 @@ class Workspace:
 			self.onboarding = None
 
 			self.table_counts = get_table_with_counts()
-		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restriced_doctype_cache()
-		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restriced_page_cache()
+		self.restricted_doctypes = frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restricted_doctype_cache()
+		self.restricted_pages = frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
 
 	def is_page_allowed(self):
 		cards = self.doc.get_link_groups() + get_custom_reports_and_doctypes(self.doc.module) + self.extended_links
