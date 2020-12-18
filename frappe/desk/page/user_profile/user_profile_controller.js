@@ -5,9 +5,14 @@ class UserProfile {
 
 	constructor(wrapper) {
 		this.wrapper = $(wrapper);
-		this.page = wrapper.page;
+		this.page = frappe.ui.make_app_page({
+			parent: wrapper,
+		});
 		this.sidebar = this.wrapper.find('.layout-side-section');
 		this.main_section = this.wrapper.find('.layout-main-section');
+		this.wrapper.bind('show', () => {
+			this.show();
+		});
 	}
 
 	show() {
