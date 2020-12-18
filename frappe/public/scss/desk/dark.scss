@@ -120,4 +120,11 @@
 	.form-control:focus {
 		color: white;
 	}
+
+	// find better fix
+	.heatmap-chart {
+		g > rect[fill="#ebedf0"] {
+			fill: var(--gray-700);
+		}
+	}
 }
