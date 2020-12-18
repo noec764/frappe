@@ -243,6 +243,9 @@ select.input-xs {
 		transition: none;
 		cursor: pointer;
 	}
+	a:active {
+		--icon-stroke: $component-active-color
+	}
 }
 
 .dropdown-menu .divider {
