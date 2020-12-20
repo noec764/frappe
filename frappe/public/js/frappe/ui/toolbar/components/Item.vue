@@ -9,12 +9,13 @@
 			class="dodock-sidebar-link"
 			:href="'/app/workspace/' + item.name"
 		>
-			<i
+			<!-- <i
 				v-if="item.icon"
 				class="dodock-sidebar-icon"
 				:class="item.icon"
 				:style="{color: item.color}"
-			/>
+			/> -->
+			<i class="dodock-sidebar-icon" :style="{stroke: item.color}" v-html="frappe.utils.icon(item.icon)"></i>
 			<template v-if="!isCollapsed">
 				<span class="dodock-sidebar-title">{{ item.label }}</span>
 			</template>

@@ -57,7 +57,7 @@ export default {
       goToTop: false,
       isMounted: false,
       timer: null,
-      moduleCategories: ["Modules", "Domains", "Places", "Administration"]
+      moduleCategories: ["Modules", "Administration"]
     };
   },
   created() {
