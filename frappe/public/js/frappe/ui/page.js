@@ -649,21 +649,23 @@ frappe.ui.Page = Class.extend({
 		return this.$title_area;
 	},
 
-	set_title: function(txt, icon = '', stripHtml = true, tabTitle = '') {
-		if(!txt) txt = "";
+	set_title: function(title, icon=null, strip=true, tab_title="") {
+		if (!title) title = "";
 
-		if(stripHtml) {
-			txt = strip_html(txt);
+		if (strip) {
+			title = strip_html(title);
 		}
-		this.title = txt;
+		this.title = title;
 
-		frappe.utils.set_title(tabTitle || txt);
-		if(icon) {
-			txt = '<span class="'+ icon +' text-muted" style="font-size: inherit;"></span> ' + txt;
+		frappe.utils.set_title(tab_title || title);
+		if (icon) {
+			title = `${frappe.utils.icon(icon)} ${title}`;
 		}
-		this.$title_area.find(".title-text").html(txt);
-		this.$title_area.tooltip('dispose');
-		this.$title_area.tooltip({title: txt, placement: 'auto'});
+		let title_wrapper = this.$title_area.find(".title-text");
+		title_wrapper.html(title);
+		title_wrapper.attr('title', this.title);
+		// this.$title_area.tooltip('dispose');
+		// this.$title_area.tooltip({title: txt, placement: 'auto'});
 	},
 
 	set_title_sub: function(txt) {
