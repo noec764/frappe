@@ -91,7 +91,7 @@ frappe.ui.Page = Class.extend({
 			this.add_view("main", `
 				<div class="row layout-main">
 					<div class="col-lg-2 layout-side-section"></div>
-					<div class="col-lg-10 layout-main-section-wrapper">
+					<div class="col layout-main-section-wrapper">
 						<div class="layout-main-section"></div>
 						<div class="layout-footer hide"></div>
 					</div>
@@ -106,8 +106,6 @@ frappe.ui.Page = Class.extend({
 		this.$title_area = this.wrapper.find(".title-area");
 
 		this.$sub_title_area = this.wrapper.find("h6");
-
-		this.$docname_area = this.wrapper.find(".name-text");
 
 		if(this.title)
 			this.set_title(this.title);
@@ -671,13 +669,6 @@ frappe.ui.Page = Class.extend({
 	set_title_sub: function(txt) {
 		// strip icon
 		this.$sub_title_area.html(txt).toggleClass("hide", !!!txt);
-	},
-
-	set_document_name: function(txt) {
-		if(!txt) txt = "";
-		this.$docname_area.html(txt);
-		this.$docname_area.tooltip('dispose');
-		this.$docname_area.tooltip({title: txt, placement: 'auto'});
 	},
 
 	get_main_icon: function(icon) {
