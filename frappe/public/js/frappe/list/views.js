@@ -60,7 +60,7 @@ frappe.views.Views = class Views {
 			},
 			'Calendar': {
 				condition: frappe.views.calendar[this.doctype],
-				action: () => frappe.set_route(`List/${this.doctype}/Calendar/Default`),
+				action: () => frappe.set_route(`List/${this.doctype}/Calendar`),
 				current_view_handler: () => {
 					this.get_calendars().then(calendars => {
 						this.setup_dropdown_in_sidebar(
