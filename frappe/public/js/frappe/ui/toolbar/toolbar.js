@@ -26,6 +26,7 @@ frappe.ui.toolbar.Toolbar = class {
 
 	make() {
 		this.setup_modules_menu();
+		this.setup_home_navigation();
 		this.bind_events();
 		$(document).trigger('toolbar_setup');
 	}
@@ -50,6 +51,16 @@ frappe.ui.toolbar.Toolbar = class {
 		this.menu_sidebar = new Vue({
 			el: '#modules-menu',
 			render: h => h(SidebarMenu)
+		});
+	}
+
+	setup_home_navigation() {
+		$('header').find(".navbar-home").on("click", function() {
+			if (frappe.is_mobile()) {
+				frappe.sidebar_update.trigger('toggle_mobile_menu')
+			} else {
+				frappe.set_route("/")
+			}
 		});
 	}
 
