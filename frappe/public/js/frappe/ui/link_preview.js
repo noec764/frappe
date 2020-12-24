@@ -122,7 +122,7 @@ frappe.ui.LinkPreview = class {
 			}
 		});
 
-		$(window).on('hashchange', () => {
+		frappe.router.on('change', () => {
 			this.clear_all_popovers();
 		});
 	}
