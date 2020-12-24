@@ -1,10 +1,11 @@
 @import '~quill/dist/quill.core';
 @import 'variables';
 @import 'css_variables';
-@import 'mixins';
 @import '/assets/frappe/css/fonts/fontawesome/css/all.css';
 @import '/assets/frappe/css/fonts/unicons/css/unicons.css';
 @import '~bootstrap/scss/bootstrap';
+@import "../common/mixins.scss";
+@import "../common/global.scss";
 @import 'base';
 @import "../common/buttons";
 @import 'multilevel_dropdown';
