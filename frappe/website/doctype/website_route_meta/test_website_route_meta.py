@@ -8,6 +8,7 @@ import unittest
 from frappe.utils import set_request
 from frappe.website.render import render
 
+test_dependencies = ['Blog Post']
 @unittest.skip("Skipped in CI")
 class TestWebsiteRouteMeta(unittest.TestCase):
 	def test_meta_tag_generation(self):

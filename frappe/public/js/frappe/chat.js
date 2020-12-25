@@ -192,7 +192,7 @@ frappe.quick_edit = (doctype, docname, fn) => {
 				})
 
 				const dialog = new frappe.ui.Dialog({
-					title: __(`Edit ${doctype} (${docname})`),
+					title: __('Edit') + `${doctype} (${docname})`,
 					fields: required,
 					action: {
 						primary: {
@@ -227,7 +227,7 @@ frappe.quick_edit = (doctype, docname, fn) => {
 				`)
 				$element.find('.qe-fp').click(() => {
 					dialog.hide()
-					frappe.set_route(`Form/${doctype}/${docname}`)
+					frappe.set_route('Form', doctype, docname)
 				})
 
 				dialog.show()
@@ -2238,7 +2238,7 @@ frappe.Chat.Widget.Room.Header
 			const item = {}
 
 			if (["Group", "Visitor"].includes(props.type)) {
-				item.route = `Form/Chat Room/${props.name}`
+				item.route = `chat-room/${props.name}`
 
 				item.title = props.room_name
 				item.image = props.avatar
@@ -2249,14 +2249,13 @@ frappe.Chat.Widget.Room.Header
 					item.subtitle = `${users.join(", ")} typing...`
 				} else
 					item.subtitle = props.type === "Group" ?
-						__(`${props.users.length} ${frappe._.pluralize('member', props.users.length)}`)
-						:
-						""
+						`${props.users.length} ${frappe._.pluralize('member', props.users.length)}`
+						: ""
 			}
 			else {
 				const user = props.owner === frappe.session.user ? frappe._.squash(props.users) : props.owner
 
-				item.route = `Form/User/${user}`
+				item.route = `user/${user}`
 
 				item.title = frappe.user.full_name(user)
 				item.image = frappe.user.image(user)
@@ -2426,7 +2425,7 @@ frappe.chat.component.ChatBubble
 				},
 					props.room_type === "Group" && !me ?
 						h("div", { class: "chat-bubble-author" },
-							h("a", { onclick: () => { frappe.set_route(`Form/User/${props.user}`) } },
+							h("a", { onclick: () => { frappe.set_route('Form', 'User', props.user) } },
 								frappe.user.full_name(props.user)
 							)
 						) : null,
