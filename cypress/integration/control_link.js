@@ -3,6 +3,7 @@ context('Control Link', () => {
 		cy.login();
 		cy.visit('/app/space/Website');
 	});
+
 	beforeEach(() => {
 		cy.visit('/app/space/Website');
 		cy.create_records({
@@ -76,7 +77,7 @@ context('Control Link', () => {
 			cy.get('.frappe-control[data-fieldname=link] .link-btn')
 				.should('be.visible')
 				.click();
-			cy.location('hash').should('eq', `/app/todo/${todos[0]}`);
+			cy.location('pathname').should('eq', `/app/todo/${todos[0]}`);
 		});
 	});
 });

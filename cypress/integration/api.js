@@ -29,6 +29,7 @@ context('API Resources', () => {
 			cy.get_doc('Comment', comment.name);
 		}));
 	});
+
 	it('Removes the Comments', () => {
 		cy.get_list('Comment').then(body => body.data.forEach(comment => {
 			cy.remove_doc('Comment', comment.name);
