@@ -7,7 +7,7 @@ import frappe, copy, json
 from frappe import _, msgprint
 from frappe.utils import cint
 import frappe.share
-rights = ("read", "write", "create", "delete", "submit", "cancel", "amend",
+rights = ("select", "read", "write", "create", "delete", "submit", "cancel", "amend",
 	"print", "email", "report", "import", "export", "set_user_permissions", "share")
 
 # TODO:
@@ -61,7 +61,9 @@ def has_permission(doctype, ptype="read", doc=None, verbose=False, user=None, ra
 		if isinstance(doc, string_types):
 			doc = frappe.get_doc(meta.name, doc)
 		perm = get_doc_permissions(doc, user=user, ptype=ptype).get(ptype)
-		if not perm: push_perm_check_log(_('User {0} does not have access to this document').format(frappe.bold(user)))
+
+		if not perm:
+			push_perm_check_log(_('User {0} does not have access to this document').format(frappe.bold(user)))
 	else:
 		if ptype=="submit" and not cint(meta.is_submittable):
 			push_perm_check_log(_("Document Type is not submittable"))
@@ -195,9 +197,9 @@ def get_role_permissions(doctype_meta, user=None):
 				and ptype != 'create'):
 				perms['if_owner'][ptype] = 1
 				# has no access if not owner
-				# only provide read access so that user is able to at-least access list
+				# only provide select or read access so that user is able to at-least access list
 				# (and the documents will be filtered based on owner sin further checks)
-				perms[ptype] = 1 if ptype == 'read' else 0
+				perms[ptype] = 1 if ptype in ['select', 'read'] else 0
 
 		frappe.local.role_permissions[cache_key] = perms
 

@@ -135,7 +135,7 @@ $.extend(frappe.model, {
 			let cached_timestamp = null;
 			let cached_doc = null;
 
-			let cached_docs = frappe.model.get_from_localstorage(doctype)
+			let cached_docs = frappe.model.get_from_localstorage(doctype);
 
 			if (cached_docs) {
 				let cached_docs = JSON.parse(localStorage["_doctype:" + doctype]);
@@ -246,11 +246,15 @@ $.extend(frappe.model, {
 
 	unscrub: function(txt) {
 		return __(txt || '').replace(/-|_/g, " ").replace(/\w*/g,
-            function(keywords){return keywords.charAt(0).toUpperCase() + keywords.substr(1).toLowerCase();});
+			function(keywords){return keywords.charAt(0).toUpperCase() + keywords.substr(1).toLowerCase();});
 	},
 
 	can_create: function(doctype) {
 		return frappe.boot.user.can_create.indexOf(doctype)!==-1;
+	},
+
+	can_select: function(doctype) {
+		return frappe.boot.user.can_select.indexOf(doctype)!==-1;
 	},
 
 	can_read: function(doctype) {
