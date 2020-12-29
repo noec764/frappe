@@ -7,9 +7,10 @@ frappe.views.calendar["Event"] = {
 		"title": "subject",
 		"status": "event_type",
 		"color": "color",
-		"rrule": "rrule"
+		"rrule": "rrule",
+		"secondary_status": "status"
 	},
-	status_color: {
+	secondary_status_color: {
 		"Public": "green",
 		"Private": "darkgray"
 	},

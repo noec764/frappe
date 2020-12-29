@@ -94,9 +94,21 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 							start: doc.start_date_field,
 							end: doc.end_date_field,
 							title: doc.subject_field,
-							allDay: doc.all_day ? 1 : 0
+							allDay: doc.all_day_field,
+							status: doc.status_field,
+							color: doc.color_field,
+							rrule: doc.recurrence_rule_field,
+							secondary_status: doc.secondary_status_field
+						},
+						secondary_status_color: doc.secondary_status.reduce((obj, f) =>
+							Object.assign(obj, {[f.value]: f.color}), {}
+						),
+						calendar_defaults: {
+							slots_start_time: doc.daily_minimum_time,
+							slots_end_time: doc.daily_maximum_time
 						}
 					});
+
 					resolve(options);
 				});
 			}
@@ -111,6 +123,7 @@ frappe.views.Calendar = class {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
+		this.calendar_defaults = {};
 		this.get_default_options();
 	}
 
@@ -124,10 +137,11 @@ frappe.views.Calendar = class {
 			};
 			resolve(defaults);
 		}).then(defaults => {
+			Object.assign(this.calendar_defaults, defaults)
 			this.make_page();
-			this.setup_options(defaults);
+			this.setup_options(this.calendar_defaults);
 			this.make();
-			this.setup_view_mode_button(defaults);
+			this.setup_view_mode_button(this.calendar_defaults);
 			this.bind();
 		});
 	}
@@ -160,6 +174,10 @@ frappe.views.Calendar = class {
 
 		this.fullcalendar = new Calendar(this.$cal[0], this.cal_options);
 		this.fullcalendar.render();
+
+		if (this.secondary_status_color) {
+			this.show_secondary_status_legend()
+		}
 	}
 
 	setup_view_mode_button(defaults) {
@@ -200,6 +218,25 @@ frappe.views.Calendar = class {
 		}
 	}
 
+	show_secondary_status_legend() {
+		const sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
+
+		frappe.model.with_doctype(this.doctype, () => {
+			const meta = frappe.get_meta(this.doctype);
+			const status_colors = Object.keys(this.secondary_status_color).map(f => {
+				return `
+					<div><span class="indicator-pill ${this.secondary_status_color[f]}">${__(f)}</span></div>
+				`
+			}).join("")
+			sidebar_menu.append(`
+				<div class="calendar-status-section">
+					<li class="sidebar-label">${__(meta.fields.filter(f => f.fieldname == this.field_map.secondary_status)[0].label)}</li>
+					<div>${status_colors}</div>
+				</div>
+			`)
+		});
+	}
+
 	get_system_datetime(date) {
 		date._offset = (moment(date).tz(frappe.sys_defaults.time_zone)._offset);
 		return frappe.datetime.convert_to_system_tz(date);
@@ -207,7 +244,6 @@ frappe.views.Calendar = class {
 
 	setup_options(defaults) {
 		const me = this;
-		defaults.meridiem = 'false';
 		this.cal_options = {
 			locale: frappe.boot.lang || "en",
 			plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin],
@@ -216,6 +252,7 @@ frappe.views.Calendar = class {
 				center: 'prev,title,next',
 				right: 'today'
 			},
+			height: "auto",
 			editable: true,
 			selectable: true,
 			selectMirror: true,
@@ -296,6 +333,8 @@ frappe.views.Calendar = class {
 					placement: 'auto'
 				})
 			},
+			slotMinTime: defaults.slots_start_time || "06:00:00",
+			slotMaxTime: defaults.slots_end_time || "22:00:00"
 		};
 
 		if (this.options) {
@@ -350,8 +389,8 @@ frappe.views.Calendar = class {
 				d.end = frappe.datetime.add_days(d.start, 1);
 			}
 
-			if (d.status && me.status_color) {
-				d.classNames.push(me.status_color[d.status]);
+			if ((d.secondary_status || d.status) && me.secondary_status_color) {
+				d.classNames.push(me.secondary_status_color[d.secondary_status || d.status]);
 			}
 
 			me.fix_end_date_for_event_render(d);
