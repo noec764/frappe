@@ -49,3 +49,48 @@
 		min-height: 100vh;
 	}
 }
+
+@mixin status-color($color) {
+	&::before {
+		background: #{$color} !important;
+	}
+}
+
+.calendar-status-section {
+	.green {
+		@include status-color(var(--dark-green-500));
+	}
+
+	.blue {
+		@include status-color(var(--blue-600));
+	}
+
+	.yellow {
+		@include status-color(var(--yellow-500));
+	}
+
+	.grey {
+		@include status-color(var(--gray-600));
+	}
+
+	.darkgray {
+		@include status-color(var(--dark-gray-600));
+	}
+
+	.red {
+		@include status-color(var(--red-500));
+	}
+
+	.orange {
+		@include status-color(var(--orange-500));
+	}
+
+	.status-color::before {
+		content:'';
+		display: inline-table;
+		height: 4px;
+		width: 4px;
+		border-radius: 50%;
+		margin-right: 6px;
+	}
+}

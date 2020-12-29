@@ -124,6 +124,7 @@ frappe.views.Calendar = class {
 		$.extend(this, options);
 		this.fullcalendar = null;
 		this.calendar_defaults = {};
+		this.sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
 		this.get_default_options();
 	}
 
@@ -219,16 +220,14 @@ frappe.views.Calendar = class {
 	}
 
 	show_secondary_status_legend() {
-		const sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
-
 		frappe.model.with_doctype(this.doctype, () => {
 			const meta = frappe.get_meta(this.doctype);
 			const status_colors = Object.keys(this.secondary_status_color).map(f => {
 				return `
-					<div><span class="indicator-pill ${this.secondary_status_color[f]}">${__(f)}</span></div>
+					<div><span class="flex align-items-center status-color ${this.secondary_status_color[f]}">${__(f)}</span></div>
 				`
 			}).join("")
-			sidebar_menu.append(`
+			this.sidebar_menu.append(`
 				<div class="calendar-status-section">
 					<li class="sidebar-label">${__(meta.fields.filter(f => f.fieldname == this.field_map.secondary_status)[0].label)}</li>
 					<div>${status_colors}</div>

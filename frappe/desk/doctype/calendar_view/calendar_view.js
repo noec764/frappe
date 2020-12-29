@@ -46,6 +46,7 @@ frappe.ui.form.on('Calendar View', {
 			frm.set_df_property('color_field', 'options', color_options);
 			frm.set_df_property('recurrence_rule_field', 'options', value_field_options);
 			frm.set_df_property('secondary_status_field', 'options', select_options);
+			frm.trigger("secondary_status_field");
 			frm.refresh();
 		});
 	},
