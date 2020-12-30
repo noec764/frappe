@@ -125,7 +125,7 @@ frappe.views.Views = class Views {
 				}
 			},
 			'Map': {
-				condition: frappe.boot.google_api_enabled && frappe.get_meta(this.doctype).fields.filter(f => f.fieldtype === "Geolocation").length,
+				condition: this.list_view.meta.fields.filter(f => f.fieldtype === "Geolocation").length,
 				action: () => this.set_route('map')
 			}
 		}

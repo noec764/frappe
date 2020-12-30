@@ -692,7 +692,7 @@ def validate_links_table_fieldnames(meta):
 	"""Validate fieldnames in Links table"""
 	if frappe.flags.in_patch: return
 	if frappe.flags.in_fixtures: return
-	if not self.links: return
+	if not meta.links: return
 
 	for index, link in enumerate(meta.links):
 		link_meta = frappe.get_meta(link.link_doctype)
