@@ -43,7 +43,7 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 
 		if(this.$input) {
 			var selected = this.$input.find(":selected").val();
-			this.$input.empty().add_options(options || [], this.df.doctype);
+			this.$input.empty().add_options(options || [], this.doctype);
 
 			if(value===undefined && selected) {
 				this.$input.val(selected);
@@ -82,10 +82,10 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 
  				if (is_value_null && is_label_null) {
 					value = v;
-					label = __(v, '', doctype);
+					label = __(v, null, doctype);
 				} else {
 					value = is_value_null ? "" : v.value;
-					label = is_label_null ? __(value, '', doctype) : __(v.label, '', doctype);
+					label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
 				}
 			}
 			$('<option>').html(cstr(label))
