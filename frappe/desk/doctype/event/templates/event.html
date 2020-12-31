@@ -18,7 +18,21 @@
 		{% endif %}
 		<div class="card-body">
 			{% if not portal_print_format %}<h5 class="card-title">{{ subject or "" }}</h5>{% endif %}
-				{{ content }}
+
+			{{ content }}
+
+			{% if attachments %}
+			<ul class="list-group mb-4">
+				{% for attachment in attachments %}
+				<li class="list-group-item">
+					<span><i class="uil uil-file"></i></span>
+					<a href="{{ attachment.file_url }}" target="_blank">
+						<span class="ml-1">{{ attachment.file_name }}</span>
+					</a>
+				</li>
+				{% endfor %}
+			</ul>
+			{% endif %}
 
 			{% if allow_registrations %}
 			<div id="registration-button" class="text-right">

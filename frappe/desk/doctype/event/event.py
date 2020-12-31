@@ -184,6 +184,9 @@ class Event(WebsiteGenerator):
 		context.registration_form = frappe.as_json(fields)
 		context.is_registered = frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
 
+		context.attachments = frappe.get_all("File", fields=["name", "file_name", "file_url"],
+			filters = {"attached_to_name": self.name, "attached_to_doctype": "Event", "is_private": 0}) if self.display_public_files else []
+
 	def print_format_content(self):
 		frappe.flags.ignore_print_permissions = True
 		return get_html_and_style(self, print_format=self.portal_print_format)

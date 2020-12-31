@@ -39,6 +39,7 @@
   "published",
   "allow_registrations",
   "allow_cancellations",
+  "display_public_files",
   "visible_for",
   "role",
   "section_break_30",
@@ -288,6 +289,12 @@
    "fieldtype": "Link",
    "label": "Role",
    "options": "Role"
+  },
+  {
+   "default": "0",
+   "fieldname": "display_public_files",
+   "fieldtype": "Check",
+   "label": "Display public files"
   }
  ],
  "has_web_view": 1,
@@ -303,7 +310,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2020-11-23 08:08:00.986004",
+ "modified": "2020-12-31 08:37:12.578703",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
