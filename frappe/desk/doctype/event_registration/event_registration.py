@@ -50,6 +50,14 @@ class EventRegistration(Document):
 		event.remove_participant(self.contact)
 		event.save(ignore_permissions=True)
 
+@frappe.whitelist()
+def get_user_info(user=None):
+	if not user:
+		user = frappe.session.user
+
+	return frappe.db.get_value("User", user, ["first_name", "last_name", "email", "mobile_no"], as_dict=True)
+
+
 @frappe.whitelist(allow_guest=True)
 def register_to_event(event, data, user=None):
 	try:

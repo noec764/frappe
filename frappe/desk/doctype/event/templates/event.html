@@ -113,11 +113,7 @@
 
 			if (frappe.session.user != "Guest") {
 				frappe.call({
-					method: "frappe.client.get",
-					args: {
-						doctype: "User",
-						name: frappe.session.user
-					},
+					method: "frappe.desk.doctype.event_registration.event_registration.get_user_info",
 				}).then(r => {
 					if (r && r.message) {
 						form.set_values(r.message)
@@ -141,7 +137,7 @@
 						if (r&&r.message) {
 							$(".data-registration").hide()
 							$(".registration-fields").html(
-								`{{ doc.success_message or _('<div class="alert alert-success mt-5 text-center" role="alert"><span>Thank you ! You have been successfully registered</span></div>') }}`
+								`{{ doc.success_message or _('<div class="alert alert-success mt-5 text-center" role="alert"><span>${ __("Thank you ! You have been successfully registered") }</span></div>') }}`
 							)
 						} else {
 							$(".data-registration").attr("disabled", false);
