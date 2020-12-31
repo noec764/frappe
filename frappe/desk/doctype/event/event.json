@@ -292,6 +292,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:doc.published",
    "fieldname": "display_public_files",
    "fieldtype": "Check",
    "label": "Display public files"
@@ -310,7 +311,7 @@
    "link_fieldname": "event"
   }
  ],
- "modified": "2020-12-31 08:37:12.578703",
+ "modified": "2020-12-31 18:41:12.260579",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
