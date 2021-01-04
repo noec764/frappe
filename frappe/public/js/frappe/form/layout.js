@@ -1,7 +1,7 @@
 import '../class';
 
 frappe.ui.form.Layout = Class.extend({
-	init: function(opts) {
+	init: function (opts) {
 		this.views = {};
 		this.pages = [];
 		this.sections = [];
@@ -10,7 +10,7 @@ frappe.ui.form.Layout = Class.extend({
 
 		$.extend(this, opts);
 	},
-	make: function() {
+	make: function () {
 		if (!this.parent && this.body) {
 			this.parent = this.body;
 		}
@@ -22,12 +22,12 @@ frappe.ui.form.Layout = Class.extend({
 		this.setup_tabbing();
 		this.render();
 	},
-	show_empty_form_message: function() {
+	show_empty_form_message: function () {
 		if (!(this.wrapper.find(".frappe-control:visible").length || this.wrapper.find(".section-head.collapsed").length)) {
 			this.show_message(__("This form does not have any input"));
 		}
 	},
-	get_doctype_fields: function() {
+	get_doctype_fields: function () {
 		let fields = [
 			this.get_new_name_field()
 		];
@@ -68,7 +68,7 @@ frappe.ui.form.Layout = Class.extend({
 		}
 		return fields;
 	},
-	show_message: function(html, color) {
+	show_message: function (html, color) {
 		if (this.message_color) {
 			// remove previous color
 			this.message.removeClass(this.message_color);
@@ -117,11 +117,11 @@ frappe.ui.form.Layout = Class.extend({
 
 	},
 
-	no_opening_section: function() {
-		return (this.fields[0] && this.fields[0].fieldtype!="Section Break") || !this.fields.length;
+	no_opening_section: function () {
+		return (this.fields[0] && this.fields[0].fieldtype != "Section Break") || !this.fields.length;
 	},
 
-	setup_dashboard_section: function() {
+	setup_dashboard_section: function () {
 		if (this.no_opening_section()) {
 			this.fields.unshift({fieldtype: 'Section Break'});
 		}
@@ -290,7 +290,7 @@ frappe.ui.form.Layout = Class.extend({
 	refresh_section_collapse: function() {
 		if (!this.doc) return;
 
-		for (var i=0; i<this.sections.length; i++) {
+		for (var i=0; i < this.sections.length; i++) {
 			var section = this.sections[i];
 			var df = section.df;
 			if (df && df.collapsible) {
@@ -508,7 +508,7 @@ frappe.ui.form.Layout = Class.extend({
 		let form_obj;
 		if (this.frm) {
 			form_obj = this.frm;
-		} else if (this.is_dialog) {
+		} else if (this.is_dialog || this.doctype === 'Web Form') {
 			form_obj = this;
 		}
 		if (form_obj) {

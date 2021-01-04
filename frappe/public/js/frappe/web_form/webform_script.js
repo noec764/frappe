@@ -83,6 +83,7 @@ frappe.ready(function() {
 
 		function setup_fields(form_data) {
 			form_data.web_form.web_form_fields.map(df => {
+				df.is_web_form = true;
 				if (df.fieldtype === "Table") {
 					df.get_data = () => {
 						let data = [];
@@ -97,6 +98,7 @@ frappe.ready(function() {
 						if (field.fieldtype === "Link") {
 							field.only_select = true;
 						}
+						field.is_web_form = true;
 						field.read_only = df.read_only ? df.read_only : (!is_new && !allow_edit);
 					});
 
@@ -104,7 +106,6 @@ frappe.ready(function() {
 						df.is_private = true;
 					}
 
-					df.is_web_form = true;
 					df.read_only = df.read_only ? df.read_only : (!is_new && !allow_edit);
 
 					delete df.parent;

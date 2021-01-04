@@ -274,6 +274,8 @@ export default class Grid {
 				this.perm);
 		} else if (this.df.is_web_form) {
 			this.display_status = cint(this.df.read_only) === 1 ? "Read" : "Write";
+		} else if (this.df.is_web_form && this.control) {
+			this.display_status = this.control.get_status();
 		} else {
 			// not in form
 			this.display_status = 'Write';
