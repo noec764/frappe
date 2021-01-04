@@ -157,7 +157,7 @@ frappe.Application = Class.extend({
 							user: frappe.session.user
 						},
 						callback: function(r) {
-							if(r.message.show_alert){
+							if(r.message&&r.message.show_alert){
 								frappe.show_alert({
 									indicator: 'red',
 									message: r.message.message
