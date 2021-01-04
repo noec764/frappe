@@ -22,7 +22,7 @@ google-auth-httplib2==0.0.3
 google-auth-oauthlib==0.4.1
 google-auth==1.21.1
 googlemaps==3.1.1
-gunicorn==19.10.0
+gunicorn==20.0.4
 html2text==2016.9.19
 html5lib==1.0.1
 ipython==7.14.0
