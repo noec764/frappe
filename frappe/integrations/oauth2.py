@@ -45,7 +45,6 @@ def approve(*args, **kwargs):
 			scopes=scopes,
 			credentials=frappe.flags.oauth_credentials
 		)
-
 		uri = headers.get('Location', None)
 
 		frappe.local.response["type"] = "redirect"
@@ -65,8 +64,7 @@ def authorize(**kwargs):
 		#Force login, redirect to preauth again.
 		frappe.local.response["type"] = "redirect"
 		frappe.local.response["location"] = "/login?" + encode_params({'redirect-to': frappe.request.url})
-
-	elif frappe.session['user']!='Guest':
+	else:
 		try:
 			r = frappe.request
 			scopes, frappe.flags.oauth_credentials = get_oauth_server().validate_authorization_request(
@@ -80,7 +78,6 @@ def authorize(**kwargs):
 			unrevoked_tokens = frappe.get_all("OAuth Bearer Token", filters={"status":"Active"})
 
 			if skip_auth or (get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens):
-
 				frappe.local.response["type"] = "redirect"
 				frappe.local.response["location"] = success_url
 			else:
@@ -92,7 +89,7 @@ def authorize(**kwargs):
 					"details": scopes
 				})
 				resp_html = frappe.render_template("templates/includes/oauth_confirmation.html", response_html_params)
-				frappe.respond_as_web_page(_("Confirm Access"), resp_html, primary_action=False)
+				frappe.respond_as_web_page(_("Confirm Access"), resp_html)
 		except FatalClientError as e:
 			return e
 		except OAuth2Error as e:
@@ -107,7 +104,6 @@ def get_token(*args, **kwargs):
 
 	try:
 		r = frappe.request
-
 		headers, body, status = get_oauth_server().create_token_response(
 			r.url,
 			r.method,
@@ -137,6 +133,7 @@ def get_token(*args, **kwargs):
 
 			id_token_encoded = jwt.encode(id_token, client_secret, algorithm='HS256', headers=id_token_header)
 			out.update({"id_token": str(id_token_encoded)})
+
 		frappe.local.response = out
 
 	except FatalClientError as e:
@@ -193,6 +190,7 @@ def validate_url(url_string):
 def encode_params(params):
 	"""
 	Encode a dict of params into a query string.
+
 	Use `quote_via=urllib.parse.quote` so that whitespaces will be encoded as
 	`%20` instead of as `+`. This is needed because oauthlib cannot handle `+`
 	as a whitespace.
