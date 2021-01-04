@@ -7,7 +7,7 @@
 	>
 		<a
 			class="dodock-sidebar-link"
-			:href="'/app/space/' + item.name"
+			:href="'/app/' + item.name"
 		>
 			<!-- <i
 				v-if="item.icon"

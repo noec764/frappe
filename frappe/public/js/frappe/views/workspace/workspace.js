@@ -1,3 +1,18 @@
+frappe.standard_pages['Workspaces'] = function() {
+	var wrapper = frappe.container.add_page('Workspaces');
+
+	frappe.ui.make_app_page({
+		parent: wrapper,
+		name: 'Workspaces',
+		title: __("Workspace"),
+	});
+
+	frappe.workspace = new frappe.views.Workspace(wrapper);
+	$(wrapper).bind('show', function () {
+		frappe.workspace.show();
+	});
+};
+
 frappe.views.Workspace = class Workspace {
 	constructor(wrapper) {
 		this.wrapper = $(wrapper);
@@ -5,12 +20,24 @@ frappe.views.Workspace = class Workspace {
 		this.prepare_container();
 		this.setup_dropdown();
 		this.pages = {};
+
+		this.setup_workspaces();
+	}
+
+	setup_workspaces() {
+		// workspaces grouped by categories
+		this.workspaces = {};
+		for (let page of frappe.boot.allowed_workspaces) {
+			if (!this.workspaces[page.category]) {
+				this.workspaces[page.category] = [];
+			}
+			this.workspaces[page.category].push(page);
+		}
 	}
 
 	show() {
 		let page = this.get_page_to_show();
 		this.page.set_title(__(page));
-		frappe.set_route('space', page);
 		this.show_page(page);
 	}
 

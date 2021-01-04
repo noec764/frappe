@@ -41,12 +41,15 @@ class TestSearch(unittest.TestCase):
 
 	#Search for the word "pay", part of the word "pays" (country) in french.
 	def test_link_search_in_foreign_language(self):
-		frappe.local.lang = 'fr'
-		search_widget(doctype="DocType", txt="pay", page_length=20)
-		output = frappe.response["values"]
+		try:
+			frappe.local.lang = 'fr'
+			search_widget(doctype="DocType", txt="pay", page_length=20)
+			output = frappe.response["values"]
 
-		result = [['found' for x in y if x=="Country"] for y in output]
-		self.assertTrue(['found'] in result)
+			result = [['found' for x in y if x=="Country"] for y in output]
+			self.assertTrue(['found'] in result)
+		finally:
+			frappe.local.lang = 'en'
 
 	def tearDown(self):
 		frappe.local.lang = 'en'
