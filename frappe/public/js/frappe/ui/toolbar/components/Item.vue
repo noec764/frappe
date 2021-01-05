@@ -7,7 +7,7 @@
 	>
 		<a
 			class="dodock-sidebar-link"
-			:href="'/app/' + item.name"
+			:href="'/app/' + item.name.toLowerCase()"
 		>
 			<!-- <i
 				v-if="item.icon"

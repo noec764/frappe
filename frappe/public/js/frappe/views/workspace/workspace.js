@@ -3,6 +3,7 @@ frappe.standard_pages['Workspaces'] = function() {
 
 	frappe.ui.make_app_page({
 		parent: wrapper,
+		single_column: true,
 		name: 'Workspaces',
 		title: __("Workspace"),
 	});

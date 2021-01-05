@@ -392,15 +392,10 @@ def get_desk_sidebar_items():
 		except frappe.PermissionError:
 			pass
 
-	from collections import defaultdict
-	sidebar_items = defaultdict(list)
-
-	# The order will be maintained while categorizing
 	for page in pages:
 		# Translate label
 		page['label'] = _(page.get('name'))
-		sidebar_items[page["category"]].append(page)
-	return sidebar_items
+	return pages
 
 def get_table_with_counts():
 	counts = frappe.cache().get_value("information_schema:counts")
