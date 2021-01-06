@@ -77,7 +77,7 @@ class AutoRepeat(Document):
 			self.document_title = title
 
 	def validate_submit_after_creation(self):
-		if self.submit_on_creation and not frappe.get_meta(self.reference_doctype).is_submittable:
+		if self.submit_after_creation and not frappe.get_meta(self.reference_doctype).is_submittable:
 			frappe.throw(_('Cannot enable {0} for a non-submittable doctype').format(
 				frappe.bold(_('Submit on Creation'))))
 

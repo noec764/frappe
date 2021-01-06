@@ -122,7 +122,7 @@ class TestAutoRepeat(unittest.TestCase):
 		doc = make_auto_repeat(frequency='Daily', reference_document=todo.name, start_date=add_days(today(), -1))
 		self.assertEqual(getdate(doc.next_schedule_date), add_days(current_date, -1))
 
-	def test_submit_on_creation(self):
+	def test_submit_after_creation(self):
 		doctype = 'Test Submittable DocType'
 		create_submittable_doctype(doctype)
 
@@ -130,7 +130,7 @@ class TestAutoRepeat(unittest.TestCase):
 		submittable_doc = frappe.get_doc(dict(doctype=doctype, test='test submit on creation')).insert()
 		submittable_doc.submit()
 		doc = make_auto_repeat(frequency='Daily', reference_doctype=doctype, reference_document=submittable_doc.name,
-			start_date=add_days(current_date, -1), submit_on_creation=1)
+			start_date=add_days(current_date, -1), submit_after_creation=1)
 
 		data = get_auto_repeat_entries(current_date)
 		create_repeated_entries(data)
@@ -148,7 +148,7 @@ def make_auto_repeat(**args):
 		'doctype': 'Auto Repeat',
 		'reference_doctype': args.reference_doctype or 'ToDo',
 		'reference_document': args.reference_document or frappe.db.get_value('ToDo', 'name'),
-		'submit_after_creation': args.submit_on_creation or 0,
+		'submit_after_creation': args.submit_after_creation or 0,
 		'frequency': args.frequency or 'Daily',
 		'start_date': args.start_date or add_days(today(), -1),
 		'end_date': args.end_date or "",
