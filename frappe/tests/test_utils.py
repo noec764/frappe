@@ -127,6 +127,7 @@ class TestHTMLUtils(unittest.TestCase):
 		self.assertTrue('<h1>Hello</h1>' in clean)
 		self.assertTrue('<a href="http://test.com">text</a>' in clean)
 
+@unittest.skip("Skipped in CI")
 class TestImage(unittest.TestCase):
 	def test_strip_exif_data(self):
 		original_image = Image.open("../apps/frappe/frappe/tests/data/exif_sample_image.jpg")

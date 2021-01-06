@@ -51,6 +51,9 @@ class Event(WebsiteGenerator):
 
 		self.set_route()
 
+	def autoname(self):
+		return
+
 	def get_feed(self):
 		return self.subject
 
