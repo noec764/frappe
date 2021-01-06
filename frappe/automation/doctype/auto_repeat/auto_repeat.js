@@ -114,7 +114,7 @@ frappe.auto_repeat.render_schedule = function(frm) {
 			doc: frm.doc
 		}).done((r) => {
 			frm.dashboard.add_section(
-				frappe.render_template("auto_repeat_schedule", {
+				frappe.render_template("auto_repeat_dashboard", {
 					schedule_details : r.message || []
 				}),
 				__('Auto Repeat Schedule')

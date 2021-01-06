@@ -1709,6 +1709,7 @@ File Upload Disconnected. Please try again.,Envoi du Fichier Déconnecté. Veuil
 File Upload in Progress. Please try again in a few moments.,Envoi du Fichier en Cours. Veuillez réessayer dans quelques instants.,
 File Upload,Envoi de Fichiers,
 File backup is ready,La sauvegarde de fichier est prête,
+File deleted,Fichier supprimé,
 File name cannot have {0},Le nom du ficher ne peut contenir {0},
 File not attached,Fichier joint manquant,
 File size exceeded the maximum allowed size of {0} MB,La taille du fichier a dépassé la taille maximale autorisée de {0} Mo,

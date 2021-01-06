@@ -286,8 +286,12 @@ class AutoRepeat(Document):
 		)
 		max_log = max([getdate(x.transaction_date) for x in logs]) if logs else nowdate()
 
+		for log in logs:
+			if not frappe.db.exists(log.generated_doctype, log.generated_docname):
+				log.generated_doctype = "File deleted"
+
 		return sorted(
-			[dict(link=frappe.utils.get_link_to_form(x.generated_doctype, x.generated_docname), **x) for x in logs] \
+			[dict(link=frappe.utils.get_link_to_form(x.generated_doctype, x.generated_docname) if x.generated_doctype != "File deleted" else _("File deleted"), **x) for x in logs] \
 			+ [dict(transaction_date=x) for x in schedule if getdate(x) > getdate(max_log)][:5],
 			key=lambda x:getdate(x["transaction_date"]),
 			reverse=True)
