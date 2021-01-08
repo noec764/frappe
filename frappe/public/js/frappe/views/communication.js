@@ -53,10 +53,6 @@ frappe.views.CommunicationComposer = Class.extend({
 		if (this.frm) {
 			$(document).trigger('form-typing', [this.frm]);
 		}
-
-		if (this.cc || this.bcc) {
-			this.toggle_more_options(true);
-		}
 	},
 
 	get_fields: function() {
@@ -70,17 +66,9 @@ frappe.views.CommunicationComposer = Class.extend({
 				options: contactList
 			},
 			{
-				fieldtype: "Button",
-				label: frappe.utils.icon('down'),
-				fieldname: 'option_toggle_button',
-				click: () => {
-					this.toggle_more_options();
-				}
-			},
-			{
 				fieldtype: "Section Break",
-				hidden: 1,
-				fieldname: "more_options"
+				collapsible: 1,
+				label: __("CC, BCC & Email Template")
 			},
 			{
 				label: __("CC"),
@@ -108,22 +96,20 @@ frappe.views.CommunicationComposer = Class.extend({
 				fieldname: "subject",
 				length: 524288
 			},
+			{ fieldtype: "Section Break" },
 			{
 				label: __("Message"),
 				fieldtype: "Text Editor",
-				reqd: 1,
 				fieldname: "content",
-				onchange: frappe.utils.debounce(
-					this.save_as_draft.bind(this),
-					300
-				)
+				onchange: frappe.utils.debounce(this.save_as_draft.bind(this), 300)
 			},
 			{ fieldtype: "Section Break" },
+			{ fieldtype: "Column Break" },
 			{
 				label: __("Send me a copy"),
 				fieldtype: "Check",
 				fieldname: "send_me_a_copy",
-				default: frappe.boot.user.send_me_a_copy
+				'default': frappe.boot.user.send_me_a_copy
 			},
 			{
 				label: __("Send Read Receipt"),
@@ -178,13 +164,6 @@ frappe.views.CommunicationComposer = Class.extend({
 		}
 
 		return fields;
-	},
-
-	toggle_more_options(show_options) {
-		show_options = show_options || this.dialog.fields_dict.more_options.df.hidden;
-		this.dialog.set_df_property('more_options', 'hidden', !show_options);
-		let label = frappe.utils.icon(show_options ? 'up-line': 'down');
-		this.dialog.get_field('option_toggle_button').set_label(label);
 	},
 
 	prepare: function() {
