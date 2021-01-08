@@ -527,7 +527,7 @@ frappe.ui.filter_utils = {
 			['Date', 'Datetime', 'DateRange', 'Select'].includes(df.fieldtype)
 		) {
 			df.fieldtype = 'Select';
-			df.options = this.get_timespan_options(['Last', 'Today', 'This', 'Next']);
+			df.options = this.get_timespan_options(['Last', 'Yesterday', 'Today', 'Tomorrow', 'This', 'Next']);
 		}
 		if (condition === 'is') {
 			df.fieldtype = 'Select';
@@ -548,7 +548,6 @@ frappe.ui.filter_utils = {
 				{label: __('Last 6 months'), value: 'last 6 months'},
 				{label: __('Last Year'), value: 'last year'}
 			],
-			Today: null,
 			This: [
 				{label: __('This Week'), value: 'this week'},
 				{label: __('This Month'), value: 'this month'},
