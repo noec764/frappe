@@ -13,7 +13,7 @@ common_default_keys = ["__default", "__global"]
 doctype_map_keys = ('energy_point_rule_map', 'assignment_rule_map',
 	'milestone_tracker_map', 'event_consumer_document_type_map')
 
-global_cache_keys = ("app_hooks", "installed_apps", "notification_config",
+global_cache_keys = ("app_hooks", "installed_apps",
 		"app_modules", "module_app", "system_settings",
 		'scheduler_events', 'time_zone', 'webhooks', 'active_domains',
 		'active_modules', 'assignment_rule', 'server_script_map', 'wkhtmltopdf_version',
@@ -22,12 +22,12 @@ global_cache_keys = ("app_hooks", "installed_apps", "notification_config",
 
 user_cache_keys = ("bootinfo", "user_recent", "roles", "user_doc", "lang",
 		"defaults", "user_permissions", "home_page", "linked_with",
-		"desktop_icons", 'portal_menu_items','user_perm_can_read',
+		"desktop_icons", 'portal_menu_items', 'user_perm_can_read',
 		"has_role:Page", "has_role:Report", "desk_sidebar_items")
 
 doctype_cache_keys = ("meta", "form_meta", "table_columns", "last_modified",
-		"linked_doctypes", 'notifications', 'workflow' , 'data_import_column_header_map') + doctype_map_keys
-
+		"linked_doctypes", 'notifications', 'workflow' ,
+		'data_import_column_header_map') + doctype_map_keys
 
 def clear_user_cache(user=None):
 	cache = frappe.cache()
@@ -67,16 +67,19 @@ def clear_defaults_cache(user=None):
 	elif frappe.flags.in_install!="frappe":
 		frappe.cache().delete_key("defaults")
 
+def clear_document_cache():
+	frappe.local.document_cache = {}
+	frappe.cache().delete_key("document_cache")
+
 def clear_doctype_cache(doctype=None):
+	clear_controller_cache(doctype)
 	cache = frappe.cache()
 
 	if getattr(frappe.local, 'meta_cache') and (doctype in frappe.local.meta_cache):
 		del frappe.local.meta_cache[doctype]
 
-	for key in ('is_table', 'doctype_modules', 'document_cache'):
+	for key in ('is_table', 'doctype_modules'):
 		cache.delete_value(key)
-
-	frappe.local.document_cache = {}
 
 	def clear_single(dt):
 		for name in doctype_cache_keys:
@@ -98,6 +101,18 @@ def clear_doctype_cache(doctype=None):
 		# clear all
 		for name in doctype_cache_keys:
 			cache.delete_value(name)
+
+	# Clear all document's cache. To clear documents of a specific DocType document_cache should be restructured
+	clear_document_cache()
+
+def clear_controller_cache(doctype=None):
+	if not doctype:
+		del frappe.controllers
+		frappe.controllers = {}
+		return
+
+	for site_controllers in frappe.controllers.values():
+		site_controllers.pop(doctype, None)
 
 def get_doctype_map(doctype, name, filters=None, order_by=None):
 	cache = frappe.cache()

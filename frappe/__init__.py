@@ -28,6 +28,7 @@ __version__ = '1.5.2'
 __title__ = "Dodock Framework"
 
 local = Local()
+controllers = {}
 
 class _dict(dict):
 	"""dict like object that exposes keys as attributes"""
