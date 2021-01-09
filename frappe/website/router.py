@@ -231,23 +231,11 @@ def get_page_info(path, app, start, basepath=None, app_path=None, fname=None):
 
 def setup_source(page_info):
 	'''Get the HTML source of the template'''
-	from frontmatter import Frontmatter
-
 	jenv = frappe.get_jenv()
 	source = jenv.loader.get_source(jenv, page_info.template)[0]
 	html = ''
 
 	if page_info.template.endswith('.md'):
-		# extract frontmatter block if exists
-		try:
-			# values will be used to update page_info
-			res = Frontmatter.read(source)
-			if res['attributes']:
-				page_info.update(res['attributes'])
-				source = res['body']
-		except Exception as e:
-			pass
-
 		source = frappe.utils.md_to_html(source)
 
 		if not page_info.show_sidebar:
@@ -255,7 +243,12 @@ def setup_source(page_info):
 
 	# if only content
 	if page_info.template.endswith('.html') or page_info.template.endswith('.md'):
-		html = extend_from_base_template(page_info, source)
+		if ('</body>' not in source) and ('{% block' not in source):
+			page_info.only_content = True
+			html = '{% extends "templates/web.html" %}'
+			html += '\n{% block page_content %}\n' + source + '\n{% endblock %}'
+		else:
+			html = source
 
 		# load css/js files
 		js, css = '', ''
@@ -278,23 +271,6 @@ def setup_source(page_info):
 
 	# show table of contents
 	setup_index(page_info)
-
-def extend_from_base_template(page_info, source):
-	'''Extend the content with appropriate base template if required.
-
-	For easy composition, the users will only add the content of the page,
-	not its template. But if the user has explicitly put Jinja blocks, or <body> tags,
-	or comment tags like <!-- base_template: [path] -->
-	then the system will not try and put it inside the "web.template"
-	'''
-
-	if (('</body>' not in source) and ('{% block' not in source)
-		and ('<!-- base_template:' not in source)) and 'base_template' not in page_info:
-		page_info.only_content = True
-		source = '''{% extends "templates/web.html" %}
-			{% block page_content %}\n''' + source + '\n{% endblock %}'
-
-	return source
 
 def setup_index(page_info):
 	'''Build page sequence from index.txt'''
