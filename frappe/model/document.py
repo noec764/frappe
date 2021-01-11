@@ -342,12 +342,12 @@ class Document(BaseDocument):
 			self.set_new_name()
 			rename_doc(self.doctype, self._draft_name, self.name, ignore_permissions=True, force=True, show_alert=False)
 
-		self.run_post_save_methods()
-
 		if self._action == "submit":
 			# Add submitted record and seal
 			self.add_submitted_record()
 			self.register_seal()
+
+		self.run_post_save_methods()
 
 		# clear unsaved flag
 		if hasattr(self, "__unsaved"):
