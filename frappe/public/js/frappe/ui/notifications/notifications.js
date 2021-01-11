@@ -107,6 +107,7 @@ frappe.ui.Notifications = class Notifications {
 		item.$tab.addClass("active");
 
 		Object.keys(this.tabs).forEach(tab_name => this.tabs[tab_name].hide());
+		this.tabs[item.id].make();
 		this.tabs[item.id].show();
 	}
 
@@ -438,7 +439,7 @@ class EventsView extends BaseNotificationsView {
 					participants = frappe.avatar_group(event.participants, 3)
 				}
 
-				return `<a class="recent-item event" href="/app/${this.calendar}/${event.name}">
+				return `<a class="recent-item event" href="/app/${frappe.router.slug(this.calendar)}/${event.name}">
 					<div class="event-border" style="border-color: ${color}"></div>
 					<div class="event-item">
 						<div class="event-subject">${event.title || event[field_map["title"]]}</div>
