@@ -41,12 +41,10 @@ frappe.ui.form.Footer = Class.extend({
 						comment_email: frappe.session.user,
 						comment_by: frappe.session.user_fullname
 					}).then((r) => {
-						let docinfo = this.frm.get_docinfo()
-						docinfo.comments.push(r)
-						frappe.model.set_docinfo(this.frm.doctype, this.frm.docname, "comments", docinfo.comments);
+						let comment_item = this.frm.timeline.get_comment_timeline_item(comment);
 						this.frm.comment_box.set_value('');
 						frappe.utils.play_sound("click");
-						this.frm.timeline.refresh();
+						this.frm.timeline.add_timeline_item(comment_item);
 						this.frm.sidebar.refresh_comments_count && this.frm.sidebar.refresh_comments_count();
 					}).finally(() => {
 						this.frm.comment_box.enable();
