@@ -847,6 +847,7 @@ frappe.views.view_modes = [
 	"Calendar",
 	"Image",
 	"Inbox",
+	"Tree",
 	"Map"
 ];
 frappe.views.is_valid = (view_mode) =>
