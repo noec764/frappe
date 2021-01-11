@@ -155,7 +155,7 @@ frappe.views.BaseList = class BaseList {
 		this.page = this.parent.page;
 		this.$page = $(this.parent);
 		this.page.main.addClass('frappe-card');
-		this.page.page_form.removeClass("row").addClass("flex justify-between");
+		this.page.page_form.removeClass("row").addClass("flex");
 		this.hide_page_form && this.page.page_form.hide();
 		this.hide_sidebar && this.$page.addClass('no-list-sidebar');
 		this.setup_page_head();
