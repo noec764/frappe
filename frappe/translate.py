@@ -130,7 +130,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
-			messages += frappe.db.sql("select concat('Desk Page: ', name), label from `tabDesk Page`")
+			messages += frappe.db.sql("select concat('Workspace: ', name), label from `tabWorkspace`")
 			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
 			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
 			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
@@ -338,10 +338,10 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 					if not isinstance(i, tuple):
 						raise Exception
 
-		# desk pages
-		for name in frappe.db.sql_list("""select name from `tabDesk Page`
+		# workspaces
+		for name in frappe.db.sql_list("""select name from `tabWorkspace`
 			where module in ({}) and is_standard=1""".format(modules)):
-			messages.extend(get_messages_from_desk_pages(name))
+			messages.extend(get_messages_from_workspaces(name))
 
 		for name in frappe.db.sql_list("""select chart_name from `tabDashboard Chart`
 			where module in ({}) and is_standard=1""".format(modules)):
@@ -530,13 +530,13 @@ def get_messages_from_onboarding_step(name):
 			messages.append(('Onboarding Step: ' + name, onboarding_step.get(field)))
 	return messages
 
-def get_messages_from_desk_pages(name):
-	desk_page = frappe.get_doc("Desk Page", name)
+def get_messages_from_workspaces(name):
+	desk_page = frappe.get_doc("Workspace", name)
 	messages = []
 
 	for field in ("label", "charts_label", "shortcuts_label", "cards_label"):
 		if desk_page.get(field):
-			messages.append(('Desk Page: ' + name, desk_page.get(field)))
+			messages.append(('Workspace: ' + name, desk_page.get(field)))
 
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
@@ -544,12 +544,9 @@ def get_messages_from_desk_pages(name):
 		if shortcut.get("label"):
 			messages.append(('Desk Shortcut: ' + name, shortcut.get("label")))
 
-	for card in desk_page.cards:
+	for card in desk_page.links:
 		if card.get("label"):
-			messages.append(('Desk Card: ' + name, card.get("label")))
-		for element in frappe.parse_json(card.links):
-			if element.get("label"):
-				messages.append(('Desk Card: ' + name, element.get("label")))
+			messages.append(('Desk Link: ' + name, card.get("label")))
 
 	return messages
 
