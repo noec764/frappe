@@ -263,7 +263,7 @@ export default class Grid {
 	}
 
 	refresh(force) {
-		if (this.frm.setting_dependency) return;
+		if (this.frm&&this.frm.setting_dependency) return;
 
 		this.data = this.get_data();
 

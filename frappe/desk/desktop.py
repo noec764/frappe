@@ -474,7 +474,7 @@ def get_custom_workspace_for_user(page):
 
 @frappe.whitelist()
 def save_customization(page, config):
-	"""Save customizations as a separate doctype in Desk page per user
+	"""Save customizations as a separate doctype in Workspace per user
 
 	Args:
 		page (string): Name of the page to be edited
@@ -580,7 +580,7 @@ def update_onboarding_step(name, field, value):
 
 @frappe.whitelist()
 def reset_customization(page):
-	"""Reset desk page customizations for a user
+	"""Reset Workspace customizations for a user
 
 	Args:
 		page (string): Name of the page to be reset
