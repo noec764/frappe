@@ -21,7 +21,6 @@ class EmailGroup(Document):
 
 	def import_from(self, doctype, filters=None, auto_update=False):
 		"""Extract Email Addresses from given doctype and add them to the current list"""
-		print(doctype, filters, auto_update)
 		self.import_doctype = doctype
 		self.import_filters = filters or "{}"
 		self.auto_update = auto_update
