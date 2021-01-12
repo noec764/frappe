@@ -352,6 +352,14 @@ kbd {
 		border-radius: var(--border-radius-md);
 		cursor: pointer;
 
+		.sidebar-item-label {
+			// https://css-tricks.com/flexbox-truncated-text/
+			min-width: 0;
+			overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+		}
+
 		&:focus {
 			background-color: var(--sidebar-select-color);
 			outline: 0;
