@@ -48,16 +48,18 @@ class SubscriberImportDialog {
 					args: {
 						"name": this.frm.doc.name,
 						"doctype": data.doctype,
-						"filters": data.filters
+						"filters": data.filters,
+						"auto_update": data.auto_update
 					}
 				}).then(r => {
-					this.frm.refresh_field("total_subscribers");
+					this.frm.refresh_fields();
 				})
 
 				this.dialog.hide();
 			},
 			primary_action_label: __("Import")
 		});
+		this.frm.doc.import_doctype && this.setup_filters(this.frm.doc.import_doctype)
 		this.dialog.show();
 	}
 
@@ -68,6 +70,7 @@ class SubscriberImportDialog {
 				options: this.frm.doc.__onload.import_types,
 				label:__("Import Email From"),
 				fieldname:"doctype",
+				default: this.frm.doc.import_doctype,
 				reqd:1,
 				onchange: () => {
 					this.setup_filters(this.dialog.get_value("doctype"));
@@ -81,6 +84,12 @@ class SubscriberImportDialog {
 				fieldtype: "HTML",
 				fieldname: "filter_area",
 				hidden: 1,
+			},
+			{
+				fieldtype: "Check",
+				fieldname: "auto_update",
+				label: __("Automatically update this email group"),
+				default: this.frm.doc.auto_update
 			}
 		]
 	}
@@ -94,14 +103,13 @@ class SubscriberImportDialog {
 		let $loading = this.dialog.get_field("filter_area_loading").$wrapper;
 		$(`<span class="text-muted">${__("Loading Filters...")}</span>`).appendTo($loading);
 
-		this.filters = [];
+		this.filters = []
 
-		if (this.values && this.values.stats_filter) {
-			const filters_json = new Function(`return ${this.values.stats_filter}`)();
-			this.filters = Object.keys(filters_json).map((filter) => {
-				let val = filters_json[filter];
-				return [this.values.link_to, filter, val[0], val[1], false];
-			});
+		if (doctype == this.frm.doc.import_doctype) {
+			const obj = JSON.parse(this.frm.doc.import_filters)
+			this.filters = Object.keys(obj).length ? Object.keys(obj).map(f => {
+				return [doctype, f, obj[f][0], obj[f][1]]
+			}) : []
 		}
 
 		this.filter_group = new frappe.ui.FilterGroup({

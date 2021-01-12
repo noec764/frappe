@@ -3,6 +3,7 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+
 import frappe
 from frappe import _
 from frappe.utils import validate_email_address
@@ -18,15 +19,27 @@ class EmailGroup(Document):
 			import_types.sort(key=lambda x:x["label"])
 			self.get("__onload").import_types = import_types
 
-	def import_from(self, doctype, filters):
+	def import_from(self, doctype, filters=None, auto_update=False):
 		"""Extract Email Addresses from given doctype and add them to the current list"""
-		meta = frappe.get_meta(doctype)
+		print(doctype, filters, auto_update)
+		self.import_doctype = doctype
+		self.import_filters = filters or "{}"
+		self.auto_update = auto_update
+
+		added = self.import_data()
+
+		frappe.msgprint(_("{0} subscribers added").format(added))
+
+		return self.update_total_subscribers()
+
+	def import_data(self):
+		meta = frappe.get_meta(self.import_doctype)
 		email_field = [d.fieldname for d in meta.fields if d.fieldtype in ("Data", "Small Text", "Text", "Code", "Read Only") and d.options=="Email"][0]
 		unsubscribed_field = "unsubscribed" if meta.get_field("unsubscribed") else None
 		added = 0
 
 		frappe.flags.mute_messages = True
-		for user in frappe.db.get_all(doctype, filters=filters, fields=[email_field, unsubscribed_field or "name"], limit=999999):
+		for user in frappe.db.get_all(self.import_doctype, filters=frappe.parse_json(self.import_filters), fields=[email_field, unsubscribed_field or "name"], limit=999999):
 			try:
 				email = parse_addr(user.get(email_field))[1] if user.get(email_field) else None
 				if email:
@@ -42,9 +55,7 @@ class EmailGroup(Document):
 				continue
 		frappe.flags.mute_messages = False
 
-		frappe.msgprint(_("{0} subscribers added").format(added))
-
-		return self.update_total_subscribers()
+		return added
 
 	def update_total_subscribers(self):
 		self.total_subscribers = self.get_total_subscribers()
@@ -60,10 +71,10 @@ class EmailGroup(Document):
 			frappe.delete_doc("Email Group Member", d.name)
 
 @frappe.whitelist()
-def import_from(name, doctype, filters):
+def import_from(name, doctype, filters=None, auto_update=False):
 	nlist = frappe.get_doc("Email Group", name)
 	if nlist.has_permission("write"):
-		return nlist.import_from(doctype, filters)
+		return nlist.import_from(doctype, filters, auto_update)
 
 @frappe.whitelist()
 def add_subscribers(name, email_list):
@@ -111,3 +122,10 @@ def send_welcome_email(welcome_email, email, email_group):
 
 	message = frappe.render_template(welcome_email.response, args)
 	frappe.sendmail(email, subject=welcome_email.subject, message=message)
+
+def auto_update_email_groups():
+	email_groups = frappe.get_all("Email Group", filters={"auto_update": 1}, pluck="name")
+	for email_group in email_groups:
+		doc = frappe.get_doc("Email Group", email_group)
+		doc.import_data()
+		doc.update_total_subscribers()
