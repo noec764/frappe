@@ -66,6 +66,7 @@ input[type="checkbox"] {
 		border-radius: 2px;
 		content: '';
 		cursor: default;
+		pointer-events:none
 	}
 
 	&.disabled-selected:before {
@@ -80,6 +81,7 @@ input[type="checkbox"] {
 		border-radius: 2px;
 		line-height: 10px;
 		cursor: default;
+		pointer-events:none
 	}
 }
 
