@@ -131,7 +131,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
 			messages += frappe.db.sql("select concat('Workspace: ', name), label from `tabWorkspace`")
-			messages += frappe.db.sql("select concat('Desk Shortcut: ', label), format from `tabDesk Shortcut`")
+			messages += frappe.db.sql("select concat('Workspace Shortcut: ', label), format from `tabWorkspace Shortcut`")
 			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
 			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
 			messages += frappe.db.sql("select concat('Number Card: ', name), label from `tabNumber Card`")
@@ -540,13 +540,13 @@ def get_messages_from_workspaces(name):
 
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
-			messages.append(('Desk Shortcut: ' + name, shortcut.get("format")))
+			messages.append(('Workspace Shortcut: ' + name, shortcut.get("format")))
 		if shortcut.get("label"):
-			messages.append(('Desk Shortcut: ' + name, shortcut.get("label")))
+			messages.append(('Workspace Shortcut: ' + name, shortcut.get("label")))
 
 	for card in desk_page.links:
 		if card.get("label"):
-			messages.append(('Desk Link: ' + name, card.get("label")))
+			messages.append(('Workspace Link: ' + name, card.get("label")))
 
 	return messages
 
