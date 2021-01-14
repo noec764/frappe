@@ -243,6 +243,8 @@ frappe.ui.Slides = class Slides {
 		this.done_state = done_state;
 		this.before_load = before_load;
 		this.on_update = on_update;
+		//TODO: fix for generic cases
+		this.page_name = "setup-wizard";
 
 		this.slide_dict = {};
 
