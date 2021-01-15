@@ -109,6 +109,7 @@ export default class GridPagination {
 		}
 
 		this.update_page_numbers();
+		this.grid.scroll_to_top();
 	}
 
 	go_to_last_page_to_add_row() {
