@@ -76,8 +76,6 @@ def authorize(**kwargs):
 				r.headers
 			)
 
-			scopes, frappe.flags.oauth_credentials = get_oauth_server().validate_authorization_request(uri, http_method, body, headers)
-
 			skip_auth = frappe.db.get_value("OAuth Client", frappe.flags.oauth_credentials['client_id'], "skip_authorization")
 			unrevoked_tokens = frappe.get_all("OAuth Bearer Token", filters={"status":"Active"})
 
@@ -102,13 +100,6 @@ def authorize(**kwargs):
 
 @frappe.whitelist(allow_guest=True)
 def get_token(*args, **kwargs):
-	r = frappe.request
-
-	uri = url_fix(r.url)
-	http_method = r.method
-	body = r.form
-	headers = r.headers
-	
 	#Check whether frappe server URL is set
 	frappe_server_url = frappe.db.get_value("Social Login Key", "frappe", "base_url") or None
 	if not frappe_server_url:
