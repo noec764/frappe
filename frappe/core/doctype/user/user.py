@@ -293,9 +293,9 @@ class User(Document):
 		from frappe.utils import get_url
 		content = None
 
-		full_name = get_user_fullname(frappe.session['user'])
-		if full_name == "Guest":
-			full_name = "Administrator"
+		created_by = get_user_fullname(frappe.session['user'])
+		if created_by == "Guest":
+			created_by = "Administrator"
 
 		args = {
 			'first_name': self.first_name or self.last_name or _("user"),
@@ -303,7 +303,7 @@ class User(Document):
 			'user': self.name,
 			'title': subject,
 			'login_url': get_url(),
-			'user_fullname': full_name
+			'created_by': created_by
 		}
 
 		args.update(add_args)
