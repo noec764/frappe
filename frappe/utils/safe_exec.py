@@ -90,6 +90,7 @@ def get_safe_globals():
 			attach_print = frappe.attach_print,
 
 			user=user,
+			get_roles=frappe.get_roles,
 			get_fullname=frappe.utils.get_fullname,
 			get_gravatar=frappe.utils.get_gravatar_url,
 			full_name=frappe.local.session.data.full_name if getattr(frappe.local, "session", None) else "Guest",
