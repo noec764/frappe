@@ -1030,9 +1030,14 @@ def send_token_via_email(tmp_id,token=None):
 	hotp = pyotp.HOTP(otpsecret)
 
 	frappe.sendmail(
-		recipients=user_email, sender=None, subject='Verification Code',
-		message='<p>Your verification code is {0}</p>'.format(hotp.at(int(count))),
-		delayed=False, retry=3)
+		recipients=user_email,
+		sender=None,
+		subject=_("Verification Code"),
+		template="verification_code",
+		args=dict(code=hotp.at(int(count))),
+		delayed=False,
+		retry=3
+	)
 
 	return True
 
