@@ -21,7 +21,7 @@ from frappe.utils.backups import new_backup
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.integrations.offsite_backup_utils import get_latest_backup_file, send_email, validate_file_size
 
-SCOPES = "https://www.googleapis.com/auth/drive"
+SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 class GoogleDrive(Document):
 
