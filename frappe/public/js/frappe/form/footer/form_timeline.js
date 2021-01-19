@@ -170,6 +170,8 @@ class FormTimeline extends BaseTimeline {
 				creation: communication.creation,
 				is_card: true,
 				content: this.get_communication_timeline_content(communication),
+				doctype: "Communication",
+				name: communication.name
 			});
 		});
 		return communication_timeline_contents;
@@ -216,6 +218,8 @@ class FormTimeline extends BaseTimeline {
 			icon: 'small-message',
 			creation: comment.creation,
 			is_card: true,
+			doctype: "Comment",
+			name: comment.name,
 			content: this.get_comment_timeline_content(comment),
 		};
 	}
