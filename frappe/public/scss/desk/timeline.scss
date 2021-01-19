@@ -111,7 +111,10 @@ $threshold: 34;
 			}
 
 			.actions > * {
-				color: var(--text-muted);
+				display: flex;
+				> * {
+					color: var(--text-muted);
+				}
 			}
 
 			.action-btn {
