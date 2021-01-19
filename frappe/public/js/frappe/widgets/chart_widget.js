@@ -240,7 +240,7 @@ export default class ChartWidget extends Widget {
 				df: {
 					fieldtype: 'DateRange',
 					fieldname: 'from_date',
-					placeholder: 'Date Range',
+					placeholder: __('Date Range'),
 					input_class: 'input-xs',
 					default: [this.chart_settings.from_date, this.chart_settings.to_date],
 					value: [this.chart_settings.from_date, this.chart_settings.to_date],

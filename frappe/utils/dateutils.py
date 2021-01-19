@@ -90,18 +90,21 @@ def get_dates_from_timegrain(from_date, to_date, timegrain="Daily"):
 		months = 1
 	elif "Quarterly" == timegrain:
 		months = 3
+	elif "Yearly" == timegrain:
+		years = 1
 
 	if "Weekly" == timegrain:
 		dates = [get_last_day_of_week(from_date)]
 	else:
 		dates = [get_period_ending(from_date, timegrain)]
 
-	while getdate(dates[-1]) < getdate(to_date):
+	while getdate(dates[-1]) < to_date:
 		if "Weekly" == timegrain:
 			date = get_last_day_of_week(add_to_date(dates[-1], years=years, months=months, days=days))
 		else:
 			date = get_period_ending(add_to_date(dates[-1], years=years, months=months, days=days), timegrain)
 		dates.append(date)
+
 	return dates
 
 def get_from_date_from_timespan(to_date, timespan):

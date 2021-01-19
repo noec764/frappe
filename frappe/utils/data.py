@@ -84,7 +84,7 @@ def add_to_date(date, years=0, months=0, weeks=0, days=0, hours=0, minutes=0, se
 	"""Adds `days` to the given date"""
 	from dateutil.relativedelta import relativedelta
 
-	if date==None:
+	if not date:
 		date = now_datetime()
 
 	if hours:
