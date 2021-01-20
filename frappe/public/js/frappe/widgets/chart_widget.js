@@ -150,6 +150,7 @@ export default class ChartWidget extends Widget {
 						{"label": __("Weekly"), "value": "Weekly"},
 						{"label": __("Daily"), "value": "Daily"}
 					],
+					icon: 'calendar',
 					class: 'time-interval-filter',
 					action: selected_item => {
 						this.selected_time_interval = selected_item;
@@ -166,6 +167,7 @@ export default class ChartWidget extends Widget {
 						{"label": __("Last Month"), "value": "Last Month"},
 						{"label": __("Last Week"), "value": "Last Week"}
 					],
+					icon: 'calendar',
 					class: 'timespan-filter',
 					action: selected_item => {
 						this.selected_timespan = selected_item;
@@ -571,7 +573,10 @@ export default class ChartWidget extends Widget {
 			colors: colors,
 			height: this.height,
 			maxSlices: ['Pie', 'Donut'].includes(this.chart_doc.type) ? 6 : 9,
-			axisOptions: {xIsSeries: this.chart_doc.timeseries},
+			axisOptions: {
+				xIsSeries: this.chart_doc.timeseries,
+				shortenYAxisNumbers: 1
+			},
 			tooltipOptions: {}
 		};
 
