@@ -185,6 +185,14 @@ def nowdate():
 def today():
 	return now_datetime().strftime(DATE_FORMAT)
 
+def get_abbr(string, max_len=2):
+	abbr=''
+	for part in string.split(' '):
+		if len(abbr) < max_len:
+			abbr += part[0]
+
+	return abbr or '?'
+
 def nowtime():
 	"""return current time in hh:mm"""
 	return now_datetime().strftime(TIME_FORMAT)
