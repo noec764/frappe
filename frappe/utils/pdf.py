@@ -21,7 +21,7 @@ from frappe.utils import scrub_urls
 PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError",
 	"UnknownContentError", "RemoteHostClosedError"]
 
-def get_pdf(html, options=None, output=None):
+def get_pdf(html, options=None, output=None, cover=None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
 
@@ -37,11 +37,20 @@ def get_pdf(html, options=None, output=None):
 
 	try:
 		# Set filename property to false, so no file is actually created
+
 		filedata = pdfkit.from_string(html, False, options=options or {})
 
 		# https://pythonhosted.org/PyPDF2/PdfFileReader.html
 		# create in-memory binary streams from filedata and create a PdfFileReader object
 		reader = PdfFileReader(io.BytesIO(filedata))
+
+		cover_reader = ''
+		if cover:
+			cover_page = frappe.db.get_value("Cover Page", cover, "cover_page")
+			if frappe.db.exists("File", dict(file_url=cover_page)):
+				file_doc = frappe.get_doc("File", dict(file_url=cover_page))
+				with open(file_doc.get_full_path(), "rb") as f:
+					cover_reader = PdfFileReader(io.BytesIO(f.read()))
 
 	except OSError as e:
 		if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
@@ -50,6 +59,8 @@ def get_pdf(html, options=None, output=None):
 
 			# allow pdfs with missing images if file got created
 			if output:  # output is a PdfFileWriter object
+				if cover_reader:
+					output.appendPagesFromReader(cover_reader)
 				output.appendPagesFromReader(reader)
 
 			else:
@@ -65,10 +76,14 @@ def get_pdf(html, options=None, output=None):
 			password = frappe.safe_encode(password)
 
 	if output:
+		if cover_reader:
+			output.appendPagesFromReader(cover_reader)
 		output.appendPagesFromReader(reader)
 		return output
 
 	writer = PdfFileWriter()
+	if cover_reader:
+		writer.appendPagesFromReader(cover_reader)
 	writer.appendPagesFromReader(reader)
 
 	if "password" in options:
