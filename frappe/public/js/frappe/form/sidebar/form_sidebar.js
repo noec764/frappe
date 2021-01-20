@@ -91,10 +91,10 @@ frappe.ui.form.Sidebar = class {
 
 			this.sidebar
 				.find(".modified-by")
-				.html(__("{0} edited this {1}", [frappe.user.full_name(this.frm.doc.modified_by).bold(), "<br>" + comment_when(this.frm.doc.modified).toLowerCase()]));
+				.html(__("{0} edited this {1}", [frappe.user.full_name(this.frm.doc.modified_by).bold(), "<br>" + comment_when(this.frm.doc.modified).toLowerCase()], "For example, 'Jon Doe edited this 5 minutes ago'."));
 			this.sidebar
 				.find(".created-by")
-				.html(__("{0} created this {1}", [frappe.user.full_name(this.frm.doc.owner).bold(), "<br>" + comment_when(this.frm.doc.creation).toLowerCase()]));
+				.html(__("{0} created this {1}", [frappe.user.full_name(this.frm.doc.owner).bold(), "<br>" + comment_when(this.frm.doc.creation).toLowerCase()], "For example, 'Jon Doe created this 5 minutes ago'."));
 
 			this.refresh_like();
 			this.refresh_follow();

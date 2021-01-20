@@ -480,7 +480,7 @@ export default class OnboardingWidget extends Widget {
 		this.action_area.empty();
 
 		const dismiss = $(
-			`<div class="small" style="cursor:pointer;">${__("Dismiss")}</div>`
+			`<div class="small" style="cursor:pointer;">${__('Dismiss', null, 'Stop showing the onboarding widget.')}</div>`
 		);
 		dismiss.on("click", () => {
 			let dismissed = JSON.parse(
