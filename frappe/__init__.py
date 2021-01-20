@@ -1467,7 +1467,7 @@ def get_print(doctype=None, name=None, print_format=None, style=None,
 		doc.db_set("_printed", now(), update_modified=False, commit=True)
 
 	if as_pdf:
-		cover = frappe.db.get_value("Print Format", print_format, "cover_page")
+		cover = db.get_value("Print Format", print_format, "cover_page")
 		return get_pdf(html, output = output, options = options)
 	else:
 		return html
