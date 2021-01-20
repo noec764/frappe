@@ -492,7 +492,6 @@ def sendmail(recipients=[], sender="", subject="No Subject", message="No Message
 	:param args: Arguments for rendering the template
 	:param header: Append header in email
 	"""
-
 	text_content = None
 	if template:
 		message, text_content = get_email_from_template(template, args)
@@ -1468,6 +1467,7 @@ def get_print(doctype=None, name=None, print_format=None, style=None,
 		doc.db_set("_printed", now(), update_modified=False, commit=True)
 
 	if as_pdf:
+		cover = db.get_value("Print Format", print_format, "cover_page")
 		return get_pdf(html, output = output, options = options)
 	else:
 		return html
