@@ -381,8 +381,8 @@ def build_xlsx_data(columns, data, visible_idx, include_indentation):
 	column_widths = []
 
 	for column in data.columns:
-		if column.get("hidden"):
-			continue
+		# if column.get("hidden"):
+		# 	continue
 		result[0].append(column["label"])
 		column_width = cint(column.get('width', 0))
 		# to convert into scale accepted by openpyxl
@@ -396,8 +396,8 @@ def build_xlsx_data(columns, data, visible_idx, include_indentation):
 			row_data = []
 			if isinstance(row, dict):
 				for col_idx, column in enumerate(data.columns):
-					if column.get("hidden"):
-						continue
+					# if column.get("hidden"):
+					# 	continue
 					label = column.get("label")
 					fieldname = column.get("fieldname")
 					cell_value = row.get(fieldname, row.get(label, ""))
