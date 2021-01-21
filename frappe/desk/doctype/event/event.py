@@ -258,7 +258,7 @@ def send_event_digest():
 			)
 
 @frappe.whitelist()
-def get_events(start, end, user=None, for_reminder=False, filters=None, fields=None):
+def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None):
 	if not user:
 		user = frappe.session.user
 
@@ -266,8 +266,8 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, fields=N
 		filters = json.loads(filters)
 
 	additional_fields = ""
-	if fields:
-		additional_fields = ", " + ", ".join([f"`tabEvent`.{f}" for f in fields])
+	if field_map:
+		additional_fields = ", " + ", ".join([f"`tabEvent`.{f}" for f in frappe.parse_json(field_map).values()])
 
 	filter_condition = get_filters_cond('Event', filters, [])
 
@@ -505,7 +505,7 @@ def delete_event_in_google_calendar(doc, method=None):
 
 @frappe.whitelist(allow_guest=True)
 def get_prepared_events(start, end):
-	events = get_events(start, end, fields=["route", "published", "image", "visible_for", "role"])
+	events = get_events(start, end, field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"})
 	roles = frappe.get_roles(frappe.session.user)
 
 	for event in events:

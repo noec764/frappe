@@ -50,7 +50,6 @@ def get_event_conditions(doctype, filters=None):
 
 @frappe.whitelist()
 def get_events(doctype, start, end, field_map, filters=None, fields=None):
-
 	field_map = frappe._dict(json.loads(field_map))
 
 	doc_meta = frappe.get_meta(doctype)
@@ -66,17 +65,9 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	if not fields:
 		fields = [field_map.start, field_map.end, field_map.title, 'name']
 
-	if field_map.color and doc_meta.has_field(field_map.color):
-		fields.append(field_map.color)
-
-	if field_map.rrule and doc_meta.has_field(field_map.rrule):
-		fields.append(field_map.rrule)
-
-	if field_map.allDay and doc_meta.has_field(field_map.allDay):
-		fields.append(field_map.allDay)
-
-	if field_map.status and doc_meta.has_field(field_map.status):
-		fields.append(field_map.status)
+	for f in field_map.values():
+		if doc_meta.has_field(f):
+			fields.append(f)
 
 	start_date = "ifnull(%s, '0001-01-01 00:00:00')" % field_map.start
 	end_date = "ifnull(%s, '2199-12-31 00:00:00')" % field_map.end
