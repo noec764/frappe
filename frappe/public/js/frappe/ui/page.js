@@ -437,9 +437,9 @@ frappe.ui.Page = Class.extend({
 		if (standard) {
 			$li.appendTo(parent);
 		} else {
-			this.divider = parent.find(".divider");
+			this.divider = parent.find(".dropdown-divider");
 			if(!this.divider.length) {
-				this.divider = $('<li class="divider user-action"></li>').prependTo(parent);
+				this.divider = $('<li class="dropdown-divider user-action"></li>').prependTo(parent);
 			}
 			$li.addClass("user-action").insertBefore(this.divider);
 		}
@@ -507,7 +507,7 @@ frappe.ui.Page = Class.extend({
 	},
 
 	add_divider: function() {
-		return $('<li class="divider"></li>').appendTo(this.menu);
+		return $('<li class="dropdown-divider"></li>').appendTo(this.menu);
 	},
 
 	get_or_add_inner_group_button: function(label) {
@@ -713,7 +713,7 @@ frappe.ui.Page = Class.extend({
 		}
 
 		let custom_btn_group = $(`
-			<div class="custom-btn-group hide">
+			<div class="custom-btn-group">
 				<button type="button" class="btn btn-default btn-sm ellipsis" data-toggle="dropdown" aria-expanded="false">
 					${dropdown_label}
 				</button>
