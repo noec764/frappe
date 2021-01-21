@@ -389,7 +389,7 @@ frappe.views.Calendar = class {
 			}
 
 			if ((d.secondary_status || d.status) && me.secondary_status_color) {
-				d.classNames.push(me.secondary_status_color[d.secondary_status || d.status]);
+				d.classNames.push(me.secondary_status_color[d.secondary_status || d.status] || "");
 			}
 
 			me.fix_end_date_for_event_render(d);
