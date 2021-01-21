@@ -56,6 +56,7 @@
         "auto_reply_message",
         "set_footer",
         "footer",
+        "brand_logo",
         "uidvalidity",
         "uidnext",
         "no_remaining",
@@ -415,11 +416,16 @@
             "fieldname": "create_contact",
             "fieldtype": "Check",
             "label": "Create Contacts from Incoming Emails"
+        },
+        {
+            "fieldname": "brand_logo",
+            "fieldtype": "Attach Image",
+            "label": "Brand Logo"
         }
     ],
     "icon": "fa fa-inbox",
     "links": [],
-    "modified": "2020-05-11 15:18:43.931499",
+    "modified": "2021-01-21 10:05:24.820597",
     "modified_by": "Administrator",
     "module": "Email",
     "name": "Email Account",
