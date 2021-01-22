@@ -20,6 +20,9 @@
 .tree-label {
 	margin-left: var(--margin-sm);
 	line-height: 1.4em;
+	.h6 {
+		margin-bottom: 0;
+	}
 }
 
 .tree-children {

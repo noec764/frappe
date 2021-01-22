@@ -938,8 +938,9 @@ def validate_filename(filename):
 @frappe.whitelist()
 def get_files_in_folder(folder):
 	return frappe.db.get_all('File',
-		{ 'folder': folder },
-		['name', 'file_name', 'file_url', 'is_folder', 'modified']
+		filters={ 'folder': folder },
+		fields=['name', 'file_name', 'file_url', 'is_folder', 'modified'],
+		order_by="file_name"
 	)
 
 def update_existing_file_docs(doc):

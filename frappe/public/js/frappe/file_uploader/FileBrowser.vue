@@ -80,7 +80,7 @@ export default {
 					let files = r.message || [];
 					files.sort((a, b) => {
 						if (a.is_folder && b.is_folder) {
-							return a.modified < b.modified ? -1 : 1;
+							return a.name < b.name ? -1 : 1;
 						}
 						if (a.is_folder) {
 							return -1;
