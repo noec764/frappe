@@ -69,7 +69,9 @@ function build_assets(app) {
 
 function build(inputOptions, outputOptions) {
 	return rollup.rollup(inputOptions)
-		.then(bundle => bundle.write(outputOptions))
+		.then(bundle => {
+			bundle.write(outputOptions)
+		})
 		.catch(err => {
 			log(chalk.red(err));
 			// Kill process to fail in a CI environment

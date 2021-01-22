@@ -132,7 +132,7 @@ function get_rollup_options_for_css(output_file, input_files) {
 				starts_with_css ? require('autoprefixer')() : null,
 				starts_with_css && production ? require('cssnano')({ preset: 'default' }) : null
 			].filter(Boolean),
-			extract: output_path,
+			extract: output_file,
 			loaders: [less_loader],
 			use: [
 				['less', {
@@ -143,7 +143,7 @@ function get_rollup_options_for_css(output_file, input_files) {
 				}],
 				['sass', {
 					...get_options_for_scss(),
-					outFile: output_path,
+					outFile: output_file,
 					sourceMapContents: true
 				}]
 			],
@@ -171,7 +171,7 @@ function get_rollup_options_for_css(output_file, input_files) {
 		},
 		outputOptions: {
 			// this file is always empty, remove it later?
-			file: path.resolve(assets_path, `css/rollup.manifest.css`),
+			file: path.resolve(assets_path, `rollup.manifest.css`),
 			format: 'cjs'
 		}
 	};
