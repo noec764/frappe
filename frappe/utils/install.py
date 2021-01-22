@@ -212,6 +212,10 @@ def add_standard_navbar_items():
 			'is_standard': 1
 		},
 		{
+			'item_type': 'Separator',
+			'is_standard': 1
+		},
+		{
 			'item_label': 'Logout',
 			'item_type': 'Action',
 			'action': 'frappe.app.logout()',
