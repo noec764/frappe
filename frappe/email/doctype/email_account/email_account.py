@@ -334,7 +334,7 @@ class EmailAccount(Document):
 				frappe.publish_realtime('new_email', {"account":self.email_account_name, "number":len(incoming_mails)})
 
 			if exceptions:
-				raise Exception(frappe.as_json(exceptions))
+				raise Exception(frappe.as_json(frappe.safe_decode(exceptions)))
 
 	def handle_bad_emails(self, email_server, uid, raw, reason):
 		if email_server and cint(email_server.settings.use_imap):

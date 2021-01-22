@@ -269,7 +269,6 @@ def update_global_search(doc):
 			title=title,
 			route=route
 		)
-
 		sync_value_in_queue(value)
 
 def update_global_search_for_all_web_pages():
@@ -364,7 +363,7 @@ def sync_global_search():
 def sync_value_in_queue(value):
 	try:
 		# append to search queue if connected
-		frappe.cache().lpush('global_search_queue', json.dumps(value))
+		frappe.cache().lpush('global_search_queue', json.dumps(frappe.safe_decode(value)))
 	except redis.exceptions.ConnectionError:
 		# not connected, sync directly
 		sync_value(value)
