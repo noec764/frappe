@@ -345,13 +345,3 @@ blockquote {
 		margin: 5px 0;
 	}
 }
-
-blockquote:before {
-	content: "";
-	width: 2px;
-	height: 100%;
-	position: absolute;
-	background: $gray-300;
-	border-radius: 1px;
-	left: 0;
-}
