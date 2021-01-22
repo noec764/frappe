@@ -188,7 +188,7 @@ def today():
 def get_abbr(string, max_len=2):
 	abbr=''
 	for part in string.split(' '):
-		if len(abbr) < max_len and part[0]:
+		if len(abbr) < max_len and part:
 			abbr += part[0]
 
 	return abbr or '?'
