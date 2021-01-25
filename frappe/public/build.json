@@ -308,7 +308,7 @@
 		"public/scss/web_form.scss",
 		"public/less/controls.less"
 	],
-	"frappe/css/email.css": "public/scss/email.scss",
+	"css/email.css": "public/scss/email.scss",
 	"js/barcode_scanner.min.js": "public/js/frappe/barcode_scanner/quagga.js",
 	"js/user_profile_controller.min.js": "desk/page/user_profile/user_profile_controller.js",
 	"js/events-portal.min.js": "public/js/frappe/events_portal/index.js",
