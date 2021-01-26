@@ -67,6 +67,12 @@ $threshold: 34;
 		.action-btn {
 			margin-left: var(--margin-md);
 			background-color: var(--card-bg);
+			display: flex;
+			align-items: center;
+			line-height: var(--text-xl);
+			.icon {
+				margin-right: var(--margin-xs);
+			}
 		}
 		.action-btn:first-of-type {
 			margin-left: var(--timeline-item-left-margin);
