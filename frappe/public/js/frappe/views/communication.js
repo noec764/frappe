@@ -686,9 +686,18 @@ frappe.views.CommunicationComposer = Class.extend({
 		return signature
 	},
 
-	setup_earlier_reply: function() {
+	get_default_outgoing_email_account_signature: function() {
+		return frappe.db.get_value('Email Account', { 'default_outgoing': 1, 'add_signature': 1 }, 'signature');
+	},
+
+	setup_earlier_reply: async function() {
 		let fields = this.dialog.fields_dict;
 		let signature = this.get_signature()
+
+		if (!signature) {
+			const res = await this.get_default_outgoing_email_account_signature();
+			signature = res.message.signature;
+		}
 
 		if(this.txt) {
 			this.message = this.txt + (this.message ? ("<br><br>" + this.message) : "");
