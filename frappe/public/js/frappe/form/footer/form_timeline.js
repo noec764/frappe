@@ -6,7 +6,6 @@ import { get_version_timeline_content } from "./version_timeline_content_builder
 class FormTimeline extends BaseTimeline {
 	make() {
 		super.make();
-		this.setup_document_email_link();
 		this.setup_timeline_actions();
 		this.render_timeline_items();
 		this.setup_activity_toggle();
@@ -15,6 +14,7 @@ class FormTimeline extends BaseTimeline {
 	refresh() {
 		super.refresh();
 		this.frm.trigger('timeline_refresh');
+		this.setup_document_email_link();
 	}
 
 	setup_timeline_actions() {
@@ -39,6 +39,9 @@ class FormTimeline extends BaseTimeline {
 
 	setup_activity_toggle() {
 		let doc_info = this.doc_info || this.frm.get_docinfo();
+
+		this.document_email_link_wrapper && this.document_email_link_wrapper.remove();
+
 		let has_communications = () => {
 			let communications = doc_info.communications;
 			let comments = doc_info.comments;
@@ -71,7 +74,7 @@ class FormTimeline extends BaseTimeline {
 
 		if (doc_info.document_email) {
 			const link = `<a class="document-email-link">${doc_info.document_email}</a>`;
-			const message = __("Send an email to {0} to link it here", [link.bold()]);
+			const message = __("Add to this activity by mailing to {0}", [link.bold()]);
 
 			this.document_email_link_wrapper = $(`
 				<div class="document-email-link-container">
@@ -79,7 +82,7 @@ class FormTimeline extends BaseTimeline {
 					<span class="ellipsis">${message}</span>
 				</div>
 			`);
-			this.timeline_wrapper.prepend(this.document_email_link_wrapper);
+			this.timeline_wrapper.append(this.document_email_link_wrapper);
 
 			this.document_email_link_wrapper
 				.find('.document-email-link')
