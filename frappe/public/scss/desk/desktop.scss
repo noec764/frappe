@@ -497,6 +497,7 @@ body {
 
 		.indicator-pill {
 			font-weight: 500;
+			@extend .ellipsis;
 		}
 	}
 
