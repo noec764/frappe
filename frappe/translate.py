@@ -343,6 +343,10 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			where module in ({}) and is_standard=1""".format(modules)):
 			messages.extend(get_messages_from_desk_pages(name))
 
+		for name in frappe.db.sql_list("""select chart_name from `tabDashboard Chart`
+			where module in ({}) and is_standard=1""".format(modules)):
+			messages.append(('Dashboard Chart: ' + name, name))
+
 	if app == "frappe":
 		# Web templates
 		for name in frappe.db.sql_list("""select name from `tabWeb Template`"""):
@@ -532,7 +536,6 @@ def get_messages_from_desk_pages(name):
 	for field in ("label", "charts_label", "shortcuts_label", "cards_label"):
 		if desk_page.get(field):
 			messages.append(('Desk Page: ' + name, desk_page.get(field)))
-
 
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
