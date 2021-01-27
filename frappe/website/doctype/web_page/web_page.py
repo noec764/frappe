@@ -41,6 +41,7 @@ class WebPage(WebsiteGenerator):
 	def get_context(self, context):
 		context.main_section = get_html_content_based_on_type(self, 'main_section', self.content_type)
 		context.source_content_type = self.content_type
+		context.title = self.title
 
 		if self.context_script:
 			_locals = dict(context = frappe._dict())
@@ -60,7 +61,6 @@ class WebPage(WebsiteGenerator):
 			"style": self.css or "",
 			"script": self.javascript or "",
 			"header": self.header,
-			"title": self.title,
 			"text_align": self.text_align,
 		})
 

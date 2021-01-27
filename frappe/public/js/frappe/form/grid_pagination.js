@@ -96,7 +96,7 @@ export default class GridPagination {
 		}
 	}
 
-	go_to_page(index) {
+	go_to_page(index, from_refresh) {
 		if (!index) {
 			index = this.page_index;
 		} else {
@@ -109,7 +109,9 @@ export default class GridPagination {
 		}
 
 		this.update_page_numbers();
-		this.grid.scroll_to_top();
+		if (!from_refresh) {
+			this.grid.scroll_to_top();
+		}
 	}
 
 	go_to_last_page_to_add_row() {
