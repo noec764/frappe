@@ -936,11 +936,34 @@ def validate_filename(filename):
 	return fname
 
 @frappe.whitelist()
-def get_files_in_folder(folder):
-	return frappe.db.get_all('File',
+def get_files_in_folder(folder, start=0, page_length=20):
+	start = cint(start)
+	page_length = cint(page_length)
+
+	files = frappe.db.get_all('File',
 		filters={ 'folder': folder },
 		fields=['name', 'file_name', 'file_url', 'is_folder', 'modified'],
-		order_by="file_name"
+		order_by="file_name",
+		start=start,
+		page_length=page_length + 1
+	)
+	return {
+		'files': files[:page_length],
+		'has_more': len(files) > page_length
+	}
+
+@frappe.whitelist()
+def get_files_by_search_text(text):
+	if not text:
+		return []
+
+	text = '%' + cstr(text).lower() + '%'
+	return frappe.db.get_all('File',
+		fields=['name', 'file_name', 'file_url', 'is_folder', 'modified'],
+		filters={'is_folder': False},
+		or_filters={'file_name': ('like', text), 'file_url': text, 'name': ('like', text)},
+		order_by='modified desc',
+		limit=20
 	)
 
 def update_existing_file_docs(doc):
