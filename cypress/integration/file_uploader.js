@@ -42,6 +42,7 @@ context('FileUploader', () => {
 		open_upload_dialog();
 
 		cy.get_open_dialog().find('.btn-file-upload div:contains("Library")').click();
+		cy.get('.file-filter').type('example.json');
 		cy.get_open_dialog().find('.tree-label:contains("example.json")').first().click();
 		cy.server();
 		cy.route('POST', '/api/method/upload_file').as('upload_file');
