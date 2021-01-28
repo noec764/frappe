@@ -56,6 +56,7 @@
   "energy_points_summary",
   "user_emails",
   "sb_allow_modules",
+  "module_profile",
   "modules_html",
   "block_modules",
   "home_settings",
@@ -601,6 +602,12 @@
    "fieldtype": "Select",
    "label": "Desk Theme",
    "options": "Light\nDark"
+  },
+  {
+   "fieldname": "module_profile",
+   "fieldtype": "Link",
+   "label": "Module Profile",
+   "options": "Module Profile"
   }
  ],
  "icon": "fa fa-user",
@@ -669,7 +676,7 @@
   }
  ],
  "max_attachments": 5,
- "modified": "2020-10-18 15:18:53.126800",
+ "modified": "2021-01-18 15:18:53.126800",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
