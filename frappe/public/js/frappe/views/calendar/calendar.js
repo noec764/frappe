@@ -8,6 +8,16 @@ import interactionPlugin from '@fullcalendar/interaction';
 frappe.provide("frappe.views.calendar");
 frappe.provide("frappe.views.calendars");
 
+const day_map = {
+	"Sunday": 0,
+	"Monday": 1,
+	"Tuesday": 2,
+	"Wednesday": 3,
+	"Thursday": 4,
+	"Friday": 5,
+	"Saturday": 6
+}
+
 frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	static load_last_view() {
 		const route = frappe.get_route();
@@ -105,7 +115,8 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 						),
 						calendar_defaults: {
 							slots_start_time: doc.daily_minimum_time,
-							slots_end_time: doc.daily_maximum_time
+							slots_end_time: doc.daily_maximum_time,
+							first_day: doc.first_day ? day_map[doc.first_day] : null;
 						}
 					});
 
@@ -123,7 +134,7 @@ frappe.views.Calendar = class {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
-		this.calendar_defaults = {};
+		this.calendar_defaults = this.calendar_defaults&&Object.keys(this.calendar_defaults) ? this.calendar_defaults : {};
 		this.sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
 		this.get_default_options();
 	}
@@ -227,6 +238,7 @@ frappe.views.Calendar = class {
 					<div><span class="flex align-items-center status-color ${this.secondary_status_color[f]}">${__(f)}</span></div>
 				`
 			}).join("")
+			this.sidebar_menu.find(".calendar-status-section").remove()
 			this.sidebar_menu.append(`
 				<div class="calendar-status-section">
 					<li class="sidebar-label">${__(meta.fields.filter(f => f.fieldname == this.field_map.secondary_status)[0].label)}</li>
@@ -335,6 +347,12 @@ frappe.views.Calendar = class {
 			slotMinTime: defaults.slots_start_time || "06:00:00",
 			slotMaxTime: defaults.slots_end_time || "22:00:00"
 		};
+
+		if (defaults.first_day) {
+			Object.assign(this.cal_options, {
+				firstDay: defaults.first_day
+			})
+		}
 
 		if (this.options) {
 			$.extend(this.cal_options, this.options);

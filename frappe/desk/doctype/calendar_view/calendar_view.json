@@ -19,6 +19,7 @@
   "secondary_status_field",
   "secondary_status",
   "section_break_10",
+  "first_day",
   "daily_minimum_time",
   "daily_maximum_time"
  ],
@@ -106,10 +107,17 @@
    "fieldname": "secondary_status_field",
    "fieldtype": "Select",
    "label": "Secondary Status Field"
+  },
+  {
+   "default": "Sunday",
+   "fieldname": "first_day",
+   "fieldtype": "Select",
+   "label": "First day of the week",
+   "options": "Sunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
   }
  ],
  "links": [],
- "modified": "2020-12-29 09:00:34.134076",
+ "modified": "2021-01-28 17:16:44.576948",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Calendar View",
