@@ -16,8 +16,10 @@ frappe.listview_settings['User Permission'] = {
 							dialog.fields_dict.doctype.set_input(undefined);
 							dialog.fields_dict.docname.set_input(undefined);
 							dialog.set_df_property("docname", "hidden", 1);
+							dialog.set_df_property("is_default", "hidden", 1);
 							dialog.set_df_property("apply_to_all_doctypes", "hidden", 1);
 							dialog.set_df_property("applicable_doctypes", "hidden", 1);
+							dialog.set_df_property("hide_descendants", "hidden", 1);
 						}
 					},
 					{
@@ -54,10 +56,19 @@ frappe.listview_settings['User Permission'] = {
 						}
 					},
 					{
+						fieldtype: "Section Break",
+						hide_border: 1
+					},
+					{
+						fieldname: 'is_default',
+						label: __('Is Default'),
+						fieldtype: 'Check',
+						hidden: 1
+					},
+					{
 						fieldname: 'apply_to_all_doctypes',
 						label: __('Apply to all Documents Types'),
 						fieldtype: 'Check',
-						checked: 1,
 						hidden: 1,
 						onchange: function() {
 							if(dialog.fields_dict.doctype.value && dialog.fields_dict.docname.value && dialog.fields_dict.user.value){
@@ -67,6 +78,19 @@ frappe.listview_settings['User Permission'] = {
 								}
 							}
 						}
+					},
+					{
+						fieldtype: "Column Break"
+					},
+					{
+						fieldname: 'hide_descendants',
+						label: __('Hide Descendants'),
+						fieldtype: 'Check',
+						hidden: 1
+					},
+					{
+						fieldtype: "Section Break",
+						hide_border: 1
 					},
 					{
 						label: __("Applicable Document Types"),
@@ -139,7 +163,7 @@ frappe.listview_settings['User Permission'] = {
 								}
 								frappe.show_alert({
 									message,
-									indicator: 'info'
+									indicator: 'green'
 								});
 								list_view.refresh();
 							});
@@ -205,8 +229,12 @@ frappe.listview_settings['User Permission'] = {
 	on_doctype_change: function(dialog) {
 		dialog.set_df_property("docname", "hidden", 0);
 		dialog.set_df_property("docname", "reqd", 1);
+		dialog.set_df_property("is_default", "hidden", 0);
 		dialog.set_df_property("apply_to_all_doctypes", "hidden", 0);
-		dialog.set_value("apply_to_all_doctypes","checked",1);
+		dialog.set_value("apply_to_all_doctypes", "checked", 1);
+		let show = frappe.boot.nested_set_doctypes.includes(dialog.get_value("doctype"));
+		dialog.set_df_property("hide_descendants", "hidden", !show);
+		dialog.refresh();
 	},
 
 	on_docname_change: function(dialog, options, applicable) {
@@ -226,6 +254,7 @@ frappe.listview_settings['User Permission'] = {
 			dialog.set_df_property("applicable_doctypes", "options", options);
 			dialog.set_df_property("applicable_doctypes", "hidden", 1);
 		}
+		dialog.refresh();
 	},
 
 	on_apply_to_all_doctypes_change: function(dialog, options) {
@@ -236,5 +265,6 @@ frappe.listview_settings['User Permission'] = {
 			dialog.set_df_property("applicable_doctypes", "options", options);
 			dialog.set_df_property("applicable_doctypes", "hidden", 1);
 		}
+		dialog.refresh_sections();
 	}
 };
