@@ -97,7 +97,7 @@ frappe.socketio = {
 			frappe.socketio.form_stopped_typing(frm.doctype, frm.docname);
 		});
 
-		window.addEventListener('beforeunload', (event) => {
+		window.addEventListener('beforeunload', () => {
 			if (!cur_frm || cur_frm.is_new()) {
 				return;
 			}
