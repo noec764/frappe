@@ -128,7 +128,7 @@
 
 	// Enable tnum for report
 	.dt-scrollable .dt-cell__content {
-		font-feature-settings: "tnum", "zero";
+		font-feature-settings: "tnum";
 	}
 
 	.dt-cell__content--header-0, .dt-cell__content--col-0 {
