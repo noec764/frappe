@@ -131,7 +131,7 @@ frappe.ui.form.Sidebar = class {
 			return;
 		}
 
-		let tags_parent = this.sidebar.find(".form-tags")
+		let tags_parent = this.sidebar.find(".form-tags");
 
 		this.frm.tags = new frappe.ui.TagEditor({
 			parent: tags_parent,
@@ -192,7 +192,7 @@ frappe.ui.form.Sidebar = class {
 				'doc_name': this.frm.doc.name,
 				'following': !is_followed
 			}).then(() => {
-				frappe.model.set_docinfo(this.frm.doctype, this.frm.doc.name, "is_document_followed", !is_followed)
+				frappe.model.set_docinfo(this.frm.doctype, this.frm.doc.name, "is_document_followed", !is_followed);
 				this.refresh_follow(!is_followed);
 			});
 		});
