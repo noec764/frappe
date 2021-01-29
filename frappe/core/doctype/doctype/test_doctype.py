@@ -12,7 +12,6 @@ from frappe.core.doctype.doctype.doctype import (UniqueFieldnameError,
 	HiddenAndMandatoryWithoutDefaultError,
 	CannotIndexedError,
 	InvalidFieldNameError,
-	CannotCreateStandardDoctypeError,
 	validate_links_table_fieldnames)
 
 # test_records = frappe.get_test_records('DocType')
