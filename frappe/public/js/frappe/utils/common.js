@@ -366,8 +366,8 @@ frappe.utils.new_auto_repeat_prompt = function (frm) {
 			}
 		});
 	},
-		__('Auto Repeat'),
-		__('Save')
+	__('Auto Repeat'),
+	__('Save')
 	);
 }
 

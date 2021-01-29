@@ -33,7 +33,8 @@ export default class LinksWidget extends Widget {
 				const incomplete_dependencies = item.incomplete_dependencies.map(value => {
 					return __(value)
 				}).join(", ")
-				return `<span class="link-content ellipsis disabled-link">${item.label ? item.label : item.name
+				return `<span class="link-content ellipsis disabled-link">${
+					item.label ? item.label : item.name
 				}</span>
 						<div class="module-link-popover popover fade top in" role="tooltip" style="display: none;">
 							<div class="arrow"></div>
