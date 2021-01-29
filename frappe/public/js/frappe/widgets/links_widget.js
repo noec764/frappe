@@ -59,7 +59,7 @@ export default class LinksWidget extends Widget {
 				name: item.link_to,
 				type: item.link_type,
 				is_query_report: item.is_query_report
-			})
+			});
 
 			return $(`<a href="${route}" class="link-item ellipsis ${item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">

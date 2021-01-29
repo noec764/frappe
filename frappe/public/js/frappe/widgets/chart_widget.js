@@ -590,7 +590,7 @@ export default class ChartWidget extends Widget {
 			let custom_options = JSON.parse(options);
 			for (let key in custom_options) {
 				if (typeof chart_args[key] === 'object' && typeof custom_options[key] === 'object') {
-					chart_args[key] = Object.assign(chart_args[key], custom_options[key])
+					chart_args[key] = Object.assign(chart_args[key], custom_options[key]);
 				} else {
 					chart_args[key] = custom_options[key];
 				}

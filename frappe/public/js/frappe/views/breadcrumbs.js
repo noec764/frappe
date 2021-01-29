@@ -58,7 +58,7 @@ frappe.breadcrumbs = {
 		var breadcrumbs = this.all[frappe.breadcrumbs.current_page()];
 
 		this.clear();
-		if(!breadcrumbs) return this.toggle(false);
+		if (!breadcrumbs) return this.toggle(false);
 
 		if (breadcrumbs.type === 'Custom') {
 			this.set_custom_breadcrumbs(breadcrumbs);
@@ -91,7 +91,7 @@ frappe.breadcrumbs = {
 		}
 
 		if (breadcrumbs.workspace) {
-			if(!breadcrumbs.module_info.blocked && frappe.visible_modules.includes(breadcrumbs.module_info.module)) {
+			if (!breadcrumbs.module_info.blocked && frappe.visible_modules.includes(breadcrumbs.module_info.module)) {
 				$(`<li><a href="/app/${frappe.router.slug(breadcrumbs.workspace)}">${__(breadcrumbs.workspace)}</a></li>`)
 					.appendTo(this.$breadcrumbs);
 			}
@@ -108,7 +108,7 @@ frappe.breadcrumbs = {
 
 		if (from_module) {
 			breadcrumbs.module = from_module;
-		} else if(this.preferred[breadcrumbs.doctype]!==undefined) {
+		} else if (this.preferred[breadcrumbs.doctype]!==undefined) {
 			// get preferred module for breadcrumbs
 			breadcrumbs.module = this.preferred[breadcrumbs.doctype];
 		}
@@ -142,7 +142,7 @@ frappe.breadcrumbs = {
 				route = doctype_route;
 			}
 			$(`<li><a href="/app/${route}">${__(doctype)}</a></li>`)
-				.appendTo(this.$breadcrumbs)
+				.appendTo(this.$breadcrumbs);
 		}
 	},
 
@@ -165,7 +165,7 @@ frappe.breadcrumbs = {
 	},
 
 	setup_modules() {
-		if(!frappe.visible_modules) {
+		if (!frappe.visible_modules) {
 			frappe.visible_modules = $.map(frappe.boot.allowed_workspaces, (m) => {
 				return m.module;
 			});

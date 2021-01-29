@@ -49,7 +49,7 @@ frappe.get_avatar = function(user, css_class, title, image_url=null, remove_colo
 		let style = '';
 		if (!remove_color) {
 			let color = frappe.get_palette(title);
-			style = `background-color: var(${color[0]}); color: var(${color[1]})`
+			style = `background-color: var(${color[0]}); color: var(${color[1]})`;
 		}
 		if (css_class === 'avatar-small' || css_class == 'avatar-xs') {
 			abbr = abbr.substr(0, 1);
@@ -126,7 +126,7 @@ frappe.palette = [
 	['--yellow-avatar-bg', '--yellow-avatar-color'],
 	['--purple-avatar-bg', '--purple-avatar-color'],
 	['--gray-avatar-bg', '--gray-avatar-color0']
-]
+];
 
 frappe.get_palette = function (txt) {
 	var idx = cint((parseInt(md5(txt).substr(4, 2), 16) + 1) / 5.33);
@@ -184,7 +184,7 @@ window.strip = function (s, chars) {
 		var s = lstrip(s, chars)
 		s = rstrip(s, chars);
 		return s;
-	}
+	};
 }
 
 window.lstrip = function lstrip(s, chars) {
