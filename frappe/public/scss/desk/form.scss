@@ -298,7 +298,7 @@
 }
 
 .form-group {
-	.frappe-control:last-child {
+	&.frappe-control:last-child {
 		margin-bottom: 0;
 	}
 	&:last-child.frappe-control[data-fieldtype="Table"] {
