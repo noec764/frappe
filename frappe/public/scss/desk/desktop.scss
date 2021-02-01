@@ -391,16 +391,6 @@ body {
 					}
 				}
 
-				&.skipped {
-					.step-index.step-skipped {
-						display: flex;
-					}
-
-					.step-skip {
-						display: none;
-					}
-				}
-
 				&.active,
 				&:hover {
 					background-color: var(--bg-light-gray);
@@ -424,9 +414,7 @@ body {
 
 					margin-right: var(--margin-sm);
 					border-radius: var(--border-radius-full);
-				}
 
-				.step-index {
 					&.step-pending {
 						display: none;
 					}
@@ -455,6 +443,14 @@ body {
 				}
 
 				&.skipped {
+					.step-index.step-skipped {
+						display: flex;
+					}
+
+					.step-skip {
+						display: none;
+					}
+
 					i {
 						color: var(--text-muted);
 					}

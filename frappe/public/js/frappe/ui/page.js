@@ -163,7 +163,7 @@ frappe.ui.Page = Class.extend({
 		} else {
 			sidebar_toggle.attr("title", __("Toggle Sidebar")).tooltip({
 				delay: { "show": 600, "hide": 100 },
-				trigger : "hover",
+				trigger: "hover",
 			});
 			sidebar_toggle.click(() => {
 				if (frappe.utils.is_xs() || frappe.utils.is_sm()) {
@@ -774,7 +774,7 @@ frappe.ui.Page = Class.extend({
 			.addClass('col-md-2')
 			.attr("title", __(df.label)).tooltip({
 				delay: { "show": 600, "hide": 100},
-				trigger : "hover"
+				trigger: "hover"
 			});
 
 		// html fields in toolbar are only for display
