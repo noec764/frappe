@@ -86,7 +86,7 @@ class Picker {
 	}
 
 	setup_color_event() {
-		let on_drag = (x, y) => {
+		let on_drag = (x, _y) => {
 			this.color_selector_position.x = x;
 			this.color_selector_position.y = y;
 			this.update_color();
@@ -148,6 +148,7 @@ class Picker {
 	}
 
 	get_pointer_coords() {
+		// eslint-disable-next-line no-unused-vars
 		let h, s, v;
 		[h, s, v] = utils.get_hsv(this.get_color());
 		let width = this.color_map.offsetWidth;

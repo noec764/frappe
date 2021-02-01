@@ -59,8 +59,6 @@ pre {
 
 .btn-default { @extend .btn-light; }
 
-.btn-xs { @extend .btn-sm; }
-
 .hidden-xs {
 	@include media-breakpoint-down(xs) {
 		display: none !important;
@@ -179,6 +177,7 @@ h2 {
 }
 
 .btn-xs {
+	@extend .btn-sm;
 	line-height: 1.2;
 	padding: var(--padding-xs) var(--padding-sm);
 	font-size: var(--text-xs);
@@ -246,9 +245,7 @@ select.input-xs {
 	a:active {
 		--icon-stroke: #{$component-active-color};
 	}
-}
 
-.dropdown-menu {
 	.divider, .dropdown-divider {
 		margin: 0px;
 	}
@@ -339,11 +336,6 @@ kbd {
 .frappe-timestamp {
 	cursor: default;
 }
-
-// .dropdown-menu {
-// 	margin-top: var(--margin-xs);
-// 	box-shadow: var(--shadow-sm);
-// }
 
 .btn-link {
 	box-shadow: none !important;
