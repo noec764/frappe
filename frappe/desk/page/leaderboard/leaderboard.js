@@ -145,7 +145,7 @@ class Leaderboard {
 			df: {
 				fieldtype: 'DateRange',
 				fieldname: 'selected_date_range',
-				placeholder: "Date Range",
+				placeholder: __("Date Range"),
 				default: [frappe.datetime.month_start(), frappe.datetime.now_date()],
 				input_class: 'input-xs',
 				reqd: 1,
@@ -193,7 +193,7 @@ class Leaderboard {
 
 		this.$search_box =
 			$(`<div class="leaderboard-search form-group col-md-3">
-				<input type="text" placeholder="Search" data-element="search" class="form-control leaderboard-search-input input-xs">
+				<input type="text" placeholder=${ __("Search") } data-element="search" class="form-control leaderboard-search-input input-xs">
 			</div>`);
 
 		$(this.parent).find(".page-form").append(this.$search_box);

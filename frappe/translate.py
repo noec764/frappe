@@ -131,7 +131,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title from `tabModule Onboarding`")
 			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
 			messages += frappe.db.sql("select concat('Workspace: ', name), label from `tabWorkspace`")
-			messages += frappe.db.sql("select concat('Workspace Shortcut: ', label), format from `tabWorkspace Shortcut`")
+			messages += frappe.db.sql("select concat('Workspace Shortcut: ', label), format from `tabWorkspace Shortcut` where format is not null")
 			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
 			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
 			messages += frappe.db.sql("select concat('Number Card: ', name), label from `tabNumber Card`")
@@ -396,6 +396,9 @@ def get_messages_from_doctype(name, context=True):
 			options = d.options.split('\n')
 			if not "icon" in options[0]:
 				messages.extend(options)
+
+		if d.fieldtype=='HTML' and d.options:
+			messages.append(d.options)
 
 	# translations of actions
 	for d in meta.get("actions"):

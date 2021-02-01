@@ -154,9 +154,9 @@ frappe.ui.GroupBy = class {
 							let option_text =
 								doctype == this.doctype
 									? field.label
-									: `${field.label} (${doctype})`;
+									: `${__(field.label)} (${__(doctype)})`;
 							this.aggregate_on_html += `<option data-doctype="${doctype}"
-								value="${field.fieldname}">${option_text}</option>`;
+								value="${field.fieldname}">${__(option_text)}</option>`;
 						}
 					});
 				}
