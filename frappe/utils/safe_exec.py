@@ -294,6 +294,7 @@ VALID_UTILS = (
 "strip",
 "to_markdown",
 "md_to_html",
+"markdown",
 "is_subset",
 "generate_hash",
 "get_abbr",
