@@ -108,9 +108,18 @@ class Workspace:
 			'extends': self.page_name,
 			'for_user': frappe.session.user
 		}
-		pages = frappe.get_all("Workspace", filters=filters, limit=1)
-		if pages:
-			return frappe.get_cached_doc("Workspace", pages[0])
+		user_pages = frappe.get_all("Workspace", filters=filters, limit=1)
+		if user_pages:
+			return frappe.get_cached_doc("Workspace", user_pages[0])
+
+		filters = {
+			'extends_another_page': 1,
+			'extends': self.page_name,
+			'is_default': 1
+		}
+		default_page = frappe.get_all("Workspace", filters=filters, limit=1)
+		if default_page:
+			return frappe.get_cached_doc("Workspace", default_page[0])
 
 		self.get_pages_to_extend()
 		return frappe.get_cached_doc("Workspace", self.page_name)
