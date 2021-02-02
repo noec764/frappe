@@ -165,7 +165,7 @@ def build_domain_restricted_doctype_cache(*args, **kwargs):
 		or frappe.flags.in_migrate
 		or frappe.flags.in_import
 		or frappe.flags.in_setup_wizard):
-		return
+		return []
 	_cache = frappe.cache()
 	active_domains = frappe.get_active_domains()
 	doctypes = frappe.get_all("DocType", filters={'restrict_to_domain': ('IN', active_domains)})
@@ -180,7 +180,7 @@ def build_domain_restricted_page_cache(*args, **kwargs):
 		or frappe.flags.in_migrate
 		or frappe.flags.in_import
 		or frappe.flags.in_setup_wizard):
-		return
+		return []
 	_cache = frappe.cache()
 	active_domains = frappe.get_active_domains()
 	pages = frappe.get_all("Page", filters={'restrict_to_domain': ('IN', active_domains)})
