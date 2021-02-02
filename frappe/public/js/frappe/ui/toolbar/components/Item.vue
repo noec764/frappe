@@ -9,13 +9,13 @@
 			class="dodock-sidebar-link"
 			:href="'/app/' + item.name.toLowerCase()"
 		>
-			<!-- <i
-				v-if="item.icon"
-				class="dodock-sidebar-icon"
-				:class="item.icon"
-				:style="{color: item.color}"
-			/> -->
-			<i class="dodock-sidebar-icon" :style="{stroke: item.color}" v-html="frappe.utils.icon(item.icon)"></i>
+			<i class="dodock-sidebar-icon"
+				:style="{
+					backgroundColor: getBackgroundColor(item.icon),
+					'--icon-stroke': getBackgroundColor(item.icon)
+				}"
+				v-html="frappe.utils.icon(item.icon, 'lg')">
+			</i>
 			<template v-if="!isCollapsed">
 				<span class="dodock-sidebar-title">{{ item.label }}</span>
 			</template>
@@ -53,6 +53,32 @@ export default {
 		},
 		itemClick() {
 			this.$emit('itemClick');
+		},
+		getBackgroundColor(icon) {
+			const colorMap = {
+				accounting: "#407395",
+				assets: "#457b9d",
+				tool: "#e9c46a",
+				buying: "#e76f51",
+				crm: "#ec9a9a",
+				hr: "#457b9d",
+				loan: "#e96a70",
+				"money-coins-1": "#15aabf",
+				project: "#BF90D4",
+				quality: "#1abc9c",
+				sell: "#2a9d8f",
+				support: "#72ac82",
+				website: "#84b7c5",
+				settings: "#aec8ff",
+				customization: "#F8A787",
+				integration: "#35abb7",
+				users: "#e8525b",
+				organization: "#c2831c",
+				retail: "#62B6CB",
+				stock: "#f4a261",
+				map: "#eeb867"
+			}
+			return colorMap[icon] || "var(--primary-color)"
 		}
 	}
 }

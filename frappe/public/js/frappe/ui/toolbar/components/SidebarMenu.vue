@@ -12,7 +12,7 @@
 		<div class="dodock-sidebar-list" id="sidebard-modules-list" ref="sidebarList">
 			<template v-for="(mod, mod_index) in moduleCategories">
 			<div
-				v-if="modules[mod]&&modules[mod].length"
+				v-if="modules[mod]&&modules[mod].length&&mod!='Modules'"
 				class="dodock-sidebar-divider"
 				:class="[!isCollapsed ? '' : 'collapsed']"
 				:key="mod + mod_index"
