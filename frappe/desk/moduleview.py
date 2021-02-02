@@ -329,7 +329,7 @@ def get_desktop_settings():
 	for m in all_modules:
 		modules_by_name[m['module_name']] = m
 
-	module_categories = ['Modules', 'Domains', 'Places', 'Administration']
+	module_categories = ['Modules', 'Administration']
 	user_modules_by_category = {}
 
 	user_saved_modules_by_category = home_settings.modules_by_category or {}

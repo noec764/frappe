@@ -181,7 +181,7 @@ frappe.views.BaseList = class BaseList {
 			'Gantt': 'gantt',
 			'Kanban': 'kanban',
 			'Dashboard': 'dashboard',
-			'Map': 'map'
+			'Map': 'map-view'
 		};
 
 		if (frappe.boot.desk_settings.view_switcher) {

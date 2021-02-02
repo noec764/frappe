@@ -86,7 +86,7 @@
    "fieldname": "category",
    "fieldtype": "Select",
    "label": "Category",
-   "options": "Modules\nDomains\nPlaces\nAdministration",
+   "options": "Modules\nAdministration",
    "read_only_depends_on": "eval:doc.extends_another_page == 1",
    "search_index": 1
   },
@@ -208,18 +208,18 @@
    "fieldtype": "Table",
    "label": "Links",
    "options": "Workspace Link"
-},
-{
- "default": "0",
- "depends_on": "extends_another_page",
- "description": "Sets the current page as default for all users",
- "fieldname": "is_default",
- "fieldtype": "Check",
- "label": "Is Default"
+  },
+  {
+   "default": "0",
+   "depends_on": "extends_another_page",
+   "description": "Sets the current page as default for all users",
+   "fieldname": "is_default",
+   "fieldtype": "Check",
+   "label": "Is Default"
   }
  ],
  "links": [],
- "modified": "2021-01-21 12:09:36.156614",
+ "modified": "2021-02-02 11:01:02.665864",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
