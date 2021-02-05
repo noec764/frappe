@@ -1309,9 +1309,6 @@ frappe.Chat
 
 			this.set_wrapper(selector ? selector : "body")
 			this.set_options(options)
-
-			// Load Emojis.
-			frappe.chat.emoji()
 		}
 
 		/**
