@@ -126,7 +126,7 @@
 	padding: 8px 12px;
 	// color: var(--disabled-text-color);
 	cursor: default;
-	background-color: var(--control-bg);
+	background-color: var(--disabled-control-bg);
 }
 
 .form-control:disabled, .form-control[readonly] {
