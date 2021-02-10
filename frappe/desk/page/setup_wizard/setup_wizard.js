@@ -203,7 +203,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 					this.abort_setup(r.message.fail);
 				}
 			},
-			error: this.abort_setup(__("Error in setup"), true)
+			error: () => this.abort_setup(__("Error in setup"))
 		});
 	}
 

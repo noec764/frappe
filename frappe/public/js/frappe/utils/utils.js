@@ -1092,7 +1092,7 @@ Object.assign(frappe.utils, {
 			} else if (type === "page") {
 				route = item.name;
 			} else if (type === "dashboard") {
-				route = "dashboard-view/" + item.name;
+				route = `dashboard-view/${item.name}`;
 			}
 
 		} else {
