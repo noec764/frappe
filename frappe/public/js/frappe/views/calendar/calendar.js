@@ -116,7 +116,9 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 						calendar_defaults: {
 							slots_start_time: doc.daily_minimum_time,
 							slots_end_time: doc.daily_maximum_time,
-							first_day: doc.first_day ? day_map[doc.first_day] : null
+							first_day: doc.first_day ? day_map[doc.first_day] : null,
+							display_event_time: doc.display_event_time == 1 ? true : false,
+							display_event_end: doc.display_event_end == 1 ? true : false
 						}
 					});
 
@@ -134,7 +136,10 @@ frappe.views.Calendar = class {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
-		this.calendar_defaults = this.calendar_defaults&&Object.keys(this.calendar_defaults) ? this.calendar_defaults : {};
+		this.calendar_defaults = this.calendar_defaults&&Object.keys(this.calendar_defaults) ? this.calendar_defaults : {
+			display_event_time: true,
+			display_event_end: true
+		};
 		this.sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
 		this.get_default_options();
 	}
@@ -268,8 +273,8 @@ frappe.views.Calendar = class {
 			selectable: true,
 			selectMirror: true,
 			forceEventDuration: true,
-			displayEventTime: true,
-			displayEventEnd: true,
+			displayEventTime: defaults.display_event_time,
+			displayEventEnd: defaults.display_event_end,
 			initialView: defaults.initialView,
 			weekends: defaults.weekends,
 			nowIndicator: true,
