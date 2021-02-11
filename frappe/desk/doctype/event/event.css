@@ -1,5 +1,12 @@
 .custom {
 	display: inline-flex;
+	background-color: transparent;
+	box-shadow: none;
+	padding: 0;
+}
+
+.custom .section-body {
+	padding: 0 !important;
 }
 
 .item-booking-card {
