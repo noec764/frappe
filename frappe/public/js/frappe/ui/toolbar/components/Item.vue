@@ -11,8 +11,9 @@
 		>
 			<i class="dodock-sidebar-icon"
 				:style="{
-					backgroundColor: getBackgroundColor(item.icon),
-					'--icon-stroke': getBackgroundColor(item.icon)
+					//backgroundColor: getBackgroundColor(item.icon),
+					//'--icon-stroke': getBackgroundColor(item.icon)
+					'--icon-fill': getBackgroundColor(item.icon)
 				}"
 				v-html="frappe.utils.icon(item.icon, 'lg')">
 			</i>
