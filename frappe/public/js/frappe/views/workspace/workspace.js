@@ -164,18 +164,19 @@ class DesktopPage {
 
 	make() {
 		this.page = $(`<div class="desk-page" data-page-name=${this.page_name}></div>`);
+		this.page.append(frappe.render_template('workspace_loading_skeleton'));
 		this.page.appendTo(this.container);
 
-		this.get_data().then(res => {
+		this.get_data().then(() => {
 			this.data = res.message;
 			if (!this.data) {
 				delete localStorage.current_workspace;
-				frappe.set_route("space");
+				frappe.set_route("workspace");
 				return;
 			}
 
 			this.refresh();
-		});
+		}).finally(this.page.find('.workspace_loading_skeleton').remove);
 	}
 
 	refresh() {
@@ -187,15 +188,26 @@ class DesktopPage {
 		}
 
 		this.data.onboarding && this.data.onboarding.items.length && this.make_onboarding();
-		this.make_charts().then(() => {
-			this.make_shortcuts();
-			this.make_cards();
-		});
+		this.make_charts();
+		this.make_shortcuts();
+		this.make_cards();
 	}
 
 	get_data() {
-		return frappe.call("frappe.desk.desktop.get_desktop_page", {
+		return frappe.xcall("frappe.desk.desktop.get_desktop_page", {
 			page: this.page_name
+		}).then(data => {
+			this.data = data;
+			if (!this.data) return;
+
+			return frappe.dashboard_utils.get_dashboard_settings().then(settings => {
+				let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
+				if (this.data.charts.items) {
+					this.data.charts.items.map(chart => {
+						chart.chart_settings = chart_config[chart.chart_name] || {};
+					});
+				}
+			});
 		});
 	}
 
@@ -234,7 +246,7 @@ class DesktopPage {
 				frappe.throw({ message: __("Something went wrong while saving customizations"), title: __("Failed") });
 				this.reload();
 			}
-		})
+		});
 	}
 
 	reset_customization() {
@@ -269,30 +281,21 @@ class DesktopPage {
 	}
 
 	make_charts() {
-		return frappe.dashboard_utils.get_dashboard_settings().then(settings => {
-			let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
-			if (this.data.charts.items) {
-				this.data.charts.items.map(chart => {
-					chart.chart_settings = chart_config[chart.chart_name] || {};
-				});
-			}
-
-			this.sections["charts"] = new frappe.widget.WidgetGroup({
-				container: this.page,
-				type: "chart",
-				columns: 1,
-				class_name: "widget-charts",
-				hidden: Boolean(this.onboarding_widget),
-				options: {
-					allow_sorting: this.allow_customization,
-					allow_create: this.allow_customization,
-					allow_delete: this.allow_customization,
-					allow_hiding: false,
-					allow_edit: true,
-					max_widget_count: 6,
-				},
-				widgets: this.data.charts.items
-			});
+		this.sections["charts"] = new frappe.widget.WidgetGroup({
+			container: this.page,
+			type: "chart",
+			columns: 1,
+			class_name: "widget-charts",
+			hidden: Boolean(this.onboarding_widget),
+			options: {
+				allow_sorting: this.allow_customization,
+				allow_create: this.allow_customization,
+				allow_delete: this.allow_customization,
+				allow_hiding: false,
+				allow_edit: true,
+				max_widget_count: 2,
+			},
+			widgets: this.data.charts.items
 		});
 	}
 

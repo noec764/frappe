@@ -3,12 +3,8 @@ frappe.provide('frappe.search');
 frappe.ui.Notifications = class Notifications {
 	constructor() {
 		this.tabs = {};
-		frappe.model
-			.with_doc('Notification Settings', frappe.session.user)
-			.then(doc => {
-				this.notifications_settings = doc;
-				this.make();
-			});
+		this.notification_settings = frappe.boot.notification_settings;
+		this.make();
 	}
 
 	make() {
@@ -108,7 +104,7 @@ frappe.ui.Notifications = class Notifications {
 		let tabView = new item.view(
 			item.el,
 			this.dropdown,
-			this.notifications_settings
+			this.notification_settings
 		);
 		this.tabs[item.id] = tabView;
 	}
