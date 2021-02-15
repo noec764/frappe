@@ -307,5 +307,6 @@
 	"js/user_profile_controller.min.js": "desk/page/user_profile/user_profile_controller.js",
 	"js/events-portal.min.js": "public/js/frappe/events_portal/index.js",
 	"css/website-calendar.min.css": "public/scss/calendar-base.scss",
-	"css/login.css": "public/scss/login.scss"
+	"css/login.css": "public/scss/login.scss",
+	"js/data_import_tools.min.js": "public/js/frappe/data_import/index.js"
 }
