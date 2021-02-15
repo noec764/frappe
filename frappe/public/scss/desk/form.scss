@@ -21,6 +21,7 @@
 	box-shadow: none;
 	border-radius: $border-radius;
 	font-size: var(--text-md);
+	position: relative;
 }
 
 .frappe-control.has-error {

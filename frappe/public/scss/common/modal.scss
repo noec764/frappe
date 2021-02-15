@@ -108,6 +108,10 @@ body.modal-open {
 			}
 		}
 	}
+
+	.hasDatepicker {
+		z-index: 1140;
+	}
 }
 
 .modal-minimize {
