@@ -4,7 +4,7 @@
 	.popover-content {
 		padding: 0;
 		.preview-popover-header {
-			padding: 15px;
+			padding: var(--padding-md);
 
 			.preview-header {
 				display: inline-block;
@@ -15,8 +15,8 @@
 				width: 70px;
 				height: 70px;
 				object-fit: cover;
-				margin-right: 10px;
-				border-radius: 6px;
+				margin-right: var(--margin-sm);
+				border-radius: var(--border-radius);
 			}
 
 			.preview-name {
@@ -33,14 +33,14 @@
 		}
 
 		.preview-table {
-			padding: 15px;
-			padding-bottom: 5px;
+			padding: var(--padding-md);
+			padding-bottom: var(--padding-xs);
 			max-width: 330px;
 			min-width: 200px;
 			overflow-wrap: break-word;
 
 			.preview-field {
-				padding-bottom: 10px;
+				padding-bottom: var(--padding-sm);
 				.preview-label {
 					padding-bottom: 4px;
 				}
