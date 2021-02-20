@@ -328,6 +328,7 @@ execute:frappe.reload_doctype('user')
 execute:frappe.reload_doctype('docperm')
 frappe.patches.v13_0.replace_field_target_with_open_in_new_tab
 frappe.patches.v13_0.delete_package_publish_tool
+frappe.patches.v13_0.rename_custom_client_script
 frappe.patches.v13_0.rename_list_view_setting_to_list_view_settings
 execute:frappe.delete_doc_if_exists("DocType", "Package Document Type")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
