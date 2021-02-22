@@ -93,6 +93,13 @@ class BaseDocument(object):
 		return self._meta
 
 	def update(self, d):
+		""" Update multiple fields of a doctype using a dictionary of key-value pairs.
+		Example:
+			doc.update({
+				"user": "admin",
+				"balance": 42000
+			})
+		"""
 		if "doctype" in d:
 			self.set("doctype", d.get("doctype"))
 
@@ -158,6 +165,14 @@ class BaseDocument(object):
 			del self.__dict__[key]
 
 	def append(self, key, value=None):
+		""" Append an item to a child table.
+		Example:
+			doc.append("childtable", {
+				"child_table_field": "value",
+				"child_table_int_field": 0,
+				...
+			})
+		"""
 		if value==None:
 			value={}
 		if isinstance(value, (dict, BaseDocument)):
