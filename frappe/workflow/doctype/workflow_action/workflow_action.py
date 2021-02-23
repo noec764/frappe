@@ -10,7 +10,7 @@ from frappe.desk.form.utils import get_pdf_link
 from frappe.utils.verified_command import get_signed_params, verify_request
 from frappe import _
 from frappe.model.workflow import apply_workflow, get_workflow_name, has_approval_access, \
-	has_approval_access, get_workflow_state_field, send_email_alert, get_workflow_field_value, is_transition_condition_satisfied
+	get_workflow_state_field, send_email_alert, get_workflow_field_value, is_transition_condition_satisfied
 from frappe.desk.notifications import clear_doctype_notifications
 from frappe.utils.user import get_users_with_role
 
