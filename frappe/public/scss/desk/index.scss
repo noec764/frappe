@@ -1,7 +1,7 @@
 @import "variables";
-@import "../common/mixins.scss";
-@import "../common/global.scss";
-@import "../common/icons.scss";
+@import "../common/mixins";
+@import "../common/global";
+@import "../common/icons";
 
 @import "~bootstrap/scss/bootstrap";
 @import "global";
@@ -16,6 +16,7 @@
 @import "toast";
 @import "breadcrumb";
 @import "../common/indicator";
+@import "../common/flex";
 @import "tags";
 @import "page";
 @import "timeline";
