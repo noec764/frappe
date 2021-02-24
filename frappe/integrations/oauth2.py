@@ -161,12 +161,15 @@ def revoke_token(*args, **kwargs):
 def openid_profile(*args, **kwargs):
 	picture = None
 	first_name, last_name, avatar, name = frappe.db.get_value("User", frappe.session.user, ["first_name", "last_name", "user_image", "name"])
-	frappe_userid = frappe.db.get_value("User Social Login", {"parent":frappe.session.user, "provider": "frappe"}, "userid")
+	frappe_userid = frappe.db.get_value("User Social Login", {"parent":frappe.session.user, "provider": "dodock"}, "userid")
 	request_url = urlparse(frappe.request.url)
+	base_url = frappe.db.get_value("Social Login Key", "dodock", "base_url") or None
 
 	if avatar:
 		if validate_url(avatar):
 			picture = avatar
+		elif base_url:
+			picture = base_url + '/' + avatar
 		else:
 			picture = request_url.scheme + "://" + request_url.netloc + avatar
 
