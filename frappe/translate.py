@@ -16,7 +16,6 @@ from frappe.utils import cstr
 import frappe, os, re, io, codecs, json
 from frappe.model.utils import render_include, InvalidIncludePath
 from frappe.utils import strip, strip_html_tags, is_html
-from jinja2 import TemplateError
 import itertools, operator
 from functools import reduce
 from frappe.utils.csvutils import to_csv
@@ -672,6 +671,8 @@ def extract_messages_from_code(code):
 		:param code: code from which translatable files are to be extracted
 		:param is_py: include messages in triple quotes e.g. `_('''message''')`
 	"""
+	from jinja2 import TemplateError
+
 	try:
 		code = frappe.as_unicode(render_include(code))
 	except (TemplateError, ImportError, InvalidIncludePath, IOError):
