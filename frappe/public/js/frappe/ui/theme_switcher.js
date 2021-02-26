@@ -25,11 +25,11 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 			this.themes = [
 				{
 					name: "light",
-					label: __("Frappe Light"),
+					label: __("Light"),
 				},
 				{
 					name: "dark",
-					label: __("Timeless Night"),
+					label: __("Night"),
 				}
 			];
 

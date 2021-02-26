@@ -603,7 +603,7 @@ def merge_cards_based_on_label(cards):
 	for card in cards:
 		label = card.get('label')
 		if label in cards_dict:
-			links = cards_dict[label].links + card.links
+			links = cards_dict[label].get("links") + card.get("links")
 			cards_dict[label].update(dict(links=links))
 			cards_dict[label] = cards_dict.pop(label)
 		else:
