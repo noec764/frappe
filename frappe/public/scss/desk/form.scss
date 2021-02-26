@@ -26,10 +26,10 @@
 
 .frappe-control.has-error {
 	.form-control {
-		border-color: var(--orange-400);
-		background-color: var(--orange-100);
+		border-color: var(--error-border);
+		background-color: var(--error-bg);
 		.input-with-feedback {
-			background-color: var(--orange-100);
+			background-color: var(--error-bg);
 		}
 	}
 }
