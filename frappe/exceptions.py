@@ -32,6 +32,9 @@ class PermissionError(Exception):
 class DoesNotExistError(ValidationError):
 	http_status_code = 404
 
+class PageDoesNotExistError(ValidationError):
+	http_status_code = 404
+
 class NameError(Exception):
 	http_status_code = 409
 
