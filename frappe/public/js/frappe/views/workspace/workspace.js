@@ -168,7 +168,6 @@ class DesktopPage {
 		this.page.appendTo(this.container);
 
 		this.get_data().then(() => {
-			this.data = res.message;
 			if (!this.data) {
 				delete localStorage.current_workspace;
 				frappe.set_route("workspace");
