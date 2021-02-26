@@ -449,22 +449,16 @@ class Document(BaseDocument):
 		else:
 			self.flags.name_set = True
 
-	def register_seal(self):
-		if getattr(self.meta, 'is_submittable') and getattr(self.meta, 'is_sealed'):
-			from frappe.utils.seal import get_seal_doc_and_version, get_chained_seal
-			doc = get_seal_doc_and_version(self)
-			if doc:
-				seal = get_chained_seal(doc)
-				if seal:
-					frappe.db.set_value(self.doctype, self.name, "_seal", seal, update_modified=False)
-					frappe.db.set_value(self.doctype, self.name, "_seal_version", doc.get("version", "0.0.0"), update_modified=False)
-
 	def add_submitted_record(self):
 		if getattr(self.meta, 'is_submittable'):
 			self._submitted = now()
 			self._submitted_by = frappe.session.user
 			frappe.db.set_value(self.doctype, self.name, "_submitted", self._submitted, update_modified=False)
 			frappe.db.set_value(self.doctype, self.name, "_submitted_by", self._submitted_by, update_modified=False)
+
+	def register_seal(self):
+		if getattr(self.meta, 'is_submittable') and getattr(self.meta, 'is_sealed'):
+			frappe.enqueue("frappe.core.doctype.archived_document.archived_document.create_archive", doc=self)
 
 	def get_title(self):
 		"""Get the document title based on title_field or `title` or `name`"""

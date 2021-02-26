@@ -1,95 +1,114 @@
-# Copyright (c) 2019, Frappe Technologies and contributors
+# Copyright (c) 2021, Dokos SAS and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
 import frappe
-import hashlib
-import collections
-import json
-from frappe import _, scrub
-from frappe.utils import format_datetime, get_datetime
-from frappe.utils.seal import get_sealed_doc, get_chained_seal
-from frappe.modules import load_doctype_module
-from frappe.desk.form.load import get_versions
+from collections import defaultdict
+from frappe import _
+from frappe.utils import get_datetime
+from frappe.utils.seal import hash_chain
 
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
-
 	return columns, data
 
 def get_data(filters=None):
 	if filters is None:
 		return []
 
-	documents = frappe.get_all(filters.get("doctype"), filters={"docstatus": [">", 0]})
-	modules = get_versions_data(filters.get("doctype"))
-	doc_meta = frappe.get_meta(filters.get("doctype"))
+	archives_list = get_archives(filters)
+	archives = get_archives_dict(archives_list)
+	documents = get_documents(filters)
 
-	if not modules:
-		frappe.throw(_("The versioning document for this doctype could not be found"))
-
-	result = []
+	doc_dict = defaultdict(dict)
 	for document in documents:
-		doc = frappe.get_doc(filters.get("doctype"), document.name)
+		doc_dict[document.name] = {
+			"seal": document._seal or "",
+			"submission_date": document._submitted or "",
+			"submitted_by": document._submitted_by or "",
+			"archive": archives.get(document.name, {})
+		}
 
-		if doc._seal is None or doc._submitted is None:
-			comment = _("This document is not sealed")
-			result.append([doc.name, get_datetime(doc._submitted) or "", doc.owner,\
-				"Out", comment, "", "", "", ""])
-			continue
+	missing_keys = []
+	for key in archives.keys():
+		if key not in doc_dict.keys():
+			missing_keys.append(key)
 
-		sealed_doc = get_sealed_doc(doc, modules, doc._seal_version, True)
+	for missing_key in missing_keys:
+		doc_dict[missing_key] = {
+			"seal": "",
+			"submission_date": "",
+			"submitted_by": "",
+			"archive": archives.get(missing_key, {})
+		}
 
-		# Check for renamed links
-		link_fields = get_link_fields(sealed_doc, doc_meta)
-		if link_fields:
-			sealed_doc = revise_renamed_links(sealed_doc, link_fields, doc._submitted)
+	data = []
+	documents_list = [x.name for x in sorted(documents, key=lambda i: get_datetime(i["_submitted"]))]
+	documents_dict = get_documents_dict(documents)
 
-		if sealed_doc:
-			seal = get_chained_seal(sealed_doc)
-			integrity = "Yes" if seal == doc._seal else "No"
-			comment = _("Data integrity verified") if integrity == "Yes" else _("Data integrity could not be verified")
+	for doc in doc_dict:
+		archive = doc_dict[doc].get("archive", {})
+		icon, comments = check_integrity(doc, doc_dict[doc], documents_list, documents_dict, archives)
+		row = {
+			"document_name": doc,
+			"submission_date": doc_dict[doc].get("submission_date"),
+			"submitted_by": doc_dict[doc].get("submitted_by"),
+			"archive": archive.get("name", ""),
+			"comments": comments,
+			"icon": icon
+		}
 
-			result.append([doc.name, get_datetime(doc._submitted), doc.owner,\
-				integrity, comment, seal, doc._seal, doc._seal_version])
-
-	return result
-
-def get_link_fields(doc, meta):
-	links = []
-	for field in doc:
-		links.extend([f for f in meta.fields if f.fieldname == field and f.fieldtype == "Link"])
-
-	return links
-
-def revise_renamed_links(doc, fields, submission_date):
-	for field in fields:
-		docname = doc[field.fieldname]
-		versions = frappe.get_all("Renamed Document",\
-			filters={
-				"document_type": field.options,
-				"creation": (">", submission_date)
-			},
-			fields=["previous_name", "new_name", "creation"],
-			order_by="creation")
-
-		if docname in [x.get("new_name") for x in versions]:
-			doc[field.fieldname] = versions[0].get("previous_name")
-
-	return doc
-
-def get_versions_data(doctype):
-	try:
-		data = []
-
-		module = load_doctype_module(doctype, suffix='_version')
-		if hasattr(module, 'get_data'):
-			data = module.get_data()
-
-	except ImportError:
-		return []
+		data.append(row)
 
 	return data
+
+def get_documents(filters):
+	return frappe.get_all(
+		filters.get("doctype"),
+		filters={"docstatus": [">", 0]},
+		fields=["name", "_seal", "_submitted", "_submitted_by"],
+		order_by="name desc"
+	)
+
+def get_documents_dict(documents):
+	return {x.name: x._seal for x in documents}
+
+def get_archives(filters):
+	return frappe.get_all(
+		"Archived Document",
+		filters={"reference_doctype": filters.get("doctype")},
+		fields=["name", "timestamp", "hash", "reference_docname", "data", "creation"],
+		order_by="creation"
+	)
+
+def get_archives_dict(archives):
+	return {x.reference_docname: x for x in archives}
+
+def check_integrity(name, doc, documents_list, documents_dict, archives):
+	if not doc.get("seal"):
+		return "error", _("This document is not sealed")
+
+	archive = doc.get("archive", {})
+	if not archive.get("name"):
+		return "warning", _("This document is not archived")
+	else:
+		seal = doc.get("seal")
+		initial_hash = frappe.db.get_global("initial_hash")
+		previous_archive = documents_list.index(name)
+		if previous_archive > 0:
+			previous_doc = documents_list[previous_archive - 1]
+			previous_chain = documents_dict.get(previous_doc)
+		else:
+			previous_chain = initial_hash
+
+		msg = ""
+		if hash_chain(previous_chain, seal) != archive.get("hash"):
+			msg = "warning", _("The seal chain does not match")
+		if hash_chain(initial_hash, seal) == archive.get("hash"):
+			msg = "warning", _("The document exists but is not chained correctly")
+		if msg:
+			return msg
+
+	return "success", _("This document exists and has been correctly archived")
 
 
 def get_columns(filters=None):
@@ -98,49 +117,33 @@ def get_columns(filters=None):
 			"label": _("Document Name"),
 			"fieldname": "document_name",
 			"fieldtype": "Data",
-			"width": 150
+			"width": 300
 		},
 		{
 			"label": _("Submission Date"),
 			"fieldname": "submission_date",
 			"fieldtype": "Datetime",
-			"width": 150
+			"width": 200
 		},
 		{
-			"label": _("Owner"),
-			"fieldname": "owner",
-			"fieldtype": "Data",
-			"width": 100
+			"label": _("Submitted By"),
+			"fieldname": "submitted_by",
+			"fieldtype": "Link",
+			"options": "User",
+			"width": 200
 		},
 		{
-			"label": _("Integrity"),
-			"fieldname": "integrity",
-			"fieldtype": "Data",
-			"width": 50
+			"label": _("Archive"),
+			"fieldname": "archive",
+			"fieldtype": "Link",
+			"options": "Archived Document",
+			"width": 300
 		},
 		{
 			"label": _("Comments"),
 			"fieldname": "comments",
 			"fieldtype": "Data",
-			"width": 280
-		},
-		{
-			"label": _("Calculated Seal"),
-			"fieldname": "calculated_seal",
-			"fieldtype": "Data",
-			"width": 220
-		},
-		{
-			"label": _("Registered Seal"),
-			"fieldname": "registered_seal",
-			"fieldtype": "Data",
-			"width": 220
-		},
-		{
-			"label": _("Seal Version"),
-			"fieldname": "version",
-			"fieldtype": "Data",
-			"width": 100
+			"width": 300
 		}
 	]
 	return columns
@@ -153,7 +156,7 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user_perms.build_permissions()
 	can_read = user_perms.can_read
 
-	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1}) if get_versions_data(d[0])]
+	sealed_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"is_sealed": 1})]
 
 	out = []
 	for dt in can_read:

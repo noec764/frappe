@@ -96,7 +96,6 @@ optional_fields = (
 	"_seen",
 	"_printed",
 	"_seal",
-	"_seal_version",
 	"_submitted",
 	"_submitted_by"
 )
@@ -123,7 +122,8 @@ core_doctypes_list = (
 	'Customize Form Field',
 	'Property Setter',
 	'Custom Field',
-	'Client Script'
+	'Client Script',
+	'Archived Document'
 )
 
 log_types = (
@@ -140,7 +140,8 @@ log_types = (
 	'Email Queue',
 	'DocShare',
 	'Document Follow',
-	'Console Log'
+	'Console Log',
+	'Archived Document'
 )
 
 def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=[]):

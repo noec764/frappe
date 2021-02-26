@@ -106,10 +106,6 @@ class DBTable:
 					'fieldname': '_seal',
 					'fieldtype': 'Data'
 				})
-				fields.append({
-					'fieldname': '_seal_version',
-					'fieldtype': 'Data'
-				})
 
 			# add _draft_name column if name_after_submit
 			if self.meta.get('name_after_submit'):
