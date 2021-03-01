@@ -356,7 +356,8 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			messages.append(('Web Template Field: ' + label, label))
 
 		for label in frappe.db.sql_list("""select item_label from `tabNavbar Item`"""):
-			messages.append(('Navbar Item: ' + label, label))
+			if label:
+				messages.append(('Navbar Item: ' + label, label))
 
 	# workflow based on app.hooks.fixtures
 	messages.extend(get_messages_from_workflow(app_name=app))
