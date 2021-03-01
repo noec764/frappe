@@ -410,16 +410,17 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:!doc.disable_signup",
    "fieldname": "custom_signup",
    "fieldtype": "Link",
    "label": "Custom signup form",
    "options": "Web Form"
   },
   {
-    "default": "1",
-    "fieldname": "google_analytics_anonymize_ip",
-    "fieldtype": "Check",
-    "label": "Google Analytics Anonymize IP"
+   "default": "1",
+   "fieldname": "google_analytics_anonymize_ip",
+   "fieldtype": "Check",
+   "label": "Google Analytics Anonymize IP"
   }
  ],
  "icon": "fa fa-cog",
@@ -428,7 +429,7 @@
  "issingle": 1,
  "links": [],
  "max_attachments": 10,
- "modified": "2020-09-28 18:47:18.506700",
+ "modified": "2021-03-01 14:46:58.673660",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Settings",
