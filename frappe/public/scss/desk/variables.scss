@@ -57,6 +57,7 @@ $modal-content-box-shadow-sm-up: 0px 5px 10px rgba(0, 0, 0, 0.100661);
 $modal-md: 575px;
 $modal-sm: 450px;
 $link-color: var(--text-color);
+$input-btn-focus-width: 2px;
 
 // dropdown
 $dropdown-color: var(--text-color);
@@ -162,10 +163,9 @@ $spacers: (
 	64: 16rem,
 );
 
-
-@import 'dark';
 @import 'typography';
 @import '~bootstrap/scss/functions';
 @import '~bootstrap/scss/variables';
 @import "~bootstrap/scss/mixins";
 @import 'css_variables';
+@import 'dark';
