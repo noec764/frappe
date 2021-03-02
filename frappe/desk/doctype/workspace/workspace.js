@@ -27,5 +27,11 @@ frappe.ui.form.on('Workspace', {
 				frm.set_df_property(field.df.fieldname, "read_only", "1");
 			});
 		frm.disable_save();
+	},
+
+	icon: function(frm) {
+		frm.get_field("icon_display").$wrapper.html(
+			`<div class="my-2 text-center">${frappe.utils.icon(frm.doc.icon, "sm")}</div>`
+		)
 	}
 });
