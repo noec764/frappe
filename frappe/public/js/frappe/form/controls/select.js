@@ -127,6 +127,7 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 		}
 		// select the first option
 		this.selectedIndex = 0;
+		$(this).trigger('select-change');
 		return $(this);
 	};
 	$.fn.set_working = function() {
