@@ -40,10 +40,9 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 			return;
 		}
 		this.last_options = JSON.stringify(options);
-
 		if(this.$input) {
 			var selected = this.$input.find(":selected").val();
-			this.$input.empty().add_options(options || [], this.doctype);
+			this.$input.empty().add_options(options || [], this.df.context || this.doctype);
 
 			if(value===undefined && selected) {
 				this.$input.val(selected);

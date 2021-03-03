@@ -685,6 +685,7 @@ class FilterArea {
 
 	make_standard_filters() {
 		this.standard_filters_wrapper = this.list_view.page.page_form.find('.standard-filter-section');
+		const context = this.list_view && this.list_view.doctype ? this.list_view.doctype : null
 		let fields = [
 			{
 				fieldtype: "Data",
@@ -751,9 +752,11 @@ class FilterArea {
 					if (["__default", "__global"].includes(default_value)) {
 						default_value = null;
 					}
+
 					return {
 						fieldtype: fieldtype,
-						label: __(df.label),
+						label: __(df.label, null, context),
+						context: context,
 						options: options,
 						fieldname: df.fieldname,
 						condition: condition,
