@@ -143,7 +143,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					// Success
 					this.handle_success(response.message);
 					frappe.web_form.events.trigger('after_save');
-					this.after_save && this.after_save();
+					this.after_save && this.after_save(response.message);
 
 					// args doctype and docname added to link doctype in file manager
 					/*frappe.call({
