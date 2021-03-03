@@ -18,6 +18,12 @@ class ArchivedDocument(Document):
 		self.hash = chained_seal
 		self.data = frappe.as_json(sealed_doc, indent=4)
 
+	def on_trash(self):
+		raise frappe.PermissionError
+
+	def on_cancel(self):
+		raise frappe.PermissionError
+
 def create_archive(doc):
 	sealed_doc = get_sealed_doc(doc)
 	if sealed_doc:
