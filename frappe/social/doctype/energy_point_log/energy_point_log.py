@@ -319,9 +319,10 @@ def send_summary(timespan):
 
 	from_date = getdate(from_date)
 	to_date = getdate()
-	settings = {x["name"]: x["energy_points_summary"] for x in frappe.get_all("User", \
-		filters={"user_type": "System User", "enabled": 1}, fields=["name", "energy_points_summary"])}
-	all_users = [user for user in get_enabled_system_users() if settings.get(user["name"]) == 1]
+
+	# select only those users that have energy point email notifications enabled
+	all_users = [user.email for user in get_enabled_system_users() if
+		is_email_notifications_enabled_for_type(user.name, 'Energy Point')]
 
 	for user in all_users:
 		frappe.set_user_lang(user.name)

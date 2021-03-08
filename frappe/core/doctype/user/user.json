@@ -53,7 +53,6 @@
   "thread_notify",
   "send_me_a_copy",
   "allowed_in_mentions",
-  "energy_points_summary",
   "user_emails",
   "sb_allow_modules",
   "module_profile",
@@ -557,7 +556,7 @@
    "label": "Api Access"
   },
   {
-   "description": "API Key cannot be  regenerated",
+   "description": "API Key cannot be regenerated",
    "fieldname": "api_key",
    "fieldtype": "Data",
    "label": "API Key",
@@ -578,12 +577,6 @@
    "fieldtype": "Password",
    "label": "API Secret",
    "read_only": 1
-  },
-  {
-   "default": "1",
-   "fieldname": "energy_points_summary",
-   "fieldtype": "Check",
-   "label": "Send me an energy points summary"
   },
   {
    "fieldname": "column_break_11",
@@ -676,7 +669,7 @@
   }
  ],
  "max_attachments": 5,
- "modified": "2021-02-01 16:11:06.037543",
+ "modified": "2021-03-08 16:11:06.037543",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
