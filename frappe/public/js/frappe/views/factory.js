@@ -23,7 +23,7 @@ frappe.views.Factory = class Factory {
 			if(route[1]) {
 				me.make(route);
 			} else {
-				frappe.show_not_found(route);
+				frappe.show_not_found();
 			}
 		}
 	}
