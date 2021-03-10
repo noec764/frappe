@@ -381,7 +381,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			method: method,
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.doc.name,
+				name: this.frm.docname,
 				items: items
 			},
 			callback: function(r) {
