@@ -331,6 +331,7 @@ frappe.patches.v13_0.replace_field_target_with_open_in_new_tab
 frappe.patches.v13_0.delete_package_publish_tool
 frappe.patches.v13_0.rename_list_view_setting_to_list_view_settings
 frappe.patches.v13_0.remove_twilio_settings
+frappe.patches.v12_0.rename_uploaded_files_with_proper_name
 execute:frappe.delete_doc_if_exists("DocType", "Package Document Type")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Tool")
