@@ -66,3 +66,10 @@ article {
 .mobile-sidebar .list-group-item:first-child {
 	border: None;
 }
+
+.sidebar-column {
+	box-shadow:1px 0 0 0 #e6ebf1;
+	.sidebar-item a {
+		font-size:1.125rem;
+	}
+}
