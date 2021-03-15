@@ -1,3 +1,5 @@
+@import "../common/form.scss";
+
 .custom-actions {
 	&> div,
 	&>button {
@@ -10,18 +12,6 @@
 	button {
 		padding: 0.2rem 0.5rem;
 	}
-}
-
-.form-control {
-	border-width: 1px;
-	border-color: var(--gray-400);
-	border-style: none none solid;
-	background-color: $control-bg;
-	color: $text-color;
-	box-shadow: none;
-	border-radius: $border-radius;
-	font-size: var(--text-md);
-	position: relative;
 }
 
 .frappe-control.has-error {
@@ -119,25 +109,6 @@
 .form-inner-toolbar {
 	padding-top: var(--padding-md);
 	text-align: right;
-}
-
-.form-control.bold {
-	font-weight: 500;
-}
-
-.like-disabled-input {
-	.for-description {
-		font-weight: normal;
-		font-size: var(--text-sm);
-	}
-	min-height: var(--input-height);
-	margin-bottom: 7px;
-	border-radius: $border-radius;
-	font-weight: 400;
-	padding: 8px 12px;
-	// color: var(--disabled-text-color);
-	cursor: default;
-	background-color: var(--disabled-control-bg);
 }
 
 .form-control:disabled, .form-control[readonly] {

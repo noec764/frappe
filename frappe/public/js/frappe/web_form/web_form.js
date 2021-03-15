@@ -91,17 +91,15 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	setup_delete_button() {
 		this.add_button_to_header(
-			'mobile_delete_btn',
-			'<i class="uil uil-trash-alt" aria-hidden="true"></i>',
-			"light",
+			frappe.utils.icon('delete'),
+			"danger",
 			() => this.delete()
 		);
 	}
 
 	setup_print_button() {
 		this.add_button_to_header(
-			'print_btn',
-			'<i class="uil uil-print" aria-hidden="true"></i>',
+			frappe.utils.icon('print'),
 			"light",
 			() => this.print()
 		);
