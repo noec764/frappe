@@ -713,24 +713,18 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			let html;
 			let _value;
 			// listview_setting formatter
-			if (
-				this.settings.formatters &&
-				this.settings.formatters[fieldname]
-			) {
-				_value = this.settings.formatters[fieldname](value, df, doc);
+			let strip_html_required =
+				df.fieldtype == "Text Editor" ||
+				(df.fetch_from &&
+					["Text", "Small Text"].includes(df.fieldtype));
+
+			if (strip_html_required) {
+				_value = strip_html(value);
 			} else {
-				let strip_html_required =
-					df.fieldtype == "Text Editor" ||
-					(df.fetch_from &&
-						["Text", "Small Text"].includes(df.fieldtype));
-				if (strip_html_required) {
-					_value = strip_html(value);
-				} else {
-					_value =
-						typeof value === "string"
-							? frappe.utils.escape_html(value)
-							: value;
-				}
+				_value =
+					typeof value === "string"
+						? frappe.utils.escape_html(value)
+						: value;
 			}
 
 			if (df.fieldtype === "Image") {
@@ -788,7 +782,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			Subject: this.get_subject_html(doc),
 			Field: field_html(),
 		};
-		const column_html = html_map[col.type];
+		let column_html = html_map[col.type];
+
+		// listview_setting formatter
+		if (
+			this.settings.formatters &&
+			this.settings.formatters[fieldname]
+		) {
+			column_html = this.settings.formatters[fieldname](value, df, doc);
+		}
 
 		return `
 			<div class="${css_class}">
@@ -918,9 +920,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get_subject_html(doc) {
-		let user = frappe.session.user;
 		let subject_field = this.columns[0].df;
-		let value = doc[subject_field.fieldname] || doc.name;
+		let value = doc[subject_field.fieldname];
+		if (this.settings.formatters && this.settings.formatters[subject_field.fieldname]) {
+			let formatter = this.settings.formatters[subject_field.fieldname];
+			value = formatter(value, subject_field, doc);
+		}
+		if (!value) {
+			value = doc.name;
+		}
 		let subject = strip_html(value.toString());
 		let escaped_subject = frappe.utils.escape_html(subject);
 
