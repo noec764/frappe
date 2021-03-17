@@ -41,8 +41,8 @@ class User(Document):
 			self.name = self.email
 
 	def onload(self):
-		from frappe.config import get_modules_from_all_apps
-		all_modules = [{"name": m.get("module_name"), "label": m.get("label")} for m in get_modules_from_all_apps()]
+		workspaces = frappe.get_all("Workspace", pluck="module", filters={"extends_another_page": 0, "for_user": ("in", ("", self.name))}, distinct=1)
+		all_modules = [{"name": m, "label": _(m)} for m in workspaces]
 		all_modules.sort(key = lambda x:x["label"])
 		self.set_onload('all_modules', all_modules)
 
