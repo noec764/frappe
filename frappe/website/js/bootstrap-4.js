@@ -34,8 +34,8 @@ frappe.get_modal = function (title, content) {
 					</div>
 					<div class="modal-footer hidden">
 						<button type="button" class="btn btn-default btn-sm btn-modal-close" data-dismiss="modal">
-							${frappe.utils.icon('close-alt', 'sm', 'close-alt')}
-							<span class="hidden-xs">${__("Close")}</span>
+						<i class="octicon octicon-x visible-xs" style="padding: 1px 0px;"></i>
+						<span class="hidden-xs">${__("Close")}</span>
 						</button>
 						<button type="button" class="btn btn-sm btn-primary hidden"></button>
 					</div>

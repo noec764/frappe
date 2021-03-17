@@ -5,7 +5,9 @@
 }
 
 .btn {
-	border: none;
+	&:not(.btn-outline-secondary) {
+		border: none;
+	}
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
 	font-size: var(--text-md);

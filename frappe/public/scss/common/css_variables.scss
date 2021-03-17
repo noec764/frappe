@@ -1,3 +1,5 @@
+$primary: #6195ff !default;
+
 :root,
 [data-theme="light"] {
 	--brand-color: #0089FF;
@@ -214,6 +216,6 @@
 	--border-radius-lg: 12px;
 	--border-radius-full: 999px;
 
-	--primary-color: #6195ff;
+	--primary-color: #{$primary};
 	--btn-height: 28px;
 }

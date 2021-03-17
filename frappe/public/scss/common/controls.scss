@@ -167,6 +167,10 @@ select.form-control {
 	.ace_print-margin {
 		background-color: var(--dark-border-color);
 	}
+
+	.ace_scrollbar {
+		z-index: 4;
+	}
 }
 
 .frappe-control[data-fieldtype="Attach"],
