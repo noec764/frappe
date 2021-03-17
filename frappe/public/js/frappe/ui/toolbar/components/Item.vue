@@ -15,7 +15,7 @@
 					//'--icon-stroke': getBackgroundColor(item.icon)
 					'--icon-fill': getBackgroundColor(item.icon)
 				}"
-				v-html="frappe.utils.icon(item.icon, 'lg')">
+				v-html="frappe.utils.icon(item.icon || 'folder-open', 'lg')">
 			</i>
 			<template v-if="!isCollapsed">
 				<span class="dodock-sidebar-title">{{ item.label }}</span>
@@ -77,7 +77,8 @@ export default {
 				organization: "#c2831c",
 				retail: "#62B6CB",
 				stock: "#f4a261",
-				map: "#eeb867"
+				map: "#eeb867",
+				agriculture : "#ffcb61"
 			}
 			return colorMap[icon] || "var(--primary-color)"
 		}

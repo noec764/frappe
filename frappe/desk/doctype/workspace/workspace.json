@@ -200,10 +200,11 @@
    "label": "Hide Custom DocTypes and Reports"
   },
   {
+   "default": "folder-open",
    "fieldname": "icon",
-   "fieldtype": "Select",
+   "fieldtype": "Data",
    "label": "Icon",
-   "options": "resting\nactive\ntable_2\ntable\nreview\npermission\nprinter\nnotification\nlist\nfilter\ngroup-by\nexternal-link\nduplicate\ndrag\ndelete\ncalendar\nattachment\nassign\nsort-descending\nsort-ascending\nwebsite\nusers\ntool\nsupport\nstock\nsetting\nsetting-gear\nsell\nretail\nquantity-1\nquality\nquality-3\nprojects\nproject\nproject-2\nproject-1\noranisation\nnon-profit\nmoney-coins-1\nloan\nintegration\ns\ngetting-started\neducation\ncustomization\ncrm\nbuying\nassets\nagriculture\naccounting\nassets\nequity\nexpenses\nfile\nfolder-normal\nfolder-open\nprimitive-dot\nimage\nimage-view\ngantt\nkanban\nincome\nliabilities\norganization\nhr\nheart\nheart-active\nmark-as-read\ntoday\nmail\ncall\nview\nreply\nreply-all\nkeyboard\ndashboard\nsmall-file\nmap\nmap-view\ncustomer\nfolder-normal-large\nfile-large\ncomment\nclap\ncriticize\nunread-status\nread-status\nbranch\ndialpad\nstar"
+   "read_only": 1
   },
   {
    "fieldname": "links",
@@ -225,7 +226,7 @@
   }
  ],
  "links": [],
- "modified": "2021-03-02 08:35:47.785807",
+ "modified": "2021-03-17 17:16:05.897460",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
