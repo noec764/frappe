@@ -32,7 +32,7 @@ def get_chained_seal(doc):
 		doc = doc.as_dict()
 
 	previous_seal = dict()
-	print("timestamp", doc)
+
 	if doc.get("timestamp"):
 		previous_entry = frappe.db.sql("""
 			SELECT name, _seal, _submitted
@@ -51,7 +51,7 @@ def get_chained_seal(doc):
 			previous_seal['_seal'] = hash_line(uuid.uuid4().hex)
 			frappe.db.set_global("initial_hash", previous_seal['_seal'])
 			frappe.db.commit()
-	print(previous_seal)
+
 	current_seal = hash_line(doc)
 
 	return current_seal, hash_chain(previous_seal['_seal'], current_seal)
