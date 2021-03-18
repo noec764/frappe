@@ -81,6 +81,10 @@ select.form-control {
 			margin-bottom: 0;
 		}
 	}
+
+	&::placeholder {
+		color: var(--gray-500);
+	}
 }
 
 .frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype='Table MultiSelect']) {

@@ -8,6 +8,10 @@
 	border-radius: $border-radius;
 	font-size: var(--text-md);
 	position: relative;
+
+	&::placeholder {
+		color: var(--gray-500);
+	}
 }
 
 .form-control.bold {
