@@ -1,22 +1,22 @@
 <template>
 	<div>
 		<div class="page-form">
-			<div class="filter-list">
+			<div class="filter-list flex w-100">
 				<div class="tag-filters-area">
-					<div class="active-tag-filters">
+					<!-- <div class="active-tag-filters">
 						<button class="btn btn-default btn-xs add-filter text-muted">
 							Add Filter
 						</button>
-					</div>
+					</div> -->
 				</div>
 				<div class="filter-edit-area"></div>
-				<div class="sort-selector">
+				<div class="sort-selector ml-auto flex">
 					<div class="dropdown"><a class="text-muted dropdown-toggle small" data-toggle="dropdown"><span class="dropdown-text">{{ columns.filter(c => c.slug == query.sort)[0].label }}</span></a>
 						<ul class="dropdown-menu">
 							<li v-for="(column, index) in columns.filter(c => c.sortable)" :key="index" @click="query.sort = column.slug"><a class="option">{{ column.label }}</a></li>
 						</ul>
 					</div>
-					<button class="btn btn-default btn-xs btn-order">
+					<button class="btn btn-default btn-xs btn-order ml-2">
 						<span class="octicon text-muted" :class="query.order == 'asc' ? 'octicon-arrow-down' : 'octicon-arrow-up'"  @click="query.order = (query.order == 'asc') ? 'desc' : 'asc'"></span>
 					</button>
 				</div>
