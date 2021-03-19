@@ -68,7 +68,7 @@
    "fieldtype": "Link",
    "label": "Restrict to Domain",
    "options": "Domain",
-   "read_only_depends_on": "eval:doc.extends_another_page == 0",
+   "read_only_depends_on": "eval:doc.extends_another_page == 1",
    "search_index": 1
   },
   {
@@ -226,7 +226,7 @@
   }
  ],
  "links": [],
- "modified": "2021-03-17 17:16:05.897460",
+ "modified": "2021-03-19 09:21:34.553280",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",

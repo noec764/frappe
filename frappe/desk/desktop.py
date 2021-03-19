@@ -268,7 +268,7 @@ class Workspace:
 				item = _dict(item)
 
 				# Condition: based on country
-				if item.country and item.country != default_country:
+				if item.only_for and item.only_for != default_country:
 					continue
 
 				# Check if user is allowed to view
