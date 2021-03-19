@@ -2,7 +2,7 @@ import os
 import frappe
 import json
 
-from frappe.commands.site import _new_site
+from frappe.installer import _new_site
 
 def get_site_config(site_name):
 	site_config = None
