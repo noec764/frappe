@@ -224,7 +224,7 @@ frappe.ui.form.on('Dashboard Chart', {
 			{label: __('Last Modified On'), value: 'modified'}
 		];
 		let value_fields = [];
-		let group_by_fields = [{label: 'Created By', value: 'owner'}];
+		let group_by_fields = [{label: __('Created By'), value: 'owner'}];
 		let aggregate_function_fields = [];
 		let update_form = function() {
 			// update select options
