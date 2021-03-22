@@ -77,7 +77,21 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 							frappe.show_progress(__('Processing'), progress, data_length, null, true);
 						}
 					}
+<<<<<<< HEAD
 				}, 0);
+=======
+					if (row_idx > 1 && (row_idx - 1) % grid_pagination.page_length === 0) {
+						grid_pagination.go_to_page(grid_pagination.page_index + 1);
+					}
+					var cur_row = cur_grid_rows[row_idx - 1];
+					row_idx ++;
+					var row_name = cur_row.doc.name;
+					$.each(row, function(ci, value) {
+						if (fieldnames[ci]) frappe.model.set_value(cur_doctype, row_name, fieldnames[ci], value);
+					});
+					frappe.show_progress(__('Processing'), i, data.length);
+				}
+>>>>>>> 66bee92db (fix: copy paste rows more than 50 (one page))
 			});
 			return false; // Prevent the default handler from running.
 		});
