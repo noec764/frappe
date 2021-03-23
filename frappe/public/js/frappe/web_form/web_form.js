@@ -128,6 +128,8 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		window.saving = true;
 		frappe.form_dirty = false;
 
+		this.disable_enable_save_btns(true)
+
 		frappe.call({
 			type: "POST",
 			method: "frappe.website.doctype.web_form.web_form.accept",
@@ -145,16 +147,20 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					frappe.web_form.events.trigger('after_save');
 					this.after_save && this.after_save(response.message);
 
+					this.disable_enable_save_btns(false)
+
 					// args doctype and docname added to link doctype in file manager
-					/*frappe.call({
-						type: 'POST',
-						method: "frappe.handler.upload_file",
-						args: {
-							file_url: response.message.attachment,
-							doctype: response.message.doctype,
-							docname: response.message.name
-						}
-					});*/
+					if (is_new) {
+						frappe.call({
+							type: 'POST',
+							method: "frappe.handler.upload_file",
+							args: {
+								file_url: response.message.attachment,
+								doctype: response.message.doctype,
+								docname: response.message.name
+							}
+						});
+					}
 				}
 			},
 			always: function() {
@@ -162,6 +168,14 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			}
 		});
 		return true;
+	}
+
+	disable_enable_save_btns(disable) {
+		const label = disable ? __("Saving...") : this.button_label || __("Save")
+		$("#header_save_btn").attr("disabled", disable)
+		$("#header_save_btn").text(label)
+		$("#footer_save_btn").attr("disabled", disable)
+		$("#footer_save_btn").text(label)
 	}
 
 	delete() {
