@@ -12,7 +12,8 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 			parent: this.wrapper,
 			control: this
 		});
-		if(this.frm) {
+
+		if (this.frm) {
 			this.frm.grids[this.frm.grids.length] = this;
 		}
 
@@ -23,17 +24,26 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 			const grid_rows = grid.grid_rows;
 			const doctype = grid.doctype;
 			const row_docname = $(e.target).closest('.grid-row').data('name');
+<<<<<<< HEAD
 			const in_grid_form = $(e.target).closest('.form-in-grid').length;
+=======
+>>>>>>> 593e2886a (refactor: Grid paste code)
 
 			let clipboard_data = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
 			let pasted_data = clipboard_data.getData('Text');
 
+<<<<<<< HEAD
 			if (!pasted_data || in_grid_form) return;
 
 			let data = frappe.utils.csv_to_array(pasted_data, '\t');
 
 			if (data.length === 1 && data[0].length === 1) return;
 
+=======
+			if (!pasted_data) return;
+
+			let data = frappe.utils.csv_to_array(pasted_data, '\t');
+>>>>>>> 593e2886a (refactor: Grid paste code)
 			let fieldnames = [];
 			// for raw data with column header
 			if (this.get_field(data[0][0])) {
@@ -52,6 +62,7 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 			}
 
 			let row_idx = locals[doctype][row_docname].idx;
+<<<<<<< HEAD
 			let data_length = data.length;
 			data.forEach((row, i) => {
 				setTimeout(() => {
@@ -76,6 +87,15 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 							let progress = i + 1;
 							frappe.show_progress(__('Processing'), progress, data_length, null, true);
 						}
+=======
+			data.forEach((row, i) => {
+				let blank_row = !row.filter(Boolean).length;
+				if (blank_row) return;
+
+				setTimeout(() => {
+					if (row_idx > this.frm.doc[table_field].length) {
+						this.grid.add_new_row();
+>>>>>>> 593e2886a (refactor: Grid paste code)
 					}
 <<<<<<< HEAD
 				}, 0);
@@ -83,18 +103,52 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 					if (row_idx > 1 && (row_idx - 1) % grid_pagination.page_length === 0) {
 						grid_pagination.go_to_page(grid_pagination.page_index + 1);
 					}
-					var cur_row = cur_grid_rows[row_idx - 1];
-					row_idx ++;
-					var row_name = cur_row.doc.name;
-					$.each(row, function(ci, value) {
-						if (fieldnames[ci]) frappe.model.set_value(cur_doctype, row_name, fieldnames[ci], value);
+
+					const row_name = grid_rows[row_idx - 1].doc.name;
+					row.forEach((value, data_index) => {
+						if (fieldnames[data_index]) {
+							frappe.model.set_value(doctype, row_name, fieldnames[data_index], value);
+						}
 					});
+<<<<<<< HEAD
 					frappe.show_progress(__('Processing'), i, data.length);
 				}
 >>>>>>> 66bee92db (fix: copy paste rows more than 50 (one page))
+=======
+					row_idx++;
+
+					let progress = i + 1;
+					frappe.show_progress(__('Processing'), progress, data.length);
+					if (progress === data.length) {
+						frappe.hide_progress();
+					}
+				}, 0);
+>>>>>>> 593e2886a (refactor: Grid paste code)
 			});
 			return false; // Prevent the default handler from running.
 		});
+	},
+	get_field(field_name) {
+		let fieldname;
+		this.grid.meta.fields.some(field => {
+			if (frappe.model.no_value_type.includes(field.fieldtype)) {
+				return false;
+			}
+
+			field_name = field_name.toLowerCase();
+			const is_field_matching = field_name => {
+				return (
+					field.fieldname.toLowerCase() === field_name ||
+					(field.label || '').toLowerCase() === field_name
+				);
+			};
+
+			if (is_field_matching()) {
+				fieldname = field.fieldname;
+				return true;
+			}
+		});
+		return fieldname;
 	},
 	refresh_input: function() {
 		this.grid.refresh();
