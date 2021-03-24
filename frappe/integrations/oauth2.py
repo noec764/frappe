@@ -101,9 +101,9 @@ def authorize(**kwargs):
 @frappe.whitelist(allow_guest=True)
 def get_token(*args, **kwargs):
 	#Check whether frappe server URL is set
-	frappe_server_url = frappe.db.get_value("Social Login Key", "frappe", "base_url") or None
+	frappe_server_url = frappe.db.get_value("Social Login Key", "dodock", "base_url") or None
 	if not frappe_server_url:
-		frappe.throw(_("Please set Base URL in Social Login Key for Frappe"))
+		frappe.throw(_("Please set Base URL in Social Login Key for Dodock"))
 
 	try:
 		r = frappe.request
