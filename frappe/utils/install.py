@@ -225,24 +225,6 @@ def add_standard_navbar_items():
 
 	standard_help_items = [
 		{
-			'item_label': 'Documentation',
-			'item_type': 'Route',
-			'route': 'https://doc.dokos.io',
-			'is_standard': 1
-		},
-		{
-			'item_label': 'Community',
-			'item_type': 'Route',
-			'route': 'https://community.dokos.io',
-			'is_standard': 1
-		},
-		{
-			'item_label': 'Report an issue',
-			'item_type': 'Route',
-			'route': 'https://gitlab.com/dokos/dokos/issues',
-			'is_standard': 1
-		},
-		{
 			'item_label': 'About',
 			'item_type': 'Action',
 			'action': 'frappe.ui.toolbar.show_about()',
