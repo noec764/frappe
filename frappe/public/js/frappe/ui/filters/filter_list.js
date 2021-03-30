@@ -282,6 +282,7 @@ frappe.ui.FilterGroup = class {
 	}
 
 	get_filter_area_template() {
+		/* eslint-disable indent */
 		return $(`
 			<div class="filter-area">
 				<div class="filter-edit-area">
@@ -298,13 +299,17 @@ frappe.ui.FilterGroup = class {
 						<button class="btn btn-secondary-dark btn-xs clear-filters">
 							${__('Clear Filters')}
 						</button>
-						<button class="btn btn-primary btn-xs apply-filters">
-							${__('Apply Filters')}
-						</button>
+						${this.filter_button ?
+							`<button class="btn btn-primary btn-xs apply-filters">
+								${__('Apply Filters')}
+							</button>`
+							: ''
+						}
 					</div>
 				</div>
 			</div>`
 		);
+		/* eslint-disable indent */
 	}
 
 	get_filters_as_object() {

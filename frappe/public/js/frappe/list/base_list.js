@@ -181,7 +181,7 @@ frappe.views.BaseList = class BaseList {
 			'Gantt': 'gantt',
 			'Kanban': 'kanban',
 			'Dashboard': 'dashboard',
-			'Map': 'map-view'
+			'Map': 'map',
 		};
 
 		if (frappe.boot.desk_settings.view_switcher) {
@@ -286,6 +286,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_filter_area() {
+		if (this.hide_filters) return;
 		this.filter_area = new FilterArea(this);
 
 		if (this.filters && this.filters.length > 0) {
@@ -294,6 +295,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_sort_selector() {
+		if (this.hide_sort_selector) return;
 		this.sort_selector = new frappe.ui.SortSelector({
 			parent: this.$filter_section,
 			doctype: this.doctype,
@@ -432,7 +434,7 @@ frappe.views.BaseList = class BaseList {
 			fields: this.get_fields(),
 			filters: this.get_filters_for_args(),
 			or_filters: this.get_or_filters_for_args(),
-			order_by: this.sort_selector.get_sql_string(),
+			order_by: this.sort_selector && this.sort_selector.get_sql_string(),
 			start: this.start,
 			page_length: this.page_length,
 			view: this.view,
@@ -848,7 +850,7 @@ frappe.views.view_modes = [
 	"Image",
 	"Inbox",
 	"Tree",
-	"Map"
+	"Map",
 ];
 frappe.views.is_valid = (view_mode) =>
 	frappe.views.view_modes.includes(view_mode);
