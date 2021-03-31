@@ -2,17 +2,18 @@
 # MIT License. See license.txt
 
 from __future__ import unicode_literals
+
+from werkzeug.wrappers import Response
+
 import frappe
-from frappe import _
 import frappe.utils
 import frappe.sessions
-import frappe.desk.form.run_method
-from frappe.utils.response import build_response
-from frappe.api import validate_auth
 from frappe.utils import cint
+from frappe.api import validate_auth
+from frappe import _, is_whitelisted
+from frappe.utils.response import build_response
+from frappe.utils.csvutils import build_csv_response
 from frappe.core.doctype.server_script.server_script_utils import run_server_script_api
-from werkzeug.wrappers import Response
-from six import string_types
 
 ALLOWED_MIMETYPES = ('image/png', 'image/jpeg', 'application/pdf', 'application/msword',
 			'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -63,8 +64,9 @@ def execute_cmd(cmd, from_async=False):
 	if from_async:
 		method = method.queue
 
-	is_whitelisted(method)
-	is_valid_http_method(method)
+	if method != run_doc_method:
+		is_whitelisted(method)
+		is_valid_http_method(method)
 
 	return frappe.call(method, **frappe.form_dict)
 

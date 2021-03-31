@@ -33,6 +33,7 @@ class DataImport(Document):
 			# validate template
 			self.get_importer()
 
+	@frappe.whitelist()
 	def validate_google_sheets_url(self):
 		if not self.google_sheets_url:
 			return
