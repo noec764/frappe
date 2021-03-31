@@ -100,16 +100,11 @@ frappe.db = {
 
 		const fields = [];
 
-		return frappe.call({
-			type: 'GET',
-			method: 'frappe.desk.reportview.get_count',
-			args: {
-				doctype,
-				filters,
-				fields,
-			}
-		}).then(r => {
-			return r.message.values;
+		return frappe.xcall('frappe.desk.reportview.get_count', {
+			doctype,
+			filters,
+			fields,
+			distinct,
 		});
 	},
 	get_link_options(doctype, txt = '', filters={}) {
