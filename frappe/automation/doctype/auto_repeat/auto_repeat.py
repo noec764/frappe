@@ -278,13 +278,14 @@ class AutoRepeat(Document):
 
 	def get_auto_repeat_schedule(self):
 		schedule = AutoRepeatScheduler(self).get_schedule()
+
 		logs = frappe.get_all("Auto Repeat Log",
 			filters={"auto_repeat": self.name, },
 			fields=["transaction_date", "generated_docname", "generated_doctype"],
 			order_by="transaction_date DESC",
 			limit=10
 		)
-		max_log = max([getdate(x.transaction_date) for x in logs]) if logs else nowdate()
+		max_log = max([getdate(x.transaction_date) for x in logs]) if logs else getdate(nowdate())
 
 		for log in logs:
 			if not frappe.db.exists(log.generated_doctype, log.generated_docname):
@@ -292,7 +293,7 @@ class AutoRepeat(Document):
 
 		return sorted(
 			[dict(link=frappe.utils.get_link_to_form(x.generated_doctype, x.generated_docname) if x.generated_doctype != "File deleted" else _("File deleted"), **x) for x in logs] \
-			+ [dict(transaction_date=x) for x in schedule if getdate(x) > getdate(max_log)][:5],
+			+ [dict(transaction_date=x) for x in list(schedule) if getdate(x) > getdate(max_log)][:5],
 			key=lambda x:getdate(x["transaction_date"]),
 			reverse=True)
 
@@ -429,7 +430,7 @@ class AutoRepeatScheduler:
 	def get_schedule(self):
 		self.schedule = [self.auto_repeat.start_date]
 
-		scheduled_date = self.auto_repeat.start_date
+		scheduled_date = getdate(self.auto_repeat.start_date)
 		while getdate(scheduled_date) <= ((self.auto_repeat.end_date and getdate(self.auto_repeat.end_date)) or add_years(getdate(nowdate()), 2)):
 			yield scheduled_date
 			scheduled_date = self.get_next_date(scheduled_date)
@@ -441,7 +442,7 @@ class AutoRepeatScheduler:
 		if self.auto_repeat.frequency == "Monthly" and self.auto_repeat.repeat_on_last_day:
 			return get_last_day(add_months(getdate(current_date), 1))
 		elif self.auto_repeat.frequency in ["Monthly", "Quarterly", "Half-yearly", "Yearly"] and cint(self.auto_repeat.repeat_on_day) > 0:
-			return add_days(get_first_day(add_months(getdate(current_date), 1)), cint(self.auto_repeat.repeat_on_day) - 1)
+			return add_days(get_first_day(self.frequency_map.get(self.auto_repeat.frequency)(current_date)), cint(self.auto_repeat.repeat_on_day) - 1)
 		else:
 			return self.frequency_map.get(self.auto_repeat.frequency)(current_date)
 
