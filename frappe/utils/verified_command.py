@@ -58,9 +58,9 @@ def get_signature(params, nonce, secret=None):
 	if not secret:
 		secret = frappe.local.conf.get("secret") or "secret"
 
-	signature = hmac.new(str(nonce), digestmod=hashlib.md5)
-	signature.update(secret)
-	signature.update(params)
+	signature = hmac.new(frappe.safe_encode(str(nonce)), digestmod=hashlib.md5)
+	signature.update(secret.encode())
+	signature.update(params.encode())
 	return signature.hexdigest()
 
 def verify_using_doc(doc, signature, cmd):
