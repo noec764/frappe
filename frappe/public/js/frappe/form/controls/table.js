@@ -24,26 +24,17 @@ frappe.ui.form.ControlTable = frappe.ui.form.Control.extend({
 			const grid_rows = grid.grid_rows;
 			const doctype = grid.doctype;
 			const row_docname = $(e.target).closest('.grid-row').data('name');
-<<<<<<< HEAD
 			const in_grid_form = $(e.target).closest('.form-in-grid').length;
-=======
->>>>>>> 593e2886a (refactor: Grid paste code)
 
 			let clipboard_data = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
 			let pasted_data = clipboard_data.getData('Text');
 
-<<<<<<< HEAD
 			if (!pasted_data || in_grid_form) return;
 
 			let data = frappe.utils.csv_to_array(pasted_data, '\t');
 
 			if (data.length === 1 && data[0].length === 1) return;
 
-=======
-			if (!pasted_data) return;
-
-			let data = frappe.utils.csv_to_array(pasted_data, '\t');
->>>>>>> 593e2886a (refactor: Grid paste code)
 			let fieldnames = [];
 			// for raw data with column header
 			if (this.get_field(data[0][0])) {
