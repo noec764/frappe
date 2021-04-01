@@ -1714,12 +1714,16 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	expand_all_rows() {
 		this.$tree_footer.find('[data-action=expand_all_rows]').hide();
+		this.datatable.bodyScrollable.style.removeProperty('height');
 		this.datatable.rowmanager.expandAllNodes();
+		this.datatable.bodyScrollable.style.removeProperty('height');
+		this.datatable.bodyScrollable.style.height = Math.max(this.data.length, 40) + "vw";
 		this.$tree_footer.find('[data-action=collapse_all_rows]').show();
 	}
 
 	collapse_all_rows() {
 		this.$tree_footer.find('[data-action=collapse_all_rows]').hide();
+		this.datatable.bodyScrollable.style.removeProperty('height');
 		this.datatable.rowmanager.collapseAllNodes();
 		this.$tree_footer.find('[data-action=expand_all_rows]').show();
 	}
