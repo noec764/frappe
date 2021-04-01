@@ -322,7 +322,7 @@ frappe.ui.form.Layout = Class.extend({
 				fieldobj.doctype = me.doc.doctype;
 				fieldobj.docname = me.doc.name;
 				fieldobj.df = frappe.meta.get_docfield(me.doc.doctype,
-					fieldobj.df.fieldname, me.frm ? me.frm.doc.name : me.doc.name) || fieldobj.df;
+					fieldobj.df.fieldname, me.doc.name) || fieldobj.df;
 
 				// on form change, permissions can change
 				if(me.frm) {
@@ -514,10 +514,10 @@ frappe.ui.form.Layout = Class.extend({
 		if (form_obj) {
 			if (this.doc && this.doc.parent) {
 				form_obj.setting_dependency = true;
-				form_obj.set_df_property(this.doc.parentfield, property, value, this.doc.parent, fieldname);
+				form_obj.set_df_property(this.doc.parentfield, property, value, this.doc.parent, fieldname, this.doc.name);
+				form_obj.setting_dependency = false;
 				// refresh child fields
 				this.fields_dict[fieldname] && this.fields_dict[fieldname].refresh();
-				form_obj.setting_dependency = false;
 			} else {
 				form_obj.set_df_property(fieldname, property, value);
 			}
