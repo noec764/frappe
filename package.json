@@ -1,5 +1,5 @@
 {
-  "name": "frappe",
+  "name": "dodock",
   "scripts": {
     "build": "node rollup/build.js",
     "analyze": "node rollup/analyze.js",
