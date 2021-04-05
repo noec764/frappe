@@ -5,7 +5,7 @@ export default class GridRow {
 		this.on_grid_fields_dict = {};
 		this.on_grid_fields = [];
 		$.extend(this, opts);
-		if (this.doc) {
+		if (this.doc && this.parent_df.options) {
 			this.docfields = frappe.meta.get_docfields(this.parent_df.options, this.doc.name);
 		}
 		this.columns = {};
