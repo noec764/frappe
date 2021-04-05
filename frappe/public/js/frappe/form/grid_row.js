@@ -255,6 +255,7 @@ export default class GridRow {
 		this.grid.visible_columns.forEach((col, ci) => {
 			// to get update df for the row
 			let df = this.docfields.find(field => field.fieldname === col[0].fieldname);
+
 			let colsize = col[1];
 			let txt = this.doc ?
 				frappe.format(this.doc[df.fieldname], df, null, this.doc) :
