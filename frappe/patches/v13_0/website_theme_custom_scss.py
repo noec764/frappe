@@ -1,9 +1,9 @@
 import frappe
 
 def execute():
-	frappe.reload_doctype('Website Theme')
 	frappe.reload_doc('website', 'doctype', 'Website Theme Ignore App')
 	frappe.reload_doc('website', 'doctype', 'color')
+	frappe.reload_doctype('Website Theme')
 
 	for theme in frappe.get_all('Website Theme'):
 		doc = frappe.get_doc('Website Theme', theme.name)
