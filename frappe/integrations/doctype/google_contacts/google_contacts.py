@@ -132,7 +132,7 @@ def sync(g_contact=None):
 	google_contacts = frappe.get_list("Google Contacts", filters=filters)
 
 	for g in google_contacts:
-		return sync_contacts_from_google_contacts(g.name)
+		sync_contacts_from_google_contacts(g.name)
 
 def sync_contacts_from_google_contacts(g_contact):
 	"""
