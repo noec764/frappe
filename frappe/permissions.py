@@ -7,7 +7,7 @@ import frappe, copy, json
 from frappe import _, msgprint
 from frappe.utils import cint
 import frappe.share
-rights = ("read", "write", "create", "delete", "submit", "cancel", "amend",
+rights = ("select", "read", "write", "create", "delete", "submit", "cancel", "amend",
 	"print", "email", "report", "import", "export", "set_user_permissions", "share")
 
 # TODO:
@@ -61,7 +61,9 @@ def has_permission(doctype, ptype="read", doc=None, verbose=False, user=None, ra
 		if isinstance(doc, string_types):
 			doc = frappe.get_doc(meta.name, doc)
 		perm = get_doc_permissions(doc, user=user, ptype=ptype).get(ptype)
-		if not perm: push_perm_check_log(_('User {0} does not have access to this document').format(frappe.bold(user)))
+
+		if not perm:
+			push_perm_check_log(_('User {0} does not have access to this document').format(frappe.bold(user)))
 	else:
 		if ptype=="submit" and not cint(meta.is_submittable):
 			push_perm_check_log(_("Document Type is not submittable"))
@@ -195,9 +197,9 @@ def get_role_permissions(doctype_meta, user=None):
 				and ptype != 'create'):
 				perms['if_owner'][ptype] = 1
 				# has no access if not owner
-				# only provide read access so that user is able to at-least access list
+				# only provide select or read access so that user is able to at-least access list
 				# (and the documents will be filtered based on owner sin further checks)
-				perms[ptype] = 1 if ptype == 'read' else 0
+				perms[ptype] = 1 if ptype in ['select', 'read'] else 0
 
 		frappe.local.role_permissions[cache_key] = perms
 
@@ -310,7 +312,7 @@ def has_controller_permissions(doc, ptype, user=None):
 	return None
 
 def get_doctypes_with_read():
-	return list(set([p.parent for p in get_valid_perms()]))
+	return list(set([p.parent if type(p.parent) == str else p.parent.encode('UTF8') for p in get_valid_perms()]))
 
 def get_valid_perms(doctype=None, user=None):
 	'''Get valid permissions for the current user from DocPerm and Custom DocPerm'''
@@ -364,6 +366,11 @@ def get_roles(user=None, with_standard=True):
 
 	return roles
 
+def get_doctype_roles(doctype, access_type="read"):
+	"""Returns a list of roles that are allowed to access passed doctype."""
+	meta = frappe.get_meta(doctype)
+	return [d.role for d in meta.get("permissions") if d.get(access_type)]
+
 def get_perms_for(roles, perm_doctype='DocPerm'):
 	'''Get perms for given roles'''
 	filters = {
@@ -400,7 +407,8 @@ def set_user_permission_if_allowed(doctype, name, user, with_message=False):
 	if get_role_permissions(frappe.get_meta(doctype), user).set_user_permissions!=1:
 		add_user_permission(doctype, name, user)
 
-def add_user_permission(doctype, name, user, ignore_permissions=False, applicable_for=None, is_default=0):
+def add_user_permission(doctype, name, user, ignore_permissions=False, applicable_for=None,
+	is_default=0, hide_descendants=0):
 	'''Add user permission'''
 	from frappe.core.doctype.user_permission.user_permission import user_permission_exists
 
@@ -415,6 +423,7 @@ def add_user_permission(doctype, name, user, ignore_permissions=False, applicabl
 			for_value=name,
 			is_default=is_default,
 			applicable_for=applicable_for,
+			hide_descendants=hide_descendants,
 		)).insert(ignore_permissions=ignore_permissions)
 
 def remove_user_permission(doctype, name, user):

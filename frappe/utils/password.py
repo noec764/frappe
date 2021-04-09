@@ -10,6 +10,8 @@ from cryptography.fernet import Fernet, InvalidToken
 from passlib.hash import pbkdf2_sha256, mysql41
 from passlib.registry import register_crypt_handler
 from passlib.context import CryptContext
+from pymysql.constants.ER import DATA_TOO_LONG
+from psycopg2.errorcodes import STRING_DATA_RIGHT_TRUNCATION
 
 class LegacyPassword(pbkdf2_sha256):
 	name = "frappe_legacy"
@@ -49,13 +51,25 @@ def get_decrypted_password(doctype, name, fieldname='password', raise_exception=
 		frappe.throw(_('Password not found'), frappe.AuthenticationError)
 
 def set_encrypted_password(doctype, name, pwd, fieldname='password'):
-	frappe.db.sql("""insert into `__Auth` (doctype, name, fieldname, `password`, encrypted)
-		values (%(doctype)s, %(name)s, %(fieldname)s, %(pwd)s, 1)
-		{on_duplicate_update} `password`=%(pwd)s, encrypted=1""".format(
-			on_duplicate_update=frappe.db.get_on_duplicate_update(['doctype', 'name', 'fieldname'])
-		), { 'doctype': doctype, 'name': name, 'fieldname': fieldname, 'pwd': encrypt(pwd) })
+	try:
+		frappe.db.sql("""insert into `__Auth` (doctype, name, fieldname, `password`, encrypted)
+			values (%(doctype)s, %(name)s, %(fieldname)s, %(pwd)s, 1)
+			{on_duplicate_update} `password`=%(pwd)s, encrypted=1""".format(
+				on_duplicate_update=frappe.db.get_on_duplicate_update(['doctype', 'name', 'fieldname'])
+			), { 'doctype': doctype, 'name': name, 'fieldname': fieldname, 'pwd': encrypt(pwd) })
+	except frappe.db.DataError as e:
+		if ((frappe.db.db_type == 'mariadb' and e.args[0] == DATA_TOO_LONG) or
+			(frappe.db.db_type == 'postgres' and e.pgcode == STRING_DATA_RIGHT_TRUNCATION)):
+			frappe.throw(_("Most probably your password is too long."), exc=e)
+		raise e
 
-def check_password(user, pwd, doctype='User', fieldname='password'):
+def remove_encrypted_password(doctype, name, fieldname='password'):
+	frappe.db.sql(
+		'DELETE FROM `__Auth` WHERE doctype = %s and name = %s and fieldname = %s',
+		values=[doctype, name, fieldname]
+	)
+
+def check_password(user, pwd, doctype='User', fieldname='password', delete_tracker_cache=True):
 	'''Checks if user and password are correct, else raises frappe.AuthenticationError'''
 
 	auth = frappe.db.sql("""select `name`, `password` from `__Auth`
@@ -67,7 +81,11 @@ def check_password(user, pwd, doctype='User', fieldname='password'):
 
 	# lettercase agnostic
 	user = auth[0].name
-	delete_login_failed_cache(user)
+
+	# TODO: This need to be deleted after checking side effects of it.
+	# We have a `LoginAttemptTracker` that can take care of tracking related cache.
+	if delete_tracker_cache:
+		delete_login_failed_cache(user)
 
 	if not passlibctx.needs_update(auth[0].password):
 		update_password(user, pwd, doctype, fieldname)
@@ -131,10 +149,6 @@ def create_auth_table():
 	frappe.db.create_auth_table()
 
 def encrypt(pwd):
-	if len(pwd) > 100:
-		# encrypting > 100 chars will lead to truncation
-		frappe.throw(_('Password cannot be more than 100 characters long'))
-
 	cipher_suite = Fernet(encode(get_encryption_key()))
 	cipher_text = cstr(cipher_suite.encrypt(encode(pwd)))
 	return cipher_text
@@ -157,3 +171,6 @@ def get_encryption_key():
 		frappe.local.conf.encryption_key = encryption_key
 
 	return frappe.local.conf.encryption_key
+
+def get_password_reset_limit():
+	return frappe.db.get_single_value("System Settings", "password_reset_limit") or 0

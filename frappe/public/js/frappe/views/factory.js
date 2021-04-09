@@ -13,7 +13,7 @@ frappe.views.Factory = class Factory {
 		var page_name = frappe.get_route_str(),
 			me = this;
 
-		if(frappe.pages[page_name] && !page_name.includes("Form/")) {
+		if (frappe.pages[page_name]) {
 			frappe.container.change_to(page_name);
 			if(me.on_show) {
 				me.on_show();
@@ -23,7 +23,7 @@ frappe.views.Factory = class Factory {
 			if(route[1]) {
 				me.make(route);
 			} else {
-				frappe.show_not_found(route);
+				frappe.show_not_found();
 			}
 		}
 	}

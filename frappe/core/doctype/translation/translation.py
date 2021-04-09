@@ -10,14 +10,17 @@ from frappe.utils import strip_html_tags, is_html
 
 class Translation(Document):
 	def validate(self):
-		if is_html(self.source_name):
+		if is_html(self.source_text):
 			self.remove_html_from_source()
 
 	def remove_html_from_source(self):
-		self.source_name = strip_html_tags(self.source_name).strip()
+		self.source_text = strip_html_tags(self.source_text).strip()
 
 	def on_update(self):
-		clear_cache()
+		clear_user_translation_cache(self.language)
 
 	def on_trash(self):
-		clear_cache()
+		clear_user_translation_cache(self.language)
+
+def clear_user_translation_cache(lang):
+	frappe.cache().hdel('lang_user_translations', lang)

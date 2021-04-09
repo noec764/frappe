@@ -82,6 +82,7 @@ class AutoEmailReport(Document):
 		if self.format == 'HTML':
 			columns, data = make_links(columns, data)
 
+			columns = update_field_types(columns)
 			return self.get_html_table(columns, data)
 
 		elif self.format == 'XLSX':
@@ -217,7 +218,10 @@ def send_daily():
 			if auto_email_report.day_of_week != current_day:
 				continue
 
-		auto_email_report.send()
+		try:
+			auto_email_report.send()
+		except Exception as e:
+			frappe.log_error(e, _('Failed to send {0} Auto Email Report').format(auto_email_report.name))
 
 
 def send_monthly():
@@ -234,5 +238,14 @@ def make_links(columns, data):
 			elif col.fieldtype == "Dynamic Link":
 				if col.options and row.get(col.fieldname) and row.get(col.options):
 					row[col.fieldname] = get_link_to_form(row[col.options], row[col.fieldname])
+			elif col.fieldtype == "Currency":
+				row[col.fieldname] = frappe.format_value(row[col.fieldname], col)
 
 	return columns, data
+
+def update_field_types(columns):
+	for col in columns:
+		if col.fieldtype in  ("Link", "Dynamic Link", "Currency")  and col.options != "Currency":
+			col.fieldtype = "Data"
+			col.options = ""
+	return columns

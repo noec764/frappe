@@ -1,17 +1,23 @@
 import frappe
 from datetime import datetime
+from frappe.utils import getdate
 
 @frappe.whitelist()
 def get_energy_points_heatmap_data(user, date):
+	try:
+		date = getdate(date)
+	except Exception:
+		date = getdate()
+
 	return dict(frappe.db.sql("""select unix_timestamp(date(creation)), sum(points)
 		from `tabEnergy Point Log`
 		where
 			date(creation) > subdate('{date}', interval 1 year) and
 			date(creation) < subdate('{date}', interval -1 year) and
-			user = '{user}' and
+			user = %s and
 			type != 'Review'
 		group by date(creation)
-		order by creation asc""".format(user = user, date = date)))
+		order by creation asc""".format(date = date), user))
 
 
 @frappe.whitelist()
@@ -48,8 +54,8 @@ def get_user_rank(user):
 		as_list = True)
 
 	return {
-	   'monthly_rank': [i+1 for i, r in enumerate(monthly_rank) if r[0] == user],
-	   'all_time_rank': [i+1 for i, r in enumerate(all_time_rank) if r[0] == user]
+	'monthly_rank': [i+1 for i, r in enumerate(monthly_rank) if r[0] == user],
+	'all_time_rank': [i+1 for i, r in enumerate(all_time_rank) if r[0] == user]
 	}
 
 
@@ -69,10 +75,10 @@ def update_profile_info(profile_info):
 
 @frappe.whitelist()
 def get_energy_points_list(start, limit, user):
-	return frappe.db.get_list('Energy Point Log',\
-		filters = {'user': user, 'type': ['!=', 'Review']},\
-		fields = ['name','user', 'points', 'reference_doctype', 'reference_name', 'reason',\
-			'type', 'seen', 'rule', 'owner', 'creation', 'revert_of'],\
-		start = start,\
-		limit = limit,\
+	return frappe.db.get_list('Energy Point Log',
+		filters = {'user': user, 'type': ['!=', 'Review']},
+		fields = ['name','user', 'points', 'reference_doctype', 'reference_name', 'reason',
+			'type', 'seen', 'rule', 'owner', 'creation', 'revert_of'],
+		start = start,
+		limit = limit,
 		order_by = 'creation desc')

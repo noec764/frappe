@@ -29,6 +29,8 @@ def get_transitions(doc, workflow = None, raise_exception=False):
 	if doc.is_new():
 		return []
 
+	doc.load_from_db()
+
 	frappe.has_permission(doc, 'read', throw=True)
 	roles = frappe.get_roles()
 
@@ -45,19 +47,31 @@ def get_transitions(doc, workflow = None, raise_exception=False):
 	transitions = []
 	for transition in workflow.transitions:
 		if transition.state == current_state and transition.allowed in roles:
-			if transition.condition:
-				# if condition, evaluate
-				# access to frappe.db.get_value and frappe.db.get_list
-				success = frappe.safe_eval(transition.condition,
-					dict(frappe = frappe._dict(
-						db = frappe._dict(get_value = frappe.db.get_value, get_list=frappe.db.get_list),
-						session = frappe.session
-					)),
-					dict(doc = doc))
-				if not success:
-					continue
+			if not is_transition_condition_satisfied(transition, doc):
+				continue
 			transitions.append(transition.as_dict())
 	return transitions
+
+def get_workflow_safe_globals():
+	# access to frappe.db.get_value, frappe.db.get_list, and date time utils.
+	return dict(
+		frappe=frappe._dict(
+			db=frappe._dict(get_value=frappe.db.get_value, get_list=frappe.db.get_list),
+			session=frappe.session,
+			utils=frappe._dict(
+				now_datetime=frappe.utils.now_datetime,
+				add_to_date=frappe.utils.add_to_date,
+				get_datetime=frappe.utils.get_datetime,
+				now=frappe.utils.now
+			)
+		)
+	)
+
+def is_transition_condition_satisfied(transition, doc):
+	if not transition.condition:
+		return True
+	else:
+		return frappe.safe_eval(transition.condition, get_workflow_safe_globals(), dict(doc=doc.as_dict()))
 
 @frappe.whitelist()
 def apply_workflow(doc, action):
@@ -107,8 +121,7 @@ def apply_workflow(doc, action):
 
 @frappe.whitelist()
 def can_cancel_document(doc):
-	doc = frappe.get_doc(frappe.parse_json(doc))
-	workflow = get_workflow(doc.doctype)
+	workflow = get_workflow(doctype)
 	for state_doc in workflow.states:
 		if state_doc.doc_status == '2':
 			for transition in workflow.transitions:
@@ -185,7 +198,7 @@ def bulk_workflow_approval(docnames, doctype, action):
 	from collections import defaultdict
 
 	# dictionaries for logging
-	errored_transactions = defaultdict(list)
+	failed_transactions = defaultdict(list)
 	successful_transactions = defaultdict(list)
 
 	# WARN: message log is cleared
@@ -194,35 +207,45 @@ def bulk_workflow_approval(docnames, doctype, action):
 
 	docnames = json.loads(docnames)
 	for (idx, docname) in enumerate(docnames, 1):
+		message_dict = {}
 		try:
 			show_progress(docnames, _('Applying: {0}').format(action), idx, docname)
 			apply_workflow(frappe.get_doc(doctype, docname), action)
 			frappe.db.commit()
-		except frappe.ValidationError:
-			frappe.log_error(frappe.get_traceback(), "Workflow {0} threw an error for {1} {2}".format(action, doctype, docname))
+		except Exception as e:
+			if not frappe.message_log:
+				# Exception is  raised manually and not from msgprint or throw
+				message = "{0}".format(e.__class__.__name__)
+				if e.args:
+					message +=  " : {0}".format(e.args[0])
+				message_dict = {"docname": docname, "message": message}
+				failed_transactions[docname].append(message_dict)
+
 			frappe.db.rollback()
+			frappe.log_error(frappe.get_traceback(), "Workflow {0} threw an error for {1} {2}".format(action, doctype, docname))
 		finally:
-			if frappe.message_log:
-				messages = frappe.get_message_log()
-				for message in messages:
-					frappe.message_log.pop()
-					message_dict = {"docname": docname, "message": message.get("message")}
+			if not message_dict:
+				if frappe.message_log:
+					messages = frappe.get_message_log()
+					for message in messages:
+						frappe.message_log.pop()
+						message_dict = {"docname": docname, "message": message.get("message")}
 
-					if message.get("raise_exception", False):
-						errored_transactions[docname].append(message_dict)
-					else:
-						successful_transactions[docname].append(message_dict)
-			else:
-				successful_transactions[docname].append({"docname": docname, "message": None})
+						if message.get("raise_exception", False):
+							failed_transactions[docname].append(message_dict)
+						else:
+							successful_transactions[docname].append(message_dict)
+				else:
+					successful_transactions[docname].append({"docname": docname, "message": None})
 
-	if errored_transactions and successful_transactions:
+	if failed_transactions and successful_transactions:
 		indicator = "orange"
-	elif errored_transactions:
+	elif failed_transactions:
 		indicator  = "red"
 	else:
 		indicator = "green"
 
-	print_workflow_log(errored_transactions, _("Errored Transactions"), doctype, indicator)
+	print_workflow_log(failed_transactions, _("Failed Transactions"), doctype, indicator)
 	print_workflow_log(successful_transactions, _("Successful Transactions"), doctype, indicator)
 
 def print_workflow_log(messages, title, doctype, indicator):
@@ -240,7 +263,7 @@ def print_workflow_log(messages, title, doctype, indicator):
 				html = "<div>{0}</div>".format(doc)
 			msg += html
 
-		frappe.msgprint(msg, title=_("Workflow Status"), indicator=indicator)
+		frappe.msgprint(msg, title=_("Workflow Status"), indicator=indicator, is_minimizable=True)
 
 @frappe.whitelist()
 def get_common_transition_actions(docs, doctype):
@@ -253,9 +276,11 @@ def get_common_transition_actions(docs, doctype):
 				doc['doctype'] = doctype
 			actions = [t.get('action') for t in get_transitions(doc, raise_exception=True) \
 				if has_approval_access(frappe.session.user, doc, t)]
-			if not actions: return []
+			if not actions:
+				return []
 			common_actions = actions if i == 1 else set(common_actions).intersection(actions)
-			if not common_actions: return []
+			if not common_actions:
+				return []
 	except WorkflowStateError:
 		pass
 
@@ -280,6 +305,7 @@ def set_workflow_state_on_action(doc, workflow_name, action):
 			return
 
 	action_map = {
+		'update_after_submit': '1',
 		'submit': '1',
 		'cancel': '2'
 	}

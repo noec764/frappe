@@ -20,7 +20,7 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 					<div class="control-input-wrapper">\
 						<div class="control-input"></div>\
 						<div class="control-value like-disabled-input" style="display: none;"></div>\
-						<p class="help-box small text-muted hidden-xs"></p>\
+						<p class="help-box small text-muted"></p>\
 					</div>\
 				</div>\
 			</div>').appendTo(this.parent);
@@ -127,24 +127,6 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 		this.disp_area && $(this.disp_area).html(display_value);
 	},
 
-	bind_change_event: function() {
-		var me = this;
-		this.$input && this.$input.on("change", this.change || function(e) {
-			me.parse_validate_and_set_in_model(me.get_input_value(), e);
-		});
-	},
-	bind_focusout: function() {
-		// on touchscreen devices, scroll to top
-		// so that static navbar and page head don't overlap the input
-		if (frappe.dom.is_touchscreen()) {
-			var me = this;
-			this.$input && this.$input.on("focusout", function() {
-				if (frappe.dom.is_touchscreen()) {
-					frappe.utils.scroll_to(me.$wrapper);
-				}
-			});
-		}
-	},
 	set_label: function(label) {
 		if(label) this.df.label = label;
 
@@ -153,7 +135,7 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 
 		var icon = "";
 		this.label_span.innerHTML = (icon ? '<i class="'+icon+'"></i> ' : "") +
-			__(this.df.label)  || "&nbsp;";
+			__(this.df.label, null, this.df.parent)  || "&nbsp;";
 		this._label = this.df.label;
 	},
 	set_description: function(description) {
@@ -177,7 +159,20 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 		this.$wrapper.find(".help-box").html("");
 	},
 	set_mandatory: function(value) {
-		this.$wrapper.toggleClass("has-error", (this.df.reqd && is_null(value)) ? true : false);
+		this.$wrapper.toggleClass("has-error", Boolean(this.df.reqd && is_null(value)));
+	},
+	set_invalid: function () {
+		let invalid = !!this.df.invalid;
+		if (this.grid) {
+			this.$wrapper.parents('.grid-static-col').toggleClass('invalid', invalid);
+			this.$input.toggleClass('invalid', invalid);
+			this.grid_row.columns[this.df.fieldname].is_invalid = invalid;
+		} else {
+			this.$wrapper.toggleClass('has-error', invalid);
+		}
+	},
+	set_required() {
+		this.label_area && $(this.label_area).toggleClass('reqd', Boolean(this.df.reqd));
 	},
 	set_bold: function() {
 		if(this.$input) {

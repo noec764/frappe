@@ -76,6 +76,12 @@ def get_notifications_for_doctypes(config, notification_count):
 
 	return open_count_doctype
 
+@frappe.whitelist()
+@frappe.read_only()
+def get_notification_for_doctype(doctype):
+	if doctype in get_notification_config().for_doctype:
+		return get_notifications_for_doctypes(frappe._dict(for_doctype={doctype: get_notification_config().for_doctype.get(doctype, {})}), {}).get(doctype)
+
 def get_notifications_for_targets(config, notification_percent):
 	"""Notifications for doc targets"""
 	can_read = frappe.get_user().get_can_read()
@@ -213,7 +219,10 @@ def get_notification_config():
 def get_filters_for(doctype):
 	'''get open filters for doctype'''
 	config = get_notification_config()
-	return config.get("for_doctype").get(doctype, {})
+	doctype_config = config.get("for_doctype").get(doctype, {})
+	filters = doctype_config if not isinstance(doctype_config, string_types) else None
+
+	return filters
 
 @frappe.whitelist()
 @frappe.read_only()
@@ -250,7 +259,7 @@ def get_open_count(doctype, name, items=[]):
 			continue
 
 		filters = get_filters_for(d)
-		fieldname = links.get("non_standard_fieldnames", {}).get(d, links.fieldname)
+		fieldname = links.get("non_standard_fieldnames", {}).get(d, links.get('fieldname'))
 		data = {"name": d}
 		if filters:
 			# get the fieldname for the current document
@@ -269,8 +278,9 @@ def get_open_count(doctype, name, items=[]):
 		"count": out,
 	}
 
-	module = frappe.get_meta_module(doctype)
-	if hasattr(module, "get_timeline_data"):
-		out["timeline_data"] = module.get_timeline_data(doctype, name)
+	if not meta.custom:
+		module = frappe.get_meta_module(doctype)
+		if hasattr(module, "get_timeline_data"):
+			out["timeline_data"] = module.get_timeline_data(doctype, name)
 
 	return out

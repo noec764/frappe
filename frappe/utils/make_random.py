@@ -29,10 +29,11 @@ def add_random_children(doc, fieldname, rows, randomize, unique=None):
 			doc.append(fieldname, d)
 
 def get_random(doctype, filters=None, doc=False):
+	from frappe.desk.reportview import get_filters_cond
 	condition = []
 	if filters:
-		for key, val in filters.items():
-			condition.append("%s='%s'" % (key, str(val).replace("'", "\'")))
+		get_filters_cond(doctype, filters, condition, ignore_permissions=True)
+
 	if condition:
 		condition = " where " + " and ".join(condition)
 	else:

@@ -13,6 +13,7 @@
  "field_order": [
   "stopped",
   "method",
+  "server_script",
   "frequency",
   "cron_format",
   "last_execution",
@@ -35,7 +36,7 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:doc.queue==='All'",
+   "depends_on": "eval:doc.frequency==='All'",
    "fieldname": "create_log",
    "fieldtype": "Check",
    "label": "Create Log"
@@ -48,7 +49,7 @@
   },
   {
    "allow_in_quick_entry": 1,
-   "depends_on": "eval:doc.queue==='Cron'",
+   "depends_on": "eval:doc.frequency==='Cron'",
    "fieldname": "cron_format",
    "fieldtype": "Data",
    "label": "Cron Format",
@@ -63,6 +64,14 @@
    "options": "All\nHourly\nHourly Long\nDaily\nDaily Long\nWeekly\nWeekly Long\nMonthly\nMonthly Long\nCron\nYearly\nAnnual",
    "read_only": 1,
    "reqd": 1
+  },
+  {
+    "fieldname": "server_script",
+    "fieldtype": "Link",
+    "label": "Server Script",
+    "options": "Server Script",
+    "read_only": 1,
+    "search_index": 1
   }
  ],
  "in_create": 1,
@@ -72,7 +81,7 @@
    "link_fieldname": "scheduled_job_type"
   }
  ],
- "modified": "2019-12-09 11:10:21.259929",
+ "modified": "2020-10-07 10:39:24.519460",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Scheduled Job Type",

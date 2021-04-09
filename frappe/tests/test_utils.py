@@ -7,6 +7,10 @@ import unittest
 from frappe.utils import evaluate_filters, money_in_words, scrub_urls, get_url
 from frappe.utils import ceil, floor
 
+from PIL import Image
+from frappe.utils.image import strip_exif_data
+import io
+
 class TestFilters(unittest.TestCase):
 	def test_simple_dict(self):
 		self.assertTrue(evaluate_filters({'doctype': 'User', 'status': 'Open'}, {'status': 'Open'}))
@@ -39,13 +43,13 @@ class TestFilters(unittest.TestCase):
 class TestMoney(unittest.TestCase):
 	def test_money_in_words(self):
 		nums_bhd = [
-			(5000, "BHD Five Thousand"), (5000.0, "BHD Five Thousand"),
-			(0.1, "One Hundred Fils"), (0, "BHD Zero"), ("Fail", "")
+			(5000, "Five Thousand Bahraini Dinar"), (5000.0, "Five Thousand Bahraini Dinar"),
+			(0.1, "One Hundred Fils"), (0, "Zero Bahraini Dinar"), ("Fail", "")
 		]
 
 		nums_ngn = [
-			(5000, "NGN Five Thousand"), (5000.0, "NGN Five Thousand"),
-			(0.1, "Ten Kobo"), (0, "NGN Zero"), ("Fail", "")
+			(5000, "Five Thousand Naira"), (5000.0, "Five Thousand Naira"),
+			(0.1, "Ten Kobo"), (0, "Zero Naira"), ("Fail", "")
 		]
 
 		for num in nums_bhd:
@@ -122,3 +126,15 @@ class TestHTMLUtils(unittest.TestCase):
 		clean = clean_email_html(sample)
 		self.assertTrue('<h1>Hello</h1>' in clean)
 		self.assertTrue('<a href="http://test.com">text</a>' in clean)
+
+@unittest.skip("Skipped in CI")
+class TestImage(unittest.TestCase):
+	def test_strip_exif_data(self):
+		original_image = Image.open("../apps/frappe/frappe/tests/data/exif_sample_image.jpg")
+		original_image_content = io.open("../apps/frappe/frappe/tests/data/exif_sample_image.jpg", mode='rb').read()
+
+		new_image_content = strip_exif_data(original_image_content, "image/jpeg")
+		new_image = Image.open(io.BytesIO(new_image_content))
+
+		self.assertEqual(new_image._getexif(), None)
+		self.assertNotEqual(original_image._getexif(), new_image._getexif())

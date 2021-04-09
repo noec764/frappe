@@ -7,7 +7,8 @@ import frappe
 from frappe import _
 import datetime
 from frappe.model.document import Document
-from frappe.core.page.dashboard.dashboard import cache_source, get_from_date_from_timespan
+from frappe.utils.dashboard import cache_source
+from frappe.utils.dateutils import get_from_date_from_timespan
 from frappe.utils import nowdate, add_to_date, getdate, get_last_day
 from frappe.desk.doctype.dashboard_chart.dashboard_chart import get_aggregate_function
 
@@ -64,6 +65,7 @@ class DashboardCard(Document):
 	def validate(self):
 		if self.card_type != 'Custom':
 			self.check_required_field()
+		self.check_document_type()
 
 	def check_required_field(self):
 		if not self.card_type=="Custom":
@@ -71,3 +73,7 @@ class DashboardCard(Document):
 				frappe.throw(_("Time series based on is required to create a dashboard card"))
 			if not self.document_type:
 				frappe.throw(_("Document type is required to create a dashboard card"))
+
+	def check_document_type(self):
+		if frappe.get_meta(self.document_type).issingle:
+			frappe.throw(_("You cannot create a dashboard chart from single DocTypes"))

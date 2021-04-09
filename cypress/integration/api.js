@@ -2,12 +2,12 @@ context('API Resources', () => {
 	before(() => {
 		cy.visit('/login');
 		cy.login();
-		cy.visit('/desk');
+		cy.visit('/app/website');
 	});
 
 	it('Creates two Comments', () => {
-		cy.insert_doc('Comment', {comment_type: 'Comment', content: "hello"});
-		cy.insert_doc('Comment', {comment_type: 'Comment', content: "world"});
+		cy.insert_doc('Comment', { comment_type: 'Comment', content: "hello" });
+		cy.insert_doc('Comment', { comment_type: 'Comment', content: "world" });
 	});
 
 	it('Lists the Comments', () => {
@@ -29,6 +29,7 @@ context('API Resources', () => {
 			cy.get_doc('Comment', comment.name);
 		}));
 	});
+
 	it('Removes the Comments', () => {
 		cy.get_list('Comment').then(body => body.data.forEach(comment => {
 			cy.remove_doc('Comment', comment.name);

@@ -21,7 +21,7 @@
 			<td class="danger">{{ item[1] }}</td>
 			<td class="success">{{ item[2] }}</td>
 		</tr>
-		{% endif %}
+		{% endfor %}
 	</tbody>
 </table>
 {% endif %}
@@ -30,7 +30,7 @@
 {% for key in _keys %}
 	{% if data[key] && data[key].length %}
 	{% var title = key==="added" ? __("Rows Added") : __("Rows Removed"); %}
-	<h3>{{ title }}</h3>
+	<h4>{{ title }}</h4>
 	<table class="table table-bordered">
 		<thead>
 			<tr>
@@ -58,7 +58,7 @@
 					</table>
 				</td>
 			</tr>
-			{% endif %}
+			{% endfor %}
 		</tbody>
 	</table>
 

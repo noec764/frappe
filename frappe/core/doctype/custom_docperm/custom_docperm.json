@@ -13,6 +13,7 @@
      "column_break_2",
      "permlevel",
      "section_break_4",
+     "select",
      "read",
      "write",
      "create",
@@ -211,6 +212,12 @@
       "fieldtype": "Data",
       "label": "Reference Document Type",
       "read_only": 1
+     },
+     {
+        "default": "0",
+        "fieldname": "select",
+        "fieldtype": "Check",
+        "label": "Select"
      }
     ],
     "modified": "2019-10-31 16:58:16.157079",

@@ -6,8 +6,11 @@ frappe.ui.form.ControlMarkdownEditor = frappe.ui.form.ControlCode.extend({
 		this.ace_editor_target.wrap(`<div class="${this.editor_class}-container">`);
 		this.markdown_container = this.$input_wrapper.find(`.${this.editor_class}-container`);
 
-		this.showing_preview = false;
-		this.preview_toggle_btn = $(`<button class="btn btn-default btn-xs ${this.editor_class}-toggle">${__('Preview')}</button>`)
+		this.editor.getSession().setUseWrapMode(true);
+
+		if (!this.preview_toggle_btn) {
+			this.showing_preview = false;
+			this.preview_toggle_btn = $(`<button class="btn btn-default btn-xs ${this.editor_class}-toggle">${__('Preview')}</button>`)
 			.click(e => {
 				if (!this.showing_preview) {
 					this.update_preview();
@@ -21,7 +24,8 @@ frappe.ui.form.ControlMarkdownEditor = frappe.ui.form.ControlCode.extend({
 
 				$btn.text(this.showing_preview ? __('Edit') : __('Preview'));
 			});
-		this.markdown_container.prepend(this.preview_toggle_btn);
+			this.markdown_container.prepend(this.preview_toggle_btn);
+		}
 
 		this.markdown_preview = $(`<div class="${this.editor_class}-preview border rounded">`).hide();
 		this.markdown_container.append(this.markdown_preview);
@@ -42,5 +46,9 @@ frappe.ui.form.ControlMarkdownEditor = frappe.ui.form.ControlCode.extend({
 			.then(() => {
 				this.update_preview();
 			});
+	},
+
+	set_disp_area(value) {
+		this.disp_area && $(this.disp_area).text(value);
 	}
 });

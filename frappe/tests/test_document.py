@@ -38,11 +38,13 @@ class TestDocument(unittest.TestCase):
 			"event_type": "Public"
 		})
 		d.insert()
+		frappe.db.commit()
 		self.assertTrue(d.name.startswith("EV"))
 		self.assertEqual(frappe.db.get_value("Event", d.name, "subject"),
 			"test-doc-test-event 1")
 
 		# test if default values are added
+		d.load_from_db()
 		self.assertEqual(d.send_reminder, 1)
 		return d
 
@@ -64,6 +66,13 @@ class TestDocument(unittest.TestCase):
 		d.save()
 
 		self.assertEqual(frappe.db.get_value(d.doctype, d.name, "subject"), "subject changed")
+
+	def test_value_changed(self):
+		d = self.test_insert()
+		d.subject = "subject changed again"
+		d.save()
+		self.assertTrue(d.has_value_changed('subject'))
+		self.assertFalse(d.has_value_changed('event_type'))
 
 	def test_mandatory(self):
 		# TODO: recheck if it is OK to force delete
@@ -180,48 +189,13 @@ class TestDocument(unittest.TestCase):
 
 		# css attributes
 		xss = '<div style="something: doesn\'t work; color: red;">Test</div>'
-		escaped_xss = '<div style="color: red;">Test</div>'
+		escaped_xss = '<div style="">Test</div>'
 		d.subject += xss
 		d.save()
 		d.reload()
 
 		self.assertTrue(xss not in d.subject)
 		self.assertTrue(escaped_xss in d.subject)
-
-	def test_link_count(self):
-		if os.environ.get('CI'):
-			# cannot run this test reliably in travis due to its handling
-			# of parallelism
-			return
-
-		from frappe.model.utils.link_count import update_link_count
-
-		update_link_count()
-
-		doctype, name = 'User', 'test@example.com'
-
-		d = self.test_insert()
-		d.append('event_participants', {"reference_doctype": doctype, "reference_docname": name})
-
-		d.save()
-
-		link_count = frappe.cache().get_value('_link_count') or {}
-		old_count = link_count.get((doctype, name)) or 0
-
-		frappe.db.commit()
-
-		link_count = frappe.cache().get_value('_link_count') or {}
-		new_count = link_count.get((doctype, name)) or 0
-
-		self.assertEqual(old_count + 1, new_count)
-
-		before_update = frappe.db.get_value(doctype, name, 'idx')
-
-		update_link_count()
-
-		after_update = frappe.db.get_value(doctype, name, 'idx')
-
-		self.assertEqual(before_update + new_count, after_update)
 
 	def test_naming_series(self):
 		data = ["TEST-", "TEST/17-18/.test_data./.####", "TEST.YYYY.MM.####"]
@@ -241,43 +215,19 @@ class TestDocument(unittest.TestCase):
 
 			self.assertEqual(cint(old_current) - 1, new_current)
 
-	def test_rename_doc(self):
-		from random import choice, sample
+	def test_non_negative_check(self):
+		frappe.delete_doc_if_exists("Currency", "Frappe Coin", 1)
 
-		available_documents = []
-		doctype = "ToDo"
+		d = frappe.get_doc({
+			'doctype': 'Currency',
+			'currency_name': 'Frappe Coin',
+			'smallest_currency_fraction_value': -1
+		})
 
-		# data generation: 4 todo documents
-		for num in range(1, 5):
-			doc = frappe.get_doc({
-				"doctype": doctype,
-				"date": add_to_date(now(), days=num),
-				"description": "this is todo #{}".format(num)
-			}).insert()
-			available_documents.append(doc.name)
+		self.assertRaises(frappe.NonNegativeError, d.insert)
 
-		# test 1: document renaming
-		old_name = choice(available_documents)
-		new_name = old_name + '.new'
-		self.assertEqual(new_name, frappe.rename_doc(doctype, old_name, new_name, force=True))
-		available_documents.remove(old_name)
-		available_documents.append(new_name)
+		d.set('smallest_currency_fraction_value', 1)
+		d.insert()
+		self.assertEqual(frappe.db.get_value("Currency", d.name), d.name)
 
-		# test 2: merge documents
-		first_todo, second_todo = sample(available_documents, 2)
-
-		second_todo_doc = frappe.get_doc(doctype, second_todo)
-		second_todo_doc.priority = "High"
-		second_todo_doc.save()
-
-		merged_todo = frappe.rename_doc(doctype, first_todo, second_todo, merge=True, force=True)
-		merged_todo_doc = frappe.get_doc(doctype, merged_todo)
-		available_documents.remove(first_todo)
-
-		with self.assertRaises(DoesNotExistError):
-			frappe.get_doc(doctype, first_todo)
-
-		self.assertEqual(merged_todo_doc.priority, second_todo_doc.priority)
-
-		for docname in available_documents:
-			frappe.delete_doc(doctype, docname)
+		frappe.delete_doc_if_exists("Currency", "Frappe Coin", 1)

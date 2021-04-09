@@ -82,6 +82,14 @@ $.extend(frappe.datetime, {
 		return moment(d).add(months, "months").format();
 	},
 
+	week_start: function() {
+		return moment().startOf("week").format();
+	},
+
+	week_end: function() {
+		return moment().endOf("week").format();
+	},
+
 	month_start: function() {
 		return moment().startOf("month").format();
 	},
@@ -224,6 +232,10 @@ $.extend(frappe.datetime, {
 	get_time: (timestamp) => {
 		// return time with AM/PM
 		return moment(timestamp).format('hh:mm A');
+	},
+
+	get_date: (timestamp) => {
+		return moment(timestamp).format("LL");
 	},
 
 	validate: function(d) {

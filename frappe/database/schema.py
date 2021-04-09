@@ -13,7 +13,7 @@ class DBTable:
 	def __init__(self, doctype, meta=None):
 		self.doctype = doctype
 		self.table_name = 'tab{}'.format(doctype)
-		self.meta = meta or frappe.get_meta(doctype)
+		self.meta = meta or frappe.get_meta(doctype, False)
 		self.columns = {}
 		self.current_columns = {}
 
@@ -30,6 +30,9 @@ class DBTable:
 		self.get_columns_from_docfields()
 
 	def sync(self):
+		if self.meta.get('is_virtual'):
+			# no schema to sync for virtual doctypes
+			return
 		if self.is_new():
 			self.create()
 		else:
@@ -65,89 +68,67 @@ class DBTable:
 		"""
 			get columns from docfields and custom fields
 		"""
-		fl = frappe.db.sql("SELECT * FROM `tabDocField` WHERE parent = %s", self.doctype, as_dict = 1)
-		lengths = {}
-		precisions = {}
-		uniques = {}
+		fields = self.meta.get_fieldnames_with_value(True)
 
 		# optional fields like _comments
-		if not self.meta.istable:
+		if not self.meta.get('istable'):
 			for fieldname in frappe.db.OPTIONAL_COLUMNS:
-				fl.append({
+				fields.append({
 					"fieldname": fieldname,
 					"fieldtype": "Text"
 				})
 
 			# add _seen column if track_seen
-			if getattr(self.meta, 'track_seen', False):
-				fl.append({
+			if self.meta.get('track_seen'):
+				fields.append({
 					'fieldname': '_seen',
 					'fieldtype': 'Text'
 				})
 
 			# add _printed column if track_print
-			if getattr(self.meta, 'track_print', False):
-				fl.append({
+			if self.meta.get('track_print'):
+				fields.append({
 					'fieldname': '_printed',
 					'fieldtype': 'Datetime'
 				})
 
-			# add _seal column if is_sealed
-			if getattr(self.meta, 'is_sealed', False):
-				fl.append({
-					'fieldname': '_seal',
+			# add _submitted and _submitted_by columns if is_submittable
+			if self.meta.get('is_submittable'):
+				fields.append({
+					'fieldname': '_submitted',
+					'fieldtype': 'Datetime'
+				})
+				fields.append({
+					'fieldname': '_submitted_by',
 					'fieldtype': 'Data'
 				})
-				fl.append({
-					'fieldname': '_seal_version',
+
+			# add _seal column if is_sealed
+			if self.meta.get('is_sealed'):
+				fields.append({
+					'fieldname': '_seal',
 					'fieldtype': 'Data'
 				})
 
 			# add _draft_name column if name_after_submit
-			if getattr(self.meta, 'name_after_submit', False):
-				fl.append({
+			if self.meta.get('name_after_submit'):
+				fields.append({
 					'fieldname': '_draft_name',
 					'fieldtype': 'Data'
 				})
 
-		if (not frappe.flags.in_install_db
-			and (frappe.flags.in_install != "frappe"
-			or frappe.flags.ignore_in_install)):
-			custom_fl = frappe.db.sql("""
-				SELECT * FROM `tabCustom Field`
-				WHERE dt = %s AND docstatus < 2
-				""", (self.doctype,), as_dict=1)
-			if custom_fl: fl += custom_fl
-
-			# apply length, precision and unique from property setters
-			for ps in frappe.get_all("Property Setter",
-				fields=["field_name", "property", "value"],
-				filters={
-					"doc_type": self.doctype,
-					"doctype_or_field": "DocField",
-					"property": ["in", ["precision", "length", "unique"]]
-				}):
-
-				if ps.property=="length":
-					lengths[ps.field_name] = cint(ps.value)
-
-				elif ps.property=="precision":
-					precisions[ps.field_name] = cint(ps.value)
-
-				elif ps.property=="unique":
-					uniques[ps.field_name] = cint(ps.value)
-
-		for f in fl:
-			self.columns[f['fieldname']] = DbColumn(self,
-				f['fieldname'],
-				f['fieldtype'],
-				lengths.get(f["fieldname"]) or f.get('length'),
-				f.get('default'),
-				f.get('search_index'),
-				f.get('options'),
-				uniques.get(f["fieldname"],
-				f.get('unique')),
-				precisions.get(f['fieldname']) or f.get('precision'))
+		for field in fields:
+			self.columns[field.get('fieldname')] = DbColumn(
+				self,
+				field.get('fieldname'),
+				field.get('fieldtype'),
+				field.get('length'),
+				field.get('default'),
+				field.get('search_index'),
+				field.get('options'),
+				field.get('unique'),
+				field.get('precision')
+			)
 
 	def validate(self):
 		"""Check if change in varchar length isn't truncating the columns"""
@@ -191,16 +172,15 @@ class DBTable:
 						if frappe.db.is_missing_column(e):
 							# Unknown column 'column_name' in 'field list'
 							continue
-						else:
-							raise
+						raise
 
 					if max_length and max_length[0][0] and max_length[0][0] > new_length:
 						if col.fieldname in self.columns:
 							self.columns[col.fieldname].length = current_length
 
-						frappe.msgprint(_("""Reverting length to {0} for '{1}' in '{2}';
-							Setting the length as {3} will cause truncation of data.""")
-							.format(current_length, col.fieldname, self.doctype, new_length))
+						info_message = _("Reverting length to {0} for '{1}' in '{2}'. Setting the length as {3} will cause truncation of data.") \
+							.format(current_length, col.fieldname, self.doctype, new_length)
+						frappe.msgprint(info_message)
 
 	def is_new(self):
 		return self.table_name not in frappe.db.get_tables()
@@ -242,7 +222,7 @@ class DbColumn:
 			column_def += ' not null default {0}'.format(default_value)
 
 		elif self.default and (self.default not in frappe.db.DEFAULT_SHORTCUTS) \
-			and not self.default.startswith(":") and column_def not in ('text', 'longtext'):
+			and not cstr(self.default).startswith(":") and column_def not in ('text', 'longtext'):
 			column_def += " default {}".format(frappe.db.escape(self.default))
 
 		if self.unique and (column_def not in ('text', 'longtext')):

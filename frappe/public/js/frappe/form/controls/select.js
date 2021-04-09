@@ -2,10 +2,39 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 	html_element: 'select',
 	make_input: function() {
 		this._super();
-		this.$wrapper.find('.control-input')
-			.addClass('flex align-center')
-			.append('<i class="octicon octicon-chevron-down text-muted"></i>');
+		const is_xs_input = this.df.input_class
+			&& this.df.input_class.includes('input-xs');
+		this.set_icon(is_xs_input);
+		this.df.placeholder && this.set_placeholder(is_xs_input);
+
+		this.$input.addClass('ellipsis');
 		this.set_options();
+	},
+	set_icon: function(is_xs_input) {
+		const select_icon_html =
+			`<div class="select-icon ${is_xs_input ? 'xs' : ''}">
+				${frappe.utils.icon('select', is_xs_input ? 'xs' : 'sm')}
+			</div>`;
+		if (this.only_input) {
+			this.$wrapper.append(select_icon_html);
+		} else {
+			this.$wrapper.find('.control-input')
+				.addClass('flex align-center')
+				.append(select_icon_html);
+		}
+	},
+	set_placeholder: function(is_xs_input) {
+		const placeholder_html =
+			`<div class="placeholder ellipsis text-extra-muted ${is_xs_input ? 'xs' : ''}">
+				<span>${this.df.placeholder}</span>
+			</div>`;
+		if (this.only_input) {
+			this.$wrapper.append(placeholder_html);
+		} else {
+			this.$wrapper.find('.control-input').append(placeholder_html);
+		}
+		this.toggle_placeholder();
+		this.$input && this.$input.on('select-change', () => this.toggle_placeholder());
 	},
 	set_formatted_input: function(value) {
 		// refresh options first - (new ones??)
@@ -40,10 +69,9 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 			return;
 		}
 		this.last_options = JSON.stringify(options);
-
 		if(this.$input) {
 			var selected = this.$input.find(":selected").val();
-			this.$input.empty().add_options(options || []);
+			this.$input.empty().add_options(options || [], this.df.context || this.doctype);
 
 			if(value===undefined && selected) {
 				this.$input.val(selected);
@@ -64,12 +92,16 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 			this.set_description(__("Please attach a file first."));
 			return [""];
 		}
+	},
+	toggle_placeholder: function() {
+		const input_set = Boolean(this.$input.find('option:selected').text());
+		this.$wrapper.find('.placeholder').toggle(!input_set);
 	}
 });
 
 // add <option> list to <select>
 (function($) {
-	$.fn.add_options = function(options_list) {
+	$.fn.add_options = function(options_list, doctype) {
 		// create options
 		for(var i=0, j=options_list.length; i<j; i++) {
 			var v = options_list[i];
@@ -82,10 +114,10 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 
  				if (is_value_null && is_label_null) {
 					value = v;
-					label = __(v);
+					label = __(v, null, doctype);
 				} else {
 					value = is_value_null ? "" : v.value;
-					label = is_label_null ? __(value) : __(v.label);
+					label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
 				}
 			}
 			$('<option>').html(cstr(label))
@@ -95,6 +127,7 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 		}
 		// select the first option
 		this.selectedIndex = 0;
+		$(this).trigger('select-change');
 		return $(this);
 	};
 	$.fn.set_working = function() {
@@ -102,5 +135,12 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 	};
 	$.fn.done_working = function() {
 		this.prop('disabled', false);
+	};
+
+	let original_val = $.fn.val;
+	$.fn.val = function() {
+		let result = original_val.apply(this, arguments);
+		if (arguments.length > 0) $(this).trigger('select-change');
+		return result;
 	};
 })(jQuery);

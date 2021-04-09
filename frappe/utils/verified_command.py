@@ -2,7 +2,7 @@
 # MIT License. See license.txt
 
 from __future__ import unicode_literals
-import hmac
+import hmac, hashlib
 from six.moves.urllib.parse import urlencode
 from frappe import _
 
@@ -17,7 +17,7 @@ def get_signed_params(params):
 	if not isinstance(params, string_types):
 		params = urlencode(params)
 
-	signature = hmac.new(params.encode())
+	signature = hmac.new(params.encode(), digestmod=hashlib.md5)
 	signature.update(get_secret().encode())
 	return params + "&_signature=" + signature.hexdigest()
 
@@ -35,7 +35,7 @@ def verify_request():
 	if signature_string in query_string:
 		params, signature = query_string.split(signature_string)
 
-		given_signature = hmac.new(params.encode('utf-8'))
+		given_signature = hmac.new(params.encode('utf-8'), digestmod=hashlib.md5)
 
 		given_signature.update(get_secret().encode())
 		valid = signature == given_signature.hexdigest()
@@ -58,9 +58,9 @@ def get_signature(params, nonce, secret=None):
 	if not secret:
 		secret = frappe.local.conf.get("secret") or "secret"
 
-	signature = hmac.new(str(nonce))
-	signature.update(secret)
-	signature.update(params)
+	signature = hmac.new(frappe.safe_encode(str(nonce)), digestmod=hashlib.md5)
+	signature.update(secret.encode())
+	signature.update(params.encode())
 	return signature.hexdigest()
 
 def verify_using_doc(doc, signature, cmd):

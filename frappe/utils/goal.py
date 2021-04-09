@@ -1,5 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe
@@ -56,6 +56,10 @@ def get_monthly_goal_graph_data(title, doctype, docname, goal_value_field, goal_
 
 	from frappe.utils.formatters import format_value
 	import json
+
+	# should have atleast read perm
+	if not frappe.has_permission(goal_doctype):
+		return None
 
 	meta = frappe.get_meta(doctype)
 	doc = frappe.get_doc(doctype, docname)

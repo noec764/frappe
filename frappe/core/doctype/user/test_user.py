@@ -2,7 +2,7 @@
 # MIT License. See license.txt
 from __future__ import unicode_literals
 
-import frappe, unittest
+import frappe, unittest, uuid
 
 from frappe.model.delete_doc import delete_doc
 from frappe.utils.data import today, add_to_date
@@ -10,7 +10,7 @@ from frappe import _dict
 from frappe.limits import update_limits, clear_limit
 from frappe.utils import get_url
 from frappe.core.doctype.user.user import get_total_users
-from frappe.core.doctype.user.user import MaxUsersReachedError, test_password_strength
+from frappe.core.doctype.user.user import test_password_strength
 from frappe.core.doctype.user.user import extract_mentions
 import requests
 
@@ -21,6 +21,8 @@ class TestUser(unittest.TestCase):
 		# disable password strength test
 		frappe.db.set_value("System Settings", "System Settings", "enable_password_policy", 0)
 		frappe.db.set_value("System Settings", "System Settings", "minimum_password_score", "")
+		frappe.db.set_value("System Settings", "System Settings", "password_reset_limit", 3)
+		frappe.set_user('Administrator')
 
 	def test_user_type(self):
 		new_user = frappe.get_doc(dict(doctype='User', email='test-for-type@example.com',
@@ -107,52 +109,18 @@ class TestUser(unittest.TestCase):
 		frappe.set_user("testperm@example.com")
 
 		me = frappe.get_doc("User", "testperm@example.com")
-		self.assertRaises(frappe.PermissionError, me.add_roles, "System Manager")
+		me.add_roles("System Manager")
+
+		# system manager is not added (it is reset)
+		self.assertFalse('System Manager' in [d.role for d in me.roles])
 
 		frappe.set_user("Administrator")
 
 		me = frappe.get_doc("User", "testperm@example.com")
 		me.add_roles("System Manager")
 
+		# system manager now added by Administrator
 		self.assertTrue("System Manager" in [d.role for d in me.get("roles")])
-
-	def test_user_limit_for_site(self):
-		update_limits({'users': get_total_users()})
-
-		# reload site config
-		from frappe import _dict
-		frappe.local.conf = _dict(frappe.get_site_config())
-
-		# Create a new user
-		user = frappe.new_doc('User')
-		user.email = 'test_max_users@example.com'
-		user.first_name = 'Test_max_user'
-
-		self.assertRaises(MaxUsersReachedError, user.add_roles, 'System Manager')
-
-		if frappe.db.exists('User', 'test_max_users@example.com'):
-			delete_contact('test_max_users@example.com')
-			frappe.delete_doc('User', 'test_max_users@example.com')
-
-		# Clear the user limit
-		clear_limit('users')
-
-	def test_user_limit_for_site_with_simultaneous_sessions(self):
-		clear_limit('users')
-
-		# make sure this user counts
-		user = frappe.get_doc('User', 'test@example.com')
-		user.add_roles('Website Manager')
-		user.save()
-
-		update_limits({'users': get_total_users()})
-
-		user.simultaneous_sessions = user.simultaneous_sessions + 1
-
-		self.assertRaises(MaxUsersReachedError, user.save)
-
-		# Clear the user limit
-		clear_limit('users')
 
 	# def test_deny_multiple_sessions(self):
 	#	from frappe.installer import update_site_config
@@ -184,6 +152,7 @@ class TestUser(unittest.TestCase):
 	# 	# first connection should fail
 	# 	test_request(conn1)
 
+	@unittest.skip("Skipped in CI")
 	def test_site_expiry(self):
 		user = frappe.get_doc('User', 'test@example.com')
 		user.enabled = 1
@@ -226,26 +195,6 @@ class TestUser(unittest.TestCase):
 		delete_contact(new_user.name)
 		frappe.delete_doc('User', new_user.name)
 		self.assertFalse(frappe.db.exists('User', new_user.name))
-
-	def test_deactivate_additional_users(self):
-		update_limits({'users': get_total_users()+1})
-
-		if not frappe.db.exists("User", "test_deactivate_additional_users@example.com"):
-			user = frappe.new_doc('User')
-			user.email = 'test_deactivate_additional_users@example.com'
-			user.first_name = 'Test Deactivate Additional Users'
-			user.add_roles("System Manager")
-
-		#update limits
-		update_limits({"users": get_total_users()-1})
-		self.assertEqual(frappe.db.get_value("User", "test_deactivate_additional_users@example.com", "enabled"), 0)
-
-		if frappe.db.exists("User", "test_deactivate_additional_users@example.com"):
-			delete_contact('test_deactivate_additional_users@example.com')
-			frappe.delete_doc('User', 'test_deactivate_additional_users@example.com')
-
-		# Clear the user limit
-		clear_limit('users')
 
 	def test_password_strength(self):
 		# Test Password without Password Strenth Policy
@@ -300,6 +249,48 @@ class TestUser(unittest.TestCase):
 		'''
 		self.assertEqual(extract_mentions(comment)[0], "test_user@example.com")
 		self.assertEqual(extract_mentions(comment)[1], "test.again@example1.com")
+
+	def test_rate_limiting_for_reset_password(self):
+		# Allow only one reset request for a day
+
+		frappe.db.set_value("System Settings", "System Settings", "password_reset_limit", 1)
+		frappe.db.commit()
+
+		url = get_url()
+		data={'cmd': 'frappe.core.doctype.user.user.reset_password', 'user': 'test@test.com'}
+
+		# Clear rate limit tracker to start fresh
+		key = f"rl:{data['cmd']}:{data['user']}"
+		frappe.cache().delete(key)
+
+		c = FrappeClient(url)
+		res1 = c.session.post(url, data=data, verify=c.verify, headers=c.headers)
+		res2 = c.session.post(url, data=data, verify=c.verify, headers=c.headers)
+		self.assertEqual(res1.status_code, 200)
+		self.assertEqual(res2.status_code, 417)
+
+	def test_user_rollback(self):
+		""" """
+		frappe.db.commit()
+		frappe.db.begin()
+		user_id = str(uuid.uuid4())
+		email = f'{user_id}@example.com'
+		try:
+			frappe.flags.in_import = True  # disable throttling
+			frappe.get_doc(dict(
+				doctype='User',
+				email=email,
+				first_name=user_id,
+			)).insert()
+		finally:
+			frappe.flags.in_import = False
+
+		# Check user has been added
+		self.assertIsNotNone(frappe.db.get("User", {"email": email}))
+
+		# Check that rollback works
+		frappe.db.rollback()
+		self.assertIsNone(frappe.db.get("User", {"email": email}))
 
 def delete_contact(user):
 	frappe.db.sql("DELETE FROM `tabContact` WHERE `email_id`= %s", user)

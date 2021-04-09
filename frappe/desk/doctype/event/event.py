@@ -10,17 +10,29 @@ import json
 from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
 	nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime)
 from frappe import _
-from frappe.model.document import Document
+from frappe.website.website_generator import WebsiteGenerator
 from frappe.utils.user import get_enabled_system_users
 from frappe.desk.reportview import get_filters_cond
 from frappe.desk.calendar import process_recurring_events
 from frappe.integrations.doctype.google_calendar.google_calendar import get_google_calendar_object, \
 	format_date_according_to_google_calendar, get_timezone_naive_datetime
+from frappe.www.printview import get_html_and_style
 
 weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 communication_mapping = {"": "Event", "Event": "Event", "Meeting": "Meeting", "Call": "Phone", "Sent/Received Email": "Email", "Other": "Other"}
 
-class Event(Document):
+FIELD_MAP = {
+	"id": "name",
+	"start": "starts_on",
+	"end": "ends_on",
+	"allDay": "all_day",
+	"title": "subject",
+	"description": "description",
+	"route": "route",
+	"published": "published"
+}
+
+class Event(WebsiteGenerator):
 	def validate(self):
 		if not self.starts_on:
 			self.starts_on = now_datetime()
@@ -36,6 +48,18 @@ class Event(Document):
 
 		if self.sync_with_google_calendar and not self.google_calendar:
 			frappe.throw(_("Select Google Calendar to which event should be synced."))
+
+		self.set_route()
+
+	def autoname(self):
+		return
+
+	def get_feed(self):
+		return self.subject
+
+	def set_route(self):
+		if not self.route:
+			self.route = f"events/{self.name}-{frappe.scrub(self.subject[:30])}"
 
 	def before_save(self):
 		if self.google_calendar and not self.google_calendar_id:
@@ -103,6 +127,76 @@ class Event(Document):
 
 		communication.save(ignore_permissions=True)
 
+	def add_participant(self, contact):
+		"""Add a single participant to event participants
+		Args:
+			contact (string): Contact name
+		"""
+		self.append("event_participants", {
+			"contact": contact,
+		})
+
+	def add_participants(self, participants):
+		"""Add participant entry
+		Args:
+			participants ([Array]): Array of contact names
+		"""
+		for participant in participants:
+			self.add_participant(participant)
+
+	def remove_participant(self, participant):
+		participant_list = []
+		for event_participant in self.event_participants:
+			if event_participant != participant:
+				participant_list.append(event_participant)
+
+		self.event_participants = participant_list
+
+	def get_context(self, context):
+		if not cint(self.published):
+			self.show_permission_error()
+
+		if self.visible_for != "All":
+			if frappe.session.user =="Guest":
+				self.show_permission_error()
+			elif self.visible_for == "Role" and self.role not in frappe.get_roles(frappe.session.user):
+				self.show_permission_error()
+
+		is_guest = frappe.session.user == "Guest"
+
+		context.no_cache = 0
+		context.show_sidebar = not is_guest
+		context.show_close_button = not is_guest
+
+		content = f'<p class="card-text">{self.description or ""}</p>'
+		event_style = ""
+		if self.portal_print_format:
+			print_format_content = self.print_format_content()
+			content = print_format_content.get("html")
+			event_style = print_format_content.get("style")
+
+		context.content = content
+		context.event_style = event_style
+
+		fields = []
+		for field in frappe.get_meta("Event Registration").fields:
+			if not (field.fieldname == "amended_from" or field.permlevel > 0):
+				field.label = _(field.label)
+				fields.append(field)
+
+		context.registration_form = frappe.as_json(fields)
+		context.is_registered = frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
+
+		context.attachments = frappe.get_all("File", fields=["name", "file_name", "file_url"],
+			filters = {"attached_to_name": self.name, "attached_to_doctype": "Event", "is_private": 0}) if self.display_public_files else []
+
+	def print_format_content(self):
+		frappe.flags.ignore_print_permissions = True
+		return get_html_and_style(self, print_format=self.portal_print_format)
+
+	def show_permission_error(self):
+		frappe.throw(_("This event is not publicly available"), frappe.PermissionError)
+
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
 	deleted_participant = frappe.get_doc(reference_doctype, reference_docname)
@@ -164,12 +258,16 @@ def send_event_digest():
 			)
 
 @frappe.whitelist()
-def get_events(start, end, user=None, for_reminder=False, filters=None):
+def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None):
 	if not user:
 		user = frappe.session.user
 
 	if isinstance(filters, string_types):
 		filters = json.loads(filters)
+
+	additional_fields = ""
+	if field_map:
+		additional_fields = ", " + ", ".join([f"`tabEvent`.{f}" for f in frappe.parse_json(field_map).values()])
 
 	filter_condition = get_filters_cond('Event', filters, [])
 
@@ -190,6 +288,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 				`tabEvent`.repeat_this_event,
 				`tabEvent`.rrule,
 				`tabEvent`.repeat_till
+				{additional_fields}
 		FROM {tables}
 		WHERE (
 				(
@@ -219,8 +318,8 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 						AND `tabDocShare`.user=%(user)s
 				)
 			)
-		AND `tabEvent`.status='Open'
 		ORDER BY `tabEvent`.starts_on""".format(
+			additional_fields=additional_fields,
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
 			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else ""
@@ -231,10 +330,13 @@ def get_events(start, end, user=None, for_reminder=False, filters=None):
 		}, as_dict=1)
 
 	# process recurring events
-	result = list(events)
+	result = []
 	for event in events:
+		result.append(event)
 		if event.get("repeat_this_event"):
 			result = [x for x in result if x.get("name") != event.get("name")]
+			start = get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
+			end = get_datetime(end).replace(hour=0, minute=0, second=0) if event.get("all_day") else end
 			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
 
 	return result
@@ -330,6 +432,7 @@ def insert_event_in_google_calendar(doc, method=None):
 		frappe.publish_realtime('event_synced', {"message": _("Event Synced with Google Calendar.")}, \
 			user=frappe.session.user)
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(_("Google Calendar - Could not insert event in Google Calendar {0}, error code {1}."\
 			).format(account.name, err.resp.status))
 
@@ -370,6 +473,7 @@ def update_event_in_google_calendar(doc, method=None):
 		frappe.publish_realtime('event_synced', {"message": _("Event Synced with Google Calendar.")}, \
 			user=frappe.session.user)
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(_("Google Calendar - Could not update Event {0} in Google Calendar, error code {1}."\
 			).format(doc.name, err.resp.status))
 
@@ -396,5 +500,20 @@ def delete_event_in_google_calendar(doc, method=None):
 		google_calendar.events().update(calendarId=doc.google_calendar_id, \
 			eventId=doc.google_calendar_event_id, body=event).execute()
 	except HttpError as err:
+		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(_("Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}."\
 			).format(doc.name, err.resp.status))
+
+@frappe.whitelist(allow_guest=True)
+def get_prepared_events(start, end):
+	events = get_events(start, end, field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"})
+	roles = frappe.get_roles(frappe.session.user)
+
+	for event in events:
+		if event.get("published") and (event.get("visible_for") == "All" or (event.get("visible_for") == "Role" and event.get("role") in roles)):
+			for field in FIELD_MAP:
+				event.update({
+					field: event.get(FIELD_MAP[field])
+				})
+
+	return events

@@ -23,12 +23,12 @@ frappe.ui.form.on("Event", {
 	},
 	repeat_this_event: function(frm) {
 		if(frm.doc.repeat_this_event === 1) {
-			new frappe.CalendarRecurrence(frm, true);
+			new frappe.CalendarRecurrence({frm: frm, show: true});
 		}
 	},
 	add_repeat_text(frm) {
 		if (frm.doc.rrule) {
-			new frappe.CalendarRecurrence(frm, false);
+			new frappe.CalendarRecurrence({frm: frm, show: false});
 		}
 	},
 	sync_with_google_calendar(frm) {

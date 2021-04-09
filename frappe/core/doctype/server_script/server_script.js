@@ -2,7 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Server Script', {
-	// refresh: function(frm) {
-
-	// }
+	refresh: function(frm) {
+		if (frm.doc.script_type != 'Scheduler Event') {
+			frm.dashboard.hide();
+		}
+	}
 });

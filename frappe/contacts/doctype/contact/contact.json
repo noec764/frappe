@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_events_in_timeline": 1,
  "allow_import": 1,
  "allow_rename": 1,
@@ -16,7 +17,6 @@
   "address",
   "sync_with_google_contacts",
   "cb00",
-  "status",
   "salutation",
   "designation",
   "gender",
@@ -33,8 +33,8 @@
   "email_ids",
   "phone_nos",
   "contact_details",
-  "is_primary_contact",
   "links",
+  "is_primary_contact",
   "more_info",
   "department",
   "unsubscribed"
@@ -87,15 +87,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "default": "Passive",
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Status",
-   "options": "Passive\nOpen\nReplied"
-  },
-  {
    "fieldname": "salutation",
    "fieldtype": "Link",
    "label": "Salutation",
@@ -115,6 +106,7 @@
    "label": "Phone",
    "oldfieldname": "contact_no",
    "oldfieldtype": "Data",
+   "options": "Phone",
    "read_only": 1
   },
   {
@@ -200,6 +192,7 @@
    "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Mobile No",
+   "options": "Phone",
    "read_only": 1
   },
   {
@@ -245,7 +238,15 @@
  "icon": "fa fa-user",
  "idx": 1,
  "image_field": "image",
- "modified": "2019-10-09 17:48:26.790985",
+ "index_web_pages_for_search": 1,
+ "links": [
+  {
+   "group": "Events",
+   "link_doctype": "Event Registration",
+   "link_fieldname": "contact"
+  }
+ ],
+ "modified": "2020-11-20 18:12:46.584771",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Contact",

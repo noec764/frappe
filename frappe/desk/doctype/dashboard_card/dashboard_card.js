@@ -7,6 +7,13 @@ frappe.ui.form.on('Dashboard Card', {
 	refresh: function(frm) {
 		frm.card_filters = null;
 		frm.set_df_property("filters_section", "hidden", 1);
+		frm.set_query('document_type', function() {
+			return {
+				filters: {
+					'issingle': false
+				}
+			}
+		});
 		frm.trigger('update_options');
 	},
 	source(frm) {
@@ -122,7 +129,7 @@ frappe.ui.form.on('Dashboard Card', {
 		var filters_set = false;
 		fields.map( f => {
 			if (filters[f.fieldname]) {
-				const filter_row = $(`<tr><td>${f.label}</td><td>${filters[f.fieldname] || ""}</td></tr>`);
+				const filter_row = $(`<tr><td>${__(f.label)}</td><td>${__(filters[f.fieldname]) || ""}</td></tr>`);
 				table.find('tbody').append(filter_row);
 				filters_set = true;
 			}
@@ -146,7 +153,7 @@ frappe.ui.form.on('Dashboard Card', {
 						frm.trigger('show_filters');
 					}
 				},
-				primary_action_label: "Set"
+				primary_action_label: __("Set")
 			});
 			dialog.show();
 			dialog.set_values(filters);

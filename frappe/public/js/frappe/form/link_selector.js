@@ -88,8 +88,8 @@ frappe.ui.form.LinkSelector = Class.extend({
 						<div class="col-xs-8">\
 							<span class="text-muted">%(values)s</span></div>\
 						</div>', {
-							name: v[0],
-							values: v.splice(1).join(", ")
+							name: __(v[0]),
+							values: v.splice(1).map(v => __(v)).join(", ")
 						})).appendTo(parent);
 
 					row.find("a")
@@ -152,7 +152,13 @@ frappe.ui.form.LinkSelector = Class.extend({
 							d = me.target.add_new_row();
 						},
 						() => frappe.timeout(0.1),
-						() => frappe.model.set_value(d.doctype, d.name, me.fieldname, value),
+						() => {
+							let args = {};
+							args[me.fieldname] = value;
+							args[me.qty_fieldname] = data.qty;
+
+							return frappe.model.set_value(d.doctype, d.name, args);
+						},
 						() => frappe.timeout(0.5),
 						() => frappe.model.set_value(d.doctype, d.name, me.qty_fieldname, data.qty),
 						() => frappe.show_alert(__("Added {0} ({1})", [value, data.qty]))

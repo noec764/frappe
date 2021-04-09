@@ -1,6 +1,6 @@
 frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 	make_input: function() {
-		var me = this;
+		let me = this;
 		this.$input = $('<button class="btn btn-default btn-sm btn-attach">')
 			.html(__("Attach"))
 			.prependTo(me.input_area)
@@ -13,6 +13,7 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 					<i class="uil uil-paperclip"></i>
 					<a class="attached-file-link" target="_blank"></a>
 				</div>
+				${this.get_preview_section()}
 				<div>
 					<a class="btn btn-xs btn-default" data-action="reload_attachment">${__('Reload File')}</a>
 					<a class="btn btn-xs btn-default" data-action="clear_attachment">${__('Clear')}</a>
@@ -26,9 +27,17 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 
 		frappe.utils.bind_actions_with_object(this.$value, this);
 		this.toggle_reload_button();
+
+	},
+	get_preview_section: function() {
+		return `<div class="file-preview">
+			<div class="file-icon border rounded">
+				<img class="attached-file-preview" style="object-fit: cover;"></img>
+			</div>
+		</div>`
 	},
 	clear_attachment: function() {
-		var me = this;
+		let me = this;
 		if(this.frm) {
 			me.parse_validate_and_set_in_model(null);
 			me.refresh();
@@ -66,6 +75,7 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 		if (this.frm) {
 			options.doctype = this.frm.doctype;
 			options.docname = this.frm.docname;
+			options.fieldname = this.df.fieldname;
 		}
 
 		if (this.df.options) {
@@ -78,18 +88,32 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 	set_input: function(value, dataurl) {
 		this.value = value;
 		if(this.value) {
-			this.$input.toggle(false);
-			if(this.value.indexOf(",")!==-1) {
-				var parts = this.value.split(",");
-				var filename = parts[0];
-				dataurl = parts[1];
+			this.$input&&this.$input.toggle(false);
+			// value can also be using this format: FILENAME,DATA_URL
+			// Important: We have to be careful because normal filenames may also contain ","
+			let file_url_parts = this.value.match(/^([^:]+),(.+):(.+)$/);
+			let filename;
+			if (file_url_parts) {
+				filename = file_url_parts[1];
+				dataurl = file_url_parts[2] + ':' + file_url_parts[3];
 			}
-			this.$value.toggle(true).find(".attached-file-link")
+			this.$value&&this.$value.toggle(true).find(".attached-file-link")
 				.html(filename || this.value)
 				.attr("href", dataurl || this.value);
 		} else {
 			this.$input.toggle(true);
 			this.$value.toggle(false);
+		}
+
+		if (this.value) {
+			if (this.$value) {
+				this.$value.find(".attached-file-preview")
+					.attr("src", dataurl || this.value).attr("alt", filename || this.value);
+			} else if (!this.disabled_preview_section) {
+				this.disabled_preview_section = this.$wrapper.find(".control-input-wrapper").append(this.get_preview_section())
+				this.disabled_preview_section.find(".attached-file-preview")
+					.attr("src", dataurl || this.value).attr("alt", filename || this.value);
+			}
 		}
 	},
 

@@ -50,6 +50,7 @@ def create_contact(name, salutation, emails=None, phones=None, save=True):
 			doc.add_phone(d.get("phone"), d.get("is_primary_phone"), d.get("is_primary_mobile_no"))
 
 	if save:
+		doc.flags.ignore_permissions = True
 		doc.insert()
 
 	return doc

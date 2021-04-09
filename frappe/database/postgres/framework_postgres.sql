@@ -63,6 +63,9 @@ CREATE TABLE "tabDocField" (
   "precision" varchar(255) DEFAULT NULL,
   "length" bigint NOT NULL DEFAULT 0,
   "translatable" smallint NOT NULL DEFAULT 0,
+  "hide_border" smallint NOT NULL DEFAULT 0,
+  "hide_days" smallint NOT NULL DEFAULT 0,
+  "hide_seconds" smallint NOT NULL DEFAULT 0,
   PRIMARY KEY ("name")
 ) ;
 
@@ -127,7 +130,7 @@ CREATE TABLE "tabDocType Action" (
   "label" varchar(140) NOT NULL,
   "group" varchar(140) DEFAULT NULL,
   "action_type" varchar(140) NOT NULL,
-  "action" varchar(140) NOT NULL,
+  "action" text NOT NULL,
   PRIMARY KEY ("name")
 ) ;
 
@@ -221,6 +224,9 @@ CREATE TABLE "tabDocType" (
   "allow_guest_to_view" smallint NOT NULL DEFAULT 0,
   "route" varchar(255) DEFAULT NULL,
   "is_published_field" varchar(255) DEFAULT NULL,
+  "email_append_to" smallint NOT NULL DEFAULT 0,
+  "subject_field" varchar(255) DEFAULT NULL,
+  "sender_field" varchar(255) DEFAULT NULL,
   PRIMARY KEY ("name")
 ) ;
 
@@ -274,7 +280,7 @@ CREATE TABLE "__Auth" (
 	"doctype" VARCHAR(140) NOT NULL,
 	"name" VARCHAR(255) NOT NULL,
 	"fieldname" VARCHAR(140) NOT NULL,
-	"password" VARCHAR(255) NOT NULL,
+	"password" TEXT NOT NULL,
 	"encrypted" int NOT NULL DEFAULT 0,
 	PRIMARY KEY ("doctype", "name", "fieldname")
 );

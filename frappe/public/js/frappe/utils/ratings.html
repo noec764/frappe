@@ -1,8 +1,0 @@
-<div>
-{% if label && data.show_label %}
-	{{ __("{0}: ", label) }}
-{% endif %}
-{% for(var i=1, l=6; i<l; i++) { %}
-	<i class="fa-fw fa-star {{ i<=rating? "far": "fas" }} star-icon" data-idx=1></i>
-{% } %}
-</div>

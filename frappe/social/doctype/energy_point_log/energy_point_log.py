@@ -9,6 +9,8 @@ import json
 from frappe.model.document import Document
 from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification,\
 	get_title, get_title_html
+from frappe.desk.doctype.notification_settings.notification_settings\
+	import is_email_notifications_enabled_for_type, is_email_notifications_enabled
 from frappe.utils import cint, get_fullname, getdate, get_link_to_form
 
 class EnergyPointLog(Document):
@@ -50,8 +52,11 @@ class EnergyPointLog(Document):
 			reference_log.reverted = 0
 			reference_log.save()
 
-	def revert(self, reason):
-		frappe.only_for('System Manager')
+	@frappe.whitelist()
+	def revert(self, reason, ignore_permissions=False):
+		if not ignore_permissions:
+			frappe.only_for('System Manager')
+
 		if self.type != 'Auto':
 			frappe.throw(_('This document cannot be reverted'))
 
@@ -300,6 +305,10 @@ def send_summary(timespan):
 
 	if not is_energy_point_enabled():
 		return
+
+	if not is_email_notifications_enabled_for_type(frappe.session.user, 'Energy Point'):
+		return
+
 	from_date = frappe.utils.add_to_date(None, weeks=-1)
 	if timespan == 'Monthly':
 		from_date = frappe.utils.add_to_date(None, months=-1)
@@ -311,22 +320,24 @@ def send_summary(timespan):
 
 	from_date = getdate(from_date)
 	to_date = getdate()
-	settings = {x["name"]: x["energy_points_summary"] for x in frappe.get_all("User", \
-		filters={"user_type": "System User", "enabled": 1}, fields=["name", "energy_points_summary"])}
-	all_users = [user for user in get_enabled_system_users() if settings.get(user["name"]) == 1]
+
+	# select only those users that have energy point email notifications enabled
+	all_users = [user.email for user in get_enabled_system_users() if
+		is_email_notifications_enabled_for_type(user.name, 'Energy Point')]
 
 	for user in all_users:
 		frappe.set_user_lang(user.name)
 		frappe.sendmail(
-				subject=_('{} energy points summary').format(_(timespan)),
-				recipients=user.email,
-				template="energy_points_summary",
-				args={
+				subject = _('{} energy points summary').format(_(timespan)),
+				recipients = user.email,
+				template = "energy_points_summary",
+				args = {
 					'top_performer': user_points[0],
 					'top_reviewer': max(user_points, key=lambda x:x['given_points']),
 					'standings': user_points[:10], # top 10
 					'footer_message': get_footer_message(timespan).format(from_date, to_date)
-				}
+				},
+				with_container = 1
 			)
 
 	frappe.set_user_lang(frappe.session.user)

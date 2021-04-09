@@ -21,7 +21,10 @@
 {% endblock %}
 
 {% macro container_attributes() %}
-data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-required="{{ frappe.utils.cint(login_required and frappe.session.user=='Guest') }}" data-is-list="{{ frappe.utils.cint(is_list) }}" data-allow-delete="{{ allow_delete }}"
+data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}"
+	data-login-required="{{ frappe.utils.cint(login_required and frappe.session.user=='Guest') }}"
+	data-is-list="{{ frappe.utils.cint(is_list) }}" data-allow-delete="{{ allow_delete }}"
+	data-allow-edit="{{ allow_edit }}"
 {% endmacro %}
 
 {% block page_content %}
@@ -30,15 +33,14 @@ data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-req
 	{# web form list #}
 	<div class="web-form-wrapper" {{ container_attributes() }}></div>
 	<div id="list-filters" class="row"></div>
-	<div id="datatable" class="pt-3"></div>
+	<div id="datatable" class="pt-4"></div>
 	<div class="list-view-footer text-right"></div>
 	{% else %}
 	{# web form #}
-	<div role="form">
-		<div id="introduction" class="text-muted"></div>
-		<hr>
+	<div role="form" id="web-form">
+		<div id="introduction"></div>
 		<div class="web-form-wrapper" {{ container_attributes() }}></div>
-		<div class="web-form-footer pull-right"></div>
+		<div class="web-form-footer text-right"></div>
 	</div>
 
 	{% if show_attachments and not frappe.form_dict.new and attachments %}
@@ -62,7 +64,7 @@ data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}" data-login-req
 	{% endif %} {# attachments #}
 
 	{% if allow_comments and not frappe.form_dict.new and not is_list -%}
-	<div class="comments">
+	<div class="comments mt-6">
 		<h3>{{ _("Comments") }}</h3>
 		{% include 'templates/includes/comments/comments.html' %}
 	</div>
@@ -78,6 +80,7 @@ frappe.boot = {
 	sysdefaults: {
 		float_precision: parseInt("{{ frappe.get_system_settings('float_precision') or 3 }}"),
 		date_format: "{{ frappe.get_system_settings('date_format') or 'yyyy-mm-dd' }}",
+		time_format: "{{ frappe.get_system_settings('time_format') or 'HH:mm' }}",
 	}
 };
 // for backward compatibility of some libs
@@ -88,6 +91,7 @@ $(".file-size").each(function() {
 });
 </script>
 <script type="text/javascript" src="/assets/js/control.min.js"></script>
+{% include "public/icons/timeless/symbol-defs.svg" %}
 {% if is_list %}
 {# web form list #}
 <script type="text/javascript" src="/assets/js/moment-bundle.min.js"></script>

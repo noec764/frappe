@@ -6,15 +6,15 @@
 {% macro main_content() %}
 <div class="page-content-wrapper">
 	<!-- breadcrumbs -->
-	<div class="page-breadcrumbs">
+	<div class="page-breadcrumbs container">
 		{% block breadcrumbs %}
-		{% include 'templates/includes/breadcrumbs.html' %}
+			{% include 'templates/includes/breadcrumbs.html' %}
 		{% endblock %}
 	</div>
 
 	{% block page_container %}
-	<main class="container my-5">
-		<div class="d-flex justify-content-between align-items-center">
+	<main class="{% if not full_width %}container{% endif %}">
+		<div class="d-flex justify-content-between align-items-center page-header-section">
 			<div class="page-header">
 				{% block header %}{% endblock %}
 			</div>
@@ -38,21 +38,33 @@
 </div>
 {% endmacro %}
 
-{% macro container_attributes() %}
-id="page-{{ name or route | e }}" data-path="{{ pathname | e }}" {%- if page_or_generator=="Generator" %}source-type="Generator" data-doctype="{{ doctype }}"{% endif %}
+{% macro container_attributes() -%}
+id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
+{%- if page_or_generator=="Generator" %}source-type="Generator" data-doctype="{{ doctype }}"{%- endif %}
+{%- if source_content_type %}source-content-type="{{ source_content_type }}"{%- endif %}
+{%- endmacro %}
+
+{% macro sidebar() %}
+<div class="sidebar-column col-md-{{ columns }}">
+	{% block page_sidebar %}
+	{% include "templates/includes/web_sidebar.html" %}
+	{% endblock %}
+</div>
 {% endmacro %}
 
 {% if show_sidebar %}
 <div class="container-fluid">
 	<div class="row" {{ container_attributes() }} style="min-height: 65vh;">
-			<div class="pt-4 col-sm-3 col-md-2 sidebar-column d-none d-sm-block bg-light">
-				{% block page_sidebar %}
-				{% include "templates/includes/web_sidebar.html" %}
-				{% endblock %}
-			</div>
-		<div class="col-sm-9 col-md-10 main-column">
+		{%- set columns = sidebar_columns or 2 -%}
+		{%- if not sidebar_right -%}
+		{{ sidebar() }}
+		{%- endif -%}
+		<div class="main-column col-12 col-md-{{ 12 - columns }}">
 			{{ main_content() }}
 		</div>
+		{%- if sidebar_right -%}
+		{{ sidebar() }}
+		{%- endif -%}
 	</div>
 </div>
 {% else %}
@@ -60,4 +72,5 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}" {%- if page_or_
 	{{ main_content() }}
 </div>
 {% endif %}
+
 {% endblock %}

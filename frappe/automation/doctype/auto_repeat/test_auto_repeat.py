@@ -30,8 +30,8 @@ class TestAutoRepeat(unittest.TestCase):
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test recurring todo', assigned_by='Administrator')).insert()
 
-		doc = make_auto_repeat(reference_document=todo.name, start_date=today())
-		self.assertEqual(doc.next_schedule_date, getdate(today()))
+		doc = make_auto_repeat(reference_document=todo.name, start_date=getdate(today()))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(today()))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 		frappe.db.commit()
@@ -47,7 +47,7 @@ class TestAutoRepeat(unittest.TestCase):
 		self.assertEqual(todo.get('description'), new_todo.get('description'))
 
 	def test_monthly_auto_repeat(self):
-		start_date = today()
+		start_date = add_months(today(), -3)
 		end_date = add_months(start_date, 12)
 
 		todo = frappe.get_doc(
@@ -103,19 +103,43 @@ class TestAutoRepeat(unittest.TestCase):
 	def test_next_schedule_date(self):
 		current_date = getdate(today())
 		todo = frappe.get_doc(
-			dict(doctype='ToDo', description='test next schedule date todo', assigned_by='Administrator')).insert()
+			dict(doctype='ToDo', description='test next schedule date for monthly', assigned_by='Administrator')).insert()
 		doc = make_auto_repeat(frequency='Monthly',	reference_document=todo.name, start_date=add_months(today(), -2))
 
 		#check next_schedule_date
-		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), -2)))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(today(), -2)))
 		data = get_auto_repeat_entries(current_date)
 		create_repeated_entries(data)
 		docnames = frappe.get_all(doc.reference_doctype, filters={'auto_repeat': doc.name})
 
 		#the original doc + the repeated doc
-		self.assertEqual(len(docnames), 3)
+		self.assertEqual(len(docnames), 4)
 		doc.load_from_db()
-		self.assertEqual(doc.next_schedule_date, getdate(add_months(today(), 1)))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(today(), 1)))
+
+		todo = frappe.get_doc(
+			dict(doctype='ToDo', description='test next schedule date for daily', assigned_by='Administrator')).insert()
+		doc = make_auto_repeat(frequency='Daily', reference_document=todo.name, start_date=add_days(today(), -1))
+		self.assertEqual(getdate(doc.next_schedule_date), add_days(current_date, -1))
+
+	def test_submit_after_creation(self):
+		doctype = 'Test Submittable DocType'
+		create_submittable_doctype(doctype)
+
+		current_date = getdate()
+		submittable_doc = frappe.get_doc(dict(doctype=doctype, test='test submit on creation')).insert()
+		submittable_doc.submit()
+		doc = make_auto_repeat(frequency='Daily', reference_doctype=doctype, reference_document=submittable_doc.name,
+			start_date=add_days(current_date, -1), submit_after_creation=1)
+
+		data = get_auto_repeat_entries(current_date)
+		create_repeated_entries(data)
+		docnames = frappe.db.get_all(doc.reference_doctype,
+			filters={'auto_repeat': doc.name},
+			fields=['docstatus'],
+			limit=1
+		)
+		self.assertEquals(docnames[0].docstatus, 1)
 
 
 def make_auto_repeat(**args):
@@ -124,6 +148,7 @@ def make_auto_repeat(**args):
 		'doctype': 'Auto Repeat',
 		'reference_doctype': args.reference_doctype or 'ToDo',
 		'reference_document': args.reference_document or frappe.db.get_value('ToDo', 'name'),
+		'submit_after_creation': args.submit_after_creation or 0,
 		'frequency': args.frequency or 'Daily',
 		'start_date': args.start_date or add_days(today(), -1),
 		'end_date': args.end_date or "",
@@ -134,3 +159,33 @@ def make_auto_repeat(**args):
 	}).insert(ignore_permissions=True)
 
 	return doc
+
+def create_submittable_doctype(doctype):
+	if frappe.db.exists('DocType', doctype):
+		return
+	else:
+		doc = frappe.get_doc({
+			'doctype': 'DocType',
+			'__newname': doctype,
+			'module': 'Custom',
+			'custom': 1,
+			'is_submittable': 1,
+			'fields': [{
+				'fieldname': 'test',
+				'label': 'Test',
+				'fieldtype': 'Data'
+			}],
+			'permissions': [{
+				'role': 'System Manager',
+				'read': 1,
+				'write': 1,
+				'create': 1,
+				'delete': 1,
+				'submit': 1,
+				'cancel': 1,
+				'amend': 1
+			}]
+		}).insert()
+
+		doc.allow_auto_repeat = 1
+		doc.save()

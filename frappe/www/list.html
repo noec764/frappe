@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header %}
-	<h1>{{ title or (_("{0} List").format(_(doctype))) }}</h1>
+	<h2>{{ title or (_("{0} List").format(_(doctype))) }}</h2>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -19,6 +19,8 @@
 		{{ _("New") }}
 	</a>
 </div>
+{% elif header_action %}
+	{{ header_action }}
 {% endif %}
 {% endblock %}
 

@@ -79,7 +79,7 @@ class Domain(Document):
 		'''Load domain info via hooks'''
 		self.data = frappe.get_domain_data(self.name)
 
-	def get_domain_data(self, module):
+	def get_domain_data(self):
 		return frappe.get_attr(frappe.get_hooks('domains')[self.name] + '.data')
 
 	def set_default_portal_role(self):

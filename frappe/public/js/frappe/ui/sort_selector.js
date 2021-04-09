@@ -23,21 +23,22 @@ frappe.ui.SortSelector = Class.extend({
 
 		// order
 		this.wrapper.find('.btn-order').on('click', function() {
-			var btn = $(this);
-			var order = $(this).attr('data-value')==='desc' ? 'asc' : 'desc';
+			let btn = $(this);
+			const order = $(this).attr('data-value') === 'desc' ? 'asc' : 'desc';
+			const title = $(this).attr('data-value' )=== 'desc' ? 'ascending' : 'descending';
 
 			btn.attr('data-value', order);
+			btn.attr('title', title);
 			me.sort_order = order;
-			btn.find('.octicon')
-				.removeClass('octicon-arrow-' + (order==='asc' ? 'down' : 'up'))
-				.addClass('octicon-arrow-' + (order==='desc' ? 'down' : 'up'));
+			const icon_name = order === 'asc'? 'sort-ascending' : 'sort-descending';
+			btn.find('.sort-order').html(frappe.utils.icon(icon_name, 'sm'));
 			(me.onchange || me.change)(me.sort_by, me.sort_order);
 		});
 
 		// select field
-		this.wrapper.find('.dropdown a.option').on('click', function() {
+		this.wrapper.find('.sort-selector-button a.option').on('click', function() {
 			me.sort_by = $(this).attr('data-value');
-			me.wrapper.find('.dropdown .dropdown-text').html($(this).html());
+			me.wrapper.find('.sort-selector-button .dropdown-text').html($(this).html());
 			(me.onchange || me.change)(me.sort_by, me.sort_order);
 		});
 
@@ -122,7 +123,8 @@ frappe.ui.SortSelector = Class.extend({
 
 			// bold or mandatory
 			meta.fields.forEach(function(df) {
-				if(df.mandatory || df.bold) {
+				const excluded_fieldtypes = [frappe.model.table_fields, frappe.model.no_value_type, frappe.model.layout_fields]
+				if(!excluded_fieldtypes.flat().includes(df.fieldtype) && (df.reqd || df.bold)) {
 					_options.push({fieldname: df.fieldname, label: df.label});
 				}
 			});

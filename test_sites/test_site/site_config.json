@@ -10,5 +10,11 @@
  "root_password": "dokosadmin",
  "run_selenium_tests": 1,
  "host_name": "http://test_site:8000",
- "server_script_enabled": 1
+ "server_script_enabled": 1,
+ "install_apps": [],
+ "redis_cache": "redis://redis_cache:6379",
+ "redis_queue": "redis://redis_queue:6379",
+ "redis_socketio": "redis://redis_socketio:6379",
+ "socketio_port": 9000,
+ "mute_emails": 0
 }
