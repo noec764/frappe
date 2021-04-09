@@ -195,6 +195,7 @@ def get_context(context):
 
 	def send_an_email(self, doc, context):
 		from email.utils import formataddr
+		from frappe.core.doctype.communication.email import make as make_communication
 		subject = self.subject
 		if "{" in subject:
 			subject = frappe.render_template(self.subject, context)
@@ -203,21 +204,11 @@ def get_context(context):
 		recipients, cc, bcc = self.get_list_of_recipients(doc, context)
 		if not (recipients or cc or bcc):
 			return
+
 		sender = None
+		message = frappe.render_template(self.message, context)
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
-
-		message = frappe.render_template(self.message, context)
-
-		com_kwargs = {
-			"sender": sender,
-			"recipients": ', '.join(recipients) if isinstance(recipients, list) else recipients,
-			"cc": cc,
-			"bcc": bcc,
-			"subject": subject,
-			"message": message,
-			"doc": doc
-		}
 
 		frappe.sendmail(recipients=recipients,
 			subject=subject,
@@ -229,9 +220,25 @@ def get_context(context):
 			reference_name=doc.name,
 			attachments=attachments,
 			expose_recipients="header",
-			communication=self.make_communication_entry(**com_kwargs),
 			print_letterhead=((attachments
 				and attachments[0].get('print_letterhead')) or False))
+
+		# Add mail notification to communication list
+		# No need to add if it is already a communication.
+		if doc.doctype != 'Communication':
+			make_communication(doctype=doc.doctype,
+				name=doc.name,
+				content=message,
+				subject=subject,
+				sender=sender,
+				recipients=recipients,
+				communication_medium="Email",
+				send_email=False,
+				attachments=attachments,
+				cc=cc,
+				bcc=bcc,
+				communication_type='Automated Message',
+				ignore_permissions=True)
 
 	def make_communication_entry(self, **kwargs):
 		"""Make communication entry"""
