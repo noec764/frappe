@@ -95,7 +95,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	make() {
 		super.make();
-		this.container.addClass("container setup-wizard-slide with-form m-auto w-50");
+		this.container.addClass("container setup-wizard-slide with-form w-50");
 		this.$next_btn.addClass('action');
 		this.$complete_btn = this.$footer.find('.complete-btn').addClass('action');
 		this.setup_keyboard_nav();
@@ -297,7 +297,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			</div>
 		</div>`;
 
-		return $(`<div class="slides-wrapper container setup-wizard-slide setup-in-progress">
+		return $(`<div class="slides-wrapper container setup-wizard-slide setup-in-progress w-50">
 			<div class="content text-center">
 				<h1 class="slide-title title">${title}</h1>
 				<div class="state-icon-container">${loading_html}</div>

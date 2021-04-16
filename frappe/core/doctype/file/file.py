@@ -162,6 +162,18 @@ class File(Document):
 		):
 			return
 
+	def fetch_attached_to_field(self, old_file_url):
+		if self.attached_to_field:
+			return True
+
+		reference_dict = frappe.get_doc(
+			self.attached_to_doctype, self.attached_to_name).as_dict()
+
+		for key, value in reference_dict.items():
+			if value == old_file_url:
+				self.attached_to_field = key
+				return True
+
 	def validate_attachment_limit(self):
 		attachment_limit = 0
 		if self.attached_to_doctype and self.attached_to_name:
