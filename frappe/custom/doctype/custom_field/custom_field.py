@@ -52,13 +52,13 @@ class CustomField(Document):
 		is_fieldtype_changed = (not self.is_new()) and (old_fieldtype != self.fieldtype)
 
 		if is_fieldtype_changed and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype):
-			frappe.throw(_("Fieldtype cannot be changed from {0} to {1}").format(old_fieldtype, self.fieldtype))
+			frappe.throw(_("Fieldtype cannot be changed from {0} to {1}").format(_(old_fieldtype), _(self.fieldtype)))
 
 		if not self.fieldname:
 			frappe.throw(_("Fieldname not set for Custom Field"))
 
 		if self.fieldname in fieldnames:
-			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, self.dt))
+			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, _(self.dt)))
 
 		if self.get('translatable', 0) and not supports_translation(self.fieldtype):
 			self.translatable = 0

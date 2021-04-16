@@ -19,7 +19,7 @@ class ClientScript(Document):
 		)
 		if exists:
 			frappe.throw(
-				_("Client Script for {0} {1} already exists").format(frappe.bold(self.dt), self.view),
+				_("Client Script for {0} {1} already exists").format(frappe.bold(_(self.dt)), _(self.view)),
 				frappe.DuplicateEntryError,
 			)
 
