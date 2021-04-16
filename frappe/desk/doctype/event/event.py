@@ -336,7 +336,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 		if event.get("repeat_this_event"):
 			result = [x for x in result if x.get("name") != event.get("name")]
 			start = get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
-			end = get_datetime(end).replace(hour=0, minute=0, second=0) if event.get("all_day") else end
+			end = get_datetime(end).replace(hour=23, minute=59, second=0) if event.get("all_day") else end
 			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
 
 	return result
