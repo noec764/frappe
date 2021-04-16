@@ -14,6 +14,8 @@ from frappe.cache_manager import (
 	build_domain_restricted_page_cache,
 	build_table_count_cache
 )
+from frappe.desk.notifications import get_notification_for_doctype
+
 
 def handle_not_exist(fn):
 	@wraps(fn)
@@ -232,12 +234,13 @@ class Workspace:
 			else:
 				item.incomplete_dependencies = ""
 
-		if item.onboard:
-			# Mark Spotlights for initial
-			if item.get("type") == "doctype":
-				name = item.get("name")
-				count = self._doctype_contains_a_record(name)
+		if item.get("link_type") == "DocType":
+			name = item.get("link_to")
+			item["open_count"] = get_notification_for_doctype(name)
 
+			if item.onboard:
+			# Mark Spotlights for initial
+				count = self._doctype_contains_a_record(name)
 				item["count"] = count
 
 		# Translate label
