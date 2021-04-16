@@ -48,6 +48,283 @@ E.g. 1 USD = 100 centimes",
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Thank you ! You have been successfully registered"") }</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Merci ! Vous êtes inscrit·e à cet événement"") }</span></div>",
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Thank you ! You have been successfully registered</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Merci ! Votre inscription est prise en compte</span></div>",
 "<div class=""alert"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>","<div class=""alert"">Veuillez ne pas mettre à jour les types de document directement. Utilisez la vue de personnalisation de formulaire et les champs personnalisés pour modifier des propriétés!</div>",
+"<h3>Client Script Help</h3>
+<p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>
+<pre><code>
+
+// fetch local_tax_no on selection of customer 
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
+
+// additional validation on dates 
+frappe.ui.form.on('Task',  'validate',  function(frm) {
+    if (frm.doc.from_date &lt; get_today()) {
+        msgprint('You can not select past date in From Date');
+        validated = false;
+    } 
+});
+
+// make a field read-only after saving 
+frappe.ui.form.on('Task',  {
+    refresh: function(frm) {
+        // use the __islocal value of doc,  to check if the doc is saved or not
+        frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
+    } 
+});
+
+// additional permission check
+frappe.ui.form.on('Task',  {
+    validate: function(frm) {
+        if(user=='user1@example.com' &amp;&amp; frm.doc.purpose!='Material Receipt') {
+            msgprint('You are only allowed Material Receipt');
+            validated = false;
+        }
+    } 
+});
+
+// calculate sales incentive
+frappe.ui.form.on('Sales Invoice',  {
+    validate: function(frm) {
+        // calculate incentives for each person on the deal
+        total_incentive = 0
+        $.each(frm.doc.sales_team,  function(i,  d) {
+            // calculate incentive
+            var incentive_percent = 2;
+            if(frm.doc.base_grand_total &gt; 400) incentive_percent = 4;
+            // actual incentive
+            d.incentives = flt(frm.doc.base_grand_total) * incentive_percent / 100;
+            total_incentive += flt(d.incentives)
+        });
+        frm.doc.total_incentive = total_incentive;
+    } 
+})
+
+</code></pre>","<h3>Aide pour les scrips clients</h3>
+<p>Les scripts clients sont exécutés uniquement côté client (i.e. dans les formulaires). Voici quelques exemples pour démarrer</p>
+<pre><code>
+
+// récupérer le champ local_tax_no à la sélection du client 
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
+
+// validations additionnelles sur les dates 
+frappe.ui.form.on('Task',  'validate',  function(frm) {
+    if (frm.doc.from_date &lt; get_today()) {
+        msgprint('Vous ne pouvez pas sélectionner une date passée dans le champ Date de début');
+        validated = false;
+    } 
+});
+
+// mettre un champ en lecture seule après l'enregistrement 
+frappe.ui.form.on('Task',  {
+    refresh: function(frm) {
+        // utilisez la valeur __islocal du document pour vérifier si le document est enregistré ou non
+        frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
+    } 
+});
+
+// vérification d'autorisations additionnelles
+frappe.ui.form.on('Task',  {
+    validate: function(frm) {
+        if(user=='user1@example.com' &amp;&amp; frm.doc.purpose!='Material Receipt') {
+            msgprint('Vous ne pouvez créer que des reçus d'achat');
+            validated = false;
+        }
+    } 
+});
+
+// calculer les commissions de vente
+frappe.ui.form.on('Sales Invoice',  {
+    validate: function(frm) {
+        // calcule les commissions de chaque personne impliquée dans la vente
+        total_incentive = 0
+        $.each(frm.doc.sales_team,  function(i,  d) {
+            // calcule la commission
+            var incentive_percent = 2;
+            if(frm.doc.base_grand_total &gt; 400) incentive_percent = 4;
+            // commission actuelle
+            d.incentives = flt(frm.doc.base_grand_total) * incentive_percent / 100;
+            total_incentive += flt(d.incentives)
+        });
+        frm.doc.total_incentive = total_incentive;
+    } 
+})
+
+</code></pre>",
+"<h3>Custom CSS Help</h3>
+
+<p>Notes:</p>
+
+<ol>
+<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li>
+<li>All values are given class <code>value</code></li>
+<li>All Section Breaks are given class <code>section-break</code></li>
+<li>All Column Breaks are given class <code>column-break</code></li>
+</ol>
+
+<h4>Examples</h4>
+
+<p>1. Left align integers</p>
+
+<pre><code>[data-fieldtype=""Int""] .value { text-align: left; }</code></pre>
+
+<p>1. Add border to sections except the last section</p>
+
+<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; }
+.section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>
+","<h3>Aide pour le CSS personnalisé</h3>
+
+<p>Notes:</p>
+
+<ol>
+<li>Tous les groupes de champs (libellé + valeur) ont les attributs <code>data-fieldtype</code> et <code>data-fieldname</code></li>
+<li>Toutes les valeurs ont la classe <code>value</code></li>
+<li>Tous les sauts de section on la classe <code>section-break</code></li>
+<li>Tous les sauts de colonne ont la classe <code>column-break</code></li>
+</ol>
+
+<h4>Exemples</h4>
+
+<p>1. Aligner les nombres entiers à gauche</p>
+
+<pre><code>[data-fieldtype=""Int""] .value { text-align: left; }</code></pre>
+
+<p>1. Ajouter une bordure aux sections excepté la dernière section</p>
+
+<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; }
+.section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>",
+"<h3>Print Format Help</h3>
+<hr>
+<h4>Introduction</h4>
+<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p>
+<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p>
+<hr>
+<h4>References</h4>
+<ol>
+	<li><a href=""http://jinja.pocoo.org/docs/templates/"" target=""_blank"">Jinja Templating Language</a></li>
+	<li><a href=""http://getbootstrap.com"" target=""_blank"">Bootstrap CSS Framework</a></li>
+</ol>
+<hr>
+<h4>Example</h4>
+<pre><code>&lt;h3&gt;{{ doc.select_print_heading or ""Invoice"" }}&lt;/h3&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Customer Name&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.customer_name }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Date&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.get_formatted(""invoice_date"") }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;table class=""table table-bordered""&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Sr&lt;/th&gt;
+			&lt;th&gt;Item Name&lt;/th&gt;
+			&lt;th&gt;Description&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Qty&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Rate&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Amount&lt;/th&gt;
+		&lt;/tr&gt;
+		{%- for row in doc.items -%}
+		&lt;tr&gt;
+			&lt;td style=""width: 3%;""&gt;{{ row.idx }}&lt;/td&gt;
+			&lt;td style=""width: 20%;""&gt;
+				{{ row.item_name }}
+				{% if row.item_code != row.item_name -%}
+				&lt;br&gt;Item Code: {{ row.item_code}}
+				{%- endif %}
+			&lt;/td&gt;
+			&lt;td style=""width: 37%;""&gt;
+				&lt;div style=""border: 0px;""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt;
+			&lt;td style=""width: 10%; text-align: right;""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""rate"", doc) }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""amount"", doc) }}&lt;/td&gt;
+		&lt;/tr&gt;
+		{%- endfor -%}
+	&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h4>Common Functions</h4>
+<table class=""table table-bordered"">
+	<tbody>
+		<tr>
+			<td style=""width: 30%;""><code>doc.get_formatted(""[fieldname]"", [parent_doc])</code></td>
+			<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td>
+		</tr>
+		<tr>
+			<td style=""width: 30%;""><code>frappe.db.get_value(""[doctype]"", ""[name]"", ""fieldname"")</code></td>
+			<td>Get value from another document.</td>
+		</tr>
+	</tbody>
+</table>
+","<h3>Aide pour les formats d'impression</h3>
+<hr>
+<h4>Introduction</h4>
+<p>Les formats d'impression sont rendus côté serveur grâce au language Jinja. Tous les formulaires ont accès à l'objet <code>doc</code> qui contient des informations sur le document a formater. Vous pouvez aussi accéder à des fonctions communes via le module <code>frappe</code>.</p>
+<p>Pour le style, vous pouvez utiliser toutes les classes du framework CSS Bootstrap.</p>
+<hr>
+<h4>Références</h4>
+<ol>
+	<li><a href=""http://jinja.pocoo.org/docs/templates/"" target=""_blank"">Language Jinja</a></li>
+	<li><a href=""http://getbootstrap.com"" target=""_blank"">Framework CSS Bootstrap</a></li>
+</ol>
+<hr>
+<h4>Exemple</h4>
+<pre><code>&lt;h3&gt;{{ doc.select_print_heading or ""Facture"" }}&lt;/h3&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Nom du client&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.customer_name }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Date&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.get_formatted(""invoice_date"") }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;table class=""table table-bordered""&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Sr&lt;/th&gt;
+			&lt;th&gt;Nom de l'article&lt;/th&gt;
+			&lt;th&gt;Description&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Qté&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Prix Unitaire&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Montant&lt;/th&gt;
+		&lt;/tr&gt;
+		{%- for row in doc.items -%}
+		&lt;tr&gt;
+			&lt;td style=""width: 3%;""&gt;{{ row.idx }}&lt;/td&gt;
+			&lt;td style=""width: 20%;""&gt;
+				{{ row.item_name }}
+				{% if row.item_code != row.item_name -%}
+				&lt;br&gt;Item Code: {{ row.item_code}}
+				{%- endif %}
+			&lt;/td&gt;
+			&lt;td style=""width: 37%;""&gt;
+				&lt;div style=""border: 0px;""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt;
+			&lt;td style=""width: 10%; text-align: right;""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""rate"", doc) }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""amount"", doc) }}&lt;/td&gt;
+		&lt;/tr&gt;
+		{%- endfor -%}
+	&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h4>Fonctions Communes</h4>
+<table class=""table table-bordered"">
+	<tbody>
+		<tr>
+			<td style=""width: 30%;""><code>doc.get_formatted(""[fieldname]"", [parent_doc])</code></td>
+			<td>Obtenez la valeur formatée en Date, Devise, etc. Passez le <code>doc</code> parent pour les champ de type devise.</td>
+		</tr>
+		<tr>
+			<td style=""width: 30%;""><code>frappe.db.get_value(""[doctype]"", ""[name]"", ""fieldname"")</code></td>
+			<td>Récupérez une valeur d'un autre document.</td>
+		</tr>
+	</tbody>
+</table>",
 "<h4>Default Template</h4>
 <p>Uses <a href=""http://jinja.pocoo.org/docs/templates/"">Jinja Templating</a> and all the fields of Address (including Custom Fields if any) will be available</p>
 <pre><code>{{ address_line1 }}&lt;br&gt;
@@ -72,10 +349,112 @@ E.g. 1 USD = 100 centimes",
  {% si email_id%} Email: {{email_id}} & lt; br & gt ; {% endif -%} 
  </ code> </ pre>",
 "<h5 class=""text-muted uppercase"">Or</h5>","<h5 class=""text-muted uppercase"">Ou</h5>",
-"<p><strong>Condition Examples:</strong></p>\n<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000\n</pre>","<p><strong>Exemples de conditions:</strong></p>\n<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000\n</pre>",
-"<p><strong>Condition Examples:</strong></p>\n<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000\n</pre>\n","<p><strong>Exemples de conditions:</strong></p>\n<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000\n</pre>\n",
+"<h5>Message Example</h5>
+
+<pre>&lt;h3&gt;Order Overdue&lt;/h3&gt;
+
+&lt;p&gt;Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.&lt;/p&gt;
+
+&lt;!-- show last comment --&gt;
+{% if comments %}
+Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+&lt;h4&gt;Details&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Customer: {{ doc.customer }}
+&lt;li&gt;Amount: {{ doc.grand_total }}
+&lt;/ul&gt;
+</pre>","<h5>Exemple de message</h5>
+
+<pre>&lt;h3&gt;Commande en retard&lt;/h3&gt;
+
+&lt;p&gt;La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.&lt;/p&gt;
+
+&lt;!-- voir les derniers commentaires --&gt;
+{% if comments %}
+Dernier commentaire: {{ comments[-1].comment }} par {{ comments[-1].by }}
+{% endif %}
+
+&lt;h4&gt;Détails&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Client: {{ doc.customer }}
+&lt;li&gt;Montant: {{ doc.grand_total }}
+&lt;/ul&gt;
+</pre>",
+"<h5>Message Example</h5>
+
+<pre>*Order Overdue*
+
+Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.
+
+<!-- show last comment -->
+{% if comments %}
+Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+*Details*
+
+• Customer: {{ doc.customer }}
+• Amount: {{ doc.grand_total }}
+</pre>","<h5>Message Example</h5>
+
+<pre>*Commande en retard*
+
+La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.
+
+<!-- voir les derniers commentaires -->
+{% if comments %}
+Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+*Détails*
+
+• Client: {{ doc.customer }}
+• Montant: {{ doc.grand_total }}
+</pre>",
+"<p><strong>Condition Examples:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>
+","<p><strong>Exemples de conditions:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>",
+"<p><strong>Condition Examples:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>","<p><strong>Exemples de conditions:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>",
 <p>No results found for ',<p>Aucun résultat trouvé pour ',
 "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>","<p>Définissez le contexte de publication du modèle. Exemple:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>",
+"<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
+<p>Allowed functions: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Les conditions doivent être écrites en simple Python. Veuillez utiliser les propriétés disponibles dans le formulaire uniquement.</p>
+<p>Fonctions disponibles: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
 > {0} year(s) ago,> {0} ans,
 A Lead with this Email Address should exist,Un Prospect avec cette Adresse email devrait exister,
 A chained seal will be calculated for all documents,Une chaîne scellée sera calculée pour tous les documents,

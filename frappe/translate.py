@@ -775,7 +775,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	def escape_newlines(s):
 		return (s.replace("\\\n", "|||||")
 				.replace("\\n", "||||")
-				.replace("\n", "|||"))
+				.replace("\n", "|µ||"))
 
 	if get_all:
 		print(str(len(contextual_messages)) + " messages")
@@ -820,12 +820,9 @@ def update_translations(lang, translated_file, app):
 	full_dict = load_lang(lang, [app])
 	if full_dict:
 		def restore_newlines(s):
-			return (s.replace("|||||", "\\\n")
-					.replace("| | | | |", "\\\n")
+			return (s.replace("||||||", "\\\n")
 					.replace("||||", "\\n")
-					.replace("| | | |", "\\n")
-					.replace("|||", "\\n")
-					.replace("| | |", "\\n"))
+					.replace("|µ||", "\n"))
 
 		translation_dict = get_translation_dict_from_file(translated_file, lang, app)
 		newdict = {}
