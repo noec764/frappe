@@ -261,7 +261,7 @@ frappe.views.Calendar = class {
 	setup_options(defaults) {
 		const me = this;
 		this.cal_options = {
-			locale: frappe.boot.lang || "en",
+			locale: frappe.get_cookie('preferred_language') || "en",
 			plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin],
 			headerToolbar: {
 				left: 'dayGridMonth,timeGridWeek,timeGridDay',
