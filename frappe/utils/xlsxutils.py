@@ -1,18 +1,20 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-from __future__ import unicode_literals
 
-import frappe
+import re
+from io import BytesIO
 
 import openpyxl
 import xlrd
-import re
-from openpyxl.styles import Font
 from openpyxl import load_workbook
+from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
-from six import BytesIO, string_types
+
+import frappe
 
 ILLEGAL_CHARACTERS_RE = re.compile(r'[\000-\010]|[\013-\014]|[\016-\037]')
+
+
 # return xlsx file object
 def make_xlsx(data, sheet_name, wb=None, column_widths=None):
 	column_widths = column_widths or []
@@ -31,12 +33,12 @@ def make_xlsx(data, sheet_name, wb=None, column_widths=None):
 	for row in data:
 		clean_row = []
 		for item in row:
-			if isinstance(item, string_types) and (sheet_name not in ['Data Import Template', 'Data Export']):
+			if isinstance(item, str) and (sheet_name not in ['Data Import Template', 'Data Export']):
 				value = handle_html(item)
 			else:
 				value = item
 
-			if isinstance(item, string_types) and next(ILLEGAL_CHARACTERS_RE.finditer(value), None):
+			if isinstance(item, str) and next(ILLEGAL_CHARACTERS_RE.finditer(value), None):
 				# Remove illegal characters from the string
 				value = re.sub(ILLEGAL_CHARACTERS_RE, '', value)
 
@@ -85,7 +87,6 @@ def read_xlsx_file_from_attached_file(file_url=None, fcontent=None, filepath=Non
 		_file = frappe.get_doc("File", {"file_url": file_url})
 		filename = _file.get_full_path()
 	elif fcontent:
-		from io import BytesIO
 		filename = BytesIO(fcontent)
 	elif filepath:
 		filename = filepath
