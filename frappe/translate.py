@@ -86,6 +86,9 @@ def get_all_languages():
 		return frappe.db.sql_list('select name from tabLanguage')
 	return frappe.cache().get_value('languages', _get)
 
+def get_all_language_with_name():
+		return frappe.db.get_all('Language', ['language_code', 'language_name'])
+
 def get_lang_dict():
 	"""Returns all languages in dict format, full name is the key e.g. `{"english":"en"}`"""
 	return dict(frappe.db.sql('select language_name, name from tabLanguage'))
