@@ -1962,7 +1962,7 @@ forwarded@~0.1.2:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.1.2.tgz#98c23dab1175657b8c0573e8ceccd91b0ff18c84"
   integrity sha1-mMI9qxF1ZXuMBXPozszZGw/xjIQ=
 
-frappe-charts@^2.0.0-rc11:
+frappe-charts@^2.0.0-rc13:
   version "2.0.0-rc9"
   resolved "https://registry.yarnpkg.com/frappe-charts/-/frappe-charts-2.0.0-rc9.tgz#95b68d50d501c655b3d19cdc24a1dde053f4ef9e"
   integrity sha512-s3GZXKWWQi4/7QzvX7bnYX6lUqQpbQeqQf4ip/uXFQ3VvOtmSkFzrso8pQHD1D3FdDU8oTEnWoSkU7Oe2THbpw==
