@@ -86,6 +86,9 @@ def get_all_languages():
 		return frappe.db.sql_list('select name from tabLanguage')
 	return frappe.cache().get_value('languages', _get)
 
+def get_all_language_with_name():
+		return frappe.db.get_all('Language', ['language_code', 'language_name'])
+
 def get_lang_dict():
 	"""Returns all languages in dict format, full name is the key e.g. `{"english":"en"}`"""
 	return dict(frappe.db.sql('select language_name, name from tabLanguage'))
@@ -775,7 +778,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	def escape_newlines(s):
 		return (s.replace("\\\n", "|||||")
 				.replace("\\n", "||||")
-				.replace("\n", "|||"))
+				.replace("\n", "|µ||"))
 
 	if get_all:
 		print(str(len(contextual_messages)) + " messages")
@@ -820,12 +823,9 @@ def update_translations(lang, translated_file, app):
 	full_dict = load_lang(lang, [app])
 	if full_dict:
 		def restore_newlines(s):
-			return (s.replace("|||||", "\\\n")
-					.replace("| | | | |", "\\\n")
+			return (s.replace("||||||", "\\\n")
 					.replace("||||", "\\n")
-					.replace("| | | |", "\\n")
-					.replace("|||", "\\n")
-					.replace("| | |", "\\n"))
+					.replace("|µ||", "\n"))
 
 		translation_dict = get_translation_dict_from_file(translated_file, lang, app)
 		newdict = {}

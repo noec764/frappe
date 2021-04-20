@@ -66,6 +66,7 @@
 			font-size: var(--text-md);
 		}
 		input:focus {
+			color: var(--text-color);
 			border-bottom-left-radius: 0;
 			border-bottom-right-radius: 0;
 			box-shadow: var(--awesomebar-shadow);

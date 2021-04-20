@@ -47,6 +47,284 @@ E.g. 1 USD = 100 centimes",
 ; not allowed in condition,; non autorisé dans la condition,
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Thank you ! You have been successfully registered"") }</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Merci ! Vous êtes inscrit·e à cet événement"") }</span></div>",
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Thank you ! You have been successfully registered</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Merci ! Votre inscription est prise en compte</span></div>",
+"<div class=""alert"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>","<div class=""alert"">Veuillez ne pas mettre à jour les types de document directement. Utilisez la vue de personnalisation de formulaire et les champs personnalisés pour modifier des propriétés!</div>",
+"<h3>Client Script Help</h3>
+<p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>
+<pre><code>
+
+// fetch local_tax_no on selection of customer 
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
+
+// additional validation on dates 
+frappe.ui.form.on('Task',  'validate',  function(frm) {
+    if (frm.doc.from_date &lt; get_today()) {
+        msgprint('You can not select past date in From Date');
+        validated = false;
+    } 
+});
+
+// make a field read-only after saving 
+frappe.ui.form.on('Task',  {
+    refresh: function(frm) {
+        // use the __islocal value of doc,  to check if the doc is saved or not
+        frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
+    } 
+});
+
+// additional permission check
+frappe.ui.form.on('Task',  {
+    validate: function(frm) {
+        if(user=='user1@example.com' &amp;&amp; frm.doc.purpose!='Material Receipt') {
+            msgprint('You are only allowed Material Receipt');
+            validated = false;
+        }
+    } 
+});
+
+// calculate sales incentive
+frappe.ui.form.on('Sales Invoice',  {
+    validate: function(frm) {
+        // calculate incentives for each person on the deal
+        total_incentive = 0
+        $.each(frm.doc.sales_team,  function(i,  d) {
+            // calculate incentive
+            var incentive_percent = 2;
+            if(frm.doc.base_grand_total &gt; 400) incentive_percent = 4;
+            // actual incentive
+            d.incentives = flt(frm.doc.base_grand_total) * incentive_percent / 100;
+            total_incentive += flt(d.incentives)
+        });
+        frm.doc.total_incentive = total_incentive;
+    } 
+})
+
+</code></pre>","<h3>Aide pour les scrips clients</h3>
+<p>Les scripts clients sont exécutés uniquement côté client (i.e. dans les formulaires). Voici quelques exemples pour démarrer</p>
+<pre><code>
+
+// récupérer le champ local_tax_no à la sélection du client 
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
+
+// validations additionnelles sur les dates 
+frappe.ui.form.on('Task',  'validate',  function(frm) {
+    if (frm.doc.from_date &lt; get_today()) {
+        msgprint('Vous ne pouvez pas sélectionner une date passée dans le champ Date de début');
+        validated = false;
+    } 
+});
+
+// mettre un champ en lecture seule après l'enregistrement 
+frappe.ui.form.on('Task',  {
+    refresh: function(frm) {
+        // utilisez la valeur __islocal du document pour vérifier si le document est enregistré ou non
+        frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
+    } 
+});
+
+// vérification d'autorisations additionnelles
+frappe.ui.form.on('Task',  {
+    validate: function(frm) {
+        if(user=='user1@example.com' &amp;&amp; frm.doc.purpose!='Material Receipt') {
+            msgprint('Vous ne pouvez créer que des reçus d'achat');
+            validated = false;
+        }
+    } 
+});
+
+// calculer les commissions de vente
+frappe.ui.form.on('Sales Invoice',  {
+    validate: function(frm) {
+        // calcule les commissions de chaque personne impliquée dans la vente
+        total_incentive = 0
+        $.each(frm.doc.sales_team,  function(i,  d) {
+            // calcule la commission
+            var incentive_percent = 2;
+            if(frm.doc.base_grand_total &gt; 400) incentive_percent = 4;
+            // commission actuelle
+            d.incentives = flt(frm.doc.base_grand_total) * incentive_percent / 100;
+            total_incentive += flt(d.incentives)
+        });
+        frm.doc.total_incentive = total_incentive;
+    } 
+})
+
+</code></pre>",
+"<h3>Custom CSS Help</h3>
+
+<p>Notes:</p>
+
+<ol>
+<li>All field groups (label + value) are set attributes <code>data-fieldtype</code> and <code>data-fieldname</code></li>
+<li>All values are given class <code>value</code></li>
+<li>All Section Breaks are given class <code>section-break</code></li>
+<li>All Column Breaks are given class <code>column-break</code></li>
+</ol>
+
+<h4>Examples</h4>
+
+<p>1. Left align integers</p>
+
+<pre><code>[data-fieldtype=""Int""] .value { text-align: left; }</code></pre>
+
+<p>1. Add border to sections except the last section</p>
+
+<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; }
+.section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>
+","<h3>Aide pour le CSS personnalisé</h3>
+
+<p>Notes:</p>
+
+<ol>
+<li>Tous les groupes de champs (libellé + valeur) ont les attributs <code>data-fieldtype</code> et <code>data-fieldname</code></li>
+<li>Toutes les valeurs ont la classe <code>value</code></li>
+<li>Tous les sauts de section on la classe <code>section-break</code></li>
+<li>Tous les sauts de colonne ont la classe <code>column-break</code></li>
+</ol>
+
+<h4>Exemples</h4>
+
+<p>1. Aligner les nombres entiers à gauche</p>
+
+<pre><code>[data-fieldtype=""Int""] .value { text-align: left; }</code></pre>
+
+<p>1. Ajouter une bordure aux sections excepté la dernière section</p>
+
+<pre><code>.section-break { padding: 30px 0px; border-bottom: 1px solid #eee; }
+.section-break:last-child { padding-bottom: 0px; border-bottom: 0px;  }</code></pre>",
+"<h3>Print Format Help</h3>
+<hr>
+<h4>Introduction</h4>
+<p>Print Formats are rendered on the server side using the Jinja Templating Language. All forms have access to the <code>doc</code> object which contains information about the document that is being formatted. You can also access common utilities via the <code>frappe</code> module.</p>
+<p>For styling, the Boostrap CSS framework is provided and you can enjoy the full range of classes.</p>
+<hr>
+<h4>References</h4>
+<ol>
+	<li><a href=""http://jinja.pocoo.org/docs/templates/"" target=""_blank"">Jinja Templating Language</a></li>
+	<li><a href=""http://getbootstrap.com"" target=""_blank"">Bootstrap CSS Framework</a></li>
+</ol>
+<hr>
+<h4>Example</h4>
+<pre><code>&lt;h3&gt;{{ doc.select_print_heading or ""Invoice"" }}&lt;/h3&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Customer Name&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.customer_name }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Date&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.get_formatted(""invoice_date"") }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;table class=""table table-bordered""&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Sr&lt;/th&gt;
+			&lt;th&gt;Item Name&lt;/th&gt;
+			&lt;th&gt;Description&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Qty&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Rate&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Amount&lt;/th&gt;
+		&lt;/tr&gt;
+		{%- for row in doc.items -%}
+		&lt;tr&gt;
+			&lt;td style=""width: 3%;""&gt;{{ row.idx }}&lt;/td&gt;
+			&lt;td style=""width: 20%;""&gt;
+				{{ row.item_name }}
+				{% if row.item_code != row.item_name -%}
+				&lt;br&gt;Item Code: {{ row.item_code}}
+				{%- endif %}
+			&lt;/td&gt;
+			&lt;td style=""width: 37%;""&gt;
+				&lt;div style=""border: 0px;""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt;
+			&lt;td style=""width: 10%; text-align: right;""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""rate"", doc) }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""amount"", doc) }}&lt;/td&gt;
+		&lt;/tr&gt;
+		{%- endfor -%}
+	&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h4>Common Functions</h4>
+<table class=""table table-bordered"">
+	<tbody>
+		<tr>
+			<td style=""width: 30%;""><code>doc.get_formatted(""[fieldname]"", [parent_doc])</code></td>
+			<td>Get document value formatted as Date, Currency, etc. Pass parent <code>doc</code> for currency type fields.</td>
+		</tr>
+		<tr>
+			<td style=""width: 30%;""><code>frappe.db.get_value(""[doctype]"", ""[name]"", ""fieldname"")</code></td>
+			<td>Get value from another document.</td>
+		</tr>
+	</tbody>
+</table>
+","<h3>Aide pour les formats d'impression</h3>
+<hr>
+<h4>Introduction</h4>
+<p>Les formats d'impression sont rendus côté serveur grâce au language Jinja. Tous les formulaires ont accès à l'objet <code>doc</code> qui contient des informations sur le document a formater. Vous pouvez aussi accéder à des fonctions communes via le module <code>frappe</code>.</p>
+<p>Pour le style, vous pouvez utiliser toutes les classes du framework CSS Bootstrap.</p>
+<hr>
+<h4>Références</h4>
+<ol>
+	<li><a href=""http://jinja.pocoo.org/docs/templates/"" target=""_blank"">Language Jinja</a></li>
+	<li><a href=""http://getbootstrap.com"" target=""_blank"">Framework CSS Bootstrap</a></li>
+</ol>
+<hr>
+<h4>Exemple</h4>
+<pre><code>&lt;h3&gt;{{ doc.select_print_heading or ""Facture"" }}&lt;/h3&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Nom du client&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.customer_name }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=""row""&gt;
+	&lt;div class=""col-md-3 text-right""&gt;Date&lt;/div&gt;
+	&lt;div class=""col-md-9""&gt;{{ doc.get_formatted(""invoice_date"") }}&lt;/div&gt;
+&lt;/div&gt;
+&lt;table class=""table table-bordered""&gt;
+	&lt;tbody&gt;
+		&lt;tr&gt;
+			&lt;th&gt;Sr&lt;/th&gt;
+			&lt;th&gt;Nom de l'article&lt;/th&gt;
+			&lt;th&gt;Description&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Qté&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Prix Unitaire&lt;/th&gt;
+			&lt;th class=""text-right""&gt;Montant&lt;/th&gt;
+		&lt;/tr&gt;
+		{%- for row in doc.items -%}
+		&lt;tr&gt;
+			&lt;td style=""width: 3%;""&gt;{{ row.idx }}&lt;/td&gt;
+			&lt;td style=""width: 20%;""&gt;
+				{{ row.item_name }}
+				{% if row.item_code != row.item_name -%}
+				&lt;br&gt;Item Code: {{ row.item_code}}
+				{%- endif %}
+			&lt;/td&gt;
+			&lt;td style=""width: 37%;""&gt;
+				&lt;div style=""border: 0px;""&gt;{{ row.description }}&lt;/div&gt;&lt;/td&gt;
+			&lt;td style=""width: 10%; text-align: right;""&gt;{{ row.qty }} {{ row.uom or row.stock_uom }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""rate"", doc) }}&lt;/td&gt;
+			&lt;td style=""width: 15%; text-align: right;""&gt;{{
+				row.get_formatted(""amount"", doc) }}&lt;/td&gt;
+		&lt;/tr&gt;
+		{%- endfor -%}
+	&lt;/tbody&gt;
+&lt;/table&gt;</code></pre>
+<hr>
+<h4>Fonctions Communes</h4>
+<table class=""table table-bordered"">
+	<tbody>
+		<tr>
+			<td style=""width: 30%;""><code>doc.get_formatted(""[fieldname]"", [parent_doc])</code></td>
+			<td>Obtenez la valeur formatée en Date, Devise, etc. Passez le <code>doc</code> parent pour les champ de type devise.</td>
+		</tr>
+		<tr>
+			<td style=""width: 30%;""><code>frappe.db.get_value(""[doctype]"", ""[name]"", ""fieldname"")</code></td>
+			<td>Récupérez une valeur d'un autre document.</td>
+		</tr>
+	</tbody>
+</table>",
 "<h4>Default Template</h4>
 <p>Uses <a href=""http://jinja.pocoo.org/docs/templates/"">Jinja Templating</a> and all the fields of Address (including Custom Fields if any) will be available</p>
 <pre><code>{{ address_line1 }}&lt;br&gt;
@@ -70,8 +348,113 @@ E.g. 1 USD = 100 centimes",
  {% if télécopieur%} Fax: {{fax}} & lt; br & gt; {% endif -%} 
  {% si email_id%} Email: {{email_id}} & lt; br & gt ; {% endif -%} 
  </ code> </ pre>",
+"<h5 class=""text-muted uppercase"">Or</h5>","<h5 class=""text-muted uppercase"">Ou</h5>",
+"<h5>Message Example</h5>
+
+<pre>&lt;h3&gt;Order Overdue&lt;/h3&gt;
+
+&lt;p&gt;Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.&lt;/p&gt;
+
+&lt;!-- show last comment --&gt;
+{% if comments %}
+Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+&lt;h4&gt;Details&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Customer: {{ doc.customer }}
+&lt;li&gt;Amount: {{ doc.grand_total }}
+&lt;/ul&gt;
+</pre>","<h5>Exemple de message</h5>
+
+<pre>&lt;h3&gt;Commande en retard&lt;/h3&gt;
+
+&lt;p&gt;La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.&lt;/p&gt;
+
+&lt;!-- voir les derniers commentaires --&gt;
+{% if comments %}
+Dernier commentaire: {{ comments[-1].comment }} par {{ comments[-1].by }}
+{% endif %}
+
+&lt;h4&gt;Détails&lt;/h4&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Client: {{ doc.customer }}
+&lt;li&gt;Montant: {{ doc.grand_total }}
+&lt;/ul&gt;
+</pre>",
+"<h5>Message Example</h5>
+
+<pre>*Order Overdue*
+
+Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.
+
+<!-- show last comment -->
+{% if comments %}
+Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+*Details*
+
+• Customer: {{ doc.customer }}
+• Amount: {{ doc.grand_total }}
+</pre>","<h5>Message Example</h5>
+
+<pre>*Commande en retard*
+
+La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.
+
+<!-- voir les derniers commentaires -->
+{% if comments %}
+Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
+{% endif %}
+
+*Détails*
+
+• Client: {{ doc.customer }}
+• Montant: {{ doc.grand_total }}
+</pre>",
+"<p><strong>Condition Examples:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>
+","<p><strong>Exemples de conditions:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>",
+"<p><strong>Condition Examples:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>","<p><strong>Exemples de conditions:</strong></p>
+<pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
+</pre>",
 <p>No results found for ',<p>Aucun résultat trouvé pour ',
 "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>","<p>Définissez le contexte de publication du modèle. Exemple:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>",
+"<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
+<p>Allowed functions: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Les conditions doivent être écrites en simple Python. Veuillez utiliser les propriétés disponibles dans le formulaire uniquement.</p>
+<p>Fonctions disponibles: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
 > {0} year(s) ago,> {0} ans,
 A Lead with this Email Address should exist,Un Prospect avec cette Adresse email devrait exister,
 A chained seal will be calculated for all documents,Une chaîne scellée sera calculée pour tous les documents,
@@ -92,6 +475,7 @@ API Access,Accès API,
 API Endpoint Args,Args de paramètres API,
 API Endpoint,API Endpoint,
 API Key cannot be  regenerated,La clé d'API ne peut pas être regénérée,
+API Key cannot be regenerated,Les clés API ne peuvent pas être regénérées,
 API Key of the user(Event Subscriber) on the producer site,La clé d'API de l'utilisateur (Abonné à l'événement) sur le site du producteur,
 API Key,Clé API,
 API Method,Méthode d'API,
@@ -177,6 +561,7 @@ Add Tags,Ajouter des tags,
 Add Total Row,Ajouter une Ligne Totale,
 Add Unsubscribe Link,Ajouter un lien de désinscription,
 Add User Permissions,Ajouter des autorisations utilisateur,
+Add a Filter,Ajouter un filtre,
 Add a New Role,Ajouter un Nouveau Rôle,
 Add a column,Ajouter une colonne,
 Add a comment,Ajouter un commentaire,
@@ -203,6 +588,7 @@ Add to Dashboard,Ajouter au tableau de bord,
 Add to To Do,Ajouter à la Liste des Tâches,
 Add to ToDo,Ajouter à la ToDo,
 Add to table,Ajouter au tableau,
+Add to this activity by mailing to {0},Ajouter à cette activité en envoyant un email à {0},
 Add your own Tag Categories,Ajoutez vos propres catégories de balises,
 Add your own translations,Ajoutez vos propres traductions,
 Add {0},Ajouter un·e {0},
@@ -225,6 +611,7 @@ Address,Adresse,
 Addresses And Contacts,Adresses et contacts,
 Addresses,Adresses,
 Adds a client custom script to a DocType,Ajoute un script personnalisé à un type de document,
+Adds a custom client script to a DocType,Ajoute un script client personnalisé à un type de document,
 Adds a custom field to a DocType,Ajoute un champ personnalisé à un type de document,
 Adds a custom script (client or server) to a DocType,Ajoute d'un script personnalisé (client ou serveur) à un DocType,
 Admin,Admin,
@@ -375,6 +762,7 @@ Apply Strict User Permissions,Appliquer des autorisations d'utilisateur strictes
 Apply Style,Appliquer le Style,
 Apply Text Styles,Appliquer les Styles de Texte,
 Apply To All Document Types,Appliquer à tous les types de documents,
+Apply To,Appliquer à,
 Apply this rule if the User is the Owner,Appliquer cette règle si l'utilisateur est le créateur,
 Apply this rule only once per document,Appliquer cette règle une fois par document,
 Apply to all Documents Types,Appliquer à tous les types de documents,
@@ -389,6 +777,7 @@ Apr,Avr,
 April,Avril,
 Archive,Archiver,
 Archived Columns,Colonnes Archivées,
+Archived Document,Document archivé,
 Archived,Archivé,
 Are you sure you want to delete all rows?,Êtes-vous sûr ce vouloir supprimer toutes les lignes ?,
 Are you sure you want to delete the attachment?,Êtes-vous sûr de vouloir supprimer la pièce jointe ?,
@@ -408,6 +797,7 @@ Assign To Users,Attribuer aux utilisateurs,
 Assign To,Attribuer À,
 Assign Users,Attribuer à des utilisateurs,
 Assign a permission level to the field.,Attribuer un niveau d'autorisation sur le champ.,
+Assign a user,Assigner un utilisateur,
 "Assign one by one, in sequence","Attribuer un à un, en séquence",
 Assign to me,Me l'attribuer,
 Assign to the one who has the least assignments,Attribuer à celui qui a le moins d'attributions,
@@ -427,6 +817,7 @@ Assignment Day {0} has been repeated.,Le jour d'attribution {0} a été répét�
 Assignment Days,Jours d'attribution,
 Assignment Rule Day,Jour des règles d'attribution,
 Assignment Rule User,Utilisateur de règle d'attribution,
+Assignment Rule is not allowed on {0} document type,Les règles d'assignation ne sont pas autorisées pour le type de document {0},
 Assignment Rule,Règle d'attribution,
 Assignment Rules,Règles d'attribution,
 Assignment Update on {0},Mise à jour d'assignation sur {0},
@@ -472,6 +863,7 @@ Authentication failed while receiving emails from Email Account: {0}.,L'authenti
 Authentication,Authentification,
 Author,Auteur,
 Authorization Code,Code d'autorisation,
+Authorization URI,URI d'autorisation,
 Authorization error for {0},Erreur d'autorisation pour {0},
 Authorize API Indexing  Access,Autoriser l'accès à l'API d'indexation,
 Authorize Google Calendar Access,Autoriser l'accès à Google Agenda,
@@ -490,6 +882,7 @@ Auto Repeat failed for {0},La répétition automatique a échoué pour {0},
 Auto Repeat has been {0},La Répétition Automatique a été {0},
 Auto Repeat,Répétition automatique,
 Auto Reply Message,Message de réponse automatique,
+Auto Update,Mise à jour automatique,
 Auto assignment failed: {0},L'attribution automatique a échoué,
 Auto repeat triggered,Répétition automatique lancée,
 Auto,Auto,
@@ -497,6 +890,7 @@ Automatic Linking can be activated only for one Email Account.,La liaison automa
 Automatic Linking can be activated only if Incoming is enabled.,La liaison automatique ne peut être activée que si les emails entrants sont autorisés.,
 Automatically Assign Documents to Users,Attribuer automatiquement les documents aux utilisateurs,
 Automatically generates recurring documents.,Génère des documents récurrents automatiquement,
+Automatically update this email group,Met à jour ce groupe d'emails automatiquement,
 Automation,Automatisation,
 Autorized,Autorisé,
 "Available variables: link, site_url, first_name, last_name, user","Variables disponibles: link, site_url, first_name, last_name, user",
@@ -559,6 +953,7 @@ Before Insert,Avant l'insertion,
 Before Save (Submitted Document),Avant enregistrement (Document validé),
 Before Save,Avant l'enregistrement,
 Before Submit,Avant la validation,
+Before Validate,Avant validation,
 Beginner,Débutant,
 Beginning with,Commençant par,
 Beta,Bêta,
@@ -590,6 +985,7 @@ Braintree Settings,Paramètres Braintree,
 Braintree payment gateway settings,Paramètres de passerelle de paiement Braintree,
 Brand HTML,Marque HTML,
 Brand Image,Logo,
+Brand Logo,Logo de la marque,
 Brand,Marque,
 Breadcrumbs,Fil d'Ariane (Breadcrumbs),
 Browse,Parcourir,
@@ -601,6 +997,7 @@ Bucket Name,Nom du compartiment,
 Bucket {0} not found.,Compartiment {0} non trouvé,
 Bucket,Bucket,
 Build Report,Créer un Rapport,
+Build,Réglages,
 Bulk Actions,Actions en masse,
 Bulk Delete,Supprimer en masse,
 Bulk Edit {0},Modifier en Masse {0},
@@ -687,6 +1084,7 @@ Cannot edit cancelled document,Impossible de modifier un document annulé,
 Cannot edit filters for standard charts,Vous ne pouvez pas modifier les filtres des graphiques standards,
 Cannot edit standard fields,Impossible de modifier les champs standards,
 Cannot enable {0} for a non-submittable doctype,{0} ne peut pas être activé pour un type de document non validable,
+Cannot get file contents of a Folder,Impossible d'obtenir le contenu des fichiers d'un dossier,
 Cannot have multiple printers mapped to a single print format.,Vous ne pouvez pas avoir plusieurs imprimantes liées à un seul format d'impression,
 Cannot link cancelled document: {0},Impossible de lier le document annulé : {0},
 Cannot map because following condition fails: ,Impossible de mapper parce la condition suivante échoue:,
@@ -712,6 +1110,7 @@ Card 6,Carte 6,
 Card 7,Carte 7,
 Card 8,Carte 8,
 Card 9,Carte 9,
+Card Break,Saut de carte,
 Card Color,Couleur de la carte,
 Card Details,Détails de la carte,
 Card Icon,Icône de la carte,
@@ -817,8 +1216,10 @@ Clicked,Cliqué,
 Client Code,Code client,
 Client Credentials,Identifiants du Client,
 Client ID,ID client,
+Client Id,N° de client,
 Client Information,Informations sur le client,
 Client Key,Clé client,
+Client Script for {0} {1} already exists,Un script client pour {0} {1} existe déjà,
 Client Script,Script client,
 Client Secret,Secret client,
 Client URLs,URLs Client,
@@ -899,6 +1300,8 @@ Confirmation Email Template,Email de confirmation,
 Confirmed,Confirmé,
 "Congratulations on completing the module setup. If you want to learn more you can refer to the documentation <a href=""{0}"">here</a>.","Félicitations pour avoir terminé la configuration du module. Si vous souhaitez en savoir davantage, vous pouvez trouver de la documentation à cette <a href=""{0}"">adresse</a>",
 "Congratulations on completing the module setup. If you want to learn more you can refer to the documentation <a target=""_blank"" href=""{0}"">here</a>.","Félicitations pour avoir terminé la configuration du module. Si vous souhaitez en savoir davantage, vous pouvez trouver de la documentation à cette <a target=""_blank"" href=""{0}"">adresse</a>",
+Connect to {},Se connect à {},
+Connected App,Application connectée,
 Connected to QZ Tray!,Connecté au bac QZ!,
 Connection Lost,Connexion perdue,
 Connection Name,Nom de la Connexion,
@@ -921,6 +1324,7 @@ Contact,Contact,
 Contacts,Contacts,
 Content (HTML),Contenu (HTML),
 Content (Markdown),Contenu (Markdown),
+Content Align,Alignement du contenu,
 Content Hash,Hash du Contenu,
 Content Type,Type de Contenu,
 Content type for building the page,Type de contenu pour construire cette page,
@@ -967,6 +1371,7 @@ Create Contacts from Incoming Emails,Créer les contacts à partir des emails en
 Create Entry,Créer une entrée,
 Create Log,Créer un journal,
 Create New Board,Créer un nouveau tableau,
+Create New Kanban Board,Créer un nouveau tableau Kanban,
 Create New,Créer Nouveau·elle,
 Create Post,Créer une publication,
 Create User Email,Créer un compte email pour l'utilisateur,
@@ -1017,6 +1422,7 @@ Custom Base URL,URL de base personnalisée,
 Custom CSS,CSS personnalisé,
 Custom Configuration,Configuration personnalisée,
 Custom DocPerm,Permission de Document Personnalisé,
+Custom Document Types Limit Exceeded,Limite de types de documents personnalisés dépassée,
 Custom Documents,Documents personnalisés,
 Custom Field {0} is created by the Administrator and can only be deleted through the Administrator account.,Le champ personnalisé {0} a été créé par l'administrateur et ne peut être supprimé que via le compte Administrateur,
 Custom Field,Champ personnalisé,
@@ -1035,6 +1441,7 @@ Custom Report,Rapport personnalisé,
 Custom Reports,Rapports personnalisés,
 Custom Role,Rôle Personnalisé,
 Custom SCSS,SCSS personnalisé,
+Custom Script List,Liste de scripts personnalisés,
 Custom Script,Script personnalisé,
 Custom Sidebar Menu,Barre Latérale Personnalisée,
 Custom Tags,Balises personnalisées,
@@ -1157,6 +1564,7 @@ Default {0},{0} par défaut,
 "Default: ""Contact Us""","Par Défaut: ""Contactez-nous""",
 Default,Par défaut,
 DefaultValue,Valeur par Défaut,
+Defaults Updated,Valeurs par défaut mises à jour,
 Defaults,Valeurs Par Défaut,
 Define workflows for forms.,Définir des flux de travail pour les formulaires.,
 Defines actions on states and the next step and allowed roles.,Définit les actions sur les états et l'étape suivantes ainsi que les rôles autorisés.,
@@ -1232,6 +1640,7 @@ Disabled Auto Reply,Réponse automatique désactivée,
 Disabled,Desactivé,
 Discard,Ignorer,
 Discuss,Commentaires,
+Dismiss,Ignorer,Stop showing the onboarding widget.
 Dismiss,Ignorer,
 Display Depends On,Afficher si les conditions suivantes sont vrai,
 Display Event End,Afficher la fin de l'événement,
@@ -1254,7 +1663,10 @@ DocShare,DocShare,
 DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field,Le type de document <b>{0}</b> défini pour le champ <b>{1}</b> doit avoir au moins un champ de type Lien,
 DocType Action,Action du type de document,
 DocType Event,Evénement déclencheur,
+DocType Layout Field,Champ de mise en page de type de document,
+DocType Layout,Mise en page de type de document,
 DocType Link,Lien du type de documents,
+DocType View,Vue du type du document,
 DocType can not be merged,DocType ne peut pas être fusionné,
 DocType can only be renamed by Administrator,DocType ne peut être renommé que par l'Administrateur,
 DocType is a Table / Form in the application.,Le type de document est un tableau / Formulaire dans l'application.,
@@ -1344,6 +1756,7 @@ Download,Télécharger,
 Dr,Dr,
 Draft,Brouillon,
 Drag and Drop tool to build and customize Print Formats.,Outil de glisser/déposer pour construire et personnaliser les formats d'impression.,
+Drag and drop files here or upload from,Glissez-déposez des fichiers ici ou téléchargez depuis,
 "Drag and drop files, ",Glissez-déposez un fichier,
 Drag elements from the sidebar to add. Drag them back to trash.,Faites glisser les éléments de la barre latérale pour les ajouter. Faites les glisser vers la barre latérale pour les retirer.,
 Drag to sort columns,Faites glisser pour trier les colonnes,
@@ -1404,6 +1817,7 @@ Edit,Modifier,
 Editable Grid,Grille éditable,
 Editing Row,Modifier Ligne,
 Eg. smsgateway.com/api/send_sms.cgi,Eg. smsgateway.com / api / send_sms.cgi,
+Elements,Eléments,
 Email / Notifications,Email / Notifications,
 Email Account Name,Nom du compte email,
 Email Account added multiple times,Compte Email ajouté plusieurs fois,
@@ -1542,9 +1956,11 @@ Error Snapshot,Instantané d'Erreur,
 "Error connecting to QZ Tray Application...<br><br> You need to have QZ Tray application installed and running, to use the Raw Print feature.<br><br><a target=""_blank"" href=""https://qz.io/download/"">Click here to Download and install QZ Tray</a>.<br> <a target=""_blank"" href=""https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing"">Click here to learn more about Raw Printing</a>.","Erreur de connection à l'application QZ Tray...<br><br> Vous devez avoir l'application QZ installé et en fonctionnement pour utiliser la fonctionnalité d'impression brute.<br><br><a target=""_blank"" href=""https://qz.io/download/"">Cliquez ici pour télécharger et installer QZ Tray</a>.<br> <a target=""_blank"" href=""https://erpnext.com/docs/user/manual/en/setting-up/print/raw-printing"">Cliquez ici pour en savoir plus sur l'impression brute</a>.",
 Error has occurred in {0},Une erreur a eu lieu pour {0},
 Error in Client Script.,Erreur dans le script client.,
+Error in Client Script,Erreur dans le script client,
 Error in Custom Script,Erreur dans le script personnalisé,
 Error in Notification: {},Erreur dans la notification: {},
 Error in Notification,Erreur dans la notification,
+Error in setup,Erreur lors de la configuration,
 Error in uploading files,Erreur lors du chargement des fichiers,
 Error message: %s,Message d'erreur: %s,
 Error message:,Message d'erreur,
@@ -1562,6 +1978,7 @@ Event Configurations,Configurations des événements,
 Event Consumer Document Type,Type de document du consommateur d'événements,
 Event Consumer Document Types,Types de documents du consommateur d'événements,
 Event Consumer,Consommateur d'événements,
+Event Frequency,Fréquence de l'événement,
 Event Participants,Participants à l'événement,
 Event Producer Document Type,Type de document du producteur d'événements,
 Event Producer Document Types,Types de document du producteur d'événements,
@@ -1588,6 +2005,7 @@ Every day events should finish on the same day.,Les événements quotidiens devr
 Everyone,Tout le monde,
 "Ex: ""colors"": [""#d1d8dd"", ""#ff5858""]","Ex: ""couleurs"": [""#d1d8dd"", ""#ff5858""]",
 Example Email Address,Exemple d'adresse email,
+"Example: ""/app""","Exemple: ""/app""",
 "Example: ""/desk""","Exemple: ""/desk""",
 Example: #Tree/Account,Exemple: #Tree/Account,
 Example: 00001,Exemple: 0001,
@@ -1604,6 +2022,7 @@ Execution Time: {0} sec,Temps d'éxécution: {0} sec,
 Existing Chart,Graphique existant,
 Expand All,Tout développer,
 Expand,Etendre,
+Experimental,Expérimental,
 Expert,Expert,
 Expiration time,Date d'Expiration,
 Expire Notification On,Les Notifications Expirent le,
@@ -1631,6 +2050,7 @@ Expose Recipients,Exposer Destinataires,
 "Expression, Optional","Expression, Optionnel",
 Extends Another Page,Etendre une autre page,
 Extends,Etend,
+Extra Parameters,Paramètres supplémentaires,
 Facebook,Facebook,
 Failed Transactions,Transactions en échec,
 Failed to change password.,Erreur de modification de mot de passe.,
@@ -1678,6 +2098,7 @@ Field Maps,Mappings de Champ,
 Field Name,Nom du Champ,
 Field To Check,Champs à vérifier,
 Field Type,Type de champ,
+Field not permitted in query,Champ non autorisé dans la requête,
 "Field that represents the Workflow State of the transaction (if field is not present, a new hidden Custom Field will be created)","Champ qui représente l'État du Workflow de la transaction (si le champ n'est pas présent, un nouveau champ caché personnalisé sera créé)",
 Field to Track,Champ à suivre,
 Field type cannot be changed for {0},Le type de champ ne peut pas être modifié pour {0},
@@ -1698,6 +2119,7 @@ Fields Multicheck,Champs à choix multiples,
 "Fields separated by comma (,) will be included in the ""Search By"" list of Search dialog box","Les champs séparés par une virgule (,) seront inclus dans la liste ""Recherche par"" de la boîte de dialogue de recherche",
 Fields,Champ,
 Fieldtype cannot be changed from {0} to {1} in row {2},"Le type de champ ne peut pas être modifié de {0} à {1}, à la ligne {2}",
+Fieldtype cannot be changed from {0} to {1},Le type de champ ne peut pas être changé de {0} à {1},
 Fieldtype {0} for {1} cannot be indexed,FieldType {0} pour {1} ne peut pas être indexé,
 Fieldtype {0} for {1} cannot be unique,FieldType {0} pour {1} ne peut pas être unique,
 Fieldtype,Type de champ,
@@ -1804,6 +2226,7 @@ For example: {} Open,Par exemple: {} ouverts,
 "For help see <a href=""https://frappe.io/docs/user/en/guides/portal-development/web-forms"" target=""_blank"">Client Script API and Examples</a>","Pour obtenir de l'aide, voir <a href=""https://frappe.io/docs/user/en/guides/portal-development/web-forms"" target=""_blank"">API de script client et exemples</a>",
 "For more information, <a class=""text-muted"" href=""https://erpnext.com/docs/user/manual/en/setting-up/email/linking-emails-to-document"">click here</a>.","Pour plus d'informations, <a class=""text-muted"" href=""https://erpnext.com/docs/user/manual/en/setting-up/email/linking-emails-to-document"">cliquez ici</a>.",
 "For more information, {0}.","Pour plus d'informations, {0}.",
+"For multiple addresses, enter the address on different line. e.g. test@test.com ⏎ test1@test.com","Pour plusieurs adresses, entrez l'adresse sur une ligne différente. Exemple test@test.com ⏎ test1@test.com",
 "For performance, only the first 100 rows were processed.","Pour des raisons de performance, seules les 100 premières lignes ont été traitées.",
 For top bar,Pour la barre supérieure,
 "For updating, you can update only selective columns.","Pour la mise à jour, vous pouvez mettre à jour uniquement une sélection colonnes.",
@@ -1881,6 +2304,7 @@ Get Alerts for Today,Obtenir les Alertes d'Aujourd'hui,
 Get Contacts,Obtenir les contacts,
 Get Fields,Obtenir des champs,
 Get Items,Obtenir les Articles,
+Get OpenID Configuration,Obtenir la configuration OpenID,
 Get your globally recognized avatar from Gravatar.com,Obtenir votre avatar mondialement reconnu depuis Gravatar.com,
 Git Branch,Branche Git,
 GitHub Sync Deletion,Suppression de synchronisation Github,
@@ -1999,6 +2423,7 @@ Has Domain,A un Domaine,
 Has Mapping,A un mapping,
 Has Role,A Un Rôle,
 Has Web View,A une vue web,
+Hash,Hash,
 Have an account? Login,Vous avez déjà un compte? Connectez-vous,
 Header HTML set from attachment {0},En-tête HTML défini pour la pièce jointe {0},
 Header HTML,HTML d'en-tête,
@@ -2027,6 +2452,7 @@ Help,Aide,
 Helpful,Utile,
 Helvetica Neue,Helvetica Neue,
 Helvetica,Helvetica,
+Hero Slider,Slider de la section principale (Hero),
 Hero with Right Image,Hero avec une image à droite,
 Hero,Hero,
 "Hi there, this is just to inform you that your backup was successfully uploaded to Google Drive.","Bonjour, nous vous informons que votre sauvegarde a été téléchargée avec succès sur Google Drive.",
@@ -2040,16 +2466,19 @@ Hide CTA,Cacher le bouton d'incitation à l'action,
 Hide Copy,Autoriser la duplication,
 Hide Custom DocTypes and Reports,Cacher les types de documents et les rapports personnalisés,
 Hide Days,Cacher les jours,
+Hide Descendants,Masquer les descendants,
 Hide Failed Jobs,Masquer les tâches en erreur,
 Hide Footer Signup,Masquer le bouton d'inscription dans le pied de page,
 Hide Heading,Masquer l'en-tête,
 Hide Login,Cacher le bouton de connexion,
+Hide Saved,Masquer les valeurs enregistrées,
 Hide Seconds,Cacher les secondes,
 Hide Standard Menu,Masquer le Menu Standard,
 Hide Tags,Cacher les tags,
 Hide Toolbar,Masquer la barre d'outils,
 Hide Traceback,Cacher le traceback,
 Hide Weekends,Masquer les week-ends,
+Hide descendant records of <b>For Value</b>.,Masquer les enregistrements descendants de <b>Pour la valeur</b>,
 Hide details,Cacher les détails,
 Hide field in Report Builder,Masquer le champ dans l'éditeur de rapports,
 Hide field in Standard Print Format,Masquer le champ dans le format d'impression standard,
@@ -2155,9 +2584,11 @@ Images,Images,
 Implicit,Implicite,
 Import Data from CSV / Excel files.,Importer des données à partir de fichiers CSV / Excel,
 Import Data,Importer des données,
+Import DocType,Type de document source,
 Import Email From,Importer les emails depuis,
 Import File Errors and Warnings,Erreurs et alertes d'import de fichiers,
 Import File,Fichier d'import,
+Import Filters,Filtres d'import,
 Import Log Preview,Prévisualisation du journal d'import,
 Import Log,Journal d'import,
 Import Options,Options d'import,
@@ -2258,6 +2689,7 @@ Intro,Intro,
 Introduce your company to the website visitor.,Présentez votre entreprise pour le visiteur du site.,
 Introduction,Introduction,
 Introductory information for the Contact Us Page,Information d'Introduction pour la Page Contactez-nous,
+Introspection URI,URI d'instrospection,
 "Invalid ""depends_on"" expression set in filter {0}",Expression 'depends_on' invalide dans le filtre {0},
 "Invalid ""depends_on"" expression","Expression ""depends_on"" non valide",
 Invalid Access Key ID or Secret Access Key.,ID de clé d'accès ou clé d'accès secrète invalide.,
@@ -2271,6 +2703,7 @@ Invalid Date,Date invalide,
 Invalid Email Account,Compte de messagerie invalide,
 Invalid Email: {0},Email Invalide : {0},
 Invalid Fieldname,Nom du champ invalide,
+Invalid File URL,URL de fichier invalide,
 Invalid Filter Value,Valeur de filtre invalide,
 Invalid Filter: {0},Filtre Invalide : {0},
 "Invalid Home Page <br> Standard pages examples: index, login, products, blog, about, contact","Page d'accueil invalide <br> Exemple de pages standard: index, login, products, blog, about, contact",
@@ -2282,9 +2715,11 @@ Invalid Link,Lien Invalide,
 Invalid Login Token,Jeton de Connexion invalide,
 Invalid Login. Try again.,Identifiants invalides. Réessayez.,
 Invalid Mail Server. Please rectify and try again.,Serveur Mail Invalide. Veuillez corriger et réesayer,
+Invalid Method,Méthode invalide,
 Invalid Option,Option invalide,
 Invalid Outgoing Mail Server or Port,Serveur d'Envoi de Mail ou Port Invalide,
 Invalid Output Format,Format de Sortie Invalide,
+Invalid Parameters.,Paramètres invalides,
 Invalid Password:,Mot de passe invalide:,
 Invalid Password,Mot de Passe Invalide,
 Invalid Reference,Référence Invalide,
@@ -2295,6 +2730,7 @@ Invalid Template,Modèle invalide,
 Invalid Token,Jeton Invalide,
 Invalid URL,URL invalide,
 Invalid User Name or Support Password. Please rectify and try again.,Nom d'Utilisateur ou Mot de Passe Invalide. Veuillez corriger et réessayer,
+Invalid aggregate function,Function d'agrégation invalide,
 Invalid column,Colonne incorrecte,
 Invalid expression set in filter {0} ({1}),Expression invalide dans le filtre {0} ({1}),
 Invalid expression set in filter {0},Expression invalide dans le filtre {0},
@@ -2306,6 +2742,7 @@ Invalid file path: {0},Chemin de fichier invalide : {0},
 Invalid filter: {0},Filtre invalide: {0},
 Invalid include path,Chemin invalide,
 Invalid json added in the custom options: {0},Le JSON ajouté aux options personnalisées est invalide: {0},
+Invalid key type,Type de clé invalide,
 Invalid limit {0},Limite {0} invalide,
 Invalid link,Lien invalide,
 Invalid login or password,Identifiant ou mot de passe invalide,
@@ -2315,6 +2752,8 @@ Invalid naming series (. missing),Nom de série invalide (. manquant),
 Invalid or corrupted content for import,Contenu invalide ou corrompu pour l'import,
 Invalid payment gateway credentials,Identifiant de la Passerelle de Paiement Invalides,
 Invalid recipient address,Adresse de destinataire invalide,
+Invalid request method: {},Méthode de requête invalide: {},
+Invalid state.,Etat invalide.,
 Invalid template file for import,Fichier modèle invalide pour l'import,
 "Invalid token, please provide a valid token with prefix 'Basic' or 'Token'.","Jeton invalide, veuillez fournir un jeton valide avec le préfixe 'Basic' ou 'Token'",
 Invalid username or password,Mot de passe ou nom d'utilisateur invalide,
@@ -2352,6 +2791,7 @@ Is Private,Est Privé,
 Is Public,Public,
 Is Published Field must be a valid fieldname,Le Champ Publié doit-il être un nom de champ valide,
 Is Published Field,Est un champ publié,
+Is Query Report,Est un rapport de requête,
 Is Sealed,Est scellé,
 Is Sent,Est Envoyé,
 Is Single,Type de document unique,
@@ -2362,11 +2802,13 @@ Is Submittable,Est soumissible,
 Is Table,Est Table,
 Is Tree,Est une arborescence,
 Is Unique,Est unique,
+Is Virtual,Est virtuel,
 Is Your Company Address,Est l'Adresse de votre Entreprise,
 Is,Est,
 It is necessary to take this action today itself for the above mentioned recurring,Il est nécessaire de faire cette action aujourd'hui pour les documents récurrents mentionnés ci-dessus,
 It is risky to delete this file: {0}. Please contact your System Manager.,Il est risqué de supprimer ce fichier : {0}. Veuillez contactez votre Administrateur Système.,
 "It seems that there is an issue with the server's stripe configuration. In case of failure, the amount will get refunded to your account.","Il semble qu'il y a un problème avec la configuration de Stripe sur le serveur. En cas d'erreur, le montant est remboursé sur votre compte.",
+Item Card Group,Carte de groupe d'articles,
 Item Label,Libellé de l'élément,
 Item Type,Type d'élément,
 Item cannot be added to its own descendents,L'article ne peut être ajouté à ses propres descendants,
@@ -2473,6 +2915,7 @@ Ldap settings,Configuration LDAP,
 Lead Conversion Time,Temps de conversion des prospects,
 Leaderboard,Classement général,
 Learn about Web Pages,Découvrir les pages web,
+Learn more,En savoir plus,
 Leave a Comment,Laissez un Commentaire,
 Leave blank for new records,Laissez ce champ vide pour les nouveaux enregistrements,
 Leave blank to repeat always,Laissez vide pour répéter sans fin,
@@ -2491,6 +2934,7 @@ Let's take you back to onboarding,Retour à l'onboarding,
 Letter Head Based On,En-tête basé sur,
 Letter Head Image,Image d'en-tête,
 Letter Head Name,Nom de l'En-Tête,
+Letter Head cannot be both disabled and default,L'en-tête ne peut pas être à la fois désactivé et l'en-tête par défaut,
 Letter Head in HTML,En-Tête en HTML,
 Letter Head,En-Tête,
 Letter,Lettre,
@@ -2500,6 +2944,7 @@ Letterhead,En-tête,
 "Level 0 is for document level permissions, higher levels for field level permissions.","Le niveau 0 est pour les autorisations au niveau du document, les niveaux au dessus pour les autorisation au niveau des champs.",
 Level Name,Nom du niveau,
 Level,Niveau,
+Library,Bibliothèque,
 Lifetime,Depuis toujours,
 Light Color,Couleur claire,
 Light,Clair,
@@ -2513,6 +2958,7 @@ Limit,Limite,
 Line,Linéaire,
 Link Cards,Cartes de lien,
 Link Color,Couleur du Lien,
+Link Details,Détails du lien,
 Link DocType,Type de document lié,
 Link Document Type,Type de document lié,
 Link Expired,Le lien a expiré,
@@ -2521,8 +2967,10 @@ Link Label,Libellé du lien,
 Link Name,Nom du lien,
 Link Title,Titre du Lien,
 Link To,Pointe vers,
+Link Type,Type de lien,
 Link URL,URL du lien,
 Link a webform containing a custom signup form that will replace the standard signup form.,Liez un formulaire web contenant un formulaire d'inscription personnalisé qui remplacera le formulaire d'inscription standard.,
+"Link for About Us Page is ""/about"".","Le lien pour la page 'A Propos' est """"/about"""".""",
 "Link that is the website home page. Standard Links (index, login, products, blog, about, contact)","Lien vers la page d'accueil du site. Liens standard (index, connexion, produits, blog, à propos, contact)",
 "Link that is the website home page. Standard Links examples: index, login, products, blog, about, contact","Lien vers la page d'accueil du site web. Exemples de liens standards: index, login, products, blog, about, contact",
 Link to Bootstrap CSS,Lien vers Bootstrap CSS,
@@ -2530,8 +2978,9 @@ Link to the page you want to open. Leave blank if you want to make it a group pa
 Link to your Bootstrap theme,Lien vers votre thème Bootstrap,
 Link,Lien,
 Linked Document : ,Document lié,
-Linked With,Lié avec,
 Linked Documents,Documents liés,
+Linked With,Lié avec,
+Linked documents,Documents liés,
 Linked with {0},Lié avec {0},
 Linked,Lié,
 Links Section,Section de liens,
@@ -2549,9 +2998,11 @@ List,Liste,
 Lists,Listes,
 Load Balancing,Equilibrage de charge,
 Load More,Charger plus,
+Load more,Charger plus d'éléments,
 Loading Filters...,Chargement des filtres,
 Loading Report,Chargement du Rapport,
 Loading import file...,Chargement du fichier d'import...,
+Loading user profile,Chargement du profil utilisateur,
 Loading versions...,Chargement des versions...,
 Loading...,Chargement en cours...,
 Loading,Chargement,
@@ -2581,6 +3032,8 @@ Login Failed please try again,"La connexion a échoué, veuillez réessayer",
 Login Id is required,ID de Connexion est nécessaire,
 Login Required,Connexion obligatoire,
 Login Verification Code from {},Code de Vérification de Connexion depuis {},
+Login With Email,Inscription avec Email,
+Login With {0},Inscription avec {0},
 Login and view in Browser,Connectez-vous et affichez la page dans le navigateur,
 Login not allowed at this time,Connexion non autorisée pour le moment,
 Login required,Connexion requise,
@@ -2605,6 +3058,7 @@ Looks like something is wrong with this site's payment gateway configuration. No
 "Looks like something went wrong during the transaction. Since we haven't confirmed the payment, Paypal will automatically refund you this amount. If it doesn't, please send us an email and mention the Correlation ID: {0}.","On dirait que quelque chose s'est mal déroulé lors de la transaction. Puisque nous avons pas confirmé le paiement, PayPal vous remboursera automatiquement ce montant. Si ce n'est pas le cas, envoyez-nous un email et mentionnez l'ID de Corrélation: {0}.",
 Looks like you didn't change the value,Veuillez vérifier que vous avez bien changé la valeur,
 Looks like you haven't received any notifications.,Vous n'avez aucune notification.,
+Looks like you haven’t received any notifications.,Vous n'avez reçu aucune notification.,
 Low,Bas,
 Madam,Madame,
 Main Section (HTML),Section principale (HTML),
@@ -2648,6 +3102,7 @@ Mappings,Mappings,
 Mar,Mars,
 March,Mars,
 Mark all as Read,Tout marquer comme lu,
+Mark all as read,Tout marquer comme lu,
 Mark as Done,Marquer comme Terminé,
 Mark as Read,Marquer comme lu,
 Mark as Spam,Marquer comme spam,
@@ -2727,15 +3182,19 @@ Mobile No,N° Mobile,
 Mobile number,Numéro de mobile,
 Mode of payment,Mode de paiement,
 Models (building blocks) of the Application,Modèles (blocs de construction) de l'Application,
+Models,Modèles,
 Modified By,Modifié Par,
 Module Dashboard Items,Articles de tableau de bord de modules,
 Module Dashboard,Tableau de bord des modules,
 Module Def,Module Def,
+Module HTML,HTML des modules,
 Module Items,Articles des modules,
 Module Name,Nom du Module,
 Module Not Found,Module Introuvable,
 Module Onboarding,Onboarding par module,
 Module Path,Chemin du Module,
+Module Profile Name,Nom du profil de modules,
+Module Profile,Profil de modules,
 Module to Export,Module dans lequel exporter les personnalisations,
 Module {0} Not Found,Module {0} introuvable,
 Module,Module,
@@ -2776,8 +3235,10 @@ Mx,Mr,
 My Account,Mon compte,
 My Profile,Mon profil,
 My Settings,Mes paramètres,
+My device,Mon appareil,
 MyISAM,MyISAM,
 Name Case,Casse du nom,
+"Name already taken, please set a new name","Nom déjà pris, veuillez choisir un nouveau nom",
 Name cannot contain special characters like {0},Le Nom ne peut contenir des caractères spéciaux tels que {0},
 Name not set via prompt,Nom défini via un popup de demande,
 Name of the Document Type (DocType) you want this field to be linked to. e.g. Customer,Nom du Type de Document (DocType) auquel vous souhaitez que ce champ soit lié. e.g. Client,
@@ -2864,6 +3325,7 @@ Next 6 months,Prochains 6 mois,
 Next Action Email Template,Modèle d'email pour l'action suivante,
 Next Actions HTML,HTML pour les actions suivantes,
 Next Date's day and Repeat on Day of Month must be equal,Le jour de la Date Suivante et le Jour de Répétition du Mois doivent être égal,
+Next Document,Document suivant,
 Next Events,Prochains événements,
 Next Month,Dernier mois,
 Next Quarter,Dernier trimestre,
@@ -2875,8 +3337,10 @@ Next Week,Prochaine semaine,
 Next Year,Prochaine année,
 Next actions,Prochaines actions,
 Next,Suivant,
+Night,Nuit,
 No Active Sessions,Aucune Session Active,
 No Copy,Ne pas copier la valeur de ce champ lors d'une copie du document,
+No Data to Show,Aucune donnée à afficher,
 No Data...,Aucune donnée…,
 No Data,Aucune donnée,
 No Email Account,Aucun Compte Email,
@@ -2905,6 +3369,7 @@ No Results,Aucun Résultat,
 No Tags,Aucune balise,
 No Timespan,Aucune période,
 No Upcoming Events,Aucun événement à venir,
+No activities to show,Aucune activité à afficher,
 No activity,Aucune activité,
 No address added yet.,Aucune addresse.,
 No alerts for today,Aucune alerte pour aujourd'hui,
@@ -2991,6 +3456,7 @@ Not a valid LDAP user,Utilisateur LDAP non valide,
 Not a valid User Image.,Image utilisateur non valide.,
 Not a valid Workflow Action,Action de flux de travail non valide,
 Not a valid user,Utilisateur invalide,
+Not a valid view:,Vue invalide:,
 Not a zip file,Pas un fichier zip,
 Not active,Non actif,
 Not added to reference timeline,Non ajouté à la chronologie du document de référence,
@@ -3003,6 +3469,7 @@ Not allowed to Import,Non autorisé à Importer,
 				please enable Allow Print For {0} in Print Settings","Vous n'êtes pas autorisé à joindre un document {0}, veuillez activer ""Autoriser l'impression"" pour {0} dans les paramètres d'impression.",
 "Not allowed to attach {0} document, please enable Allow Print For {0} in Print Settings","Attacher un document {0} n'est pas autorisé, veuillez cocher 'Autoriser l'impression pour les document {0}' dans les paramètres d'impression",
 Not allowed to change {0} after submission,Non autorisé à changer {0} après la validation,
+Not allowed to create custom Virtual DocType.,Vous n'êtes pas autorisé à créer un type de document virtuel personnalisé.,
 Not allowed to print cancelled documents,Non autorisé à imprimer des documents annulés,
 Not allowed to print draft documents,Non autorisé à imprimer des brouillons de documents,
 Not enough permission to see links,Pas assez d'autorisations pour voir les liens,
@@ -3063,6 +3530,7 @@ OAuth Bearer Token,Jeton de Détention OAuth,
 OAuth Client ID,ID du client OAuth,
 OAuth Client,Client OAuth,
 OAuth Provider Settings,Paramètres du Fournisseur OAuth,
+OAuth Scope,Scope Oauth,
 OK,OK,
 OTP App,Application OTP,
 OTP Issuer Name,Nom de l'Émetteur OTP,
@@ -3080,6 +3548,7 @@ Old Password,Ancien Mot De Passe,
 Older backups will be automatically deleted,Les anciennes sauvegardes seront automatiquement supprimées,
 Older,Plus ancien,
 "On {0}, {1} wrote:","Sur {0}, {1} a écrit :",
+Onboard,Accueillir,
 Onboarding Complete,Onboarding terminé,
 Onboarding Permission,Autorisations d'onboarding,
 Onboarding Slide Field,Champ de diapositive d'accueil,
@@ -3107,6 +3576,7 @@ Only If Creator,Seulement si l'utilisateur l'a créé,
 Only Options allowed for Data field are:,Les options autorisées pour un champ de type Données sont:,
 Only SELECT SQL allowed in scripting,Seules les requêtes SQL SELECT sont autorisées dans les scripts,
 Only Send Records Updated in Last X Hours,Envoyer Uniquement les Enregistrements Mis à Jour au cours des X Dernières Heures,
+Only for ,Seulement pour,
 Only for {},Seulement pour {},
 "Only image extensions (.gif, .jpg, .jpeg, .tiff, .png, .svg) allowed","Seules les extensions d'image (.gif, .jpg, .jpeg, .tiff, .png, .svg) sont autorisées",
 Only mandatory fields are necessary for new records. You can delete non-mandatory columns if you wish.,Seuls les champs obligatoires sont nécessaires pour les nouveaux enregistrements. Vous pouvez supprimer des colonnes non obligatoires si vous le souhaitez.,
@@ -3123,6 +3593,7 @@ Oops! Something went wrong,Oups ! Quelque chose a mal tourné,
 Oops,Oups,
 Open Awesomebar,Ouvrir la barre de recherche,
 Open Chat,Ouvrir le chat,
+Open Communication,Ouvrir la communication,
 Open Document,Ouvrir le document,
 Open Documents,Documents ouverts,
 Open Help,Ouvrir l'aide,
@@ -3134,10 +3605,12 @@ Open Translation,Ouvrir la traduction,
 Open URL in a New Tab,Ouvrir l'URL dans un nouvel onglet,
 Open a dialog with mandatory fields to create a new record quickly,Ouvrir un popup avec les champs obligatoires pour créer une nouvelle entrée rapidement,
 Open a module or tool,Ouvrir un module ou un outil,
+Open in web,Ouvrir dans le web,
 Open list item,Ouvrir l'élément de la liste,
 Open your authentication app on your mobile phone.,Ouvrez votre application d'authentification sur votre téléphone portable.,
 Open {0},Ouvrir {0},
 Open,Ouvrir,Verb
+OpenID Configuration,Configuration OpenID,
 Open,Ouvert,
 Opened,Ouvert,
 Operation,Opération,
@@ -3228,6 +3701,7 @@ Password cannot be more than 127 characters long,Le mot de passe ne peut pas avo
 Password changed successfully.,Mot de passe changé avec succès.,
 Password for Base DN,Mot de Passe pour la Base DN,
 Password is required or select Awaiting Password,Mot de Passe est requis ou sélectionner En Attente de Mot de Passe,
+Password missing in Email Account,Mot de passe manquant dans le compte email,
 Password not found,Mot de Passe non trouvé,
 Password reset instructions have been sent to your email,Les Instructions de réinitialisation du mot de passe ont été envoyés à votre adresse Email,
 Password,Mot de passe,
@@ -3305,6 +3779,7 @@ Places,Espaces,
 Plan Name,Nom du Plan,
 Plant,Usine,
 Please Duplicate this Website Theme to customize.,Veuillez Dupliquer le thème de ce site Web pour le personnaliser.,
+Please Enable Server Scripts,Veuillez activer les scripts serveur,
 Please Enter Your Password to Continue,Veuillez entrer votre mot de passe pour continuer,
 Please Install the ldap3 library via pip to use ldap functionality.,Veuillez installer la librarie ldap3 via pip pour utiliser cette fonctionnalité,
 Please Set Chart,Veuillez configurer un graphique,
@@ -3318,6 +3793,7 @@ Please ask your administrator to verify your sign-up,Veuillez demander à votre 
 Please attach a file first.,Veuillez d'abord joindre un fichier.,
 Please attach a file or set a URL,Veuillez joindre un fichier ou définir une URL,
 Please attach an image file to set HTML,Veuillez attacher un fichier image pour définir le HTML,
+Please check OpenID Configuration URL,Veuillez vérifier l'URL de configuration OpenID,
 Please check the filter values set for Dashboard Chart: {},Veuillez vérifier les valeurs des filtres définis pour le graphique du tableau de bord: {},
 "Please check the value of ""Fetch From"" set for field {0}","Veuillez vérifier la valeur de ""Récupérer depuis le champ"" définie pour le champ {0}",
 Please check your email for verification,Veuillez vérifier votre email pour validation,
@@ -3343,11 +3819,13 @@ Please enter Authorize URL,Veuillez entrer l'URL d'autorisation,
 Please enter Base URL,Veuillez entrer l'URL de base,
 Please enter Client ID before social login is enabled,Veuillez entrer le code client avant que le login social soit activé,
 Please enter Client Secret before social login is enabled,Veuillez entrer le secret client avant que la connexion avec les réseaux sociaux soit activé,
+Please enter OpenID Configuration URL,Veuillez entrer l'URL de configuration OpenID,
 Please enter Redirect URL,Veuillez entrer l'URL de redirection,
 Please enter a valid email address.,Veuillez entrer une adresse email valide.,
 "Please enter both your email and message so that we \
 				can get back to you. Thanks!","Veuillez entrer à la fois votre email et votre message afin que nous \
  puissions revenir vers vous. Merci !",
+Please enter the password for: <b>{0}</b>,Veuillez entrer le mot de passe pour: <b>{0}</b>,
 Please enter the password,Veuillez entrer le mot de passe,
 Please enter valid mobile nos,Veuillez entrer des N° de mobiles valides,
 Please enter values for App Access Key and App Secret Key,Veuillez entrer des valeurs pour la Clé d'Accès à l'App et la Clé Secrète de l'App,
@@ -3394,6 +3872,7 @@ Please select document type first.,Veuillez d'abord sélectionner le type de doc
 Please select the Document Type.,Veuillez sélectionner le type de document.,
 Please select which module this Web Template belongs to.,Veuillez sélectionner le module auquel ce modèle de bloc web appartient,
 Please set API Key and Secret on the producer and consumer sites first.,Veuillez d'abord définir la clé et le secret d'API sur les site du producteur et du consommateur.,
+Please set Base URL in Social Login Key for Dodock,Veuillez définir une URL de base dans la clé de connexion de social pour Dodock,
 Please set Base URL in Social Login Key for Frappe,Veuillez définir l'URL de base dans la clé de connexion sociale pour Frappe,
 Please set Dropbox access keys in your site config,Veuillez définir les clés d'accès Dropbox dans la configuration de votre site,
 Please set Email Address,Veuillez définir une Adresse email,
@@ -3449,12 +3928,17 @@ Press Esc to close,Appuyez sur Echap pour fermer,
 Preview HTML,Aperçu HTML,
 Preview Message,Message d'aperçu,
 Preview,Aperçu,
+Previous Document,Document précédent,
 Previous Hash,Hash précédent,
 Previous Name,Nom précédent,
 Previous,Précedent,
+Primary Action ,Action principale,
+Primary Action Label ,Libellé de l'action principale,
 Primary Action Label,Libellé d'action principale,
 Primary Action URL,URL d'action principale,
+Primary Action,Action principale,
 Primary Color,Couleur primaire,
+Primary Navbar,Barre de navigation principale,
 Primary,Primaire,
 Print Documents,Imprimer des documents,
 Print Format Builder,Éditeur de format d'impression,
@@ -3499,6 +3983,8 @@ Processing...,Traitement en cours...,
 Processing,En traitement,
 Producer Document Name,Nom du document du producteur,
 Producer URL,URL du producteur,
+Product Card,Carte produit,
+Product Category Cards,Cartes de catégories de produits,
 Prof,Prof,
 Professional,Professionnelle,
 Profile Image,Photo de profil,
@@ -3548,6 +4034,7 @@ Quarter Day,Quart de Journée,
 Quarterly,Trimestriel,
 Query / Script,Requête / Script,
 Query Options,Options de Requête,
+Query Parameters,Paramètres de requête,
 Query Report,Rapport de Requête,
 Query must be a SELECT,La requête doit être un SELECT,
 Query,Requête,
@@ -3584,8 +4071,10 @@ Read by Recipient On,Lu par le destinataire le,
 Read by Recipient,Lu par le destinataire,
 Read,Lire,
 Reason,Raison,
+Rebuild Tree,Reconstruire l'arbre,
 Rebuild,Mettre à jour,
 Receipient,Bénéficiaire,
+Received an invalid token type.,Type de jeton reçu invalide.,
 Received,Reçu,
 Receiver By Document Field,Destinataire par champ de document,
 Receiver By Role,Destinataire par rôle,
@@ -3606,6 +4095,7 @@ Recurring document creation failure,Echec récurrent de création de document,
 Recurring,Récurrent,
 Redirect To,Rediriger Vers,
 Redirect URI Bound To Auth Code,URI de Redirection Lié au Code Auth,
+Redirect URI,URI de redirection,
 Redirect URIs,URIs de redirection,
 Redirect URL,URL de Redirection,
 Redis cache server not running. Please contact Administrator / Tech support,Le serveur de cache Redis ne fonctionne pas. Veuillez contacter l'administrateur / le support technique,
@@ -3664,6 +4154,7 @@ Remote Objectname,Nom de l'objet distant,
 Remote Primary Key,Clé primaire distante,
 Remote Value Filters,Filtres pour les valeurs distantes,
 Remote,À Distance,
+Remove Failed Jobs,Enlever les tâches en erreur,
 Remove Field,Supprimer le champ,
 Remove Filter,Supprimer le filtre,
 Remove Section,Supprimer la section,
@@ -3716,6 +4207,7 @@ Report an issue,Remonter un problème,
 Report cannot be set for Single types,Le Rapport ne peut pas être défini pour les types Uniques,
 "Report has no data, please modify the filters or change the Report Name","Le rapport n'a pas de données, veuillez modifier les filtres ou modifier le nom du rapport.",
 "Report has no numeric fields, please change the Report Name","Le rapport n'a aucun champ numérique, veuillez modifier le nom du rapport",
+"Report initiated, click to view status","Report lancé, cliquez pour voir son statut",
 Report of all document shares,Rapport de tous les partages de documents,
 Report this issue,Signaler ce problème,
 Report updated successfully,Rapport mis à jour avec succès,
@@ -3797,6 +4289,7 @@ Review Points: ,Points de revue,
 Review Points,Points de revue,
 Review,Revue,
 Reviews,Revues,
+Revocation URI,URI de révocation,
 Revoke,Révoquer,
 Revoked,Révoqué,
 Rich Text,Text riche,
@@ -3884,6 +4377,7 @@ Sample,Échantillon,
 Sat,Sam,
 Saturday,Samedi,
 Save API Secret: ,Enregistrer le secret d'API:,
+Save API Secret: {0},Secret d'API à enregistrer: {0},
 Save Anyway,Enregistrer malgré tout,
 Save As,Enregistrer Sous,
 Save Comment,Enregistrer un commentaire,
@@ -3926,6 +4420,7 @@ Script URL,URL du Script,
 Script or Query reports,Rapports Script ou Query,
 Script to attach to all web pages.,Script à joindre à toutes les pages web.,
 Script,Script,
+Scripting,Scripts,
 Seal Version,Version du sceau,
 Sealed documents cannot be deleted,Les documents scellés ne peuvent pas être supprimés,
 Search Bar,Barre de recherche,
@@ -3938,6 +4433,7 @@ Search by filename or extension,Chercher par nom de fichier ou extension,
 Search field {0} is not valid,Champ de recherche {0} n'est pas valide,
 Search for '{0}',Rechercher '{0}',
 Search for anything,Rechercher tout,
+Search for {0},Chercher {0},
 Search in a document type,Rechercher dans un type de document,
 Search or Create a New Chat,Rechercher ou créer un nouveau chat,
 Search or type a command (Ctrl + G),Recherchez ou entrez une commande (Ctrl + G),
@@ -4011,6 +4507,7 @@ Select Filters,Sélectionner des filtres,
 Select Google Calendar to which event should be synced.,Sélectionnez l'agenda Google avec lequel synchroniser cet événement.,
 Select Google Contacts to which contact should be synced.,Sélectionnez le contact Google avec lequel ce contact doit être synchronisé,
 Select Group By...,Sélectionnez un groupe...,
+Select Kanban,Sélectionner un Kanban,
 Select Language...,Choisir la Langue...,
 Select Language,Sélectionnez la langue,
 Select Languages,Sélectionner les langues,
@@ -4074,6 +4571,7 @@ Send Read Receipt,Envoyer un accusé de réception,
 Send System Notification,Envoyer une notification système,
 Send To All Assignees,Envoyer à tous les utilisateurs assignés au document,
 Send Unsubscribe Link,Ajouter un lien de désabonnement,
+Send Web View Link,Envoyer un lien de vue web,
 Send Welcome Email,Envoyer un Email de Bienvenue,
 Send a notification,Envoyer une notification,
 Send a test notification,Envoyer une notification test,
@@ -4081,6 +4579,7 @@ Send alert if date matches this field's value,Envoyer une alerte si la date corr
 Send alert if this field's value changes,Envoyer une alerte si la valeur de ce champ change,
 Send an email reminder in the morning,Envoyer un email de rappel dans la matinée,
 Send an email to {0} to link it here.,Envoyer un email à {0} pour le lier à ce document,
+Send an email to {0} to link it here,Envoyer un email à {0} pour lier ici,</a></b>
 Send an email to {0} to link it here,Envoyez un email à {0} pour le lier ici,
 Send days before or after the reference date,Envoyer jours avant ou après la date de référence,
 Send document Web View link in email,Envoyer un lien pour voir le document dans le navigateur dans les emails,
@@ -4133,6 +4632,7 @@ Set Chart,Créer un graphique,
 Set Dynamic Filters,Défnir les filtres dynamiques,
 Set Filters for {0},Définir des filtres pour {0},
 Set Filters,Définir des filtres,
+Set Limit,Définir une limite,
 Set Meta Tags,Définir les meta tags,
 Set New Password,Définir un nouveau mot de passe,
 Set Number of Backups,Définir le nombre de sauvegardes,
@@ -4146,6 +4646,8 @@ Set Quantity,Définir Quantité,
 Set Role For,Définir le Rôle Pour,
 Set User Permissions,Définir des autorisations utilisateurs,
 Set Value,Définir la Valeur,
+Set all private,Tout est privé,
+Set all public,Tout est public,
 Set as Default Theme,Choisir comme thème par défaut,
 Set custom roles for page and report,Définir des rôles personnalisés pour la page et le rapport,
 "Set default format, page size, print style etc.","Définir format par défaut, la taille de la page, le style d'impression etc.",
@@ -4159,6 +4661,7 @@ Set up rules for user assignments.,Créer des règles pour l'attribution aux uti
 Set up your website,Configurez votre site web,
 Set,Défini,Filters
 Set,Définir,
+Sets the current page as default for all users,Défini la page actuelle comme page par défaut pour tous les utilisateurs,
 Setting this Address Template as default as there is no other default,"Définition de ce modèle d'adresse par défaut, car il n'y a pas d'autre défaut",
 Setting up Global Search documents.,Configuration des documents de la recherche globale.,
 Setting up your system,Configuration de votre système,
@@ -4208,6 +4711,7 @@ Show Board,Afficher le tableau,
 Show CTA in Blog,Afficher un bouton d'incitation à l'action dans le blog,
 Show Calendar,Afficher le calendrier,
 Show Confetti,Afficher les confettis,
+Show Controls,Afficher les contrôles,
 Show Dashboard,Voir le tableau de bord,
 Show Days,Afficher les jours,
 Show Document,Voir le document,
@@ -4217,6 +4721,7 @@ Show Form Tour,Afficher la découverte du formulaire,
 Show Full Error and Allow Reporting of Issues to the Developer,Montrer l'Erreur Complète et Autoriser l'envoi de Rapports d'Erreurs aux Développeurs,
 Show Full Form?,Voir le formulaire complet ?,
 Show Full Form,Afficher le formulaire complet,
+Show Indicators,Afficher les indicateurs,
 Show Keyboard Shortcuts,Voir les raccourcis claviers,
 Show Likes,Afficher Likes,
 Show Line Breaks after Sections,Afficher les sauts de Ligne après chaque section,
@@ -4229,6 +4734,7 @@ Show Preview Popup,Afficher le popup de prévisualisation,
 Show Print First,Afficher l'impression en premier,
 Show Relapses,Afficher les Rechutes,
 Show Report,Afficher le rapport,
+Show Saved,Afficher les valeurs enregistrées,
 Show Seconds,Afficher les secondes,
 Show Section Headings,Afficher les titres de section,
 Show Sidebar,Afficher la barre latérale,
@@ -4365,6 +4871,7 @@ Standard Sidebar Menu,Menu Standard de la Barre Latérale,
 Standard rich text editor with controls,Editeur de texte riche standard avec options de contrôle,
 Standard roles cannot be disabled,Les rôles standard ne peuvent pas être désactivées,
 Standard roles cannot be renamed,Les rôles standard ne peuvent pas être renommés,
+Standard user type {0} can not be deleted.,Le type d'utilisateur standard {0} ne peut pas être supprimé.,
 Standard,Standard,
 Standings,Classement,
 Start Date Field,Date de début,
@@ -4430,15 +4937,18 @@ Submit this document to confirm,Valider ce document pour confirmer,
 Submit {0} documents?,Valider {0} documents ?,
 Submit,Valider,
 Submiting {0},Validation de {0},
+Submitted By,Validé par,
 Submitted Document cannot be converted back to draft. Transition row {0},Document Soumis ne peut pas être reconvertis en Brouillon. Ligne de transition {0},
 Submitted,Validé,
 Submitting,Soumission,
 Subscribed Documents,Documents souscrits,
 Subscription Notification,Notification d'abonnement,
 Subsidiary,Filiale,
+Subtitle ,Sous-titre,
 Subtitle,Sous-titres,
 Success Action,Action de succès,
 Success Message,Message de succès,
+Success URI,URI de succès,
 Success URL,Lien de succès,
 Success! You are good to go 👍,Succès! Vous pouvez y aller 👍,
 Success,Réussite,
@@ -4492,6 +5002,7 @@ System Settings,Paramètres Système,
 System User,Utilisateur Système,
 System and Website Users,Utilisateurs système et site web,
 System managers are allowed by default,Les responsables système sont autorisés par défaut,
+System will auto-delete Prepared Reports permanently after these many days since creation,Le système supprimera automatiquement et définitivement les rapports préparés après ce nombre de jours,
 System will automatically delete Prepared Reports after these many days since creation,Le système va automatiquement supprimer les rapports préparés x jours après leur création,
 System,Système,
 Tab 1 Content,Contenu de l'onglet 1,
@@ -4561,9 +5072,11 @@ Thank you for your feedback!,Merci pour votre réponse,
 Thank you for your interest in subscribing to our updates,Merci de l'intérêt que vous nous montrez en vous abonnant à notre actualité,
 Thank you for your message,Merci pour votre message,
 Thank you,Merci,
+Thanks,Merci,
 The Auto Repeat for this document has been disabled.,La répétition automatique a été désactivée pour ce document.,
 The CSV format is case sensitive,Le format CSV est sensible à la casse,
 The Condition '{0}' is invalid,La Condition '{0}' est invalide,
+The File URL you've entered is incorrect,L'URL du fichier que vous avez entrée est incorrecte,
 The First User: You,Le Premier Utilisateur : Vous,
 The Link specified has either been used before or is invalid,Ce lien a déjà été utilisé ou est invalide.,
 "The application has been updated to a new version, please refresh this page","L'application a été mise à jour vers une nouvelle version, veuillez rafraîchir cette page",
@@ -4572,9 +5085,12 @@ The bank could not authenticate this card. Please try again or contact your bank
 The column {0} has {1} different date formats. Automatically setting {2} as the default format as it is the most common. Please change other values in this column to this format.,La colonnne {0} a {1} formats de date différents. Le format {2} sera considéré comme le format par défaut car c'est le plus courant. Veuillez changer les autres valeurs dans cette colonne pour les mettre dans ce format.,
 The comment cannot be empty,Les commentaires ne peuvent pas être vides,
 The document could not be correctly assigned,Le document n'a pas pu être attribué correctement,
+The document exists but is not chained correctly,Ce document existe mais n'est pas correctement chaîné,
 The document has been assigned to {0},Le document a été attribué à {0},
+The field {0} is mandatory,Le champ {0} est obligatoire,
 The first user will become the System Manager (you can change this later).,Le premier utilisateur deviendra le Responsable Système (vous pouvez changer cela plus tard).,
 The following records needs to be created before we can import your file.,Les données suivantes doivent être crées avant de pouvoir importer ce fichier.,
+The limit has not set for the user type {0} in the site config file.,La limite n'a pas été définie pour le type d'utilisateur {0} dans le fichier de configuration du site (site_config),
 The mapping configuration between two doctypes.,Mapping de configuration entre deux types de documents.,
 "The meta description is an HTML attribute that provides a brief summary of a web page. Search engines such as Google often display the meta description in search results, which can influence click-through rates.",La meta-description est un attribut HTML fournissant un court résumé de la page. Les moteurs de recherche affichent souvent les meta-descriptions dans leurs résultats et cela a une influence sur le taux de clic.,
 "The meta image is unique image representing the content of the page. Images for this Card should be at least 280px in width, and at least 150px in height.",Une meta-image est une image unique représentant cette page. Ce type d'images doivent faire au moins 280px de large et 150px de haut.,
@@ -4582,12 +5098,15 @@ The name that will appear in Google Calendar,Le nom qui apparaîtra dans Google 
 The page you are looking for is missing. This could be because it is moved or there is a typo in the link.,La page que vous recherchez est manquante. Cela pourrait être dû au fait qu'elle a été déplacée ou il y a une faute de frappe dans le lien.,
 The process for deletion of {0} data associated with {1} has been initiated.,La suppression des données de {1} sur {0} a démarré.,
 The resource you are looking for is not available,La ressource que vous recherchez n'est pas disponible,
+The role {0} should be a custom role.,Le rôle {0} doit être un rôle personnalisé.,
+The seal chain does not match,La sceau de la chaîne ne correspond pas,
 The site which is consuming your events.,Site consommant vos événements,
 The site you want to subscribe to for consuming events.,Site auquel vous souhaitez vous abonner pour consommer vos événements.,
 The system is being updated. Please refresh again after a few moments.,Le système est en cours de mise à jour. Veuillez réessayer dans quelques instants.,
 The system provides many pre-defined roles. You can add new roles to set finer permissions.,Le système offre de nombreux rôles prédéfinis. Vous pouvez ajouter de nouveaux rôles pour définir des autorisations plus fines .,
 "The task {0}, that you assigned to {1}, has been closed by {2}.","La tâche {0}, que vous avez attribuée à {1}, a été fermée par {2}.",
 "The task {0}, that you assigned to {1}, has been closed.","La tâche {0}, que vous avez attribuée à {1}, a été fermée.",
+The total number of user document types limit has been crossed.,Le nombre total de types de documents pour cet utilisateur a été dépassé.,
 The user from this field will be rewarded points,Les utilisateurs de ce champ obtiendront des points,
 The versioning document for this doctype could not be found,Le document de version de ce type de document n'a pas pu être trouvé,
 The webhook will be triggered if this expression is true,Ce webhook sera déclenché si cette expression est vraie,
@@ -4642,10 +5161,12 @@ This dashboard is empty,Ce tableau de bord est vide,
 "This document accepts <a href=""http://jinja.pocoo.org/docs/templates/"">Jinja Templating</a> and any field in the address doctype (custom fields included).<br>Read more in the <a href=""https://doc.dokos.io/dokos/setting-up/configuration/address-templates.html"">documentation</a>.","Ce document accepte le <a href=""http://jinja.pocoo.org/docs/templates/"">language Jinja</a> et tous les champs du type de document Adresse (champs personnalisés inclus).<br>Pour en savoir plus, lire la <a href=""https://doc.dokos.io/fr/dokos/installation/configuration/modele-adresses.html"">documentation</a>",
 "This document accepts <a href=""http://jinja.pocoo.org/docs/templates/"">Jinja Templating</a> and any field in the address doctype (custom fields included).<br>Read more in the [documentation](https://doc.dokos.io/dokos/setting-up/configuration/address-templates.html)","Ce document accepte le <a href=""http://jinja.pocoo.org/docs/templates/"">language Jinja</a> et tous les champs du type de document Adresse (champs personnalisés inclus).<br>Pour en savoir plus, lire la [documentation](https://doc.dokos.io/fr/dokos/installation/configuration/modele-adresses.html)",
 This document cannot be reverted,Ce document ne peut pas être annulé,
+This document exists and has been correctly archived,Ce document existe et a été correctement archivé,
 This document has been modified after the email was sent.,Ce document a été modifié après l'envoi de l'e-mail.,
 This document has been reverted,Ce document a été annulé,
 "This document is already amended, you cannot ammend it again","Ce document est déjà modifié, vous ne pouvez pas le modifier à nouveau",
 This document is currently queued for execution. Please try again,Ce document est actuellement en attente d'exécution. Veuillez réessayer,
+This document is not archived,Ce document n'est pas archivé,
 This document is not sealed,Ce document n'est pas scellé,
 This email is autogenerated,Ce courrier électronique est autogénéré,
 This email was sent to {0} and copied to {1},Cet email a été envoyé à {0} et une copie à {1},
@@ -4721,6 +5242,7 @@ Tip:  Double click cell to edit,Astuce : Double cliquez dans une cellule pour l'
 Title Case,Casse du titre,
 Title Field,Champ titre,
 Title Prefix,Préfixe de Titre,
+Title ,Titre,
 Title field must be a valid fieldname,Champ Titre doit être un nom de champ valide,
 Title of the page,Titre de la page,
 Title,Titre,
@@ -4742,12 +5264,14 @@ To enable it follow the instructions in the following link: {0},"Pour l'activer,
 "To get the updated report, click on {0}.","Pour avoir un rapport mis à jour, cliquez sur {0}",
 To print output use <code>log(text)</code>,Pour imprimer un résultat utilisez <code>log(text)</code>,
 "To renew, {0}.","Pour renouveler, {0}.",
+"To set the role {0} in the user {1}, kindly set the {2} field as {3} in one of the {4} record.","Pour ajouter le rôle {0} à l'utilisateur {1}, mettez {3} dans le champ {2} de l'une des entrées de {4}.",
 "To stop sending repetitive error notifications from the system, we have checked Disabled field in the Auto Repeat document","Pour arrêter d'envoyer des notifications d'erreurs répétitives à partir du système, nous avons coché la case Désactivé dans le document de Répétition Automatique",
 "To use Google Calendar, enable <a href='#Form/Google Settings'>Google Settings</a>.","Pour utiliser Google Agenda, activer les <a href='#Form/Google Settings'>paramètres Google</a>.",
 "To use Google Calendar, enable {0}.","Pour utiliser Google Agenda, activez les {0}.",
 "To use Google Contacts, enable {0}.","Pour utiliser les contacts Google, activez les {0}.",
 "To use Google Drive, enable {0}.","Pour utiliser Google Drive, activez les {0}.",
 "To use Google Indexing, enable <a href=""#Form/Google Settings"">Google Settings</a>.","Pour utiliser l'indexation Google, autorisez les <a href=""#Form/Google Settings"">Paramètres Google</a>.",
+"To use Google Indexing, enable <a href=""/app/Form/Google Settings"">Google Settings</a>.","Pour utiliser l'indexation Google, autorisez les <a href=""/app/Form/Google Settings"">Paramètres Google</a>."",",
 "To use Slack Channel, add a <a href=""#List/Slack%20Webhook%20URL/List"">Slack Webhook URL</a>.","Pour utiliser les canaux Slack, ajoutez une <a href=""#List/Slack%20Webhook%20URL/List"">URL de webhook Slack</a>.",
 "To use Slack Channel, add a <a href=""\#Form/Slack Webhook URL"">Slack Webhook URL</a>.","Pour utiliser un canal Slack, ajoutez un <a href=""\#Form/Slack Webhook URL"">URL de Webhook Slack</a>.",
 "To use WhatsApp for Business, initialize <a href=""#Form/Twilio Settings"">Twilio Settings</a>.","Pour utiliser WhatsApp for Business, initialisez les <a href=""#Form/Twilio Settings"">Paramètres Twilio</a>.",
@@ -4759,6 +5283,10 @@ Toggle Charts,Afficher/Cacher les graphiques,
 Toggle Grid View,Afficher/Cacher la vue en grille,
 Toggle Public/Private,Modifier public/privé,
 Toggle Sidebar,Afficher/Cacher la barre latérale,
+Toggle Theme,Changer de thème,
+Token Cache,Cache du jeton,
+Token Type,Type de jeton,
+Token URI,URI du jeton,
 Token is missing,Le Jeton est manquant,
 Token,Jeton,
 Too Many Requests,Trop de requêtes,
@@ -4840,6 +5368,7 @@ UPPERCASE,MAJUSCULE,
 "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook","URIs pour recevoir le code d'autorisation ainsi que les réponses d'échec une fois que l'utilisateur autorise l'accès. Typiquement, un point de terminaison REST exposé par l'application cliente.<br>Par exemple, http: //hostname//api/method/frappe.www.login.login_via_facebook",
 URL for documentation or help,URL de documentation ou d'aide,
 URL must start with 'http://' or 'https://',L'URL doit commencer par 'http://' ou 'https://',
+URL must start with http:// or https://,L'URL doit commencer avec http:// ou https://,
 URL of the page,URL de la page,
 URL to go to on clicking the slideshow image,URL de redirection lorsque l'on clique sur l'image du diaporama,
 URL,URL,
@@ -4938,12 +5467,14 @@ User Can Dismiss ,L'utilisateur peut cacher la carte,
 User Cannot Create,L'utilisateur ne peut pas créer,
 User Cannot Search,L'utilisateur ne peut pas rechercher,
 User Defaults,Profil par Défaut,
+User Document Types Limit Exceeded,Limite de types de documents pour cet utilisateur dépassée,
 User Email,Email de l'Utilisateur,
 User Emails,Les Emails de l'Utilisateur,
 User Field,Champ contenant l'utilisateur,
 User ID Property,Propriété de l'ID utilisateur,
 User ID of a Blogger,ID l'Utilisateur d'un Blogger,
 User ID,ID de l'Utilisateur,
+User Id Field is mandatory in the user type {0},Le champ User Id est obligatoire pour le type d'utilisateur {0},
 User Id,Utilisateur du site,
 User Image,Photo de Profil,
 User Manually Logged Out,L'utilisateur s'est déconnecté manuellement,
@@ -4963,6 +5494,7 @@ User ,Utilisateur,
 User can login using Email id or Mobile number,L'utilisateur peut se connecter en utilisant l'identifiant de messagerie ou le numéro de téléphone mobile,
 User can login using Email id or User Name,L'utilisateur peut se connecter en utilisant son Email ou son Nom d'Utilisateur,
 User does not exist,L'utilisateur n'existe pas,
+User does not have permission to create the new {0},L'utilisateur n'a pas l'autorisation de créer un nouveau {0},
 User editable form on Website.,Formulaire modifiable par l'utilisateur sur le Site.,
 User is already registered for this event.,Cet utilisateur est déjà enregistré pour cet événement,
 User is mandatory for Share,L'utilisateur est obligatoire pour Partager,
@@ -4978,6 +5510,7 @@ User {0} has requested for data deletion,L'utilisateur {0} a demandé la suppres
 User {0} is disabled,Utilisateur {0} est désactivé,
 User {0} not found on the producer site,L'utilisateur {0} n'a pas été trouvé sur le site du producteur,
 User,Utilisateur,
+Userinfo URI,URI des informations utilisateur,
 Username {0} already exists,Nom d'Utilisateur {0} existe déjà,
 Username,Nom d'utilisateur,
 Users To Notify,Utilisateurs à notifier,
@@ -5043,6 +5576,7 @@ View Report,Voir un rapport,
 View Setting,Paramètres des vues,
 View Settings,Paramètres d'affichage,
 View Subscribers,Voir les abonnés,
+View Switcher,Voir la sélection de vues,
 View Website,Voir le site web,
 View as {0},Vue {0},
 View document,Voir le document,
@@ -5125,6 +5659,7 @@ Welcome to {0},Bienvenue sur {0},
 WhatsApp,WhatsApp,
 "When enabled this will allow guests to upload files to your application, You can enable this if you wish to collect files from user without having them to log in, for example in job applications web form.","Si cette option est activée, des utilisateurs non connectés pourront télécharger des fichiers sur votre système. Vous pouvez activer cette options si vous souhaitez que des invités puissent télécharger des fichiers sans devoir s'inscrire sur votre plateforme.",
 "When you Amend a document after Cancel and save it, it will get a new number that is a version of the old number.","Lorsque vous Modifiez un document après l'avoir Annulé et que vous l'enregistrez, il va obtenir un nouveau numéro qui est une version de l'ancien numéro.",
+Which view of the associated DocType should this shortcut take you to?,Vers quelle vue du type de document associé ce raccourci doit-il vous emmener ?,
 Widget Height,Hauteur du widget,
 Widget Name,Nom du widget,
 Widget Type,Type de widget,
@@ -5163,6 +5698,9 @@ Workflow Transition,Transition du Flux de Travail,
 Workflow state represents the current state of a document.,L'état du flux de travail représente l'état actuel d'un document.,
 Workflow will start after saving.,Le Flux de Travail démarre après l'enregistrement.,
 Workflow,Flux de travail,
+Workspace Chart,Graphique de l'espace de travail,
+Workspace Link,Lien de l'espace de travail,
+Workspace Shortcut,Raccourci de l'espace de travail,
 Workspace,Espace de travail,
 Write a Python file in the same folder where this is saved and return column and result.,Écrire un script Python dans le dossier où est enregistré ce rapport et renvoyer la colonne et le résultat.,
 Write a SELECT query. Note result is not paged (all data is sent in one go).,Écrire une requête SELECT. Remarque : le résultat n'est pas paginé (toutes les données sont transmises en une seule fois).,
@@ -5170,6 +5708,7 @@ Write titles and introductions to your blog.,Écrire des titres et des introduct
 Writers Introduction,Présentation des Rédacteurs,
 Write,Écrire,
 Wrong Fetch From value,Valeur récupérée depuis le champ invalide,
+Wrong fieldname <b>{0}</b> in add_fetch configuration of client script,Nom de champ incorret <b>{0}</b> dans la configuration du script client,
 Wrong fieldname <b>{0}</b> in add_fetch configuration of custom script,Nom de champ incorrect <b>{0}</b> dans la configuration add_fetch du script personnalisé,
 X Axis Field,Champ de l'Axe X,
 X Field,Champ X,
@@ -5188,6 +5727,7 @@ You are connected to internet.,Vous êtes connecté à Internet.,
 You are not allowed to create columns,Vous n'êtes pas autorisé à créer des colonnes,
 You are not allowed to delete Standard Report,Vous n'êtes pas autorisés à supprimer les rapports standards,
 You are not allowed to delete a standard Website Theme,Vous n'êtes pas autorisé à supprimer un Thème standard du Site Web,
+You are not allowed to edit the report.,Vous n'êtes pas autorisé à éditer le rapport.,
 You are not allowed to print this document,Vous n'êtes pas autorisé à imprimer ce document,
 You are not allowed to print this report,Vous n'êtes pas autorisé à imprimer ce rapport,
 You are not allowed to send emails related to this document,Vous n'êtes pas autorisé à envoyer un email en relation avec ce document,
@@ -5201,12 +5741,15 @@ You are registered for this event,Vous êtes inscrit à cet événement,
 				read as well as unread message from server. This may also cause the duplication\
 				of Communication (emails).","Vous sélectionnez l'Option Sync avec TOUS, cela resynchronisera tout les message lu et non lu à partir du serveur. Cela peut également provoquer la duplication de Communication (emails).",
 You can add dynamic properties from the document by using Jinja templating.,Vous pouvez ajouter des propriétés dynamiques au document à l'aide des modèles Jinja.,
+You can also copy-paste following link in your browser,Vous pouvez aussi copier-coller le lien suivant dans votre navigateur,
 You can also copy-paste this ,Vous pouvez ausso copier/coller ce,
 You can also copy-paste this link in your browser,Vous pouvez également copier-coller ce lien dans votre navigateur,
 You can also copy-paste this {0} to your browser,Vous pouvez aussi copier-coller ce {0} dans votre navigateur.,
 "You can change Submitted documents by cancelling them and then, amending them.","Vous pouvez modifier les documents Soumis en les annulant et ensuite, en les modifiant.",
 You can continue with the onboarding after exploring this page,Vous pourrez continuer l'onboarding après avoir exploré cette page,
 You can find things by asking 'find orange in customers',Vous pouvez trouver des choses en demandant 'trouver orange dans clients',
+You can only have one default page that extends a particular standard page.,Vous ne pouvez avoir qu'une page par défaut qui étend une page standard,
+You can only set the 3 custom doctypes in the Document Types table.,Vous ne pouvez choisir que 3 types de documents personnalisés dans la table des types de documents.,
 "You can only upload JPG, PNG, PDF, or Microsoft documents.","Vous pouvez uniquement télécharger des fichiers JPG, PNG, PDF ou des documents Microsoft.",
 You can only upload upto 5000 records in one go. (may be less in some cases),Vous pouvez seulement charger jusqu'à 5000 enregistrement en une seule fois. (peut-être moins dans certains cas),
 "You can select one from the following,","Vous pouvez choisir l'une des options suivantes,",
@@ -5245,6 +5788,7 @@ You have used up all of the space allotted to you. Please buy more space in your
 You have {0} days left in your subscription,Il vous reste {0} jour(s) dans votre abonnement,
 You haven't added any Dashboard Charts or Number Cards yet.,Vous n'avez pas encore ajouté de graphique de tableau de bord ou de carte statistique.,
 You haven't created a {0} yet,Vous n'avez pas encore créé {0},
+You hit the rate limit because of too many requests. Please try after sometime.,Vous avez atteint la limite de requêtes. Veuillez réessayer dans quelques secondes.,
 You lost some energy points,Vous avez perdu des points d'énergie,
 You may continue with onboarding,Vous pouvez continuer l'onboarding,
 You must login to submit this form,Vous devez vous connecter pour valider ce formulaire,
@@ -5264,6 +5808,7 @@ You seem good to go!,Félicitations,
 You selected Draft or Cancelled documents,Vous avez sélectionné des documents Brouillon ou Annulés,
 You unfollowed this document,Vous ne suivez plus ce document,
 "You're doing great, let's take you back to the onboarding page.","Félicitations, vous pouvez revenir à la page d'onboarding.",
+You,Vous,Name of the current user. For example: You edited this 5 hours ago.
 YouTube,YouTube,
 You,Vous,
 Your Country,Votre pays,
@@ -5299,6 +5844,7 @@ Your subscription has expired.,Votre abonnement a expiré.,
 Your subscription will expire on {0}.,Votre abonnement expirera le {0}.,
 Your subscription will expire today.,Votre abonnement expirera aujourd'hui.,
 Your subscription will expire tomorrow.,Votre abonnement expirera demain.,
+Your verification code is {0},Votre code de vérification est le {0},
 Your website is set up !,Votre site web est prêt,
 Zero means send records updated at anytime,Zéro signifie envoyer des enregistrements mis à jour à tout moment,
 Zero,Zéro,
@@ -5308,6 +5854,7 @@ Zone,Zone,
 [Warning] Backup Upload Failed,[Attention] Erreur de téléchargement de la sauvegarde,
 _doctype,_doctype,
 _report,_rapport,
+added rows for {0},a ajouté des lignes à {0},
 added {0},{0} ajouté,
 added,ajouté,
 adjust,paramétrer,
@@ -5371,6 +5918,7 @@ cn-north-1,cn-north-1,
 cn-northwest-1,cn-northwest-1,
 cog,dent,
 comment,commentaire,
+commented,a commenté,
 comments,commentaires,
 composing an email,rédiger un email,
 created,créé,
@@ -5538,6 +6086,7 @@ refresh_token,refresh_token,
 refresh,rafraîchir,
 remove-circle,retirez-cercle,
 remove-sign,retirez-signe,
+removed rows for {0},a retiré des lignes à {0},
 removed,retiré,
 remove,retirer,
 renamed from {0} to {1},a renommé {0} à {1},
@@ -5583,6 +6132,7 @@ tag,balise,
 tags,balises,
 "target = ""_blank""","target = ""_blank""",
 tasks,tâche,
+test,test,
 text in document type,Texte dans le type de document,
 text-height,Hauteur-texte,
 text-width,largeur-text,
@@ -5648,6 +6198,7 @@ zoom-out,Réduire,
 {0} M,{0} M,
 {0} Name,{0} Nom,
 {0} Page Views,{0} vues de page,
+{0} Page views,{0} vues de page,
 {0} Report,Rapport: {0},
 {0} Reports,{0} rapports,
 {0} Settings not found,Paramètres {0} introuvables,
@@ -5710,6 +6261,8 @@ zoom-out,Réduire,
 {0} from {1} to {2},{0} de {1} à {2},
 {0} gained {1} point for {2} {3},{0} a gagné {1} point pour {2} {3},
 {0} gained {1} points for {2} {3},{0} a gagné {1} points pour {2} {3},
+{0} gained {1} points,{0} a gagné {1} points,
+{0} gave {1} points,{0} a donné {1} points,
 {0} has already assigned default value for {1}.,{0} a déjà une valeur par défaut pour {1},
 {0} has been successfully added to the Email Group.,{0} a été ajouté avec succès au Groupe d'Email.,
 {0} has left the conversation in {1} {2},{0} a quitté la conversation dans {1} {2},
@@ -5724,6 +6277,7 @@ zoom-out,Réduire,
 {0} is currently {1},{0} est en train de {1},
 {0} is disabled,{0} est désactivé,
 {0} is mandatory,{0} est obligatoire,
+{0} is not a field of doctype {1},{0} n'est pas un champ du type de document {1},
 {0} is not a raw printing format.,{0} n'est pas un format d'impression brut.,
 {0} is not a valid DocType for Dynamic Link,{0} n'est pas un type de document valide pour un lien dynamique,
 {0} is not a valid Email Address,{0} n'est pas une Adresse email valide,
@@ -5834,5 +6388,6 @@ zoom-out,Réduire,
 {} Published,{} publiés,
 {} Reports,{} rapports,
 {} energy points summary,Récapitulatif de points d'énergie {},
+{} has been disabled. It can only be enabled if {} is checked.,{} est désactivé. Il ne peut être activé que si {} est coché.,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,

@@ -229,8 +229,8 @@ def user_linked_with_permission_on_doctype(doc, user):
 		label = frappe.get_meta(doc.apply_user_permission_on).get_field(doc.user_id_field).label
 
 		frappe.msgprint(_("To set the role {0} in the user {1}, kindly set the {2} field as {3} in one of the {4} record.")
-			.format(frappe.bold(doc.role), frappe.bold(user), frappe.bold(label),
-				frappe.bold(user), frappe.bold(doc.apply_user_permission_on)))
+			.format(frappe.bold(_(doc.role)), frappe.bold(user), frappe.bold(_(label)),
+				frappe.bold(user), frappe.bold(_(doc.apply_user_permission_on))))
 
 		return False
 
