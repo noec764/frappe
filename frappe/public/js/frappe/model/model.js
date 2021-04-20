@@ -248,7 +248,7 @@ $.extend(frappe.model, {
 	},
 
 	unscrub: function(txt) {
-		return __(txt || '').replace(/-|_/g, " ").replace(/\w*/g,
+		return (txt || '').replace(/-|_/g, " ").replace(/\w*/g,
 			function(keywords){return keywords.charAt(0).toUpperCase() + keywords.substr(1).toLowerCase();});
 	},
 

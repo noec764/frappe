@@ -37,7 +37,10 @@ def get_all_nodes(doctype, parent, tree_method, **filters):
 	return out
 
 @frappe.whitelist()
-def get_children(doctype, parent=''):
+def get_children(doctype, parent='', **filters):
+	"""
+	Keep `filters` for legacy usage
+	"""
 	return _get_children(doctype, parent)
 
 def _get_children(doctype, parent='', ignore_permissions=False):

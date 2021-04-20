@@ -100,7 +100,7 @@ frappe.views.TreeView = Class.extend({
 		frappe.treeview_settings.filters = []
 		$.each(this.opts.filters || [], function(i, filter) {
 			if (frappe.route_options && frappe.route_options[filter.fieldname]) {
-				filter.default = frappe.route_options[filter.fieldname]
+				filter.default = frappe.route_options[filter.fieldname];
 			}
 
 			if (!filter.disable_onchange) {
