@@ -418,6 +418,7 @@ $.extend(frappe, {
 				});
 			});
 		}
+	}
 });
 
 frappe.setup_search = function (target, search_scope) {
