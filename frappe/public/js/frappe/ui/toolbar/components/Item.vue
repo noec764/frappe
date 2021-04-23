@@ -7,7 +7,7 @@
 	>
 		<a
 			class="dodock-sidebar-link"
-			:href="'/app/' + item.name.toLowerCase()"
+			:href="'/app/' + frappe.router.slug(item.name)"
 		>
 			<i class="dodock-sidebar-icon"
 				:style="{
