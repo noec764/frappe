@@ -395,6 +395,8 @@ export default class Grid {
 			this.wrapper.find('.grid-footer').toggle(false);
 		}
 
+		this.wrapper.find('.grid-add-row, .grid-add-multiple-rows').toggle(this.is_editable());
+
 	}
 
 	truncate_rows() {
