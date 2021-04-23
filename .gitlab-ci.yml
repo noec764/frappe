@@ -32,7 +32,10 @@ unittests:
     - npm install --global yarn
     - mkdir -p apps
     - mkdir -p apps/frappe
-    - cd ~/
+    - ls .
+    - ls ~/
+    - ls /builds
+    - ls /builds/dokos
     - mv -f * apps/frappe/ || true
     - . env/bin/activate
     - pip3 install --upgrade pip
