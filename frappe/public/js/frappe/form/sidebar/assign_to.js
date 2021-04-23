@@ -42,7 +42,6 @@ frappe.ui.form.AssignTo = Class.extend({
 				frm: this.frm
 			});
 		});
-
 	},
 	add: function() {
 		var me = this;
@@ -67,17 +66,17 @@ frappe.ui.form.AssignTo = Class.extend({
 		me.assign_to.dialog.show();
 	},
 	remove: function(owner) {
-		if(this.frm.is_new()) {
+		if (this.frm.is_new()) {
 			frappe.throw(__("Please save the document before removing assignment"));
 			return;
 		}
 
 		return frappe.xcall('frappe.desk.form.assign_to.remove', {
-				doctype: me.frm.doctype,
-				name: me.frm.docname,
-				assign_to: owner
-			}).then((assignments) => {
-				this.render(assignments);
+			doctype: this.frm.doctype,
+			name: this.frm.docname,
+			assign_to: owner
+		}).then((assignments) => {
+			this.render(assignments);
 		});
 	}
 });
@@ -209,6 +208,7 @@ frappe.ui.form.AssignToDialog = Class.extend({
 	}
 });
 
+
 frappe.ui.form.AssignmentDialog = class {
 	constructor(opts) {
 		this.frm = opts.frm;
@@ -297,9 +297,11 @@ frappe.ui.form.AssignmentDialog = class {
 					${frappe.utils.icon('close')}
 				</span>
 			`);
-			this.remove_assignment(assignment).then((assignments) => {
-				row.remove();
-				this.render(assignments);
+			row.find('.remove-btn').click(() => {
+				this.remove_assignment(assignment).then((assignments) => {
+					row.remove();
+					this.render(assignments);
+				});
 			});
 		}
 		return row;

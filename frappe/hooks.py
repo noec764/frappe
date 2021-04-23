@@ -4,7 +4,7 @@ from frappe import _
 
 
 app_name = "frappe"
-app_title = "dodock"
+app_title = "Dodock"
 app_publisher = "Dokos SAS"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_icon = "octicon octicon-circuit-board"
