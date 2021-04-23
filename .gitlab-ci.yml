@@ -25,17 +25,23 @@ unittests:
     - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client
     - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
     - dpkg -i wkhtmltox_0.12.5-1.buster_amd64.deb && rm wkhtmltox_0.12.5-1.buster_amd64.deb
+    - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_i386.deb
+    - dpkg -i wkhtmltox_0.12.5-1.buster_i386.deb && rm wkhtmltox_0.12.5-1.buster_i386.deb
+    - rm -rf /var/lib/apt/lists/*
+    - rm -rf /etc/apt/sources.list.d/*
+    - apt-get update
+    - curl -sL https://deb.nodesource.com/setup_12.x | bash
+    - apt-get install -y nodejs
+    - npm install --global yarn
     - mkdir -p apps
     - mkdir -p apps/frappe
     - mv -f * apps/frappe/ || true
-    - mkdir -p sites logs && echo "frappe" > sites/apps.txt
-    - mkdir -p ../logs
-    - cp -r apps/frappe/test_sites/test_site sites/
-    - mkdir -p test_site/logs
-    - python -m venv env
     - . env/bin/activate
     - pip3 install --upgrade pip
     - pip3 install --no-cache-dir -e apps/frappe/
+    - cd apps/frappe
+    - yarn install
+    - cd ../../
     - python apps/frappe/test_sites/test_installer.py || true
     - python apps/frappe/test_sites/test_runner.py
 
