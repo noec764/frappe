@@ -29,7 +29,7 @@ def create_or_update_social_login_key():
 		social_login_key = frappe.get_doc("Social Login Key", "frappe")
 	except frappe.DoesNotExistError:
 		social_login_key = frappe.new_doc("Social Login Key")
-	social_login_key.get_social_login_provider("Frappe", initialize=True)
+	social_login_key.get_social_login_provider("Dodock", initialize=True)
 	social_login_key.base_url = frappe.utils.get_url()
 	social_login_key.enable_social_login = 0
 	social_login_key.save()

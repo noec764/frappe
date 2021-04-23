@@ -14,6 +14,8 @@ from frappe.core.doctype.user.user import test_password_strength
 from frappe.core.doctype.user.user import extract_mentions
 import requests
 
+from frappe.frappeclient import FrappeClient
+
 test_records = frappe.get_test_records('User')
 
 class TestUser(unittest.TestCase):
