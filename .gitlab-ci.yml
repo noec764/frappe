@@ -36,7 +36,7 @@ unittests:
     - mkdir -p sites logs && echo "frappe" > sites/apps.txt
     - mkdir -p ../logs
     - mkdir sites/test_site
-    - cp -r apps/frappe/tests_site/test_site/site_config.json sites/test_site/
+    - cp -r apps/frappe/test_sites/test_site/site_config.json sites/test_site/
     - mkdir -p test_site/logs
     - mkdir -p sites/assets
     - python -m venv env
