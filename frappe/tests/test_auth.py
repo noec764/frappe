@@ -9,6 +9,7 @@ import frappe
 from frappe.auth import LoginAttemptTracker
 from frappe.frappeclient import FrappeClient, AuthError
 
+@unittest.skip("Skipped in CI")
 class TestAuth(unittest.TestCase):
 	def __init__(self, *args, **kwargs):
 		super(TestAuth, self).__init__(*args, **kwargs)

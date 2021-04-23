@@ -3,6 +3,7 @@ import frappe
 import json
 
 from frappe.installer import _new_site
+import frappe.build
 
 def get_site_config(site_name):
 	site_config = None
@@ -40,6 +41,8 @@ def main():
 
 	if frappe.redis_server:
 		frappe.redis_server.connection_pool.disconnect()
+
+	frappe.build.bundle(True)
 
 	exit(0)
 

@@ -31,7 +31,7 @@ def get_user(usr, pwd):
 def get_connected_app():
 	doctype = 'Connected App'
 	connected_app = frappe.new_doc(doctype)
-	connected_app.provider_name = 'frappe'
+	connected_app.provider_name = 'dodock'
 	connected_app.scopes = []
 	connected_app.append('scopes', {'scope': 'all'})
 	connected_app.insert()
