@@ -46,7 +46,7 @@
  "name": "Desk Items",
  "owner": "Administrator",
  "permissions": [],
- "route": "/desk#Form/DocType/Desk Items",
+ "route": "/app/Form/DocType/Desk Items",
  "sort_field": "modified",
  "sort_order": "DESC"
 }

@@ -18,17 +18,19 @@ frappe.ui.form.on('DocType', {
 				frm.set_value("custom", 1);
 			}
 			frm.toggle_enable("custom", 0);
+			frm.toggle_enable("is_virtual", 0);
 			frm.toggle_enable("beta", 0);
 		}
 
 		if (!frm.is_new() && !frm.doc.istable) {
 			if (frm.doc.issingle) {
 				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
-					frappe.set_route('Form', frm.doc.name);
+					window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
+					// frappe.set_route('Form', frm.doc.name);
 				});
 			} else {
 				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
-					frappe.set_route('List', frm.doc.name, 'List');
+					window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
 				});
 			}
 		}
@@ -53,7 +55,7 @@ frappe.ui.form.on('DocType', {
 		frm.events.autoname(frm);
 	},
 
-	autoname(frm) {
+	autoname: function(frm) {
 		frm.set_df_property('fields', 'reqd', frm.doc.autoname !== 'Prompt');
 	}
 })

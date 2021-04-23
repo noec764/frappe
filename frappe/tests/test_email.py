@@ -17,14 +17,16 @@ class TestEmail(unittest.TestCase):
 		frappe.db.sql("""delete from `tabEmail Unsubscribe`""")
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 		frappe.db.sql("""delete from `tabEmail Queue Recipient`""")
+		frappe.db.commit()
 
 	def test_email_queue(self, send_after=None):
+		frappe.flags.mute_emails = False
+
 		frappe.sendmail(recipients=['test@example.com', 'test1@example.com'],
 						sender="admin@example.com",
 						reference_doctype='User', reference_name='Administrator',
 						subject='Testing Queue', message='This mail is queued!',
 						unsubscribe_message="Unsubscribe", send_after=send_after)
-
 		email_queue = frappe.db.sql("""select name,message from `tabEmail Queue` where status='Not Sent'""", as_dict=1)
 		self.assertEqual(len(email_queue), 1)
 		queue_recipients = [r.recipient for r in frappe.db.sql("""SELECT recipient FROM `tabEmail Queue Recipient`
@@ -42,6 +44,7 @@ class TestEmail(unittest.TestCase):
 		self.assertEqual(len(email_queue), 0)
 
 	def test_flush(self):
+		frappe.flags.mute_emails = False
 		self.test_email_queue()
 		from frappe.email.queue import flush
 		flush(from_test=True)
@@ -55,6 +58,7 @@ class TestEmail(unittest.TestCase):
 		self.assertTrue('Unsubscribe' in frappe.safe_decode(frappe.flags.sent_mail))
 
 	def test_cc_header(self):
+		frappe.flags.mute_emails = False
 		# test if sending with cc's makes it into header
 		frappe.sendmail(recipients=['test@example.com'],
 						cc=['test1@example.com'],
@@ -75,6 +79,7 @@ class TestEmail(unittest.TestCase):
 		self.assertTrue('CC: test1@example.com' in message)
 
 	def test_cc_footer(self):
+		frappe.flags.mute_emails = False
 		# test if sending with cc's makes it into header
 		frappe.sendmail(recipients=['test@example.com'],
 						cc=['test1@example.com'],
@@ -93,6 +98,7 @@ class TestEmail(unittest.TestCase):
 			frappe.flags.sent_mail))
 
 	def test_expose(self):
+		frappe.flags.mute_emails = False
 		from frappe.utils.verified_command import verify_request
 		frappe.sendmail(recipients=['test@example.com'],
 						cc=['test1@example.com'],
@@ -128,10 +134,13 @@ class TestEmail(unittest.TestCase):
 				break
 
 	def test_expired(self):
+		frappe.flags.mute_emails = False
 		self.test_email_queue()
 		frappe.db.sql("UPDATE `tabEmail Queue` SET `modified`=(NOW() - INTERVAL '8' day)")
-		from frappe.email.queue import clear_outbox
-		clear_outbox()
+
+		from frappe.email.queue import set_expiry_for_email_queue
+		set_expiry_for_email_queue()
+
 		email_queue = frappe.db.sql("""select name from `tabEmail Queue` where status='Expired'""", as_dict=1)
 		self.assertEqual(len(email_queue), 1)
 		queue_recipients = [r.recipient for r in frappe.db.sql("""select recipient from `tabEmail Queue Recipient`
@@ -141,6 +150,7 @@ class TestEmail(unittest.TestCase):
 		self.assertEqual(len(queue_recipients), 2)
 
 	def test_unsubscribe(self):
+		frappe.flags.mute_emails = False
 		from frappe.email.queue import unsubscribe, send
 		unsubscribe(doctype="User", name="Administrator", email="test@example.com")
 
@@ -176,8 +186,8 @@ class TestEmail(unittest.TestCase):
 		with open(frappe.get_app_path('frappe', 'tests', 'data', 'email_with_image.txt'), 'r') as raw:
 			communication = email_account.insert_communication(raw.read())
 
-		self.assertTrue(re.search('''<img[^>]*src=["']/private/files/rtco1.png[^>]*>''', communication.content))
-		self.assertTrue(re.search('''<img[^>]*src=["']/private/files/rtco2.png[^>]*>''', communication.content))
+		self.assertTrue(re.search('''<img[^>]*src=["']/private/files/rtco1[^>]*>''', communication.content))
+		self.assertTrue(re.search('''<img[^>]*src=["']/private/files/rtco2[^>]*>''', communication.content))
 
 
 if __name__ == '__main__':

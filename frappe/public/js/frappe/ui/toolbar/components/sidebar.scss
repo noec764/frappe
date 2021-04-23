@@ -1,31 +1,5 @@
-$primaryColor: #6195FF;
-$baseBg: #fff;
-$darkenBg: #f5f7fa;
-$lightenBg: #e0e0e0;
-
-$itemColor: #262626;
-
-$itemOpenColor: #fff;
-$itemOpenBg: $primaryColor;
-
-$itemHoverColor: #fff;
-$itemHoverBg: $primaryColor;
-
-$iconActiveColor: #fff;
-$iconActiveBg: #262626;
-
-$iconOpenColor: #fff;
-$iconOpenBg: transparent;
-
-$mobileItemColor: #fff;
-$mobileItemBg: $primaryColor;
-$mobileIconBg: transparent;
-$mobileIconColor: #fff;
-
-$dropDownColor: #262626;
-$dropDownBg: #e3e3e3;
-
 .v-sidebar-menu {
+	background-color: var(--fg-color);
 	& , * {
 	  box-sizing: border-box;
 	}
@@ -44,53 +18,48 @@ $dropDownBg: #e3e3e3;
 			left: inherit;
 			text-align: right;
 		}
-		& > .vsm-list {
-			padding-top: 45px;
+		& > .dodock-sidebar-list {
+			padding-top: 60px;
 			width: 100%;
 			height: 100%;
 			overflow-y: auto;
 			scrollbar-width: none;
 		}
-		& > .vsm-list::-webkit-scrollbar {
+		& > .dodock-sidebar-list::-webkit-scrollbar {
 			display: none !important;
 		}
-		&.vsm-collapsed > .vsm-list {
+		&.dodock-sidebar-collapsed > .dodock-sidebar-list {
 			width: calc(100% + 17px);
 			padding-right: 17px;
 		}
-		&.rtl > .vsm-list {
+		&.rtl > .dodock-sidebar-list {
 			direction: rtl;
 		}
-		&.vsm-collapsed.rtl > .vsm-list {
+		&.dodock-sidebar-collapsed.rtl > .dodock-sidebar-list {
 			padding-right: 0px;
 			padding-left: 17px;
 			float: right;
 		}
 	}
-	& .vsm-item {
+	& .dodock-sidebar-item {
 		position: relative;
-		& > .vsm-link {
-		& > .vsm-icon {
-			height: 30px;
-			line-height: 30px;
-			width: 30px;
-			text-align: center;
-			border-radius: 3px;
-			& > .selected-module {
+		& > .dodock-sidebar-link {
+			& > .dodock-sidebar-icon {
+				height: 30px;
+				line-height: 30px;
+				width: 30px;
+				text-align: center;
 				border-radius: 4px;
-				display: inline-block;
-				color: #fff;
-				background-color: $primaryColor;
+				--icon-fill: white;
+			}
+			&:after {
+				content: '';
+				display: block;
+				clear: both;
 			}
 		}
-		&:after {
-			content: '';
-			display: block;
-			clear: both;
-		}
-		}
 	}
-	& .vsm-link {
+	& .dodock-sidebar-link {
 		position: relative;
 		display: block;
 		font-size: 16px;
@@ -105,35 +74,18 @@ $dropDownBg: #e3e3e3;
 			pointer-events: none;
 		}
 	}
-	& .vsm-title {
+	& .dodock-sidebar-title {
 		display: block;
 		white-space: nowrap;
 	}
-	& .vsm-icon {
+	& .dodock-sidebar-icon {
 		float: left;
-		line-height: 30px;
 		margin-right: 10px;
 	}
-	&.rtl .vsm-icon {
+	&.rtl .dodock-sidebar-icon {
 		float: right;
 		margin-left: 10px;
 		margin-right: 0px;
-	}
-	& .vsm-badge {
-		padding: 0px 6px;
-		font-size: 12px;
-		border-radius: 3px;
-		position: absolute;
-		right: 10px;
-		height: 20px;
-		line-height: 20px;
-		margin-top: 5px;
-		font-weight: 600;
-		text-transform: uppercase;
-	}
-	&.rtl .vsm-badge {
-		left: 10px;
-		right: inherit;
 	}
 	& .collapse-btn {
 		display: block;
@@ -151,68 +103,71 @@ $dropDownBg: #e3e3e3;
 	}
 	& .down-btn {
 		&:after {
-			content: '\e829';
+			content: '\eb38';
 			font-family: 'unicons';
 			font-size: 1.3em;
 		}
 	}
 	& .up-btn {
 		&:after {
-			content: '\e82c';
+			content: '\eb5d';
 			font-family: 'unicons';
 			font-size: 1.3em;
 		}
 	}
-}
+	button:focus {
+		outline: none;
+	}
 
-.v-sidebar-menu {
-	background-color: $baseBg;
-	& .vsm-link {
-		color: $itemColor;
+	& .dodock-sidebar-link {
+		color: var(--text-color);
 	}
-	& .vsm-item.first-item {
-		&.active-item > .vsm-link, &.parent-active-item > .vsm-link {
-			box-shadow: 3px 0px 0px 0px $primaryColor inset;
-			& > .vsm-icon {
-				color: $iconActiveColor;
-				background-color: $iconActiveBg;
-			}
-		}
-	}
-	&.rtl .vsm-item.first-item {
-		&.active-item > .vsm-link, &.parent-active-item > .vsm-link {
-			box-shadow: -3px 0px 0px 0px $primaryColor inset;
-		}
-	}
-	&.vsm-default {
-		& .vsm-item.first-item {
-			&.open-item > .vsm-link {
-				color: $itemOpenColor;
-				background-color: $itemOpenBg;
-				& > .vsm-icon {
-					color: $iconOpenColor;
-					background-color: $iconOpenBg;
-				}
-			}
-		}
-		& .vsm-link:hover {
-			color: $itemHoverColor;
-			background-color: $itemHoverBg;
-			& .vsm-icon {
-				color: $itemHoverColor !important;
+	&.dodock-sidebar-default {
+		& .dodock-sidebar-link:hover {
+			color: white;
+			background-color: var(--primary-color);
+			& .dodock-sidebar-icon {
+				color: white !important;
 			}
 		}
 	}
 	& .collapse-btn {
-		color: $itemColor;
-		background-color: $darkenBg;
-		outline-color: $darkenBg;
+		color: var(--text-color);
+		background-color: var(--fg-color);
+		outline-color: var(--fg-color);
 	}
-}
 
-.vsm-list-overlay {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	z-index: 998;
+	& .dodock-sidebar-divider {
+		display: block;
+		padding: 10px 10px 5px 10px;
+		text-transform: uppercase;
+		color: var(--text-secondary-color);
+		font-weight: 800;
+		line-height: 1.25em;
+		white-space: nowrap;
+
+		&:before {
+			background-color: var(--text-secondary-color);
+			content: "";
+			display: inline-block;
+			height: 3px;
+			position: relative;
+			vertical-align: middle;
+			width: 60%;
+			right: 0.5em;
+			margin-left: -50%;
+		}
+		&.collapsed:before {
+			width: 100%;
+		}
+		&.collapsed > span {
+			visibility: hidden;
+			opacity: 0;
+		}
+		& > span {
+			visibility: visible;
+			opacity: 1;
+			transition: visibility 0s, opacity 0.5s linear;
+		}
+	}
 }

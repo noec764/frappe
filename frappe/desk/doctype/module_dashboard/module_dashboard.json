@@ -59,7 +59,7 @@
   }
  ],
  "read_only": 1,
- "route": "/desk#Form/DocType/Module Dashboard",
+ "route": "/app/Form/DocType/Module Dashboard",
  "sort_field": "modified",
  "sort_order": "DESC"
 }

@@ -31,9 +31,16 @@ class CustomField(Document):
 		# fieldnames should be lowercase
 		self.fieldname = self.fieldname.lower()
 
-	def validate(self):
+	def before_insert(self):
+		self.set_fieldname()
 		meta = frappe.get_meta(self.dt, cached=False)
 		fieldnames = [df.fieldname for df in meta.get("fields")]
+
+	def validate(self):
+		from frappe.custom.doctype.customize_form.customize_form import CustomizeForm
+
+		meta = frappe.get_meta(self.dt, cached=False)
+		fieldnames = [df.fieldname for df in meta.get("fields") if df.name!=self.name]
 
 		if self.insert_after=='append':
 			self.insert_after = fieldnames[-1]
@@ -41,10 +48,17 @@ class CustomField(Document):
 		if self.insert_after and self.insert_after in fieldnames:
 			self.idx = fieldnames.index(self.insert_after) + 1
 
-		self._old_fieldtype = self.db_get('fieldtype')
+		old_fieldtype = self.db_get('fieldtype')
+		is_fieldtype_changed = (not self.is_new()) and (old_fieldtype != self.fieldtype)
+
+		if is_fieldtype_changed and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype):
+			frappe.throw(_("Fieldtype cannot be changed from {0} to {1}").format(_(old_fieldtype), _(self.fieldtype)))
 
 		if not self.fieldname:
 			frappe.throw(_("Fieldname not set for Custom Field"))
+
+		if self.fieldname in fieldnames:
+			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, _(self.dt)))
 
 		if self.get('translatable', 0) and not supports_translation(self.fieldtype):
 			self.translatable = 0
@@ -65,6 +79,11 @@ class CustomField(Document):
 			frappe.db.updatedb(self.dt)
 
 	def on_trash(self):
+		#check if Admin owned field
+		if self.owner == 'Administrator' and frappe.session.user != 'Administrator':
+			frappe.throw(_("Custom Field {0} is created by the Administrator and can only be deleted through the Administrator account.").format(
+					frappe.bold(self.label)))
+
 		# delete property setter entries
 		frappe.db.sql("""\
 			DELETE FROM `tabProperty Setter`

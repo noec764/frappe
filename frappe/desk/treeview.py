@@ -1,5 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe
@@ -11,6 +11,8 @@ def get_all_nodes(doctype, parent, tree_method, **filters):
 
 	if 'cmd' in filters:
 		del filters['cmd']
+
+	filters.pop('data', None)
 
 	tree_method = frappe.get_attr(tree_method)
 
@@ -36,19 +38,28 @@ def get_all_nodes(doctype, parent, tree_method, **filters):
 
 @frappe.whitelist()
 def get_children(doctype, parent='', **filters):
+	"""
+	Keep `filters` for legacy usage
+	"""
+	return _get_children(doctype, parent)
+
+def _get_children(doctype, parent='', ignore_permissions=False):
 	parent_field = 'parent_' + doctype.lower().replace(' ', '_')
-	filters=[['ifnull(`{0}`,"")'.format(parent_field), '=', parent],
+	filters = [['ifnull(`{0}`,"")'.format(parent_field), '=', parent],
 		['docstatus', '<' ,'2']]
 
-	doctype_meta = frappe.get_meta(doctype)
-	data = frappe.get_list(doctype, fields=[
-		'name as value',
-		'{0} as title'.format(doctype_meta.get('title_field') or 'name'),
-		'is_group as expandable'],
+	meta = frappe.get_meta(doctype)
+	return frappe.get_list(
+		doctype,
+		fields=[
+			'name as value',
+			'{0} as title'.format(meta.get('title_field') or 'name'),
+			'is_group as expandable'
+		],
 		filters=filters,
-		order_by='name')
-
-	return data
+		order_by='name',
+		ignore_permissions=ignore_permissions
+	)
 
 @frappe.whitelist()
 def add_node():
@@ -58,7 +69,7 @@ def add_node():
 	doc.save()
 
 def make_tree_args(**kwarg):
-	del kwarg['cmd']
+	kwarg.pop('cmd', None)
 
 	doctype = kwarg['doctype']
 	parent_field = 'parent_' + doctype.lower().replace(' ', '_')

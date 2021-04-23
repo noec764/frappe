@@ -7,11 +7,12 @@ frappe.views.calendar["Event"] = {
 		"title": "subject",
 		"status": "event_type",
 		"color": "color",
-		"rrule": "rrule"
+		"rrule": "rrule",
+		"secondary_status": "status"
 	},
-	style_map: {
-		"Public": "success",
-		"Private": "info"
+	secondary_status_color: {
+		"Public": "green",
+		"Private": "darkgray"
 	},
 	get_events_method: "frappe.desk.doctype.event.event.get_events"
 }

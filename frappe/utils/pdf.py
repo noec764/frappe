@@ -6,6 +6,7 @@ import io
 import os
 import re
 from distutils.version import LooseVersion
+import subprocess
 
 import pdfkit
 import six
@@ -14,12 +15,13 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 
 import frappe
 from frappe import _
-from frappe.utils import get_wkhtmltopdf_version, scrub_urls
+from frappe.utils import scrub_urls
+
 
 PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError",
 	"UnknownContentError", "RemoteHostClosedError"]
 
-def get_pdf(html, options=None, output=None):
+def get_pdf(html, options=None, output=None, cover=None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
 
@@ -35,11 +37,20 @@ def get_pdf(html, options=None, output=None):
 
 	try:
 		# Set filename property to false, so no file is actually created
+
 		filedata = pdfkit.from_string(html, False, options=options or {})
 
 		# https://pythonhosted.org/PyPDF2/PdfFileReader.html
 		# create in-memory binary streams from filedata and create a PdfFileReader object
 		reader = PdfFileReader(io.BytesIO(filedata))
+
+		cover_reader = ''
+		if cover:
+			cover_page = frappe.db.get_value("Cover Page", cover, "cover_page")
+			if frappe.db.exists("File", dict(file_url=cover_page)):
+				file_doc = frappe.get_doc("File", dict(file_url=cover_page))
+				with open(file_doc.get_full_path(), "rb") as f:
+					cover_reader = PdfFileReader(io.BytesIO(f.read()))
 
 	except OSError as e:
 		if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
@@ -48,12 +59,16 @@ def get_pdf(html, options=None, output=None):
 
 			# allow pdfs with missing images if file got created
 			if output:  # output is a PdfFileWriter object
+				if cover_reader:
+					output.appendPagesFromReader(cover_reader)
 				output.appendPagesFromReader(reader)
 
 			else:
 				frappe.throw(_("PDF generation failed because of broken image links"))
 		else:
 			raise
+	finally:
+		cleanup(options)
 
 	if "password" in options:
 		password = options["password"]
@@ -61,10 +76,14 @@ def get_pdf(html, options=None, output=None):
 			password = frappe.safe_encode(password)
 
 	if output:
+		if cover_reader:
+			output.appendPagesFromReader(cover_reader)
 		output.appendPagesFromReader(reader)
 		return output
 
 	writer = PdfFileWriter()
+	if cover_reader:
+		writer.appendPagesFromReader(cover_reader)
 	writer.appendPagesFromReader(reader)
 
 	if "password" in options:
@@ -111,14 +130,31 @@ def prepare_options(html, options):
 	options.update(html_options or {})
 
 	# cookies
-	if frappe.session and frappe.session.sid:
-		options['cookie'] = [('sid', '{0}'.format(frappe.session.sid))]
+	options.update(get_cookie_options())
 
 	# page size
 	if not options.get("page-size"):
 		options['page-size'] = frappe.db.get_single_value("Print Settings", "pdf_page_size") or "A4"
 
 	return html, options
+
+def get_cookie_options():
+	options = {}
+	if frappe.session and frappe.session.sid and hasattr(frappe.local, "request"):
+		# Use wkhtmltopdf's cookie-jar feature to set cookies and restrict them to host domain
+		cookiejar = "/tmp/{}.jar".format(frappe.generate_hash())
+
+		# Remove port from request.host
+		# https://werkzeug.palletsprojects.com/en/0.16.x/wrappers/#werkzeug.wrappers.BaseRequest.host
+		domain = ""
+		if hasattr(frappe.local, 'request'):
+			domain = frappe.utils.get_host_name().split(":", 1)[0]
+		with open(cookiejar, "w") as f:
+			f.write("sid={}; Domain={};\n".format(frappe.session.sid, domain))
+
+		options['cookie-jar'] = cookiejar
+
+	return options
 
 def read_options_from_html(html):
 	options = {}
@@ -129,7 +165,7 @@ def read_options_from_html(html):
 	toggle_visible_pdf(soup)
 
 	# use regex instead of soup-parser
-	for attr in ("margin-top", "margin-bottom", "margin-left", "margin-right", "page-size", "header-spacing"):
+	for attr in ("margin-top", "margin-bottom", "margin-left", "margin-right", "page-size", "header-spacing", "orientation"):
 		try:
 			pattern = re.compile(r"(\.print-format)([\S|\s][^}]*?)(" + str(attr) + r":)(.+)(mm;)")
 			match = pattern.findall(html)
@@ -138,7 +174,7 @@ def read_options_from_html(html):
 		except:
 			pass
 
-	return soup.prettify(), options
+	return str(soup), options
 
 def prepare_header_footer(soup):
 	options = {}
@@ -146,8 +182,7 @@ def prepare_header_footer(soup):
 	head = soup.find("head").contents
 	styles = soup.find_all("style")
 
-	bootstrap = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/frappe/css/bootstrap.css"))
-	fontawesome = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/frappe/css/fonts/fontawesome/css/all.css"))
+	css = frappe.read_file(os.path.join(frappe.local.sites_path, "assets/css/printview.css"))
 
 	# extract header and footer
 	for html_id in ("header-html", "footer-html"):
@@ -160,11 +195,10 @@ def prepare_header_footer(soup):
 			toggle_visible_pdf(content)
 			html = frappe.render_template("templates/print_formats/pdf_header_footer.html", {
 				"head": head,
-				"styles": styles,
 				"content": content,
+				"styles": styles,
 				"html_id": html_id,
-				"bootstrap": bootstrap,
-				"fontawesome": fontawesome
+				"css": css
 			})
 
 			# create temp file
@@ -182,11 +216,8 @@ def prepare_header_footer(soup):
 
 	return options
 
-def cleanup(fname, options):
-	if os.path.exists(fname):
-		os.remove(fname)
-
-	for key in ("header-html", "footer-html"):
+def cleanup(options):
+	for key in ("header-html", "footer-html", "cookie-jar"):
 		if options.get(key) and os.path.exists(options[key]):
 			os.remove(options[key])
 
@@ -198,3 +229,16 @@ def toggle_visible_pdf(soup):
 	for tag in soup.find_all(attrs={"class": "hidden-pdf"}):
 		# remove tag from html
 		tag.extract()
+
+def get_wkhtmltopdf_version():
+	wkhtmltopdf_version = frappe.cache().hget("wkhtmltopdf_version", None)
+
+	if not wkhtmltopdf_version:
+		try:
+			res = subprocess.check_output(["wkhtmltopdf", "--version"])
+			wkhtmltopdf_version = res.decode('utf-8').split(" ")[1]
+			frappe.cache().hset("wkhtmltopdf_version", None, wkhtmltopdf_version)
+		except Exception:
+			pass
+
+	return (wkhtmltopdf_version or '0')

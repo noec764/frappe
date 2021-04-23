@@ -14,11 +14,11 @@
 		{% } else if (feed_type==="Label") { %}
 			{%= __("{0} {1}", ["<strong>" + subject + "</strong>", link]) %}
 		{% } else if (reference_doctype && feed_type==="Comment") { %}
-			{%= __("Commented on {0}: {1}", [link, "<strong>" + content + "</strong>"]) %}
+			{%= __("Commented on {0}: {1}", [link, "<strong>" + __(content) + "</strong>"]) %}
 		{% } else if (reference_doctype && communication_type==="Communication") { %}
 			{%= __("Communicated via {0} on {1}: {2}", [__(feed_type), link, "<strong>" + subject + "</strong>"]) %}
 		{% } else if (reference_doctype && !feed_type) { %}
-			{%= __("Updated {0}: {1}", [link, "<strong>" + subject + "</strong>"]) %}
+			{%= __("Updated {0}: {1}", [link, "<strong>" + __(subject) + "</strong>"]) %}
 		{% } else if (feed_type==="Like" && reference_doctype) { %}
 			{%= by %} <i class="fas fa-heart"></i>
 			{% if (in_list(["Comment", "Communication"], reference_doctype)) { %}
@@ -27,9 +27,9 @@
 				{%= link %}
 			{% } %}
 		{% } else if (in_list(["Created", "Submitted", "Cancelled", "Deleted"], feed_type)) { %}
-			{%= __("{0} {1}", ["<strong>" + __(feed_type) + "</strong>", feed_type==="Deleted" ? subject : link ]) %}
+			{%= __("{0} {1}", ["<strong>" + __(feed_type) + "</strong>", feed_type==="Deleted" ? reference_doctype : link ]) %}
 		{% } else if (feed_type==="Updated") { %}
-			{%= __("Updated {0}: {1}", [link, "<strong>" + subject + "</strong>"]) %}
+			{%= __("Updated {0}: {1}", [link, "<strong>" + __(subject) + "</strong>"]) %}
 		{% } else if (feed_type==="Relinked") { %}
             		 {%= __("{0} {1} to {2}", [by, content,link]) %}
 		{% } else if (reference_doctype && reference_name) { %}

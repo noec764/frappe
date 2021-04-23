@@ -29,6 +29,7 @@
         "default_incoming",
         "email_sync_option",
         "initial_sync_count",
+        "create_contact",
         "section_break_12",
         "enable_automatic_linking",
         "section_break_13",
@@ -55,6 +56,7 @@
         "auto_reply_message",
         "set_footer",
         "footer",
+        "brand_logo",
         "uidvalidity",
         "uidnext",
         "no_remaining",
@@ -65,7 +67,9 @@
             "fieldname": "email_id",
             "fieldtype": "Data",
             "in_global_search": 1,
+            "in_list_view": 1,
             "label": "Email Address",
+            "options": "Email",
             "reqd": 1
         },
         {
@@ -89,14 +93,12 @@
             "default": "0",
             "fieldname": "awaiting_password",
             "fieldtype": "Check",
-            "in_list_view": 1,
             "label": "Awaiting password"
         },
         {
             "default": "0",
             "fieldname": "ascii_encode_password",
             "fieldtype": "Check",
-            "in_list_view": 1,
             "label": "Use ASCII encoding for password"
         },
         {
@@ -115,6 +117,8 @@
             "fieldname": "domain",
             "fieldtype": "Link",
             "label": "Domain",
+            "in_list_view": 1,
+            "in_standard_filter": 1,
             "options": "Email Domain"
         },
         {
@@ -406,11 +410,22 @@
             "fieldname": "use_ssl_for_outgoing",
             "fieldtype": "Check",
             "label": "Use SSL for Outgoing"
+        },
+        {
+            "default": "0",
+            "fieldname": "create_contact",
+            "fieldtype": "Check",
+            "label": "Create Contacts from Incoming Emails"
+        },
+        {
+            "fieldname": "brand_logo",
+            "fieldtype": "Attach Image",
+            "label": "Brand Logo"
         }
     ],
     "icon": "fa fa-inbox",
     "links": [],
-    "modified": "2019-12-18 15:56:39.744520",
+    "modified": "2021-01-21 10:05:24.820597",
     "modified_by": "Administrator",
     "module": "Email",
     "name": "Email Account",
@@ -423,6 +438,10 @@
             "role": "System Manager",
             "set_user_permissions": 1,
             "write": 1
+        },
+        {
+            "read": 1,
+            "role": "Inbox User"
         }
     ],
     "sort_field": "modified",

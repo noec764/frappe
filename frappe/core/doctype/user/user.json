@@ -1,4 +1,5 @@
 {
+ "actions": [],
  "allow_import": 1,
  "allow_rename": 1,
  "creation": "2014-03-11 14:55:00",
@@ -6,20 +7,21 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "sb0_5",
   "enabled",
   "section_break_3",
   "email",
-  "first_name",
-  "middle_name",
   "last_name",
+  "language",
+  "column_break0",
+  "first_name",
   "full_name",
+  "time_zone",
+  "column_break_11",
+  "middle_name",
+  "username",
+  "desk_theme",
   "send_welcome_email",
   "unsubscribed",
-  "column_break0",
-  "username",
-  "language",
-  "time_zone",
   "user_image",
   "sb1",
   "role_profile_name",
@@ -27,15 +29,16 @@
   "roles",
   "short_bio",
   "gender",
-  "phone",
-  "mobile_no",
   "birth_date",
-  "location",
-  "banner_image",
-  "column_break_22",
   "interest",
+  "banner_image",
+  "column_break_26",
+  "phone",
+  "location",
   "bio",
   "mute_sounds",
+  "column_break_22",
+  "mobile_no",
   "change_password",
   "new_password",
   "logout_all_sessions",
@@ -46,17 +49,13 @@
   "document_follow_notify",
   "document_follow_frequency",
   "email_settings",
+  "email_signature",
   "thread_notify",
   "send_me_a_copy",
   "allowed_in_mentions",
-  "energy_points_summary",
-  "email_signature",
-  "email_inbox",
   "user_emails",
-  "background",
-  "background_image",
-  "background_style",
   "sb_allow_modules",
+  "module_profile",
   "modules_html",
   "block_modules",
   "home_settings",
@@ -64,15 +63,16 @@
   "defaults",
   "sb3",
   "simultaneous_sessions",
-  "user_type",
-  "login_after",
-  "login_before",
   "restrict_ip",
-  "bypass_restrict_ip_check_if_2fa_enabled",
-  "column_break1",
-  "last_login",
   "last_ip",
+  "column_break1",
+  "login_after",
+  "user_type",
   "last_active",
+  "section_break_63",
+  "login_before",
+  "bypass_restrict_ip_check_if_2fa_enabled",
+  "last_login",
   "last_known_versions",
   "third_party_authentication",
   "social_logins",
@@ -83,10 +83,6 @@
   "api_secret"
  ],
  "fields": [
-  {
-   "fieldname": "sb0_5",
-   "fieldtype": "Section Break"
-  },
   {
    "default": "1",
    "fieldname": "enabled",
@@ -99,7 +95,8 @@
   {
    "depends_on": "enabled",
    "fieldname": "section_break_3",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Basic Info"
   },
   {
    "fieldname": "email",
@@ -182,7 +179,7 @@
   {
    "fieldname": "time_zone",
    "fieldtype": "Select",
-   "label": "Timezone"
+   "label": "Time zone"
   },
   {
    "description": "Get your globally recognized avatar from Gravatar.com",
@@ -241,12 +238,14 @@
   {
    "fieldname": "phone",
    "fieldtype": "Data",
-   "label": "Phone"
+   "label": "Phone",
+   "options": "Phone"
   },
   {
    "fieldname": "mobile_no",
    "fieldtype": "Data",
    "label": "Mobile No",
+   "options": "Phone",
    "unique": 1
   },
   {
@@ -303,10 +302,10 @@
    "no_copy": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "logout_all_sessions",
    "fieldtype": "Check",
-   "label": "Logout from all devices while changing Password"
+   "label": "Logout from all devices after changing password"
   },
   {
    "fieldname": "reset_password_key",
@@ -357,7 +356,7 @@
    "depends_on": "enabled",
    "fieldname": "email_settings",
    "fieldtype": "Section Break",
-   "label": "Email Settings"
+   "label": "Email"
   },
   {
    "default": "1",
@@ -384,35 +383,11 @@
    "no_copy": 1
   },
   {
-   "collapsible": 1,
-   "fieldname": "email_inbox",
-   "fieldtype": "Section Break",
-   "label": "Email Inbox"
-  },
-  {
    "fieldname": "user_emails",
    "fieldtype": "Table",
    "label": "User Emails",
    "options": "User Email",
    "permlevel": 1
-  },
-  {
-   "collapsible": 1,
-   "depends_on": "enabled",
-   "fieldname": "background",
-   "fieldtype": "Section Break",
-   "label": "Desktop Background"
-  },
-  {
-   "fieldname": "background_image",
-   "fieldtype": "Attach",
-   "label": "Background Image"
-  },
-  {
-   "fieldname": "background_style",
-   "fieldtype": "Select",
-   "label": "Background Style",
-   "options": "Fill Screen\nTile"
   },
   {
    "collapsible": 1,
@@ -581,7 +556,7 @@
    "label": "Api Access"
   },
   {
-   "description": "API Key cannot be  regenerated",
+   "description": "API Key cannot be regenerated",
    "fieldname": "api_key",
    "fieldtype": "Data",
    "label": "API Key",
@@ -604,17 +579,97 @@
    "read_only": 1
   },
   {
-   "default": "1",
-   "fieldname": "energy_points_summary",
-   "fieldtype": "Check",
-   "label": "Send me an energy points summary"
+   "fieldname": "column_break_11",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_63",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "desk_theme",
+   "fieldtype": "Select",
+   "label": "Desk Theme",
+   "options": "Light\nDark"
+  },
+  {
+   "fieldname": "module_profile",
+   "fieldtype": "Link",
+   "label": "Module Profile",
+   "options": "Module Profile"
   }
  ],
  "icon": "fa fa-user",
  "idx": 413,
  "image_field": "user_image",
+ "links": [
+  {
+   "group": "Profile",
+   "link_doctype": "Contact",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Profile",
+   "link_doctype": "Chat Profile",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Profile",
+   "link_doctype": "Blogger",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Access Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Activity Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Energy Point Log",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Logs",
+   "link_doctype": "Route History",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Settings",
+   "link_doctype": "User Permission",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Settings",
+   "link_doctype": "Document Follow",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Activity",
+   "link_doctype": "Communication",
+   "link_fieldname": "user"
+  },
+  {
+   "group": "Activity",
+   "link_doctype": "ToDo",
+   "link_fieldname": "owner"
+  },
+  {
+    "group": "Integrations",
+    "link_doctype": "Token Cache",
+    "link_fieldname": "user"
+  }
+ ],
  "max_attachments": 5,
- "modified": "2019-10-22 14:16:34.810223",
+ "modified": "2021-03-08 16:11:06.037543",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
@@ -630,18 +685,19 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "set_user_permissions": 1,
    "share": 1,
    "write": 1
   },
   {
    "permlevel": 1,
    "read": 1,
-   "report": 1,
    "role": "System Manager",
    "write": 1
   }
  ],
  "quick_entry": 1,
+ "route": "user",
  "search_fields": "full_name",
  "show_name_in_global_search": 1,
  "sort_field": "modified",

@@ -99,7 +99,7 @@ class RedisWrapper(redis.Redis):
 
 		except redis.exceptions.ConnectionError:
 			regex = re.compile(cstr(key).replace("|", "\|").replace("*", "[\w]*"))
-			return [k for k in list(frappe.local.cache) if regex.match(k.decode())]
+			return [k for k in list(frappe.local.cache) if regex.match(cstr(k))]
 
 	def delete_keys(self, key):
 		"""Delete keys with wildcard `*`."""
@@ -139,6 +139,12 @@ class RedisWrapper(redis.Redis):
 
 	def llen(self, key):
 		return super(RedisWrapper, self).llen(self.make_key(key))
+
+	def lrange(self, key, start, stop):
+		return super(RedisWrapper, self).lrange(self.make_key(key), start, stop)
+
+	def ltrim(self, key, start, stop):
+		return super(RedisWrapper, self).ltrim(self.make_key(key), start, stop)
 
 	def hset(self, name, key, value, shared=False):
 		if key is None:

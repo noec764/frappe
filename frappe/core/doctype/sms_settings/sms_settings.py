@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe
@@ -18,6 +18,9 @@ class SMSSettings(Document):
 def validate_receiver_nos(receiver_list):
 	validated_receiver_list = []
 	for d in receiver_list:
+		if not d:
+			break
+
 		# remove invalid character
 		for x in [' ','-', '(', ')']:
 			d = d.replace(x, '')

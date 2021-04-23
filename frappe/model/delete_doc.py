@@ -19,11 +19,12 @@ from frappe.utils.global_search import delete_for_document
 from frappe.desk.doctype.tag.tag import delete_tags_for_document
 from frappe.exceptions import FileNotFoundError
 
-DOCTYPES_TO_SKIP = ["Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", \
-	"File", "Version", "Document Follow", "Comment", "View Log", "Tag Link", "Notification Log", "Email Queue"]
+DOCTYPES_TO_SKIP = ("Communication", "ToDo", "DocShare", "Email Unsubscribe", "Activity Log", \
+	"File", "Version", "Document Follow", "Comment", "View Log", "Tag Link", "Notification Log", \
+	"Email Queue", "Archived Document")
 
-def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reload=False,
-	ignore_permissions=False, flags=None, ignore_on_trash=False, ignore_missing=True):
+def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reload=False, ignore_permissions=False,
+	flags=None, ignore_on_trash=False, ignore_missing=True, delete_permanently=False):
 	"""
 		Deletes a doc(dt, dn) and validates if it is not submitted and not linked in a live record
 	"""
@@ -68,7 +69,7 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 				check_permission_and_not_submitted(doc)
 
 				frappe.db.sql("delete from `tabCustom Field` where dt = %s", name)
-				frappe.db.sql("delete from `tabCustom Script` where dt = %s", name)
+				frappe.db.sql("delete from `tabClient Script` where dt = %s", name)
 				frappe.db.sql("delete from `tabProperty Setter` where doc_type = %s", name)
 				frappe.db.sql("delete from `tabReport` where ref_doctype=%s", name)
 				frappe.db.sql("delete from `tabCustom DocPerm` where parent=%s", name)
@@ -76,8 +77,12 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 
 			delete_from_table(doctype, name, ignore_doctypes, None)
 
-			if not (for_reload or frappe.flags.in_migrate or frappe.flags.in_install or frappe.flags.in_test) \
-				and frappe.conf.developer_mode:
+			if frappe.conf.developer_mode and not doc.custom and not (
+				for_reload
+				or frappe.flags.in_migrate
+				or frappe.flags.in_install
+				or frappe.flags.in_uninstall
+			):
 				try:
 					delete_controllers(name, doc.module)
 				except (FileNotFoundError, OSError, KeyError):
@@ -111,7 +116,7 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 			doc.run_method("after_delete")
 
 			# delete attachments
-			remove_all(doctype, name, from_delete=True)
+			remove_all(doctype, name, delete_permanently=delete_permanently)
 
 			if not for_reload:
 				# Enqueued at the end, because it gets committed
@@ -125,8 +130,13 @@ def delete_doc(doctype=None, name=None, force=0, ignore_doctypes=None, for_reloa
 		# delete tag link entry
 		delete_tags_for_document(doc)
 
-		if doc and not for_reload:
+		if for_reload:
+			delete_permanently = True
+
+		if not delete_permanently:
 			add_to_deleted_document(doc)
+
+		if doc and not for_reload:
 			if not frappe.flags.in_patch:
 				try:
 					doc.notify_update()
@@ -152,10 +162,10 @@ def update_naming_series(doc):
 	if doc.meta.autoname:
 		if doc.meta.autoname.startswith("naming_series:") \
 			and getattr(doc, "naming_series", None):
-			revert_series_if_last(doc.naming_series, doc.name)
+			revert_series_if_last(doc.naming_series, doc.name, doc)
 
 		elif doc.meta.autoname.split(":")[0] not in ("Prompt", "field", "hash"):
-			revert_series_if_last(doc.meta.autoname, doc.name)
+			revert_series_if_last(doc.meta.autoname, doc.name, doc)
 
 def delete_from_table(doctype, name, ignore_doctypes, doc):
 	if doctype!="DocType" and doctype==name:
@@ -210,7 +220,7 @@ def check_permission_and_not_submitted(doc):
 
 	# check if submitted
 	if doc.docstatus == 1:
-		frappe.msgprint(_("{0} {1}: Submitted Record cannot be deleted.").format(_(doc.doctype), doc.name),
+		frappe.msgprint(_("{0} {1}: Submitted Record cannot be deleted. You must Cancel it first.").format(_(doc.doctype), doc.name),
 			raise_exception=True)
 
 def check_if_doc_is_linked(doc, method="Delete"):
@@ -227,7 +237,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 				["name", "parent", "parenttype", "docstatus"], as_dict=True):
 				linked_doctype = item.parenttype if item.parent else link_dt
 
-				ignore_linked_doctypes = doc.get('ignore_linked_doctypes') or []				
+				ignore_linked_doctypes = doc.get('ignore_linked_doctypes') or []
 				if linked_doctype in DOCTYPES_TO_SKIP or (linked_doctype in ignore_linked_doctypes and method == 'Cancel'):
 					# don't check for communication and todo!
 					continue
@@ -290,15 +300,15 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					raise_link_exists_exception(doc, reference_doctype, reference_docname, at_position)
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=''):
-	doc_link = '<a href="#Form/{0}/{1}">{1}</a>'.format(doc.doctype, doc.name)
-	reference_link = '<a href="#Form/{0}/{1}">{1}</a>'.format(reference_doctype, reference_docname)
+	doc_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(_(doc.doctype), doc.name, _(doc.name))
+	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(_(reference_doctype), reference_docname, _(reference_docname))
 
 	#hack to display Single doctype only once in message
 	if reference_doctype == reference_docname:
 		reference_doctype = ''
 
 	frappe.throw(_('Cannot delete or cancel because {0} {1} is linked with {2} {3} {4}')
-		.format(doc.doctype, doc_link, reference_doctype, reference_link, row), frappe.LinkExistsError)
+		.format(_(doc.doctype), doc_link, _(reference_doctype), reference_link, row), frappe.LinkExistsError)
 
 def delete_dynamic_links(doctype, name):
 	delete_references('ToDo', doctype, name, 'reference_type')
@@ -337,17 +347,22 @@ def clear_timeline_references(link_doctype, link_name):
 		WHERE `tabCommunication Link`.link_doctype=%s AND `tabCommunication Link`.link_name=%s""", (link_doctype, link_name))
 
 def insert_feed(doc):
-	from frappe.utils import get_fullname
-
-	if frappe.flags.in_install or frappe.flags.in_import or getattr(doc, "no_feed_on_delete", False):
+	if (
+		frappe.flags.in_install
+		or frappe.flags.in_uninstall
+		or frappe.flags.in_import
+		or getattr(doc, "no_feed_on_delete", False)
+	):
 		return
+
+	from frappe.utils import get_fullname
 
 	frappe.get_doc({
 		"doctype": "Comment",
 		"comment_type": "Deleted",
 		"reference_doctype": doc.doctype,
 		"subject": "{0} {1}".format(_(doc.doctype), doc.name),
-		"full_name": get_fullname(doc.owner)
+		"full_name": get_fullname(doc.owner),
 	}).insert(ignore_permissions=True)
 
 def delete_controllers(doctype, module):

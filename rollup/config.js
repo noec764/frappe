@@ -3,15 +3,16 @@ const fs = require('fs');
 const chalk = require('chalk');
 const log = console.log; // eslint-disable-line
 
-const multi_entry = require('rollup-plugin-multi-entry');
-const commonjs = require('rollup-plugin-commonjs');
-const node_resolve = require('rollup-plugin-node-resolve');
+const multi_entry = require('@rollup/plugin-multi-entry');
+const commonjs = require('@rollup/plugin-commonjs');
+const node_resolve = require('@rollup/plugin-node-resolve');
 const postcss = require('rollup-plugin-postcss');
-const buble = require('rollup-plugin-buble');
+const buble = require('@rollup/plugin-buble');
 const { terser } = require('rollup-plugin-terser');
 const vue = require('rollup-plugin-vue');
 const frappe_html = require('./frappe-html-plugin');
-const visualizer = require('rollup-plugin-visualizer');
+const less_loader = require('./less-loader');
+const replace = require('@rollup/plugin-replace');
 
 const production = process.env.FRAPPE_ENV === 'production';
 
@@ -44,6 +45,10 @@ function get_rollup_options_for_js(output_file, input_files) {
 
 	const plugins = [
 		// enables array of inputs
+		replace({
+			'process.env.NODE_ENV': JSON.stringify(production ? 'production' : 'development'),
+			'process.env.VUE_ENV': JSON.stringify('browser')
+		}),
 		multi_entry(),
 		// .html -> .js
 		frappe_html(),
@@ -51,7 +56,10 @@ function get_rollup_options_for_js(output_file, input_files) {
 		ignore_css(),
 		// .vue -> .js,
 		vue({
-			exclude: ['node_modules/**']
+			exclude: ['node_modules/**'],
+			template: {
+				isProduction: production
+			}
 		}),
 		// ES6 -> ES5
 		buble({
@@ -59,24 +67,17 @@ function get_rollup_options_for_js(output_file, input_files) {
 			transforms: {
 				dangerousForOf: true,
 				classes: false,
-				modules: true
+				modules: true,
+				asyncAwait: false
 			},
 			exclude: [path.resolve(bench_path, '**/*.css'), path.resolve(bench_path, '**/*.less')]
 		}),
-		node_resolve({
+		node_resolve.nodeResolve({
 			customResolveOptions: {
 				paths: node_resolve_paths
 			}
 		}),
-		commonjs({
-			namedExports: {
-				'node_modules/@fullcalendar/core/main.js': ['Calendar'],
-				'frappe/public/js/lib/rrule/rrule-tz.min.js': ['RRule', 'ENGLISH']
-			}
-		}),
-		!production && visualizer({
-			filename: path.resolve(bench_path, 'stats', output_file + ".html"),
-		}),
+		commonjs(),
 		production && terser()
 	];
 
@@ -120,14 +121,19 @@ function get_rollup_options_for_js(output_file, input_files) {
 
 function get_rollup_options_for_css(output_file, input_files) {
 	const output_path = path.resolve(assets_path, output_file);
-	const minimize_css = output_path.startsWith('css/') && production;
+	const starts_with_css = output_file.startsWith('css/');
 
 	const plugins = [
 		// enables array of inputs
 		multi_entry(),
 		// less -> css
 		postcss({
-			extract: output_path,
+			plugins: [
+				starts_with_css ? require('autoprefixer')() : null,
+				starts_with_css && production ? require('cssnano')({ preset: 'default' }) : null
+			].filter(Boolean),
+			extract: output_file,
+			loaders: [less_loader],
 			use: [
 				['less', {
 					// import other less/css files starting from these folders
@@ -135,14 +141,18 @@ function get_rollup_options_for_css(output_file, input_files) {
 						path.resolve(get_public_path('frappe'), 'less')
 					]
 				}],
-				['sass', get_options_for_scss()]
+				['sass', {
+					...get_options_for_scss(),
+					outFile: output_file,
+					sourceMapContents: true
+				}]
 			],
 			include: [
 				path.resolve(bench_path, '**/*.less'),
 				path.resolve(bench_path, '**/*.scss'),
 				path.resolve(bench_path, '**/*.css')
 			],
-			minimize: minimize_css
+			sourceMap: starts_with_css && !production
 		})
 	];
 
@@ -156,11 +166,12 @@ function get_rollup_options_for_css(output_file, input_files) {
 
 				// console.warn everything else
 				log(chalk.yellow.underline(warning.code), ':', warning.message);
+				log(warning);
 			}
 		},
 		outputOptions: {
 			// this file is always empty, remove it later?
-			file: path.resolve(assets_path, `css/rollup.manifest.css`),
+			file: path.resolve(assets_path, `rollup.manifest.css`),
 			format: 'cjs'
 		}
 	};
@@ -174,7 +185,11 @@ function get_options_for(app) {
 		.map(output_file => {
 			if (output_file.startsWith('concat:')) return null;
 
-			const input_files = build_json[output_file]
+			let files = build_json[output_file];
+			if (typeof files === 'string') {
+				files = [files];
+			}
+			const input_files = files
 				.map(input_file => {
 					let prefix = get_app_path(app);
 					if (input_file.startsWith('node_modules/')) {

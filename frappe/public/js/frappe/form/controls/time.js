@@ -71,7 +71,7 @@ frappe.ui.form.ControlTime = frappe.ui.form.ControlDate.extend({
 	set_description: function() {
 		const { description } = this.df;
 		const { time_zone } = frappe.sys_defaults;
-		if (!frappe.datetime.is_timezone_same()) {
+		if (!this.df.hide_timezone && !frappe.datetime.is_timezone_same()) {
 			if (!description) {
 				this.df.description = time_zone;
 			} else if (!description.includes(time_zone)) {

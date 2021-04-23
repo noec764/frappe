@@ -55,7 +55,7 @@ $.extend(frappe.user, {
 	name: 'Guest',
 	full_name: function(uid) {
 		return uid === frappe.session.user ?
-			__("You") :
+			__("You", null, "Name of the current user. For example: You edited this 5 hours ago.") :
 			frappe.user_info(uid).fullname;
 	},
 	image: function(uid) {
@@ -74,7 +74,7 @@ $.extend(frappe.user, {
 	},
 	get_desktop_items: function() {
 		// hide based on permission
-		var modules_list = $.map(frappe.boot.allowed_modules, function(icon) {
+		var modules_list = $.map(frappe.boot.allowed_workspaces, function(icon) {
 			var m = icon.module_name;
 			var type = frappe.modules[m] && frappe.modules[m].type;
 

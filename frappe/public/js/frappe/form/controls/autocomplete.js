@@ -1,6 +1,7 @@
 import Awesomplete from 'awesomplete';
 
 frappe.ui.form.ControlAutocomplete = frappe.ui.form.ControlData.extend({
+	trigger_change_on_input_event: false,
 	make_input() {
 		this._super();
 		this.setup_awesomplete();
@@ -88,6 +89,20 @@ frappe.ui.form.ControlAutocomplete = frappe.ui.form.ControlData.extend({
 			}
 		});
 
+		this.$input.on("awesomplete-open", () => {
+			this.toggle_container_scroll('.modal-dialog', 'modal-dialog-scrollable');
+			this.toggle_container_scroll('.grid-form-body .form-area', 'scrollable');
+
+			this.autocomplete_open = true;
+		});
+
+		this.$input.on("awesomplete-close", () => {
+			this.toggle_container_scroll('.modal-dialog', 'modal-dialog-scrollable', true);
+			this.toggle_container_scroll('.grid-form-body .form-area', 'scrollable', true);
+
+			this.autocomplete_open = false;
+		});
+
 		this.$input.on('awesomplete-selectcomplete', () => {
 			this.$input.trigger('change');
 		});
@@ -97,8 +112,8 @@ frappe.ui.form.ControlAutocomplete = frappe.ui.form.ControlData.extend({
 		if (this.df.ignore_validation) {
 			return value || '';
 		}
-		let valid_values = this.awesomplete._list.map(d => d.value);
-		if (!valid_values.length) {
+		let valid_values = this.awesomplete&&this.awesomplete._list.map(d => d.value);
+		if (!valid_values || !valid_values.length) {
 			return value;
 		}
 		if (valid_values.includes(value)) {

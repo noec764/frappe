@@ -1,9 +1,10 @@
 from __future__ import unicode_literals
 from . import __version__ as app_version
+from frappe import _
 
 
 app_name = "frappe"
-app_title = "dodock"
+app_title = "Dodock"
 app_publisher = "Dokos SAS"
 app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_icon = "octicon octicon-circuit-board"
@@ -25,20 +26,22 @@ page_js = {
 
 # website
 app_include_js = [
-	"assets/js/libs.min.js",
-	"assets/js/desk.min.js",
-	"assets/js/list.min.js",
-	"assets/js/form.min.js",
-	"assets/js/control.min.js",
-	"assets/js/report.min.js"
+	"/assets/js/libs.min.js",
+	"/assets/js/desk.min.js",
+	"/assets/js/list.min.js",
+	"/assets/js/form.min.js",
+	"/assets/js/control.min.js",
+	"/assets/js/report.min.js"
 ]
 app_include_css = [
-	"assets/css/desk.min.css",
-	"assets/css/list.min.css",
-	"assets/css/form.min.css",
-	"assets/css/report.min.css",
-	"assets/css/module.min.css"
+	"/assets/css/desk.min.css",
+	"/assets/css/report.min.css"
 ]
+
+doctype_js = {
+	"Web Page": "public/js/frappe/utils/web_template.js",
+	"Website Settings": "public/js/frappe/utils/web_template.js"
+}
 
 web_include_js = [
 	"website_script.js"
@@ -51,7 +54,14 @@ website_route_rules = [
 	{"from_route": "/kb/<category>", "to_route": "Help Article"},
 	{"from_route": "/newsletters", "to_route": "Newsletter"},
 	{"from_route": "/profile", "to_route": "me"},
+	{"from_route": "/app/<path:app_path>", "to_route": "app"},
 ]
+
+website_redirects = [
+	{"source": r"/desk(.*)", "target": r"/app\1"},
+]
+
+base_template = "templates/base.html"
 
 write_file_keys = ["file_url", "file_name"]
 
@@ -91,14 +101,19 @@ permission_query_conditions = {
 	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 	"ToDo": "frappe.desk.doctype.todo.todo.get_permission_query_conditions",
 	"User": "frappe.core.doctype.user.user.get_permission_query_conditions",
+	"Dashboard Settings": "frappe.desk.doctype.dashboard_settings.dashboard_settings.get_permission_query_conditions",
 	"Notification Log": "frappe.desk.doctype.notification_log.notification_log.get_permission_query_conditions",
+	"Dashboard": "frappe.desk.doctype.dashboard.dashboard.get_permission_query_conditions",
+	"Dashboard Chart": "frappe.desk.doctype.dashboard_chart.dashboard_chart.get_permission_query_conditions",
+	"Number Card": "frappe.desk.doctype.number_card.number_card.get_permission_query_conditions",
 	"Notification Settings": "frappe.desk.doctype.notification_settings.notification_settings.get_permission_query_conditions",
 	"Note": "frappe.desk.doctype.note.note.get_permission_query_conditions",
 	"Kanban Board": "frappe.desk.doctype.kanban_board.kanban_board.get_permission_query_conditions",
 	"Contact": "frappe.contacts.address_and_contact.get_permission_query_conditions_for_contact",
 	"Address": "frappe.contacts.address_and_contact.get_permission_query_conditions_for_address",
 	"Communication": "frappe.core.doctype.communication.communication.get_permission_query_conditions_for_communication",
-	"Workflow Action": "frappe.workflow.doctype.workflow_action.workflow_action.get_permission_query_conditions"
+	"Workflow Action": "frappe.workflow.doctype.workflow_action.workflow_action.get_permission_query_conditions",
+	"Prepared Report": "frappe.core.doctype.prepared_report.prepared_report.get_permission_query_condition"
 }
 
 has_permission = {
@@ -106,14 +121,20 @@ has_permission = {
 	"ToDo": "frappe.desk.doctype.todo.todo.has_permission",
 	"User": "frappe.core.doctype.user.user.has_permission",
 	"Note": "frappe.desk.doctype.note.note.has_permission",
+	"Dashboard Chart": "frappe.desk.doctype.dashboard_chart.dashboard_chart.has_permission",
+	"Number Card": "frappe.desk.doctype.number_card.number_card.has_permission",
 	"Kanban Board": "frappe.desk.doctype.kanban_board.kanban_board.has_permission",
 	"Contact": "frappe.contacts.address_and_contact.has_permission",
 	"Address": "frappe.contacts.address_and_contact.has_permission",
 	"Communication": "frappe.core.doctype.communication.communication.has_permission",
 	"Workflow Action": "frappe.workflow.doctype.workflow_action.workflow_action.has_permission",
 	"File": "frappe.core.doctype.file.file.has_permission",
-	"Desk": "frappe.desk.doctype.desk.desk.has_permission"
+	"Prepared Report": "frappe.core.doctype.prepared_report.prepared_report.has_permission"
 }
+
+standard_portal_menu_items = [
+	{"title": _("Events"), "route": "/events", "reference_doctype": "Event", "role": "Customer"}
+]
 
 has_website_permission = {
 	"Address": "frappe.contacts.doctype.address.address.has_website_permission"
@@ -125,12 +146,17 @@ standard_queries = {
 
 doc_events = {
 	"*": {
+		"after_insert": [
+			"frappe.event_streaming.doctype.event_update_log.event_update_log.notify_consumers"
+		],
 		"on_update": [
 			"frappe.desk.notifications.clear_doctype_notifications",
 			"frappe.core.doctype.activity_log.feed.update_feed",
 			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
 			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
-			"frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone"
+			"frappe.core.doctype.file.file.attach_files_to_document",
+			"frappe.event_streaming.doctype.event_update_log.event_update_log.notify_consumers",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
 		],
 		"after_rename": "frappe.desk.notifications.clear_doctype_notifications",
 		"on_cancel": [
@@ -139,12 +165,13 @@ doc_events = {
 		],
 		"on_trash": [
 			"frappe.desk.notifications.clear_doctype_notifications",
-			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions"
+			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
+			"frappe.event_streaming.doctype.event_update_log.event_update_log.notify_consumers"
 		],
 		"on_change": [
-			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points"
-		],
-		"after_insert": "frappe.cache_manager.build_table_count_cache"
+			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
+			"frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone"
+		]
 	},
 	"Event": {
 		"after_insert": "frappe.desk.doctype.event.event.insert_event_in_google_calendar",
@@ -156,12 +183,13 @@ doc_events = {
 		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts"
 	},
 	"DocType": {
+		"after_insert": "frappe.cache_manager.build_domain_restricted_doctype_cache",
 		"after_save": "frappe.cache_manager.build_domain_restricted_doctype_cache"
 	},
 	"Page": {
+		"after_insert": "frappe.cache_manager.build_domain_restricted_page_cache",
 		"after_save": "frappe.cache_manager.build_domain_restricted_page_cache"
 	}
-
 }
 
 scheduler_events = {
@@ -178,7 +206,8 @@ scheduler_events = {
 		"frappe.email.doctype.email_account.email_account.notify_unreplied",
 		"frappe.integrations.doctype.razorpay_settings.razorpay_settings.capture_payment",
 		'frappe.utils.global_search.sync_global_search',
-		"frappe.integrations.doctype.google_calendar.google_calendar.sync"
+		"frappe.integrations.doctype.google_calendar.google_calendar.sync_all_calendars",
+		"frappe.monitor.flush"
 	],
 	"hourly": [
 		"frappe.model.utils.link_count.update_link_count",
@@ -188,31 +217,32 @@ scheduler_events = {
 		"frappe.limits.update_space_usage",
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
-		"frappe.desk.form.document_follow.send_hourly_updates"
+		"frappe.desk.form.document_follow.send_hourly_updates",
+		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email"
 	],
 	"daily": [
-		"frappe.email.queue.clear_outbox",
+		"frappe.email.queue.set_expiry_for_email_queue",
 		"frappe.desk.notifications.clear_notifications",
 		"frappe.core.doctype.error_log.error_log.set_old_logs_as_seen",
 		"frappe.desk.doctype.event.event.send_event_digest",
 		"frappe.sessions.clear_expired_sessions",
 		"frappe.email.doctype.notification.notification.trigger_daily_alerts",
 		"frappe.realtime.remove_old_task_logs",
-		"frappe.utils.scheduler.disable_scheduler_on_expiry",
-		"frappe.utils.scheduler.restrict_scheduler_events_if_dormant",
 		"frappe.email.doctype.auto_email_report.auto_email_report.send_daily",
-		"frappe.core.doctype.activity_log.activity_log.clear_authentication_logs",
 		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.remove_unverified_record",
 		"frappe.desk.form.document_follow.send_daily_updates",
 		"frappe.social.doctype.energy_point_settings.energy_point_settings.allocate_review_points",
 		"frappe.integrations.doctype.google_contacts.google_contacts.sync",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.make_auto_repeat_entry",
 		"frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed",
-		"frappe.email.doctype.unhandled_email.unhandled_email.remove_old_unhandled_emails"
+		"frappe.email.doctype.unhandled_email.unhandled_email.remove_old_unhandled_emails",
+		"frappe.core.doctype.scheduled_job_log.scheduled_job_log.flush",
+		"frappe.core.doctype.prepared_report.prepared_report.delete_expired_prepared_reports",
+		"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
+		"frappe.email.doctype.email_group.email_group.auto_update_email_groups"
 	],
 	"daily_long": [
 		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
-		"frappe.utils.change_log.check_for_update",
 		"frappe.integrations.doctype.s3_backup_settings.s3_backup_settings.take_backups_daily",
 		"frappe.integrations.doctype.google_drive.google_drive.daily_backup",
 		"frappe.integrations.doctype.integration_request.integration_request.retry_failed_webhooks"
@@ -263,71 +293,80 @@ bot_parsers = [
 	'frappe.utils.bot.CountBot'
 ]
 
-setup_wizard_exception = "frappe.desk.page.setup_wizard.setup_wizard.email_setup_wizard_exception"
+setup_wizard_exception = [
+	"frappe.desk.page.setup_wizard.setup_wizard.email_setup_wizard_exception",
+	"frappe.desk.page.setup_wizard.setup_wizard.log_setup_wizard_exception"
+]
 before_write_file = "frappe.limits.validate_space_limit"
 
 before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
-after_migrate = ['frappe.website.doctype.website_theme.website_theme.generate_theme_files_if_not_exist']
-
-before_migrate = ['frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute']
+after_migrate = ['frappe.website.doctype.website_theme.website_theme.after_migrate']
 
 otp_methods = ['OTP App','Email','SMS']
 
-user_privacy_documents = [
+user_data_fields = [
+	{"doctype": "Access Log", "strict": True},
+	{"doctype": "Activity Log", "strict": True},
+	{"doctype": "Comment", "strict": True},
 	{
-		'doctype': 'File',
-		'match_field': 'attached_to_name',
-		'personal_fields': ['file_name', 'file_url'],
-		'applies_to_website_user': 1
+		"doctype": "Contact",
+		"filter_by": "email_id",
+		"redact_fields": ["first_name", "last_name", "phone", "mobile_no"],
+		"rename": True,
+	},
+	{"doctype": "Contact Email", "filter_by": "email_id"},
+	{
+		"doctype": "Address",
+		"filter_by": "email_id",
+		"redact_fields": [
+			"address_title",
+			"address_line1",
+			"address_line2",
+			"city",
+			"county",
+			"state",
+			"pincode",
+			"phone",
+			"fax",
+		],
 	},
 	{
-		'doctype': 'Email Group Member',
-		'match_field': 'email',
+		"doctype": "Communication",
+		"filter_by": "sender",
+		"redact_fields": ["sender_full_name", "phone_no", "content"],
+	},
+	{"doctype": "Communication", "filter_by": "recipients"},
+	{"doctype": "Email Group Member", "filter_by": "email"},
+	{"doctype": "Email Unsubscribe", "filter_by": "email", "partial": True},
+	{"doctype": "Email Queue", "filter_by": "sender"},
+	{"doctype": "Email Queue Recipient", "filter_by": "recipient"},
+	{
+		"doctype": "File",
+		"filter_by": "attached_to_name",
+		"redact_fields": ["file_name", "file_url"],
 	},
 	{
-		'doctype': 'Email Unsubscribe',
-		'match_field': 'email',
+		"doctype": "User",
+		"filter_by": "name",
+		"redact_fields": [
+			"email",
+			"username",
+			"first_name",
+			"middle_name",
+			"last_name",
+			"full_name",
+			"birth_date",
+			"user_image",
+			"phone",
+			"mobile_no",
+			"location",
+			"banner_image",
+			"interest",
+			"bio",
+			"email_signature",
+		],
 	},
-	{
-		'doctype': 'Email Queue',
-		'match_field': 'sender',
-	},
-	{
-		'doctype': 'Email Queue Recipient',
-		'match_field': 'recipient',
-	},
-	{
-		'doctype': 'Contact',
-		'match_field': 'email_id',
-		'personal_fields': ['first_name', 'last_name', 'phone', 'mobile_no'],
-	},
-	{
-		'doctype': 'Contact Email',
-		'match_field': 'email_id',
-	},
-	{
-		'doctype': 'Address',
-		'match_field': 'email_id',
-		'personal_fields': ['address_title', 'address_line1', 'address_line2', 'city', 'county', 'state', 'pincode',
-			'phone', 'fax'],
-	},
-	{
-		'doctype': 'Communication',
-		'match_field': 'sender',
-		'personal_fields': ['sender_full_name', 'phone_no', 'content'],
-	},
-	{
-		'doctype': 'Communication',
-		'match_field': 'recipients',
-	},
-	{
-		'doctype': 'User',
-		'match_field': 'name',
-		'personal_fields': ['email', 'username', 'first_name', 'middle_name', 'last_name', 'full_name', 'birth_date',
-			'user_image', 'phone', 'mobile_no', 'location', 'banner_image', 'interest', 'bio', 'email_signature'],
-		'applies_to_website_user': 1
-	},
-
+	{"doctype": "Version", "strict": True},
 ]
 
 global_search_doctypes = {

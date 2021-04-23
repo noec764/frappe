@@ -225,6 +225,6 @@
 			unbindWindowEvents () {
 				this.chart.unbindWindowEvents()
 			}
-		}        
+		}
 	}
 </script>

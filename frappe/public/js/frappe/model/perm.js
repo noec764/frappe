@@ -15,7 +15,7 @@ Object.assign(window, {
 });
 
 $.extend(frappe.perm, {
-	rights: ["read", "write", "create", "delete", "submit", "cancel", "amend",
+	rights: ["select", "read", "write", "create", "delete", "submit", "cancel", "amend",
 		"report", "import", "export", "print", "email", "share", "set_user_permissions"],
 
 	doctype_perm: {},
@@ -42,7 +42,7 @@ $.extend(frappe.perm, {
 	},
 
 	get_perm: (doctype, doc) => {
-		let perm = [{ read: 0 }];
+		let perm = [{ read: 0, permlevel: 0 }];
 
 		let meta = frappe.get_doc("DocType", doctype);
 		const user  = frappe.session.user;
@@ -53,7 +53,7 @@ $.extend(frappe.perm, {
 
 		if (!meta) return perm;
 
-		frappe.perm.build_role_permissions(perm, meta);
+		perm = frappe.perm.get_role_permissions(meta);
 
 		if (doc) {
 			// apply user permissions via docinfo (which is processed server-side)
@@ -107,35 +107,30 @@ $.extend(frappe.perm, {
 		return perm;
 	},
 
-	build_role_permissions: (perm, meta) => {
+	get_role_permissions: (meta) => {
+		let perm = [{ read: 0, permlevel: 0 }];
 		// Returns a `dict` of evaluated Role Permissions
-		$.each(meta.permissions || [], (i, p) => {
+		(meta.permissions || []).forEach(p => {
 			// if user has this role
-			if (frappe.user_roles.includes(p.role)) {
-				let permlevel = cint(p.permlevel);
-				if (!perm[permlevel]) {
-					perm[permlevel] = {};
-					perm[permlevel]["permlevel"] = permlevel
-				}
+			let permlevel = cint(p.permlevel);
+			if (!perm[permlevel]) {
+				perm[permlevel] = {};
+				perm[permlevel]["permlevel"] = permlevel;
+			}
 
-				$.each(frappe.perm.rights, (i, key) => {
-					perm[permlevel][key] = perm[permlevel][key] || (p[key] || 0);
+			if (frappe.user_roles.includes(p.role)) {
+				frappe.perm.rights.forEach(right => {
+					let value = perm[permlevel][right] || (p[right] || 0);
+					if (value) {
+						perm[permlevel][right] = value;
+					}
 				});
 			}
 		});
 
-		// remove values with 0
-		$.each(perm[0], (key, val) => {
-			if (!val) {
-				delete perm[0][key];
-			}
-		});
-
-		$.each(perm, (i, v) => {
-			if (v === undefined) {
-				perm[i] = {};
-			}
-		});
+		// fill gaps with empty object
+		perm = perm.map(p => p || {});
+		return perm;
 	},
 
 	get_match_rules: (doctype, ptype) => {
@@ -254,8 +249,30 @@ $.extend(frappe.perm, {
 	},
 
 	get_allowed_docs_for_doctype: (user_permissions, doctype) => {
-		return (user_permissions || []).filter(perm => {
+		// returns docs from the list of user permissions that are allowed under provided doctype
+		return frappe.perm.filter_allowed_docs_for_doctype(user_permissions, doctype, false);
+	},
+
+	filter_allowed_docs_for_doctype: (user_permissions, doctype, with_default_doc=true) => {
+		// returns docs from the list of user permissions that are allowed under provided doctype
+		// also returns default doc when with_default_doc is set
+		const filtered_perms = (user_permissions || []).filter(perm => {
 			return (perm.applicable_for === doctype || !perm.applicable_for);
-		}).map(perm => perm.doc);
+		});
+
+		const allowed_docs = (filtered_perms).map(perm => perm.doc);
+
+		if (with_default_doc) {
+			const default_doc = allowed_docs.length === 1 ? allowed_docs : filtered_perms
+				.filter(perm => perm.is_default)
+				.map(record => record.doc);
+
+			return {
+				allowed_records: allowed_docs,
+				default_doc: default_doc[0]
+			};
+		} else {
+			return allowed_docs;
+		}
 	}
 });

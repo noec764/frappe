@@ -6,11 +6,10 @@ from __future__ import unicode_literals
 import frappe
 
 from frappe import throw, _
-from frappe.utils import cstr
+from frappe.utils import cstr, cint
 
 from frappe.model.document import Document
 from jinja2 import TemplateSyntaxError
-from frappe.utils.user import is_website_user
 from frappe.model.naming import make_autoname
 from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from six import iteritems, string_types
@@ -41,7 +40,6 @@ class Address(Document):
 
 	def validate(self):
 		self.link_address()
-		self.validate_reference()
 		self.validate_preferred_address()
 		set_link_title(self)
 		deduplicate_dynamic_links(self)
@@ -49,7 +47,7 @@ class Address(Document):
 
 	def link_address(self):
 		"""Link address based on owner"""
-		if not self.links and not self.is_your_company_address:
+		if not self.links:
 			contact_name = frappe.db.get_value("Contact", {"email_id": self.owner})
 			if contact_name:
 				contact = frappe.get_cached_doc('Contact', contact_name)
@@ -58,12 +56,6 @@ class Address(Document):
 				return True
 
 		return False
-
-	def validate_reference(self):
-		if self.is_your_company_address:
-			if not [row for row in self.links if row.link_doctype == "Company"]:
-				frappe.throw(_("Address needs to be linked to a Company. Please add a row for Company in the Links table below."),
-					title =_("Company not Linked"))
 
 	def validate_preferred_address(self):
 		preferred_fields = ['is_primary_address', 'is_shipping_address']
@@ -150,7 +142,7 @@ def get_default_address(doctype, name, sort_key='is_primary_address'):
 		""" %(sort_key, '%s', '%s'), (doctype, name))
 
 	if out:
-		return sorted(out, key = functools.cmp_to_key(lambda x,y: cmp(y[1], x[1])))[0][0]
+		return sorted(out, key = functools.cmp_to_key(lambda x,y: cmp(cint(y[1]), cint(x[1]))))[0][0]
 	else:
 		return None
 
@@ -199,7 +191,7 @@ def get_list_context(context=None):
 def get_address_list(doctype, txt, filters, limit_start, limit_page_length = 20, order_by = None):
 	from frappe.www.list import get_list
 	user = frappe.session.user
-	ignore_permissions = False
+	ignore_permissions = True
 	
 	if not filters: filters = []
 	filters.append(("Address", "owner", "=", user))
@@ -232,25 +224,6 @@ def get_address_templates(address):
 	else:
 		return result
 
-@frappe.whitelist()
-def get_shipping_address(company, address = None):
-	filters = [
-		["Dynamic Link", "link_doctype", "=", "Company"],
-		["Dynamic Link", "link_name", "=", company],
-		["Address", "is_your_company_address", "=", 1]
-	]
-	fields = ["*"]
-	if address and frappe.db.get_value('Dynamic Link',
-		{'parent': address, 'link_name': company}):
-		filters.append(["Address", "name", "=", address])
-
-	address = frappe.get_all("Address", filters=filters, fields=fields) or {}
-
-	if address:
-		address_as_dict = address[0]
-		name, address_template = get_address_templates(address_as_dict)
-		return address_as_dict.get("name"), frappe.render_template(address_template, address_as_dict)
-
 def get_company_address(company):
 	ret = frappe._dict()
 	ret.company_address = get_default_address('Company', company)
@@ -258,6 +231,8 @@ def get_company_address(company):
 
 	return ret
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def address_query(doctype, txt, searchfield, start, page_len, filters):
 	from frappe.desk.reportview import get_match_cond
 
@@ -265,16 +240,17 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 	link_name = filters.pop('link_name')
 
 	condition = ""
-	for fieldname, value in iteritems(filters):
-		condition += " and {field}={value}".format(
-			field=fieldname,
-			value=value
-		)
-
 	meta = frappe.get_meta("Address")
+	for fieldname, value in iteritems(filters):
+		if meta.get_field(fieldname) or fieldname in frappe.db.DEFAULT_COLUMNS:
+			condition += " and {field}={value}".format(
+				field=fieldname,
+				value=frappe.db.escape(value))
+
 	searchfields = meta.get_search_fields()
 
-	if searchfield:
+	if searchfield and (meta.get_field(searchfield)\
+		or searchfield in frappe.db.DEFAULT_COLUMNS):
 		searchfields.append(searchfield)
 
 	search_condition = ''

@@ -40,7 +40,7 @@
  "name": "Module Dashboard Items",
  "owner": "Administrator",
  "permissions": [],
- "route": "/desk#Form/DocType/Module Dashboard Items",
+ "route": "/app/Form/DocType/Module Dashboard Items",
  "sort_field": "modified",
  "sort_order": "DESC"
 }

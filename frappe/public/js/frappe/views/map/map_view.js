@@ -2,17 +2,18 @@ frappe.provide('frappe.views');
 
 frappe.views.MapView = class MapView extends frappe.views.ListView {
 	get view_name() {
+		// __("Map")
 		return 'Map';
 	}
 
 	setup_defaults() {
 		super.setup_defaults();
-		this.page_title = this.page_title + ' ' + __('Map');
+		this.page_title = __('{0} Map', [this.page_title]);
 	}
 
 	get_fields() {
-		const fields_to_add = this.meta.fields.filter(f => f.fieldtype === "Geolocation").map(f => f.fieldname)
-		fields_to_add.forEach(fieldname => {
+		this.gelocation_fields = this.meta.fields.filter(f => f.fieldtype === "Geolocation").map(f => f.fieldname)
+		this.gelocation_fields.forEach(fieldname => {
 			this.fields.push([fieldname, this.doctype]);
 		})
 		return super.get_fields();
@@ -27,7 +28,8 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	}
 
 	setup_view() {
-
+		this.sort_selector.wrapper.hide();
+		this.list_sidebar&&this.list_sidebar.parent.find(".list-tag-preview").hide();
 	}
 
 	prepare_data(data) {
@@ -48,7 +50,7 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		this.map_id = frappe.dom.get_unique_id();
 		this.map_area = $(
 			`<div class="map-wrapper border">
-				<div id=${this.map_id} style="min-height: ${this.$result.innerHeight()}px; z-index: 1; max-width:100%"></div>
+				<div id=${this.map_id} style="min-height: calc(100vh - 284px); z-index: 1; max-width:100%"></div>
 			</div>`
 		);
 		this.map_area.prependTo(this.$result);
@@ -134,27 +136,29 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		const me = this;
 		me.editableLayers = new L.FeatureGroup();
 		me.data.forEach(value => {
-			const geometry_value = value.map_location
-			const data_layers = new L.LayerGroup()
-				.addLayer(L.geoJson(JSON.parse(geometry_value),{
-					pointToLayer: function(geoJsonPoint, latlng) {
-						if (geoJsonPoint.properties.point_type == "circle"){
-							return L.circle(latlng, {radius: geoJsonPoint.properties.radius})
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
-						} else if (geoJsonPoint.properties.point_type == "circlemarker") {
-							return L.circleMarker(latlng, {radius: geoJsonPoint.properties.radius})
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
+			me.gelocation_fields.forEach(field => {
+				const geometry_value = value[field]
+				const data_layers = new L.LayerGroup()
+					.addLayer(L.geoJson(JSON.parse(geometry_value),{
+						pointToLayer: function(geoJsonPoint, latlng) {
+							if (geoJsonPoint.properties.point_type == "circle"){
+								return L.circle(latlng, {radius: geoJsonPoint.properties.radius})
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							} else if (geoJsonPoint.properties.point_type == "circlemarker") {
+								return L.circleMarker(latlng, {radius: geoJsonPoint.properties.radius})
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							}
+							else {
+								return L.marker(latlng)
+									.bindPopup(me.get_popup(value))
+									.bindTooltip(me.get_tooltip(value));
+							}
 						}
-						else {
-							return L.marker(latlng)
-								.bindPopup(me.get_popup(value))
-								.bindTooltip(me.get_tooltip(value));
-						}
-					}
-				}));
-			me.add_non_group_layers(data_layers, me.editableLayers);
+					}));
+				me.add_non_group_layers(data_layers, me.editableLayers);
+			})
 		})
 		try {
 			me.map.flyToBounds(me.editableLayers.getBounds(), {
@@ -185,7 +189,11 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	get_popup(value) {
 		const text = Object.keys(this.list_fields).reduce((prev, f) => {
 			return `${prev}<p><b>${__(this.list_fields[f])}</b>: ${__(value[f])}</p>`
-		}, `<b>${value.name}</b>`)
+		}, `<b>${frappe.utils.get_form_link(
+			this.doctype,
+			value.name,
+			true
+		)}</b>`)
 
 		return text
 	}

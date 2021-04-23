@@ -46,8 +46,8 @@ setup(
 	name='frappe',
 	version=version,
 	description='Metadata driven, full-stack web framework',
-	author='Frappe Technologies',
-	author_email='info@frappe.io',
+	author='Dokos SAS',
+	author_email='hello@dokos.io',
 	packages=find_packages(),
 	zip_safe=False,
 	include_package_data=True,
@@ -58,5 +58,6 @@ setup(
 	cmdclass = \
 	{
 		'clean': CleanCommand
-	}
+	},
+	python_requires='>=3.6'
 )

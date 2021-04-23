@@ -128,7 +128,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		}
 
 		let args = {
-			folder: 'Home/Attachments',
+			folder: frappe.boot.attachments_folder,
 			on_success: attachment => this.attachments.push(attachment)
 		};
 
@@ -136,7 +136,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			args = {
 				doctype: this.frm.doctype,
 				docname: this.frm.docname,
-				folder: 'Home/Attachments',
+				folder: frappe.boot.attachments_folder,
 				on_success: attachment => {
 					this.frm.attachments.attachment_uploaded(attachment);
 					this.render_attach();
@@ -246,8 +246,6 @@ frappe.views.InteractionComposer = class InteractionComposer {
 						me.add_attachments(r.message, selected_attachments);
 					}
 					if (cur_frm) {
-						// clear input
-						cur_frm.timeline.input && cur_frm.timeline.input.val("");
 						cur_frm.reload_doc();
 					}
 				} else {
@@ -265,7 +263,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				args: {
 					doctype: doc.doctype,
 					name: doc.name,
-					assign_to: assignee
+					assign_to: JSON.stringify([assignee])
 				},
 				callback:function(r) {
 					if(!r.exc) {

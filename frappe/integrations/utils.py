@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2015, Frappe Technologies and contributors
+# Copyright (c) 2020, Frappe Technologies and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
@@ -50,9 +50,12 @@ def make_post_request(url, auth=None, headers=None, data=None):
 		frappe.log_error()
 		raise exc
 
-def create_request_log(data, integration_type, service_name, name=None):
+def create_request_log(data, integration_type, service_name, name=None, error=None):
 	if isinstance(data, string_types):
 		data = json.loads(data)
+
+	if isinstance(error, string_types):
+		error = json.loads(error)
 
 	integration_request = frappe.get_doc({
 		"doctype": "Integration Request",
@@ -60,6 +63,7 @@ def create_request_log(data, integration_type, service_name, name=None):
 		"integration_request_service": service_name,
 		"reference_doctype": data.get("reference_doctype"),
 		"reference_docname": data.get("reference_docname"),
+		"error": json.dumps(error, default=json_handler),
 		"data": json.dumps(data, default=json_handler, indent=4)
 	})
 
@@ -123,8 +127,8 @@ def get_gateway_controller(doctype, docname):
 
 class PaymentGatewayController(Document):
 	def finalize_request(self, reference_no=None):
-		redirect_to = self.data.get('redirect_to') or 'payment-success'
-		redirect_message = self.data.get('redirect_message') or None
+		redirect_to = self.data.get('redirect_to')
+		redirect_message = self.data.get('redirect_message')
 
 		if self.flags.status_changed_to in ["Completed", "Autorized", "Pending"] and self.reference_document:
 			custom_redirect_to = None
@@ -152,19 +156,11 @@ class PaymentGatewayController(Document):
 			"status": self.integration_request.status
 		}
 
-	def change_integration_request_status(self, status, type, error):
+	def change_integration_request_status(self, status, error_type, error):
 		if hasattr(self, "integration_request"):
 			self.flags.status_changed_to = status
 			self.integration_request.db_set('status', status, update_modified=True)
-			self.integration_request.db_set(type, error, update_modified=True)
+			self.integration_request.db_set(error_type, error, update_modified=True)
 
-	def change_linked_integration_requests_status(self, status):
-		try:
-			linked_docs = frappe.get_all("Integration Request",\
-				filters={"reference_doctype": self.reference_document.doctype,\
-					"reference_docname": self.reference_document.name})
-
-			for linked_doc in linked_docs:
-				frappe.db.set_value("Integration Request", linked_doc.name, "status", status)
-		except Exception:
-			frappe.log_error(frappe.get_traceback(), _("Integration request status update error"))
+		if hasattr(self, "update_reference_document_status"):
+			self.update_reference_document_status(status)

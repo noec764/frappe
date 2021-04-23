@@ -45,7 +45,9 @@ def authenticate(user):
 def get(user, fields = None):
 	duser   = frappe.get_doc('User', user)
 
-	if frappe.db.exists('Chat Profile', user):
+	if not frappe.db.exists('Chat Profile', user):
+		return {}
+	else:
 		dprof = frappe.get_doc('Chat Profile', user)
 
 		# If you're adding something here, make sure the client recieves it.
@@ -76,14 +78,19 @@ def create(user, exists_ok = False, fields = None):
 
 	exists_ok, fields = safe_json_loads(exists_ok, fields)
 
-	try:
-		dprof = frappe.new_doc('Chat Profile')
-		dprof.user = user
-		dprof.save(ignore_permissions = True)
-	except frappe.DuplicateEntryError:
-		frappe.clear_messages()
-		if not exists_ok:
-			frappe.throw(_('Chat Profile for User {0} exists.').format(user))
+	profile = get(user, fields = fields)
+	if profile:
+		return profile
+	else:
+
+		try:
+			dprof = frappe.new_doc('Chat Profile')
+			dprof.user = user
+			dprof.save(ignore_permissions = True)
+		except frappe.DuplicateEntryError:
+			frappe.clear_messages()
+			if not exists_ok:
+				frappe.throw(_('Chat Profile for User {0} exists.').format(user))
 
 	profile = get(user, fields = fields)
 

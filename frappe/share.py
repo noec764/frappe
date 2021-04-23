@@ -91,13 +91,12 @@ def set_permission(doctype, name, user, permission_to, value=1, everyone=0):
 @frappe.whitelist()
 def get_users(doctype, name):
 	"""Get list of users with which this document is shared"""
-	return frappe.db.sql("""select
-			`name`, `user`, `read`, `write`, `share`, `everyone`
-		from
-			`tabDocShare`
-		where
-			share_doctype=%s and share_name=%s""",
-		(doctype, name), as_dict=True)
+	return frappe.db.get_all("DocShare",
+		fields=["`name`", "`user`", "`read`", "`write`", "`share`", "everyone", "owner", "creation"],
+		filters=dict(
+			share_doctype=doctype,
+			share_name=name
+		))
 
 def get_shared(doctype, user=None, rights=None):
 	"""Get list of shared document names for given user and DocType.
@@ -145,7 +144,7 @@ def get_share_name(doctype, name, user, everyone):
 def check_share_permission(doctype, name):
 	"""Check if the user can share with other users"""
 	if not frappe.has_permission(doctype, ptype="share", doc=name):
-		frappe.throw(_("No permission to {0} {1} {2}").format("share", doctype, name), frappe.PermissionError)
+		frappe.throw(_("No permission to {0} {1} {2}").format(_("share"), _(doctype), name), frappe.PermissionError)
 
 def notify_assignment(shared_by, doctype, doc_name, everyone, notify=0):
 

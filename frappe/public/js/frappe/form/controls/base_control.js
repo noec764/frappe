@@ -40,21 +40,30 @@ frappe.ui.form.Control = Class.extend({
 			return this.df.get_status(this);
 		}
 
-		if((!this.doctype && !this.docname) || this.df.parenttype === 'Web Form') {
+		if ((!this.doctype && !this.docname) || this.df.parenttype === 'Web Form' || this.df.webform_field) {
 			// like in case of a dialog box
 			if (cint(this.df.hidden)) {
 				// eslint-disable-next-line
-				if(explain) console.log("By Hidden: None");
+				if (explain) console.log("By Hidden: None"); // eslint-disable-line no-console
 				return "None";
 
 			} else if (cint(this.df.hidden_due_to_dependency)) {
 				// eslint-disable-next-line
-				if(explain) console.log("By Hidden Dependency: None");
+				if(explain) console.log("By Hidden Dependency: None"); // eslint-disable-line no-console
 				return "None";
 
 			} else if (cint(this.df.read_only)) {
 				// eslint-disable-next-line
-				if(explain) console.log("By Read Only: Read");
+				if (explain) console.log("By Read Only: Read"); // eslint-disable-line no-console
+				return "Read";
+
+			} else if ((this.grid &&
+					this.grid.display_status == 'Read') ||
+					(this.layout &&
+					this.layout.grid &&
+					this.layout.grid.display_status == 'Read')) {
+				// parent grid is read
+				if (explain) console.log("By Parent Grid Read-only: Read"); // eslint-disable-line no-console
 				return "Read";
 
 			}
@@ -65,13 +74,22 @@ frappe.ui.form.Control = Class.extend({
 		var status = frappe.perm.get_field_display_status(this.df,
 			frappe.model.get_doc(this.doctype, this.docname), this.perm || (this.frm && this.frm.perm), explain);
 
+		// Match parent grid controls read only status
+		if (status === 'Write' && (this.grid || (this.layout && this.layout.grid) && !cint(this.df.allow_on_submit))) {
+			var grid = this.grid || this.layout.grid;
+			if (grid.display_status == 'Read') {
+				status = 'Read';
+				if (explain) console.log("By Parent Grid Read-only: Read"); // eslint-disable-line no-console
+			}
+		}
+
 		// hide if no value
 		if (this.doctype && status==="Read" && !this.only_input
 			&& is_null(frappe.model.get_value(this.doctype, this.docname, this.df.fieldname))
 			&& !in_list(["HTML", "Image", "Button"], this.df.fieldtype)) {
 
 			// eslint-disable-next-line
-			if(explain) console.log("By Hide Read-only, null fields: None");
+			if (explain) console.log("By Hide Read-only, null fields: None"); // eslint-disable-line no-console
 			status = "None";
 		}
 
@@ -84,18 +102,16 @@ frappe.ui.form.Control = Class.extend({
 			&& this.refresh_input
 			&& this.refresh_input();
 
-		var value = this.get_value();
-
-		this.show_translatable_button(value);
+		this.show_translatable_button();
 	},
-	show_translatable_button(value) {
+	show_translatable_button() {
 		// Disable translation non-string fields or special string fields
 		if (!frappe.model
 			|| !this.frm
 			|| !this.doc
 			|| !this.df.translatable
 			|| !frappe.model.can_write('Translation')
-			|| !value) return;
+			|| !this.get_value()) return;
 
 		// Disable translation in website
 		if (!frappe.views || !frappe.views.TranslationManager) return;
@@ -114,7 +130,7 @@ frappe.ui.form.Control = Class.extend({
 				if (!this.doc.__islocal) {
 					new frappe.views.TranslationManager({
 						'df': this.df,
-						'source_name': value,
+						'source_text': this.get_value(),
 						'target_language': this.doc.language,
 						'doc': this.doc
 					});
@@ -142,9 +158,13 @@ frappe.ui.form.Control = Class.extend({
 	},
 	validate_and_set_in_model: function(value, e) {
 		var me = this;
-		if(this.inside_change_event) {
+		let force_value_set = (this.doc && this.doc.__run_link_triggers);
+		let is_value_same = (this.get_model_value() === value);
+
+		if (this.inside_change_event || (!force_value_set && is_value_same)) {
 			return Promise.resolve();
 		}
+
 		this.inside_change_event = true;
 		var set = function(value) {
 			me.inside_change_event = false;
@@ -155,8 +175,11 @@ frappe.ui.form.Control = Class.extend({
 
 					if(me.df.change || me.df.onchange) {
 						// onchange event specified in df
-						return (me.df.change || me.df.onchange).apply(me, [e]);
+						let set = (me.df.change || me.df.onchange).apply(me, [e]);
+						me.set_invalid && me.set_invalid();
+						return set;
 					}
+					me.set_invalid && me.set_invalid();
 				}
 			]);
 		};

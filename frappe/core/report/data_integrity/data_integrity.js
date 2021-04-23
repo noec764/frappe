@@ -19,15 +19,14 @@ frappe.query_reports["Data Integrity"] = {
 	],
 	"formatter": function(value, row, column, data, default_formatter) {
 
-		if (column.fieldname == "integrity") {
-
-			return repl('<div class="text-center"><i class="fa %(icon)s" style="color: %(color)s;"></i></div>', {
-				icon: (value=="Yes") ? "fa-check": (value=="Out") ? "fa-bell" : "fa-exclamation",
-				color: (value=="Yes") ? "green": (value=="Out") ? "orange" : "red"
-			});
-
+		if (column.fieldname == "comments") {
+			const icon = (data.icon=="success") ? "fa-check": (data.icon=="warning") ? "fa-bell" : "fa-exclamation"
+			const color = (data.icon=="success") ? "green": (data.icon=="warning") ? "orange" : "red"
+			return `<div class="text-left">
+						<i class="fa ${icon}" style="color: ${color};"></i>
+						${value}
+					</div>`;
 		}
-
 		return value;
 	}
 }

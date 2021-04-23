@@ -51,7 +51,7 @@ class PostgresDatabase(Database):
 			'Data':			('varchar', self.VARCHAR_LEN),
 			'Link':			('varchar', self.VARCHAR_LEN),
 			'Dynamic Link':	('varchar', self.VARCHAR_LEN),
-			'Password':		('varchar', self.VARCHAR_LEN),
+			'Password':		('text', ''),
 			'Select':		('varchar', self.VARCHAR_LEN),
 			'Rating':		('smallint', None),
 			'Read Only':	('varchar', self.VARCHAR_LEN),
@@ -60,7 +60,8 @@ class PostgresDatabase(Database):
 			'Signature':	('text', ''),
 			'Color':		('varchar', self.VARCHAR_LEN),
 			'Barcode':		('text', ''),
-			'Geolocation':	('text', '')
+			'Geolocation':	('text', ''),
+			'Duration':		('decimal', '18,6')
 		}
 
 	def get_connection(self):
@@ -92,7 +93,7 @@ class PostgresDatabase(Database):
 
 	# pylint: disable=W0221
 	def sql(self, *args, **kwargs):
-		if len(args):
+		if args:
 			# since tuple is immutable
 			args = list(args)
 			args[0] = modify_query(args[0])
@@ -139,11 +140,11 @@ class PostgresDatabase(Database):
 
 	@staticmethod
 	def is_table_missing(e):
-		return e.pgcode == '42P01'
+		return getattr(e, 'pgcode', None) == '42P01'
 
 	@staticmethod
 	def is_missing_column(e):
-		return e.pgcode == '42703'
+		return getattr(e, 'pgcode', None) == '42703'
 
 	@staticmethod
 	def is_access_denied(e):
@@ -178,7 +179,7 @@ class PostgresDatabase(Database):
 				"doctype" VARCHAR(140) NOT NULL,
 				"name" VARCHAR(255) NOT NULL,
 				"fieldname" VARCHAR(140) NOT NULL,
-				"password" VARCHAR(255) NOT NULL,
+				"password" TEXT NOT NULL,
 				"encrypted" INT NOT NULL DEFAULT 0,
 				PRIMARY KEY ("doctype", "name", "fieldname")
 			)""")
@@ -276,13 +277,13 @@ class PostgresDatabase(Database):
 		# pylint: disable=W1401
 		return self.sql('''
 			SELECT a.column_name AS name,
-			CASE a.data_type
+			CASE LOWER(a.data_type)
 				WHEN 'character varying' THEN CONCAT('varchar(', a.character_maximum_length ,')')
-				WHEN 'timestamp without TIME zone' THEN 'timestamp'
+				WHEN 'timestamp without time zone' THEN 'timestamp'
 				ELSE a.data_type
 			END AS type,
 			COUNT(b.indexdef) AS Index,
-			COALESCE(a.column_default, NULL) AS default,
+			SPLIT_PART(COALESCE(a.column_default, NULL), '::', 1) AS default,
 			BOOL_OR(b.unique) AS unique
 			FROM information_schema.columns a
 			LEFT JOIN

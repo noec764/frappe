@@ -6,9 +6,18 @@ import frappe
 from frappe import msgprint, _
 import json
 import csv
+from csv import QUOTE_NONNUMERIC, QUOTE_ALL, QUOTE_MINIMAL, QUOTE_NONE
 import six
+import requests
 from six import StringIO, text_type, string_types
 from frappe.utils import encode, cstr, cint, flt, comma_or
+
+QUOTE_MAP = {
+	'QUOTE_NONNUMERIC': QUOTE_NONNUMERIC,
+	'QUOTE_ALL': QUOTE_ALL,
+	'QUOTE_MINIMAL': QUOTE_MINIMAL,
+	'QUOTE_NONE': QUOTE_NONE
+}
 
 def read_csv_content_from_uploaded_file(ignore_encoding=False):
 	if getattr(frappe, "uploaded_file", None):
@@ -93,8 +102,8 @@ def send_csv_to_client(args):
 	frappe.response["doctype"] = args.filename
 	frappe.response["type"] = "csv"
 
-def to_csv(data):
-	writer = UnicodeWriter()
+def to_csv(data, quoting="QUOTE_NONNUMERIC", lineterminator="\r\n"):
+	writer = UnicodeWriter(quoting=quoting, lineterminator=lineterminator)
 	for row in data:
 		writer.writerow(row)
 
@@ -106,10 +115,12 @@ def build_csv_response(data, filename):
 	frappe.response["type"] = "csv"
 
 class UnicodeWriter:
-	def __init__(self, encoding="utf-8"):
+	def __init__(self, encoding="utf-8", quoting="QUOTE_NONNUMERIC" ,lineterminator="\r\n"):
 		self.encoding = encoding
+		self.quoting = QUOTE_MAP.get(quoting)
+		self.lineterminator = lineterminator
 		self.queue = StringIO()
-		self.writer = csv.writer(self.queue, quoting=csv.QUOTE_NONNUMERIC)
+		self.writer = csv.writer(self.queue, quoting=self.quoting, lineterminator=self.lineterminator)
 
 	def writerow(self, row):
 		if six.PY2:
@@ -133,7 +144,7 @@ def check_record(d):
 
 			if docfield.fieldtype=='Select' and val and docfield.options:
 				if val not in docfield.options.split('\n'):
-					frappe.throw(_("{0} must be one of {1}").format(_(docfield.label), comma_or(docfield.options.split("\n"))))
+					frappe.throw(_("{0} must be one of {1}").format(_(docfield.label), comma_or([_(x) for x in docfield.options.split("\n")])))
 
 			if val and docfield.fieldtype=='Date':
 				d[key] = parse_date(val)
@@ -171,4 +182,45 @@ def import_doc(d, doctype, overwrite, row_idx, submit=False, ignore_links=False)
 			doc.get('name')))
 
 def getlink(doctype, name):
-	return '<a href="#Form/%(doctype)s/%(name)s">%(name)s</a>' % locals()
+	return '<a href="/app/Form/%(doctype)s/%(name)s">%(name)s</a>' % locals()
+
+def get_csv_content_from_google_sheets(url):
+	# https://docs.google.com/spreadsheets/d/{sheetid}}/edit#gid={gid}
+	validate_google_sheets_url(url)
+	# get gid, defaults to first sheet
+	if "gid=" in url:
+		gid = url.rsplit('gid=', 1)[1]
+	else:
+		gid = 0
+
+	# remove /edit path
+	url = url.rsplit('/edit', 1)[0]
+	# add /export path,
+	url = url + '/export?format=csv&gid={0}'.format(gid)
+
+	headers = {
+		'Accept': 'text/csv'
+	}
+	response = requests.get(url, headers=headers)
+
+	if response.ok:
+		# if it returns html, it couldn't find the CSV content
+		# because of invalid url or no access
+		if response.text.strip().endswith('</html>'):
+			frappe.throw(
+				_('Google Sheets URL is invalid or not publicly accessible.'),
+				title=_("Invalid URL")
+			)
+		return response.content
+	elif response.status_code == 400:
+		frappe.throw(_('Google Sheets URL must end with "gid={number}". Copy and paste the URL from the browser address bar and try again.'),
+			title=_("Incorrect URL"))
+	else:
+		response.raise_for_status()
+
+def validate_google_sheets_url(url):
+	if "docs.google.com/spreadsheets" not in url:
+		frappe.throw(
+			_('"{0}" is not a valid Google Sheets URL').format(url),
+			title=_("Invalid URL"),
+		)

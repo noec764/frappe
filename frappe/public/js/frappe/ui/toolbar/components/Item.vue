@@ -1,21 +1,24 @@
 <template>
 	<div
-		class="vsm-item first-item"
+		class="dodock-sidebar-item"
 		@mouseenter="mouseEnter($event)"
 		@touchend="touchEnd($event)"
+		@click="itemClick"
 	>
 		<a
-			class="vsm-link"
-			:href="item.type === 'module' ? '#modules/' + item.module_name : item.link"
+			class="dodock-sidebar-link"
+			:href="'/app/' + frappe.router.slug(item.name)"
 		>
-			<i
-				v-if="item.icon"
-				class="vsm-icon"
-				:class="item.icon"
-				:style="{color: item.color}"
-			/>
+			<i class="dodock-sidebar-icon"
+				:style="{
+					//backgroundColor: getBackgroundColor(item.icon),
+					//'--icon-stroke': getBackgroundColor(item.icon)
+					'--icon-fill': getBackgroundColor(item.icon)
+				}"
+				v-html="frappe.utils.icon(item.icon || 'folder-open', 'lg')">
+			</i>
 			<template v-if="!isCollapsed">
-				<span class="vsm-title">{{ item.label }}</span>
+				<span class="dodock-sidebar-title">{{ item.label }}</span>
 			</template>
 		</a>
 	</div>
@@ -48,6 +51,36 @@ export default {
 			if (this.isCollapsed) {
 				this.$parent.$emit('touchEndItem')
 			}
+		},
+		itemClick() {
+			this.$emit('itemClick');
+		},
+		getBackgroundColor(icon) {
+			const colorMap = {
+				accounting: "#407395",
+				assets: "#457b9d",
+				tool: "#e9c46a",
+				buying: "#e76f51",
+				crm: "#ec9a9a",
+				hr: "#457b9d",
+				loan: "#e96a70",
+				"money-coins-1": "#15aabf",
+				project: "#BF90D4",
+				quality: "#1abc9c",
+				sell: "#2a9d8f",
+				support: "#72ac82",
+				website: "#84b7c5",
+				settings: "#aec8ff",
+				customization: "#F8A787",
+				integration: "#35abb7",
+				users: "#e8525b",
+				organization: "#c2831c",
+				retail: "#62B6CB",
+				stock: "#f4a261",
+				map: "#eeb867",
+				agriculture : "#ffcb61"
+			}
+			return colorMap[icon] || "var(--primary-color)"
 		}
 	}
 }

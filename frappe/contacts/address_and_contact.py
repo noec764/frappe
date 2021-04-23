@@ -1,5 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# License: GNU General Public License v3. See license.txt
+# MIT License. See license.txt
 
 from __future__ import unicode_literals
 import frappe
@@ -146,6 +146,8 @@ def delete_contact_and_address(doctype, docname):
 			if len(doc.links)==1:
 				doc.delete()
 
+@frappe.whitelist()
+@frappe.validate_and_sanitize_search_inputs
 def filter_dynamic_link_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	if not txt: txt = ""
 
