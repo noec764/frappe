@@ -51,7 +51,7 @@ def get_oauth_client():
 
 	return oauth_client
 
-
+@unittest.skip("Skipped in CI")
 class TestConnectedApp(unittest.TestCase):
 
 	def setUp(self):
