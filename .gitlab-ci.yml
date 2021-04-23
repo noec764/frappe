@@ -32,9 +32,8 @@ unittests:
     - npm install --global yarn
     - mkdir -p apps
     - mkdir -p apps/frappe
-    - shopt -s extglob dotglob
-    - mv -f !(apps) apps/frappe/ || true
-    - shopt -u dotglob
+    - mv -f * apps/frappe/ || true
+    - python -m venv env
     - . env/bin/activate
     - pip3 install --upgrade pip
     - pip3 install --no-cache-dir -e apps/frappe/
