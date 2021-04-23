@@ -33,6 +33,12 @@ unittests:
     - mkdir -p apps
     - mkdir -p apps/frappe
     - mv -f * apps/frappe/ || true
+    - mkdir -p sites logs && echo "frappe" > sites/apps.txt
+    - mkdir -p ../logs
+    - mkdir sites/test_site
+    - cp -r apps/frappe/tests_site/test_site/site_config.json sites/test_site/
+    - mkdir -p test_site/logs
+    - mkdir -p sites/assets
     - python -m venv env
     - . env/bin/activate
     - pip3 install --upgrade pip
