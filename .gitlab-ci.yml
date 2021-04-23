@@ -32,6 +32,7 @@ unittests:
     - npm install --global yarn
     - mkdir -p apps
     - mkdir -p apps/frappe
+    - cd ~/
     - mv -f * apps/frappe/ || true
     - . env/bin/activate
     - pip3 install --upgrade pip
