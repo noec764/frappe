@@ -252,6 +252,7 @@ class TestUser(unittest.TestCase):
 		self.assertEqual(extract_mentions(comment)[0], "test_user@example.com")
 		self.assertEqual(extract_mentions(comment)[1], "test.again@example1.com")
 
+	@unittest.skip("Skipped in CI")
 	def test_rate_limiting_for_reset_password(self):
 		# Allow only one reset request for a day
 
