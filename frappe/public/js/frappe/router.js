@@ -164,37 +164,17 @@ frappe.router = {
 		return route;
 	},
 
-	translate_doctype_name() {
-		return new Promise((resolve) => {
-			const route = frappe.router.current_route = frappe.router.parse();
-			const factory = route[0].toLowerCase();
-			const set_name = () => {
-				const d = frappe.router.doctype_names[route[1]];
-				route[1] = d.doctype;
-				frappe.router.doctype_layout = d.doctype_layout;
-				resolve();
-			};
-
-			if (frappe.router.factory_views.includes(factory)) {
-				// translate the doctype to its original name
-				if (frappe.router.doctype_names[route[1]]) {
-					set_name();
-				} else {
-					frappe.xcall('frappe.desk.utils.get_doctype_name', {name: route[1]}).then((data) => {
-						frappe.router.doctype_names[route[1]] = data.name_map;
-						set_name();
-					});
-				}
-			} else {
-				resolve();
-			}
-		});
-	},
-
 	get_standard_route_for_list(route, doctype_route) {
 		let standard_route;
 		if (route[2].toLowerCase()==='tree') {
 			standard_route = ['Tree', doctype_route.doctype];
+		} else if (doctype_route.doctype == "File") {
+			standard_route = ['List', doctype_route.doctype, frappe.utils.to_title_case(route[2])];
+			if (route.length >= 3) {
+				route.slice(3).map(r => {
+					standard_route.push(r);
+				})
+			}
 		} else {
 			standard_route = ['List', doctype_route.doctype, frappe.utils.to_title_case(route[2])];
 			if (route[3]) {
@@ -407,8 +387,8 @@ frappe.router = {
 	},
 
 	get_sub_path(route) {
-		var sub_path = frappe.router.get_sub_path_string(route);
-		route = $.map(sub_path.split('/'), frappe.router.decode_component).join('/');
+		var sub_path = this.get_sub_path_string(route);
+		route = $.map(sub_path.split('/'), this.decode_component).join('/');
 
 		return route;
 	},
