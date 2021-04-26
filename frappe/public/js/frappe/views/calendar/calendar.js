@@ -192,6 +192,8 @@ frappe.views.Calendar = class {
 		this.fullcalendar = new Calendar(this.$cal[0], this.cal_options);
 		this.fullcalendar.render();
 
+		this.$wrapper.find('.fc-today-button').prepend(frappe.utils.icon('today'));
+
 		if (this.secondary_status_color) {
 			this.show_secondary_status_legend()
 		}

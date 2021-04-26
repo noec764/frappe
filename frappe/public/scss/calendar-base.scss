@@ -117,4 +117,11 @@
 	.fc-now-indicator-arrow {
 		display: none !important;
 	}
+
+	.fc-today-button:disabled,
+	.fc-today-button:not(:hover) {
+		.icon {
+			--icon-stroke: white;
+		}
+	}
 }
