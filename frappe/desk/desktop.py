@@ -376,6 +376,11 @@ def get_desktop_page(page):
 def get_desk_sidebar_items():
 	"""Get list of sidebar items for desk"""
 
+	def sort_items(items_list, sort_keys):
+		for key, reverse in reversed(sort_keys):
+			items_list.sort(key=lambda x:x.get(key), reverse=reverse)
+		return items_list
+
 	# don't get domain restricted pages
 	blocked_modules = frappe.get_doc('User', frappe.session.user).get_blocked_modules()
 
@@ -391,7 +396,7 @@ def get_desk_sidebar_items():
 
 	# pages sorted based on pinned to top and then by name
 	order_by = "pin_to_top desc, pin_to_bottom asc, name asc"
-	all_pages = frappe.get_all("Workspace", fields=["name", "category", "icon",  "module"],
+	all_pages = frappe.get_all("Workspace", fields=["name", "category", "icon", "module", "pin_to_top", "pin_to_bottom"],
 		filters=filters, order_by=order_by, ignore_permissions=True)
 	pages = []
 
@@ -407,7 +412,8 @@ def get_desk_sidebar_items():
 	for page in pages:
 		# Translate label
 		page['label'] = _(page.get('name'))
-	return pages
+
+	return sort_items(pages, (("pin_to_bottom", False), ("pin_to_top", True), ("label", False)))
 
 def get_table_with_counts():
 	counts = frappe.cache().get_value("information_schema:counts")
