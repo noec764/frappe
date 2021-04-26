@@ -68,14 +68,14 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			frappe.breadcrumbs.add({
 				type: 'Custom',
 				label: __(last_folder),
-				route: `/app/List/File/Home/${new_route.join("/")}`
+				route: `/app/file/view/Home/${new_route.join("/")}`
 			});
 
 		} else {
 			frappe.breadcrumbs.add({
 				type: "Custom",
 				label: __("Home"),
-				route: "/app/List/File/Home"
+				route: "/app/file/view/Home"
 			});
 		}
 	}
@@ -326,7 +326,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 						acc += "/" + curr;
 					}
 					return acc;
-				}, "/app/file");
+				}, "/app/file/view");
 
 				return `<a href="${route}">${folder}</a>`;
 			})
@@ -367,7 +367,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 	get_route_url(file) {
 		return file.is_folder
-			? "/app/List/File/" + file.name
+			? "/app/file/view/" + file.name
 			: this.get_form_link(file);
 	}
 
@@ -393,7 +393,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			<div class="list-row-col ellipsis list-subject level">
 				<input class="level-item list-row-checkbox hidden-xs"
 					type="checkbox" data-name="${file.name}">
-				<span class="level-item  ellipsis" title="${file.file_name}">
+				<span class="level-item ellipsis" title="${file.file_name}">
 					<a class="ellipsis" href="${route_url}" title="${file.file_name}">
 						${file.subject_html}
 					</a>
