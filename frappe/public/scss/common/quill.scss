@@ -127,7 +127,10 @@
 	border: 1px solid var(--border-color);
 	padding: 2px 5px;
 	font-size: var(--text-sm);
-	background-color: var(--fg-color);
+	background-color: var(--user-mention-bg-color);
+	a[href] {
+		text-decoration: none;
+	}
 }
 
 // table
@@ -183,7 +186,7 @@
 	max-height: 100%;
 	padding: 0;
 	.mention {
-		background-color: var(--control-bg);
+		--user-mention-bg-color: var(--control-bg);
 	}
 }
 
@@ -209,4 +212,8 @@
 			overflow: hidden;
 		}
 	}
+}
+
+.mention[data-is-group="true"] {
+	background-color: var(--group-mention-bg-color);
 }

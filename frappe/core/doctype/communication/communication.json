@@ -153,7 +153,7 @@
    "fieldname": "communication_type",
    "fieldtype": "Select",
    "label": "Communication Type",
-   "options": "Communication\nComment\nChat\nBot\nNotification\nFeedback",
+   "options": "Communication\nComment\nChat\nBot\nNotification\nFeedback\nAutomated Message",
    "read_only": 1,
    "reqd": 1
   },
@@ -396,7 +396,7 @@
  "icon": "fa fa-comment",
  "idx": 1,
  "links": [],
- "modified": "2019-12-27 14:44:04.880373",
+ "modified": "2021-03-25 09:44:28.963538",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Communication",
@@ -438,8 +438,8 @@
     "create": 1,
     "delete": 1,
     "email": 1,
-    "export":1,
-    "print":1,
+    "export": 1,
+    "print": 1,
     "read": 1,
     "role": "Inbox User"
   },

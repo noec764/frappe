@@ -70,6 +70,9 @@
 
 	--sidebar-select-color: var(--gray-800);
 
+	--scrollbar-thumb-color: var(--gray-600);
+	--scrollbar-track-color: var(--gray-700);
+
 	--shadow-inset: var(--fg-color);
 	--border-color: var(--gray-700);
 	--dark-border-color: var(--gray-600);
@@ -79,6 +82,8 @@
 
 	// input
 	--input-disabled-bg: none;
+
+	color-scheme: dark;
 
 	.frappe-card {
 		.btn-default {
@@ -103,7 +108,7 @@
 	.ql-editor {
 		color: var(--text-on-gray);
 		&.read-mode {
-			span,
+			span:not(.mention),
 			p,
 			u,
 			strong {

@@ -22,6 +22,11 @@ from frappe.utils.csvutils import to_csv
 
 def guess_language(lang_list=None):
 	"""Set `frappe.local.lang` from HTTP headers at beginning of request"""
+	user_preferred_language = frappe.request.cookies.get('preferred_language')
+	is_guest_user = not frappe.session.user or frappe.session.user == 'Guest'
+	if is_guest_user and user_preferred_language:
+		return user_preferred_language
+
 	lang_codes = frappe.request.accept_languages.values()
 	if not lang_codes:
 		return frappe.local.lang
@@ -267,6 +272,9 @@ def get_translation_dict_from_file(path, lang, app):
 	return translation_map
 
 def get_user_translations(lang):
+	if not frappe.db:
+		frappe.connect()
+
 	out = frappe.cache().hget('lang_user_translations', lang)
 	if out is None:
 		out = {}
@@ -937,3 +945,24 @@ def get_translations(source_text):
 			'source_text': source_text
 		}
 	)
+
+@frappe.whitelist(allow_guest=True)
+def get_all_languages(with_language_name=False):
+	"""Returns all language codes ar, ch etc"""
+	def get_language_codes():
+		return frappe.db.sql_list('select name from tabLanguage')
+
+	def get_all_language_with_name():
+		return frappe.db.get_all('language', ['language_code', 'language_name'])
+
+	if not frappe.db:
+		frappe.connect()
+
+	if with_language_name:
+		return frappe.cache().get_value('languages_with_name', get_all_language_with_name)
+	else:
+		return frappe.cache().get_value('languages', get_language_codes)
+
+@frappe.whitelist(allow_guest=True)
+def set_preferred_language_cookie(preferred_language):
+	frappe.local.cookie_manager.set_cookie("preferred_language", preferred_language)

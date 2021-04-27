@@ -45,8 +45,10 @@ frappe.Application = Class.extend({
 		this.load_user_permissions();
 		this.make_nav_bar();
 		this.set_favicon();
-		this.add_browser_class();
 		this.setup_analytics();
+		this.add_browser_class();
+		this.setup_energy_point_listeners();
+		this.setup_copy_doc_listener();
 
 		frappe.ui.keys.setup();
 
@@ -109,6 +111,8 @@ frappe.Application = Class.extend({
 			});
 			dialog.get_close_btn().toggle(false);
 		});
+
+		this.setup_user_group_listeners();
 
 		// listen to build errors
 		this.setup_build_error_listener();
@@ -585,6 +589,54 @@ frappe.Application = Class.extend({
 				console.warn(data);
 			});
 		}
+	},
+
+	setup_user_group_listeners() {
+		frappe.realtime.on('user_group_added', (user_group) => {
+			frappe.boot.user_groups && frappe.boot.user_groups.push(user_group);
+		});
+		frappe.realtime.on('user_group_deleted', (user_group) => {
+			frappe.boot.user_groups = (frappe.boot.user_groups || []).filter(el => el !== user_group);
+		});
+	},
+
+	setup_energy_point_listeners() {
+		frappe.realtime.on('energy_point_alert', (message) => {
+			frappe.show_alert(message);
+		});
+	},
+
+	setup_copy_doc_listener() {
+		$('body').on('paste', (e) => {
+			try {
+				let clipboard_data = e.clipboardData || window.clipboardData || e.originalEvent.clipboardData;
+				let pasted_data = clipboard_data.getData('Text');
+				let doc = JSON.parse(pasted_data);
+				if (doc.doctype) {
+					e.preventDefault();
+					let sleep = (time) => {
+						return new Promise((resolve) => setTimeout(resolve, time));
+					};
+
+					frappe.dom.freeze(__('Creating {0}', [doc.doctype]) + '...');
+					// to avoid abrupt UX
+					// wait for activity feedback
+					sleep(500).then(() => {
+						let res = frappe.model.with_doctype(doc.doctype, () => {
+							let newdoc = frappe.model.copy_doc(doc);
+							newdoc.__newname = doc.name;
+							newdoc.idx = null;
+							newdoc.__run_link_triggers = false;
+							frappe.set_route('Form', newdoc.doctype, newdoc.name);
+							frappe.dom.unfreeze();
+						});
+						res && res.fail(frappe.dom.unfreeze);
+					});
+				}
+			} catch (e) {
+				//
+			}
+		});
 	}
 });
 
