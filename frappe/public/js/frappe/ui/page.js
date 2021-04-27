@@ -162,7 +162,7 @@ frappe.ui.Page = Class.extend({
 		if (this.disable_sidebar_toggle || !sidebar_wrapper.length) {
 			sidebar_toggle.remove();
 		} else {
-			sidebar_toggle.attr("title", __("Toggle Sidebar")).tooltip({
+			!frappe.is_mobile()&&sidebar_toggle.attr("title", __("Toggle Sidebar")).tooltip({
 				delay: { "show": 600, "hide": 100 },
 				trigger: "hover",
 			});

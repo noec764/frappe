@@ -25,6 +25,11 @@ frappe.ui.form.ControlGeolocation = frappe.ui.form.ControlData.extend({
 		}
 	},
 
+	can_write() {
+		// TODO: Handle read-only grids with level 1 field
+		return "Write";
+	},
+
 	make_map() {
 		this.bind_leaflet_map();
 		this.bind_leaflet_draw_control();
