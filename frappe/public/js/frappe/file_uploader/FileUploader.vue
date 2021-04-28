@@ -6,7 +6,6 @@
 	>
 		<div
 			class="file-upload-area"
-			@click="browse_files"
 			v-show="files.length === 0 && !show_file_browser && !show_web_link"
 		>
 			<div v-if="!is_dragging">
@@ -14,7 +13,7 @@
 					{{ __('Drag and drop files here or upload from') }}
 				</div>
 				<div class="mt-2">
-					<button class="btn btn-file-upload">
+					<button class="btn btn-file-upload" @click="browse_files">
 						<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
 							<circle cx="15" cy="15" r="15" fill="url(#paint0_linear)"/>
 							<path d="M13.5 22V19" stroke="white" stroke-linecap="round" stroke-linejoin="round"/>
