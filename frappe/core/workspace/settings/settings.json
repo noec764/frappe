@@ -52,6 +52,15 @@
    "type": "Link"
   },
   {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Rename Tool",
+   "link_to": "Rename Tool",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -346,7 +355,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-04-01 12:00:56.427985",
+ "modified": "2021-04-28 10:22:12.168738",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",

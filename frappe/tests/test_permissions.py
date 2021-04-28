@@ -27,6 +27,8 @@ class TestPermissions(unittest.TestCase):
 			user.add_roles("System Manager")
 
 			user = frappe.get_doc("User", "test2@example.com")
+			user_roles = frappe.get_roles()
+			user.remove_roles(*user_roles)
 			user.add_roles("Blogger")
 
 			user = frappe.get_doc("User", "test3@example.com")

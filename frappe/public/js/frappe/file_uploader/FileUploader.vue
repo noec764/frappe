@@ -6,7 +6,6 @@
 	>
 		<div
 			class="file-upload-area"
-			@click="browse_files"
 			v-show="files.length === 0 && !show_file_browser && !show_web_link"
 		>
 			<div v-if="!is_dragging">

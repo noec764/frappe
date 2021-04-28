@@ -87,12 +87,12 @@ frappe.ui.form.ControlAttach = frappe.ui.form.ControlData.extend({
 
 	set_input: function(value, dataurl) {
 		this.value = value;
+		let filename;
 		if(this.value) {
 			this.$input&&this.$input.toggle(false);
 			// value can also be using this format: FILENAME,DATA_URL
 			// Important: We have to be careful because normal filenames may also contain ","
 			let file_url_parts = this.value.match(/^([^:]+),(.+):(.+)$/);
-			let filename;
 			if (file_url_parts) {
 				filename = file_url_parts[1];
 				dataurl = file_url_parts[2] + ':' + file_url_parts[3];
