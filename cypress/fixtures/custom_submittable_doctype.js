@@ -11,20 +11,20 @@ export default {
 		{
 			fieldname: 'enabled',
 			fieldtype: 'Check',
-			label: 'Enabled',
+			label: __('Enabled'),
 			allow_on_submit: 1,
 			reqd: 1
 		},
 		{
 			fieldname: 'title',
 			fieldtype: 'Data',
-			label: 'title',
+			label: __('title'),
 			reqd: 1
 		},
 		{
 			fieldname: 'description',
 			fieldtype: 'Text Editor',
-			label: 'Description'
+			label: __('Description')
 		}
 	],
 	links: [],

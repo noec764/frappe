@@ -1430,7 +1430,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				{
 					fieldtype: "Code",
 					fieldname: "url",
-					label: "URL",
+					label: __("URL"),
 					default: this.get_share_url(),
 					read_only: 1,
 				},

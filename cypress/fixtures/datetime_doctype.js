@@ -10,17 +10,17 @@ export default {
 		{
 			fieldname: 'date',
 			fieldtype: 'Date',
-			label: 'Date'
+			label: __('Date')
 		},
 		{
 			fieldname: 'time',
 			fieldtype: 'Time',
-			label: 'Time'
+			label: __('Time')
 		},
 		{
 			fieldname: 'datetime',
 			fieldtype: 'Datetime',
-			label: 'Datetime'
+			label: __('Datetime')
 		}
 	],
 	issingle: 1,
