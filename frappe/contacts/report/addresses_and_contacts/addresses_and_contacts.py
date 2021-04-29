@@ -61,7 +61,6 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 	for reference_name, details in iteritems(reference_details):
 		addresses = details.get("address", [])
 		contacts  = details.get("contact", [])
-		print(reference_name, addresses, contacts)
 		if not any([addresses, contacts]):
 			result = [reference_name]
 			result.extend(add_blank_columns_for("Address"))
