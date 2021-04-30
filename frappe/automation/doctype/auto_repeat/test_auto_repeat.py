@@ -117,7 +117,7 @@ class TestAutoRepeat(unittest.TestCase):
 		#the original doc + the repeated doc
 		self.assertEqual(len(docnames), 4)
 		doc.load_from_db()
-		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(today(), 1)))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(add_months(today(), -2), 3)))
 
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test next schedule date for daily', assigned_by='Administrator')).insert()
