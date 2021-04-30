@@ -186,7 +186,7 @@ def get_role_permissions(doctype_meta, user=None, is_owner=None):
 			return any(p.get(ptype, 0) and not p.get('if_owner', 0) for p in applicable_permissions)
 
 		applicable_permissions = list(filter(is_perm_applicable, getattr(doctype_meta, 'permissions', [])))
-		has_if_owner_enabled = all(p.get('if_owner', 0) for p in applicable_permissions)
+		has_if_owner_enabled = any(p.get('if_owner', 0) for p in applicable_permissions)
 
 		perms['has_if_owner_enabled'] = has_if_owner_enabled
 
