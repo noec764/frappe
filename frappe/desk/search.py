@@ -11,7 +11,7 @@ from six import string_types
 import re
 import wrapt
 
-UNTRANSLATED_DOCTYPES = ["DocType", "Role", "Module Def", "Report", "Dashboard", "Page"]
+UNTRANSLATED_DOCTYPES = ["DocType", "Role", "Module Def", "Report", "Dashboard", "Page", "Dashboard Chart", "Number Card"]
 
 def sanitize_searchfield(searchfield):
 	blacklisted_keywords = ['select', 'delete', 'drop', 'update', 'case', 'and', 'or', 'like']

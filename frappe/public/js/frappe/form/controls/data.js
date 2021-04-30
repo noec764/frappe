@@ -120,15 +120,12 @@ frappe.ui.form.ControlData = frappe.ui.form.ControlInput.extend({
 				let email_invalid = false;
 				email_list.forEach(function(email) {
 					if (!validate_email(email)) {
-						frappe.msgprint(__("Invalid Email: {0}", [email]));
 						email_invalid = true;
 					}
 				});
-
 				this.df.invalid = email_invalid;
 				return v;
 			}
-
 		} else {
 			return v;
 		}

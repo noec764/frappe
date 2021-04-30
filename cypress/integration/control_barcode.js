@@ -9,7 +9,7 @@ context('Control Barcode', () => {
 			title: 'Barcode',
 			fields: [
 				{
-					label: 'Barcode',
+					label: __('Barcode'),
 					fieldname: 'barcode',
 					fieldtype: 'Barcode'
 				}

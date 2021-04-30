@@ -2135,7 +2135,7 @@ frappe.Chat.Widget.Room
 			const actions = frappe._.compact([
 				!frappe._.is_mobile() && {
 					icon: "camera",
-					label: "Camera",
+					label: __("Camera"),
 					onclick: () => {
 						const capture = new frappe.ui.Capture({
 							animate: false,
@@ -2150,7 +2150,7 @@ frappe.Chat.Widget.Room
 				},
 				{
 					icon: "file",
-					label: "File",
+					label: __("File"),
 					onclick: () => {
 						new frappe.ui.FileUploader({
 							doctype: "Chat Room",

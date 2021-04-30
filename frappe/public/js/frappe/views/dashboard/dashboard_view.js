@@ -280,7 +280,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				{
 					fieldname: 'new_or_existing',
 					fieldtype: 'Select',
-					label: 'Choose an existing chart or create a new chart',
+					label: __('Choose an existing chart or create a new chart'),
 					options: [{
 						'value': 'New Chart',
 						'label': __('New Chart')
@@ -291,14 +291,14 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					reqd: 1,
 				},
 				{
-					label: 'Chart',
+					label: __('Chart'),
 					fieldname: 'chart',
 					fieldtype: 'Link',
 					get_query: () => {
 						return {
 							'query': 'frappe.desk.doctype.dashboard_chart.dashboard_chart.get_charts_for_user',
 							filters: {
-								document_type: this.doctype,
+								document_type: ["in", [this.doctype, ""]],
 							}
 						};
 					},
@@ -311,7 +311,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					depends_on: 'eval: doc.new_or_existing == "New Chart"'
 				},
 				{
-					label: 'Chart Label',
+					label: __('Chart Label'),
 					fieldname: 'label',
 					fieldtype: 'Data',
 					mandatory_depends_on: 'eval: doc.new_or_existing == "New Chart"'
@@ -321,7 +321,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					fieldtype: 'Column Break'
 				},
 				{
-					label: 'Chart Type',
+					label: __('Chart Type'),
 					fieldname: 'chart_type',
 					fieldtype: 'Select',
 					options: ['Time Series', 'Group By'],
@@ -330,18 +330,18 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				{
 					fieldname: 'sb_2',
 					fieldtype: 'Section Break',
-					label: 'Chart Config',
+					label: __('Chart Config'),
 					depends_on: 'eval: doc.chart_type == "Time Series" && doc.new_or_existing == "New Chart"',
 				},
 				{
-					label: 'Function',
+					label: __('Function'),
 					fieldname: 'chart_function',
 					fieldtype: 'Select',
 					options: ['Count', 'Sum', 'Average'],
 					default: 'Count',
 				},
 				{
-					label: 'Timespan',
+					label: __('Timespan'),
 					fieldtype: 'Select',
 					fieldname: 'timespan',
 					depends_on: 'eval: doc.chart_type == "Time Series"',
@@ -353,21 +353,21 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					fieldtype: 'Column Break'
 				},
 				{
-					label: 'Value Based On',
+					label: __('Value Based On'),
 					fieldtype: 'Select',
 					fieldname: 'based_on',
 					options: fields.value_fields,
 					depends_on: 'eval: doc.chart_function=="Sum"'
 				},
 				{
-					label: 'Time Series Based On',
+					label: __('Time Series Based On'),
 					fieldtype: 'Select',
 					fieldname: 'based_on',
 					options: fields.date_fields,
 					mandatory_depends_on: 'eval: doc.chart_type == "Time Series"'
 				},
 				{
-					label: 'Time Interval',
+					label: __('Time Interval'),
 					fieldname: 'time_interval',
 					fieldtype: 'Select',
 					depends_on: 'eval: doc.chart_type == "Time Series"',
@@ -377,18 +377,18 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 				{
 					fieldname: 'sb_2',
 					fieldtype: 'Section Break',
-					label: 'Chart Config',
+					label: __('Chart Config'),
 					depends_on: 'eval: doc.chart_type == "Group By" && doc.new_or_existing == "New Chart"',
 				},
 				{
-					label: 'Group By Type',
+					label: __('Group By Type'),
 					fieldname: 'group_by_type',
 					fieldtype: 'Select',
 					options: ['Count', 'Sum', 'Average'],
 					default: 'Count',
 				},
 				{
-					label: 'Aggregate Function Based On',
+					label: __('Aggregate Function Based On'),
 					fieldtype: 'Select',
 					fieldname: 'aggregate_function_based_on',
 					options: fields.aggregate_function_fields,
@@ -399,14 +399,14 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					fieldtype: 'Column Break'
 				},
 				{
-					label: 'Group By Based On',
+					label: __('Group By Based On'),
 					fieldtype: 'Select',
 					fieldname: 'group_by_based_on',
 					options: fields.group_by_fields,
 					default: 'Last Year',
 				},
 				{
-					label: 'Number of Groups',
+					label: __('Number of Groups'),
 					fieldtype: 'Int',
 					fieldname: 'number_of_groups',
 					default: 0,
@@ -417,7 +417,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					depends_on: 'eval: doc.new_or_existing == "New Chart"'
 				},
 				{
-					label: 'Chart Type',
+					label: __('Chart Type'),
 					fieldname: 'type',
 					fieldtype: 'Select',
 					options: ['Line', 'Bar', 'Percentage', 'Pie'],
@@ -428,7 +428,7 @@ frappe.views.DashboardView = class DashboardView extends frappe.views.ListView {
 					fieldtype: 'Column Break'
 				},
 				{
-					label: 'Chart Color',
+					label: __('Chart Color'),
 					fieldname: 'color',
 					fieldtype: 'Color',
 					depends_on: 'eval: doc.new_or_existing == "New Chart"',

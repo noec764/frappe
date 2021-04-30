@@ -983,7 +983,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		// child table index column
 		if (fieldname === 'idx' && doctype !== this.doctype) {
 			docfield = {
-				label: "Index",
+				label: __("Index"),
 				fieldtype: "Int",
 				parent: doctype,
 			};

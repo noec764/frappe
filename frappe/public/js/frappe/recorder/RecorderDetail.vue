@@ -108,12 +108,12 @@ export default {
 		return {
 			requests: [],
 			columns: [
-				{label: "Path", slug: "path"},
-				{label: "Duration (ms)", slug: "duration", sortable: true, number: true},
-				{label: "Time in Queries (ms)", slug: "time_queries", sortable: true, number: true},
-				{label: "Queries", slug: "queries", sortable: true, number: true},
-				{label: "Method", slug: "method"},
-				{label: "Time", slug: "time", sortable: true},
+				{label: __("Path"), slug: "path"},
+				{label: __("Duration (ms)"), slug: "duration", sortable: true, number: true},
+				{label: __("Time in Queries (ms)"), slug: "time_queries", sortable: true, number: true},
+				{label: __("Queries"), slug: "queries", sortable: true, number: true},
+				{label: __("Method"), slug: "method"},
+				{label: __("Time"), slug: "time", sortable: true},
 			],
 			query: {
 				sort: "duration",
@@ -151,11 +151,11 @@ export default {
 			const current_page = this.query.pagination.page;
 			const total_pages = this.query.pagination.total;
 			return [{
-				label: "First",
+				label: __("First"),
 				number: 1,
 				status: (current_page == 1) ? "disabled" : "",
 			},{
-				label: "Previous",
+				label: __("Previous"),
 				number: Math.max(current_page - 1, 1),
 				status: (current_page == 1) ? "disabled" : "",
 			}, {
@@ -163,11 +163,11 @@ export default {
 				number: current_page,
 				status: "btn-info",
 			}, {
-				label: "Next",
+				label: __("Next"),
 				number: Math.min(current_page + 1, total_pages),
 				status: (current_page == total_pages) ? "disabled" : "",
 			}, {
-				label: "Last",
+				label: __("Last"),
 				number: total_pages,
 				status: (current_page == total_pages) ? "disabled" : "",
 			}];

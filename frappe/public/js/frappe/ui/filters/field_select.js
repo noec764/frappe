@@ -108,7 +108,7 @@ frappe.ui.FieldSelect = Class.extend({
 			std_filters = std_filters.concat([{
 				fieldname: 'parent',
 				fieldtype: 'Data',
-				label: 'Parent',
+				label: __('Parent'),
 				parent: me.doctype,
 			}]);
 		}

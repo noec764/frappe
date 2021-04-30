@@ -201,19 +201,19 @@ export default {
  	data() {
 		return {
 			columns: [
-				{label: "Path", slug: "path", type: "Data", class: "col-sm-6"},
-				{label: "CMD", slug: "cmd", type: "Data", class: "col-sm-6"},
-				{label: "Time", slug: "time", type: "Time", class: "col-sm-6"},
-				{label: "Duration (ms)", slug: "duration", type: "Float", class: "col-sm-6"},
-				{label: "Number of Queries", slug: "queries", type: "Int", class: "col-sm-6"},
-				{label: "Time in Queries (ms)", slug: "time_queries", type: "Float", class: "col-sm-6"},
-				{label: "Request Headers", slug: "headers", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
-				{label: "Form Dict", slug: "form_dict", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
+				{label: __("Path"), slug: "path", type: "Data", class: "col-sm-6"},
+				{label: __("CMD"), slug: "cmd", type: "Data", class: "col-sm-6"},
+				{label: __("Time"), slug: "time", type: "Time", class: "col-sm-6"},
+				{label: __("Duration (ms)"), slug: "duration", type: "Float", class: "col-sm-6"},
+				{label: __("Number of Queries"), slug: "queries", type: "Int", class: "col-sm-6"},
+				{label: __("Time in Queries (ms)"), slug: "time_queries", type: "Float", class: "col-sm-6"},
+				{label: __("Request Headers"), slug: "headers", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
+				{label: __("Form Dict"), slug: "form_dict", type: "Small Text", formatter: value => `<pre class="for-description like-disabled-input">${JSON.stringify(value, null, 4)}</pre>`, class: "col-sm-12"},
 			],
 			table_columns: [
-				{label: "Execution Order", slug: "index", sortable: true},
-				{label: "Duration (ms)", slug: "duration", sortable: true},
-				{label: "Exact Copies", slug: "exact_copies", sortable: true},
+				{label: __("Execution Order"), slug: "index", sortable: true},
+				{label: __("Duration (ms)"), slug: "duration", sortable: true},
+				{label: __("Exact Copies"), slug: "exact_copies", sortable: true},
 			],
 			query: {
 				sort: "duration",
@@ -236,11 +236,11 @@ export default {
 			const current_page = this.query.pagination.page;
 			const total_pages = this.query.pagination.total;
 			return [{
-				label: "First",
+				label: __("First"),
 				number: 1,
 				status: (current_page == 1) ? "disabled" : "",
 			},{
-				label: "Previous",
+				label: __("Previous"),
 				number: Math.max(current_page - 1, 1),
 				status: (current_page == 1) ? "disabled" : "",
 			}, {
@@ -248,11 +248,11 @@ export default {
 				number: current_page,
 				status: "btn-info",
 			}, {
-				label: "Next",
+				label: __("Next"),
 				number: Math.min(current_page + 1, total_pages),
 				status: (current_page == total_pages) ? "disabled" : "",
 			}, {
-				label: "Last",
+				label: __("Last"),
 				number: total_pages,
 				status: (current_page == total_pages) ? "disabled" : "",
 			}];

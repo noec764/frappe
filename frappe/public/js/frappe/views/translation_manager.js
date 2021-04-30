@@ -50,7 +50,7 @@ frappe.views.TranslationManager = class TranslationManager {
 				fieldtype: 'Table',
 				fields: [
 					{
-						label: 'Language',
+						label: __('Language'),
 						fieldname: 'language',
 						fieldtype: 'Link',
 						options: 'Language',
@@ -58,7 +58,7 @@ frappe.views.TranslationManager = class TranslationManager {
 						columns: 3
 					},
 					{
-						label: 'Translation',
+						label: __('Translation'),
 						fieldname: 'translation',
 						fieldtype: 'Text',
 						in_list_view: 1,

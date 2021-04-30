@@ -310,7 +310,7 @@ export default class ListSettings {
 		let me = this;
 
 		me.subject_field = {
-			label: "Name",
+			label: __("Name"),
 			fieldname: "name"
 		};
 
@@ -332,7 +332,7 @@ export default class ListSettings {
 		if (frappe.has_indicator(me.doctype)) {
 			me.fields.push({
 				type: "Status",
-				label: "Status",
+				label: __("Status"),
 				fieldname: "status_field"
 			});
 		}
