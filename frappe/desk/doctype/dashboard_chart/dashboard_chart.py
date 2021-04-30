@@ -3,6 +3,7 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+import re
 import frappe
 from frappe import _
 import datetime
@@ -313,11 +314,13 @@ def get_result(data, timegrain, from_date, to_date, chart_type):
 @frappe.validate_and_sanitize_search_inputs
 def get_charts_for_user(doctype, txt, searchfield, start, page_len, filters):
 	or_filters = {'owner': frappe.session.user, 'is_public': 1}
-	return frappe.db.get_list('Dashboard Chart',
+	charts = frappe.db.get_list('Dashboard Chart',
 		fields=['name'],
 		filters=filters,
 		or_filters=or_filters,
 		as_list = 1)
+
+	return tuple([v for v in list(charts) if re.search(re.escape(txt)+".*", (_(v[0])), re.IGNORECASE)])
 
 class DashboardChart(Document):
 

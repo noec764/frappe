@@ -19,7 +19,7 @@ frappe.webhook = {
 				// add meta fields
 				for (let field of frappe.model.std_fields) {
 					if (field.fieldname == "name") {
-						fields.unshift({ label: "Name (Doc Name)", value: "name" });
+						fields.unshift({ label: __("Name (Doc Name)"), value: "name" });
 					} else {
 						fields.push({ label: `${__(field.label)} (${field.fieldtype})`, value: field.fieldname });
 					}

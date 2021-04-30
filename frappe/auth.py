@@ -18,7 +18,6 @@ from frappe.utils.password import check_password, delete_login_failed_cache
 from frappe.core.doctype.activity_log.activity_log import add_authentication_log
 from frappe.twofactor import (should_run_2fa, authenticate_for_2factor,
 	confirm_otp_token, get_cached_user_pass)
-from frappe.website.utils import get_home_page
 
 from six.moves.urllib.parse import quote
 
@@ -165,10 +164,18 @@ class LoginManager:
 		self.full_name = " ".join(filter(None, [self.info.first_name,
 			self.info.last_name]))
 
-		frappe.local.cookie_manager.set_cookie("system_user", "yes")
+		if self.info.user_type=="Website User":
+			frappe.local.cookie_manager.set_cookie("system_user", "no")
+			if not resume:
+				frappe.local.response["message"] = "No App"
+				frappe.local.response["home_page"] = '/' + get_home_page()
+		else:
+			frappe.local.cookie_manager.set_cookie("system_user", "yes")
+			if not resume:
+				frappe.local.response['message'] = 'Logged In'
+				frappe.local.response["home_page"] = "/app"
+
 		if not resume:
-			frappe.local.response['message'] = 'Logged In'
-			frappe.local.response["home_page"] = "/app"
 			frappe.response["full_name"] = self.full_name
 
 		# redirect information

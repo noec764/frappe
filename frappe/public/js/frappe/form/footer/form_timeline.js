@@ -490,7 +490,7 @@ class FormTimeline extends BaseTimeline {
 			df: {
 				fieldtype: 'Comment',
 				fieldname: 'comment',
-				label: 'Comment'
+				label: __('Comment')
 			},
 			mentions: frappe.utils.get_names_for_mentions(),
 			render_input: true,
