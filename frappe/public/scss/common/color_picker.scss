@@ -122,3 +122,10 @@
 		}
 	}
 }
+
+.data-row.row {
+	.selected-color {
+		top: calc(50% - 11px);
+		z-index: 2;
+	}
+}
