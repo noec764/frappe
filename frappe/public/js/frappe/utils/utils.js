@@ -830,6 +830,10 @@ Object.assign(frappe.utils, {
 		};
 	},
 	get_form_link: function(doctype, name, html = false, display_text = null) {
+		if (!doctype || !name) {
+			return ''
+		}
+
 		display_text = display_text || name;
 		name = encodeURIComponent(name);
 		const route = `/app/${encodeURIComponent(doctype.toLowerCase().replace(/ /g, '-'))}/${name}`;
