@@ -106,10 +106,10 @@ $.extend(frappe.meta, {
 	},
 
 	get_fields_to_check_permissions: function(doctype) {
-		var fields = $.map(frappe.meta.get_docfields(doctype, n), function(df) {
+		var fields = $.map(frappe.meta.get_docfields(doctype, name), function(df) {
 			return (df.fieldtype==="Link" && df.ignore_user_permissions!==1) ? df : null;
 		});
-		fields = fields.concat({label: __("Name"), fieldname: n, options: doctype});
+		fields = fields.concat({label: __("Name"), fieldname: name, options: doctype});
 		return fields;
 	},
 

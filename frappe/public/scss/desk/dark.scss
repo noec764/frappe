@@ -85,6 +85,9 @@
 
 	color-scheme: dark;
 
+	// checkbox
+	--checkbox-focus-shadow: 0 0 0 2px var(--gray-600);
+
 	.frappe-card {
 		.btn-default {
 			background-color: var(--bg-color);
