@@ -10,7 +10,7 @@ frappe.ui.form.ControlFloat = frappe.ui.form.ControlInt.extend({
 			number_format = this.get_number_format();
 		}
 		var formatted_value = format_number(parseFloat(value), number_format, this.get_precision());
-		return isNaN(parseFloat(value)) ? "" : formatted_value;
+		return isNaN(Number(value)) ? "" : formatted_value;
 	},
 
 	// even a float field can be formatted based on currency format instead of float format
