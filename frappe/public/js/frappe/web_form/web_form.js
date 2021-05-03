@@ -91,6 +91,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	setup_delete_button() {
 		this.add_button_to_header(
+			'delete_btn',
 			frappe.utils.icon('delete'),
 			"danger",
 			() => this.delete()
@@ -99,6 +100,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 	setup_print_button() {
 		this.add_button_to_header(
+			'print_btn',
 			frappe.utils.icon('print'),
 			"light",
 			() => this.print()
