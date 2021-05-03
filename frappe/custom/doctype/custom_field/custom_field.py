@@ -36,6 +36,9 @@ class CustomField(Document):
 		meta = frappe.get_meta(self.dt, cached=False)
 		fieldnames = [df.fieldname for df in meta.get("fields")]
 
+		if self.fieldname in fieldnames:
+			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, self.dt))
+
 	def validate(self):
 		from frappe.custom.doctype.customize_form.customize_form import CustomizeForm
 
@@ -56,9 +59,6 @@ class CustomField(Document):
 
 		if not self.fieldname:
 			frappe.throw(_("Fieldname not set for Custom Field"))
-
-		if self.fieldname in fieldnames:
-			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, _(self.dt)))
 
 		if self.get('translatable', 0) and not supports_translation(self.fieldtype):
 			self.translatable = 0
