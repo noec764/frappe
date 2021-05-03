@@ -153,7 +153,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 
 		if (!items || !items.length) {
 			html = `<div class="empty-state">
-						${__("No {} Found", [__(view)])}
+						${__("No {0} Found", [__(view)])}
 				</div>`;
 		} else {
 			const page_name = this.get_page_name();

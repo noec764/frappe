@@ -71,12 +71,12 @@
 			</div>
 			<div v-if="requests.length == 0" class="no-result text-muted flex justify-center align-center" style="">
 				<div class="msg-box no-border" v-if="status.status == 'Inactive'" >
-					<p>Recorder is Inactive</p>
-					<p><button class="btn btn-primary btn-sm btn-new-doc" @click="start()">Start Recording</button></p>
+					<p>{{ __("Recorder is Inactive") }}</p>
+					<p><button class="btn btn-primary btn-sm btn-new-doc" @click="start()">{{ __("Start Recording") }}</button></p>
 				</div>
 				<div class="msg-box no-border" v-if="status.status == 'Active'" >
-					<p>No Requests found</p>
-					<p>Go make some noise</p>
+					<p>{{ __("No Requests found") }}</p>
+					<p>{{ __("Go make some noise") }}</p>
 				</div>
 			</div>
 			<div v-if="requests.length != 0" class="list-paging-area">
@@ -140,7 +140,7 @@ export default {
 	mounted() {
 		this.fetch_status();
 		this.refresh();
-		this.$root.page.set_secondary_action("Clear", () => {
+		this.$root.page.set_secondary_action(__("Clear"), () => {
 			frappe.set_route("recorder");
 			this.clear();
 		});
@@ -230,11 +230,11 @@ export default {
 		},
 		update_buttons: function() {
 			if(this.status.status == "Active") {
-				this.$root.page.set_primary_action("Stop", () => {
+				this.$root.page.set_primary_action(__("Stop"), () => {
 					this.stop();
 				});
 			} else {
-				this.$root.page.set_primary_action("Start", () => {
+				this.$root.page.set_primary_action(__("Start"), () => {
 					this.start();
 				});
 			}
