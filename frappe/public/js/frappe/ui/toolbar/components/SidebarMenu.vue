@@ -2,7 +2,7 @@
 	<div>
 		<div
 		class="v-sidebar-menu hidden-sm hidden-xs"
-		:class="[!isCollapsed ? 'dodock-sidebar-default' : 'dodock-sidebar-collapsed']"
+		:class="[!isCollapsed ? 'dodock-sidebar-default' : 'dodock-sidebar-collapsed', isRTL ? 'rtl': '']"
 		:style="[{'width': sidebarWidth}, mobileDisplay ? {'display': 'block !important'} : '', !showBottomButton ? {'padding-bottom': '20px'} : '']"
 		@mouseenter="mouseEnter"
 		@mouseleave="mouseLeave"
@@ -14,7 +14,7 @@
 			<div
 				v-if="modules[mod]&&modules[mod].length&&mod!='Modules'"
 				class="dodock-sidebar-divider"
-				:class="[!isCollapsed ? '' : 'collapsed']"
+				:class="[!isCollapsed ? '' : 'collapsed', isRTL ? 'rtl': '']"
 				:key="mod + mod_index"
 			>
 				<span>{{ __(mod) }}</span>
@@ -48,16 +48,17 @@
 	},
 	data() {
 		return {
-		isCollapsed: true,
-		modules: {},
-		modules_list: [],
-		width: "200px",
-		widthCollapsed: "50px",
-		mobileDisplay: false,
-		goToTop: false,
-		isMounted: false,
-		timer: null,
-		moduleCategories: ["Modules", "Administration"]
+			isCollapsed: true,
+			modules: {},
+			modules_list: [],
+			width: "200px",
+			widthCollapsed: "50px",
+			mobileDisplay: false,
+			goToTop: false,
+			isMounted: false,
+			timer: null,
+			moduleCategories: ["Modules", "Administration"],
+			isRTL: frappe.utils.is_rtl()
 		};
 	},
 	created() {
