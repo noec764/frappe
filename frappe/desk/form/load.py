@@ -116,7 +116,7 @@ def get_milestones(doctype, name):
 		filters=dict(reference_type=doctype, reference_name=name))
 
 def get_attachments(dt, dn):
-	return frappe.get_all("File", fields=["name", "file_name", "file_url", "is_private"],
+	return frappe.get_list("File", fields=["name", "file_name", "file_url", "is_private"],
 		filters = {"attached_to_name": dn, "attached_to_doctype": dt})
 
 def get_versions(doc):

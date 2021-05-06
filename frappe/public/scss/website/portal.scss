@@ -30,10 +30,9 @@ article {
 
 	&:hover {
 		background-color: #f8faff;
-	}
-
-	a:hover {
-		text-decoration: none;
+		a {
+			text-decoration: none;
+		}
 	}
 }
 
