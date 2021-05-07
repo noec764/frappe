@@ -27,7 +27,7 @@ if PY2:
 	reload(sys)
 	sys.setdefaultencoding("utf-8")
 
-__version__ = '2.0.7'
+__version__ = '2.0.8'
 __title__ = "Dodock Framework"
 
 local = Local()
