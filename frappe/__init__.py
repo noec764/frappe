@@ -4,7 +4,6 @@
 globals attached to frappe module
 + some utility functions that should probably be moved
 """
-from six import iteritems, binary_type, text_type, string_types
 from werkzeug.local import Local, release_local
 import os, sys, importlib, inspect, json, warnings
 import typing
@@ -84,14 +83,14 @@ def _(msg, lang=None, context=None):
 
 def as_unicode(text, encoding='utf-8'):
 	'''Convert to unicode if required'''
-	if isinstance(text, text_type):
+	if isinstance(text, str):
 		return text
 	elif text==None:
 		return ''
-	elif isinstance(text, binary_type):
-		return text_type(text, encoding)
+	elif isinstance(text, bytes):
+		return str(text, encoding)
 	else:
-		return text_type(text)
+		return str(text)
 
 def get_lang_dict(fortype, name=None):
 	"""Returns the translated language dict for the given type and name.
@@ -585,7 +584,7 @@ def is_whitelisted(method):
 		# strictly sanitize form_dict
 		# escapes html characters like <> except for predefined tags like a, b, ul etc.
 		for key, value in form_dict.items():
-			if isinstance(value, string_types):
+			if isinstance(value, str):
 				form_dict[key] = sanitize_html(value)
 
 def read_only():
@@ -709,7 +708,7 @@ def has_website_permission(doc=None, ptype='read', user=None, verbose=False, doc
 		user = session.user
 
 	if doc:
-		if isinstance(doc, string_types):
+		if isinstance(doc, str):
 			doc = get_doc(doctype, doc)
 
 		doctype = doc.doctype
@@ -778,7 +777,7 @@ def set_value(doctype, docname, fieldname, value=None):
 	return frappe.client.set_value(doctype, docname, fieldname, value)
 
 def get_cached_doc(*args, **kwargs):
-	if args and len(args) > 1 and isinstance(args[1], text_type):
+	if args and len(args) > 1 and isinstance(args[1], str):
 		key = get_document_cache_key(args[0], args[1])
 		# local cache
 		doc = local.document_cache.get(key)
@@ -809,7 +808,7 @@ def clear_document_cache(doctype, name):
 
 def get_cached_value(doctype, name, fieldname, as_dict=False):
 	doc = get_cached_doc(doctype, name)
-	if isinstance(fieldname, string_types):
+	if isinstance(fieldname, str):
 		if as_dict:
 			throw('Cannot make dict for single fieldname')
 		return doc.get(fieldname)
@@ -1023,7 +1022,7 @@ def get_doc_hooks():
 	if not hasattr(local, 'doc_events_hooks'):
 		hooks = get_hooks('doc_events', {})
 		out = {}
-		for key, value in iteritems(hooks):
+		for key, value in hooks.items():
 			if isinstance(key, tuple):
 				for doctype in key:
 					append_hook(out, doctype, value)
@@ -1140,7 +1139,7 @@ def get_file_json(path):
 
 def read_file(path, raise_not_found=False):
 	"""Open a file and return its content as Unicode."""
-	if isinstance(path, text_type):
+	if isinstance(path, str):
 		path = path.encode("utf-8")
 
 	if os.path.exists(path):
@@ -1163,7 +1162,7 @@ def get_attr(method_string):
 
 def call(fn, *args, **kwargs):
 	"""Call a function and match arguments."""
-	if isinstance(fn, string_types):
+	if isinstance(fn, str):
 		fn = get_attr(fn)
 
 	newargs = get_newargs(fn, kwargs)
@@ -1175,9 +1174,8 @@ def get_newargs(fn, kwargs):
 		fnargs = fn.fnargs
 	else:
 		fnargs = inspect.getfullargspec(fn).args
-		varargs = inspect.getfullargspec(fn).varargs
+		fnargs.extend(inspect.getfullargspec(fn).kwonlyargs)
 		varkw = inspect.getfullargspec(fn).varkw
-		defaults = inspect.getfullargspec(fn).defaults
 
 	newargs = {}
 	for a in kwargs:
