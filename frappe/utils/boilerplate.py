@@ -253,10 +253,10 @@ app_license = "{app_license}"
 # 	],
 # 	"weekly": [
 # 		"{app_name}.tasks.weekly"
-# 	]
+# 	],
 # 	"monthly": [
 # 		"{app_name}.tasks.monthly"
-# 	]
+# 	],
 # }}
 
 # Testing
@@ -284,26 +284,26 @@ app_license = "{app_license}"
 
 # User Data Protection
 # --------------------
-user_data_fields = [
-	{{
-		"doctype": "{{doctype_1}}",
-		"filter_by": "{{filter_by}}",
-		"redact_fields": ["{{field_1}}", "{{field_2}}"],
-		"partial": 1,
-	}},
-	{{
-		"doctype": "{{doctype_2}}",
-		"filter_by": "{{filter_by}}",
-		"partial": 1,
-	}},
-	{{
-		"doctype": "{{doctype_3}}",
-		"strict": False,
-	}},
-	{{
-		"doctype": "{{doctype_4}}"
-	}}
-]
+# user_data_fields = [
+# 	{{
+# 		"doctype": "{{doctype_1}}",
+# 		"filter_by": "{{filter_by}}",
+# 		"redact_fields": ["{{field_1}}", "{{field_2}}"],
+# 		"partial": 1,
+# 	}},
+# 	{{
+# 		"doctype": "{{doctype_2}}",
+# 		"filter_by": "{{filter_by}}",
+# 		"partial": 1,
+# 	}},
+# 	{{
+# 		"doctype": "{{doctype_3}}",
+# 		"strict": False,
+# 	}},
+# 	{{
+# 		"doctype": "{{doctype_4}}"
+# 	}}
+# ]
 
 # Authentication and authorization
 # --------------------------------
