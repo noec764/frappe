@@ -15,17 +15,31 @@ from frappe.utils import get_bench_path, update_progress_bar, cint
 
 @click.command('build')
 @click.option('--app', help='Build assets for app')
-@click.option('--make-copy', is_flag=True, default=False, help='Copy the files instead of symlinking')
-@click.option('--restore', is_flag=True, default=False, help='Copy the files instead of symlinking with force')
+@click.option('--hard-link', is_flag=True, default=False, help='Copy the files instead of symlinking')
+@click.option('--make-copy', is_flag=True, default=False, help='[DEPRECATED] Copy the files instead of symlinking')
+@click.option('--restore', is_flag=True, default=False, help='[DEPRECATED] Copy the files instead of symlinking with force')
 @click.option('--verbose', is_flag=True, default=False, help='Verbose')
-def build(app=None, make_copy=False, restore = False, verbose=False):
+def build(app=None, hard_link=False, make_copy=False, restore=False, verbose=False, force=False):
 	"Minify + concatenate JS and CSS files, build translations"
-	import frappe.build
 	import frappe
 	frappe.init('')
 	# don't minify in developer_mode for faster builds
 	no_compress = frappe.local.conf.developer_mode or False
-	frappe.build.bundle(no_compress, app=app, make_copy=make_copy, restore = restore, verbose=verbose)
+
+	if make_copy or restore:
+		hard_link = make_copy or restore
+		click.secho(
+			"bench build: --make-copy and --restore options are deprecated in favour of --hard-link",
+			fg="yellow",
+		)
+
+	frappe.build.bundle(
+		skip_frappe=False,
+		no_compress=no_compress,
+		hard_link=hard_link,
+		verbose=verbose,
+		app=app,
+	)
 
 @click.command('watch')
 def watch():
@@ -465,6 +479,8 @@ frappe.db.connect()
 @pass_context
 def console(context):
 	"Start ipython console for a site"
+	import warnings
+
 	site = get_site(context)
 	frappe.init(site=site)
 	frappe.connect()
@@ -485,6 +501,7 @@ def console(context):
 	if failed_to_import:
 		print("\nFailed to import:\n{}".format(", ".join(failed_to_import)))
 
+	warnings.simplefilter('ignore')
 	IPython.embed(display_banner="", header="", colors="neutral")
 
 @click.command('run-tests')
