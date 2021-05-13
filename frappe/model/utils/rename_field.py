@@ -4,6 +4,7 @@
 from __future__ import unicode_literals, print_function
 
 import frappe
+from frappe import _
 import json
 from frappe.model import no_value_fields, table_fields
 from frappe.utils.password import rename_password_field

@@ -9,8 +9,7 @@ from frappe.model.db_query import DatabaseQuery
 from frappe.permissions import add_permission, reset_perms
 from frappe.core.doctype.doctype.doctype import clear_permissions_cache
 
-# test_records = frappe.get_test_records('ToDo')
-test_user_records = frappe.get_test_records('User')
+test_dependencies = ['User']
 
 class TestToDo(unittest.TestCase):
 	def test_delete(self):

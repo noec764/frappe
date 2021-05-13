@@ -144,6 +144,7 @@ def get_dict(fortype, name=None):
 			messages += frappe.db.sql("select concat('Number Card: ', name), label from `tabNumber Card`")
 			messages += frappe.db.sql("select concat('Dashboard Chart: ', name), chart_name from `tabDashboard Chart`")
 
+		messages = deduplicate_messages(messages)
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
 		message_dict.update(get_dict_from_hooks(fortype, name))
 
@@ -617,8 +618,14 @@ def get_onboarding_messages(app):
 def get_messages_from_include_files(app_name=None):
 	"""Returns messages from js files included at time of boot like desk.min.js for desk and web"""
 	messages = []
-	for file in (frappe.get_hooks("app_include_js", app_name=app_name) or []) + (frappe.get_hooks("web_include_js", app_name=app_name) or []):
-		messages.extend(get_messages_from_file(os.path.join(frappe.local.sites_path, file)))
+	app_include_js = frappe.get_hooks("app_include_js", app_name=app_name) or []
+	web_include_js = frappe.get_hooks("web_include_js", app_name=app_name) or []
+	include_js = app_include_js + web_include_js
+
+	for js_path in include_js:
+		relative_path = os.path.join(frappe.local.sites_path, js_path.lstrip('/'))
+		messages_from_file = get_messages_from_file(relative_path)
+		messages.extend(messages_from_file)
 
 	for app in ([app_name] if app_name else frappe.get_installed_apps()):
 		if os.path.isfile(frappe.get_app_path(app, "public/build.json")):
