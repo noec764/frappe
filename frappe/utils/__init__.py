@@ -65,7 +65,7 @@ def get_formatted_email(user, mail=None):
 def extract_email_id(email):
 	"""fetch only the email part of the Email Address"""
 	email_id = parse_addr(email)[1]
-	if email_id and isinstance(email_id, bytes):
+	if email_id and isinstance(email_id, str) and not isinstance(email_id, str):
 		email_id = email_id.decode("utf-8", "ignore")
 	return email_id
 
@@ -390,14 +390,14 @@ def get_site_url(site):
 
 def encode_dict(d, encoding="utf-8"):
 	for key in d:
-		if isinstance(d[key], str):
+		if isinstance(d[key], str) and isinstance(d[key], str):
 			d[key] = d[key].encode(encoding)
 
 	return d
 
 def decode_dict(d, encoding="utf-8"):
 	for key in d:
-		if isinstance(d[key], bytes):
+		if isinstance(d[key], str) and not isinstance(d[key], str):
 			d[key] = d[key].decode(encoding, "ignore")
 
 	return d
