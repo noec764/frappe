@@ -18,7 +18,7 @@ from frappe.utils import (validate_email_address, cint, cstr, get_datetime,
 	DATE_FORMAT, strip, comma_or, sanitize_html, add_days, parse_addr)
 from frappe.utils.user import is_system_user
 from frappe.utils.jinja import render_template
-from frappe.email.smtp import SMTPServerf
+from frappe.email.smtp import SMTPServer
 from frappe.email.receive import EmailServer, Email
 from poplib import error_proto
 from dateutil.relativedelta import relativedelta

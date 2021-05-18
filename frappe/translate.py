@@ -128,19 +128,19 @@ def get_dict(fortype, name=None):
 			messages = get_messages_from_include_files()
 			messages += get_all_messages_from_js_files()
 			messages += get_messages_from_doctype("DocPerm")
-			messages += frappe.db.sql("select concat('Navbar Item: ', item_label), item_label from `tabNavbar Item`")
+			messages += get_messages_from_navbar()
 			messages += frappe.db.sql("select concat('Print Format: ', name), name from `tabPrint Format`")
 			messages += frappe.db.sql("select concat('DocType: ', name), name from tabDocType")
 			messages += frappe.db.sql("select concat('Role: ', name), name from tabRole")
 			messages += frappe.db.sql("select concat('Module: ', name), name from `tabModule Def`")
-			messages += frappe.db.sql("select concat('Page: ', name), title from `tabPage`")
+			messages += frappe.db.sql("select concat('Page: ', name), coalesce(title, '') from `tabPage`")
 			messages += frappe.db.sql("select concat('Report: ', name), name from `tabReport`")
-			messages += frappe.db.sql("select concat('Module Onboarding: ', name), title from `tabModule Onboarding`")
-			messages += frappe.db.sql("select concat('Onboarding Step: ', name), title from `tabOnboarding Step`")
+			messages += frappe.db.sql("select concat('Module Onboarding: ', name), coalesce(title, '') from `tabModule Onboarding`")
+			messages += frappe.db.sql("select concat('Onboarding Step: ', name), coalesce(title, '') from `tabOnboarding Step`")
 			messages += frappe.db.sql("select concat('Workspace: ', name), label from `tabWorkspace`")
 			messages += frappe.db.sql("select concat('Workspace Shortcut: ', label), format from `tabWorkspace Shortcut` where format is not null")
 			messages += frappe.db.sql("select concat('Web Template: ', name), name from `tabWeb Template`")
-			messages += frappe.db.sql("select concat('Web Template Field: ', name), label from `tabWeb Template Field`")
+			messages += frappe.db.sql("select concat('Web Template Field: ', name), coalesce(label, '') from `tabWeb Template Field`")
 			messages += frappe.db.sql("select concat('Number Card: ', name), label from `tabNumber Card`")
 			messages += frappe.db.sql("select concat('Dashboard Chart: ', name), chart_name from `tabDashboard Chart`")
 
@@ -602,18 +602,10 @@ def get_server_messages(app):
 
 	return messages
 
-def get_onboarding_messages(app):
-	messages = []
-	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
-		for dontwalk in (".git", "public", "locale"):
-			if dontwalk in folders: folders.remove(dontwalk)
-
-		for f in files:
-			f = frappe.as_unicode(f)
-			if f.endswith(file_extensions):
-				messages.extend(get_messages_from_file(os.path.join(basepath, f)))
-
-	return messages
+def get_messages_from_navbar():
+	"""Return all labels from Navbar Items, as specified in Navbar Settings."""
+	labels = frappe.get_all('Navbar Item', filters={'item_label': ('is', 'set')}, pluck='item_label')
+	return [('Navbar:', label, 'Label of a Navbar Item') for label in labels]
 
 def get_messages_from_include_files(app_name=None):
 	"""Returns messages from js files included at time of boot like desk.min.js for desk and web"""
