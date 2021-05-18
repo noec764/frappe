@@ -1,7 +1,7 @@
 import '../class';
 
-frappe.ui.form.Layout = Class.extend({
-	init: function (opts) {
+frappe.ui.form.Layout = class Layout {
+	constructor (opts) {
 		this.views = {};
 		this.pages = [];
 		this.sections = [];
@@ -9,8 +9,9 @@ frappe.ui.form.Layout = Class.extend({
 		this.fields_dict = {};
 
 		$.extend(this, opts);
-	},
-	make: function () {
+	}
+
+	make() {
 		if (!this.parent && this.body) {
 			this.parent = this.body;
 		}
@@ -21,13 +22,15 @@ frappe.ui.form.Layout = Class.extend({
 		}
 		this.setup_tabbing();
 		this.render();
-	},
-	show_empty_form_message: function () {
+	}
+
+	show_empty_form_message() {
 		if (!(this.wrapper.find(".frappe-control:visible").length || this.wrapper.find(".section-head.collapsed").length)) {
 			this.show_message(__("This form does not have any input"));
 		}
-	},
-	get_doctype_fields: function () {
+	}
+
+	get_doctype_fields() {
 		let fields = [
 			this.get_new_name_field()
 		];
@@ -38,7 +41,7 @@ frappe.ui.form.Layout = Class.extend({
 		}
 
 		return fields;
-	},
+	}
 
 	get_new_name_field() {
 		return {
@@ -57,7 +60,7 @@ frappe.ui.form.Layout = Class.extend({
 				return 'None';
 			}
 		};
-	},
+	}
 
 	get_fields_from_layout() {
 		const fields = [];
@@ -67,8 +70,9 @@ frappe.ui.form.Layout = Class.extend({
 			fields.push(docfield);
 		}
 		return fields;
-	},
-	show_message: function (html, color) {
+	}
+
+	show_message(html, color) {
 		if (this.message_color) {
 			// remove previous color
 			this.message.removeClass(this.message_color);
@@ -84,8 +88,9 @@ frappe.ui.form.Layout = Class.extend({
 		} else {
 			this.message.empty().addClass('hidden');
 		}
-	},
-	render: function(new_fields) {
+	}
+
+	render(new_fields) {
 		var me = this;
 		var fields = new_fields || this.fields;
 
@@ -115,19 +120,19 @@ frappe.ui.form.Layout = Class.extend({
 			}
 		});
 
-	},
+	}
 
-	no_opening_section: function () {
+	no_opening_section() {
 		return (this.fields[0] && this.fields[0].fieldtype != "Section Break") || !this.fields.length;
-	},
+	}
 
-	setup_dashboard_section: function () {
+	setup_dashboard_section() {
 		if (this.no_opening_section()) {
 			this.fields.unshift({fieldtype: 'Section Break'});
 		}
-	},
+	}
 
-	replace_field: function(fieldname, df, render) {
+	replace_field(fieldname, df, render) {
 		df.fieldname = fieldname; // change of fieldname is avoided
 		if (this.fields_dict[fieldname] && this.fields_dict[fieldname].df) {
 			const fieldobj = this.init_field(df, render);
@@ -141,9 +146,9 @@ frappe.ui.form.Layout = Class.extend({
 			this.section.fields_dict[fieldname] = fieldobj;
 			this.refresh_fields([df]);
 		}
-	},
+	}
 
-	make_field: function(df, colspan, render) {
+	make_field(df, colspan, render) {
 		!this.section && this.make_section();
 		!this.column && this.make_column();
 
@@ -157,9 +162,9 @@ frappe.ui.form.Layout = Class.extend({
 		this.section.fields_list.push(fieldobj);
 		this.section.fields_dict[df.fieldname] = fieldobj;
 		fieldobj.section = this.section;
-	},
+	}
 
-	init_field: function(df, render = false) {
+	init_field(df, render = false) {
 		const fieldobj = frappe.ui.form.make_control({
 			df: df,
 			doctype: this.doctype,
@@ -171,9 +176,9 @@ frappe.ui.form.Layout = Class.extend({
 
 		fieldobj.layout = this;
 		return fieldobj;
-	},
+	}
 
-	make_page: function(df) {
+	make_page(df) {
 		var me = this,
 			head = $('<div class="form-clickable-section text-center">\
 				<a class="btn-fold h6 text-muted">'+__("Show more details")+'</a>\
@@ -197,13 +202,13 @@ frappe.ui.form.Layout = Class.extend({
 
 		this.section = null;
 		this.folded = true;
-	},
+	}
 
-	unfold: function() {
+	unfold() {
 		this.fold_btn.trigger('click');
-	},
+	}
 
-	make_section: function(df) {
+	make_section(df) {
 		this.section = new frappe.ui.form.Section(this, df);
 
 		// append to layout fields
@@ -213,16 +218,16 @@ frappe.ui.form.Layout = Class.extend({
 		}
 
 		this.column = null;
-	},
+	}
 
-	make_column: function(df) {
+	make_column(df) {
 		this.column = new frappe.ui.form.Column(this.section, df);
 		if (df && df.fieldname) {
 			this.fields_list.push(this.column);
 		}
-	},
+	}
 
-	refresh: function(doc) {
+	refresh(doc) {
 		var me = this;
 		if (doc) this.doc = doc;
 
@@ -248,9 +253,9 @@ frappe.ui.form.Layout = Class.extend({
 			// collapse sections
 			this.refresh_section_collapse();
 		}
-	},
+	}
 
-	refresh_sections: function() {
+	refresh_sections() {
 		// hide invisible sections
 
 		this.wrapper.find(".form-section:not(.hide-control)").each(function() {
@@ -265,9 +270,9 @@ frappe.ui.form.Layout = Class.extend({
 
 		this.frm && this.frm.dashboard.refresh();
 
-	},
+	}
 
-	refresh_fields: function(fields) {
+	refresh_fields(fields) {
 		let fieldnames = fields.map((field) => {
 			if (field.fieldname) return field.fieldname;
 		});
@@ -280,14 +285,14 @@ frappe.ui.form.Layout = Class.extend({
 				}
 			}
 		});
-	},
+	}
 
-	add_fields: function(fields) {
+	add_fields(fields) {
 		this.render(fields);
 		this.refresh_fields(fields);
-	},
+	}
 
-	refresh_section_collapse: function() {
+	refresh_section_collapse() {
 		if (!(this.sections && this.sections.length)) return;
 
 		for (var i=0; i < this.sections.length; i++) {
@@ -311,9 +316,9 @@ frappe.ui.form.Layout = Class.extend({
 				section.collapse(collapse);
 			}
 		}
-	},
+	}
 
-	attach_doc_and_docfields: function(refresh) {
+	attach_doc_and_docfields(refresh) {
 		var me = this;
 		for (var i=0, l=this.fields_list.length; i<l; i++) {
 			var fieldobj = this.fields_list[i];
@@ -331,14 +336,15 @@ frappe.ui.form.Layout = Class.extend({
 			}
 			refresh && fieldobj.df && fieldobj.refresh && fieldobj.refresh();
 		}
-	},
+	}
 
-	refresh_section_count: function() {
+	refresh_section_count() {
 		this.wrapper.find(".section-count-label:visible").each(function(i) {
 			$(this).html(i+1);
 		});
-	},
-	setup_tabbing: function() {
+	}
+
+	setup_tabbing() {
 		var me = this;
 		this.wrapper.on("keydown", function(ev) {
 			if (ev.which==9) {
@@ -349,8 +355,9 @@ frappe.ui.form.Layout = Class.extend({
 					return me.handle_tab(doctype, fieldname, ev.shiftKey);
 			}
 		});
-	},
-	handle_tab: function(doctype, fieldname, shift) {
+	}
+
+	handle_tab(doctype, fieldname, shift) {
 		var me = this,
 			grid_row = null,
 			prev = null,
@@ -408,8 +415,9 @@ frappe.ui.form.Layout = Class.extend({
 		}
 
 		return false;
-	},
-	focus_on_next_field: function(start_idx, fields) {
+	}
+
+	focus_on_next_field(start_idx, fields) {
 		// loop to find next eligible fields
 		for (var i= start_idx + 1, len = fields.length; i < len; i++) {
 			var field = fields[i];
@@ -430,11 +438,13 @@ frappe.ui.form.Layout = Class.extend({
 				}
 			}
 		}
-	},
-	is_visible: function(field) {
+	}
+
+	is_visible(field) {
 		return field.disp_status==="Write" && (field.$wrapper && field.$wrapper.is(":visible"));
-	},
-	set_focus: function(field) {
+	}
+
+	set_focus(field) {
 		// next is table, show the table
 		if (field.df.fieldtype=="Table") {
 			if (!field.grid.grid_rows.length) {
@@ -447,11 +457,13 @@ frappe.ui.form.Layout = Class.extend({
 		} else if (field.$input) {
 			field.$input.focus();
 		}
-	},
-	get_open_grid_row: function() {
+	}
+
+	get_open_grid_row() {
 		return $(".grid-row-open").data("grid_row");
-	},
-	refresh_dependency: function() {
+	}
+
+	refresh_dependency() {
 		// Resolve "depends_on" and show / hide accordingly
 		var me = this;
 
@@ -501,8 +513,9 @@ frappe.ui.form.Layout = Class.extend({
 		}
 
 		this.refresh_section_count();
-	},
-	set_dependant_property: function(condition, fieldname, property) {
+	}
+
+	set_dependant_property(condition, fieldname, property) {
 		let set_property = this.evaluate_depends_on_value(condition);
 		let value = set_property ? 1 : 0;
 		let form_obj;
@@ -522,8 +535,9 @@ frappe.ui.form.Layout = Class.extend({
 				form_obj.set_df_property(fieldname, property, value);
 			}
 		}
-	},
-	evaluate_depends_on_value: function(expression) {
+	}
+
+	evaluate_depends_on_value(expression) {
 		var out = null;
 		var doc = this.doc;
 
@@ -545,7 +559,7 @@ frappe.ui.form.Layout = Class.extend({
 
 		} else if (expression.substr(0, 5)=='eval:') {
 			try {
-				out = eval(expression.substr(5));
+				out = frappe.utils.eval(expression.substr(5), { doc });
 				if (parent && parent.istable && expression.includes('is_submittable')) {
 					out = true;
 				}
@@ -566,10 +580,10 @@ frappe.ui.form.Layout = Class.extend({
 
 		return out;
 	}
-});
+};
 
-frappe.ui.form.Section = Class.extend({
-	init: function(layout, df) {
+frappe.ui.form.Section = class FormSection {
+	constructor(layout, df) {
 		this.layout = layout;
 		this.df = df || {};
 		this.fields_list = [];
@@ -583,8 +597,9 @@ frappe.ui.form.Section = Class.extend({
 		};
 
 		this.refresh();
-	},
-	make: function() {
+	}
+
+	make() {
 		if (!this.layout.page) {
 			this.layout.page = $('<div class="form-page"></div>').appendTo(this.layout.wrapper);
 		}
@@ -613,8 +628,9 @@ frappe.ui.form.Section = Class.extend({
 
 		// for bc
 		this.body = $('<div class="section-body">').appendTo(this.wrapper);
-	},
-	make_head: function() {
+	}
+
+	make_head() {
 		this.head = $(`<div class="section-head">
 			${__(this.df.label)}
 			<span class="ml-2 collapse-indicator mb-1">
@@ -630,8 +646,9 @@ frappe.ui.form.Section = Class.extend({
 			});
 			this.indicator.show();
 		}
-	},
-	refresh: function() {
+	}
+
+	refresh() {
 		if (!this.df)
 			return;
 
@@ -644,8 +661,9 @@ frappe.ui.form.Section = Class.extend({
 		}
 
 		this.wrapper.toggleClass("hide-control", !!hide);
-	},
-	collapse: function(hide) {
+	}
+
+	collapse(hide) {
 		// unknown edge case
 		if (!(this.head && this.body)) {
 			return;
@@ -669,11 +687,13 @@ frappe.ui.form.Section = Class.extend({
 		});
 
 
-	},
+	}
+
 	is_collapsed() {
 		return this.body.hasClass('hide');
-	},
-	has_missing_mandatory: function() {
+	}
+
+	has_missing_mandatory() {
 		var missing_mandatory = false;
 		for (var j=0, l=this.fields_list.length; j < l; j++) {
 			var section_df = this.fields_list[j].df;
@@ -684,18 +704,19 @@ frappe.ui.form.Section = Class.extend({
 		}
 		return missing_mandatory;
 	}
-});
+};
 
-frappe.ui.form.Column = Class.extend({
-	init: function(section, df) {
+frappe.ui.form.Column = class FormColumn {
+	constructor(section, df) {
 		if (!df) df = {};
 
 		this.df = df;
 		this.section = section;
 		this.make();
 		this.resize_all_columns();
-	},
-	make: function() {
+	}
+
+	make() {
 		this.wrapper = $('<div class="form-column">\
 			<form>\
 			</form>\
@@ -709,8 +730,9 @@ frappe.ui.form.Column = Class.extend({
 			$('<label class="control-label">' + __(this.df.label, null, this.df.parent)
 				+ '</label>').appendTo(this.wrapper);
 		}
-	},
-	resize_all_columns: function() {
+	}
+
+	resize_all_columns() {
 		// distribute all columns equally
 		var colspan = cint(12 / this.section.wrapper.find(".form-column").length);
 
@@ -718,8 +740,9 @@ frappe.ui.form.Column = Class.extend({
 			.addClass("form-column")
 			.addClass("col-sm-" + colspan);
 
-	},
-	refresh: function() {
+	}
+
+	refresh() {
 		this.section.refresh();
 	}
-});
+};

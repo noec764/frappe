@@ -132,7 +132,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	}
 };
 
-frappe.views.Calendar = class {
+frappe.views.Calendar = class Calendar {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;

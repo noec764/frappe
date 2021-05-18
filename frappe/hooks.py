@@ -26,16 +26,16 @@ page_js = {
 
 # website
 app_include_js = [
-	"/assets/js/libs.min.js",
-	"/assets/js/desk.min.js",
-	"/assets/js/list.min.js",
-	"/assets/js/form.min.js",
-	"/assets/js/control.min.js",
-	"/assets/js/report.min.js"
+	"libs.bundle.js",
+	"desk.bundle.js",
+	"list.bundle.js",
+	"form.bundle.js",
+	"controls.bundle.js",
+	"report.bundle.js",
 ]
 app_include_css = [
-	"/assets/css/desk.min.css",
-	"/assets/css/report.min.css"
+	"desk.bundle.css",
+	"report.bundle.css",
 ]
 
 doctype_js = {
@@ -48,6 +48,8 @@ web_include_js = [
 ]
 
 web_include_css = []
+
+email_css = ['email.bundle.css']
 
 website_route_rules = [
 	{"from_route": "/blog/<category>", "to_route": "Blog Post"},

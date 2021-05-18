@@ -91,7 +91,6 @@ export default {
 					{
 						parent: value.parent,
 						fieldname: value.fieldname,
-						label: value.label,
 						reference: value.reference,
 						label: value.label,
 						function: value.function,

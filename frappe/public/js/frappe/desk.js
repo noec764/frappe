@@ -22,12 +22,12 @@ $(document).ready(function() {
 	frappe.start_app();
 });
 
-frappe.Application = Class.extend({
-	init: function() {
+frappe.Application = class Application {
+	constructor() {
 		this.startup();
-	},
+	}
 
-	startup: function() {
+	startup() {
 		frappe.socketio.init();
 		frappe.model.init();
 
@@ -80,7 +80,6 @@ frappe.Application = Class.extend({
 			// delayed following requests to make boot faster
 			setTimeout(() => {
 				this.show_change_log();
-				//this.show_update_available();
 			}, 1000);
 		}
 
@@ -113,7 +112,7 @@ frappe.Application = Class.extend({
 		});
 
 		// listen to build errors
-		this.setup_build_error_listener();
+		this.setup_build_events();
 
 		if (frappe.sys_defaults.email_user_password) {
 			var email_list =  frappe.sys_defaults.email_user_password.split(',');
@@ -160,7 +159,7 @@ frappe.Application = Class.extend({
 				}, 600000); // check every 10 minutes
 			}
 		}
-	},
+	}
 
 	set_route() {
 		frappe.flags.setting_original_route = true;
@@ -175,14 +174,14 @@ frappe.Application = Class.extend({
 		frappe.router.on('change', () => {
 			$(".tooltip").hide();
 		});
-	},
+	}
 
 	setup_frappe_vue() {
 		Vue.prototype.__ = window.__;
 		Vue.prototype.frappe = window.frappe;
-	},
+	}
 
-	set_password: function(user) {
+	set_password(user) {
 		var me=this;
 		frappe.call({
 			method: 'frappe.core.doctype.user.user.get_email_awaiting',
@@ -199,9 +198,9 @@ frappe.Application = Class.extend({
 				}
 			}
 		});
-	},
+	}
 
-	email_password_prompt: function(email_account,user,i) {
+	email_password_prompt(email_account,user,i) {
 		var me = this;
 		let d = new frappe.ui.Dialog({
 			title: __('Password missing in Email Account'),
@@ -255,8 +254,9 @@ frappe.Application = Class.extend({
 			});
 		});
 		d.show();
-	},
-	load_bootinfo: function() {
+	}
+
+	load_bootinfo() {
 		if(frappe.boot) {
 			this.setup_workspaces();
 			frappe.model.sync(frappe.boot.docs);
@@ -278,7 +278,7 @@ frappe.Application = Class.extend({
 		} else {
 			this.set_as_guest();
 		}
-	},
+	}
 
 	setup_workspaces() {
 		frappe.modules = {};
@@ -291,24 +291,24 @@ frappe.Application = Class.extend({
 			// default workspace is settings for Frappe
 			frappe.workspaces['home'] = frappe.workspaces['build'];
 		}
-	},
+	}
 
-	load_user_permissions: function() {
+	load_user_permissions() {
 		frappe.defaults.update_user_permissions();
 
 		frappe.realtime.on('update_user_permissions', frappe.utils.debounce(() => {
 			frappe.defaults.update_user_permissions();
 		}, 500));
-	},
+	}
 
-	check_metadata_cache_status: function() {
+	check_metadata_cache_status() {
 		if(frappe.boot.metadata_version != localStorage.metadata_version) {
 			frappe.assets.clear_local_storage();
 			frappe.assets.init_local_storage();
 		}
-	},
+	}
 
-	set_globals: function() {
+	set_globals() {
 		frappe.session.user = frappe.boot.user.name;
 		frappe.session.logged_in_user = frappe.boot.user.name;
 		frappe.session.user_email = frappe.boot.user.email;
@@ -360,8 +360,9 @@ frappe.Application = Class.extend({
 				}
 			}
 		});
-	},
-	sync_pages: function() {
+	}
+
+	sync_pages() {
 		// clear cached pages if timestamp is not found
 		if(localStorage["page_info"]) {
 			frappe.boot.allowed_pages = [];
@@ -376,8 +377,9 @@ frappe.Application = Class.extend({
 			frappe.boot.allowed_pages = Object.keys(frappe.boot.page_info);
 		}
 		localStorage["page_info"] = JSON.stringify(frappe.boot.page_info);
-	},
-	set_as_guest: function() {
+	}
+
+	set_as_guest() {
 		frappe.session.user = 'Guest';
 		frappe.session.user_email = '';
 		frappe.session.user_fullname = 'Guest';
@@ -385,23 +387,26 @@ frappe.Application = Class.extend({
 		frappe.user_defaults = {};
 		frappe.user_roles = ['Guest'];
 		frappe.sys_defaults = {};
-	},
-	make_page_container: function() {
+	}
+
+	make_page_container() {
 		if($("#body").length) {
 			$(".splash").remove();
 			frappe.temp_container = $("<div id='temp-container' style='display: none;'>")
 				.appendTo("body");
 			frappe.container = new frappe.views.Container();
 		}
-	},
-	make_nav_bar: function() {
+	}
+
+	make_nav_bar() {
 		// toolbar
 		if(frappe.boot && frappe.boot.home_page!=='setup-wizard') {
 			frappe.frappe_toolbar = new frappe.ui.toolbar.Toolbar();
 		}
 
-	},
-	logout: function() {
+	}
+
+	logout() {
 		var me = this;
 		me.logged_out = true;
 		return frappe.call({
@@ -413,8 +418,9 @@ frappe.Application = Class.extend({
 				me.redirect_to_login();
 			}
 		});
-	},
-	handle_session_expired: function() {
+	}
+
+	handle_session_expired() {
 		if(!frappe.app.session_expired_dialog) {
 			var dialog = new frappe.ui.Dialog({
 				title: __('Session Expired'),
@@ -464,26 +470,28 @@ frappe.Application = Class.extend({
 				'background-color': '#4B4C9D'
 			});
 		}
-	},
-	redirect_to_login: function() {
+	}
+
+	redirect_to_login() {
 		window.location.href = '/';
-	},
-	set_favicon: function() {
+	}
+
+	set_favicon() {
 		var link = $('link[type="image/x-icon"]').remove().attr("href");
 		$('<link rel="shortcut icon" href="' + link + '" type="image/x-icon">').appendTo("head");
 		$('<link rel="icon" href="' + link + '" type="image/x-icon">').appendTo("head");
-	},
+	}
 
-	add_app_logo_url_to_frappe: function(logo_url) {
+	add_app_logo_url_to_frappe(logo_url) {
 		this.logo_url = (logo_url || []).slice(-1)[0];
 		if (window.cordova) {
 			let host = frappe.request.url;
 			host = host.slice(0, host.length - 1);
 			this.logo_url = host + frappe.app.logo_url;
 		}
-	},
+	}
 
-	trigger_primary_action: function() {
+	trigger_primary_action() {
 		// to trigger change event on active input before triggering primary action
 		$(document.activeElement).blur();
 		// wait for possible JS validations triggered after blur (it might change primary button)
@@ -497,20 +505,20 @@ frappe.Application = Class.extend({
 				frappe.container.page.save_action();
 			}
 		}, 100);
-	},
+	}
 
-	set_rtl: function() {
+	set_rtl() {
 		if (frappe.utils.is_rtl()) {
 			var ls = document.createElement('link');
 			ls.rel="stylesheet";
 			ls.type = "text/css";
-			ls.href= "/assets/css/frappe-rtl.css";
+			ls.href= frappe.assets.bundled_asset("frappe-rtl.bundle.css");
 			document.getElementsByTagName('head')[0].appendChild(ls);
 			$('body').addClass('frappe-rtl');
 		}
-	},
+	}
 
-	show_change_log: function() {
+	show_change_log() {
 		var me = this;
 		const change_log = frappe.boot.change_log;
 
@@ -541,9 +549,9 @@ frappe.Application = Class.extend({
 			});
 			me.show_notes();
 		};
-	},
+	}
 
-	setup_analytics: function() {
+	setup_analytics() {
 		if(window.mixpanel) {
 			window.mixpanel.identify(frappe.session.user);
 			window.mixpanel.people.set({
@@ -553,13 +561,13 @@ frappe.Application = Class.extend({
 				"$email": frappe.session.user
 			});
 		}
-	},
+	}
 
 	add_browser_class() {
 		$('html').addClass(frappe.utils.get_browser().name.toLowerCase());
-	},
+	}
 
-	show_notes: function() {
+	show_notes() {
 		var me = this;
 		if(frappe.boot.notes.length) {
 			frappe.boot.notes.forEach(function(note) {
@@ -586,21 +594,19 @@ frappe.Application = Class.extend({
 				}
 			});
 		}
-	},
+	}
 
-	setup_build_error_listener() {
+	setup_build_events() {
 		if (frappe.boot.developer_mode) {
-			frappe.realtime.on('build_error', (data) => {
-				console.warn(data);
-			});
+			frappe.require("build_events.bundle.js");
 		}
-	},
+	}
 
 	setup_energy_point_listeners() {
 		frappe.realtime.on('energy_point_alert', (message) => {
 			frappe.show_alert(message);
 		});
-	},
+	}
 
 	setup_copy_doc_listener() {
 		$('body').on('paste', (e) => {
@@ -634,7 +640,7 @@ frappe.Application = Class.extend({
 			}
 		});
 	}
-});
+};
 
 frappe.get_module = function(m, default_module) {
 	var module = frappe.modules[m] || default_module;

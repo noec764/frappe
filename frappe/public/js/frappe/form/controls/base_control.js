@@ -1,5 +1,5 @@
-frappe.ui.form.Control = Class.extend({
-	init: function(opts) {
+frappe.ui.form.Control = class BaseControl {
+	constructor(opts) {
 		$.extend(this, opts);
 		this.make();
 
@@ -11,31 +11,32 @@ frappe.ui.form.Control = Class.extend({
 		if(this.render_input) {
 			this.refresh();
 		}
-	},
-	make: function() {
+	}
+
+	make() {
 		this.make_wrapper();
 		this.$wrapper
 			.attr("data-fieldtype", this.df.fieldtype)
 			.attr("data-fieldname", this.df.fieldname);
 		this.wrapper = this.$wrapper.get(0);
 		this.wrapper.fieldobj = this; // reference for event handlers
-	},
+	}
 
-	make_wrapper: function() {
+	make_wrapper() {
 		this.$wrapper = $("<div class='frappe-control'></div>").appendTo(this.parent);
 
 		// alias
 		this.wrapper = this.$wrapper;
-	},
+	}
 
-	toggle: function(show) {
+	toggle(show) {
 		this.df.hidden = show ? 0 : 1;
 		this.refresh();
-	},
+	}
 
 	// returns "Read", "Write" or "None"
 	// as strings based on permissions
-	get_status: function(explain) {
+	get_status(explain) {
 		if (this.df.get_status) {
 			return this.df.get_status(this);
 		}
@@ -94,8 +95,9 @@ frappe.ui.form.Control = Class.extend({
 		}
 
 		return status;
-	},
-	refresh: function() {
+	}
+
+	refresh() {
 		this.disp_status = this.get_status();
 		this.$wrapper
 			&& this.$wrapper.toggleClass("hide-control", this.disp_status=="None")
@@ -103,7 +105,8 @@ frappe.ui.form.Control = Class.extend({
 			&& this.refresh_input();
 
 		this.show_translatable_button();
-	},
+	}
+
 	show_translatable_button() {
 		// Disable translation non-string fields or special string fields
 		if (!frappe.model
@@ -137,26 +140,31 @@ frappe.ui.form.Control = Class.extend({
 				}
 			});
 
-	},
-	get_doc: function() {
+	}
+
+	get_doc() {
 		return this.doctype && this.docname
 			&& locals[this.doctype] && locals[this.doctype][this.docname] || {};
-	},
-	get_model_value: function() {
+	}
+
+	get_model_value() {
 		if(this.doc) {
 			return this.doc[this.df.fieldname];
 		}
-	},
-	set_value: function(value) {
+	}
+
+	set_value(value) {
 		return this.validate_and_set_in_model(value);
-	},
-	parse_validate_and_set_in_model: function(value, e) {
+	}
+
+	parse_validate_and_set_in_model(value, e) {
 		if(this.parse) {
 			value = this.parse(value);
 		}
 		return this.validate_and_set_in_model(value, e);
-	},
-	validate_and_set_in_model: function(value, e) {
+	}
+
+	validate_and_set_in_model(value, e) {
 		var me = this;
 		let force_value_set = (this.doc && this.doc.__run_link_triggers);
 		let is_value_same = (this.get_model_value() === value);
@@ -192,8 +200,9 @@ frappe.ui.form.Control = Class.extend({
 			// all clear
 			return set(value);
 		}
-	},
-	get_value: function() {
+	}
+
+	get_value() {
 		if(this.get_status()==='Write') {
 			return this.get_input_value ?
 				(this.parse ? this.parse(this.get_input_value()) : this.get_input_value()) :
@@ -201,8 +210,9 @@ frappe.ui.form.Control = Class.extend({
 		} else {
 			return this.value || undefined;
 		}
-	},
-	set_model_value: function(value) {
+	}
+
+	set_model_value(value) {
 		if(this.frm) {
 			this.last_value = value;
 			return frappe.model.set_value(this.doctype, this.docname, this.df.fieldname,
@@ -214,11 +224,12 @@ frappe.ui.form.Control = Class.extend({
 			this.set_input(value);
 			return Promise.resolve();
 		}
-	},
-	set_focus: function() {
+	}
+
+	set_focus() {
 		if(this.$input) {
 			this.$input.get(0).focus();
 			return true;
 		}
 	}
-});
+};

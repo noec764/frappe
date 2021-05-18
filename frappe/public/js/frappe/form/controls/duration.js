@@ -1,10 +1,10 @@
-frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
-	make_input: function() {
-		this._super();
+frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.ControlData {
+	make_input() {
+		super.make_input();
 		this.make_picker();
-	},
+	}
 
-	make_picker: function() {
+	make_picker() {
 		this.inputs = [];
 		this.set_duration_options();
 		this.$picker = $(
@@ -21,9 +21,9 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 		this.$picker.hide();
 		this.bind_events();
 		this.refresh();
-	},
+	}
 
-	build_numeric_input: function(label, hidden, max) {
+	build_numeric_input(label, hidden, max) {
 		// For translations
 		// __("days"), __("hours"), __("minutes"), __("seconds")
 		let $duration_input = $(`
@@ -49,13 +49,13 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 		}
 		$control.prepend($input);
 		$control.appendTo(this.$picker.find(".picker-row"));
-	},
+	}
 
 	set_duration_options() {
 		this.duration_options = frappe.utils.get_duration_options(this.df);
-	},
+	}
 
-	set_duration_picker_value: function(value) {
+	set_duration_picker_value(value) {
 		let total_duration = frappe.utils.seconds_to_duration(value, this.duration_options);
 
 		if (this.$picker) {
@@ -63,9 +63,9 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 				this.inputs[duration].prop("value", total_duration[duration]);
 			});
 		}
-	},
+	}
 
-	bind_events: function() {
+	bind_events() {
 		// flag to handle the display property of the picker
 		let clicked = false;
 
@@ -105,21 +105,21 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 				this.$picker.hide();
 			}
 		});
-	},
+	}
 
 	get_value() {
 		return cint(this.value);
-	},
+	}
 
-	refresh_input: function() {
-		this._super();
+	refresh_input() {
+		super.refresh_input();
 		this.set_duration_options();
 		this.set_duration_picker_value(this.value);
-	},
+	}
 
-	format_for_input: function(value) {
+	format_for_input(value) {
 		return frappe.utils.get_formatted_duration(value, this.duration_options);
-	},
+	}
 
 	get_duration() {
 		// returns an object of days, hours, minutes and seconds from the inputs array
@@ -140,7 +140,7 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 			}
 		}
 		return total_duration;
-	},
+	}
 
 	is_duration_picker_set(inputs) {
 		let is_set = false;
@@ -151,4 +151,4 @@ frappe.ui.form.ControlDuration = frappe.ui.form.ControlData.extend({
 		});
 		return is_set;
 	}
-});
+};
