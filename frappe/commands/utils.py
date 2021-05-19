@@ -483,7 +483,6 @@ frappe.db.connect()
 @pass_context
 def console(context):
 	"Start ipython console for a site"
-	import warnings
 
 	site = get_site(context)
 	frappe.init(site=site)
@@ -505,7 +504,6 @@ def console(context):
 	if failed_to_import:
 		print("\nFailed to import:\n{}".format(", ".join(failed_to_import)))
 
-	warnings.simplefilter('ignore')
 	IPython.embed(display_banner="", header="", colors="neutral")
 
 @click.command('run-tests')

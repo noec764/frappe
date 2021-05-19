@@ -4,8 +4,16 @@
 globals attached to frappe module
 + some utility functions that should probably be moved
 """
+import os, warnings
+
+_dev_server = os.environ.get('DEV_SERVER', False)
+
+if _dev_server:
+	warnings.simplefilter('always', DeprecationWarning)
+	warnings.simplefilter('always', PendingDeprecationWarning)
+
 from werkzeug.local import Local, release_local
-import os, sys, importlib, inspect, json, warnings
+import sys, importlib, inspect, json
 import typing
 from past.builtins import cmp
 import click
@@ -24,8 +32,6 @@ __title__ = "Dodock Framework"
 
 local = Local()
 controllers = {}
-warnings.simplefilter('always', DeprecationWarning)
-warnings.simplefilter('always', PendingDeprecationWarning)
 
 class _dict(dict):
 	"""dict like object that exposes keys as attributes"""
@@ -190,7 +196,7 @@ def init(site, sites_path=None, new_site=False):
 	local.meta_cache = {}
 	local.form_dict = _dict()
 	local.session = _dict()
-	local.dev_server = os.environ.get('DEV_SERVER', False)
+	local.dev_server = _dev_server
 
 	setup_module_map()
 
