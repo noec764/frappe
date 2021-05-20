@@ -168,7 +168,7 @@ class DesktopPage {
 		this.page.appendTo(this.container);
 
 		this.get_data().then(() => {
-			if (!this.data) {
+			if (Object.keys(this.data).length == 0) {
 				delete localStorage.current_workspace;
 				frappe.set_route("workspace");
 				return;
@@ -197,7 +197,7 @@ class DesktopPage {
 			page: this.page_name
 		}).then(data => {
 			this.data = data;
-			if (!this.data) return;
+			if (Object.keys(this.data).length == 0) return;
 
 			return frappe.dashboard_utils.get_dashboard_settings().then(settings => {
 				let chart_config = settings.chart_config ? JSON.parse(settings.chart_config) : {};
