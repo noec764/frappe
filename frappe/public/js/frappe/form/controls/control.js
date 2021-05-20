@@ -13,6 +13,7 @@ import './link';
 import './dynamic_link';
 import './text';
 import './code';
+import './text_editor.html';
 import './text_editor';
 import './comment';
 import './check';
