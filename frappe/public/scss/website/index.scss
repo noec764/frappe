@@ -1,7 +1,7 @@
 @import '../common/quill';
 @import 'variables';
-@import '/assets/frappe/css/fonts/fontawesome/css/all.css';
-@import '/assets/frappe/css/fonts/unicons/css/unicons.css';
+@import 'frappe/public/css/fonts/fontawesome/css/all.css';
+@import 'frappe/public/css/fonts/unicons/css/unicons.css';
 @import '~bootstrap/scss/bootstrap';
 @import "../common/mixins.scss";
 @import "../common/global.scss";
