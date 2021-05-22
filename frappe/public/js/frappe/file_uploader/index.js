@@ -14,6 +14,7 @@ export default class FileUploader {
 		upload_notes,
 		allow_multiple,
 		as_dataurl,
+		show_upload_button,
 		disable_file_browser,
 		frm
 	} = {}) {
@@ -30,7 +31,7 @@ export default class FileUploader {
 			el: this.wrapper,
 			render: h => h(FileUploaderComponent, {
 				props: {
-					show_upload_button: !Boolean(this.dialog),
+					show_upload_button: show_upload_button || !Boolean(this.dialog),
 					doctype,
 					docname,
 					fieldname,
