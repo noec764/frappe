@@ -76,6 +76,7 @@ class TestEmail(unittest.TestCase):
 		self.assertTrue('CC: test1@example.com' in message)
 
 	def test_cc_footer(self):
+		frappe.conf.use_ssl = True
 		frappe.flags.mute_emails = False
 		# test if sending with cc's makes it into header
 		frappe.sendmail(recipients=['test@example.com'],
@@ -93,6 +94,10 @@ class TestEmail(unittest.TestCase):
 
 		self.assertTrue('This email was sent to test@example.com and copied to test1@example.com' in frappe.safe_decode(
 			frappe.flags.sent_mail))
+
+		# check for email tracker
+		self.assertTrue('mark_email_as_seen' in frappe.safe_decode(frappe.flags.sent_mail))
+		frappe.conf.use_ssl = False
 
 	def test_expose(self):
 		frappe.flags.mute_emails = False
