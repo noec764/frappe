@@ -113,12 +113,15 @@ class User(Document):
 
 		now = frappe.flags.in_test or frappe.flags.in_install
 		self.send_password_notification(self.__new_password)
-		frappe.enqueue(
-			'frappe.core.doctype.user.user.create_contact',
-			user=self,
-			ignore_mandatory=True,
-			now=now
-		)
+		if self.flags.create_contact_immediately:
+			create_contact(user=self, ignore_mandatory=True)
+		else:
+			frappe.enqueue(
+				'frappe.core.doctype.user.user.create_contact',
+				user=self,
+				ignore_mandatory=True,
+				now=now
+			)
 		if self.name not in ('Administrator', 'Guest') and not self.user_image:
 			frappe.enqueue('frappe.core.doctype.user.user.update_gravatar', name=self.name, now=now)
 
@@ -1143,7 +1146,7 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 	from frappe.contacts.doctype.contact.contact import get_contact_name
 	if user.name in ["Administrator", "Guest"]: return
 
-	contact_name = get_contact_name(user.email)
+	contact_name = get_contact_name(user.email) or frappe.db.get_value("User", dict(user=user.name))
 	if not contact_name:
 		contact = frappe.get_doc({
 			"doctype": "Contact",
@@ -1161,7 +1164,10 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 
 		if user.mobile_no:
 			contact.add_phone(user.mobile_no, is_primary_mobile_no=True)
-		contact.insert(ignore_permissions=True, ignore_links=ignore_links, ignore_mandatory=ignore_mandatory)
+		try:
+			contact.insert(ignore_permissions=True, ignore_links=ignore_links, ignore_mandatory=ignore_mandatory)
+		except frappe.DuplicateEntryError:
+			pass
 	else:
 		contact = frappe.get_doc("Contact", contact_name)
 		contact.first_name = user.first_name
