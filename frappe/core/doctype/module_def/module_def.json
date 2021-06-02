@@ -69,6 +69,7 @@
 	  "read": 1,
 	  "report": 1,
 	  "role": "Administrator",
+	  "select": 1,
 	  "share": 1,
 	  "write": 1
 	 },
@@ -78,7 +79,14 @@
 	  "read": 1,
 	  "report": 1,
 	  "role": "System Manager",
+	  "select": 1,
 	  "write": 1
+	},
+	{
+	 "read": 1,
+	 "report": 1,
+	 "role": "All",
+	 "select": 1
 	 }
 	],
 	"show_name_in_global_search": 1,
