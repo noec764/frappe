@@ -40,12 +40,15 @@
 			padding: var(--padding-sm);
 			color: var(--text-color);
 			border-radius: var(--border-radius);
+			white-space: normal;
 			@extend .ellipsis;
 			&:not(:last-child) {
 				margin-bottom: var(--margin-xs);
 			}
 			p {
 				margin-bottom: 0;
+				overflow-y: clip;
+				text-overflow: ellipsis;
 			}
 		}
 
