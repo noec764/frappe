@@ -1,7 +1,7 @@
 # Copyright (c) 2019, Dokos and Contributors
 # See license.txt
 
-from __future__ import unicode_literals
+
 import frappe
 from frappe import _
 import frappe.defaults

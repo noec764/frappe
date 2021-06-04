@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2019, Frappe Technologies and Contributors
 # See license.txt
-from __future__ import unicode_literals
+
 
 import unittest, frappe
 from frappe.utils import getdate, formatdate, get_last_day

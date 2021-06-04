@@ -2,7 +2,7 @@
 # Copyright (c) 2019, Frappe Technologies and contributors
 # For license information, please see license.txt
 
-from __future__ import unicode_literals
+
 
 import ast
 from types import FunctionType, MethodType, ModuleType

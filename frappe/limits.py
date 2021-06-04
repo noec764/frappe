@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import frappe
 from frappe import _
 from frappe.utils import now_datetime, getdate, flt, cint, get_fullname
@@ -8,8 +8,7 @@ from frappe.utils.user import get_enabled_system_users
 from frappe.utils import get_site_info
 import os, subprocess, json
 import os, subprocess
-from six.moves.urllib.parse import parse_qsl, urlsplit, urlunsplit, urlencode
-from six import string_types
+from urllib.parse import parse_qsl, urlsplit, urlunsplit, urlencode
 
 class SiteExpiredError(frappe.ValidationError):
 	http_status_code = 417
@@ -164,7 +163,7 @@ def update_limits(limits_dict):
 def clear_limit(key):
 	'''Remove a limit option from site_config'''
 	limits = get_limits()
-	to_clear = [key] if isinstance(key, string_types) else key
+	to_clear = [key] if isinstance(key, str) else key
 	for key in to_clear:
 		if key in limits:
 			del limits[key]

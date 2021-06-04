@@ -1,7 +1,7 @@
 # Copyright (c) 2017, Frappe and Contributors
 # MIT License. See license.txt
 
-from __future__ import unicode_literals
+
 import frappe
 from frappe.utils import validate_email_address
 

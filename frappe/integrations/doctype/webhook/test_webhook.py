@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2017, Frappe Technologies and Contributors
 # See license.txt
-from __future__ import unicode_literals
+
 
 import unittest
 
@@ -95,7 +95,7 @@ class TestWebhook(unittest.TestCase):
 		)
 		self.assertTrue(self.test_user.email in frappe.flags.webhooks_executed)
 		self.assertEqual(
-			frappe.flags.webhooks_executed.get(self.test_user.email)[0], 
+			frappe.flags.webhooks_executed.get(self.test_user.email)[0],
 			self.sample_webhooks[0].name
 		)
 

@@ -10,7 +10,7 @@
 # 3. call update_nsm(doc_obj) in the on_upate method
 
 # ------------------------------------------
-from __future__ import unicode_literals
+
 
 import frappe
 from frappe import _

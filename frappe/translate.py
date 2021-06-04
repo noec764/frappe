@@ -1,11 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-
-from __future__ import unicode_literals, print_function
-
-from six import iteritems, text_type, string_types, PY2
-from frappe.utils import cstr
-
 """
 	frappe.translate
 	~~~~~~~~~~~~~~~~
@@ -13,11 +7,17 @@ from frappe.utils import cstr
 	Translation tools for frappe
 """
 
-import frappe, os, re, io, codecs, json
-from frappe.model.utils import render_include, InvalidIncludePath
-from frappe.utils import strip, strip_html_tags, is_html
-import itertools, operator
+import io
+import itertools
+import json
+import operator
+import os
+import re
 from functools import reduce
+
+import frappe
+from frappe.model.utils import InvalidIncludePath, render_include
+from frappe.utils import is_html, strip, strip_html_tags
 from frappe.utils.csvutils import to_csv
 
 def guess_language(lang_list=None):
@@ -37,8 +37,8 @@ def guess_language(lang_list=None):
 
 	for l in lang_codes:
 		code = l.strip()
-		if not isinstance(code, text_type):
-			code = text_type(code, 'utf-8')
+		if not isinstance(code, str):
+			code = str(code, 'utf-8')
 		if code in lang_list or code == "en":
 			guess = code
 			break
@@ -457,7 +457,7 @@ def get_messages_from_workflow(doctype=None, app_name=None):
 	else:
 		fixtures = frappe.get_hooks('fixtures', app_name=app_name) or []
 		for fixture in fixtures:
-			if isinstance(fixture, string_types) and fixture == 'Worflow':
+			if isinstance(fixture, str) and fixture == 'Worflow':
 				workflows = frappe.get_all('Workflow')
 				break
 			elif isinstance(fixture, dict) and fixture.get('dt', fixture.get('doctype')) == 'Workflow':
@@ -493,7 +493,7 @@ def get_messages_from_custom_fields(app_name):
 	custom_fields = []
 
 	for fixture in fixtures:
-		if isinstance(fixture, string_types) and fixture == 'Custom Field':
+		if isinstance(fixture, str) and fixture == 'Custom Field':
 			custom_fields = frappe.get_all('Custom Field', fields=['name','label', 'description', 'fieldtype', 'options'])
 			break
 		elif isinstance(fixture, dict) and fixture.get('dt', fixture.get('doctype')) == 'Custom Field':
@@ -725,7 +725,7 @@ def is_translatable(m):
 def add_line_number(messages, code):
 	ret = []
 	messages = sorted(messages, key=lambda x: x[0])
-	newlines = [m.start() for m in re.compile('\\n').finditer(code)]
+	newlines = [m.start() for m in re.compile(r'\\n').finditer(code)]
 	line = 1
 	newline_i = 0
 	for pos, message, context in messages:
@@ -741,18 +741,10 @@ def read_csv_file(path):
 	:param path: File path"""
 	from csv import reader
 
-	if PY2:
-		with codecs.open(path, 'r', 'utf-8') as msgfile:
-			data = msgfile.read()
+	with io.open(path, mode='r', encoding='utf-8', newline='') as msgfile:
+		data = reader(msgfile)
+		newdata = [[ val for val in row ] for row in data]
 
-			# for japanese! #wtf
-			data = data.replace(chr(28), "").replace(chr(29), "")
-			data = reader([r.encode('utf-8') for r in data.splitlines()])
-			newdata = [[text_type(val, 'utf-8') for val in row] for row in data]
-	else:
-		with io.open(path, mode='r', encoding='utf-8', newline='') as msgfile:
-			data = reader(msgfile)
-			newdata = [[ val for val in row ] for row in data]
 	return newdata
 
 def write_csv_file(path, lang_dict):
@@ -935,7 +927,7 @@ def update_translations_for_source(source=None, translation_dict=None):
 			frappe.delete_doc('Translation', d.name)
 
 	# remaining values are to be inserted
-	for lang, translated_text in iteritems(translation_dict):
+	for lang, translated_text in translation_dict.items():
 		doc = frappe.new_doc('Translation')
 		doc.language = lang
 		doc.source_text = source

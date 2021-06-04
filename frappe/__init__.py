@@ -15,7 +15,6 @@ if _dev_server:
 from werkzeug.local import Local, release_local
 import sys, importlib, inspect, json
 import typing
-from past.builtins import cmp
 import click
 
 # Local application imports

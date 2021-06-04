@@ -1,6 +1,6 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-from __future__ import unicode_literals
+
 import frappe
 from frappe import _
 from frappe.utils import flt, fmt_money

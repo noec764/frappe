@@ -1,22 +1,17 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2015, Frappe Technologies and contributors
 # For license information, please see license.txt
-
-from __future__ import unicode_literals
 import frappe
 
 from frappe import throw, _
-from frappe.utils import cstr, cint
+from frappe.utils import cstr
 
 from frappe.model.document import Document
 from jinja2 import TemplateSyntaxError
 from frappe.model.naming import make_autoname
 from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
-from six import iteritems, string_types
-from past.builtins import cmp
 from frappe.contacts.address_and_contact import set_link_title
 
-import functools
 import googlemaps
 import json
 
@@ -139,10 +134,13 @@ def get_default_address(doctype, name, sort_key='is_primary_address'):
 		WHERE
 			dl.parent = addr.name and dl.link_doctype = %s and
 			dl.link_name = %s and ifnull(addr.disabled, 0) = 0
-		""" %(sort_key, '%s', '%s'), (doctype, name))
+		""" %(sort_key, '%s', '%s'), (doctype, name), as_dict=True)
 
 	if out:
-		return sorted(out, key = functools.cmp_to_key(lambda x,y: cmp(cint(y[1]), cint(x[1]))))[0][0]
+		for contact in out:
+			if contact.get(sort_key):
+				return contact.name
+		return out[0].name
 	else:
 		return None
 
@@ -168,7 +166,7 @@ def get_territory_from_address(address):
 	if not address:
 		return
 
-	if isinstance(address, string_types):
+	if isinstance(address, str):
 		address = frappe.get_cached_doc("Address", address)
 
 	territory = None
@@ -205,10 +203,6 @@ def has_website_permission(doc, ptype, user, verbose=False):
 		contact = frappe.get_doc('Contact', contact_name)
 		return contact.has_common_link(doc)
 
-		lead_name = frappe.db.get_value("Lead", {"email_id": frappe.session.user})
-		if lead_name:
-			return doc.has_link('Lead', lead_name)
-
 	return False
 
 def get_address_templates(address):
@@ -241,7 +235,7 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 
 	condition = ""
 	meta = frappe.get_meta("Address")
-	for fieldname, value in iteritems(filters):
+	for fieldname, value in filters.items():
 		if meta.get_field(fieldname) or fieldname in frappe.db.DEFAULT_COLUMNS:
 			condition += " and {field}={value}".format(
 				field=fieldname,

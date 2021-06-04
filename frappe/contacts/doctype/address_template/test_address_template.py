@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2015, Frappe Technologies and Contributors
 # See license.txt
-from __future__ import unicode_literals
+
 
 import frappe, unittest
 
@@ -42,4 +42,4 @@ class TestAddressTemplate(unittest.TestCase):
 				"doctype": "Address Template",
 				"country": 'Brazil',
 				"template": template
-			}).insert()		
+			}).insert()

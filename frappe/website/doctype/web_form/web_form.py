@@ -1,13 +1,9 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and contributors
 # For license information, please see license.txt
-
-from __future__ import unicode_literals
-
 import json
 import os
 
-from six import iteritems
-from six.moves.urllib.parse import urlencode
+from urllib.parse import urlencode
 
 import frappe
 from frappe import _, scrub
@@ -109,9 +105,7 @@ class WebForm(WebsiteGenerator):
 			# py
 			if not os.path.exists(path + '.py'):
 				with open(path + '.py', 'w') as f:
-					f.write("""from __future__ import unicode_literals
-
-import frappe
+					f.write("""import frappe
 
 def get_context(context):
 	# do your magic here

@@ -7,7 +7,7 @@ record of files
 naming for same name files: file.gif, file-1.gif, file-2.gif etc
 """
 
-from __future__ import unicode_literals
+
 
 import base64
 import hashlib
@@ -23,8 +23,8 @@ import zipfile
 import requests
 import requests.exceptions
 from PIL import Image, ImageFile, ImageOps
-from six import PY2, StringIO, string_types, text_type
-from six.moves.urllib.parse import quote, unquote
+from io import StringIO
+from urllib.parse import quote, unquote
 
 import frappe
 from frappe import _, conf
@@ -378,18 +378,14 @@ class File(Document):
 		file_path = self.get_full_path()
 
 		# read the file
-		if PY2:
-			with open(encode(file_path)) as f:
-				content = f.read()
-		else:
-			with io.open(encode(file_path), mode='rb') as f:
-				content = f.read()
-				try:
-					# for plain text files
-					content = content.decode()
-				except UnicodeDecodeError:
-					# for .png, .jpg, etc
-					pass
+		with io.open(encode(file_path), mode='rb') as f:
+			content = f.read()
+			try:
+				# for plain text files
+				content = content.decode()
+			except UnicodeDecodeError:
+				# for .png, .jpg, etc
+				pass
 
 		return content
 
@@ -426,7 +422,7 @@ class File(Document):
 		frappe.create_folder(file_path)
 		# write the file
 		self.content = self.get_content()
-		if isinstance(self.content, text_type):
+		if isinstance(self.content, str):
 			self.content = self.content.encode()
 		with open(os.path.join(file_path.encode('utf-8'), self.file_name.encode('utf-8')), 'wb+') as f:
 			f.write(self.content)
@@ -480,7 +476,7 @@ class File(Document):
 		self.content = content
 
 		if decode:
-			if isinstance(content, text_type):
+			if isinstance(content, str):
 				self.content = content.encode("utf-8")
 
 			if b"," in self.content:
@@ -628,7 +624,7 @@ def create_new_folder(file_name, folder):
 @frappe.whitelist()
 def move_file(file_list, new_parent, old_parent):
 
-	if isinstance(file_list, string_types):
+	if isinstance(file_list, str):
 		file_list = json.loads(file_list)
 
 	for file_obj in file_list:
@@ -824,7 +820,7 @@ def remove_file_by_url(file_url, doctype=None, name=None):
 
 
 def get_content_hash(content):
-	if isinstance(content, text_type):
+	if isinstance(content, str):
 		content = content.encode()
 	return hashlib.md5(content).hexdigest() #nosec
 
@@ -877,8 +873,8 @@ def extract_images_from_html(doc, content):
 			filename = headers.split("filename=")[-1]
 
 			# decode filename
-			if not isinstance(filename, text_type):
-				filename = text_type(filename, 'utf-8')
+			if not isinstance(filename, str):
+				filename = str(filename, 'utf-8')
 		else:
 			mtype = headers.split(";")[0]
 			filename = get_random_filename(content_type=mtype)
@@ -901,7 +897,7 @@ def extract_images_from_html(doc, content):
 
 		return '<img src="{file_url}"'.format(file_url=file_url)
 
-	if content and isinstance(content, string_types):
+	if content and isinstance(content, str):
 		content = re.sub(r'<img[^>]*src\s*=\s*["\'](?=data:)(.*?)["\']', _save_file, content)
 
 	return content
@@ -931,7 +927,7 @@ def get_attached_images(doctype, names):
 	'''get list of image urls attached in form
 	returns {name: ['image.jpg', 'image.png']}'''
 
-	if isinstance(names, string_types):
+	if isinstance(names, str):
 		names = json.loads(names)
 
 	img_urls = frappe.db.get_list('File', filters={

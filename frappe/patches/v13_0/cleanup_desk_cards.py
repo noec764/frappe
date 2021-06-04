@@ -1,5 +1,4 @@
 import frappe
-from six import string_types
 from json import loads
 from frappe.desk.doctype.workspace.workspace import get_link_type, get_report_type
 
@@ -28,7 +27,7 @@ def rebuild_links(page):
 	doc.links = []
 
 	for card in get_all_cards(page):
-		if isinstance(card.links, string_types):
+		if isinstance(card.links, str):
 			links = loads(card.links)
 		else:
 			links = card.links

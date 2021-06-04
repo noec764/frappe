@@ -1,9 +1,5 @@
 # Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-
-from __future__ import unicode_literals
-from six.moves import range
-from six import string_types
 import frappe
 import json
 
@@ -200,7 +196,7 @@ class Event(WebsiteGenerator):
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
 	deleted_participant = frappe.get_doc(reference_doctype, reference_docname)
-	if isinstance(event, string_types):
+	if isinstance(event, str):
 		event = json.loads(event)
 
 	filters = [
@@ -262,7 +258,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 	if not user:
 		user = frappe.session.user
 
-	if isinstance(filters, string_types):
+	if isinstance(filters, str):
 		filters = json.loads(filters)
 
 	additional_fields = ""

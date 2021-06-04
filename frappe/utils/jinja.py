@@ -1,6 +1,6 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-from __future__ import unicode_literals
+
 from bs4 import BeautifulSoup
 from frappe.utils import cint
 
@@ -69,7 +69,7 @@ def render_template(template, context, is_path=None, safe_render=True):
 	:param safe_render: (optional) prevent server side scripting via jinja templating
 	'''
 
-	from frappe import get_traceback, throw
+	from frappe import _, get_traceback, throw
 	from jinja2 import TemplateError
 
 	if not template:
@@ -79,7 +79,7 @@ def render_template(template, context, is_path=None, safe_render=True):
 		return get_jenv().get_template(template).render(context)
 	else:
 		if safe_render and ".__" in template:
-			throw("Illegal template")
+			throw(_("Illegal template"))
 		try:
 			template = transform_template_blot(template, context)
 

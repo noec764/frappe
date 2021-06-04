@@ -1,7 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-
-from __future__ import unicode_literals
 import frappe
 from frappe import _
 import frappe.sessions
@@ -9,8 +7,6 @@ from frappe.utils import cstr
 import os, mimetypes, json
 import re
 
-import six
-from six import iteritems
 from werkzeug.wrappers import Response
 from werkzeug.routing import Rule
 from werkzeug.wsgi import wrap_file
@@ -131,7 +127,7 @@ def build_response(path, data, http_status_code, headers=None):
 
 	add_preload_headers(response)
 	if headers:
-		for key, val in iteritems(headers):
+		for key, val in headers.items():
 			response.headers[key] = val.encode("ascii", errors="xmlcharrefreplace")
 
 	return response
@@ -323,7 +319,7 @@ def clear_cache(path=None):
 		frappe.get_attr(method)(path)
 
 def render_403(e, pathname):
-	frappe.local.message = _("Please login to access this page.")
+	frappe.local.message = cstr(e)
 	frappe.local.message_title = _("Not Permitted")
 	frappe.local.response['context'] = dict(
 		indicator_color = 'red',

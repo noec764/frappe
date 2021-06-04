@@ -1,8 +1,5 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
-
-from __future__ import unicode_literals
-
 import frappe
 import re
 import redis
@@ -11,7 +8,6 @@ import os
 from frappe.utils import cint, strip_html_tags
 from frappe.utils.html_utils import unescape_html
 from frappe.model.base_document import get_controller
-from six import text_type
 from frappe.translate import send_translations
 
 def setup_global_search_table():
@@ -344,9 +340,9 @@ def get_formatted_value(value, field):
 
 	if getattr(field, 'fieldtype', None) in ["Text", "Text Editor"]:
 		value = unescape_html(frappe.safe_decode(value))
-		value = (re.subn(r'(?s)<[\s]*(script|style).*?</\1>', '', text_type(value))[0])
+		value = (re.subn(r'(?s)<[\s]*(script|style).*?</\1>', '', str(value))[0])
 		value = ' '.join(value.split())
-	return field.label + " : " + strip_html_tags(text_type(value))
+	return field.label + " : " + strip_html_tags(str(value))
 
 
 def sync_global_search():

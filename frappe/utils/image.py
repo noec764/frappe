@@ -1,7 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-from __future__ import unicode_literals, print_function
+
 import os
 
 def resize_images(path, maxdim=700):
@@ -22,7 +22,7 @@ def strip_exif_data(content, content_type):
 	""" Strips EXIF from image files which support it.
 	Works by creating a new Image object which ignores exif by
 	default and then extracts the binary data back into content.
-	Returns: 
+	Returns:
 		Bytes: Stripped image content
 	"""
 

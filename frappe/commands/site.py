@@ -12,7 +12,6 @@ from frappe import _
 from frappe.commands import get_site, pass_context
 from frappe.exceptions import SiteNotSpecifiedError
 from frappe.limits import update_limits, get_limits
-from six import text_type
 
 @click.command('new-site')
 @click.argument('site')
@@ -576,7 +575,7 @@ def set_limit(context, site, limit, value):
 
 @click.command('set-limits')
 @click.option('--site', help='site name')
-@click.option('--limit', 'limits', type=(text_type, text_type), multiple=True)
+@click.option('--limit', 'limits', type=(str, str), multiple=True)
 @pass_context
 def set_limits(context, site, limits):
 	_set_limits(context, site, limits)

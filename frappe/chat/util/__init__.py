@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 # imports - module imports
 from frappe.chat.util.util import (

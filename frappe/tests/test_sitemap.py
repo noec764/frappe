@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 
 import frappe, unittest
 from frappe.utils import get_html_for_route

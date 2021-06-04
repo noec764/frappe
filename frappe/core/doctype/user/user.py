@@ -1,7 +1,7 @@
 # Copyright (c) 2019, Dokos SAS and Contributors
 # MIT License. See license.txt
 
-from __future__ import unicode_literals, print_function
+
 
 from bs4 import BeautifulSoup
 
