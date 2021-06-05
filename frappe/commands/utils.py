@@ -559,7 +559,6 @@ skip_test_records=False, skip_before_tests=False, failfast=False):
 			'*.less',
 			'*.scss',
 			'*.vue',
-			'*.pyc',
 			'*.html',
 			'*/test_*',
 			'*/node_modules/*',

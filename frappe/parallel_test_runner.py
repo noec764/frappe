@@ -125,7 +125,6 @@ class ParallelTestRunner():
 				'*.less',
 				'*.scss',
 				'*.vue',
-				'*.pyc',
 				'*.html',
 				'*/test_*',
 				'*/node_modules/*',
