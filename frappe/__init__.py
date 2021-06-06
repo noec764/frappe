@@ -19,7 +19,17 @@ from .utils.lazy_loader import lazy_import
 # Lazy imports
 faker = lazy_import('faker')
 
+<<<<<<< HEAD
 __version__ = '2.0.0-dev'
+=======
+# Harmless for Python 3
+# For Python 2 set default encoding to utf-8
+if PY2:
+	reload(sys)
+	sys.setdefaultencoding("utf-8")
+
+__version__ = '2.0.12'
+>>>>>>> b2b4abcd1b3a43294420f3d9d4ac9481f72b0c06
 __title__ = "Dodock Framework"
 
 local = Local()
