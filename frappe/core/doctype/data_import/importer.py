@@ -129,7 +129,7 @@ class Importer:
 
 					if self.console:
 						update_progress_bar(
-							"Importing {0} records".format(total_payload_count),
+							_("Importing {0} records").format(total_payload_count),
 							current_index,
 							total_payload_count,
 						)
@@ -535,9 +535,9 @@ class Row:
 		if len_row != len_columns:
 			less_than_columns = len_row < len_columns
 			message = (
-				"Row has less values than columns"
+				_("Row has less values than columns")
 				if less_than_columns
-				else "Row has more values than columns"
+				else _("Row has more values than columns")
 			)
 			self.warnings.append(
 				{"row": self.row_number, "message": message,}
@@ -572,6 +572,7 @@ class Row:
 
 		for col, value in zip(columns, values):
 			df = col.df
+
 			if value in INVALID_VALUES:
 				value = None
 
@@ -914,7 +915,7 @@ class Column:
 					{
 						"col": self.column_number,
 						"message": (
-							"The following values do not exist for {}: {}".format(
+							_("The following values do not exist for {}: {}").format(
 								self.df.options, missing_values
 							)
 						),
@@ -945,8 +946,7 @@ class Column:
 						{
 							"col": self.column_number,
 							"message": (
-								"The following values are invalid: {0}. Values must be"
-								" one of {1}".format(invalid_values, valid_values)
+								_("The following values are invalid: {0}. Values must be one of {1}").format(invalid_values, valid_values)
 							),
 						}
 					)

@@ -12,7 +12,7 @@ export default class GridRow {
 		}
 		this.columns = {};
 		this.columns_list = [];
-		this.row_check_html = '<input type="checkbox" class="grid-row-check float-left">';
+		this.row_check_html = '<input type="checkbox" class="grid-row-check pull-left">';
 		this.make();
 	}
 	make() {
@@ -196,9 +196,9 @@ export default class GridRow {
 			// REDESIGN-TODO: Make translation contextual, this No is Number
 			var txt = (this.doc ? this.doc.idx : __("No."));
 			this.row_index = $(
-				`<div class="row-index sortable-handle col col-xs-1 flex align-items-center">
+				`<div class="row-index sortable-handle col col-xs-1">
 					${this.row_check_html}
-				<span class="hidden-xs ml-1">${txt}</span></div>`)
+				<span class="hidden-xs">${txt}</span></div>`)
 				.appendTo(this.row)
 				.on('click', function(e) {
 					if(!$(e.target).hasClass('grid-row-check')) {
@@ -234,7 +234,7 @@ export default class GridRow {
 				this.open_form_button = $(`
 					<div class="btn-open-row">
 						<a>${frappe.utils.icon('edit', 'xs')}</a>
-						<div class="hidden-xs edit-grid-row">${__("Edit")}</div>
+						<div class="hidden-xs edit-grid-row">${ __("Edit") }</div>
 					</div>
 				`)
 					.appendTo($('<div class="col col-xs-1"></div>').appendTo(this.row))
@@ -257,7 +257,6 @@ export default class GridRow {
 		this.grid.visible_columns.forEach((col, ci) => {
 			// to get update df for the row
 			let df = this.docfields.find(field => field.fieldname === col[0].fieldname);
-
 			let colsize = col[1];
 			let txt = this.doc ?
 				frappe.format(this.doc[df.fieldname], df, null, this.doc) :
@@ -290,25 +289,25 @@ export default class GridRow {
 
 	make_column(df, colsize, txt, ci) {
 		let me = this;
-		var add_class = ((["Text", "Small Text"].indexOf(df.fieldtype) !== -1) ?
+		var add_class = ((["Text", "Small Text"].indexOf(df.fieldtype)!==-1) ?
 			" grid-overflow-no-ellipsis" : "");
-		add_class += (["Int", "Currency", "Float", "Percent"].indexOf(df.fieldtype) !== -1) ?
-			" text-right" : "";
-		add_class += (["Check"].indexOf(df.fieldtype) !== -1) ?
-			" text-center" : "";
+		add_class += (["Int", "Currency", "Float", "Percent"].indexOf(df.fieldtype)!==-1) ?
+			" text-right": "";
+		add_class += (["Check"].indexOf(df.fieldtype)!==-1) ?
+			" text-center": "";
 
-		var $col = $('<div class="col grid-static-col col-xs-' + colsize + ' ' + add_class + '"></div>')
+		var $col = $('<div class="col grid-static-col col-xs-'+colsize+' '+add_class+'"></div>')
 			.attr("data-fieldname", df.fieldname)
 			.attr("data-fieldtype", df.fieldtype)
 			.data("df", df)
 			.appendTo(this.row)
-			.on('click', function () {
-				if (frappe.ui.form.editable_row === me) {
+			.on('click', function() {
+				if(frappe.ui.form.editable_row===me) {
 					return;
 				}
 				var out = me.toggle_editable_row();
 				var col = this;
-				setTimeout(function () {
+				setTimeout(function() {
 					$(col).find('input[type="Text"]:first').focus();
 				}, 500);
 				return out;
@@ -420,6 +419,7 @@ export default class GridRow {
 				field_on_change_function && field_on_change_function(e);
 				this.refresh_field(field.df.fieldname);
 			};
+
 			field.df.onchange_modified = true;
 		}
 
@@ -601,8 +601,6 @@ export default class GridRow {
 		if (!this.doc) return;
 
 		if (!this.open_row_at_index(this.doc.idx)) {
-			this.grid.grid_rows[row_index + 1].toggle_view(true);
-		} else {
 			this.grid.add_new_row(null, null, true);
 		}
 	}
