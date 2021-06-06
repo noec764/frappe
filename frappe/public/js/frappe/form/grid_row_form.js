@@ -10,7 +10,6 @@ export default class GridRowForm {
 		this.make_form();
 		this.form_area.empty();
 		frappe.utils.scroll_to(0, false, 0, this.wrapper.find('.grid-form-body'));
-
 		this.layout = new frappe.ui.form.Layout({
 			fields: this.row.docfields,
 			body: this.form_area,
@@ -50,8 +49,7 @@ export default class GridRowForm {
 							${frappe.utils.icon('down')}
 						</button>
 						<button class="btn btn-secondary btn-sm pull-right grid-move-row hidden-xs">
-							${ __("Move") }
-						</button>
+							${ __("Move") }</button>
 						<button class="btn btn-secondary btn-sm pull-right grid-duplicate-row hidden-xs">
 							${frappe.utils.icon('duplicate')}
 							${ __("Duplicate") }
@@ -60,8 +58,8 @@ export default class GridRowForm {
 							${ __("Insert Above") }</button>
 						<button class="btn btn-secondary btn-sm pull-right grid-insert-row-below hidden-xs">
 							${ __("Insert Below") }</button>
-						<button class="btn btn-danger btn-xs pull-right grid-delete-row">
-							${frappe.utils.icon('delete', 'sm')}
+						<button class="btn btn-danger btn-sm pull-right grid-delete-row">
+							${frappe.utils.icon('delete')}
 						</button>
 					</span>
 				</div>

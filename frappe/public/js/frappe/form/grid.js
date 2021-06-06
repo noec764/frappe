@@ -50,10 +50,10 @@ export default class Grid {
 	}
 
 	make() {
-
 		let template = `
 			<label class="control-label">${__(this.df.label || '')}</label>
 			<p class="text-muted small grid-description"></p>
+			<div class="grid-custom-buttons grid-field"></div>
 			<div class="form-grid">
 				<div class="grid-heading-row"></div>
 				<div class="grid-body">
@@ -69,7 +69,7 @@ export default class Grid {
 				</div>
 			</div>
 			<div class="small form-clickable-section grid-footer">
-			<div class="flex justify-between">
+				<div class="flex justify-between">
 					<div class="grid-buttons">
 						<button class="btn btn-xs btn-danger grid-remove-rows hidden"
 							style="margin-right: 4px;"
@@ -101,7 +101,8 @@ export default class Grid {
 						</a>
 					</div>
 				</div>
-			</div>`;
+			</div>
+		`;
 
 		this.wrapper = $(template).appendTo(this.parent);
 		$(this.parent).addClass('form-group');
@@ -117,6 +118,7 @@ export default class Grid {
 
 		this.custom_buttons = {};
 		this.grid_buttons = this.wrapper.find('.grid-buttons');
+		this.grid_custom_buttons = this.wrapper.find('.grid-custom-buttons');
 		this.remove_rows_button = this.grid_buttons.find('.grid-remove-rows');
 		this.remove_all_rows_button = this.grid_buttons.find('.grid-remove-all-rows');
 
@@ -126,7 +128,6 @@ export default class Grid {
 			this.df.on_setup(this);
 		}
 	}
-
 	set_grid_description() {
 		let description_wrapper = $(this.parent).find('.grid-description');
 		if (this.df.description) {
@@ -135,7 +136,6 @@ export default class Grid {
 			description_wrapper.hide();
 		}
 	}
-
 	setup_grid_pagination() {
 		this.grid_pagination = new GridPagination({
 			grid: this,
@@ -157,7 +157,7 @@ export default class Grid {
 				let result_length = this.grid_pagination.get_result_length();
 				let page_index = this.grid_pagination.page_index;
 				let page_length = this.grid_pagination.page_length;
-				for (var ri = (page_index - 1 ) * page_length; ri < result_length; ri++) {
+				for (var ri = (page_index - 1) * page_length; ri < result_length; ri++) {
 					this.grid_rows[ri].doc.__checked = checked ? 1 : 0;
 				}
 			} else {
@@ -196,7 +196,7 @@ export default class Grid {
 		tasks.push(() => {
 			if (dirty) {
 				this.refresh();
-				this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
+				this.frm && this.frm.script_manager.trigger(this.df.fieldname + "_delete", this.doctype);
 			}
 		});
 
@@ -272,7 +272,7 @@ export default class Grid {
 	}
 
 	refresh(force) {
-		if (this.frm&&this.frm.setting_dependency) return;
+		if (this.frm && this.frm.setting_dependency) return;
 
 		this.data = this.get_data();
 
@@ -280,6 +280,7 @@ export default class Grid {
 		let $rows = $(this.parent).find('.rows');
 
 		this.setup_fields();
+
 		if (this.frm) {
 			this.display_status = frappe.perm.get_field_display_status(this.df, this.frm.doc,
 				this.perm);
@@ -303,7 +304,6 @@ export default class Grid {
 
 		this.truncate_rows();
 		this.grid_rows_by_docname = {};
-
 		this.grid_pagination.update_page_numbers();
 		this.render_result_rows($rows, false);
 		this.grid_pagination.check_page_number();
@@ -344,14 +344,16 @@ export default class Grid {
 		if (!this.grid_rows) {
 			return;
 		}
-
-		for (var ri = (page_index - 1 ) * page_length; ri < result_length; ri++) {
+		for (var ri = (page_index - 1) * page_length; ri < result_length; ri++) {
 			var d = this.data[ri];
 			if (!d) {
 				return;
 			}
 			if (d.idx === undefined) {
 				d.idx = ri + 1;
+			}
+			if (d.name === undefined) {
+				d.name = "row " + d.idx;
 			}
 			if (this.grid_rows[ri] && !append_row) {
 				var grid_row = this.grid_rows[ri];
@@ -649,7 +651,7 @@ export default class Grid {
 
 		$rows.find(".grid-row").each((i, item) => {
 			let $item = $(item);
-			let index = (this.grid_pagination.page_index - 1) * this.grid_pagination.page_length+i;
+			let index = (this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
 			let d = locals[this.doctype][$item.attr('data-name')];
 			d.idx = index + 1;
 			$item.attr('data-idx', d.idx);
@@ -793,8 +795,8 @@ export default class Grid {
 	}
 
 	setup_allow_bulk_edit() {
-		const me = this;
-		if (this.display_status !== 'Read' && this.frm && this.frm.get_docfield(this.df.fieldname).allow_bulk_edit) {
+		let me = this;
+		if (this.frm && this.frm.get_docfield(this.df.fieldname).allow_bulk_edit) {
 			// download
 			this.setup_download();
 
@@ -816,7 +818,6 @@ export default class Grid {
 						// row #2 contains fieldnames;
 						var fieldnames = data[2];
 						me.frm.clear_table(me.df.fieldname);
-
 						$.each(data, (i, row) => {
 							if (i > 6) {
 								var blank_row = true;
@@ -897,18 +898,19 @@ export default class Grid {
 		});
 	}
 
-	add_custom_button(label, click) {
+	add_custom_button(label, click, position='bottom') {
 		// add / unhide a custom button
-		var btn = this.custom_buttons[label];
-		if (!btn) {
-			btn = $('<button class="btn btn-secondary btn-xs btn-custom">' + label + '</button>')
-				.css('margin-right', '4px')
-				.prependTo(this.grid_buttons)
+		const $wrapper = position === 'top' ? this.grid_custom_buttons : this.grid_buttons;
+		let $btn = this.custom_buttons[label];
+		if (!$btn) {
+			$btn = $(`<button class="btn btn-default btn-xs btn-custom">${__(label)}</button>`)
+				.prependTo($wrapper)
 				.on('click', click);
-			this.custom_buttons[label] = btn;
+			this.custom_buttons[label] = $btn;
 		} else {
-			btn.removeClass('hidden');
+			$btn.removeClass('hidden');
 		}
+		return $btn;
 	}
 
 	clear_custom_buttons() {
