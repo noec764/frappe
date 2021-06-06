@@ -1,6 +1,8 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
+
+
 frappe.ui.form.save = function (frm, action, callback, btn) {
 	$(btn).prop("disabled", true);
 
@@ -156,7 +158,6 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 						[__(frappe.meta.docfield_map[doc.parenttype][doc.parentfield].label).bold(), doc.idx]);
 				} else {
 					var message = __('Mandatory fields required in {0}', [__(doc.doctype)]);
-
 				}
 				message = message + '<br><br><ul><li>' + error_fields.join('</li><li>') + "</ul>";
 				frappe.msgprint({
@@ -191,6 +192,7 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 			throw "saving";
 		}
 
+		// ensure we remove new docs routes ONLY
 		if ( frm.is_new() ) {
 			frappe.ui.form.remove_old_form_route();
 		}
@@ -214,7 +216,10 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 					var doc = r.docs && r.docs[0];
 					if (doc) {
 						frappe.ui.form.update_calling_link(doc);
-						frappe.ui.form.update_route_after_rename(doc);
+						if (!frappe.ui.form.dont_update_route_after_rename) {
+							frappe.ui.form.update_route_after_rename(doc);
+						}
+						frappe.ui.form.dont_update_route_after_rename = false;
 					}
 				}
 			}
@@ -230,12 +235,24 @@ frappe.ui.form.save = function (frm, action, callback, btn) {
 
 frappe.ui.form.remove_old_form_route = () => {
 	let current_route = frappe.get_route().join("/");
-	frappe.route_history = frappe.route_history.filter((route) => route.join("/") !== current_route);
+	frappe.route_history = frappe.route_history
+		.filter((route) => route.join("/") !== current_route);
 }
 
 frappe.ui.form.update_calling_link = (newdoc) => {
-	if (frappe._from_link && newdoc.doctype === frappe._from_link.df.options) {
-		var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docname);
+	if (!frappe._from_link) return;
+	var doc = frappe.get_doc(frappe._from_link.doctype, frappe._from_link.docname);
+
+	let is_valid_doctype = () => {
+		if (frappe._from_link.df.fieldtype==='Link') {
+			return newdoc.doctype === frappe._from_link.df.options;
+		} else {
+			// dynamic link, type is dynamic
+			return newdoc.doctype === doc[frappe._from_link.df.options];
+		}
+	};
+
+	if (is_valid_doctype()) {
 		// set value
 		if (doc && doc.parentfield) {
 			//update values for child table
@@ -269,4 +286,3 @@ frappe.ui.form.update_route_after_rename = (doc) => {
 		frappe.set_route("Form", doc.doctype, doc.name);
 	}
 }
-

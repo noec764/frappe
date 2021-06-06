@@ -99,7 +99,7 @@ class MariaDBDatabase(Database):
 		return db_size[0].get('database_size')
 
 	@staticmethod
-	def escape(s, percent=True):
+	def escape(s, percent=True, full=True):
 		"""Excape quotes and percent in given string."""
 		# pymysql expects unicode argument to escape_string with Python 3
 		s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace("`", "\\`")
@@ -112,7 +112,7 @@ class MariaDBDatabase(Database):
 		if percent:
 			s = s.replace("%", "%%")
 
-		return "'" + s + "'"
+		return "'" + s + "'" if full else s
 
 	# column type
 	@staticmethod
