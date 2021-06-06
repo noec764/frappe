@@ -1146,7 +1146,7 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 	from frappe.contacts.doctype.contact.contact import get_contact_name
 	if user.name in ["Administrator", "Guest"]: return
 
-	contact_name = get_contact_name(user.email) or frappe.db.get_value("User", dict(user=user.name))
+	contact_name = get_contact_name(user.email) or frappe.db.get_value("Contact", dict(user=user.name))
 	if not contact_name:
 		contact = frappe.get_doc({
 			"doctype": "Contact",
