@@ -52,7 +52,7 @@ unittests:
 build_dodock:
   stage: Build Dodock
   script:
-    - "curl -X POST -F token=$BUILD_TOKEN -F ref=master -F variables[BUILD_DODOCK]=true -F variables[BUILD_DOKOS]=true https://gitlab.com/api/v4/projects/13223898/trigger/pipeline"
+    - "curl -X POST -F token=$BUILD_TOKEN -F ref=develop -F variables[BUILD_DODOCK]=true -F variables[BUILD_DOKOS]=true -F variables[GIT_BRANCH]=$CI_COMMIT_REF_NAME https://gitlab.com/api/v4/projects/13223898/trigger/pipeline"
   only:
     refs:
       - master
