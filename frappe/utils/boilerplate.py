@@ -73,7 +73,7 @@ def make_boilerplate(dest, app_name):
 		f.write(frappe.as_unicode(setup_template.format(**hooks)))
 
 	with open(os.path.join(dest, hooks.app_name, "requirements.txt"), "w") as f:
-		f.write("frappe")
+		f.write("# frappe -- https://gitlab.com/dokos/dodock is installed via 'bench init'")
 
 	with open(os.path.join(dest, hooks.app_name, "README.md"), "w") as f:
 		f.write(frappe.as_unicode("## {0}\n\n{1}\n\n#### License\n\n{2}".format(hooks.app_title,

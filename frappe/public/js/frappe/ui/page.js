@@ -410,6 +410,9 @@ frappe.ui.Page = class Page {
 			parent.parent().removeClass("hide");
 		}
 
+		let $link = this.is_in_group_button_dropdown(parent, 'li > a.grey-link', label);
+		if ($link) return $link;
+
 		let $li;
 		let $icon = ``;
 
@@ -441,9 +444,8 @@ frappe.ui.Page = class Page {
 				</li>
 			`);
 		}
-		var $link = $li.find("a").on("click", click);
 
-		if (this.is_in_group_button_dropdown(parent, 'li > a.grey-link', label)) return;
+		$link = $li.find("a").on("click", click);
 
 		if (standard) {
 			$li.appendTo(parent);
@@ -509,8 +511,8 @@ frappe.ui.Page = class Page {
 				let item = $(this).html();
 				return $(item).attr('data-label') === label;
 			});
-		return result.length > 0;
-	}
+		return result.length > 0 && result;
+	},
 
 	clear_btn_group(parent) {
 		parent.empty();
