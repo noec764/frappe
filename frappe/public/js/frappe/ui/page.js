@@ -511,7 +511,7 @@ frappe.ui.Page = Class.extend({
 				let item = $(this).html();
 				return $(item).attr('data-label') === label;
 			});
-			return result.length > 0 && result;
+		return result.length > 0 && result;
 	},
 
 	clear_btn_group: function(parent) {
