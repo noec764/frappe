@@ -568,6 +568,9 @@ export default class GridRow {
 			.find('.grid-insert-row-below, .grid-insert-row, .grid-duplicate-row, .grid-append-row')
 			.toggle(!cannot_add_rows);
 
+		this.wrapper.find('.grid-delete-row')
+			.toggle(!(this.grid.df && this.grid.df.cannot_delete_rows));
+
 		frappe.dom.freeze("", "dark");
 		if (cur_frm) cur_frm.cur_grid = this;
 		if (frappe.web_form) frappe.web_form.cur_grid = this;
