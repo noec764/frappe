@@ -12,7 +12,7 @@ import functools
 
 import email.utils
 
-from frappe import _, are_emails_muted
+from frappe import _, are_emails_muted, safe_encode
 from frappe.model.document import Document
 from frappe.utils import (validate_email_address, cint, cstr, get_datetime,
 	DATE_FORMAT, strip, comma_or, sanitize_html, add_days, parse_addr)
@@ -622,6 +622,7 @@ class EmailAccount(Document):
 		if email_server.imap:
 			_, folders = email_server.imap.list()
 			sent_folders = [x for x in folders if "sent" in str(x).lower()]
+			message = safe_encode(message)
 			if sent_folders:
 				sent_folder = str([x for x in sent_folders[0].decode().split('"') if x][-1])
 				email_server.imap.append(f'"{sent_folder}"', "\\Seen", imaplib.Time2Internaldate(time.time()), message)
