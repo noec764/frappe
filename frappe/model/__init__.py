@@ -180,7 +180,7 @@ def delete_fields(args_dict, delete=0):
 		frappe.db.sql("""
 			DELETE FROM `tabDocField`
 			WHERE parent='%s' AND fieldname IN (%s)
-		""" % (dt, ", ".join(["'{}'".format(f) for f in fields])))
+		""" % (dt, ", ".join("'{}'".format(f) for f in fields)))
 
 		# Delete the data/column only if delete is specified
 		if not delete:
@@ -190,7 +190,7 @@ def delete_fields(args_dict, delete=0):
 			frappe.db.sql("""
 				DELETE FROM `tabSingles`
 				WHERE doctype='%s' AND field IN (%s)
-			""" % (dt, ", ".join(["'{}'".format(f) for f in fields])))
+			""" % (dt, ", ".join("'{}'".format(f) for f in fields)))
 		else:
 			existing_fields = frappe.db.multisql({
 					"mariadb": "DESC `tab%s`" % dt,
@@ -213,7 +213,7 @@ def delete_fields(args_dict, delete=0):
 				frappe.db.commit()
 
 			query = "ALTER TABLE `tab%s` " % dt + \
-				", ".join(["DROP COLUMN `%s`" % f for f in fields_need_to_delete])
+				", ".join("DROP COLUMN `%s`" % f for f in fields_need_to_delete)
 			frappe.db.sql(query)
 
 		if frappe.conf.db_type == 'postgres':

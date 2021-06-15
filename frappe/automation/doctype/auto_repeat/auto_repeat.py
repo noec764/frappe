@@ -244,7 +244,7 @@ class AutoRepeat(Document):
 			res = get_contacts_linking_to(self.reference_doctype, self.reference_document, fields=['email_id'])
 			res += get_contacts_linked_from(self.reference_doctype, self.reference_document, fields=['email_id'])
 
-			email_ids = list(set([d.email_id for d in res]))
+			email_ids = {d.email_id for d in res}
 			if not email_ids:
 				frappe.msgprint(_('No contacts linked to document'), alert=True)
 			else:
