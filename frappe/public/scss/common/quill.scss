@@ -184,6 +184,7 @@
 }
 
 .ql-editor.read-mode {
+	height: unset;
 	max-height: 100%;
 	padding: 0;
 	.mention {
