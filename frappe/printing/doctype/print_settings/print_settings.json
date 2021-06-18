@@ -133,7 +133,7 @@
    "label": "Print Style"
   },
   {
-   "default": "Modern",
+   "default": "TwentyTwenty",
    "fieldname": "print_style",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -167,7 +167,7 @@
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
- "modified": "2020-10-21 23:42:09.471022",
+ "modified": "2021-05-21 23:42:09.471022",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Print Settings",

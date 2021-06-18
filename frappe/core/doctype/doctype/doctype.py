@@ -9,7 +9,6 @@ from frappe.cache_manager import clear_user_cache, clear_controller_cache
 # imports - module imports
 import frappe
 from frappe import _
-import frappe.website.render
 from frappe.utils import now, cint
 from frappe.model import no_value_fields, default_fields, data_fieldtypes, table_fields, data_field_options
 from frappe.model.document import Document
@@ -23,6 +22,7 @@ from frappe.model.docfield import supports_translation
 from frappe.modules.import_file import get_file_path
 from frappe.model.meta import Meta
 from frappe.desk.utils import validate_route_conflict
+from frappe.website.utils import clear_cache
 
 
 class InvalidFieldNameError(frappe.ValidationError): pass
@@ -254,7 +254,7 @@ class DocType(Document):
 				frappe.throw(_('Field "route" is mandatory for Web Views'), title='Missing Field')
 
 			# clear website cache
-			frappe.website.render.clear_cache()
+			clear_cache()
 
 
 	def change_modified_of_parent(self):
@@ -565,11 +565,6 @@ class DocType(Document):
 		from frappe.modules.export_file import export_to_files
 		export_to_files(record_list=[['DocType', self.name]], create_init=True)
 
-
-	def import_doc(self):
-		"""Import from standard folder `[module]/doctype/[name]/[name].json`."""
-		from frappe.modules.import_module import import_from_files
-		import_from_files(record_list=[[self.module, 'doctype', self.name]])
 
 	def make_controller_template(self):
 		"""Make boilerplate controller template."""

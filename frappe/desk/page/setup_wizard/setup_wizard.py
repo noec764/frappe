@@ -245,7 +245,7 @@ def disable_future_access():
 def load_messages(language):
 	"""Load translation messages for given language from all `setup_wizard_requires`
 	javascript files"""
-	from frappe.website.render import clear_cache as clear_website_cache
+	from frappe.website.utils import clear_cache as clear_website_cache
 	frappe.clear_cache()
 	clear_website_cache()
 	set_default_language(get_language_code(language))
