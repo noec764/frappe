@@ -9,9 +9,7 @@ frappe.breadcrumbs = {
 		"User": "Users",
 		"Dashboard": "Customization",
 		"Dashboard Chart": "Customization",
-		"Dashboard Chart Source": "Customization",
-		"Dashboard Card": "Customization",
-		"Dashboard Card Source": "Customization"
+		"Dashboard Chart Source": "Customization"
 	},
 
 	module_map: {

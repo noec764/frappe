@@ -196,7 +196,6 @@ frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
 frappe.patches.dokos.v1_2.add_rrule_to_events
-frappe.patches.dokos.v1_3.no_timespan_to_all_time
 frappe.patches.dokos.v2_0.rename_frappe_social_provider
 frappe.patches.dokos.v2_0.add_submitted_field
 frappe.patches.dokos.v2_0.correct_desk_shortcuts_color

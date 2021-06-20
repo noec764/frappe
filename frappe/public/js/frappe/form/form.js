@@ -1609,7 +1609,9 @@ frappe.ui.form.Form = class FrappeForm {
 	}
 
 	show_tour(on_finish) {
-		if (!Array.isArray(frappe.tour[this.doctype])) {
+		const tour_info = frappe.tour[this.doctype];
+
+		if (!Array.isArray(tour_info)) {
 			return;
 		}
 
@@ -1623,28 +1625,12 @@ frappe.ui.form.Form = class FrappeForm {
 			prevBtnText: __('Previous'),
 			doneBtnText: __('Done'),
 			closeBtnText: __('Close'),
-			opacity: 0.25,
-			onNext: () => {
-				if (!driver.hasNextStep()) {
-					on_finish && on_finish();
-				} else if (driver.steps[driver.currentStep + 1].node.classList.contains("hide-control")) {
-					driver.moveNext();
-				}
-			},
-			onPrevious: () => {
-				if (driver.currentStep - 1 >= 0) {
-					if (driver.steps[driver.currentStep - 1].node.classList.contains("hide-control")) {
-						driver.movePrevious();
-					}
-				} else {
-					driver.reset();
-				}
-			}
+			opacity: 0.25
 		});
 
 		this.layout.sections.forEach(section => section.collapse(false));
 
-		let steps = frappe.tour[this.doctype].map((step, index) => {
+		let steps = tour_info.map(step => {
 			let field = this.get_docfield(step.fieldname);
 			if (field) {
 				const position = this.get_field_position(field, index);
@@ -1655,6 +1641,28 @@ frappe.ui.form.Form = class FrappeForm {
 						title: step.title || field.label,
 						description: step.description,
 						position: step.position || position
+					},
+					onNext: () => {
+						const next_condition_satisfied = this.layout.evaluate_depends_on_value(step.next_step_condition || true);
+
+						if (!next_condition_satisfied) {
+							driver.preventMove();
+						}
+
+						if (!driver.hasNextStep()) {
+							on_finish && on_finish();
+						} else if (driver.steps[driver.currentStep + 1].node.classList.contains("hide-control")) {
+							driver.moveNext();
+						}
+					},
+					onPrevious: () => {
+						if (driver.currentStep - 1 >= 0) {
+							if (driver.steps[driver.currentStep - 1].node.classList.contains("hide-control")) {
+								driver.movePrevious();
+							}
+						} else {
+							driver.reset();
+						}
 					}
 				};
 			}
