@@ -189,6 +189,7 @@ class FormTimeline extends BaseTimeline {
 		}
 		doc.owner = doc.sender;
 		doc.user_full_name = doc.sender_full_name;
+		doc.content = frappe.dom.remove_script_and_style(doc.content);
 		let communication_content =  $(frappe.render_template('timeline_message_box', { doc }));
 		this.setup_reply(communication_content, doc);
 		return communication_content;
@@ -229,6 +230,7 @@ class FormTimeline extends BaseTimeline {
 	}
 
 	get_comment_timeline_content(doc) {
+		doc.content = frappe.dom.remove_script_and_style(doc.content);
 		const comment_content = $(frappe.render_template('timeline_message_box', { doc }));
 		this.setup_comment_actions(comment_content, doc);
 		return comment_content;
