@@ -423,6 +423,13 @@
    "reqd": 1
   },
   {
+   "default": "3",
+   "description": "Hourly rate limit for generating password reset links",
+   "fieldname": "password_reset_limit",
+   "fieldtype": "Int",
+   "label": "Password Reset Link Generation Limit"
+  },
+  {
    "default": "1",
    "fieldname": "logout_on_password_reset",
    "fieldtype": "Check",
@@ -484,7 +491,7 @@
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2021-03-25 17:54:32.668876",
+ "modified": "2021-04-25 17:54:32.668876",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
