@@ -59,7 +59,7 @@ class Contact(Document):
 		return None
 
 	def has_link(self, doctype, name):
-		for link in self.links:
+		for link in self.get("links"):
 			if link.link_doctype==doctype and link.link_name== name:
 				return True
 
