@@ -12,6 +12,7 @@ import './script_manager';
 import './script_helpers';
 import './sidebar/form_sidebar';
 import './footer/footer';
+import './form_tour';
 
 frappe.ui.form.Controller = class FormController {
 	constructor(opts) {
@@ -152,6 +153,10 @@ frappe.ui.form.Form = class FrappeForm {
 		this.dashboard = new frappe.ui.form.Dashboard({
 			frm: this,
 			parent: $('<div class="form-dashboard">').insertAfter(this.layout.wrapper.find('.form-message'))
+		});
+
+		this.tour = new frappe.ui.form.FormTour({
+			frm: this
 		});
 
 		// workflow state
@@ -1606,85 +1611,6 @@ frappe.ui.form.Form = class FrappeForm {
 			$el.removeClass('has-error');
 			$el.find('input, select, textarea').focus();
 		}, 1000);
-	}
-
-	show_tour(on_finish) {
-		const tour_info = frappe.tour[this.doctype];
-
-		if (!Array.isArray(tour_info)) {
-			return;
-		}
-
-		const driver = new frappe.Driver({
-			className: 'frappe-driver',
-			allowClose: false,
-			padding: 10,
-			overlayClickNext: true,
-			keyboardControl: true,
-			nextBtnText: __('Next'),
-			prevBtnText: __('Previous'),
-			doneBtnText: __('Done'),
-			closeBtnText: __('Close'),
-			opacity: 0.25
-		});
-
-		this.layout.sections.forEach(section => section.collapse(false));
-
-		let steps = tour_info.map(step => {
-			let field = this.get_docfield(step.fieldname);
-			if (field) {
-				const position = this.get_field_position(field, index);
-				const selected_elem = this.page.main.find(`.frappe-control[data-fieldname='${step.fieldname}']`)[0];
-				return {
-					element: selected_elem,
-					popover: {
-						title: step.title || field.label,
-						description: step.description,
-						position: step.position || position
-					},
-					onNext: () => {
-						const next_condition_satisfied = this.layout.evaluate_depends_on_value(step.next_step_condition || true);
-
-						if (!next_condition_satisfied) {
-							driver.preventMove();
-						}
-
-						if (!driver.hasNextStep()) {
-							on_finish && on_finish();
-						} else if (driver.steps[driver.currentStep + 1].node.classList.contains("hide-control")) {
-							driver.moveNext();
-						}
-					},
-					onPrevious: () => {
-						if (driver.currentStep - 1 >= 0) {
-							if (driver.steps[driver.currentStep - 1].node.classList.contains("hide-control")) {
-								driver.movePrevious();
-							}
-						} else {
-							driver.reset();
-						}
-					}
-				};
-			}
-		}).filter(f => f)
-
-		if (!steps.length) {
-			return
-		}
-
-		driver.defineSteps(steps);
-		frappe.router.on('change', () => driver.reset());
-		driver.start();
-	}
-
-	get_field_position(field, index) {
-		if (["Date", "Datetime", "Time"].includes(field.fieldtype)) {
-			return 'bottom'
-		} else if ([0, 1].includes(index)) {
-			return 'bottom'
-		} else {
-			return 'top'
-		}
 	}
 
 	setup_docinfo_change_listener() {
