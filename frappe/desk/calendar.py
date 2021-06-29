@@ -60,8 +60,7 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 				"color": d.fieldname
 			})
 
-	if filters:
-		filters = json.loads(filters or '')
+	filters = json.loads(filters) if filters else []
 
 	if not fields:
 		fields = [field_map.start, field_map.end, field_map.title, 'name']
@@ -83,6 +82,7 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	if doc_meta.has_field("repeat_this_event"):
 		filters.append([doctype, 'repeat_this_event', '!=', 1])
 
+	fields = list({field for field in fields if field})
 	events = frappe.get_list(doctype, fields=fields, filters=filters)
 
 	if doc_meta.has_field("repeat_this_event") and doc_meta.has_field("repeat_till"):

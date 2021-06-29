@@ -229,7 +229,7 @@ frappe.views.Calendar = class Calendar {
 	}
 
 	field_map() {
-		return {
+		return this.field_map || {
 			"id": "name",
 			"start": "start",
 			"end": "end",
