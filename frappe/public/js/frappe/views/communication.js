@@ -136,7 +136,7 @@ frappe.views.CommunicationComposer = class {
 			);
 		});
 
-		if (email_accounts.length > 1) {
+		if (email_accounts.length) {
 			fields.unshift({
 				label: __("From"),
 				fieldtype: "Select",
