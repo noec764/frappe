@@ -12,7 +12,7 @@ frappe.ui.form.Attachments = class Attachments {
 		this.parent.find(".add-attachment-btn").click(function() {
 			me.new_attachment();
 		});
-		this.add_attachment_wrapper = this.parent.find(".add_attachment").parent();
+		this.add_attachment_wrapper = this.parent.find(".add-attachment-btn");
 		this.attachments_label = this.parent.find(".attachments-label");
 	}
 
@@ -42,7 +42,7 @@ frappe.ui.form.Attachments = class Attachments {
 		this.parent.find(".attachment-row").remove();
 
 		var max_reached = this.max_reached();
-		this.add_attachment_wrapper.toggleClass("hide", !max_reached);
+		this.add_attachment_wrapper.toggle(!max_reached);
 
 		// add attachment objects
 		var attachments = this.get_attachments();
