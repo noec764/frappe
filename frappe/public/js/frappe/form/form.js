@@ -817,7 +817,7 @@ frappe.ui.form.Form = class FrappeForm {
 			'docname': this.doc.name
 		}).then(is_amended => {
 			if (is_amended) {
-				frappe.throw(__('This document is already amended, you cannot ammend it again'));
+				frappe.throw(__('This document is already amended, you cannot amend it again'));
 			}
 			this.validate_form_action("Amend");
 			var me = this;
