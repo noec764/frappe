@@ -163,14 +163,14 @@ class TestDB(unittest.TestCase):
 		# Testing read for distinct and sql functions
 		self.assertEqual(list(
 			frappe.get_all("ToDo",
-				fields=[f"`{random_field}`"],
+				fields=[f"`{random_field}` as total"],
 				distinct=True,
 				limit=1,
 			)[0]
 		)[0], "total")
 		self.assertEqual(list(
 			frappe.get_all("ToDo",
-			fields=["`{0}`".format(random_field)],
+			fields=[f"`{random_field}`"],
 			distinct=True,
 			limit=1,
 			)[0]
