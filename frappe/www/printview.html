@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ lang }}" dir="{{ layout_direction }}">
 <head>
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex"/>
@@ -7,9 +7,6 @@
 	<title>{{ title }}</title>
 	<meta name="generator" content="frappe">
 	{{ include_style('print.bundle.css') }}
-	{%- if has_rtl -%}
-		{{ include_style('frappe-rtl.bundle.css') }}
-	{%- endif -%}
 	<style>
 	{{ css }}
 	</style>
