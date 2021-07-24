@@ -6,8 +6,9 @@ import time
 import unittest
 
 import frappe
-from frappe.auth import LoginAttemptTracker
+from frappe.auth import HTTPRequest, LoginAttemptTracker
 from frappe.frappeclient import FrappeClient, AuthError
+from frappe.utils import set_request
 
 @unittest.skip("Skipped in CI")
 class TestAuth(unittest.TestCase):
