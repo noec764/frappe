@@ -134,9 +134,12 @@ def return_link_expired_page(doc, doc_workflow_state):
 
 def clear_old_workflow_actions(doc, user=None):
 	user = user if user else frappe.session.user
-	frappe.db.sql("""DELETE FROM `tabWorkflow Action`
-		WHERE `reference_doctype`=%s AND `reference_name`=%s AND `user`!=%s AND `status`='Open'""",
-		(doc.get('doctype'), doc.get('name'), user))
+	frappe.db.delete("Workflow Action", {
+		"reference_doctype": doc.get("doctype"),
+		"reference_name": doc.get("name"),
+		"user": ("!=", user),
+		"status": "Open"
+	})
 
 def update_completed_workflow_actions(doc, user=None):
 	user = user if user else frappe.session.user
@@ -255,9 +258,10 @@ def clear_workflow_actions(doctype, name):
 	if not (doctype and name):
 		return
 
-	frappe.db.sql('''delete from `tabWorkflow Action`
-		where reference_doctype=%s and reference_name=%s''',
-		(doctype, name))
+	frappe.db.delete("Workflow Action", {
+		"reference_doctype": doctype,
+		"reference_name": name
+	})
 
 def get_doc_workflow_state(doc):
 	workflow_name = get_workflow_name(doc.get('doctype'))

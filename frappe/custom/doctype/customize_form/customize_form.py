@@ -1,6 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
-
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# MIT License. See LICENSE
 
 """
 	Customize Form is a Single DocType used to mask the Property Setter
@@ -21,8 +20,8 @@ from frappe.core.doctype.doctype.doctype import validate_series
 
 class CustomizeForm(Document):
 	def on_update(self):
-		frappe.db.sql("delete from tabSingles where doctype='Customize Form'")
-		frappe.db.sql("delete from `tabCustomize Form Field`")
+		frappe.db.delete("Singles", {"doctype": "Customize Form"})
+		frappe.db.delete("Customize Form Field")
 
 	@frappe.whitelist()
 	def fetch_to_customize(self):

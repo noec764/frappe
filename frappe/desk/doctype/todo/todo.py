@@ -40,9 +40,7 @@ class ToDo(Document):
 		self.update_in_reference()
 
 	def on_trash(self):
-		# unlink todo from linked comments
-		frappe.db.sql("""delete from `tabCommunication Link`
-			where link_doctype=%(doctype)s and link_name=%(name)s""", {"doctype": self.doctype, "name": self.name})
+		self.delete_communication_links()
 
 		self.update_in_reference()
 
@@ -51,6 +49,13 @@ class ToDo(Document):
 			return
 
 		frappe.get_doc(self.reference_type, self.reference_name).add_comment(comment_type, text)
+
+	def delete_communication_links(self):
+		# unlink todo from linked comments
+		return frappe.db.delete("Communication Link", {
+			"link_doctype": self.doctype,
+			"link_name": self.name
+		})
 
 	def update_in_reference(self):
 		if not (self.reference_type and self.reference_name):

@@ -124,7 +124,10 @@ def delete_tags_for_document(doc):
 	if not frappe.db.table_exists("Tag Link"):
 		return
 
-	frappe.db.sql("""DELETE FROM `tabTag Link` WHERE `document_type`=%s AND `document_name`=%s""", (doc.doctype, doc.name))
+	frappe.db.delete("Tag Link", {
+		"document_type": doc.doctype,
+		"document_name": doc.name
+	})
 
 def update_tags(doc, tags):
 	"""
@@ -162,7 +165,11 @@ def get_deleted_tags(new_tags, existing_tags):
 	return list(set(existing_tags) - set(new_tags))
 
 def delete_tag_for_document(dt, dn, tag):
-	frappe.db.sql("""DELETE FROM `tabTag Link` WHERE `document_type`=%s AND `document_name`=%s AND tag=%s""", (dt, dn, tag))
+	frappe.db.delete("Tag Link", {
+		"document_type": dt,
+		"document_name": dn,
+		"tag": tag
+	})
 
 @frappe.whitelist()
 def get_documents_for_tag(tag):
