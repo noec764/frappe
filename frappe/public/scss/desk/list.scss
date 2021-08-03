@@ -63,7 +63,7 @@
 }
 
 .list-row {
-	padding: 15px;
+	padding: 15px 15px 15px 0px;
 	height: 45px;
 	cursor: pointer;
 	transition: color 0.2s;
@@ -134,6 +134,10 @@
 			margin-left: 5px;
 		}
 	}
+
+	.select-like {
+		padding: 15px 0px 15px 15px;
+	}
 }
 
 .list-row-head {
@@ -200,6 +204,10 @@ $level-margin-right: 8px;
 
 input.list-check-all, input.list-row-checkbox {
 	margin-top: 0px;
+}
+
+.render-list-checkbox {
+	margin-left: 15px;
 }
 
 .filterable {
