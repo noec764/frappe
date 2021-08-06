@@ -54,7 +54,7 @@ context('Depends On', () => {
 						"fieldtype": "Table",
 						'read_only_depends_on': "eval:doc.test_field=='Some Other Value'",
 						'options': "Child Test Depends On"
-					}
+					},
 				]
 			});
 		});

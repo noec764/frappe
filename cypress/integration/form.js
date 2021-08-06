@@ -18,6 +18,7 @@ context('Form', () => {
 		cy.get('.primary-action').click();
 		cy.wait('@form_save').its('response.statusCode').should('eq', 200);
 		cy.visit('/app/todo');
+		cy.wait(300);
 		cy.get('.title-text').should('be.visible').and('contain', 'To Do');
 		cy.get('.list-row').should('contain', 'this is a test todo');
 	});
@@ -56,6 +57,7 @@ context('Form', () => {
 
 		cy.get('@email_input1').type(website_input, { waitForAnimations: false });
 		cy.fill_field('company_name', 'Test Company');
+
 		cy.get('@row2').click();
 		cy.get('@row2').find('input.input-with-feedback.form-control').as('email_input2');
 		cy.get('@email_input2').type(valid_email, { waitForAnimations: false });
