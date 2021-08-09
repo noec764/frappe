@@ -773,22 +773,22 @@ frappe.ui.form.Form = class FrappeForm {
 		const me = this;
 		const cancel_doc = () => {
 			frappe.validated = true;
-			me.script_manager.trigger("before_cancel").then(() => {
+			this.script_manager.trigger("before_cancel").then(() => {
 				if (!frappe.validated) {
-					return me.handle_save_fail(btn, on_error);
+					return this.handle_save_fail(btn, on_error);
 				}
 
 				var after_cancel = function(r) {
 					if (r.exc) {
-						me.handle_save_fail(btn, on_error);
+						this.handle_save_fail(btn, on_error);
 					} else {
 						frappe.utils.play_sound("cancel");
-						me.refresh();
+						this.refresh();
 						callback && callback();
-						me.script_manager.trigger("after_cancel");
+						this.script_manager.trigger("after_cancel");
 					}
 				};
-				frappe.ui.form.save(me, "cancel", after_cancel, btn);
+				frappe.ui.form.save(this, "cancel", after_cancel, btn);
 			});
 		}
 
