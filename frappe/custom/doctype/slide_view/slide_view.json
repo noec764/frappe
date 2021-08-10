@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "beta": 1,
+ "creation": "2021-08-02 11:17:35.915015",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "route",
+  "naming_series",
+  "column_break_4",
+  "allow_back",
+  "allow_any",
+  "done_state",
+  "section_doc",
+  "reference_doctype",
+  "column_break_10",
+  "can_create_doc",
+  "can_edit_doc",
+  "slides_section",
+  "slides"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference DocType",
+   "options": "DocType"
+  },
+  {
+   "fetch_from": "title",
+   "fetch_if_empty": 1,
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Route",
+   "unique": 1
+  },
+  {
+   "default": "SLIDES-",
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "SLIDES-"
+  },
+  {
+   "default": "1",
+   "description": "Permet d'indiquer quand les slides ont \u00e9t\u00e9 remplies. ???",
+   "fieldname": "done_state",
+   "fieldtype": "Check",
+   "label": "Indiquer les diapositives termin\u00e9es"
+  },
+  {
+   "default": "1",
+   "depends_on": "reference_doctype",
+   "fieldname": "can_edit_doc",
+   "fieldtype": "Check",
+   "label": "Can edit document"
+  },
+  {
+   "default": "1",
+   "depends_on": "reference_doctype",
+   "fieldname": "can_create_doc",
+   "fieldtype": "Check",
+   "label": "Can create document"
+  },
+  {
+   "fieldname": "section_doc",
+   "fieldtype": "Section Break",
+   "label": "Document settings"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "slides",
+   "fieldtype": "Data",
+   "label": "Slides"
+  },
+  {
+   "fieldname": "slides_section",
+   "fieldtype": "Section Break",
+   "label": "Diapositives"
+  },
+  {
+   "default": "1",
+   "description": "Cochez la case pour permettre aux utilisateurs de revenir en arri\u00e8re pour modifier des valeurs dans les diapositives pr\u00e9c\u00e9dentes.",
+   "fieldname": "allow_back",
+   "fieldtype": "Check",
+   "label": "Permettre le retour en arri\u00e8re"
+  },
+  {
+   "default": "0",
+   "depends_on": "allow_back",
+   "description": "Permettre d'acc\u00e9der \u00e0 n'importe quelle diapositive \u00e0 l'aide de la barre de progression globale.",
+   "fieldname": "allow_any",
+   "fieldtype": "Check",
+   "label": "Permettre le d\u00e9placement rapide"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-08-09 16:39:20.556042",
+ "modified_by": "Administrator",
+ "module": "Custom",
+ "name": "Slide View",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
