@@ -1,0 +1,23 @@
+{
+ "content": null,
+ "creation": "2021-08-02 12:04:22.417823",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2021-08-05 13:11:23.874238",
+ "modified_by": "Administrator",
+ "module": "Custom",
+ "name": "slide-viewer",
+ "owner": "Administrator",
+ "page_name": "slide-viewer",
+ "roles": [
+  {
+   "role": "All"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 1,
+ "title": "Slide Viewer"
+}
