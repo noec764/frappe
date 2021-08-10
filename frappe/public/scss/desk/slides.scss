@@ -1,8 +1,10 @@
 .slides-progress {
-	margin-top: 80px;
+	margin-top: 60px;
 	display: flex;
 	margin-bottom: var(--margin-lg);
 	justify-content: center;
+	flex-wrap: wrap;
+	gap: var(--margin-xs);
 
 	.slide-step {
 		@include flex(flex, center, center, null);
@@ -11,7 +13,6 @@
 		width: 18px;
 		border-radius: var(--border-radius-full);
 		border: 1px solid var(--gray-300);
-		margin: 0 var(--margin-xs);
 		background-color: var(--card-bg);
 
 		.slide-step-indicator {
@@ -133,5 +134,14 @@
 
 	.success-state {
 		margin-bottom: var(--margin-lg);
+	}
+
+	&.state-loading {
+		cursor: progress;
+
+		.form {
+			pointer-events: none;
+			opacity: 0.5;
+		}
 	}
 }
