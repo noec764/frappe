@@ -15,6 +15,7 @@ frappe.setup = {
 		}
 		frappe.setup.events[event].push(fn);
 	},
+
 	add_slide: function (slide) {
 		frappe.setup.slides.push(slide);
 	},
@@ -31,6 +32,14 @@ frappe.setup = {
 }
 
 frappe.pages['setup-wizard'].on_page_load = function (wrapper) {
+	const $wrapper = $(wrapper)
+	$wrapper.css({
+    height: '80vh',
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+	})
+
 	let requires = (frappe.boot.setup_wizard_requires || []);
 	frappe.require(requires, function() {
 		frappe.call({
@@ -46,13 +55,11 @@ frappe.pages['setup-wizard'].on_page_load = function (wrapper) {
 					slide_class: frappe.setup.SetupWizardSlide,
 					unidirectional: 1,
 					done_state: 1,
-					before_load: ($footer) => {
-						$footer.find('.next-btn').removeClass('btn-default')
-							.addClass('btn-primary');
-						$footer.find('.text-right').prepend(
-							$(`<button class="complete-btn btn btn-sm primary">
-						${__("Complete Setup")}</button>`));
-
+					before_load: (s) => {
+						// move progress dots above the slides
+						s.$slide_progress.detach().prependTo($wrapper)
+						s.$slide_progress.css({ marginTop: '0' })
+						s.$footer.find('.next-btn').removeClass('btn-default').addClass('btn-primary');
 					}
 				}
 				frappe.wizard = new frappe.setup.SetupWizard(wizard_settings);
@@ -75,7 +82,7 @@ frappe.pages['setup-wizard'].on_page_show = function () {
 
 frappe.setup.on("before_load", function () {
 	// load slides
-	frappe.setup.slides_settings.forEach((s) => {
+	frappe.setup.get_slides_settings().forEach((s) => {
 		if (!(s.name === 'user' && frappe.boot.developer_mode)) {
 			// if not user slide with developer mode
 			frappe.setup.add_slide(s);
@@ -84,77 +91,33 @@ frappe.setup.on("before_load", function () {
 });
 
 frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
-	constructor(args = {}) {
+	constructor(args) {
+		Object.assign(args, { page_name: 'setup-wizard' })
 		super(args);
-		$.extend(this, args);
 
-		this.page_name = "setup-wizard";
-		this.welcomed = true;
 		frappe.set_route("setup-wizard/0");
 	}
 
 	make() {
 		super.make();
-		this.container.addClass("container setup-wizard-slide with-form w-50");
-		this.$next_btn.addClass('action');
-		this.$complete_btn = this.$footer.find('.complete-btn').addClass('action');
+		this.$container.addClass("container setup-wizard-slide with-form w-50");
 		this.setup_keyboard_nav();
 	}
 
-	setup_keyboard_nav() {
-		$('body').on('keydown', this.handle_enter_press.bind(this));
-	}
-
-	disable_keyboard_nav() {
-		$('body').off('keydown', this.handle_enter_press.bind(this));
-	}
-
-	handle_enter_press(e) {
-		if (e.which === frappe.ui.keyCode.ENTER) {
-			var $target = $(e.target);
-			if ($target.hasClass('prev-btn')) {
-				$target.trigger('click');
-			} else {
-				this.container.find('.next-btn').trigger('click');
-				e.preventDefault();
-			}
-		}
-	}
-
-	before_show_slide() {
-		if (!this.welcomed) {
-			frappe.set_route(this.page_name);
-			return false;
-		}
-		return true;
-	}
-
 	show_slide(id) {
-		if (id === this.slides.length) {
-			// show_slide called on last slide
-			this.action_on_complete();
-			return;
-		}
 		super.show_slide(id);
 		frappe.set_route(this.page_name, id + "");
 	}
 
-	show_hide_prev_next(id) {
-		super.show_hide_prev_next(id);
-		if (id + 1 === this.slides.length) {
-			this.$next_btn.removeClass("btn-primary").hide();
-			this.$complete_btn.addClass("btn-primary").show()
-				.on('click', () => this.action_on_complete());
-
-		} else {
-			this.$next_btn.addClass("btn-primary").show();
-			this.$complete_btn.removeClass("btn-primary").hide();
-		}
+	translate_buttons() {
+		this.$complete_btn.text(__("Complete Setup"))
+		this.$next_btn.text(__("Next"))
+		this.$prev_btn.text(__("Previous"))
 	}
 
 	refresh_slides() {
 		// For Translations, etc.
-		if (this.in_refresh_slides || !this.current_slide.set_values()) {
+		if (this.in_refresh_slides || this.current_slide.has_errors()) {
 			return;
 		}
 		this.in_refresh_slides = true;
@@ -166,28 +129,31 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		frappe.setup.slides = this.get_setup_slides_filtered_by_domain();
 
-		this.slides = frappe.setup.slides;
+		this.slide_settings = frappe.setup.slides;
 
 		frappe.setup.run_event("after_load");
 
 		// re-render all slide, only remake made slides
-		$.each(this.slide_dict, (id, slide) => {
+		this.slide_instances.forEach((slide, id) => {
 			if (slide.made) {
-				this.made_slide_ids.push(id);
+				slide.destroy();
+				this.slide_instances[id] = undefined
 			}
 		});
-		this.made_slide_ids.push(this.current_id);
+		this.slide_instances = []
+
 		this.setup();
 
+		this.current_slide = null
 		this.show_slide(this.current_id);
 		setTimeout(() => {
-			this.container.find('.form-control').first().focus();
+			this.$container.find('.form-control').first().focus();
 		}, 200);
 		this.in_refresh_slides = false;
 	}
 
-	action_on_complete() {
-		if (!this.current_slide.set_values()) return;
+	on_complete() {
+		if (this.current_slide.has_errors()) return;
 		this.update_values();
 		this.show_working_state();
 		this.disable_keyboard_nav();
@@ -264,8 +230,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	show_working_state() {
-		this.container.hide();
-		frappe.set_route(this.page_name);
+		this.$container.hide();
+		// frappe.set_route(this.page_name);
 
 		this.$working_state = this.get_message(
 			__("Setting up your system"),
@@ -273,7 +239,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.attach_abort_button();
 
-		this.current_id = this.slides.length;
+		this.current_id = this.slide_settings.length;
 		this.current_slide = null;
 	}
 
@@ -283,8 +249,8 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.$abort_btn.on('click', () => {
 			$(this.parent).find('.setup-in-progress').remove();
-			this.container.show();
-			frappe.set_route(this.page_name, this.slides.length - 1);
+			this.$container.show();
+			// frappe.set_route(this.page_name, this.slide_settings.length - 1);
 		});
 
 		this.$abort_btn.hide();
@@ -317,35 +283,12 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 };
 
 frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
-	constructor(slide = null) {
-		super(slide);
-	}
-
-	make() {
-		super.make();
-		this.set_init_values();
-		this.reset_action_button_state();
-	}
-
-	set_init_values() {
-		var me = this;
-		// set values from frappe.setup.values
-		if (frappe.wizard.values && this.fields) {
-			this.fields.forEach(function (f) {
-				var value = frappe.wizard.values[f.fieldname];
-				if (value) {
-					me.get_field(f.fieldname).set_input(value);
-				}
-			});
-		}
-	}
-
 };
 
 // Frappe slides settings
 // ======================================================
 
-frappe.setup.slides_settings = [
+frappe.setup.get_slides_settings = () => [
 	{
 		// Welcome (language) slide
 		name: "welcome",
