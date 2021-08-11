@@ -153,7 +153,7 @@ frappe.ui.Slide = class Slide {
 	get_state() {
 		const done = !!(this.done)
 		const made = !!(this.made)
-		const valid = !!(made && !this.has_errors(true))
+		const valid = !!(this.last_validation_result)
 		const skip = !!(this.should_skip && this.should_skip(this))
 		return { done, made, valid, skip }
 	}
@@ -202,14 +202,18 @@ frappe.ui.Slide = class Slide {
 		return {}
 	}
 
-	has_errors(ignore_form_errors) {
+	has_errors(ignore_form_errors = false) {
 		if (this.made && this.form) {
 			const values = this.form.get_values(ignore_form_errors);
 			if (values === null) {
 				return true;
 			}
-			if (this.validate && !this.validate(this)) {
-				return true;
+			if (this.validate) {
+				const valid = this.validate(this);
+				this.last_validation_result = valid;
+				if (!valid) {
+					return true;
+				}
 			}
 		}
 		return false;
