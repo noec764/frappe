@@ -202,6 +202,10 @@ frappe.ui.Slide = class Slide {
 		return {}
 	}
 
+	get values() {
+		return this.slidesInstance.get_values() // return all values
+	}
+
 	has_errors(ignore_form_errors = false) {
 		if (this.made && this.form) {
 			const values = this.form.get_values(ignore_form_errors);
