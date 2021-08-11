@@ -670,7 +670,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	get_values() {
-		const allValues = { ...this.values, ...this.initial_values };
+		const allValues = { ...this.initial_values, ...this.values };
 		this.slide_instances.forEach((slide) => {
 			const slideValues = slide.get_values();
 			Object.assign(allValues, slideValues);
