@@ -73,7 +73,8 @@ data_field_options = (
 	'Email',
 	'Name',
 	'Phone',
-	'URL'
+	'URL',
+	'Barcode'
 )
 
 default_fields = (
