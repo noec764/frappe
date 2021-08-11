@@ -258,9 +258,7 @@ frappe.ui.Slide = class Slide {
 			});
 			field.$wrapper.on('blur', 'input', e => {
 				// bugfix: empty required fields were missing red border
-				setTimeout(() => {
-					me.form.refresh_fields([field.df])
-				}, 500)
+				if (field.has_input) setTimeout(() => field.refresh(), 200)
 			});
 		});
 	}
