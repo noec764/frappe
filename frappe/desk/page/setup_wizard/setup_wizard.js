@@ -110,9 +110,13 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	translate_buttons() {
-		this.$complete_btn.text(__("Complete Setup"))
-		this.$next_btn.text(__("Next"))
-		this.$prev_btn.text(__("Previous"))
+		this.texts.complete_btn = __("Complete Setup")
+		this.texts.next_btn = __("Next")
+		this.texts.prev_btn = __("Previous")
+
+		this.$complete_btn.text(this.texts.complete_btn)
+		this.$next_btn.text(this.texts.next_btn)
+		this.$prev_btn.text(this.texts.prev_btn)
 	}
 
 	refresh_slides() {
