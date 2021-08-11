@@ -54,9 +54,7 @@ frappe.ui.Slide = class Slide {
 	 * Called when click on Next/Finish (going to next slide or completing slide view).
 	 * Not called when going back or for random slide changes (e.g. when clicking on progress dots).
 	 * @returns {Promise<boolean>|boolean} `true` if all fields are valid
-	 * @type {() => Promise<boolean>|boolean}
 	 */
-	async_validate(){return true}
 	// async async_validate(self) { return true }
 
 	/**
