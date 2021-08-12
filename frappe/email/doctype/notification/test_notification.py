@@ -60,7 +60,7 @@ class TestNotification(unittest.TestCase):
 			"reference_name": communication.name, "status":"Not Sent"}))
 
 		self.assertEqual(frappe.db.get_value('Communication',
-			communication.name, 'subject'), 'test')
+			communication.name, 'subject'), '__testing__')
 
 	def test_condition(self):
 		"""Check notification is triggered based on a condition.
