@@ -23,7 +23,7 @@ unittests:
 
   script:
     - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client
-    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --host="$MYSQL_DATABASE" --default-character-set=utf8mb4
+    - mysql --user=root --password="$MYSQL_ROOT_PASSWORD" --default-character-set=utf8mb4
     - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_i386.deb
     - dpkg -i wkhtmltox_0.12.5-1.buster_i386.deb && rm wkhtmltox_0.12.5-1.buster_i386.deb
     - rm -rf /var/lib/apt/lists/*
