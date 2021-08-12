@@ -684,7 +684,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2021-07-02 08:05:14.447362",
+ "modified": "2021-08-12 14:58:44.955726",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
@@ -710,10 +710,6 @@
    "role": "Administrator",
    "share": 1,
    "write": 1
-  },
-  {
-   "role": "All",
-   "select": 1
   }
  ],
  "route": "doctype",
