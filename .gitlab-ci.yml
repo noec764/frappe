@@ -9,7 +9,7 @@ unittests:
 
   services:
     - name: mariadb
-      command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--character-set-client-handshake=FALSE']
+      command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--character-set-client-handshake=FALSE', '--innodb_read_only_compressed=OFF']
     - name: redis
       alias: redis_queue
     - name: redis
@@ -23,7 +23,6 @@ unittests:
 
   script:
     - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client
-    - mysql --user=root --password=$MYSQL_ROOT_PASSWORD --host="mariadb" --default-character-set=utf8mb4
     - wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_i386.deb
     - dpkg -i wkhtmltox_0.12.5-1.buster_i386.deb && rm wkhtmltox_0.12.5-1.buster_i386.deb
     - rm -rf /var/lib/apt/lists/*
