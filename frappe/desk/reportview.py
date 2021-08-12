@@ -438,7 +438,9 @@ def get_stats(stats, doctype, filters=[]):
 		columns = []
 
 	for tag in tags:
-		tag_count = frappe.get_list(doctype,
+		if not tag in columns: continue
+		try:
+			tag_count = frappe.get_list(doctype,
 				fields=[tag, "count(*)"],
 				filters=filters + [[tag, '!=', '']],
 				group_by=tag,
@@ -463,7 +465,6 @@ def get_stats(stats, doctype, filters=[]):
 				stats[tag] = tag_count
 
 		except frappe.db.SQLError:
-			# does not work for child tables
 			pass
 		except frappe.db.InternalError as e:
 			# raised when _user_tags column is added on the fly
