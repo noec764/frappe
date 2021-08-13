@@ -6,8 +6,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import validate_email_address, strip_html, cstr, time_diff_in_seconds
 from frappe.core.doctype.communication.email import validate_email
-from frappe.core.doctype.communication.mixins import CommunicationEmailMixin
-from frappe.core.doctype.communication.email import validate_email, notify, _notify
+from frappe.core.doctype.communication.mixin import CommunicationEmailMixin
+from frappe.core.doctype.communication.email import validate_email
 from frappe.core.utils import get_parent_doc
 from frappe.utils.bot import BotReply
 from frappe.utils import parse_addr, split_emails

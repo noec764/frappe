@@ -670,13 +670,8 @@ def get_all_messages_from_js_files(app_name=None):
 				if "frappe/public/js/lib" in basepath:
 					continue
 
-				if os.path.isfile(frappe.get_app_path(app, "public/build.json")):
-					with open(frappe.get_app_path(app, "public/build.json"), 'r') as f:
-						built_files = json.loads(f.read())
-						built_files = reduce(lambda a,b: a.extend(b) or a, list(built_files.values()), [])
-
 				for fname in files:
-					if fname not in built_files and (fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue")):
+					if fname.endswith(".js") or fname.endswith(".html") or fname.endswith(".vue"):
 						messages.extend(get_messages_from_file(os.path.join(basepath, fname)))
 
 	return messages
