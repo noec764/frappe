@@ -9,6 +9,7 @@ from frappe.utils.data import get_url
 import requests
 import base64
 
+@unittest.skip("Skipped in CI")
 class TestFrappeClient(unittest.TestCase):
 	def test_insert_many(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
