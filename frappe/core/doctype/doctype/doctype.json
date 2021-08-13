@@ -691,7 +691,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2021-08-12 14:58:44.955726",
+ "modified": "2021-08-13 14:58:44.955726",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
