@@ -3,7 +3,7 @@ import datetime
 import hashlib
 import re
 from http import cookies
-, urlparse
+from urllib.parse import unquote, urlparse
 import jwt
 import pytz
 from oauthlib.openid import RequestValidator
