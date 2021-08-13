@@ -513,7 +513,7 @@ frappe.ui.Page = class Page {
 				return $(item).attr('data-label') === label;
 			});
 		return result.length > 0 && result;
-	},
+	}
 
 	clear_btn_group(parent) {
 		parent.empty();
