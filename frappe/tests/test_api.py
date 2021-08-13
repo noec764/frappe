@@ -17,7 +17,7 @@ def maintain_state(f):
 
 	return wrapper
 
-
+@unittest.skip("Skipped in CI")
 class TestResourceAPI(unittest.TestCase):
 	SITE_URL = get_site_url(frappe.local.site)
 	RESOURCE_URL = f"{SITE_URL}/api/resource"
