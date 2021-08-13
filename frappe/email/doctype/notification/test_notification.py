@@ -7,9 +7,7 @@ import frappe, frappe.utils, frappe.utils.scheduler
 from frappe.desk.form import assign_to
 import unittest
 
-test_records = frappe.get_test_records('Notification')
-
-test_dependencies = ["User"]
+test_dependencies = ["User", "Notification"]
 
 class TestNotification(unittest.TestCase):
 	def setUp(self):
@@ -62,7 +60,7 @@ class TestNotification(unittest.TestCase):
 			"reference_name": communication.name, "status":"Not Sent"}))
 
 		self.assertEqual(frappe.db.get_value('Communication',
-			communication.name, 'subject'), 'test')
+			communication.name, 'subject'), '__testing__')
 
 	def test_condition(self):
 		"""Check notification is triggered based on a condition.

@@ -90,8 +90,7 @@ frappe.RoleEditor = class {
 
 		this.perm_dialog.$wrapper
 			.find('.modal-dialog')
-			.css("width", "1200px")
-			.css("max-width", "80vw");
+			.css("max-width", "120vw");
 	}
 	show() {
 		let user_roles = this.frm.doc.roles.map(a => a.role);
