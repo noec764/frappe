@@ -10,23 +10,13 @@
 		@scroll="onWheel"
 		>
 		<div class="dodock-sidebar-list" id="sidebard-modules-list" ref="sidebarList">
-			<template v-for="(mod, mod_index) in moduleCategories">
-			<div
-				v-if="modules[mod]&&modules[mod].length&&mod!='Modules'"
-				class="dodock-sidebar-divider"
-				:class="[!isCollapsed ? '' : 'collapsed', isRTL ? 'rtl': '']"
-				:key="mod + mod_index"
-			>
-				<span>{{ __(mod) }}</span>
-			</div>
-			<template v-for="(item, index) in modules[mod]">
+			<template v-for="(item, index) in modules">
 				<item
 				:key="item.name + index"
 				:item="item"
 				:is-collapsed="isCollapsed"
 				@itemClick="itemClick"
 				/>
-			</template>
 			</template>
 		</div>
 		<button
@@ -57,7 +47,6 @@
 			goToTop: false,
 			isMounted: false,
 			timer: null,
-			moduleCategories: ["Modules", "Administration"],
 			isRTL: frappe.utils.is_rtl()
 		};
 	},
@@ -77,7 +66,7 @@
 		showBottomButton() {
 		if (this.isMounted) {
 			return (
-			this.modules_list.length * 50 >
+			this.modules.length * 50 >
 			this.$refs.sidebarList.clientHeight - 35
 			);
 		}
@@ -102,14 +91,10 @@
 			this.mobileDisplay = false;
 		},
 		getModules() {
-			frappe.xcall("frappe.desk.desktop.get_desk_sidebar_items").then(r => {
-				this.modules_list = r;
-				this.modules = {
-					"Modules": this.modules_list.filter(f => f.category == "Modules"),
-					"Administration": this.modules_list.filter(f => f.category == "Administration")
-				}
+			frappe.xcall("frappe.desk.desktop.get_wspace_sidebar_items").then(r => {
+				this.modules = r.pages;
 
-				const maxLength = this.modules_list.reduce((acc, item) => {
+				const maxLength = this.modules.reduce((acc, item) => {
 					return item.label.length > acc ? item.label.length : acc;
 				}, 0);
 

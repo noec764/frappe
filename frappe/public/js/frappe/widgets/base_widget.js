@@ -25,14 +25,14 @@ export default class Widget {
 		this.action_area.empty();
 
 		options.allow_sorting &&
-			this.add_custom_button(
+			frappe.utils.add_custom_button(
 				frappe.utils.icon('drag', 'xs'),
 				null,
 				"drag-handle",
 			);
 
 		options.allow_delete &&
-			this.add_custom_button(
+			frappe.utils.add_custom_button(
 				frappe.utils.icon('delete', 'xs'),
 				() => this.delete(),
 				"",
@@ -48,11 +48,13 @@ export default class Widget {
 			}
 			const classname = this.hidden ? 'uil uil-eye' : 'uil uil-eye-slash';
 			const title = this.hidden ? `${__('Show')}` : `${__('Hide')}`;
-			this.add_custom_button(
+			frappe.utils.add_custom_button(
 				`<i class="${classname}" aria-hidden="true"></i>`,
 				() => this.hide_or_show(),
 				"show-or-hide-button",
-				title
+				title,
+				null,
+				this.action_area
 			);
 
 			this.show_or_hide_button = this.action_area.find(
@@ -61,18 +63,24 @@ export default class Widget {
 		}
 
 		options.allow_edit &&
-			this.add_custom_button(
+			frappe.utils.add_custom_button(
 				frappe.utils.icon("edit", "xs"),
-				() => this.edit()
+				() => this.edit(),
+				null,
+				`${__('Edit')}`,
+				null,
+				this.action_area
 			);
 
 		if (options.allow_resize) {
 			const title = this.width == 'Full'? `${__('Collapse')}` : `${__('Expand')}`;
-			this.add_custom_button(
+			frappe.utils.add_custom_button(
 				'<i class="uil uil-maximize-left" aria-hidden="true"></i>',
 				() => this.toggle_width(),
 				"resize-button",
-				title
+				title,
+				null,
+				this.action_area
 			);
 
 			this.resize_button = this.action_area.find(
@@ -92,8 +100,8 @@ export default class Widget {
 			${ this.shadow ? "widget-shadow" : " " }
 		" data-widget-name="${this.name ? this.name : ''}">
 			<div class="widget-head">
-				<div>
-					<div class="widget-title ellipsis"></div>
+				<div class="widget-label">
+					<div class="widget-title"></div>
 					<div class="widget-subtitle"></div>
 				</div>
 				<div class="widget-control"></div>
@@ -114,37 +122,25 @@ export default class Widget {
 	}
 
 	set_title(max_chars) {
-		let base = __(this.label) || __(this.name);
+		let base = this.title || __(this.label) || __(this.name);
 		let title = max_chars ? frappe.ellipsis(base, max_chars) : base;
 
 		if (this.icon) {
 			let icon = frappe.utils.icon(this.icon);
-			this.title_field[0].innerHTML = `${icon} <span>${title}</span>`;
+			this.title_field[0].innerHTML = `${icon} <span class="ellipsis" title="${title}">${title}</span>`;
 		} else {
-			this.title_field[0].innerHTML = title;
+			this.title_field[0].innerHTML = `<span class="ellipsis" title="${title}">${title}</span>`;
 			if (max_chars) {
-				this.title_field[0].setAttribute('title', this.label);
+				this.title_field[0].setAttribute('title', this.title || this.label);
 			}
 		}
 		this.subtitle && this.subtitle_field.html(this.subtitle);
 	}
 
-	add_custom_button(html, action, class_name = "", title="", btn_type) {
-		if (!btn_type) btn_type = 'btn-secondary';
-		let button = $(
-			`<button class="btn ${btn_type} btn-xs ${class_name}" title="${title}">${html}</button>`
-		);
-		button.click(event => {
-			event.stopPropagation();
-			action && action();
-		});
-		button.appendTo(this.action_area);
-	}
-
-	delete(animate=true) {
+	delete(animate=true, dismissed=false) {
 		let remove_widget = (setup_new) => {
 			this.widget.remove();
-			this.options.on_delete && this.options.on_delete(this.name, setup_new);
+			!dismissed && this.options.on_delete && this.options.on_delete(this.name, setup_new);
 		};
 
 		if (animate) {
@@ -168,8 +164,9 @@ export default class Widget {
 			primary_action: (data) => {
 				Object.assign(this, data);
 				data.name = this.name;
-
+				this.new = true;
 				this.refresh();
+				this.options.on_edit && this.options.on_edit(data);
 			},
 			primary_action_label: __("Save")
 		});
