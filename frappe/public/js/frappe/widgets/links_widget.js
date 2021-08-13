@@ -66,6 +66,8 @@ export default class LinksWidget extends Widget {
 				opts.doctype = item.dependencies;
 			}
 
+			const route = frappe.utils.generate_route(opts);
+
 			return $(`<a href="${route}" class="link-item ellipsis ${item.onboard ? "onboard-spotlight" : ""
 			} ${disabled_dependent(item)}" type="${item.type}">
 					${get_link_for_item(item)}
