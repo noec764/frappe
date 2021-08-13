@@ -1,8 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See license.txt
 
-
-
 def resolve_class(classes):
 	if classes is None:
 		return ""
