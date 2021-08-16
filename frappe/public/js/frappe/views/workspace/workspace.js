@@ -1,6 +1,8 @@
 import EditorJS from '@editorjs/editorjs';
 import Undo from 'editorjs-undo';
 
+frappe.provide('frappe.sidebar_update')
+
 frappe.standard_pages['Workspaces'] = function() {
 	var wrapper = frappe.container.add_page('Workspaces');
 
@@ -8,9 +10,10 @@ frappe.standard_pages['Workspaces'] = function() {
 		parent: wrapper,
 		name: 'Workspaces',
 		title: __("Workspace"),
+		single_column: true
 	});
 
-	frappe.workspace = new frappe.views.Workspace(wrapper);
+	frappe.workspace = new frappe.views.DodockWorkspace(wrapper);
 	$(wrapper).bind('show', function () {
 		frappe.workspace.show();
 	});
@@ -755,3 +758,31 @@ frappe.views.Workspace = class Workspace {
 		this.undo.readOnly = true;
 	}
 };
+
+frappe.views.DodockWorkspace = class DodockWorkspace extends frappe.views.Workspace {
+	constructor(opts) {
+		super(opts);
+
+		frappe.sidebar_update.on("register_sidebar_items", items => {
+			this.registered_sorted_items(items.items)
+		})
+	}
+
+	reload() {
+		super.reload()
+		frappe.sidebar_update.trigger('customize_sidebar', !this.is_read_only)
+	}
+
+	make_sidebar() {
+		//
+	}
+
+	make_sidebar_sortable() {
+		frappe.sidebar_update.trigger('customize_sidebar', true)
+	}
+
+	registered_sorted_items(items) {
+		this.sorted_public_items = items.filter(i => i.public === 1)
+		this.sorted_private_items = items.filter(i => i.public !== 1)
+	}
+}

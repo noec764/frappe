@@ -392,16 +392,17 @@
    "type": "Link"
   }
  ],
- "modified": "2021-08-13 18:31:46.314589",
+ "modified": "2021-08-16 12:59:07.554895",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",
  "owner": "Administrator",
+ "parent_page": "",
  "pin_to_bottom": 1,
  "pin_to_top": 0,
  "public": 1,
  "roles": [],
- "sequence_id": 0,
+ "sequence_id": 4,
  "shortcuts": [
   {
    "icon": "setting",

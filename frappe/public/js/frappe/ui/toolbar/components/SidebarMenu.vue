@@ -9,16 +9,28 @@
 		@wheel="onWheel"
 		@scroll="onWheel"
 		>
-		<div class="dodock-sidebar-list" id="sidebard-modules-list" ref="sidebarList">
-			<template v-for="(item, index) in modules">
-				<item
-				:key="item.name + index"
-				:item="item"
-				:is-collapsed="isCollapsed"
-				@itemClick="itemClick"
-				/>
-			</template>
-		</div>
+		<draggable
+			class="dodock-sidebar-list"
+			id="sidebard-modules-list"
+			ref="sidebarList"
+			tag="div"
+			v-model="modules"
+			v-bind="dragOptions"
+			@start="drag = true"
+			@end="registerItems"
+		>
+			<transition-group type="transition" :name="!drag ? 'flip-list' : null">
+				<template v-for="(item, index) in modules">
+					<item
+					:key="item.name + index"
+					:item="item"
+					:is-collapsed="isCollapsed"
+					:customize-view="customizeView"
+					@itemClick="itemClick"
+					/>
+				</template>
+			</transition-group>
+		</draggable>
 		<button
 			v-if="!mobileDisplay && showBottomButton"
 			class="collapse-btn"
@@ -31,76 +43,92 @@
 
 <script>
 	import Item from "./Item.vue";
+	import draggable from 'vuedraggable';
+
 	export default {
 	name: "SidebarMenu",
 	components: {
-		Item
+		Item,
+		draggable
+	},
+	props: {
+		categories: {
+			type: Array,
+			default: () => []
+		},
+		pages: {
+			type: Array,
+			default: () => []
+		},
 	},
 	data() {
 		return {
+			modules: this.pages,
 			isCollapsed: true,
-			modules: {},
-			modules_list: [],
 			width: "200px",
 			widthCollapsed: "50px",
 			mobileDisplay: false,
+			customizeView: false,
 			goToTop: false,
 			isMounted: false,
-			timer: null,
-			isRTL: frappe.utils.is_rtl()
+			isRTL: frappe.utils.is_rtl(),
+			drag: false
 		};
 	},
 	created() {
 		frappe.sidebar_update.on("toggle_mobile_menu", () => {
-		this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand();
+			this.mobileDisplay ? this.mobileCollapse() : this.mobileExpand();
+		});
+
+		frappe.sidebar_update.on("customize_sidebar", (r) => {
+			this.customizeView = r;
+			this.setIsCollapsed(!r);
 		});
 	},
 	computed: {
 		sidebarWidth() {
-		return this.mobileDisplay
-			? "100%"
-			: this.isCollapsed
-			? this.widthCollapsed
-			: this.width;
+			return this.mobileDisplay
+				? "100%"
+				: this.isCollapsed
+				? this.widthCollapsed
+				: this.width;
 		},
 		showBottomButton() {
-		if (this.isMounted) {
-			return (
-			this.modules.length * 50 >
-			this.$refs.sidebarList.clientHeight - 35
-			);
-		}
+			if (this.isMounted) {
+				return (
+					this.modules.length * 50 > this.$refs.sidebarList.clientHeight - 35
+				);
+			}
+		},
+		dragOptions() {
+			return {
+				animation: 200,
+				group: "description",
+				disabled: !this.customizeView,
+				ghostClass: "ghost"
+			};
 		}
 	},
 	mounted() {
 		this.isMounted = true;
-		this.getModules();
+		const maxLength = this.modules.reduce((acc, item) => {
+			return item.label.length > acc ? item.label.length : acc;
+		}, 0);
+		this.width = Math.max(maxLength > 25 ? maxLength * 10 : maxLength * 12, 200) + "px";
 	},
 	methods: {
 		mouseLeave() {
-			this.isCollapsed = this.mobileDisplay ? false : true;
+			this.setIsCollapsed(this.mobileDisplay || this.customizeView ? false : true);
 		},
 		mouseEnter() {
-			this.isCollapsed = false;
+			this.setIsCollapsed(false);
 		},
 		mobileExpand() {
-			this.isCollapsed = false;
+			this.setIsCollapsed(false);
 			this.mobileDisplay = true;
 		},
 		mobileCollapse() {
 			this.mobileDisplay = false;
-		},
-		getModules() {
-			frappe.xcall("frappe.desk.desktop.get_wspace_sidebar_items").then(r => {
-				this.modules = r.pages;
-
-				const maxLength = this.modules.reduce((acc, item) => {
-					return item.label.length > acc ? item.label.length : acc;
-				}, 0);
-
-				this.width =
-				Math.max(maxLength > 25 ? maxLength * 10 : maxLength * 12, 200) + "px";
-			});
 		},
 		scrollUpDown() {
 			const scrollHeight = document.querySelector("#sidebard-modules-list")
@@ -131,6 +159,16 @@
 		},
 		itemClick() {
 			this.mobileDisplay && (this.mobileDisplay = !this.mobileDisplay);
+		},
+		setIsCollapsed(value) {
+			this.isCollapsed = value;
+			document.getElementsByClassName("page-container").forEach(elem => {
+				elem.setAttribute('style', `padding-left: ${this.isCollapsed ? 0 : "calc(" + this.width + " - 40px)"}`);
+			})
+		},
+		registerItems() {
+			this.drag = false;
+			frappe.sidebar_update.trigger('register_sidebar_items', {items: this.modules})
 		}
 	}
 };
@@ -138,4 +176,17 @@
 
 <style lang="scss">
 @import "./sidebar.scss";
+
+.flip-list-move {
+  transition: transform 0.5s;
+}
+
+.no-move {
+  transition: transform 0s;
+}
+
+.ghost {
+  opacity: 0.5;
+  background: #c8ebfb;
+}
 </style>

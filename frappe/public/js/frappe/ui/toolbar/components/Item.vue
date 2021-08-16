@@ -1,26 +1,31 @@
 <template>
-	<div
-		class="dodock-sidebar-item"
-		@mouseenter="mouseEnter($event)"
-		@touchend="touchEnd($event)"
-		@click="itemClick"
-	>
-		<a
-			class="dodock-sidebar-link"
-			:href="'/app/' + frappe.router.slug(item.name)"
+	<div class="dodock-sidebar-item-container">
+		<div
+			class="dodock-sidebar-item"
+			@mouseenter="mouseEnter($event)"
+			@touchend="touchEnd($event)"
+			@click="itemClick"
 		>
-			<i class="dodock-sidebar-icon"
-				:style="{
-					//backgroundColor: getBackgroundColor(item.icon),
-					//'--icon-stroke': getBackgroundColor(item.icon)
-					'--icon-fill': getBackgroundColor(item.icon)
-				}"
-				v-html="frappe.utils.icon(item.icon || 'folder-open', 'lg')">
-			</i>
-			<template v-if="!isCollapsed">
-				<span class="dodock-sidebar-title">{{ item.label }}</span>
-			</template>
-		</a>
+			<a
+				class="dodock-sidebar-link"
+				:href="'/app/' + frappe.router.slug(item.name)"
+			>
+				<span><i class="dodock-sidebar-icon"
+					:style="{
+						'--icon-fill': getBackgroundColor(item.icon)
+					}"
+					v-html="frappe.utils.icon(item.icon || 'folder-open', 'lg')">
+				</i></span>
+				<template v-if="!isCollapsed">
+					<span class="dodock-sidebar-title">{{ item.label }}</span>
+				</template>
+			</a>
+			<div class="sidebar-item-control" v-if="customizeView">
+				<span class="sidebar-info" v-if="!item.is_editable" @click="itemNotEditable" v-html="frappe.utils.icon('lock', 'sm')"></span>
+				<button class="btn btn-secondary btn-xs drag-handle" title="Drag" v-if="item.is_editable" v-html="frappe.utils.icon('drag', 'xs')"></button>
+				<button class="btn btn-secondary btn-xs delete-page" title="Delete" v-if="item.is_editable" v-html="frappe.utils.icon('delete', 'xs')"></button>
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -32,6 +37,9 @@ export default {
 			required: true
 		},
 		isCollapsed: {
+			type: Boolean
+		},
+		customizeView: {
 			type: Boolean
 		}
 	},
@@ -47,13 +55,15 @@ export default {
 				})
 			}
 		},
-		touchEnd(event) {
+		touchEnd() {
 			if (this.isCollapsed) {
 				this.$parent.$emit('touchEndItem')
 			}
 		},
 		itemClick() {
-			this.$emit('itemClick');
+			if (!this.customizeView) {
+				this.$emit('itemClick');
+			}
 		},
 		getBackgroundColor(icon) {
 			const colorMap = {
@@ -81,6 +91,12 @@ export default {
 				agriculture : "#ffcb61"
 			}
 			return colorMap[icon] || "var(--primary-color)"
+		},
+		itemNotEditable() {
+			frappe.show_alert({
+				message: __("Only Workspace Manager can sort or edit this page"),
+				indicator: 'info'
+			}, 5);
 		}
 	}
 }

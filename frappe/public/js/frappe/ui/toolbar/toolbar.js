@@ -47,11 +47,27 @@ frappe.ui.toolbar.Toolbar = class {
 	}
 
 	setup_modules_menu() {
-		smoothscroll.polyfill();
-		this.menu_sidebar = new Vue({
-			el: '#modules-menu',
-			render: h => h(SidebarMenu)
-		});
+		frappe.xcall("frappe.desk.desktop.get_wspace_sidebar_items")
+		.then(pages => {
+			const all_pages = pages.pages
+			all_pages.forEach(page => {
+				page.is_editable = !page.public || pages.has_access;
+			});
+
+			smoothscroll.polyfill();
+			this.menu_sidebar = new Vue({
+				el: '#modules-menu',
+				render: h => h(SidebarMenu, {
+					props: {
+						categories: [
+							'Public',
+							frappe.user.first_name() || 'Private'
+						],
+						pages: all_pages
+					}
+				})
+			});
+		})
 	}
 
 	setup_home_navigation() {
