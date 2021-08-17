@@ -318,8 +318,6 @@ frappe.views.Workspace = class Workspace {
 			this.setup_actions(page);
 			this.content = this_page && JSON.parse(this_page.content || "[]");
 
-			console.log(this.content)
-
 			this.add_custom_cards_in_content();
 
 			$('.item-anchor').addClass('disable-click');

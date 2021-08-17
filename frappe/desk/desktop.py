@@ -282,6 +282,7 @@ class Workspace:
 				else:
 					new_card = card.as_dict().copy()
 				new_card["links"] = new_items
+				new_card["original_label"] = new_card["label"]
 				new_card["label"] = _(new_card["label"])
 				new_data.append(new_card)
 
@@ -298,6 +299,7 @@ class Workspace:
 			for chart in charts:
 				if frappe.has_permission('Dashboard Chart', doc=chart.chart_name):
 					# Translate label
+					chart.original_label = chart.label if chart.label else chart.chart_name
 					chart.label = _(chart.label) if chart.label else _(chart.chart_name)
 					all_charts.append(chart)
 
@@ -328,6 +330,7 @@ class Workspace:
 						new_item['ref_doctype'] = report.get('ref_doctype')
 
 				# Translate label
+				new_item["original_label"] = item.label if item.label else item.link_to
 				new_item["label"] = _(item.label) if item.label else _(item.link_to)
 
 				items.append(new_item)
@@ -342,6 +345,7 @@ class Workspace:
 				if onboarding_doc:
 					item = {
 						'label':  _(onboarding),
+						'original_label':  onboarding,
 						'title': _(onboarding_doc.title),
 						'subtitle': _(onboarding_doc.subtitle),
 						'success': _(onboarding_doc.success_message),

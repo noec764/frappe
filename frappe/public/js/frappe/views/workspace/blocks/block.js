@@ -7,8 +7,9 @@ export default class Block {
 
 	make(block, block_name, widget_type = block) {
 		let block_data = this.config.page_data[block+'s'].items.find(obj => {
-			return obj.label == block_name;
+			return obj.original_label == block_name || obj.label == block_name;
 		});
+
 		if (!block_data) return false;
 		this.wrapper.innerHTML = '';
 		block_data.in_customize_mode = !this.readOnly;
