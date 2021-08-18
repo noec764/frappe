@@ -476,6 +476,10 @@ frappe.ui.Slides = class Slides {
 				$dot.addClass('active');
 			}
 
+			if (state.skip) {
+				$dot.addClass('step-skip');
+			}
+
 			counts.total++;
 			if (state.done) {
 				counts.completed++;
@@ -574,7 +578,7 @@ frappe.ui.Slides = class Slides {
 
 	bind_progress_dots() {
 		const me = this
-		this.$slide_progress.find('.slide-step')
+		this.$slide_progress.find('.slide-step:not(.step-skip)')
 			.addClass('link')
 			.on('click', function () {
 				const id = this.getAttribute('data-step-id');
@@ -583,7 +587,8 @@ frappe.ui.Slides = class Slides {
 	}
 
 	show_previous_slide() {
-		const prev_id = this.current_id - 1; //this.find_next_nonskipped_slide(-1);
+		// const prev_id = this.current_id - 1;
+		const prev_id = this.find_next_nonskipped_slide(-1);
 		if (prev_id >= 0) {
 			this.show_slide(prev_id);
 		}
@@ -592,29 +597,35 @@ frappe.ui.Slides = class Slides {
 	show_next_slide(ignore_form_errors) {
 		const hasErrors = this.current_slide.has_errors(ignore_form_errors);
 		const stopBecauseErrors = this.unidirectional ? hasErrors : false;
-		if (!stopBecauseErrors) {
-			const next_id = this.current_id + 1; //this.find_next_nonskipped_slide(+1);
-			if (next_id < this.slide_instances.length) {
-				this.show_slide(next_id);
-			} else if (next_id === this.slide_instances.length) {
-				this.complete()
-			}
+		if (stopBecauseErrors) { return; }
+
+		// const next_id = this.current_id + 1;
+		const next_id = this.find_next_nonskipped_slide(+1);
+		if (next_id >= 0 && next_id < this.slide_instances.length) {
+			this.show_slide(next_id);
+		} else if (next_id === -1) {
+			this.complete()
 		}
 	}
 
+	/**
+	 * Returns the index of the next/previous non-skipped slide,
+	 * or returns -1 if the slides cannot move in the given direction (first/last non-skipped slide).
+	 * @param {Number} direction +1 or -1
+	 * @returns {Number} -1 if not found
+	 */
 	find_next_nonskipped_slide(direction = +1) {
-		let next_id = this.current_id + direction
-		while (next_id < this.slide_instances.length && next_id >= 0) {
-			const s = this.slide_instances[next_id]
-			const skip = (typeof s.should_skip === 'function' ? s.should_skip(s) : s.should_skip)
+		let id = this.current_id + direction
+		while (id < this.slide_instances.length && id >= 0) {
+			const s = this.slide_instances[id]
+			const skip = (typeof s.should_skip === 'function' ? s.should_skip(s) : Boolean(s.should_skip))
 
-			if (skip) {
-				next_id += direction
-			} else {
-				break
-			}
+			if (!skip) { return id }
+
+			id += direction
 		}
-		return next_id
+		// not found, cannot go in this direction
+		return -1
 	}
 
 	/**
@@ -652,22 +663,29 @@ frappe.ui.Slides = class Slides {
 		}
 	}
 
-	show_hide_prev_next(id) {
-		const isFirstSlide = (id === 0)
-		const isLastSlide = (id === this.slide_instances.length - 1)
+	can_go_next(id) {
+		const next_id = this.find_next_nonskipped_slide(+1)
+		return (next_id !== -1)
+	}
 
-		if (isFirstSlide || this.unidirectional) {
-			this.$prev_btn.hide();
-		} else {
+	can_go_prev(id) {
+		const prev_id = this.find_next_nonskipped_slide(-1)
+		return (prev_id !== -1)
+	}
+
+	show_hide_prev_next(id) {
+		if (this.can_go_prev(id) && !this.unidirectional) {
 			this.$prev_btn.show();
+		} else {
+			this.$prev_btn.hide();
 		}
 
-		if (isLastSlide) {
-			this.$next_btn.hide();
-			this.$complete_btn.show();
-		} else {
+		if (this.can_go_next(id)) {
 			this.$next_btn.show();
 			this.$complete_btn.hide();
+		} else {
+			this.$next_btn.hide();
+			this.$complete_btn.show();
 		}
 	}
 

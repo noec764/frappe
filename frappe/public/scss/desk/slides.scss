@@ -9,22 +9,25 @@
 	.slide-step {
 		@include flex(flex, center, center, null);
 
+		--step-bg-color: var(--card-bg);
+		--step-fg-color: var(--gray-400);
+
 		height: 18px;
 		width: 18px;
 		border-radius: var(--border-radius-full);
-		border: 1px solid var(--gray-300);
-		background-color: var(--card-bg);
+		box-shadow: 0 0 0 1.5px var(--step-fg-color) inset;
+		background-color: var(--step-bg-color);
 
 		.slide-step-indicator {
 			height: 6px;
 			width: 6px;
-			background-color: var(--gray-300);
+			background-color: var(--step-fg-color);
 			border-radius: var(--border-radius-full);
-			// display: none;
 		}
 
 		.slide-step-complete {
 			display: none;
+			transition: inherit;
 
 			.icon-xs {
 				height: 10px;
@@ -33,28 +36,34 @@
 		}
 
 		&.active {
-			// background-color: var(--primary);
-			border: 1px solid var(--primary);
+			--step-fg-color: var(--primary);
 
 			.slide-step-indicator {
-				display: block;
-				background-color: var(--primary);
+				height: 10px;
+				width: 10px;
 			}
 		}
 
 		// &.step-success.active {
-		// 	background-color: var(--primary);
-		// 	border: 1px solid var(--primary);
-
 		// 	.slide-step-indicator {
-		// 		display: block;
-		// 		background-color: var(--white);
+		// 		display: none;
+		// 	}
+
+		// 	.slide-step-complete {
+		// 		display: flex;
+
+		// 		.icon use {
+		// 			stroke-width: 2.5px;
+		// 			stroke: var(--step-fg-color);
+		// 		}
 		// 	}
 		// }
 
 		&.step-success:not(.active) {
-			background-color: var(--primary);
-			border: 1px solid var(--primary);
+			--step-bg-color: var(--primary);
+			--step-fg-color: var(--primary);
+			// --step-bg-color: #31bf6a;
+			// --step-fg-color: #28a745;
 
 			.slide-step-indicator {
 				display: none;
@@ -64,9 +73,18 @@
 				display: flex;
 
 				.icon use {
-					stroke-width: 2;
+					stroke-width: 2.5px;
 					stroke: var(--white);
 				}
+			}
+		}
+
+		&.step-skip:not(.active) {
+			opacity: 0.4;
+
+			.slide-step-indicator {
+				width: 8px;
+				height: 2px;
 			}
 		}
 	}
