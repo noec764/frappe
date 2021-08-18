@@ -924,6 +924,10 @@ body {
 						&.new-widget {
 							align-items: inherit;
 						}
+
+						&.ce-paragraph {
+							display: block;
+						}
 	
 						.paragraph-control {
 							display: flex;
