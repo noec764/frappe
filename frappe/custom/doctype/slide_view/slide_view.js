@@ -7,8 +7,20 @@ frappe.ui.form.on('Slide View', {
 		// 	frappe.set_route('slide-viewer', frm.doc.route)
 		// });
 
-		if (frm.doc.route) {
-			frm.add_web_link(`/app/slide-viewer/${frm.doc.route}`, __("Go to Slide Viewer"));
-		}
+		frm.page.set_secondary_action(__("Go to Slide Viewer"), () => {
+			frappe.set_route('slide-viewer', frm.doc.route)
+		}, 'view', __("Go to Slide Viewer"));
+
+		// frm.page.add_action_item(__("Go to Slide Viewer"), () => {
+		// 	frappe.set_route('slide-viewer', frm.doc.route)
+		// }, false)
+
+		// frm.page.add_menu_item(__("Go to Slide Viewer"), () => {
+		// 	frappe.set_route('slide-viewer', frm.doc.route)
+		// }, false, undefined)
+
+		// if (frm.doc.route) {
+		// 	frm.add_web_link(`/app/slide-viewer/${frm.doc.route}`, __("Go to Slide Viewer"));
+		// }
 	}
 });
