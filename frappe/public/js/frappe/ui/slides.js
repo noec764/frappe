@@ -120,11 +120,21 @@ frappe.ui.Slide = class Slide {
 	}
 
 	setup_form() {
-		this.form = new frappe.ui.FieldGroup({
+		const fieldGroupOptions = {
 			fields: this.get_atomic_fields(),
 			body: this.$form[0],
-			no_submit_on_enter: true
-		});
+			no_submit_on_enter: true,
+		}
+		if (this.parent_form) {
+			Object.assign(fieldGroupOptions, {
+				frm: this.parent_form,
+				doctype: this.parent_form.doctype,
+				docname: this.parent_form.docname,
+				doc: this.parent_form.doc,
+			})
+		}
+
+		this.form = new frappe.ui.FieldGroup(fieldGroupOptions);
 		this.form.make();
 
 		if (this.add_more) {
@@ -190,16 +200,15 @@ frappe.ui.Slide = class Slide {
 	}
 
 	get_values() {
+		const v = {}
 		if (this.made && this.form) {
-			const v = {}
 			for (const f of this.form.fields) {
 				v[f.fieldname] = this.form.get_value(f.fieldname)
 			}
-			return v
 			// const ignore_form_errors = true
 			// return this.form.get_values(ignore_form_errors);
 		}
-		return {}
+		return v
 	}
 
 	get values() {
@@ -322,6 +331,7 @@ frappe.ui.Slides = class Slides {
 	 *   unidirectional?: boolean,
 	 *   clickable_progress_dots?: boolean,
 	 *   done_state?: boolean,
+	 *   parent_form?: frappe.ui.form.Form,
 	 * }}
 	 */
 	constructor({
@@ -332,6 +342,7 @@ frappe.ui.Slides = class Slides {
 		unidirectional = false,
 		clickable_progress_dots = false,
 		done_state = false,
+		parent_form = undefined,
 		...settings
 	}) {
 		this.parent = parent;
@@ -340,6 +351,8 @@ frappe.ui.Slides = class Slides {
 		this.unidirectional = Boolean(unidirectional);
 		this.clickable_progress_dots = Boolean(clickable_progress_dots);
 		this.done_state = Boolean(done_state);
+
+		this.parent_form = parent_form;
 
 		this.slide_class = frappe.ui.Slide;
 
@@ -350,7 +363,6 @@ frappe.ui.Slides = class Slides {
 		  in_progress: __("In progress"),
 		}
 
-		this.initial_values = initial_values;
 		this.values = initial_values;
 
 		Object.assign(this, settings)
@@ -399,6 +411,7 @@ frappe.ui.Slides = class Slides {
 				this.slide_instances[id] = new (this.slide_class)({
 					...settings,
 					parent: this.$body,
+					parent_form: this.parent_form,
 					render_parent_dots: this.render_progress_dots.bind(this),
 					slidesInstance: this,
 					id: id,
@@ -689,18 +702,23 @@ frappe.ui.Slides = class Slides {
 		}
 	}
 
+	get doc() {
+		return this.values;
+	}
+
+	/**
+	 * Side effect: update this.values (without reassignment)
+	 */
 	get_values() {
-		const allValues = { ...this.initial_values, ...this.values };
 		this.slide_instances.forEach((slide) => {
 			const slideValues = slide.get_values();
-			Object.assign(allValues, slideValues);
+			Object.assign(this.values, slideValues);
 		});
-		this.values = allValues;
-		return allValues;
+		return this.values;
 	}
 
 	update_values() {
-		this.values = this.get_values();
+		return this.get_values();
 	}
 
 	has_errors() {
