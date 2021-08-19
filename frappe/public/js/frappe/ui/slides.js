@@ -347,7 +347,7 @@ frappe.ui.Slides = class Slides {
 	}) {
 		this.parent = parent;
 		this.slide_settings = slides;
-		this.current_id = cint(starting_slide) || 0;
+		this.current_id = Math.min(slides.length - 1, cint(starting_slide) || 0);
 		this.unidirectional = Boolean(unidirectional);
 		this.clickable_progress_dots = Boolean(clickable_progress_dots);
 		this.done_state = Boolean(done_state);
@@ -458,9 +458,9 @@ frappe.ui.Slides = class Slides {
 	 * Can be called by a slide to update states
 	 */
 	render_progress_dots() {
-		if (this.slide_instances.length === 0) { return; }
-
 		this.$slide_progress.empty();
+
+		if (this.slide_instances.length <= 1) { return; }
 
 		const states = [];
 		const counts = {
@@ -627,8 +627,11 @@ frappe.ui.Slides = class Slides {
 	 * @param {Number} direction +1 or -1
 	 * @returns {Number} -1 if not found
 	 */
-	find_next_nonskipped_slide(direction = +1) {
-		let id = this.current_id + direction
+	find_next_nonskipped_slide(direction = +1, curr_id = undefined) {
+		if (curr_id === undefined) {
+			curr_id = this.current_id
+		}
+		let id = curr_id + direction
 		while (id < this.slide_instances.length && id >= 0) {
 			const s = this.slide_instances[id]
 			const skip = (typeof s.should_skip === 'function' ? s.should_skip(s) : Boolean(s.should_skip))
@@ -677,12 +680,12 @@ frappe.ui.Slides = class Slides {
 	}
 
 	can_go_next(id) {
-		const next_id = this.find_next_nonskipped_slide(+1)
+		const next_id = this.find_next_nonskipped_slide(+1, id)
 		return (next_id !== -1)
 	}
 
 	can_go_prev(id) {
-		const prev_id = this.find_next_nonskipped_slide(-1)
+		const prev_id = this.find_next_nonskipped_slide(-1, id)
 		return (prev_id !== -1)
 	}
 
