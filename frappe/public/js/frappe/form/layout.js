@@ -248,19 +248,23 @@ frappe.ui.form.Layout = class Layout {
 		// refresh sections
 		this.refresh_sections();
 
-		
+
 		if (this.frm) {
 			// collapse sections
 			this.refresh_section_collapse();
 		}
 
 		if (document.activeElement) {
-			document.activeElement.focus();
-
-			if (document.activeElement.tagName == 'INPUT') {
+			if (document.activeElement.tagName == 'INPUT' && this.is_numeric_field_active()) {
 				document.activeElement.select();
 			}
 		}
+	}
+
+	is_numeric_field_active() {
+		const control = $(document.activeElement).closest(".frappe-control");
+		const fieldtype = (control.data() || {}).fieldtype;
+		return frappe.model.numeric_fieldtypes.includes(fieldtype);
 	}
 
 	refresh_sections() {
