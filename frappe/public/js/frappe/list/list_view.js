@@ -7,20 +7,16 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	static load_last_view() {
 		const route = frappe.get_route();
 		const doctype = route[1];
-		const parsed_route = frappe.router.get_sub_path_string().split('/')
 
-		if (parsed_route.length === 1) {
+		if (route.length === 2) {
 			const user_settings = frappe.get_user_settings(doctype);
 			const last_view = user_settings.last_view;
-			if (last_view && last_view.toLowerCase() != "list") {
-				frappe.set_route(
-					"list",
-					frappe.router.doctype_layout || doctype,
-					frappe.views.is_valid(last_view) ? last_view.toLowerCase() : "list"
-				);
-				return true;
-			}
-			return false;
+			frappe.set_route(
+				"list",
+				frappe.router.doctype_layout || doctype,
+				frappe.views.is_valid(last_view) ? last_view.toLowerCase() : "list"
+			);
+			return true;
 		}
 		return false;
 	}

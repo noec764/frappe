@@ -176,13 +176,6 @@ frappe.router = {
 		let standard_route;
 		if (route[2].toLowerCase()==='tree') {
 			standard_route = ['Tree', doctype_route.doctype];
-		} else if (doctype_route.doctype == "File") {
-			standard_route = ['List', doctype_route.doctype, frappe.utils.to_title_case(route[2])];
-			if (route.length >= 3) {
-				route.slice(3).map(r => {
-					standard_route.push(r);
-				})
-			}
 		} else {
 			standard_route = ['List', doctype_route.doctype, frappe.utils.to_title_case(route[2])];
 			// calendar / kanban / dashboard / folder

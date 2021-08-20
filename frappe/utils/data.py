@@ -1266,6 +1266,7 @@ def get_filter(doctype, f, filters_config=None):
 	valid_operators = ("=", "!=", ">", "<", ">=", "<=", "like", "not like", "in", "not in", "is",
 		"between", "descendants of", "ancestors of", "not descendants of", "not ancestors of",
 		"timespan", "previous", "next")
+	standard_filters_operator = ("value or descendants of", )
 
 	if filters_config:
 		additional_operators = []
@@ -1273,7 +1274,7 @@ def get_filter(doctype, f, filters_config=None):
 			additional_operators.append(key.lower())
 		valid_operators = tuple(set(valid_operators + tuple(additional_operators)))
 
-	if f.operator.lower() not in valid_operators:
+	if f.operator.lower() not in valid_operators + standard_filters_operator:
 		frappe.throw(frappe._("Operator must be one of {0}").format(", ".join(valid_operators)))
 
 

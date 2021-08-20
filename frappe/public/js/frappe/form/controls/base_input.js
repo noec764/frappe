@@ -109,6 +109,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 			me.set_label();
 			me.set_mandatory(me.value);
 			me.set_bold();
+			me.set_required();
 		}
 	}
 
