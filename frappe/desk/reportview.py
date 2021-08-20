@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 """build query for doclistview and return results"""
 
 import frappe, json
-from six.moves import range
 import frappe.permissions
 from frappe.model.db_query import DatabaseQuery
 from frappe.model import default_fields, optional_fields
