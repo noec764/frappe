@@ -13,7 +13,7 @@ import base64
 class TestFrappeClient(unittest.TestCase):
 	def test_insert_many(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title in ('Sing','a','song','of','sixpence')")
+		frappe.db.delete("Note", {"title": ("in", ('Sing','a','song','of','sixpence'))})
 		frappe.db.commit()
 
 		server.insert_many([
@@ -32,7 +32,7 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_create_doc(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title = 'test_create'")
+		frappe.db.delete("Note", {"title": "test_create"})
 		frappe.db.commit()
 
 		server.insert({"doctype": "Note", "public": True, "title": "test_create"})
@@ -47,7 +47,7 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_get_doc(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title = 'get_this'")
+		frappe.db.delete("Note", {"title": "get_this"})
 		frappe.db.commit()
 
 		server.insert_many([
@@ -58,7 +58,7 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_get_value(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title = 'get_value'")
+		frappe.db.delete("Note", {"title": "get_value"})
 		frappe.db.commit()
 
 		test_content = "test get value"
@@ -83,7 +83,7 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_update_doc(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title in ('Sing','sing')")
+		frappe.db.delete("Note", {"title": ("in", ("Sing", "sing"))})
 		frappe.db.commit()
 
 		server.insert({"doctype":"Note", "public": True, "title": "Sing"})
@@ -95,12 +95,12 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_update_child_doc(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabContact` where first_name = 'George' and last_name = 'Steevens'")
-		frappe.db.sql("delete from `tabContact` where first_name = 'William' and last_name = 'Shakespeare'")
-		frappe.db.sql("delete from `tabCommunication` where reference_doctype = 'Event'")
-		frappe.db.sql("delete from `tabCommunication Link` where link_doctype = 'Contact'")
-		frappe.db.sql("delete from `tabEvent` where subject = 'Sing a song of sixpence'")
-		frappe.db.sql("delete from `tabEvent Participants` where reference_doctype = 'Contact'")
+		frappe.db.delete("Contact", {"first_name": "George", "last_name": "Steevens"})
+		frappe.db.delete("Contact", {"first_name": "William", "last_name": "Shakespeare"})
+		frappe.db.delete("Communication", {"reference_doctype": "Event"})
+		frappe.db.delete("Communication Link", {"link_doctype": "Contact"})
+		frappe.db.delete("Event", {"subject": "Sing a song of sixpence"})
+		frappe.db.delete("Event Participants", {"reference_doctype": "Contact"})
 		frappe.db.commit()
 
 		# create multiple contacts
@@ -132,7 +132,7 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_delete_doc(self):
 		server = FrappeClient(get_url(), "Administrator", "admin", verify=False)
-		frappe.db.sql("delete from `tabNote` where title = 'delete'")
+		frappe.db.delete("Note", {"title": "delete"})
 		frappe.db.commit()
 
 		server.insert_many([

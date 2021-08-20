@@ -7,9 +7,9 @@ test_dependencies = ['Email Account']
 
 class TestEmail(unittest.TestCase):
 	def setUp(self):
-		frappe.db.sql("""delete from `tabEmail Unsubscribe`""")
-		frappe.db.sql("""delete from `tabEmail Queue`""")
-		frappe.db.sql("""delete from `tabEmail Queue Recipient`""")
+		frappe.db.delete("Email Unsubscribe")
+		frappe.db.delete("Email Queue")
+		frappe.db.delete("Email Queue Recipient")
 		frappe.db.commit()
 
 	def test_email_queue(self, send_after=None):
@@ -179,7 +179,7 @@ class TestEmail(unittest.TestCase):
 		import re
 		email_account = frappe.get_doc('Email Account', '_Test Email Account 1')
 
-		frappe.db.sql('''delete from `tabCommunication` where sender = 'sukh@yyy.com' ''')
+		frappe.db.delete("Communication", {"sender": "sukh@yyy.com"})
 
 		with open(frappe.get_app_path('frappe', 'tests', 'data', 'email_with_image.txt'), 'r') as raw:
 			mails = email_account.get_inbound_mails(test_mails=[raw.read()])
