@@ -30,3 +30,17 @@ body {
 
 // Custom Theme
 {{ custom_scss or '' }}
+
+:root {
+	{% if primary_color %}
+	--primary: #{$primary};
+	--primary-color: #{$primary};
+	{% endif -%}
+	{% if background_color %}
+	--bg-color: #{$body-bg};
+	{% endif -%}
+	{% if text_color %}
+	--text-color: #{$body-text-color};
+	--text-light: #{$body-text-color};
+	{% endif -%}
+}

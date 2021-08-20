@@ -176,6 +176,7 @@ frappe.ui.form.Form = class FrappeForm {
 				field && ["Link", "Dynamic Link"].includes(field.df.fieldtype) && field.validate && field.validate(value);
 
 				me.layout.refresh_dependency();
+				me.layout.refresh_sections();
 				let object = me.script_manager.trigger(fieldname, doc.doctype, doc.name);
 				return object;
 			}
@@ -1068,7 +1069,7 @@ frappe.ui.form.Form = class FrappeForm {
 
 		if(!this.doc.__islocal) {
 			frappe.model.remove_from_locals(this.doctype, this.docname);
-			frappe.model.with_doc(this.doctype, this.docname, () => {
+			return frappe.model.with_doc(this.doctype, this.docname, () => {
 				this.refresh();
 			});
 		}
@@ -1078,6 +1079,7 @@ frappe.ui.form.Form = class FrappeForm {
 		if (this.fields_dict[fname] && this.fields_dict[fname].refresh) {
 			this.fields_dict[fname].refresh();
 			this.layout.refresh_dependency();
+			this.layout.refresh_sections();
 		}
 	}
 
@@ -1125,11 +1127,20 @@ frappe.ui.form.Form = class FrappeForm {
 
 	add_custom_button(label, fn, group) {
 		// temp! old parameter used to be icon
-		if(group && (group.indexOf("fa fa-")!==-1 || group.indexOf("fas fa-")!==-1 || group.indexOf("far fa-")!==-1 || group.indexOf("fab fa-")!==-1 || group.indexOf("uil uil-")!==-1)) group = null;
-		var btn = this.page.add_inner_button(label, fn, group);
-		if(btn) {
+		if (group && group.indexOf("fa fa-") !== -1)
+			group = null;
+
+		let btn = this.page.add_inner_button(label, fn, group);
+
+		if (btn) {
+			// Add actions as menu item in Mobile View
+			let menu_item_label = group ? `${group} > ${label}` : label;
+			let menu_item = this.page.add_menu_item(menu_item_label, fn, false);
+			menu_item.parent().addClass("hidden-lg");
+
 			this.custom_buttons[label] = btn;
 		}
+
 		return btn;
 	}
 

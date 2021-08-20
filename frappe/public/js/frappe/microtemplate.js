@@ -41,21 +41,21 @@ frappe.template.compile = function(str, name) {
 
 		var fn_str = "var _p=[],print=function(){_p.push.apply(_p,arguments)};" +
 
-	        // Introduce the data as local variables using with(){}
-	        "with(obj){\n_p.push('" +
+		// Introduce the data as local variables using with(){}
+		"with(obj){\n_p.push('" +
 
-	        // Convert the template into pure JavaScript
-	        str
-	          .replace(/[\r\t\n]/g, " ")
-	          .split("{%").join("\t")
-	          .replace(/((^|%})[^\t]*)'/g, "$1\r")
-	          .replace(/\t=(.*?)%}/g, "',$1,'")
-	          .split("\t").join("');\n")
-	          .split("%}").join("\n_p.push('")
-	          .split("\r").join("\\'")
-	      + "');}return _p.join('');";
+		// Convert the template into pure JavaScript
+		str
+			.replace(/[\r\t\n]/g, " ")
+			.split("{%").join("\t")
+			.replace(/((^|%})[^\t]*)'/g, "$1\r")
+			.replace(/\t=(.*?)%}/g, "',$1,'")
+			.split("\t").join("');\n")
+			.split("%}").join("\n_p.push('")
+			.split("\r").join("\\'")
+		+ "');}return _p.join('');";
 
-		  frappe.template.debug[name] = fn_str;
+		frappe.template.debug[name] = fn_str;
 		try {
 			frappe.template.compiled[key] = new Function("obj", fn_str);
 		} catch (e) {
