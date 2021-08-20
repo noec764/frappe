@@ -461,8 +461,13 @@ frappe.db.connect()
 	])
 
 @click.command('console')
+@click.option(
+	'--autoreload',
+	is_flag=True,
+	help="Reload changes to code automatically"
+)
 @pass_context
-def console(context):
+def console(context, autoreload=False):
 	"Start ipython console for a site"
 
 	site = get_site(context)
@@ -470,7 +475,13 @@ def console(context):
 	frappe.connect()
 	frappe.local.lang = frappe.db.get_default("lang")
 
-	import IPython
+	from IPython.terminal.embed import InteractiveShellEmbed
+
+	terminal = InteractiveShellEmbed()
+	if autoreload:
+		terminal.extension_manager.load_extension("autoreload")
+		terminal.run_line_magic("autoreload", "2")
+
 	all_apps = frappe.get_installed_apps()
 	failed_to_import = []
 
@@ -485,7 +496,9 @@ def console(context):
 	if failed_to_import:
 		print("\nFailed to import:\n{}".format(", ".join(failed_to_import)))
 
-	IPython.embed(display_banner="", header="", colors="neutral")
+	terminal.colors = "neutral"
+	terminal.display_banner = False
+	terminal()
 
 @click.command('run-tests')
 @click.option('--app', help="For App")
