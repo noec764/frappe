@@ -101,12 +101,14 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 		const attachment = email.has_attachment ?
 			`<span class="uil uil-paperclip" title="${__('Has Attachments')}"></span>` : '';
 
-		const form_link = frappe.utils.get_form_link(email.reference_doctype, email.reference_name);
-		const link = email.reference_doctype && email.reference_doctype !== this.doctype ?
-			`<a class="text-muted grey" href="${form_link}"
+		let link = "";
+		if (email.reference_doctype && email.reference_doctype !== this.doctype) {
+			link = `<a class="text-muted grey"
+				href="${frappe.utils.get_form_link(email.reference_doctype, email.reference_name)}"
 				title="${__('Linked with {0}', [email.reference_doctype])}">
 				<i class="fa fa-link fa-large"></i>
-			</a>` : '';
+			</a>`;
+		}
 
 		const communication_date = comment_when(email.communication_date, true);
 		const status =
