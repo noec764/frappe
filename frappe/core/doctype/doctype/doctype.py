@@ -130,9 +130,9 @@ class DocType(Document):
 			field_label = docfield.label or docfield.fieldname
 
 			if docfield.fieldname in method_set:
-				conflict_type = "controller method"
+				conflict_type = _("controller method")
 			if docfield.fieldname in property_set:
-				conflict_type = "class property"
+				conflict_type = _("class property")
 
 			if conflict_type:
 				frappe.throw(
