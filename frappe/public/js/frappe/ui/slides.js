@@ -492,7 +492,7 @@ frappe.ui.Slides = class Slides {
 
 			if (state.skip) {
 				$dot.addClass('step-skip');
-				$dot.prop('title', __('This slide is skipped'));
+				$dot.prop('title', __('This slide is skipped', null, 'Slide View'));
 			}
 
 			counts.total++;

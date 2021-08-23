@@ -3,24 +3,28 @@
 
 frappe.ui.form.on('Slide View', {
 	refresh: function(frm) {
-		// frm.page.add_inner_button(__("Go to Slide Viewer"), () => {
-		// 	frappe.set_route('slide-viewer', frm.doc.route)
-		// });
-
-		frm.page.set_secondary_action(__("Go to Slide Viewer"), () => {
+		const label = __('Open {0}', [__('Slide View')])
+		frm.page.set_secondary_action(label, (x) => {
 			frappe.set_route('slide-viewer', frm.doc.route)
-		}, 'view', __("Go to Slide Viewer"));
+		}, 'view', label);
 
-		// frm.page.add_action_item(__("Go to Slide Viewer"), () => {
-		// 	frappe.set_route('slide-viewer', frm.doc.route)
-		// }, false)
+		frm.trigger('_update_doc_settings_warning')
+	},
 
-		// frm.page.add_menu_item(__("Go to Slide Viewer"), () => {
-		// 	frappe.set_route('slide-viewer', frm.doc.route)
-		// }, false, undefined)
+	_update_doc_settings_warning: function(frm) {
+		const error_text_doc_settings = frm.get_field('html_invalid_doc_settings');
+		if (error_text_doc_settings) {
+			const el = error_text_doc_settings.disp_area
+			el.innerHTML = frappe.utils.icon('solid-warning') + "&nbsp;" + __("Please note that you will not be able to create or modify any document with this slide view.", null, "Slide View");
+			el.style.color = 'var(--red)';
+		}
+	},
 
-		// if (frm.doc.route) {
-		// 	frm.add_web_link(`/app/slide-viewer/${frm.doc.route}`, __("Go to Slide Viewer"));
-		// }
-	}
+	can_create_doc: function(frm) {
+		frm.trigger('_update_doc_settings_warning')
+	},
+
+	can_edit_doc: function(frm) {
+		frm.trigger('_update_doc_settings_warning')
+	},
 });

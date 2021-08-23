@@ -1,7 +1,8 @@
 {
  "actions": [],
+ "allow_copy": 1,
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "format: {route}",
  "beta": 1,
  "creation": "2021-08-02 11:17:35.915015",
  "doctype": "DocType",
@@ -10,17 +11,18 @@
  "field_order": [
   "title",
   "route",
-  "naming_series",
-  "column_break_4",
+  "_cb_1",
   "allow_back",
   "allow_any",
   "done_state",
-  "section_doc",
+  "_section_document",
   "reference_doctype",
-  "column_break_10",
+  "_cb_2",
   "can_create_doc",
   "can_edit_doc",
-  "slides_section",
+  "add_fullpage_edit_btn",
+  "html_invalid_doc_settings",
+  "_section_slides",
   "slides"
  ],
  "fields": [
@@ -46,45 +48,24 @@
    "unique": 1
   },
   {
-   "default": "SLIDES-",
-   "fieldname": "naming_series",
-   "fieldtype": "Select",
-   "label": "Naming Series",
-   "options": "SLIDES-"
-  },
-  {
    "default": "1",
-   "description": "Permet d'indiquer quand les slides ont \u00e9t\u00e9 remplies. ???",
    "fieldname": "done_state",
    "fieldtype": "Check",
-   "label": "Indiquer les diapositives termin\u00e9es"
+   "label": "Show completed slides in the progress bar"
   },
   {
    "default": "1",
    "depends_on": "reference_doctype",
    "fieldname": "can_edit_doc",
    "fieldtype": "Check",
-   "label": "Can edit document"
+   "label": "Allow document edition"
   },
   {
    "default": "1",
    "depends_on": "reference_doctype",
    "fieldname": "can_create_doc",
    "fieldtype": "Check",
-   "label": "Can create document"
-  },
-  {
-   "fieldname": "section_doc",
-   "fieldtype": "Section Break",
-   "label": "Document settings"
-  },
-  {
-   "fieldname": "column_break_10",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_4",
-   "fieldtype": "Column Break"
+   "label": "Allow document creation"
   },
   {
    "fieldname": "slides",
@@ -92,29 +73,56 @@
    "label": "Slides"
   },
   {
-   "fieldname": "slides_section",
-   "fieldtype": "Section Break",
-   "label": "Diapositives"
-  },
-  {
    "default": "1",
-   "description": "Cochez la case pour permettre aux utilisateurs de revenir en arri\u00e8re pour modifier des valeurs dans les diapositives pr\u00e9c\u00e9dentes.",
+   "description": "Allow users to go back and edit values in previous slides.",
    "fieldname": "allow_back",
    "fieldtype": "Check",
-   "label": "Permettre le retour en arri\u00e8re"
+   "label": "Allow to go back"
   },
   {
    "default": "0",
    "depends_on": "allow_back",
-   "description": "Permettre d'acc\u00e9der \u00e0 n'importe quelle diapositive \u00e0 l'aide de la barre de progression globale.",
+   "description": "Allow users to jump to any slide by clicking on the progress dots.",
    "fieldname": "allow_any",
    "fieldtype": "Check",
-   "label": "Permettre le d\u00e9placement rapide"
+   "label": "Allow to go to any slide"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.reference_doctype && (doc.can_create_doc||doc.can_edit_doc)",
+   "fieldname": "add_fullpage_edit_btn",
+   "fieldtype": "Check",
+   "label": "Edit in full page"
+  },
+  {
+   "depends_on": "eval:doc.reference_doctype && !(doc.can_create_doc || doc.can_edit_doc)",
+   "fieldname": "html_invalid_doc_settings",
+   "fieldtype": "HTML",
+   "read_only": 1,
+   "report_hide": 1
+  },
+  {
+   "fieldname": "_cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "_section_document",
+   "fieldtype": "Section Break",
+   "label": "Document"
+  },
+  {
+   "fieldname": "_cb_2",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "_section_slides",
+   "fieldtype": "Section Break",
+   "label": "Slides"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-08-09 16:39:20.556042",
+ "modified": "2021-08-23 19:31:58.905286",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Slide View",
