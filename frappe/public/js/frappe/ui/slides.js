@@ -332,6 +332,7 @@ frappe.ui.Slides = class Slides {
 	 *   clickable_progress_dots?: boolean,
 	 *   done_state?: boolean,
 	 *   parent_form?: frappe.ui.form.Form,
+	 *   slide_class?: frappe.ui.Slide,
 	 * }}
 	 */
 	constructor({
@@ -343,6 +344,7 @@ frappe.ui.Slides = class Slides {
 		clickable_progress_dots = false,
 		done_state = false,
 		parent_form = undefined,
+		slide_class = frappe.ui.Slide,
 		...settings
 	}) {
 		this.parent = parent;
@@ -354,7 +356,7 @@ frappe.ui.Slides = class Slides {
 
 		this.parent_form = parent_form;
 
-		this.slide_class = frappe.ui.Slide;
+		this.slide_class = slide_class;
 
 		this.texts = {
 			prev_btn: __("Previous"),
@@ -468,8 +470,7 @@ frappe.ui.Slides = class Slides {
 			total: 0,
 		};
 
-		this.slide_instances.forEach((s, id) => {
-			const slide = this.slide_instances[id] || s;
+		this.slide_instances.forEach((slide, id) => {
 			const isCurrent = (id === this.current_id);
 			if (!slide.get_state) { return; }
 			const state = slide.get_state();
@@ -491,6 +492,7 @@ frappe.ui.Slides = class Slides {
 
 			if (state.skip) {
 				$dot.addClass('step-skip');
+				$dot.prop('title', __('This slide is skipped'));
 			}
 
 			counts.total++;

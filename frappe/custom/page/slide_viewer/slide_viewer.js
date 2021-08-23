@@ -36,7 +36,7 @@ class SlideViewer {
 	starting_slide = 0
 	documentName = null
 	additional_settings = null
-	doc = {}
+	doc = null
 
 	/** @type {frappe.ui.Slides} */
 	slidesInstance = null
@@ -65,7 +65,7 @@ class SlideViewer {
 
 		await Promise.all([
 			SlideViewer.getTranslations(reference_doctype),
-			SlideViewer.fetchMetaForDocType(reference_doctype),
+			reference_doctype && SlideViewer.fetchMetaForDocType(reference_doctype),
 		])
 
 		// check permissions
@@ -73,51 +73,65 @@ class SlideViewer {
 		let error = ''
 
 		if (reference_doctype) {
-			if (this.documentName) {
+			const meta = frappe.get_meta(reference_doctype)
+			if (meta.issingle && !this.documentName) {
 				if (can_edit_doc) {
+					// Single DocType
 					mode = 'Edit'
-				} else {
-					error = 'cannot edit'
-				}
+					this.documentName = meta.name
+				} else { error = 'cannot edit' }
+		  } else if (this.documentName) {
+				if (can_edit_doc) { mode = 'Edit' }
+				else { error = 'cannot edit' }
 			} else {
-				if (can_create_doc) {
-					mode = 'Create'
-				} else {
-					error = 'cannot create'
-				}
+				if (can_create_doc) { mode = 'Create' }
+				else { error = 'cannot create' }
 			}
 		} else {
-			// @todo not an invalid state, check for .slides
+			// @todo not an invalid state, check for .slides and .on_complete
 			return frappe.throw('[Slide Viewer] cannot edit document with a Slide View without reference_doctype')
 		}
 
 		if (mode === 'Edit') {
 			// edit mode / duplicate mode
-			this.doc = await frappe.xcall('frappe.client.get', {
-				doctype: reference_doctype,
-				name: this.documentName,
+			let is403 = false
+			this.doc = await frappe.model.with_doc(reference_doctype, this.documentName, (name, r) => {
+				// callback is called before promise resolution
+				if (r && r['403']) is403 = true;
 			});
 
-			// frappe.client.get should throw when doc is not found
-			if (!this.doc) { return frappe.throw(__("{0} {1} not found", [__(reference_doctype), __(this.documentName)])) }
-
-			frappe.provide("frappe.model.docinfo." + this.doc.doctype + "." + this.doc.name)
-			frappe.model.add_to_locals(this.doc)
+			if (this.doc) {
+				// okay
+			} else if (is403) {
+				error = 'forbidden'
+			} else {
+				error = 'missing document'
+			}
 		}
 		else if (mode === 'Create') {
 			this.doc = frappe.model.get_new_doc(reference_doctype)
-			frappe.provide("frappe.model.docinfo." + this.doc.doctype + "." + this.doc.name)
-			frappe.model.add_to_locals(this.doc)
-		}
-		else {
-			if (error === 'cannot edit') {
-				// frappe.show_alert({ message: __("Cannot edit this document."), indicator: 'red' })
-				return frappe.throw('[Slide Viewer] cannot edit document with this Slide View') // @todo
-			} else if (error === 'cannot create') {
-				return frappe.throw('[Slide Viewer] cannot create document with this Slide View') // @todo
-			} else if (error) {
-				return frappe.throw('[Slide Viewer] an unknown error: ' + error)
+			if (this.doc) {
+				// okay
+			} else {
+				error = 'frappe.model.get_new_doc returned null --> doctype meta not loaded?'
 			}
+		}
+
+		if (error === 'cannot edit') {
+			// frappe.show_alert({ message: __("Cannot edit this document."), indicator: 'red' })
+			frappe.show_not_permitted(__("Slide View"))
+			throw new Error('[Slide Viewer] cannot edit document with this Slide View')
+		} else if (error === 'cannot create') {
+			frappe.show_not_permitted(__("Slide View"))
+			throw new Error('[Slide Viewer] cannot create document with this Slide View')
+		} else if (error === 'missing document') {
+			frappe.show_not_found(__(reference_doctype) + " - " + __(this.documentName));
+			throw new Error('[Slide Viewer] ' + __("{0} {1} not found", [__(reference_doctype), __(this.documentName)]))
+		} else if (error === 'forbidden') {
+			frappe.show_not_permitted(__(reference_doctype) + " - " + __(this.documentName));
+			throw new Error('[Slide Viewer] ' + __("You don't have the permissions to access this document"))
+		} else if (error) {
+			return frappe.throw('[Slide Viewer] an unknown error: ' + error)
 		}
 	}
 
@@ -148,6 +162,10 @@ class SlideViewer {
 		this.wrapper = wrapper
 
 		await this._fetch()
+		if (!this.doc || !this.slideView) {
+			frappe.show_not_found('');
+			throw new Error("[SlideViewer.renderInWrapper]: missing .doc or .slideView");
+		}
 
 		if (this.documentName) {
 			frappe.utils.set_title(__(this.slideView.title) + " - " + this.documentName)
@@ -160,7 +178,13 @@ class SlideViewer {
 		if (slidesSettings) {
 			this.slidesInstance = new (this.SlidesClass)(slidesSettings)
 		} else {
-			frappe.msgprint('Aucune diapositive à affficher') // @todo
+			const msg = __('Oops, there are no slides to display.', 'Slide Viewer')
+			const img = 'empty.svg'
+			frappe.show_message_page({
+				page_name: msg,
+				message: msg,
+				img: `/assets/frappe/images/ui/${img}`
+			})
 		}
 	}
 
@@ -196,8 +220,6 @@ class SlideViewer {
 		const allSlides = await this.getSlides();
 		if (!allSlides || allSlides.length === 0) { return null }
 
-		/** @type {ConstructorParameters<typeof frappe.ui.Slides>[0]} */
-		const slidesViewer = this
 		const baseSettings = {
 			slidesViewer: this,
 			slide_class: this.SlideClass,
@@ -283,12 +305,11 @@ class SlideViewer {
 		return new Promise((cb) => frappe.model.with_doctype(doctype, cb))
 	}
 
-	static async getFieldsForDocType(doctype) {
+	static async getMetaForDocType(doctype) {
 		if (!frappe.get_meta(doctype)) {
 			await SlideViewer.fetchMetaForDocType(doctype)
 		}
-		const meta = frappe.get_meta(doctype)
-		return meta.fields
+		return frappe.get_meta(doctype)
 	}
 }
 
@@ -298,53 +319,21 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 		parent: wrapper,
 		single_column: false,
 	})
-	page.wrapper.empty()
+	page.wrapper.children('.page-head').hide()
+	page.sidebar.hide()
+	page.body.empty()
 	cur_page = page
 
 	frappe.utils.set_title(__("Slide Viewer")) // initial title
 
 	const { route, docname, starting_slide } = SlideViewer.getParamsFromRouter()
 
-	let $fullPageEditBtn = null
-
 	const slidesViewer = new SlideViewer({
 		route,
 		docname,
 		starting_slide,
-		additional_settings: (self) => ({
-			before_load: (/** @type {frappe.ui.Slides} */ slides) => {
-				slides.$container.css({ width: '100%', maxWidth: '800px' })
-
-				if (self.doc && self.doc.doctype) {
-					$fullPageEditBtn = $(`
-						<button class="btn btn-secondary btn-sm">
-							${frappe.utils.icon('edit', 'xs')}
-							${__("Edit in full page")}
-						</button>
-					`);
-					$fullPageEditBtn.appendTo(slides.$footer.find('.text-left'));
-					$fullPageEditBtn.on('click', () => {
-						// @see open_doc() in frappe/public/js/frappe/form/quick_entry.js
-
-						if (self.doc && self.doc.doctype) {
-							// @todo FakeForm is reused on real Form page
-							// @see frappe/public/js/frappe/form/form.js:247
-							cur_frm.dirty() // force dirty
-							cur_frm.save()
-						} else {
-							frappe.set_route('Form', ref_doctype, 'new');
-						}
-					});
-				}
-			},
-			before_show_slide(id) {
-				if (id === 0) {
-					$fullPageEditBtn?.show()
-				} else {
-					$fullPageEditBtn?.hide()
-				}
-			},
-		}),
+		SlidesClass: SlidesWithFullPageEditButton,
+		SlideClass: SlideWithForm,
 	})
 
 	// const dialog = new frappe.ui.Dialog()
@@ -353,18 +342,21 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 
 	// await slidesViewer.renderInWrapper(page.body)
 
-	const container = $('<div style="padding: 2rem 1rem">').appendTo(wrapper)
+	const container = $('<div style="padding: 2rem 1rem">').appendTo(page.body)
 	await slidesViewer.renderInWrapper(container)
 }
 
 async function getAutoslidesForDocType(doctype, docname = '') {
-	const fields = await SlideViewer.getFieldsForDocType(doctype)
+	const meta = await SlideViewer.getMetaForDocType(doctype)
+	const fields = meta.fields
 	const slides = []
 
 	let globalTitle = ''
-	if (docname) {
+	if (meta.issingle) {
+		globalTitle = __(meta.name)
+	} else if (docname) {
 		const href = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docname)}`;
-		const link = `<a href="${href}">${docname}</a>`
+		const link = `<a href="${href}" onclick="frappe.set_route('${href}');event&&event.preventDefault()">${docname}</a>`
 		globalTitle = __("Edit {0}", [link])
 	} else {
 		globalTitle = __("New {0}", [__(doctype)])
@@ -410,7 +402,18 @@ async function getAutoslidesForDocType(doctype, docname = '') {
 		}
 	}
 
-	return slides.filter(s => s.fields.length > 0)
+	return slides.filter(slide => {
+		const f = slide.fields.filter(df => {
+			if (frappe.model.layout_fields.includes(df.fieldtype)) {
+				return false
+			}
+			if (df.read_only && !df.read_only_depends_on) {
+				return false
+			}
+			return true
+		})
+		return f.length > 0
+	})
 
 	function newEmptySlide(translatedSubtitle = undefined) {
 		return {
@@ -423,7 +426,7 @@ async function getAutoslidesForDocType(doctype, docname = '') {
 	}
 }
 
-frappe.ui.Slides = class SlidesWithFakeForm extends frappe.ui.Slides {
+class SlidesWithForm extends frappe.ui.Slides {
 	setup() {
 		const fakeform = new FakeForm(cur_page.body, this.doc, { parentSlides: this })
 		this.parent_form = fakeform
@@ -449,15 +452,22 @@ frappe.ui.Slides = class SlidesWithFakeForm extends frappe.ui.Slides {
 
 		fakeform.make()
 		fakeform.refresh()
+
+		frappe.model.on(fakeform.doctype, "*", (fieldname, value, doc) => {
+			if (doc.name === fakeform.docname) {
+				this.render_progress_dots();
+				this.show_hide_prev_next(this.current_id);
+			}
+		});
 	}
 }
 
-frappe.ui.Slide = class SlideWithFakeForm extends frappe.ui.Slide {
+class SlideWithForm extends frappe.ui.Slide {
 	set_form_values(values) { return Promise.resolve() }
 
 	should_skip() {
-		if (this.condition) {
-			const conditionValid = this.slidesInstance.fakeform.layout.evaluate_depends_on_value(this.condition)
+		if (this.condition && this.parent_form && this.parent_form.layout) {
+			const conditionValid = this.parent_form.layout.evaluate_depends_on_value(this.condition)
 			if (!conditionValid) {
 				return true
 			}
@@ -465,11 +475,39 @@ frappe.ui.Slide = class SlideWithFakeForm extends frappe.ui.Slide {
 	}
 }
 
+class SlidesWithFullPageEditButton extends SlidesWithForm {
+	before_load() {
+		this.$container.css({ width: '100%', maxWidth: '800px' })
+
+		if (this.doc && this.doc.doctype && this.doc.name) {
+			this.$fullPageEditBtn = $(`
+				<button class="btn btn-secondary btn-sm btn-edit-in-full-page">
+					${frappe.utils.icon('edit', 'xs')}
+					${__("Edit in full page")}
+				</button>
+			`);
+			this.$fullPageEditBtn.appendTo(this.$footer.find('.text-left'));
+			this.$fullPageEditBtn.on('click', () => {
+				// @see open_doc() in frappe/public/js/frappe/form/quick_entry.js
+				frappe.set_route('Form', this.doc.doctype, this.doc.name);
+			});
+		}
+	}
+	before_show_slide(id) {
+		if (this.$fullPageEditBtn) {
+			if (this.can_go_prev(id)) {
+				this.$fullPageEditBtn.hide()
+			} else {
+				this.$fullPageEditBtn.show()
+			}
+		}
+	}
+}
 
 class FakeForm extends frappe.ui.form.Form {
 	constructor(wrapper, doc, opts = {}) {
 		if (!(typeof doc === 'object' && doc.doctype)) {
-			frappe.throw('[Slide View/FakeForm] `doc` parameter should be an object with at least a `doctype` property.')
+			frappe.throw('[Slide View/FakeForm] `doc` parameter should be an object with a `doctype` property.')
 		}
 
 		const doctype = doc.doctype
@@ -529,33 +567,33 @@ class FakeForm extends frappe.ui.form.Form {
 			}
 		})
 
-		const sidebarProxy = new Proxy({}, {
-			get(o, k, r) {
-				return () => {
-					// console.log(`%cfrm.sidebar.${k}`, 'color:pink')
-					return undefined
-				}
-			}
-		})
-		Object.defineProperty(this, 'sidebar', {
-			configurable: true,
-			get() { return sidebarProxy },
-			set(v) { },
-		})
+		// const sidebarProxy = new Proxy({}, {
+		// 	get(o, k, r) {
+		// 		return () => {
+		// 			console.log(`%cfrm.sidebar.${k}`, 'color:pink')
+		// 			return undefined
+		// 		}
+		// 	}
+		// })
+		// Object.defineProperty(this, 'sidebar', {
+		// 	configurable: true,
+		// 	get() { return sidebarProxy },
+		// 	set(v) { },
+		// })
 
-		this.toolbar = new Proxy({}, {
-			get(o, k, r) {
-				if (o[k]) { return o[k] }
-				return () => {
-					// console.log(`%cfrm.toolbar.${k}`, 'color:pink')
-					return undefined
-				}
-			},
-			set(o, k, v) {
-				o[k] = v
-				return true
-			}
-		})
+		// this.toolbar = new Proxy({}, {
+		// 	get(o, k, r) {
+		// 		if (o[k]) { return o[k] }
+		// 		return () => {
+		// 			console.log(`%cfrm.toolbar.${k}`, 'color:pink')
+		// 			return undefined
+		// 		}
+		// 	},
+		// 	set(o, k, v) {
+		// 		o[k] = v
+		// 		return true
+		// 	}
+		// })
 	}
 	make() {
 		this.layout.doc = this.doc
@@ -592,19 +630,38 @@ class FakeForm extends frappe.ui.form.Form {
 	set_df_property (fieldname, prop, value) {
 		if (!this.ready) { return this.__defer('set_df_property', fieldname, prop, value) }
 		super.set_df_property(fieldname, prop, value)
-		// this.ff(fieldname)?.set_df_property?.(fieldname, prop, value);
 	}
-	// ff_get_form_for_field(fieldname) {
-	// 	for (const s of this.parentSlides.slide_instances) {
-	// 		const f = s.form && s.form.fields_dict[fieldname]
-	// 		if (f) { return s.form }
-	// 	}
-	// 	return undefined
-	// }
-	// ff(fieldname) {
-	// 	const form = this.ff_get_form_for_field(fieldname)
-	// 	if (!form) { console.log('%cNo form for field: ' + fieldname, 'background:red;color:white') }
-	// 	return form
-	// }
+
+	async save(...args) {
+		this.fakeform_saving = true
+		await super.save(...args)
+		this.fakeform_saving = false
+	}
+	async savesubmit(...args) {
+		this.fakeform_saving = true
+		await super.savesubmit(...args)
+		this.fakeform_saving = false
+	}
+	savecancel(btn, callback, on_error) {
+		this.fakeform_saving = true
+		super.savecancel(btn, (...args) => {
+			callback&&callback(...args)
+			this.fakeform_saving = false
+		}, (...args) => {
+			on_error&&on_error(...args)
+			this.fakeform_saving = false
+		})
+	}
+	async amend_doc() {
+		this.fakeform_saving = true
+		super.amend_doc()
+		this.fakeform_saving = false
+	}
+	refresh(switched_docname) {
+		if (!this.fakeform_saving) {
+			// Skip the refresh during/after save to prevent the FakeForm from being reused on the real form page.
+			super.refresh(switched_docname)
+		}
+	}
 	refresh_header() { /* Prevent frappe.utils.set_title */ }
 }
