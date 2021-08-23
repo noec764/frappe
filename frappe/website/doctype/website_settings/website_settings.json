@@ -56,6 +56,8 @@
   "google_analytics_id",
   "google_analytics_anonymize_ip",
   "misc_section",
+  "app_name",
+  "app_logo",
   "subdomain",
   "disable_signup",
   "column_break_45",
@@ -227,7 +229,7 @@
    "collapsible": 1,
    "fieldname": "misc_section",
    "fieldtype": "Section Break",
-   "label": "Signup"
+   "label": "Login Page"
   },
   {
    "description": "An icon file with .ico extension. Should be 16 x 16 px. Generated using a favicon generator. [favicon-generator.org]",
@@ -236,9 +238,9 @@
    "label": "FavIcon"
   },
   {
-   "description": "Sub-domain provided by erpnext.com",
+   "description": "Sub-domain provided by Dokos Cloud",
    "fieldname": "subdomain",
-   "fieldtype": "Text",
+   "fieldtype": "Small Text",
    "label": "Subdomain",
    "read_only": 1
   },
@@ -439,6 +441,17 @@
  "fieldname": "navbar_template_section",
  "fieldtype": "Section Break",
  "label": "Navbar Template"
+},
+{
+ "default": "Dodock",
+ "fieldname": "app_name",
+ "fieldtype": "Data",
+ "label": "App Name"
+},
+{
+ "fieldname": "app_logo",
+ "fieldtype": "Attach Image",
+ "label": "App Logo"
   }
  ],
  "icon": "fa fa-cog",

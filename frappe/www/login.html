@@ -61,7 +61,7 @@
 	{%- if logo -%}
 	<img class="app-logo" src="{{ logo }}">
 	{% endif %}
-	<h4><span class='indicator'>{{ _('Login') }}</span></h4>
+	<h4>{{ _('Login to {0}').format(app_name) }}</h4>
 </div>
 {% endmacro %}
 
