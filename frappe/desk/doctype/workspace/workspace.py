@@ -18,6 +18,12 @@ class Workspace(Document):
 			frappe.throw(_("You need to be in developer mode to edit this document"))
 		validate_route_conflict(self.doctype, self.name)
 
+		try:
+			if not isinstance(loads(self.content), list):
+				raise
+		except Exception:
+			frappe.throw(_("Content data shoud be a list"))
+
 		if self.is_default and self.name and frappe.db.exists("Desk Page", {
 			"name": ["!=", self.name], 'is_default': 1, 'extends': self.extends
 		}):
@@ -166,7 +172,7 @@ def get_report_type(report):
 def save_page(title, icon, parent, public, sb_public_items, sb_private_items, deleted_pages, new_widgets, blocks, save):
 	save = frappe.parse_json(save)
 	public = frappe.parse_json(public)
-	if save: 
+	if save:
 		doc = frappe.new_doc('Workspace')
 		doc.title = title
 		doc.icon = icon
