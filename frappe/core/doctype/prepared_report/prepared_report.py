@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2018, Frappe Technologies and contributors
 # For license information, please see license.txt
-
-
-
-
 import json
 
 import frappe
@@ -13,7 +9,6 @@ from frappe.desk.query_report import generate_report_result
 from frappe.model.document import Document
 from frappe.utils import gzip_compress, gzip_decompress
 from frappe.utils.background_jobs import enqueue
-from frappe.core.doctype.file.file import remove_all
 
 
 class PreparedReport(Document):
