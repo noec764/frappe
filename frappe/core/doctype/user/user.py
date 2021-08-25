@@ -217,7 +217,7 @@ class User(Document):
 				})
 
 				frappe.msgprint(_('Role has been set as per the user type {0}')
-					.format(self.user_type), alert=True)
+					.format(_(self.user_type)), alert=True)
 
 		user_type_doc.update_modules_in_user(self)
 
@@ -1262,4 +1262,4 @@ def generate_keys(user):
 @frappe.whitelist()
 def switch_theme(theme):
 	if theme in ["Dark", "Light"]:
-		frappe.db.set_value("User", frappe.session.user, "desk_theme", theme) 
+		frappe.db.set_value("User", frappe.session.user, "desk_theme", theme)
