@@ -44,7 +44,7 @@ frappe.ui.form.FormTour = class FormTour {
 				this.tour = { steps: frappe.tour[this.frm.doctype] };
 			}
 		}
-		
+
 		if (on_finish) this.on_finish = on_finish;
 
 		this.init_driver();
@@ -79,7 +79,7 @@ frappe.ui.form.FormTour = class FormTour {
 
 			const driver_step = this.get_step(step, on_next, on_previous);
 			this.driver_steps.push(driver_step);
-			
+
 			if (step.fieldtype == 'Table') this.handle_table_step(step);
 			if (step.is_table_field) this.handle_child_table_step(step);
 		});
@@ -96,10 +96,16 @@ frappe.ui.form.FormTour = class FormTour {
 
 	get_step(step_info, on_next, on_previous) {
 		const { name, fieldname, title, description, position, is_table_field } = step_info;
+		let element = `.frappe-control[data-fieldname='${fieldname}']`;
+
 		const field = this.frm.get_field(fieldname);
-		let element = field ? field.wrapper : `.frappe-control[data-fieldname='${fieldname}']`;
+		if (field) {
+			// wrapper for section breaks returns in a list
+			element = field.wrapper[0] ? field.wrapper[0] : field.wrapper;
+		}
 
 		if (is_table_field) {
+			// TODO: fix wrapper for grid sections
 			element = `.grid-row-open .frappe-control[data-fieldname='${fieldname}']`;
 		}
 
@@ -148,7 +154,7 @@ frappe.ui.form.FormTour = class FormTour {
 			const is_next_field_in_curr_table = next_step.parent_field == curr_step.field;
 
 			if (!is_next_field_in_curr_table) return;
-			
+
 			const rows = this.frm.doc[curr_step.fieldname];
 			const table_has_rows = rows && rows.length > 0;
 			if (table_has_rows) {
