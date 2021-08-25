@@ -153,6 +153,10 @@ select.form-control {
 			margin-left: var(--margin-sm);
 		}
 	}
+
+	.dropdown-toggle::after {
+		float: right;
+	}
 }
 
 .ace_editor {
