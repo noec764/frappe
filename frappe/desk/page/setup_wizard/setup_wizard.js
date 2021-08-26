@@ -110,13 +110,13 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	translate_buttons() {
-		this.texts.complete_btn = __("Complete Setup")
-		this.texts.next_btn = __("Next")
-		this.texts.prev_btn = __("Previous")
+		this.text_complete_btn = __("Complete Setup");
+		this.text_next_btn = __("Next");
+		this.text_prev_btn = __("Previous");
 
-		this.$complete_btn.text(this.texts.complete_btn)
-		this.$next_btn.text(this.texts.next_btn)
-		this.$prev_btn.text(this.texts.prev_btn)
+		this.$complete_btn.text(this.text_complete_btn);
+		this.$next_btn.text(this.text_next_btn);
+		this.$prev_btn.text(this.text_prev_btn);
 	}
 
 	refresh_slides() {
@@ -141,7 +141,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		this.slide_instances.forEach((slide, id) => {
 			if (slide.made) {
 				slide.destroy();
-				this.slide_instances[id] = undefined
+				if (slide.$wrapper) { slide.$wrapper.remove() }
 			}
 		});
 		this.slide_instances = []
@@ -235,6 +235,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	show_working_state() {
 		this.$container.hide();
+		this.$slide_progress.hide();
 		// frappe.set_route(this.page_name);
 
 		this.$working_state = this.get_message(
@@ -243,6 +244,9 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.attach_abort_button();
 
+		if (this.current_slide) {
+			this.current_slide.hide_slide();
+		}
 		this.current_id = this.slide_settings.length;
 		this.current_slide = null;
 	}
@@ -253,6 +257,10 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 		this.$abort_btn.on('click', () => {
 			$(this.parent).find('.setup-in-progress').remove();
+			for (const s of this.slide_instances) { s.done = false; }
+			this.render_progress_dots();
+			this.show_slide(0);
+			this.$slide_progress.show();
 			this.$container.show();
 			// frappe.set_route(this.page_name, this.slide_settings.length - 1);
 		});
