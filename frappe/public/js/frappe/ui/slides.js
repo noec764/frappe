@@ -551,7 +551,7 @@ frappe.ui.Slides = class Slides {
 			this.on_update(counts.completed, counts.total);
 		}
 
-		if (this.clickable_progress_dots) {
+		if (this.clickable_progress_dots && shouldRemakeAll) {
 			this.bind_progress_dots();
 		}
 	}
@@ -650,10 +650,13 @@ frappe.ui.Slides = class Slides {
 
 	bind_progress_dots() {
 		const me = this;
-		this.$slide_progress.find('.slide-step:not(.step-skip)')
+		this.$slide_progress.find('.slide-step')
 			.addClass('link')
 			.off('click')
 			.on('click', function () {
+				const skipped = $(this).hasClass('step-skip')
+				if (skipped) { return; }
+
 				const hasErrors = me.current_slide.has_errors(true);
 				if (!hasErrors && me.current_slide) {
 					me.current_slide.last_validation_result = true;
