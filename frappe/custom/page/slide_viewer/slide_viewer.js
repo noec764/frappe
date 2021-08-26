@@ -81,7 +81,7 @@ class SlideViewer {
 					mode = 'Edit'
 					this.documentName = meta.name
 				} else { error = 'cannot edit' }
-		  } else if (this.documentName) {
+			} else if (this.documentName) {
 				if (can_edit_doc) { mode = 'Edit' }
 				else { error = 'cannot edit' }
 			} else {
@@ -186,9 +186,8 @@ class SlideViewer {
 				img: `/assets/frappe/images/ui/${img}`
 			})
 		}
-	}
 
-	async getSlidesSettings() {
+	async getSlidesSettings(params) {
 		const allSlides = await this.getSlides();
 		if (!allSlides || allSlides.length === 0) { return null }
 
@@ -196,7 +195,6 @@ class SlideViewer {
 			slidesViewer: this,
 			slide_class: this.SlideClass,
 
-			parent: this.wrapper,
 			slides: allSlides,
 			initial_values: this.doc,
 			starting_slide: this.starting_slide,
@@ -208,6 +206,8 @@ class SlideViewer {
 				cur_frm.save(undefined, undefined, this.$complete_btn, undefined)
 			},
 		}
+
+		Object.assign(baseSettings, params);
 
 		if (this.additional_settings) {
 			if (typeof this.additional_settings === 'function') {
@@ -224,7 +224,7 @@ class SlideViewer {
 		let allSlides = [];
 
 		const ref_doctype = this.slideView.reference_doctype;
-		const shouldGenerateAutoSlides = (!this.slideView.slides) || this.slideView.slides.length === 0;
+		const shouldGenerateAutoSlides = true;
 		if (shouldGenerateAutoSlides) {
 			if (ref_doctype) {
 				allSlides = await getAutoslidesForDocType(ref_doctype, this.documentName);
@@ -232,8 +232,7 @@ class SlideViewer {
 				// cannot generate auto slides without doctype
 			}
 		} else {
-			// slides = await create_slides_for_slides_view(slideView)
-			// slides = await getSetupWizardSlides(slideView)
+			// slides = await getSlidesForSlideView(slideView)
 		}
 
 		return allSlides;
@@ -270,7 +269,7 @@ class SlideViewer {
 	}
 
 	static getSlideViewByRoute(route) {
-		return frappe.xcall('frappe.custom.page.slide_viewer.api.get_slide_view', { route })
+		return frappe.xcall('frappe.custom.page.slide_viewer.api.get_slide_view_by_route', { route })
 	}
 
 	static async fetchMetaForDocType(doctype) {
@@ -289,7 +288,7 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 	wrapper.innerHTML = ''
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
-		single_column: false,
+		single_column: true,
 	})
 	page.wrapper.children('.page-head').hide()
 	page.sidebar.hide()
@@ -312,15 +311,18 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 			if (this.slideView.add_fullpage_edit_btn) {
 				this.SlidesClass = SlidesWithFullPageEditButton
 			}
+
+			return { text_complete_btn: __("Save") }
 		},
 	})
 
-	// const dialog = new frappe.ui.Dialog()
+	// const dialog = new frappe.ui.Dialog({ size: 'large' })
 	// dialog.show()
-	// await slidesViewer.renderInWrapper(dialog.$body)
+	// await slidesViewer.renderInDialog(dialog)
 
 	const container = $('<div style="padding: 2rem 1rem">').appendTo(page.body)
 	await slidesViewer.renderInWrapper(container)
+	slidesViewer.slidesInstance.render_progress_dots()
 }
 
 async function getAutoslidesForDocType(doctype, docname = '') {
@@ -379,7 +381,8 @@ async function getAutoslidesForDocType(doctype, docname = '') {
 		}
 	}
 
-	return slides.filter(slide => {
+	return slides.filter(slide => slide.fields.length > 0)
+	/* return slides.filter(slide => {
 		const f = slide.fields.filter(df => {
 			if (frappe.model.layout_fields.includes(df.fieldtype)) {
 				return false
@@ -390,7 +393,7 @@ async function getAutoslidesForDocType(doctype, docname = '') {
 			return true
 		})
 		return f.length > 0
-	})
+	}) */
 
 	function newEmptySlide(translatedSubtitle = undefined) {
 		return {
@@ -465,7 +468,7 @@ class SlidesWithFullPageEditButton extends SlidesWithForm {
 
 		if (this.doc && this.doc.doctype && this.doc.name) {
 			this.$fullPageEditBtn = $(`
-				<button class="btn btn-secondary btn-sm btn-edit-in-full-page">
+				<button class="btn btn-secondary btn-edit-in-full-page">
 					${frappe.utils.icon('edit', 'xs')}
 					${__("Edit in full page")}
 				</button>
@@ -611,7 +614,7 @@ class FakeForm extends frappe.ui.form.Form {
 
 	refresh_field(fname) {
 		if (!this.ready) { return this.__defer('refresh_field', fname) }
-	  super.refresh_field(fname)
+		super.refresh_field(fname)
 	}
 	set_df_property (fieldname, prop, value) {
 		if (!this.ready) { return this.__defer('set_df_property', fieldname, prop, value) }

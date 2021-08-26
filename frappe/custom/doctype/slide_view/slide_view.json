@@ -21,9 +21,7 @@
   "can_create_doc",
   "can_edit_doc",
   "add_fullpage_edit_btn",
-  "html_invalid_doc_settings",
-  "_section_slides",
-  "slides"
+  "html_invalid_doc_settings"
  ],
  "fields": [
   {
@@ -68,11 +66,6 @@
    "label": "Allow document creation"
   },
   {
-   "fieldname": "slides",
-   "fieldtype": "Data",
-   "label": "Slides"
-  },
-  {
    "default": "1",
    "description": "Allow users to go back and edit values in previous slides.",
    "fieldname": "allow_back",
@@ -113,16 +106,11 @@
   {
    "fieldname": "_cb_2",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "_section_slides",
-   "fieldtype": "Section Break",
-   "label": "Slides"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-08-23 19:31:58.905286",
+ "modified": "2021-08-24 13:36:49.625366",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Slide View",
