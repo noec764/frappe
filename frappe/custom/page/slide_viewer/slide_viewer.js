@@ -447,6 +447,13 @@ async function getAutoslidesForDocType(doctype, docname = '') {
 }
 
 class SlidesWithForm extends frappe.ui.Slides {
+	render_progress_dots(...args) {
+		if (this.parent_form) {
+			this.updateSlidesWithErrorFields();
+		}
+		super.render_progress_dots(...args);
+	}
+
 	before_load() {
 		super.before_load()
 		this.$container.css({ width: '100%', maxWidth: '800px' })
@@ -484,6 +491,31 @@ class SlidesWithForm extends frappe.ui.Slides {
 				this.show_hide_prev_next(this.current_id);
 			}
 		});
+	}
+
+	updateSlidesWithErrorFields() {
+		const error_docs = this.parent_form.fakeform_get_missing_fields();
+		// Names of the invalid fields in the main document.
+		const error_root_fieldnames = []
+
+		for (const err of error_docs) {
+			const { doc, error_fields } = err
+			if (doc.parentfield) {
+				error_root_fieldnames.push(doc.parentfield)
+			} else {
+				for (const fieldname of error_fields) {
+					error_root_fieldnames.push(fieldname)
+				}
+			}
+		}
+
+		this.slide_instances.forEach(s => {
+			const slide_fieldnames = s.fields.map(df => df.fieldname)
+			const has_error = error_root_fieldnames.some(fn => slide_fieldnames.includes(fn))
+			if (has_error) {
+				s.last_validation_result = false; // force error
+			}
+		})
 	}
 }
 
@@ -699,4 +731,31 @@ class FakeForm extends frappe.ui.form.Form {
 		}
 	}
 	refresh_header() { /* Prevent frappe.utils.set_title */ }
+
+	fakeform_get_missing_fields(frm = this) {
+		if (frm.doc.docstatus == 2) return []; // don't check for cancel
+
+		const error_docs = [];
+
+		const allDocs = frappe.model.get_all_docs(frm.doc);
+		for (const doc of allDocs) {
+			const error_fields = [];
+
+			const docfields = frappe.meta.docfield_list[doc.doctype] || []
+			for (const docfield of docfields) {
+				if (docfield.fieldname) {
+					const df = frappe.meta.get_docfield(doc.doctype, docfield.fieldname, doc.name);
+
+					const hasValue = frappe.model.has_value(doc.doctype, doc.name, df.fieldname)
+					if (df.reqd && !hasValue) {
+						error_fields.push(docfield.fieldname);
+					}
+				}
+			}
+
+			error_docs.push({ doc, error_fields });
+		}
+
+		return error_docs;
+	}
 }
