@@ -247,7 +247,9 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 			done_state: this.slideView.done_state,
 
 			on_complete() {
-				cur_frm.save(undefined, undefined, this.$complete_btn, undefined)
+				if (this.parent_form) {
+					this.parent_form.save();
+				}
 			},
 		}
 
