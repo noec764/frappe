@@ -7,6 +7,10 @@ context('Slide View', () => {
 		cy.get('.slides-wrapper').should('exist');
 		cy.wait(300);
 		cy.get('#freeze').should('not.exist'); // wait for initial language setup (English)
+		cy.get_field('language', 'Select').should('be.enabled');
+		cy.get('.next-btn')
+			.should('be.enabled')
+			.should('contain', 'Next');
 	});
 
 	it('translate buttons correctly on language change', () => {
@@ -27,7 +31,7 @@ context('Slide View', () => {
 		cy.get('.next-btn').should('be.visible').click();
 	});
 
-	it('allows full page edit even with empty mandatory fields', () => {
+	it('correclty fill currency field when selecting country', () => {
 		cy.fill_field('country', 'États-Unis', 'Select').blur();
 		cy.get_field('currency', 'Select').should('have.value', 'USD');
 
