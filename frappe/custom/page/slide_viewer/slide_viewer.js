@@ -13,10 +13,11 @@
  * @property {boolean} can_edit_doc
  * @property {boolean} can_create_doc
  * @property {boolean} add_fullpage_edit_btn
- * @property {any[]} slides
  */
 
-class SlideViewer {
+frappe.provide('frappe.ui');
+
+const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 	SlideClass = frappe.ui.Slide
 	SlidesClass = frappe.ui.Slides
 
@@ -153,38 +154,82 @@ class SlideViewer {
 		}
 	}
 
+	update_page_title() {
+		if (this.documentName) {
+			frappe.utils.set_title(__(this.slideView.title) + " - " + this.documentName)
+		} else {
+			frappe.utils.set_title(__(this.slideView.title))
+		}
+	}
+
 	/**
 	 * Renders the Slide Viewer in the given container
-	 * @param {HTMLElement} wrapper
+	 * @param {HTMLElement|JQuery} wrapper
 	 */
 	async renderInWrapper(wrapper) {
-		this.wrapper = wrapper
-
 		await this._fetch()
 		if (!this.doc || !this.slideView) {
 			frappe.show_not_found('');
 			throw new Error("[SlideViewer.renderInWrapper]: missing .doc or .slideView");
 		}
 
-		if (this.documentName) {
-			frappe.utils.set_title(__(this.slideView.title) + " - " + this.documentName)
-		} else {
-			frappe.utils.set_title(__(this.slideView.title))
+		this.update_page_title();
+
+		// make the Slides instance with optional values to populate the form.
+		const slidesSettings = await this.getSlidesSettings({
+			parent: wrapper,
+		});
+		this._renderWithSettings(slidesSettings);
+	}
+
+	/**
+	 * Renders the Slide Viewer in the given Dialog
+	 * @param {frappe.ui.Dialog} dialog
+	 */
+	async renderInDialog(dialog) {
+		await this._fetch()
+		if (!this.doc || !this.slideView) {
+			frappe.show_not_found('');
+			throw new Error("[SlideViewer.renderInWrapper]: missing .doc or .slideView");
 		}
 
 		// make the Slides instance with optional values to populate the form.
-		const slidesSettings = await this.getSlidesSettings()
-		if (slidesSettings) {
-			this.slidesInstance = new (this.SlidesClass)(slidesSettings)
-		} else {
-			const msg = __("Oops, there are no slides to display.", null, "Slide View")
-			const img = 'empty.svg'
-			frappe.show_message_page({
-				page_name: msg,
-				message: msg,
-				img: `/assets/frappe/images/ui/${img}`
-			})
+		dialog.standard_actions.empty();
+		$(dialog.footer).show();
+		$(dialog.footer).removeClass('hide');
+		const slidesSettings = await this.getSlidesSettings({
+			parent: dialog.wrapper,
+			$container: $(dialog.wrapper),
+			$body: dialog.$body,
+			$footer: $(dialog.standard_actions),
+			$header: $(dialog.header).find('.title-section').addClass('justify-center'),
+			onload() {
+				this.$slide_progress.css({ margin: '0' });
+				this.$footer.find('.flex-row').addClass('row');
+			},
+		});
+
+		this._renderWithSettings(slidesSettings);
+	}
+
+	_renderWithSettings(slidesSettings) {
+		if (!slidesSettings) {
+			this.showErrorNoSlides();
+			return;
 		}
+
+		this.slidesInstance = new (this.SlidesClass)(slidesSettings);
+	}
+
+	showErrorNoSlides() {
+		const msg = __("Oops, there are no slides to display.", null, "Slide View")
+		const img = 'empty.svg'
+		frappe.show_message_page({
+			page_name: msg,
+			message: msg,
+			img: `/assets/frappe/images/ui/${img}`
+		})
+	}
 
 	async getSlidesSettings(params) {
 		const allSlides = await this.getSlides();
