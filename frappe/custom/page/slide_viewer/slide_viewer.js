@@ -65,7 +65,6 @@ class SlideViewer {
 		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView
 
 		await Promise.all([
-			SlideViewer.getTranslations(reference_doctype),
 			reference_doctype && SlideViewer.fetchMetaForDocType(reference_doctype),
 		])
 
@@ -262,10 +261,6 @@ class SlideViewer {
 			docname: docname,
 			starting_slide: starting_slide,
 		}
-	}
-
-	static getTranslations(doctype) {
-		return frappe.xcall('frappe.custom.page.slide_viewer.api.get_translations', { doctype })
 	}
 
 	static getSlideViewByRoute(route) {
