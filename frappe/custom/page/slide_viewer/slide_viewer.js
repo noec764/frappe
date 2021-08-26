@@ -488,6 +488,12 @@ class SlidesWithForm extends frappe.ui.Slides {
 }
 
 class SlideWithForm extends frappe.ui.Slide {
+	refresh() {
+		super.refresh()
+		// fix missing layout refresh
+		this.form.refresh()
+	}
+
 	set_form_values(values) { return Promise.resolve() }
 
 	should_skip() {
