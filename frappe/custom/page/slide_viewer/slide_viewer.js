@@ -753,7 +753,9 @@ class FakeForm extends frappe.ui.form.Form {
 				}
 			}
 
-			error_docs.push({ doc, error_fields });
+			if (error_fields.length > 0) {
+				error_docs.push({ doc, error_fields });
+			}
 		}
 
 		return error_docs;
