@@ -156,7 +156,7 @@
 		font-weight: var(--text-bold);
 		padding: 0 var(--padding-xs);
 	}
-	.row:first-child {
+	.form-documents:first-of-type .row:first-child {
 		.form-link-title {
 			margin-top: 0;
 		}

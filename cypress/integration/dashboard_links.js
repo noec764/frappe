@@ -6,6 +6,10 @@ context('Dashboard links', () => {
 	});
 
 	it('Adding a new contact, checking for the counter on the dashboard and deleting the created contact', () => {
+		cy.visit('/app/contact');
+		cy.clear_filters();
+
+		cy.visit('/app/user');
 		cy.get('.list-row-col > .level-item > .ellipsis').eq(0).click();
 
 		//To check if initially the dashboard contains only the "Contact" link and there is no counter
@@ -35,5 +39,26 @@ context('Dashboard links', () => {
 		cy.visit('/app/user');
 		cy.get('.list-row-col > .level-item > .ellipsis').eq(0).click();
 		cy.get('[data-doctype="Contact"]').should('contain', 'Contact');
+	});
+
+	it('Report link in dashboard', () => {
+		cy.visit('/app/user');
+		cy.visit('/app/user/Administrator');
+		cy.get('[data-doctype="Contact"]').should('contain', 'Contact');
+		cy.findByText('Connections');
+		cy.window()
+			.its('cur_frm')
+			.then(cur_frm => {
+				cur_frm.dashboard.data.reports = [
+					{
+						'label': 'Reports',
+						'items': ['Permitted Documents For User']
+					}
+				];
+				cur_frm.dashboard.render_report_links();
+				cy.get('[data-report="Permitted Documents For User"]').contains('Permitted Documents For User').click();
+				cy.findByText('Permitted Documents For User');
+				cy.findByPlaceholderText('User').should("have.value", "Administrator");
+			});
 	});
 });
