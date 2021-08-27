@@ -183,6 +183,11 @@ def get(uuid=None, *args, **kwargs):
 		result = list(frappe.cache().hgetall(RECORDER_REQUEST_SPARSE_HASH).values())
 	return result
 
+frappe.whitelist()
+@do_not_record
+@administrator_only
+def export_data(*args, **kwargs):
+	return list(frappe.cache().hgetall(RECORDER_REQUEST_HASH).values())
 
 @frappe.whitelist()
 @do_not_record
