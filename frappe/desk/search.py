@@ -61,7 +61,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 
 	if isinstance(filters, str):
 		filters = json.loads(filters)
-	
+
 	if searchfield:
 		sanitize_searchfield(searchfield)
 
@@ -263,6 +263,7 @@ def get_users_for_mentions():
 			'name': ['not in', ('Administrator', 'Guest')],
 			'allowed_in_mentions': True,
 			'user_type': 'System User',
+			'enabled': True,
 		})
 
 def get_user_groups():
