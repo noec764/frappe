@@ -27,7 +27,7 @@ from .utils.lazy_loader import lazy_import
 # Lazy imports
 faker = lazy_import('faker')
 
-__version__ = '2.0.0-dev'
+__version__ = '2.0.15'
 __title__ = "Dodock Framework"
 
 local = Local()
