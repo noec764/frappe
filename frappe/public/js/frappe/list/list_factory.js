@@ -44,7 +44,6 @@ frappe.views.ListFactory = class ListFactory extends frappe.views.Factory {
 		if (this.re_route_to_view()) {
 			return;
 		}
-
 		this.set_module_breadcrumb();
 		super.show();
 		this.set_cur_list();
@@ -71,15 +70,6 @@ frappe.views.ListFactory = class ListFactory extends frappe.views.Factory {
 			} else {
 				return false;
 			}
-		}
-
-		//TODO: Commonify with code in "make" method
-		const view_name = doctype !== 'File' ? frappe.utils.to_title_case(route[2] || 'List') : 'File';
-		let view_class = frappe.views[view_name + 'View'];
-		if (!view_class) view_class = frappe.views.ListView;
-		if (view_class && view_class.load_last_view && view_class.load_last_view()) {
-			// view can have custom routing logic
-			return;
 		}
 	}
 

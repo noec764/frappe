@@ -117,7 +117,7 @@ class TestAutoRepeat(unittest.TestCase):
 		#the original doc + the repeated doc
 		self.assertEqual(len(docnames), 4)
 		doc.load_from_db()
-		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(today(), 1)))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(add_months(add_months(today(), -2), 3)))
 
 		todo = frappe.get_doc(
 			dict(doctype='ToDo', description='test next schedule date for daily', assigned_by='Administrator')).insert()
@@ -141,7 +141,7 @@ class TestAutoRepeat(unittest.TestCase):
 			fields=['docstatus'],
 			limit=1
 		)
-		self.assertEquals(docnames[0].docstatus, 1)
+		self.assertEqual(docnames[0].docstatus, 1)
 
 
 def make_auto_repeat(**args):
@@ -162,7 +162,7 @@ def make_auto_repeat(**args):
 
 	return doc
 
-def create_submittable_doctype(doctype):
+def create_submittable_doctype(doctype, submit_perms=1):
 	if frappe.db.exists('DocType', doctype):
 		return
 	else:
@@ -183,9 +183,9 @@ def create_submittable_doctype(doctype):
 				'write': 1,
 				'create': 1,
 				'delete': 1,
-				'submit': 1,
-				'cancel': 1,
-				'amend': 1
+				'submit': submit_perms,
+				'cancel': submit_perms,
+				'amend': submit_perms
 			}]
 		}).insert()
 

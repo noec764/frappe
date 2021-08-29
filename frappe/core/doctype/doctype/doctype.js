@@ -13,6 +13,15 @@
 
 frappe.ui.form.on('DocType', {
 	refresh(frm) {
+		frm.set_query('role', 'permissions', function(doc) {
+			if (doc.custom && frappe.session.user != 'Administrator') {
+				return {
+					query: "frappe.core.doctype.role.role.role_query",
+					filters: [['Role', 'name', '!=', 'All']]
+				};
+			}
+		});
+
 		if(frappe.session.user !== "Administrator" || !frappe.boot.developer_mode) {
 			if(frm.is_new()) {
 				frm.set_value("custom", 1);
@@ -24,9 +33,8 @@ frappe.ui.form.on('DocType', {
 
 		if (!frm.is_new() && !frm.doc.istable) {
 			if (frm.doc.issingle) {
-				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {
+				frm.add_custom_button(__('Go to {0}', [__(frm.doc.name)]), () => {
 					window.open(`/app/${frappe.router.slug(frm.doc.name)}`);
-					// frappe.set_route('Form', frm.doc.name);
 				});
 			} else {
 				frm.add_custom_button(__('Go to {0} List', [__(frm.doc.name)]), () => {

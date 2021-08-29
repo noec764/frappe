@@ -20,3 +20,8 @@ def log(message, colour=''):
 	colour = colours.get(colour, "")
 	end_line = '\033[0m'
 	print(colour + message + end_line)
+
+def warn(message, category=None):
+	from warnings import warn
+
+	warn(message=message, category=category, stacklevel=2)

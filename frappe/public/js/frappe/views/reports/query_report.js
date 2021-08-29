@@ -939,7 +939,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			else {
 				wrapper[0].innerHTML =
 				`<div class="flex justify-center align-center text-muted" style="height: 120px; display: flex;">
-					<div>Please select X and Y fields</div>
+					<div>${__("Please select X and Y fields")}</div>
 				</div>`;
 			}
 		}
@@ -1096,7 +1096,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 			return Object.assign(column, {
 				id: column.fieldname,
-				name: __(column.label),
+				name: __(column.label, null, `Column of report '${this.report_name}'`), // context has to match context in get_messages_from_report in translate.py
 				width: parseInt(column.width) || null,
 				editable: false,
 				compareValue: compareFn,
@@ -1346,7 +1346,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 				open_url_post(frappe.request.url, args);
 			}
-		}, __('Export Report: '+ this.report_name), __('Download'));
+		}, __('Export Report: {0}', [this.report_name]), __('Download'));
 	}
 
 	get_data_for_csv(include_indentation) {

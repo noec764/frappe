@@ -7,9 +7,7 @@ import frappe, frappe.utils, frappe.utils.scheduler
 from frappe.desk.form import assign_to
 import unittest
 
-test_records = frappe.get_test_records('Notification')
-
-test_dependencies = ["User"]
+test_dependencies = ["User", "Notification"]
 
 class TestNotification(unittest.TestCase):
 	def setUp(self):
@@ -42,6 +40,8 @@ class TestNotification(unittest.TestCase):
 		frappe.set_user("Administrator")
 
 	def test_new_and_save(self):
+		"""Check creating a new communication triggers a notification.
+		"""
 		communication = frappe.new_doc("Communication")
 		communication.communication_type = 'Comment'
 		communication.subject = "test"
@@ -60,9 +60,11 @@ class TestNotification(unittest.TestCase):
 			"reference_name": communication.name, "status":"Not Sent"}))
 
 		self.assertEqual(frappe.db.get_value('Communication',
-			communication.name, 'subject'), 'test')
+			communication.name, 'subject'), '__testing__')
 
 	def test_condition(self):
+		"""Check notification is triggered based on a condition.
+		"""
 		event = frappe.new_doc("Event")
 		event.subject = "test"
 		event.event_type = "Private"
@@ -77,6 +79,10 @@ class TestNotification(unittest.TestCase):
 
 		self.assertTrue(frappe.db.get_value("Email Queue", {"reference_doctype": "Event",
 			"reference_name": event.name, "status":"Not Sent"}))
+
+		# Make sure that we track the triggered notifications in communication doctype.
+		self.assertTrue(frappe.db.get_value("Communication", {"reference_doctype": "Event",
+			"reference_name": event.name, "communication_type": 'Automated Message'}))
 
 	def test_invalid_condition(self):
 		frappe.set_user("Administrator")

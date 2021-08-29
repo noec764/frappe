@@ -116,3 +116,8 @@ ql-editor {
   direction: rtl;
   text-align: right;
 }
+
+.v-sidebar-menu {
+  left: unset;
+  right: 0;
+}

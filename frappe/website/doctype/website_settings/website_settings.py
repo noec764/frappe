@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.utils import get_request_site_address, encode
 from frappe.model.document import Document
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 from frappe.website.router import resolve_route
 from frappe.website.doctype.website_theme.website_theme import add_website_theme
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
@@ -120,7 +120,8 @@ def get_website_settings(context=None):
 		"facebook_share", "google_plus_one", "twitter_share", "linked_in_share",
 		"disable_signup", "hide_footer_signup", "head_html", "title_prefix",
 		"navbar_template", "footer_template", "navbar_search", "enable_view_tracking",
-		"footer_logo", "call_to_action", "call_to_action_url"]:
+		"footer_logo", "call_to_action", "call_to_action_url", "show_language_picker",
+		"chat_enable"]:
 		if hasattr(settings, k):
 			context[k] = settings.get(k)
 
@@ -187,7 +188,3 @@ def get_items(parentfield):
 					t['child_items'].append(d)
 					break
 	return top_items
-
-@frappe.whitelist(allow_guest=True)
-def is_chat_enabled():
-	return bool(frappe.db.get_single_value('Website Settings', 'chat_enable'))

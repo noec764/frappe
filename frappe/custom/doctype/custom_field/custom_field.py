@@ -36,6 +36,9 @@ class CustomField(Document):
 		meta = frappe.get_meta(self.dt, cached=False)
 		fieldnames = [df.fieldname for df in meta.get("fields")]
 
+		if self.fieldname in fieldnames:
+			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, self.dt))
+
 	def validate(self):
 		from frappe.custom.doctype.customize_form.customize_form import CustomizeForm
 
@@ -57,25 +60,23 @@ class CustomField(Document):
 		if not self.fieldname:
 			frappe.throw(_("Fieldname not set for Custom Field"))
 
-		if self.fieldname in fieldnames:
-			frappe.throw(_("A field with the name '{}' already exists in doctype {}.").format(self.fieldname, _(self.dt)))
-
 		if self.get('translatable', 0) and not supports_translation(self.fieldtype):
 			self.translatable = 0
 
 		if not self.flags.ignore_validate:
-			from frappe.core.doctype.doctype.doctype import check_if_fieldname_conflicts_with_methods
-			check_if_fieldname_conflicts_with_methods(self.dt, self.fieldname)
+			from frappe.core.doctype.doctype.doctype import check_fieldname_conflicts
+			check_fieldname_conflicts(self.dt, self.fieldname)
 
 	def on_update(self):
-		frappe.clear_cache(doctype=self.dt)
+		if not frappe.flags.in_setup_wizard:
+			frappe.clear_cache(doctype=self.dt)
 		if not self.flags.ignore_validate:
 			# validate field
 			from frappe.core.doctype.doctype.doctype import validate_fields_for_doctype
 			validate_fields_for_doctype(self.dt)
 
 		# update the schema
-		if not frappe.db.get_value('DocType', self.dt, 'issingle'):
+		if not frappe.db.get_value('DocType', self.dt, 'issingle') and not frappe.flags.in_setup_wizard:
 			frappe.db.updatedb(self.dt)
 
 	def on_trash(self):
@@ -144,6 +145,10 @@ def create_custom_fields(custom_fields, ignore_validate = False, update=True):
 	'''Add / update multiple custom fields
 
 	:param custom_fields: example `{'Sales Invoice': [dict(fieldname='test')]}`'''
+
+	if not ignore_validate and frappe.flags.in_setup_wizard:
+		ignore_validate = True
+
 	for doctype, fields in custom_fields.items():
 		if isinstance(fields, dict):
 			# only one field
@@ -162,6 +167,9 @@ def create_custom_fields(custom_fields, ignore_validate = False, update=True):
 				custom_field.flags.ignore_validate = ignore_validate
 				custom_field.update(df)
 				custom_field.save()
+
+		frappe.clear_cache(doctype=doctype)
+		frappe.db.updatedb(doctype)
 
 
 @frappe.whitelist()

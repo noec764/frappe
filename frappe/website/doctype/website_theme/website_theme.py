@@ -63,7 +63,6 @@ class WebsiteTheme(Document):
 
 		# add a random suffix
 		suffix = frappe.generate_hash('Website Theme', 8) if self.custom else 'style'
-
 		file_name = frappe.scrub(self.name) + '_' + suffix + '.css'
 		output_path = join_path(folder_path, file_name)
 
@@ -120,6 +119,7 @@ class WebsiteTheme(Document):
 			})
 		return out
 
+
 def add_website_theme(context):
 	context.theme = frappe._dict()
 
@@ -135,9 +135,12 @@ def get_active_theme():
 		except frappe.DoesNotExistError:
 			pass
 
+
+
 def get_scss(website_theme):
 	"""
 	Render `website_theme_template.scss` with the values defined in Website Theme.
+
 	params:
 	website_theme - instance of a Website Theme
 	"""
@@ -152,6 +155,7 @@ def get_scss(website_theme):
 def get_scss_paths():
 	"""
 	Return a set of SCSS import paths from all apps that provide `website.scss`.
+
 	If `$BENCH_PATH/apps/frappe/frappe/public/scss/website.scss` exists, the
 	returned set will contain 'frappe/public/scss/website'.
 	"""
@@ -171,13 +175,14 @@ def get_scss_paths():
 def after_migrate():
 	"""
 	Regenerate Active Theme CSS file after migration.
+
 	Necessary to reflect possible changes in the imported SCSS files. Called at
 	the end of every `bench migrate`.
 	"""
-	website_theme_list = frappe.get_list('Website Theme')
-	for website_theme in website_theme_list:
-		website_theme_doc = frappe.get_doc('Website Theme', website_theme.name)
-		if website_theme_doc.custom:
-			website_theme_doc.save()
-		else:
-			website_theme_doc.validate()
+	website_theme = frappe.db.get_single_value('Website Settings', 'website_theme')
+	if not website_theme or website_theme == 'Standard':
+		return
+
+	doc = frappe.get_doc('Website Theme', website_theme)
+	doc.generate_bootstrap_theme()
+	doc.save()

@@ -19,6 +19,7 @@ from frappe.integrations.doctype.webhook import run_webhooks
 from frappe.model.rename_doc import rename_doc
 from frappe.desk.form.document_follow import follow_document
 from frappe.core.doctype.server_script.server_script_utils import run_server_script_for_doc_event
+from frappe.utils.data import get_absolute_url
 
 # once_only validation
 # methods
@@ -1244,8 +1245,8 @@ class Document(BaseDocument):
 			doc.set(fieldname, flt(doc.get(fieldname), self.precision(fieldname, doc.parentfield)))
 
 	def get_url(self):
-		"""Returns Desk URL for this document. `/app/Form/{doctype}/{name}`"""
-		return "/app/Form/{doctype}/{name}".format(doctype=self.doctype, name=self.name)
+		"""Returns Desk URL for this document."""
+		return get_absolute_url(self.doctype, self.name)
 
 	def add_comment(self, comment_type='Comment', text=None, comment_email=None, link_doctype=None, link_name=None, comment_by=None):
 		"""Add a comment to this document.
@@ -1388,6 +1389,21 @@ class Document(BaseDocument):
 		"""Return a list of Tags attached to this document"""
 		from frappe.desk.doctype.tag.tag import DocTags
 		return DocTags(self.doctype).get_tags(self.name).split(",")[1:]
+
+	def __repr__(self):
+		name = self.name or "unsaved"
+		doctype = self.__class__.__name__
+
+		docstatus = f" docstatus={self.docstatus}" if self.docstatus else ""
+		parent = f" parent={self.parent}" if self.parent else ""
+
+		return f"<{doctype}: {name}{docstatus}{parent}>"
+
+	def __str__(self):
+		name = self.name or "unsaved"
+		doctype = self.__class__.__name__
+
+		return f"{doctype}({name})"
 
 def execute_action(doctype, name, action, **kwargs):
 	"""Execute an action on a document (called by background worker)"""

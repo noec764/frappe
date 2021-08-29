@@ -631,6 +631,25 @@ def ceil(s):
 
 def cstr(s, encoding='utf-8'):
 	return frappe.as_unicode(s, encoding)
+
+def sbool(x):
+	"""Converts str object to Boolean if possible.
+	Example:
+		"true" becomes True
+		"1" becomes True
+		"{}" remains "{}"
+	Args:
+		x (str): String to be converted to Bool
+	Returns:
+		object: Returns Boolean or type(x)
+	"""
+	from distutils.util import strtobool
+
+	try:
+		return bool(strtobool(x))
+	except Exception:
+		return x
+
 def rounded(num, precision=0):
 	"""round method for round halfs to nearest even algorithm aka banker's rounding - compatible with python3"""
 	precision = cint(precision)
@@ -715,11 +734,11 @@ def parse_val(v):
 		v = int(v)
 	return v
 
-def fmt_money(amount, precision=None, currency=None):
+def fmt_money(amount, precision=None, currency=None, format=None):
 	"""
 	Convert to string with commas for thousands, millions etc
 	"""
-	number_format = frappe.db.get_default("number_format") or "#,###.##"
+	number_format = format or frappe.db.get_default("number_format") or "#,###.##"
 	if precision is None:
 		precision = cint(frappe.db.get_default('currency_precision')) or None
 
@@ -892,7 +911,7 @@ def in_words(integer, in_million=True):
 	return ret.replace('-', ' ')
 
 def is_html(text):
-	if not isinstance(text, frappe.string_types):
+	if not isinstance(text, str):
 		return False
 	return re.search('<[^>]+>', text)
 
@@ -1250,6 +1269,7 @@ def get_filter(doctype, f, filters_config=None):
 	valid_operators = ("=", "!=", ">", "<", ">=", "<=", "like", "not like", "in", "not in", "is",
 		"between", "descendants of", "ancestors of", "not descendants of", "not ancestors of",
 		"timespan", "previous", "next")
+	standard_filters_operator = ("value or descendants of", )
 
 	if filters_config:
 		additional_operators = []
@@ -1257,7 +1277,7 @@ def get_filter(doctype, f, filters_config=None):
 			additional_operators.append(key.lower())
 		valid_operators = tuple(set(valid_operators + tuple(additional_operators)))
 
-	if f.operator.lower() not in valid_operators:
+	if f.operator.lower() not in valid_operators + standard_filters_operator:
 		frappe.throw(frappe._("Operator must be one of {0}").format(", ".join(valid_operators)))
 
 
@@ -1300,7 +1320,9 @@ def make_filter_dict(filters):
 
 def sanitize_column(column_name):
 	from frappe import _
+	import sqlparse
 	regex = re.compile("^.*[,'();].*")
+	column_name = sqlparse.format(column_name, strip_comments=True, keyword_case="lower")
 	blacklisted_keywords = ['select', 'create', 'insert', 'delete', 'drop', 'update', 'case', 'and', 'or']
 
 	def _raise_exception():

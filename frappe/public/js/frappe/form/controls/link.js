@@ -200,10 +200,11 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 						if(frappe.model.can_create(doctype)) {
 							// new item
 							r.results.push({
-								label: "<span class='text-primary link-option'>"
+								html: "<span class='text-primary link-option'>"
 									+ "<i class='uil uil-plus' style='margin-right: 5px;'></i> "
 									+ __("Create a new {0}", [__(me.get_options())])
 									+ "</span>",
+								label: __("Create a new {0}", [__(me.get_options())]),
 								value: "create_new__link_option",
 								action: me.new_doc
 							});
@@ -213,10 +214,11 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 						if (locals && locals['DocType']) {
 							// not applicable in web forms
 							r.results.push({
-								label: "<span class='text-primary link-option'>"
+								html: "<span class='text-primary link-option'>"
 									+ "<i class='uil uil-search-alt' style='margin-right: 5px;'></i> "
 									+ __("Advanced Search")
 									+ "</span>",
+								label: __("Advanced Search"),
 								value: "advanced_search__link_option",
 								action: me.open_advanced_search
 							});
@@ -241,16 +243,10 @@ frappe.ui.form.ControlLink = frappe.ui.form.ControlData.extend({
 		});
 
 		this.$input.on("awesomplete-open", () => {
-			this.toggle_container_scroll('.modal-dialog', 'modal-dialog-scrollable');
-			this.toggle_container_scroll('.grid-form-body .form-area', 'scrollable');
-
 			this.autocomplete_open = true;
 		});
 
 		this.$input.on("awesomplete-close", () => {
-			this.toggle_container_scroll('.modal-dialog', 'modal-dialog-scrollable', true);
-			this.toggle_container_scroll('.grid-form-body .form-area', 'scrollable', true);
-
 			this.autocomplete_open = false;
 		});
 

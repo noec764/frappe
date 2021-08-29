@@ -138,6 +138,12 @@ pre {
 	}
 }
 
+.hidden-lg {
+	@include media-breakpoint-up(md) {
+		display: none !important;
+	}
+}
+
 .visible-xs {
 	@include media-breakpoint-up(sm) {
 		display: none !important;
@@ -356,6 +362,22 @@ select.input-xs {
 	@include card();
 }
 
+.frappe-control[data-fieldtype="Select"].frappe-control[data-fieldname="color"] {
+	select {
+		padding-left: 40px;
+	}
+
+	.color-box {
+		position: absolute;
+		top: calc(50% - 11px);
+		left: 8px;
+		width: 22px;
+		height: 22px;
+		border-radius: 5px;
+		z-index: 1;
+	}
+}
+
 .frappe-control[data-fieldtype="Select"] .control-input,
 .frappe-control[data-fieldtype="Select"].form-group {
 	position: relative;
@@ -523,6 +545,12 @@ kbd {
 /*rtl styles*/
 
 .frappe-rtl {
+	text-align: right;
+	.modal-actions {
+		right: auto !important;
+		left: 5px;
+	}
+
 	input, textarea {
 		direction: rtl !important;
 	}

@@ -16,7 +16,7 @@
 		</div>
 		<div class="row form-section visible-section">
 			<div class="col-sm-10">
-				<h6 class="form-section-heading uppercase">SQL Queries</h6>
+				<h6 class="form-section-heading uppercase">{{ __("SQL Queries") }}</h6>
 			</div>
 			<div class="col-sm-2 filter-list">
 				<div class="sort-selector">
@@ -37,7 +37,7 @@
 							<div class="checkbox">
 								<label>
 									<span class="input-area"><input type="checkbox" class="input-with-feedback bold" data-fieldtype="Check" v-model="group_duplicates"></span>
-									<span class="label-area small">Group Duplicate Queries</span>
+									<span class="label-area small">{{ __("Group Duplicate Queries") }}</span>
 								</label>
 							</div>
 						</div>
@@ -48,15 +48,15 @@
 										<div class="grid-row">
 											<div class="data-row row">
 												<div class="row-index col col-xs-1">
-													<span>Index</span></div>
+													<span>{{ __("Index") }}</span></div>
 												<div class="col grid-static-col col-xs-6">
-													<div class="static-area ellipsis">Query</div>
+													<div class="static-area ellipsis">{{ __("Query") }}</div>
 												</div>
 												<div class="col grid-static-col col-xs-2">
-													<div class="static-area ellipsis text-right">Duration (ms)</div>
+													<div class="static-area ellipsis text-right">{{ __("Duration (ms)") }}</div>
 												</div>
 												<div class="col grid-static-col col-xs-2">
-													<div class="static-area ellipsis text-right">Exact Copies</div>
+													<div class="static-area ellipsis text-right">{{ __("Exact Copies") }}</div>
 												</div>
 											</div>
 										</div>
@@ -82,7 +82,7 @@
 												<div class="recorder-form-in-grid" v-if="showing == call.index">
 													<div class="grid-form-heading" @click="showing = null">
 														<div class="toolbar grid-header-toolbar">
-															<span class="panel-title">SQL Query #<span class="grid-form-row-index">{{ call.index }}</span></span>
+															<span class="panel-title">{{ __("SQL Query") }} #<span class="grid-form-row-index">{{ call.index }}</span></span>
 															<div class="btn btn-default btn-xs pull-right" style="margin-left: 7px;">
 																<span class="hidden-xs octicon octicon-triangle-up"></span>
 															</div>
@@ -98,25 +98,25 @@
 																				<form>
 																					<div class="frappe-control">
 																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Query</label></div>
+																							<div class="clearfix"><label class="control-label">{{ __("Query") }}</label></div>
 																							<div class="control-value like-disabled-input for-description"><pre>{{ call.query }}</pre></div>
 																						</div>
 																					</div>
 																					<div class="frappe-control input-max-width">
 																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Duration (ms)</label></div>
+																							<div class="clearfix"><label class="control-label">{{ __("Duration (ms)") }}</label></div>
 																							<div class="control-value like-disabled-input">{{ call.duration }}</div>
 																						</div>
 																					</div>
 																					<div class="frappe-control input-max-width">
 																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Exact Copies</label></div>
+																							<div class="clearfix"><label class="control-label">{{ __("Exact Copies") }}</label></div>
 																							<div class="control-value like-disabled-input">{{ call.exact_copies }}</div>
 																						</div>
 																					</div>
 																					<div class="frappe-control">
 																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">Stack Trace</label></div>
+																							<div class="clearfix"><label class="control-label">{{ __("SQL Explain") }}</label></div>
 																							<div class="control-value like-disabled-input for-description" style="overflow:auto">
 																								<table class="table table-striped">
 																									<thead>
@@ -137,7 +137,7 @@
 																					</div>
 																					<div class="frappe-control" v-if="call.explain_result[0]">
 																						<div class="form-group">
-																							<div class="clearfix"><label class="control-label">SQL Explain</label></div>
+																							<div class="clearfix"><label class="control-label">{{ __("SQL Explain") }}</label></div>
 																							<div class="control-value like-disabled-input for-description" style="overflow:auto">
 																								<table class="table table-striped">
 																									<thead>
@@ -165,7 +165,7 @@
 												</div>
 											</div>
 										</div>
-										<div v-if="request.calls.length == 0" class="grid-empty text-center">No Data</div>
+										<div v-if="request.calls.length == 0" class="grid-empty text-center">{{ __("No Data") }}</div>
 									</div>
 								</div>
 							</div>

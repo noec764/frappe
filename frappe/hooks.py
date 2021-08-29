@@ -140,6 +140,16 @@ has_website_permission = {
 	"Address": "frappe.contacts.doctype.address.address.has_website_permission"
 }
 
+jinja = {
+	"methods": "frappe.utils.jinja_globals",
+	"filters": [
+		"frappe.utils.data.global_date_format",
+		"frappe.utils.markdown",
+		"frappe.website.utils.get_shade",
+		"frappe.website.utils.abs_url",
+	]
+}
+
 standard_queries = {
 	"User": "frappe.core.doctype.user.user.user_query"
 }
@@ -157,6 +167,7 @@ doc_events = {
 			"frappe.core.doctype.file.file.attach_files_to_document",
 			"frappe.event_streaming.doctype.event_update_log.event_update_log.notify_consumers",
 			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
+			"frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type"
 		],
 		"after_rename": "frappe.desk.notifications.clear_doctype_notifications",
 		"on_cancel": [

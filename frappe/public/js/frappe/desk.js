@@ -45,8 +45,10 @@ frappe.Application = Class.extend({
 		this.load_user_permissions();
 		this.make_nav_bar();
 		this.set_favicon();
-		this.add_browser_class();
 		this.setup_analytics();
+		this.add_browser_class();
+		this.setup_energy_point_listeners();
+		this.setup_copy_doc_listener();
 
 		frappe.ui.keys.setup();
 
@@ -287,7 +289,7 @@ frappe.Application = Class.extend({
 		}
 		if (!frappe.workspaces['home']) {
 			// default workspace is settings for Frappe
-			frappe.workspaces['home'] = frappe.workspaces['build'];
+			frappe.workspaces['home'] = frappe.workspaces[Object.keys(frappe.workspaces)[0]];
 		}
 	},
 
@@ -482,14 +484,19 @@ frappe.Application = Class.extend({
 	},
 
 	trigger_primary_action: function() {
-		if(window.cur_dialog && cur_dialog.display) {
-			// trigger primary
-			cur_dialog.get_primary_btn().trigger("click");
-		} else if(cur_frm && cur_frm.page.btn_primary.is(':visible')) {
-			cur_frm.page.btn_primary.trigger('click');
-		} else if(frappe.container.page.save_action) {
-			frappe.container.page.save_action();
-		}
+		// to trigger change event on active input before triggering primary action
+		$(document.activeElement).blur();
+		// wait for possible JS validations triggered after blur (it might change primary button)
+		setTimeout(() => {
+			if (window.cur_dialog && cur_dialog.display) {
+				// trigger primary
+				cur_dialog.get_primary_btn().trigger("click");
+			} else if (cur_frm && cur_frm.page.btn_primary.is(':visible')) {
+				cur_frm.page.btn_primary.trigger('click');
+			} else if (frappe.container.page.save_action) {
+				frappe.container.page.save_action();
+			}
+		}, 100);
 	},
 
 	set_rtl: function() {
@@ -587,6 +594,45 @@ frappe.Application = Class.extend({
 				console.warn(data);
 			});
 		}
+	},
+
+	setup_energy_point_listeners() {
+		frappe.realtime.on('energy_point_alert', (message) => {
+			frappe.show_alert(message);
+		});
+	},
+
+	setup_copy_doc_listener() {
+		$('body').on('paste', (e) => {
+			try {
+				let pasted_data = frappe.utils.get_clipboard_data(e);
+				let doc = JSON.parse(pasted_data);
+				if (doc.doctype) {
+					e.preventDefault();
+					let sleep = (time) => {
+						return new Promise((resolve) => setTimeout(resolve, time));
+					};
+
+					frappe.dom.freeze(__('Creating {0}', [doc.doctype]) + '...');
+					// to avoid abrupt UX
+					// wait for activity feedback
+					sleep(500).then(() => {
+						let res = frappe.model.with_doctype(doc.doctype, () => {
+							let newdoc = frappe.model.copy_doc(doc);
+							newdoc.__newname = doc.name;
+							delete doc.name;
+							newdoc.idx = null;
+							newdoc.__run_link_triggers = false;
+							frappe.set_route('Form', newdoc.doctype, newdoc.name);
+							frappe.dom.unfreeze();
+						});
+						res && res.fail(frappe.dom.unfreeze);
+					});
+				}
+			} catch (e) {
+				//
+			}
+		});
 	}
 });
 

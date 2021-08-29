@@ -2,9 +2,6 @@
 # MIT License. See license.txt
 
 # util __init__.py
-
-from __future__ import print_function, unicode_literals
-
 import functools
 import hashlib
 import io
@@ -14,14 +11,11 @@ import re
 import sys
 import traceback
 import typing
-
 from email.header import decode_header, make_header
 from email.utils import formataddr, parseaddr
 from gzip import GzipFile
 from typing import Generator, Iterable
-
-from six import string_types, text_type
-from six.moves.urllib.parse import quote
+from urllib.parse import quote, urlparse
 from werkzeug.test import Client
 
 import frappe
@@ -71,7 +65,7 @@ def get_formatted_email(user, mail=None):
 def extract_email_id(email):
 	"""fetch only the email part of the Email Address"""
 	email_id = parse_addr(email)[1]
-	if email_id and isinstance(email_id, string_types) and not isinstance(email_id, text_type):
+	if email_id and isinstance(email_id, bytes):
 		email_id = email_id.decode("utf-8", "ignore")
 	return email_id
 
@@ -160,6 +154,31 @@ def split_emails(txt):
 
 	return email_list
 
+def validate_url(txt, throw=False, valid_schemes=None):
+	"""
+		Checks whether `txt` has a valid URL string
+		Parameters:
+			throw (`bool`): throws a validationError if URL is not valid
+			valid_schemes (`str` or `list`): if provided checks the given URL's scheme against this 
+		Returns:
+			bool: if `txt` represents a valid URL
+	"""
+	url = urlparse(txt)
+	is_valid = bool(url.netloc)
+
+	# Handle scheme validation
+	if isinstance(valid_schemes, str):
+		is_valid = is_valid and (url.scheme == valid_schemes)
+	elif isinstance(valid_schemes, (list, tuple, set)):
+		is_valid = is_valid and (url.scheme in valid_schemes)
+
+	if not is_valid and throw:
+		frappe.throw(
+			frappe._("'{0}' is not a valid URL").format(frappe.bold(txt))
+		)
+
+	return is_valid
+
 def random_string(length):
 	"""generate a random string"""
 	import string
@@ -215,7 +234,7 @@ def get_traceback():
 def log(event, details):
 	frappe.logger().info(details)
 
-def dict_to_str(args, sep='&'):
+def dict_to_str(args, sep = '&'):
 	"""
 	Converts a dictionary to URL
 	"""
@@ -223,6 +242,12 @@ def dict_to_str(args, sep='&'):
 	for k in list(args):
 		t.append(str(k)+'='+quote(str(args[k] or '')))
 	return sep.join(t)
+
+def list_to_str(seq, sep = ', '):
+	"""Convert a sequence into a string using seperator.
+	Same as str.join, but does type conversion and strip extra spaces.
+	"""
+	return sep.join(map(str.strip, map(str, seq)))
 
 # Get Defaults
 # ==============================================================================
@@ -362,14 +387,14 @@ def get_site_url(site):
 
 def encode_dict(d, encoding="utf-8"):
 	for key in d:
-		if isinstance(d[key], string_types) and isinstance(d[key], text_type):
+		if isinstance(d[key], str):
 			d[key] = d[key].encode(encoding)
 
 	return d
 
 def decode_dict(d, encoding="utf-8"):
 	for key in d:
-		if isinstance(d[key], string_types) and not isinstance(d[key], text_type):
+		if isinstance(d[key], bytes):
 			d[key] = d[key].decode(encoding, "ignore")
 
 	return d
@@ -636,7 +661,7 @@ def parse_json(val):
 	"""
 	Parses json if string else return
 	"""
-	if isinstance(val, string_types):
+	if isinstance(val, str):
 		val = json.loads(val)
 	if isinstance(val, dict):
 		val = frappe._dict(val)
