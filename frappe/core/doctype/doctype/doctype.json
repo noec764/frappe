@@ -33,6 +33,7 @@
   "sb1",
   "autoname",
   "name_case",
+  "allow_rename",
   "column_break_15",
   "description",
   "documentation",
@@ -46,7 +47,6 @@
   "hide_heading",
   "hide_toolbar",
   "allow_copy",
-  "allow_rename",
   "allow_import",
   "allow_auto_repeat",
   "allow_events_in_timeline",
@@ -691,7 +691,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2021-08-28 14:58:44.955726",
+ "modified": "2021-08-31 15:26:19.077164",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
