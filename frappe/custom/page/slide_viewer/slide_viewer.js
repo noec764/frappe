@@ -118,7 +118,8 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 			}
 		}
 		else if (mode === 'Create') {
-			this.doc = frappe.model.get_new_doc(reference_doctype)
+			const with_mandatory_children = true
+			this.doc = frappe.model.get_new_doc(reference_doctype, undefined, undefined, with_mandatory_children)
 			if (this.doc) {
 				// okay
 			} else {
