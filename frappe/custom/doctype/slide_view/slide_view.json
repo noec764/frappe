@@ -27,22 +27,24 @@
   {
    "fieldname": "title",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Title",
    "reqd": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
    "label": "Reference DocType",
    "options": "DocType"
   },
   {
-   "fetch_from": "title",
    "fetch_if_empty": 1,
    "fieldname": "route",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Route",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -110,7 +112,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2021-08-24 13:36:49.625366",
+ "modified": "2021-09-01 14:53:31.903384",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Slide View",
@@ -129,7 +131,9 @@
    "write": 1
   }
  ],
+ "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "title",
  "track_changes": 1
 }

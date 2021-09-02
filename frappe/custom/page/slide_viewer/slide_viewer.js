@@ -2,11 +2,10 @@
 // License: See license.txt
 
 /**
- * @typedef {Object} SlidesView
+ * @typedef {Object} SlideView
  * @property {string} title
  * @property {string} reference_doctype
  * @property {string} route
- * @property {string} naming_series
  * @property {boolean} allow_back
  * @property {boolean} allow_any
  * @property {boolean} done_state
@@ -21,7 +20,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 	SlideClass = frappe.ui.Slide
 	SlidesClass = frappe.ui.Slides
 
-	/** @type {SlidesView} */
+	/** @type {SlideView} */
 	slideView = null
 
 	route = null
@@ -35,20 +34,27 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 
 	/**
 	 * @typedef {Object} SlideViewerOptions
-	 * @property {string} route - The Slide View route name. Required.
+	 * @property {string} [route] - The Slide View route name. Required.
+	 * @property {SlideView} [slideView]
+	 *
 	 * @property {string} [docname] - The document to edit using this Slide View. Optional.
 	 * @property {string} [starting_slide] - The slide to show first.
 	 * @property {Function} [SlideClass]
 	 * @property {Function} [SlidesClass]
-	 * @property {(self: SlidesViewer) => any} [additional_settings] - A function returning additional settings for the Slides instance
+	 * @property {(self: SlideViewer) => any} [additional_settings] - A function returning additional settings for the Slides instance
 	 */
 
 	/**
 	 * @param {SlideViewerOptions} options
 	 */
 	constructor(options) {
-		if (!options.route) { return frappe.throw('[Slide Viewer] missing param: route') } // @todo
-		this.route = options.route
+		if (options.route) {
+			this.route = options.route
+		} else if (options.slideView) {
+			this.slideView = options.slideView
+		} else {
+			return frappe.throw('[Slide Viewer] constructor: should have either route or slideView param') // @todo
+		}
 
 		if (options.docname) { this.documentName = options.docname }
 		if (options.starting_slide) { this.starting_slide = options.starting_slide }
@@ -61,7 +67,9 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 	 * Fetch required data from server
 	 */
 	async _fetch() {
-		await this._fetchSlideView()
+		if (!this.slideView) {
+			await this._fetchSlideView()
+		}
 
 		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView
 
@@ -197,16 +205,43 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		dialog.standard_actions.empty();
 		$(dialog.footer).show();
 		$(dialog.footer).removeClass('hide');
+		dialog.doc = this.doc;
 		const slidesSettings = await this.getSlidesSettings({
 			parent: dialog.wrapper,
+			// parent_form: dialog,
 			$container: $(dialog.wrapper),
 			$body: dialog.$body,
 			$footer: $(dialog.standard_actions),
 			$header: $(dialog.header).find('.title-section').addClass('justify-center'),
-			onload() {
+			after_load() {
 				this.$slide_progress.css({ margin: '0' });
 				this.$footer.find('.flex-row').addClass('row');
+
+				this.make_all_slides();
+				const all_fields = this.slide_settings.flatMap(s => s.fields)
+				const fields_list = this.slide_instances.flatMap(s => s.form.fields_list)
+				const fields_dict = Object.fromEntries(this.slide_instances.flatMap(s => Object.entries(s.form.fields_dict)))
+
+				dialog.fields = all_fields
+				dialog.fields_list = fields_list
+				dialog.fields_dict = fields_dict
 			},
+			on_complete() {
+				frappe.call({
+					method: "frappe.desk.form.save.savedocs",
+					args: { doc: this.doc, action: 'Save' },
+					callback: (r) => {
+						const doc = r.docs ? r.docs[0] : this.doc;
+						frappe.set_route("Form", doc.doctype, doc.name);
+						// $(document).trigger("save", [doc]);
+					},
+					error: (r) => {
+						console.log('error');
+					},
+					btn: this.$complete_btn,
+					freeze_message: 'freeze message',
+				})
+			}
 		});
 
 		this._renderWithSettings(slidesSettings);
@@ -219,6 +254,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		}
 
 		this.slidesInstance = new (this.SlidesClass)(slidesSettings);
+		window.cur_slides = this.slidesInstance;
 	}
 
 	showErrorNoSlides() {
@@ -236,11 +272,11 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		if (!allSlides || allSlides.length === 0) { return null }
 
 		const baseSettings = {
-			slidesViewer: this,
+			slideViewer: this,
 			slide_class: this.SlideClass,
 
 			slides: allSlides,
-			initial_values: this.doc,
+			doc: this.doc,
 			starting_slide: this.starting_slide,
 			unidirectional: !this.slideView.allow_back,
 			clickable_progress_dots: this.slideView.allow_any && this.slideView.allow_back,
@@ -270,7 +306,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		let allSlides = [];
 
 		const ref_doctype = this.slideView.reference_doctype;
-		const shouldGenerateAutoSlides = true;
+		const shouldGenerateAutoSlides = (this.slideView.slides === undefined);
 		if (shouldGenerateAutoSlides) {
 			if (ref_doctype) {
 				allSlides = await getAutoslidesForDocType(ref_doctype, this.documentName);
@@ -278,7 +314,8 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 				// cannot generate auto slides without doctype
 			}
 		} else {
-			// slides = await getSlidesForSlideView(slideView)
+			// allSlides = await getSlidesForSlideView(slideView)
+			allSlides = this.slideView.slides;
 		}
 
 		return allSlides;
@@ -286,14 +323,14 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 
 	// utils
 	static getParamsFromRouter() {
-		let slidesViewRoute = null
+		let slideViewRoute = null
 		let docname = null
 		let starting_slide = null
 
 		const route = frappe.router.get_sub_path_string().split('/')
 		if (route[0] === "slide-viewer") {
 			if (route.length >= 2) {
-				slidesViewRoute = decodeURIComponent(route[1])
+				slideViewRoute = decodeURIComponent(route[1])
 			}
 			if (route.length >= 3) {
 				docname = decodeURIComponent(route[2])
@@ -304,7 +341,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		}
 
 		return {
-			route: slidesViewRoute,
+			route: slideViewRoute,
 			docname: docname,
 			starting_slide: starting_slide,
 		}
@@ -341,7 +378,7 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 
 	const { route, docname, starting_slide } = SlideViewer.getParamsFromRouter()
 
-	const slidesViewer = new SlideViewer({
+	const slideViewer = new SlideViewer({
 		route,
 		docname,
 		starting_slide,
@@ -351,7 +388,7 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 		/** @this {SlideViewer} */
 		additional_settings() {
 			if (this.slideView.add_fullpage_edit_btn) {
-				this.SlidesClass = SlidesWithFullPageEditButton
+				this.SlidesClass = extendsWithFullPageEditButton(this.SlidesClass)
 			}
 
 			return { text_complete_btn: __("Save") }
@@ -360,11 +397,11 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 
 	// const dialog = new frappe.ui.Dialog({ size: 'large' })
 	// dialog.show()
-	// await slidesViewer.renderInDialog(dialog)
+	// await slideViewer.renderInDialog(dialog)
 
 	const container = $('<div style="padding: 2rem 1rem">').appendTo(page.body)
-	await slidesViewer.renderInWrapper(container)
-	slidesViewer.slidesInstance.render_progress_dots()
+	await slideViewer.renderInWrapper(container)
+	slideViewer.slidesInstance.render_progress_dots()
 }
 
 async function getAutoslidesForDocType(doctype, docname = '') {
@@ -542,7 +579,7 @@ class SlideWithForm extends frappe.ui.Slide {
 	}
 }
 
-class SlidesWithFullPageEditButton extends SlidesWithForm {
+const extendsWithFullPageEditButton = (SlideClass) => class SlidesWithFullPageEditButton extends SlideClass {
 	before_load() {
 		super.before_load()
 

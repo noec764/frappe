@@ -138,6 +138,7 @@ frappe.ui.Slide = class Slide {
 			fields: this.get_atomic_fields(),
 			body: this.$form[0],
 			no_submit_on_enter: true,
+			doc: this.doc,
 		};
 		if (this.parent_form) {
 			Object.assign(fieldGroupOptions, {
@@ -226,6 +227,10 @@ frappe.ui.Slide = class Slide {
 	 */
 	get values() {
 		return this.parent_slides.get_values(); // return all values
+	}
+
+	get doc() {
+		return this.parent_slides.doc;
 	}
 
 	has_errors(ignore_form_errors = false) {
@@ -350,7 +355,9 @@ frappe.ui.Slides = class Slides {
 	 * @param {{
 	 *	parent: HTMLElement|JQuery,
 	 *	slides: any[],
-	 *	initial_values?: Record<String, any>,
+	 *	values?: Record<String, any>,
+	 *	doc?: Record<String, any>,
+	 *	values_is_doc?: boolean,
 	 *	starting_slide?: Number,
 	 *	unidirectional?: boolean,
 	 *	clickable_progress_dots?: boolean,
@@ -362,7 +369,8 @@ frappe.ui.Slides = class Slides {
 	constructor({
 		parent,
 		slides,
-		initial_values = {},
+		values,
+		doc,
 		starting_slide = 0,
 		unidirectional = false,
 		clickable_progress_dots = false,
@@ -387,7 +395,20 @@ frappe.ui.Slides = class Slides {
 		this.text_complete_btn = __("Submit");
 		this.text_in_progress = __("In progress");
 
-		this.values = initial_values;
+		if (doc && values) {
+			console.warning('[Slides]: cannot call constructor with both `doc` and `values` settings, ignoring `values`')
+		}
+		if (doc) {
+			this.values = doc // link to doc
+			/** true to assume .values is a document, will enable .doc getter */
+			this.values_is_doc = true
+		} else if (values) {
+			this.values = values // set initial values
+			this.values_is_doc = false
+		} else {
+			this.values = {} // no initial values
+			this.values_is_doc = false
+		}
 
 		Object.assign(this, settings);
 
@@ -399,6 +420,7 @@ frappe.ui.Slides = class Slides {
 
 	// Overridable lifecycle methods
 	before_load() { }
+	after_load() { }
 	slide_on_update() { }
 	on_complete() { }
 
@@ -427,6 +449,8 @@ frappe.ui.Slides = class Slides {
 		// can be on demand
 		this.setup();
 
+		if (this.after_load) { this.after_load(this); }
+
 		// can be on demand
 		this.show_slide(this.current_id || 0);
 	}
@@ -453,7 +477,7 @@ frappe.ui.Slides = class Slides {
 
 	make_all_slides() {
 		for (const s of this.slide_instances) {
-			if (!s.make) { s.make(); }
+			if (!s.made) { s.make(); }
 		}
 	}
 
@@ -781,7 +805,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	get doc() {
-		return this.values;
+		return this.values_is_doc ? this.values : null;
 	}
 
 	/**
