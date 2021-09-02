@@ -580,7 +580,7 @@ class SlideWithForm extends frappe.ui.Slide {
 	}
 }
 
-const extendsWithFullPageEditButton = (SlideClass) => class SlidesWithFullPageEditButton extends SlideClass {
+const extendsWithFullPageEditButton = (SlidesClass) => class SlidesWithFullPageEditButton extends SlidesClass {
 	before_load() {
 		super.before_load()
 
