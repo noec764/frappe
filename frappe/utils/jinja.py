@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
 from bs4 import BeautifulSoup
 from frappe.utils import cint
@@ -160,7 +160,7 @@ def transform_template_blot(template, context):
 				new_tag.append(content)
 			else:
 				new_tag.string = content
-		
+
 		else:
 			if f.get('data-doctype') != "Custom Functions" and {f.get('data-doctype'): f.get('data-reference')} not in doctypes \
 				and f.get('data-reference') != "name":

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2020, Dokos SAS and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Dokos SAS and contributors
+# License: MIT. See LICENSE
 
 import frappe
 from frappe.model.document import Document
@@ -62,7 +62,7 @@ def get_user_info(user=None):
 def register_to_event(event, data, user=None):
 	try:
 		registration = frappe.get_doc(
-			dict({ 
+			dict({
 				"doctype": "Event Registration",
 				"event": event,
 				"user": user or frappe.session.user

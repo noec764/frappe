@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018, Frappe Technologies and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Frappe Technologies and contributors
+# License: MIT. See LICENSE
 
 
 import frappe
@@ -50,5 +50,5 @@ def send_slack_message(webhook_url, message, reference_doctype, reference_name):
 		message = error_messages.get(r.status_code, r.status_code)
 		frappe.log_error(message, _('Slack Webhook Error'))
 		return 'error'
-	
+
 	return 'success'

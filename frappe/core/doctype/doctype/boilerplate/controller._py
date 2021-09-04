@@ -1,5 +1,5 @@
 # Copyright (c) {year}, {app_publisher} and contributors
-# For license information, please see license.txt
+# License: MIT. See LICENSE
 
 import frappe
 {base_class_import}

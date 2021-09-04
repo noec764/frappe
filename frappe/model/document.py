@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2021, Dokos and Contributors
+# License: MIT. See LICENSE
 import frappe
 import time
 from frappe import _, msgprint, is_whitelisted
@@ -457,7 +457,7 @@ class Document(BaseDocument):
 
 	def register_seal(self):
 		if getattr(self.meta, 'is_submittable') and getattr(self.meta, 'is_sealed'):
-			frappe.enqueue("frappe.core.doctype.archived_document.archived_document.create_archive", doc=self)
+			frappe.enqueue("frappe.core.doctype.archived_document.archived_document.create_archive", doc=self, queue="long")
 
 	def get_title(self):
 		"""Get the document title based on title_field or `title` or `name`"""

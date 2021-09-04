@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 import frappe
 from frappe import _
 from frappe.utils import now_datetime, cint, cstr
@@ -221,7 +221,7 @@ def revert_series_if_last(key, name, doc=None):
 			* will search hash in key then accordingly get prefix = SINV-
 		3. key = ####.-2021
 			* prefix = #### and hashes = 2021 (hash doesn't exist)
-			* will search hash in key then accordingly get prefix = "" 
+			* will search hash in key then accordingly get prefix = ""
 	"""
 	if ".#" in key:
 		prefix, hashes = key.rsplit(".", 1)

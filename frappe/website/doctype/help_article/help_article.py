@@ -1,5 +1,5 @@
-# Copyright (c) 2013, Frappe and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Frappe and contributors
+# License: MIT. See LICENSE
 
 
 import frappe

@@ -1,5 +1,5 @@
 // Copyright (c) 2020, Dokos SAS and Contributors
-// License: GNU General Public License v3. See license.txt
+// License: MIT. See LICENSE
 
 frappe.views.calendar["ToDo"] = {
 	field_map: {
@@ -24,7 +24,7 @@ frappe.views.calendar["ToDo"] = {
 			"options": "reference_type",
 			"label": __("Task")
 		}
-		
+
 	],
 	get_events_method: "frappe.desk.calendar.get_events"
 };

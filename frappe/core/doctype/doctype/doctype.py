@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos SAS and Contributors
-# See license.txt
+# Copyright (c) 2021, Dokos SAS and Contributors
+# License: MIT. See LICENSE
 
 # imports - standard imports
 import re, copy, os, shutil

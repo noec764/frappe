@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors and Contributors
-# See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors and Contributors
+# License: MIT. See LICENSE
 
 
 import frappe

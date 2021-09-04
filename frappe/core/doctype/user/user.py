@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos SAS and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Dokos SAS and Contributors
+# License: MIT. See LICENSE
 
 
 

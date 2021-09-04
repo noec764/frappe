@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2021, Dokos and Contributors
+# License: MIT. See LICENSE
 
 # model __init__.py
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2015, Frappe Technologies and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Frappe Technologies and contributors
+# License: MIT. See LICENSE
 import frappe
 
 from frappe import throw, _
@@ -190,7 +190,7 @@ def get_address_list(doctype, txt, filters, limit_start, limit_page_length = 20,
 	from frappe.www.list import get_list
 	user = frappe.session.user
 	ignore_permissions = True
-	
+
 	if not filters: filters = []
 	filters.append(("Address", "owner", "=", user))
 

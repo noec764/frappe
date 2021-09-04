@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 import frappe, re, os
 from frappe.utils.pdf import get_pdf
 from frappe.email.doctype.email_account.email_account import EmailAccount

@@ -1,5 +1,5 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2021, Dokos and Contributors
+# License: MIT. See LICENSE
 
 
 
@@ -167,7 +167,7 @@ class UserPermissions:
 
 			customizations = frappe.get_all("Property Setter", fields=['doc_type'], filters={'property': 'allow_import', 'value': "1"})
 			self.can_import += [custom.doc_type for custom in customizations]
-		
+
 		frappe.cache().hset("can_import", frappe.session.user, self.can_import)
 
 	def get_defaults(self):

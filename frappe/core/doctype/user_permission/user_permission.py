@@ -1,5 +1,5 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
-# For license information, please see license.txt
+# License: MIT. See LICENSE
 
 
 import frappe, json
@@ -123,7 +123,7 @@ def user_permission_exists(user, allow, for_value, applicable_for=None):
 @frappe.validate_and_sanitize_search_inputs
 def get_applicable_for_doctype_list(doctype, txt, searchfield, start, page_len, filters):
 	linked_doctypes_map = get_linked_doctypes(doctype, True)
-	linked_doctypes = list(linked_doctypes)	
+	linked_doctypes = list(linked_doctypes)
 	linked_doctypes = []
 	for linked_doctype, linked_doctype_values in linked_doctypes_map.items():
 		linked_doctypes.append(linked_doctype)

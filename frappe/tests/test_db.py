@@ -1,7 +1,7 @@
 #  -*- coding: utf-8 -*-
 
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
 
 
@@ -77,7 +77,7 @@ class TestDB(unittest.TestCase):
 			frappe.db.set_value("Print Settings", "Print Settings", fieldname, inp["value"])
 			self.assertEqual(frappe.db.get_single_value("Print Settings", fieldname), inp["value"])
 
-		#teardown 
+		#teardown
 		clear_custom_fields("Print Settings")
 
 	def test_log_touched_tables(self):

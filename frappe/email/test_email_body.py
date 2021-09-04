@@ -1,5 +1,5 @@
-# Copyright (c) 2017, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 import unittest, os, base64
 import frappe
 from frappe import safe_decode

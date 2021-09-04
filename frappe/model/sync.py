@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
 
 """
@@ -81,7 +81,7 @@ def get_doc_files(files, start_path):
 	"""walk and sync all doctypes and pages"""
 
 	# load in sequence - warning for devs
-	document_types = ['doctype', 'page', 'report', 'dashboard_chart_source', 'dashboard_card_source', 
+	document_types = ['doctype', 'page', 'report', 'dashboard_chart_source', 'dashboard_card_source',
 		'print_format', 'website_theme', 'web_form', 'web_template', 'notification', 'print_style',
 		'data_migration_mapping', 'data_migration_plan', 'workspace',
 		'onboarding_step', 'module_onboarding', 'form_tour']

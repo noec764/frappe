@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2015, Maxwell Morais and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Maxwell Morais and contributors
+# License: MIT. See LICENSE
 
 
 

@@ -1,5 +1,5 @@
-# Copyright (c) 2015, Web Notes Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Web Notes Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
 import sys
 import click

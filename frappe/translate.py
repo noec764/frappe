@@ -1,5 +1,5 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# License: MIT. See LICENSE
 """
 	frappe.translate
 	~~~~~~~~~~~~~~~~
@@ -700,7 +700,7 @@ def get_messages_from_file(path: str) -> List[Tuple[str, str, str, str]]:
 		return []
 
 	frappe.flags.scanned_files.append(path)
-	
+
 	bench_path = get_bench_path()
 	if os.path.exists(path):
 		with open(path, 'r') as sourcefile:
