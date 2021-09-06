@@ -52,16 +52,9 @@ frappe.ui.Slide = class Slide {
 	/**
 	 * Called when click on Next/Finish (going to next slide or completing slide view).
 	 * Not called when going back or for random slide changes (e.g. when clicking on progress dots).
-	 * @returns {boolean} `true` if all fields are valid
+	 * @returns {Promise<boolean>|boolean} `true` if slide is valid
 	 */
 	validate(self) { return true }
-
-	/**
-	 * Called when click on Next/Finish (going to next slide or completing slide view).
-	 * Not called when going back or for random slide changes (e.g. when clicking on progress dots).
-	 * @returns {Promise<boolean>|boolean} `true` if all fields are valid
-	 */
-	// async async_validate(self) { return true }
 
 	/**
 	 * Indicates whether the slide should be skipped.
@@ -211,13 +204,19 @@ frappe.ui.Slide = class Slide {
 		});
 	}
 
-	get_values() {
+	get_values(force_get_all = false) {
 		if (this.made && this.form) {
-			// for (const f of this.form.fields) {
-			// 	v[f.fieldname] = this.form.get_value(f.fieldname);
-			// }
-			const ignore_form_errors = true;
-			return this.form.get_values(ignore_form_errors);
+			if (force_get_all) {
+				const v = {};
+				for (const df of this.form.fields) {
+					const n = df.fieldname;
+					if (n) { v[n] = this.form.get_value(n); }
+				}
+				return v;
+			} else {
+				const ignore_form_errors = true;
+				return this.form.get_values(ignore_form_errors);
+			}
 		}
 		return {};
 	}
@@ -241,7 +240,8 @@ frappe.ui.Slide = class Slide {
 				return true;
 			}
 			if (this.validate) {
-				const valid = this.validate(this);
+				let valid = this.validate(this);
+				if (valid !== undefined && typeof valid.then === 'function') valid = true;
 				this.last_validation_result = Boolean(valid);
 				if (!valid) {
 					return true;
@@ -360,6 +360,7 @@ frappe.ui.Slides = class Slides {
 	 *	values_is_doc?: boolean,
 	 *	starting_slide?: Number,
 	 *	unidirectional?: boolean,
+	 *	unidirectional_allow_back?: boolean,
 	 *	clickable_progress_dots?: boolean,
 	 *	done_state?: boolean,
 	 *	parent_form?: frappe.ui.form.Form,
@@ -373,6 +374,7 @@ frappe.ui.Slides = class Slides {
 		doc,
 		starting_slide = 0,
 		unidirectional = false,
+		unidirectional_allow_back = true,
 		clickable_progress_dots = false,
 		done_state = false,
 		parent_form = undefined,
@@ -385,6 +387,9 @@ frappe.ui.Slides = class Slides {
 		this.unidirectional = Boolean(unidirectional);
 		this.clickable_progress_dots = Boolean(clickable_progress_dots);
 		this.done_state = Boolean(done_state);
+
+		/* Always allow_back if not unidirectional (because user can click next on invalid slides). */
+		this.allow_back = unidirectional ? Boolean(unidirectional_allow_back) : true;
 
 		this.parent_form = parent_form;
 
@@ -612,18 +617,23 @@ frappe.ui.Slides = class Slides {
 		}
 	}
 
-	async check_async_validation() {
-		if (this.current_slide.async_validate) {
-			this.set_in_progress();
-			const isValid = await this.current_slide.async_validate(this.current_slide);
-			this.remove_in_progress();
-			return isValid;
+	async check_validation_async() {
+		if (this.current_slide && this.current_slide.validate) {
+			const promiseOrValue = this.current_slide.validate(this.current_slide);
+			if (promiseOrValue !== undefined && typeof promiseOrValue.then === 'function') {
+				this.set_in_progress();
+				const isValid = await promiseOrValue;
+				this.remove_in_progress();
+				return Boolean(isValid);
+			} else {
+				return Boolean(promiseOrValue);
+			}
 		}
 		return true; // valid if no validator
 	}
 
 	async on_next_click() {
-		const isValid = await this.check_async_validation();
+		const isValid = await this.check_validation_async();
 		if (!isValid) { return; }
 
 		if (this.done_state && this.current_slide) {
@@ -635,7 +645,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	async on_complete_click() {
-		const isValid = await this.check_async_validation();
+		const isValid = await this.check_validation_async();
 		if (!isValid) { return; }
 
 		if (this.done_state && this.current_slide) {
@@ -678,8 +688,12 @@ frappe.ui.Slides = class Slides {
 			.addClass('link')
 			.off('click')
 			.on('click', function () {
+				const id = this.getAttribute('data-step-id');
+
 				const skipped = $(this).hasClass('step-skip')
 				if (skipped) { return; }
+
+				if (me.unidirectional && (+id) >= (+me.current_id)) { return; }
 
 				const hasErrors = me.current_slide.has_errors(true);
 				if (!hasErrors && me.current_slide) {
@@ -688,7 +702,7 @@ frappe.ui.Slides = class Slides {
 						me.current_slide.done = true;
 					}
 				}
-				const id = this.getAttribute('data-step-id');
+
 				me.show_slide(id);
 			});
 	}
@@ -789,7 +803,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	show_hide_prev_next(id) {
-		if (this.can_go_prev(id) && !this.unidirectional) {
+		if (this.can_go_prev(id) && this.allow_back) {
 			this.$prev_btn.show();
 		} else {
 			this.$prev_btn.hide();
@@ -812,8 +826,9 @@ frappe.ui.Slides = class Slides {
 	 * Side effect: updates this.values (without reassignment)
 	 */
 	get_values() {
+		const force_get_all = !this.values_is_doc;
 		this.slide_instances.forEach((slide) => {
-			const slideValues = slide.get_values();
+			const slideValues = slide.get_values(force_get_all);
 			Object.assign(this.values, slideValues);
 		});
 		return this.values;

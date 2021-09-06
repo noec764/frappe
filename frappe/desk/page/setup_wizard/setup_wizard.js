@@ -34,10 +34,10 @@ frappe.setup = {
 frappe.pages['setup-wizard'].on_page_load = function (wrapper) {
 	const $wrapper = $(wrapper)
 	$wrapper.css({
-    height: '80vh',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
+		height: '80vh',
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
 	})
 
 	let requires = (frappe.boot.setup_wizard_requires || []);
@@ -51,6 +51,7 @@ frappe.pages['setup-wizard'].on_page_load = function (wrapper) {
 				frappe.setup.run_event("before_load");
 				var wizard_settings = {
 					parent: wrapper,
+					values: { language: frappe.setup.data.default_language || "English" },
 					slides: frappe.setup.slides,
 					slide_class: frappe.setup.SetupWizardSlide,
 					unidirectional: 1,
@@ -320,7 +321,7 @@ frappe.setup.get_slides_settings = () => [
 
 			var language_field = slide.get_field("language");
 
-			language_field.set_input(frappe.setup.data.default_language || "English");
+			language_field.set_input(slide.values.language || frappe.setup.data.default_language || "English");
 
 			if (!frappe.setup._from_load_messages) {
 				language_field.$input.trigger("change");
