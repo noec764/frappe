@@ -63,6 +63,16 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		if (options.SlidesClass) { this.SlidesClass = options.SlidesClass }
 	}
 
+	hide() {
+		window.cur_slides = undefined
+		this?.slidesInstance?.parent_form?.fakeform_destroy?.()
+	}
+
+	show() {
+		window.cur_slides = this.slidesInstance
+		this?.slidesInstance?.parent_form?.fakeform_rebuild?.()
+	}
+
 	/**
 	 * Fetch required data from server
 	 */
@@ -71,50 +81,81 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 			await this._fetchSlideView()
 		}
 
-		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView
+		const { reference_doctype } = this.slideView
 
-		await Promise.all([
-			reference_doctype && SlideViewer.fetchMetaForDocType(reference_doctype),
-		])
+		if (reference_doctype) {
+			await SlideViewer.fetchMetaForDocType(reference_doctype)
+		}
+
+		await this._fetchDoc()
+	}
+
+	async _fetchDoc() {
+		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView
 
 		// check permissions
 		let mode = 'Error'
 		let error = ''
+		let fetchFromLocals = false
 
 		if (reference_doctype) {
 			const meta = frappe.get_meta(reference_doctype)
+
+			const is_new = this.documentName && this.documentName.match(/^new-.*-\d+$/)
+			const in_locals = this.documentName && frappe.get_doc(reference_doctype, this.documentName)
+
 			if (meta.issingle && !this.documentName) {
-				if (can_edit_doc) {
-					// Single DocType
-					mode = 'Edit'
-					this.documentName = meta.name
-				} else { error = 'cannot edit' }
+				// Single DocType
+				mode = 'Edit'
+				this.documentName = meta.name
+			} else if (in_locals && is_new) {
+				// edit if the document exists in locals and the name looks like a new name
+				mode = 'Edit'
+				fetchFromLocals = true
+			} else if (is_new) {
+				// create if the name looks like a new name but the document is not in locals
+				mode = 'Create'
 			} else if (this.documentName) {
-				if (can_edit_doc) { mode = 'Edit' }
-				else { error = 'cannot edit' }
+				// edit if a document name was given
+				mode = 'Edit'
 			} else {
-				if (can_create_doc) { mode = 'Create' }
-				else { error = 'cannot create' }
+				mode = 'Create'
 			}
 		} else {
 			// @todo not an invalid state, check for .slides and .on_complete
 			return frappe.throw('[Slide Viewer] cannot edit document with a Slide View without reference_doctype')
 		}
 
+		if (mode === 'Create' && !can_create_doc) {
+			mode = 'Error'
+			error = 'cannot create'
+		}
+		if (mode === 'Edit' && !can_edit_doc) {
+			mode = 'Error'
+			error = 'cannot edit'
+		}
+
 		if (mode === 'Edit') {
 			// edit mode / duplicate mode
-			let is403 = false
-			this.doc = await frappe.model.with_doc(reference_doctype, this.documentName, (name, r) => {
-				// callback is called before promise resolution
-				if (r && r['403']) is403 = true;
-			});
 
-			if (this.doc) {
-				// okay
-			} else if (is403) {
-				error = 'forbidden'
+			if (fetchFromLocals) {
+				this.doc = frappe.get_doc(reference_doctype, this.documentName)
+
+				if (!this.doc) {
+					error = 'missing document'
+				}
 			} else {
-				error = 'missing document'
+				let is403 = false
+				this.doc = await frappe.model.with_doc(reference_doctype, this.documentName, (name, r) => {
+					// callback is called before promise resolution
+					if (r && r['403']) is403 = true;
+				})
+
+				if (!this.doc) {
+					error = 'missing document'
+				} else if (is403) {
+					error = 'forbidden'
+				}
 			}
 		}
 		else if (mode === 'Create') {
@@ -122,6 +163,14 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 			this.doc = frappe.model.get_new_doc(reference_doctype, undefined, undefined, with_mandatory_children)
 			if (this.doc) {
 				// okay
+				this.documentName = this.doc.name
+				let newUrl = ['slide-viewer', this.slideView.route, this.documentName]
+				newUrl = frappe.router.get_route_from_arguments(newUrl)
+				newUrl = frappe.router.convert_to_standard_route(newUrl)
+				newUrl = frappe.router.make_url(newUrl)
+				setTimeout(() => {
+					frappe.router.push_state(newUrl)
+				}, 0) // run after page_show event
 			} else {
 				error = 'frappe.model.get_new_doc returned null --> doctype meta not loaded?'
 			}
@@ -237,7 +286,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 						// $(document).trigger("save", [doc]);
 					},
 					error: (r) => {
-						console.log('error');
+						console.error(r);
 					},
 					btn: this.$complete_btn,
 					freeze_message: 'freeze message',
@@ -255,7 +304,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		}
 
 		this.slidesInstance = new (this.SlidesClass)(slidesSettings);
-		window.cur_slides = this.slidesInstance;
+		this.show();
 	}
 
 	showErrorNoSlides() {
@@ -280,6 +329,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 			doc: this.doc,
 			starting_slide: this.starting_slide,
 			unidirectional: !this.slideView.allow_back,
+			unidirectional_allow_back: false,
 			clickable_progress_dots: this.slideView.allow_any && this.slideView.allow_back,
 			done_state: this.slideView.done_state,
 
@@ -310,7 +360,7 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 		const shouldGenerateAutoSlides = (this.slideView.slides === undefined);
 		if (shouldGenerateAutoSlides) {
 			if (ref_doctype) {
-				allSlides = await getAutoslidesForDocType(ref_doctype, this.documentName);
+				allSlides = await getAutoslidesForDocType(ref_doctype, (this.doc&&this.doc.name) || this.documentName);
 			} else {
 				// cannot generate auto slides without doctype
 			}
@@ -364,7 +414,45 @@ const SlideViewer = frappe.ui.SlideViewer = class SlideViewer {
 	}
 }
 
-frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
+frappe.pages['slide-viewer'].on_page_show = async function(/** @type {HTMLElement} */ wrapper) {
+	if (!wrapper.loaded) {
+		wrapper.loaded = true
+		$(wrapper).on('hide', () => {
+			if (wrapper.slideViewer) {
+				wrapper.slideViewer.hide()
+			}
+		})
+	}
+
+	if (wrapper.slideViewer) {
+		const svr = wrapper.slideViewer
+		const sv = svr.slideView
+
+		if (sv) {
+			// const fakeform = svr.slidesInstance && svr.slidesInstance.parent_form
+			// const doc = fakeform ? fakeform.doc : svr.doc
+			const r = SlideViewer.getParamsFromRouter()
+
+			const slide_view_in_locals = frappe.get_doc('Slide View', sv.name)
+			const slide_view_changed = slide_view_in_locals && (sv !== slide_view_in_locals)
+
+			const document_in_locals = svr.documentName && frappe.get_doc(sv.reference_doctype, svr.documentName)
+			const docname_changed = r.docname && (r.docname !== svr.documentName)
+			const route_changed = r.route !== svr.route
+
+			debugger
+			if (slide_view_changed || route_changed || docname_changed || !document_in_locals) {
+				svr.hide()
+				delete wrapper.slideViewer // re-render
+			} else {
+				svr.show()
+				return; // don't render again
+			}
+		} else {
+			delete wrapper.slideViewer // re-render
+		}
+	}
+
 	wrapper.innerHTML = ''
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
@@ -396,24 +484,36 @@ frappe.pages['slide-viewer'].on_page_show = async function(wrapper) {
 		},
 	})
 
-	// const dialog = new frappe.ui.Dialog({ size: 'large' })
-	// dialog.show()
-	// await slideViewer.renderInDialog(dialog)
-
 	const container = $('<div style="padding: 2rem 1rem">').appendTo(page.body)
+	wrapper.slideViewer = slideViewer // set before render
 	await slideViewer.renderInWrapper(container)
 	slideViewer.slidesInstance.render_progress_dots()
 }
 
 async function getAutoslidesForDocType(doctype, docname = '') {
 	const meta = await SlideViewer.getMetaForDocType(doctype)
-	const fields = meta.fields
+	const fields = meta.fields.slice()
+
+	const is_new = docname && docname.match(/^new-.*-\d+$/)
+
+	if (is_new && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
+		fields.unshift({
+			parent: doctype,
+			fieldtype: 'Data',
+			fieldname: '__newname',
+			reqd: 1,
+			// hidden: 1,
+			label: __('Name'),
+			get_status: () => 'Write'
+		})
+	}
+
 	const slides = []
 
 	let globalTitle = ''
 	if (meta.issingle) {
 		globalTitle = __(meta.name)
-	} else if (docname) {
+	} else if (!is_new) {
 		const href = `/app/${frappe.router.slug(doctype)}/${encodeURIComponent(docname)}`;
 		const link = `<a href="${href}" onclick="frappe.set_route('${href}');event&&event.preventDefault()">${docname}</a>`
 		globalTitle = __("Edit {0}", [link])
@@ -674,45 +774,114 @@ class FakeForm extends frappe.ui.form.Form {
 			}
 		})
 
-		// const sidebarProxy = new Proxy({}, {
-		// 	get(o, k, r) {
-		// 		return () => {
-		// 			console.log(`%cfrm.sidebar.${k}`, 'color:pink')
-		// 			return undefined
-		// 		}
-		// 	}
-		// })
-		// Object.defineProperty(this, 'sidebar', {
-		// 	configurable: true,
-		// 	get() { return sidebarProxy },
-		// 	set(v) { },
-		// })
+		const sidebarProxy = new Proxy({}, {
+			get(o, k, r) {
+				return () => {
+					// console.log(`%cfrm.sidebar.${k}`, 'color:pink')
+					return undefined
+				}
+			}
+		})
+		Object.defineProperty(this, 'sidebar', {
+			configurable: true,
+			get() { return sidebarProxy },
+			set(v) { },
+		})
 
-		// this.toolbar = new Proxy({}, {
-		// 	get(o, k, r) {
-		// 		if (o[k]) { return o[k] }
-		// 		return () => {
-		// 			console.log(`%cfrm.toolbar.${k}`, 'color:pink')
-		// 			return undefined
-		// 		}
-		// 	},
-		// 	set(o, k, v) {
-		// 		o[k] = v
-		// 		return true
-		// 	}
-		// })
+		this.toolbar = new Proxy({}, {
+			get(o, k, r) {
+				if (k in o) {
+					// console.log(`%cget form.toolbar.${k}`, 'color:pink')
+					return o[k]
+				}
+				return () => {
+					// console.log(`%ccall form.toolbar.${k}`, 'color:pink')
+					return undefined
+				}
+			},
+			set(o, k, v) {
+				o[k] = v
+				// console.log(`%cset form.toolbar.${k}`, 'color:pink')
+				return true
+			}
+		})
 	}
 	make() {
 		this.layout.doc = this.doc
 		this.layout.refresh_dependency();
-		this.layout.attach_doc_and_docfields(true);
+		this.layout.attach_doc_and_docfields();
 
 		this.script_manager.setup();
 
+		/**
+		 * Note: watch_model_updates() attaches listeners
+		 * with frappe.model.on but there is no way to detach them.
+		 * When a (normal) Form is created after a FakeForm is created,
+		 * it also attaches its listeners with frappe.model.on,
+		 * which causes all sorts of problems when navigating back and forth.
+		 * The reverse is also true (FakeForm then Form).
+		 * The problems seem related to the layout.refresh_dependency call
+		 * inside the watchers. That's why FakeForm.fakeform_destroy() should
+		 * always be called when hiding dialog or leaving page.
+		 */
 		this.watch_model_updates();
 
 		this.ready = true;
 		this.__defer_execute();
+	}
+
+	/**
+	 * This overriden method has two purposes:
+	 * 1. Removing any watcher added by a previous form,
+	 *    but preserving them to restore them later.
+	 * 2. Preparing the `FakeForm.unwatch_model_updates` call by keeping
+	 *    track of the watchers added by `super.watch_model_updates`.
+	 */
+	watch_model_updates() {
+		if (this.fakeform_previous_model_watchers) { return }
+
+		const table_fields = frappe.get_children("DocType", this.doctype, "fields", {
+			fieldtype: ["in", frappe.model.table_fields]
+		})
+		const watched_doctypes = frappe.utils.unique([
+			this.doctype, ...table_fields.map(df => df.options),
+		])
+
+		this.fakeform_previous_model_watchers = {}
+		for (const doctype of watched_doctypes) {
+			// add for all watched doctypes, even if no watcher
+			this.fakeform_previous_model_watchers[doctype] = frappe.model.events[doctype] || null
+			delete frappe.model.events[doctype]
+		}
+
+		super.watch_model_updates()
+	}
+
+	unwatch_model_updates() {
+		if (!this.fakeform_previous_model_watchers) { return }
+
+		for (const doctype in this.fakeform_previous_model_watchers) {
+			// delete frappe.model.events[doctype]
+			frappe.model.events[doctype] = this.fakeform_previous_model_watchers[doctype]
+		}
+		delete this.fakeform_previous_model_watchers
+	}
+
+	/** Always call fakeform_destroy when changing page/hiding dialog */
+	fakeform_destroy() {
+		if (this.fakeform_was_destroyed) return;
+		this.fakeform_was_destroyed = true;
+
+		this.unwatch_model_updates();
+	}
+
+	/** Revert fakeform_destroy */
+	fakeform_rebuild() {
+		if (!this.fakeform_was_destroyed) return;
+		delete this.fakeform_was_destroyed;
+
+		this.watch_model_updates();
+		this.refresh();
 	}
 
 	__defer(method, ...args) {

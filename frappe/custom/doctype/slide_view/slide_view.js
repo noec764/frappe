@@ -3,12 +3,19 @@
 
 frappe.ui.form.on('Slide View', {
 	refresh: function(frm) {
+		frm.trigger('_update_doc_settings_warning')
+
+		if (!frm.doc.__islocal) {
+			frm.trigger('_update_secondary_action')
+		}
+	},
+
+	/** Secondary action is removed when form is changed */
+	_update_secondary_action: function(frm) {
 		const label = __('Open {0}', [__('Slide View')])
 		frm.page.set_secondary_action(label, (x) => {
 			frappe.set_route('slide-viewer', frm.doc.route)
 		}, 'view', label);
-
-		frm.trigger('_update_doc_settings_warning')
 	},
 
 	_update_doc_settings_warning: function(frm) {
