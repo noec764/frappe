@@ -508,8 +508,8 @@ frappe.ui.Page = Class.extend({
 
 		const result = $(parent).find(`${selector}:contains('${label}')`)
 			.filter(function() {
-				let item = $(this).html();
-				return $(item).attr('data-label') === label;
+				let item = $(this);
+				return item.attr('data-label') === label;
 			});
 		return result.length > 0 && result;
 	},
