@@ -56,12 +56,6 @@ frappe.pages['setup-wizard'].on_page_load = function (wrapper) {
 					slide_class: frappe.setup.SetupWizardSlide,
 					unidirectional: 1,
 					done_state: 1,
-					before_load: (s) => {
-						// move progress dots above the slides
-						s.$slide_progress.detach().prependTo($wrapper)
-						s.$slide_progress.css({ marginTop: '0' })
-						s.$footer.find('.next-btn').removeClass('btn-default').addClass('btn-primary');
-					}
 				}
 				frappe.wizard = new frappe.setup.SetupWizard(wizard_settings);
 				frappe.setup.run_event("after_load");
@@ -101,7 +95,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	make() {
 		super.make();
-		this.$container.addClass("container setup-wizard-slide with-form w-50");
+		this.$container.addClass("setup-wizard-slide with-form");
 		this.setup_keyboard_nav();
 	}
 
@@ -276,7 +270,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			</div>
 		</div>`;
 
-		return $(`<div class="slides-wrapper container setup-wizard-slide setup-in-progress w-50">
+		return $(`<div class="mx-auto slides-default-style slides-wrapper setup-wizard-slide setup-in-progress">
 			<div class="content text-center">
 				<h1 class="slide-title title">${title}</h1>
 				<div class="state-icon-container">${loading_html}</div>
@@ -320,8 +314,7 @@ frappe.setup.get_slides_settings = () => [
 			this.setup_fields(slide);
 
 			var language_field = slide.get_field("language");
-
-			language_field.set_input(slide.values.language || frappe.setup.data.default_language || "English");
+			// language_field.set_input(frappe.setup.data.default_language || "English");
 
 			if (!frappe.setup._from_load_messages) {
 				language_field.$input.trigger("change");

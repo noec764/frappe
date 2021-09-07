@@ -1,5 +1,5 @@
 .slides-progress {
-	margin-top: 60px;
+	margin-top: 2rem;
 	display: flex;
 	margin-bottom: var(--margin-lg);
 	justify-content: center;
@@ -61,7 +61,7 @@
 
 			.slide-step-indicator {
 				transition: transform 150ms ease;
-				transform: scale(1.7);
+				transform: scale(1.6);
 			}
 		}
 
@@ -80,10 +80,10 @@
 		// }
 
 		&.step-success:not(.active) {
-			--step-bg-color: var(--primary);
-			--step-fg-color: var(--primary);
-			// --step-bg-color: #31bf6a;
-			// --step-fg-color: #28a745;
+			// --step-bg-color: var(--primary);
+			// --step-fg-color: var(--primary);
+			--step-bg-color: #34bc91;
+			--step-fg-color: #34bc91;
 
 			.slide-step-indicator {
 				opacity: 0;
@@ -118,7 +118,7 @@
 
 /* Visual styles */
 .slides-default-style {
-	width: 520px;
+	width: 100%;
 	max-width: 520px;
 	background: var(--card-bg);
 	padding: var(--padding-xl);
@@ -141,20 +141,6 @@
 
 	.success-state {
 		margin-bottom: var(--margin-lg);
-	}
-
-	&.setup-in-progress {
-		.state-icon-container {
-			margin-top: var(--margin-xl);
-		}
-
-		.setup-message {
-			margin-top: var(--margin-lg);
-		}
-
-		.btn-abort {
-			margin: var(--margin-lg) auto;
-		}
 	}
 }
 
@@ -194,6 +180,25 @@
 		.form {
 			pointer-events: none;
 			opacity: 0.5;
+		}
+	}
+}
+
+.setup-wizard-slide {
+	width: 100%;
+	max-width: 640px;
+
+	&.setup-in-progress {
+		.state-icon-container {
+			margin-top: var(--margin-xl);
+		}
+
+		.setup-message {
+			margin-top: var(--margin-lg);
+		}
+
+		.btn-abort {
+			margin: var(--margin-lg) auto;
 		}
 	}
 }

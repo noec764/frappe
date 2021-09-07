@@ -117,7 +117,7 @@ frappe.ui.Slide = class Slide {
 	}
 
 	refresh() {
-		if (this.form) {
+		if (this.form && this.parent_slides.values_is_doc) {
 			this.form.refresh(); // fix missing layout refresh
 		}
 		this.render_parent_dots();
@@ -661,7 +661,9 @@ frappe.ui.Slides = class Slides {
 		const stopBecauseErrors = this.unidirectional ? hasErrors : false;
 		if (stopBecauseErrors) { return; }
 
-		const no_active = true
+		this.update_values();
+
+		const no_active = true;
 		this.render_progress_dots(no_active);
 		this.on_complete && this.on_complete(this);
 	}
@@ -719,6 +721,8 @@ frappe.ui.Slides = class Slides {
 		const hasErrors = this.current_slide.has_errors(ignore_form_errors);
 		const stopBecauseErrors = this.unidirectional ? hasErrors : false;
 		if (stopBecauseErrors) { return; }
+
+		this.update_values();
 
 		// const next_id = this.current_id + 1;
 		const next_id = this.find_next_nonskipped_slide(+1);
@@ -835,7 +839,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	update_values() {
-		return this.get_values();
+		return this.get_values(true);
 	}
 
 	has_errors() {
