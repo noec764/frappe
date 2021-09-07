@@ -118,7 +118,7 @@ frappe.ui.Slide = class Slide {
 
 	refresh() {
 		if (this.form) {
-			this.form.refresh();
+			this.form.refresh(); // fix missing layout refresh
 		}
 		this.render_parent_dots();
 		if (this.done) {
@@ -825,8 +825,8 @@ frappe.ui.Slides = class Slides {
 	/**
 	 * Side effect: updates this.values (without reassignment)
 	 */
-	get_values() {
-		const force_get_all = !this.values_is_doc;
+	get_values(force = false) {
+		const force_get_all = force || !this.values_is_doc;
 		this.slide_instances.forEach((slide) => {
 			const slideValues = slide.get_values(force_get_all);
 			Object.assign(this.values, slideValues);

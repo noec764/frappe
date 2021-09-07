@@ -141,6 +141,7 @@
 		"public/js/frappe/ui/page.html",
 		"public/js/frappe/ui/page.js",
 		"public/js/frappe/ui/slides.js",
+		"public/js/frappe/ui/slide_viewer.js",
 		"public/js/frappe/ui/onboarding_dialog.js",
 		"public/js/frappe/ui/find.js",
 		"public/js/frappe/ui/iconbar.js",
@@ -228,6 +229,7 @@
 		"public/js/frappe/form/controls/control.js",
 		"public/js/frappe/views/formview.js",
 		"public/js/frappe/form/form.js",
+		"public/js/frappe/form/fakeform.js",
 		"public/js/frappe/meta_tag.js",
 		"public/js/frappe/calendar_recurrence.js"
 	],
