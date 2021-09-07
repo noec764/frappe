@@ -117,8 +117,8 @@ frappe.ui.SlideViewer = class SlideViewer {
 		const { reference_doctype } = this.slideView
 
 		if (reference_doctype) {
-      // fetch meta for DocType
-      await new Promise((cb) => frappe.model.with_doctype(reference_doctype, cb))
+			// fetch meta for DocType
+			await new Promise((cb) => frappe.model.with_doctype(reference_doctype, cb))
 		}
 
 		await this._fetchDoc()
@@ -239,7 +239,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 	}
 
 	async _fetchSlideView() {
-    // get Slide View by route
+		// get Slide View by route
 		this.slideView = await frappe.xcall('frappe.custom.page.slide_viewer.api.get_slide_view_by_route', { route: this.route })
 		this._checkSlideViewPermissions()
 	}
@@ -497,7 +497,7 @@ class SlidesWithForm extends frappe.ui.Slides {
 	}
 
 	updateSlidesWithErrorFields() {
-    if (!this.parent_form.fakeform_get_missing_fields) return;
+		if (!this.parent_form.fakeform_get_missing_fields) return;
 		const error_docs = this.parent_form.fakeform_get_missing_fields();
 		// Names of the invalid fields in the main document.
 		const error_root_fieldnames = []
@@ -529,7 +529,7 @@ class SlideWithForm extends frappe.ui.Slide {
 	should_skip() {
 		if (super.should_skip()) { return true }
 
-    // skip or not by evaluating depends_on
+		// skip or not by evaluating depends_on
 		if (this.condition && this.parent_form && this.parent_form.layout) {
 			const conditionValid = this.parent_form.layout.evaluate_depends_on_value(this.condition)
 			if (!conditionValid) { return true }
@@ -753,12 +753,14 @@ function fieldGroupsToSlides({
 	meta,
 }) {
 	const globalTitle = title || (meta && getSlidesTitleForMeta(meta, docname))
+	const is_new = docname && docname.match(/^new-.*-\d+$/)
+
 	const { fields_dict, sections } = getAliases(meta)
 
 	const slides = []
 	const usedFieldnames = new Set()
-	let index = 0
-	for (const group of groups) {
+	for (let index = 0; index < groups.length; index++) {
+		const group = groups[index]
 		const slide = groupToSlide(group, index)
 		if (slide) {
 			slide.fields.forEach(x => usedFieldnames.add(x.fieldname))
@@ -837,7 +839,6 @@ function fieldGroupsToSlides({
 		if (typeof fn === 'string') {
 			// if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `field_name` shorthand if no doctype is provided')
 			if (fn === '__newname') {
-				const is_new = docname && docname.match(/^new-.*-\d+$/)
 				if (is_new && meta && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
 					return getNewNameFieldForDocType(meta.name)
 				}

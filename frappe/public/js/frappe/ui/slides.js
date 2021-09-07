@@ -839,7 +839,7 @@ frappe.ui.Slides = class Slides {
 	}
 
 	update_values() {
-		return this.get_values(true);
+		return this.get_values(!this.values_is_doc);
 	}
 
 	has_errors() {
