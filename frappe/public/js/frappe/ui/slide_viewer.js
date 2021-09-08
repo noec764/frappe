@@ -574,6 +574,7 @@ async function getSlidesForSlideView(slideView, docname) {
 	const doctype = slideView.reference_doctype
 	const meta = doctype && async_get_meta(doctype)
 
+
 	if (slideView.slides) {
 		return fieldGroupsToSlides({
 			title: slideView.title,
@@ -600,12 +601,14 @@ async function getSlidesForSlideView(slideView, docname) {
 
 function getAutoslidesForMeta(meta, docname = '', title = '') {
 	const doctype = meta.name
-	const fields = meta.fields.slice()
+	const fields = meta.fields.slice() // create a shallow copy of meta.fields
 
 	const is_new = docname && docname.match(/^new-.*-\d+$/)
-
+	// const autonameFieldname = (is_new && meta && meta.autoname && meta.autoname.startsWith('field:')) ? meta.autoname.replace('field:', '') : null
 	if (is_new && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
-		fields.unshift(getNewNameFieldForDocType(doctype))
+		if (!fields.find(x => x.fieldname === 'name' || x.fieldname === '__newname')) {
+			fields.unshift(getNewNameFieldForDocType(doctype))
+		}
 	}
 
 	const slides = []

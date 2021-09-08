@@ -128,10 +128,11 @@ frappe.ui.Slide = class Slide {
 
 	setup_form() {
 		const fieldGroupOptions = {
-			fields: this.get_atomic_fields(),
+			fields: this.parent_slides.values_is_doc ? this.fields : this.get_atomic_fields(),
 			body: this.$form[0],
 			no_submit_on_enter: true,
 			doc: this.doc,
+			values: this.parent_slides.values,
 		};
 		if (this.parent_form) {
 			Object.assign(fieldGroupOptions, {
@@ -168,7 +169,7 @@ frappe.ui.Slide = class Slide {
 	get_state() {
 		const seen = this.seen;
 		const done = this.done;
-		const error = this.last_validation_result === false; // not error if undefined (unkownn) or true (valid)
+		const error = this.last_validation_result === false; // not error if undefined (unknown) or true (valid)
 		const skip = Boolean(this.should_skip && this.should_skip(this));
 		return { seen, done, error, skip };
 	}

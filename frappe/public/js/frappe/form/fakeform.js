@@ -1,5 +1,11 @@
 frappe.provide('frappe.ui.form');
 
+/**
+ * Because Frappe/Dodock is not built to have multiple instances
+ * of the same type of Form (doctype, docname), the FakeForm class
+ * tries to prevent bugs with a special handling of
+ * `frappe.model.events` and `frappe.meta.docfield_copy`.
+ */
 frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 	constructor(wrapper, doc, opts = {}) {
 		if (!(typeof doc === 'object' && doc.doctype)) {
@@ -170,6 +176,11 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		this.fakeform_was_destroyed = true;
 
 		this.unwatch_model_updates();
+
+		// bugfix: `autoname_df.hidden` was changed, affecting all of the subsequent slide views
+		this.fakeform_own_docfield_copy = frappe.meta.docfield_copy;
+		frappe.meta.docfield_copy = (this.fakeform_previous_docfield_copy || {});
+		delete this.fakeform_previous_docfield_copy;
 	}
 
 	/** Revert fakeform_destroy */
@@ -179,6 +190,10 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 
 		this.watch_model_updates();
 		this.refresh();
+
+		this.fakeform_previous_docfield_copy = frappe.meta.docfield_copy
+		frappe.meta.docfield_copy = (this.fakeform_own_docfield_copy || {});
+		delete this.fakeform_own_docfield_copy;
 	}
 
 	__defer(method, ...args) {
