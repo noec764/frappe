@@ -216,7 +216,7 @@
             "fieldtype": "Column Break"
         },
         {
-            "description": "For Links, enter the DocType as range.\nFor Select, enter list of Options, each on a new line.",
+            "description": "For Links, enter the DocType as range.<br>For Select, enter list of Options, each on a new line.",
             "fieldname": "options",
             "fieldtype": "Small Text",
             "in_list_view": 1,
