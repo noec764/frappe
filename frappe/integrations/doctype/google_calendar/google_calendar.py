@@ -4,6 +4,8 @@
 
 from datetime import datetime, timedelta
 from urllib.parse import quote
+import json
+import arrow
 
 import google.oauth2.credentials
 import requests
@@ -16,7 +18,7 @@ from frappe import _
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.model.document import Document
 from frappe.utils import (add_days, add_to_date, get_datetime,
-	get_request_site_address, get_time_zone, get_weekdays, now_datetime)
+	get_request_site_address, get_time_zone, get_weekdays, now_datetime, convert_utc_to_user_timezone)
 from frappe.utils.password import set_encrypted_password
 
 SCOPES = "https://www.googleapis.com/auth/calendar"
@@ -38,7 +40,7 @@ class GoogleCalendar(Document):
 		if not self.refresh_token:
 			button_label = frappe.bold(_("Allow Google Calendar Access"))
 			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
-		
+
 		data = {
 			"client_id": google_settings.client_id or frappe.conf.google_client_id,
 			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False) or frappe.conf.google_client_secret,
