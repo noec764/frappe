@@ -80,10 +80,10 @@
 		// }
 
 		&.step-success:not(.active) {
-			// --step-bg-color: var(--primary);
-			// --step-fg-color: var(--primary);
-			--step-bg-color: #34bc91;
-			--step-fg-color: #34bc91;
+			--step-bg-color: var(--primary);
+			--step-fg-color: var(--primary);
+			// --step-bg-color: #34bc91;
+			// --step-fg-color: #34bc91;
 
 			.slide-step-indicator {
 				opacity: 0;
