@@ -51,14 +51,14 @@ class Contact(Document):
 	def get_link_for(self, link_doctype):
 		'''Return the link name, if exists for the given link DocType'''
 		for link in self.links:
-			if link.link_doctype==link_doctype:
+			if link.link_doctype == link_doctype:
 				return link.link_name
 
 		return None
 
 	def has_link(self, doctype, name):
 		for link in self.get("links"):
-			if link.link_doctype==doctype and link.link_name== name:
+			if link.link_doctype == doctype and link.link_name == name:
 				return True
 
 	def get_link_to_doctype(self, doctype):
