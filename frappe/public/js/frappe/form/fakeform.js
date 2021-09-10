@@ -3,8 +3,8 @@ frappe.provide('frappe.ui.form');
 /**
  * Because Frappe/Dodock is not built to have multiple instances
  * of the same type of Form (doctype, docname), the FakeForm class
- * tries to prevent bugs with a special handling of
- * `frappe.model.events` and `frappe.meta.docfield_copy`.
+ * tries to prevent bugs related to `frappe.ui.form.handlers`,
+ * `frappe.model.events`, `frappe.meta.docfield_copy`.
  */
 frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 	constructor(wrapper, doc, opts = {}) {
@@ -16,6 +16,26 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 
 		const fakeparent = $('<div>')
 		super(doctype, fakeparent, true, undefined)
+
+
+		// values to store and restore
+		this.__stored_values = {
+			'docfield copy': {
+				get: () => frappe.meta.docfield_copy,
+				set: (prev) => { frappe.meta.docfield_copy = prev },
+			},
+			'model events': {
+				get: () => frappe.model.events,
+				set: (prev) => { frappe.model.events = prev },
+			},
+			'form events': {
+				get: () => frappe.ui.form.handlers,
+				set: (prev) => { frappe.ui.form.handlers = prev },
+			},
+		};
+		this.fakeform_store_environment();
+
+
 		this.ready = false
 		this.form_wrapper = wrapper
 
@@ -141,33 +161,25 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 	 *    track of the watchers added by `super.watch_model_updates`.
 	 */
 	watch_model_updates() {
-		if (this.fakeform_previous_model_watchers) { return }
-
-		const table_fields = frappe.get_children("DocType", this.doctype, "fields", {
-			fieldtype: ["in", frappe.model.table_fields]
-		})
-		const watched_doctypes = frappe.utils.unique([
-			this.doctype, ...table_fields.map(df => df.options),
-		])
-
-		this.fakeform_previous_model_watchers = {}
-		for (const doctype of watched_doctypes) {
-			// add for all watched doctypes, even if no watcher
-			this.fakeform_previous_model_watchers[doctype] = frappe.model.events[doctype] || null
-			delete frappe.model.events[doctype]
-		}
-
+		if (this.__stored_values['model events'].value !== undefined) { return }
 		super.watch_model_updates()
 	}
 
-	unwatch_model_updates() {
-		if (!this.fakeform_previous_model_watchers) { return }
-
-		for (const doctype in this.fakeform_previous_model_watchers) {
-			// delete frappe.model.events[doctype]
-			frappe.model.events[doctype] = this.fakeform_previous_model_watchers[doctype]
+	fakeform_store_environment () {
+		for (const k in this.__stored_values) {
+			const s = this.__stored_values[k]
+			s.value = s.get() // preserve old value
+			s.set(s.my_value || {}) // clear current value (eventually restoring previously updated value set by this form)
+			delete s.my_value
 		}
-		delete this.fakeform_previous_model_watchers
+	}
+	fakeform_restore_environment() {
+		for (const k in this.__stored_values) {
+			const s = this.__stored_values[k]
+			s.my_value = s.get() // store current value (set by this form)
+			s.set(s.value) // restore previous current value (set by other forms)
+			delete s.value
+		}
 	}
 
 	/** Always call fakeform_destroy when changing page/hiding dialog */
@@ -175,12 +187,7 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		if (this.fakeform_was_destroyed) return;
 		this.fakeform_was_destroyed = true;
 
-		this.unwatch_model_updates();
-
-		// bugfix: `autoname_df.hidden` was changed, affecting all of the subsequent slide views
-		this.fakeform_own_docfield_copy = frappe.meta.docfield_copy;
-		frappe.meta.docfield_copy = (this.fakeform_previous_docfield_copy || {});
-		delete this.fakeform_previous_docfield_copy;
+		this.fakeform_restore_environment();
 	}
 
 	/** Revert fakeform_destroy */
@@ -188,12 +195,8 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		if (!this.fakeform_was_destroyed) return;
 		delete this.fakeform_was_destroyed;
 
-		this.watch_model_updates();
+		this.fakeform_store_environment();
 		this.refresh();
-
-		this.fakeform_previous_docfield_copy = frappe.meta.docfield_copy
-		frappe.meta.docfield_copy = (this.fakeform_own_docfield_copy || {});
-		delete this.fakeform_own_docfield_copy;
 	}
 
 	__defer(method, ...args) {
@@ -209,6 +212,7 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 			// console.log('%c:' + method, 'color:orange', args)
 			this[method](...args)
 		}
+		this.__deferred.splice(0, n)
 	}
 
 	refresh_field(fname) {
