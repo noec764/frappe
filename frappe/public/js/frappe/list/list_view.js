@@ -236,6 +236,19 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	set_primary_action() {
 		if (this.can_create) {
+			const templates = [];
+			frappe.provide('frappe.slide_viewer_templates');
+			for (const template_id in frappe.slide_viewer_templates) {
+				const template = frappe.slide_viewer_templates[template_id];
+				if (template.slideView && template.slideView.reference_doctype === this.doctype) {
+					templates.push({
+						label: __(template_id),
+						value: template_id,
+						type: 'slide-viewer'
+					});
+				}
+			}
+
 			this.page.set_primary_action(
 				`${__("Add")} ${frappe.router.doctype_layout || __(this.doctype)}`,
 				() => {
@@ -247,6 +260,21 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				},
 				"add"
 			);
+
+			if (templates.length > 0) {
+				this.add_template_dropdown(templates, {
+					add_make_new_doc_btn: false,
+					allow_single_btn: false,
+					primary: false,
+					label: __('Templates'),
+					callback: (template, event, type) => {
+						if (type === 'slide-viewer') {
+							frappe.show_slide_viewer_template(template)
+						}
+					},
+				});
+				// this.clear_primary_action();
+			}
 		} else {
 			this.page.clear_primary_action();
 		}
@@ -1864,6 +1892,99 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const page_name = frappe.get_route_str();
 		const list_view = frappe.views.list_view[page_name];
 		list_view && list_view.on_update(data);
+	}
+
+	/**
+	 * @template T
+	 * @param {Array<{ label: string, value: T, type?: string }>} templates
+	 * @param {{
+	 * callback?: (value: T, event: MouseEvent, type?: string) => void,
+	 * insert?: (btn: JQuery) => void,
+	 * add_make_new_doc_btn?: boolean,
+	 * allow_single_btn?: boolean,
+	 * primary?: boolean,
+	 * label?: string,
+	 * }} opts
+	 */
+	add_template_dropdown(templates, opts = {}) {
+		if (this.template_btn) {
+			this.template_btn.remove()
+			this.template_btn = null
+		}
+
+		if (!opts.callback) {
+			opts.callback = frappe.show_slide_viewer_template;
+		}
+
+		if (typeof opts.callback !== 'function') {
+			console.error('list_view.add_template_dropdown: invalid `callback` option');
+			opts.callback = () => {}
+		}
+
+		if (typeof opts.insert !== 'function') {
+			opts.insert = (btn) => btn.insertBefore(this.page.btn_primary);
+		}
+
+		if (opts.add_make_new_doc_btn === undefined) {
+			opts.add_make_new_doc_btn = false
+		}
+
+		if (opts.allow_single_btn === undefined) {
+			opts.allow_single_btn = false
+		}
+
+		if (opts.primary === undefined) {
+			opts.primary = false
+		}
+
+		if (templates.length === 1 && !opts.add_make_new_doc_btn && opts.allow_single_btn) {
+			const t = templates[0];
+			const label = `${__("Add")} ${__(t.label)}`;
+			const button = $(`<button class="btn ${opts.primary ? 'btn-primary' : 'btn-default'} btn-sm ellipsis">
+				${frappe.utils.icon('add')}
+				${label}
+			</button>`).on('click', (e) => opts.callback(t.value, e, t.type));
+			opts.insert(button);
+			this.template_btn = button;
+		} else {
+			const primary_action_label = `${__("Add")} ${frappe.router.doctype_layout || __(this.doctype)}`
+			const label = opts.label || primary_action_label
+			const $template_dropdown = this.page.add_custom_button_group(label, "add")
+			const $template_dropdown_btn_group = $template_dropdown.parent('.custom-btn-group')
+
+			opts.primary && $template_dropdown_btn_group.find('button').removeClass("btn-default").addClass("btn-primary")
+
+			opts.insert($template_dropdown_btn_group);
+			this.template_btn = $template_dropdown_btn_group;
+
+			if (opts.add_make_new_doc_btn) {
+				this.page.add_dropdown_item({
+					label: primary_action_label,
+					click: () => this.make_new_doc(),
+					standard: true,
+					parent: $template_dropdown,
+				});
+				$template_dropdown.append(`<li class="dropdown-divider" style="margin: 6px 0;"></li>`);
+				$template_dropdown.append(`
+					<li>
+						<div style="padding: 6px 9px;">
+							<b>${__('Templates')}</b>
+						</div>
+					</li>
+				`).on('click', (e) => e.stopPropagation());
+			}
+
+			for (const t of templates) {
+				this.page.add_dropdown_item({
+					label: __(t.label),
+					click: (e) => opts.callback(t.value, e, t.type),
+					standard: true,
+					parent: $template_dropdown,
+					// shortcut: "",
+					// icon: "add",
+				});
+			}
+		}
 	}
 };
 
