@@ -75,7 +75,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 				}
 			}
 		} else {
-			return frappe.throw('[Slide Viewer] constructor: should have either route or slideView param') // @todo
+			return this.throwDevError('should have either route or slideView param', 'constructor')
 		}
 
 		if (options.with_form) {
@@ -92,6 +92,14 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 		if (options.SlideClass) { this.SlideClass = options.SlideClass }
 		if (options.SlidesClass) { this.SlidesClass = options.SlidesClass }
+	}
+
+	showDevWarning(warn, ctx) {
+		console.error((ctx ? `[Slide Viewer: ${ctx}]` : '[Slide Viewer]'), msg)
+	}
+
+	throwDevError(error, ctx) {
+		return frappe.throw((ctx ? `[Slide Viewer: ${ctx}]` : '[Slide Viewer]') + ' ' + error)
 	}
 
 	hide() {
@@ -131,10 +139,10 @@ frappe.ui.SlideViewer = class SlideViewer {
 			if (this.slideView.slides && this.slideView.on_complete) {
 				this.doc = {} // okay
 			} else if (this.slideView.slides) {
-				console.warn('[Slide Viewer] missing slideView.on_complete function: the Slide Viewer cannot be submitted')
+				this.showDevWarning('missing slideView.on_complete function: the Slide Viewer cannot be submitted')
 				this.doc = {} // kinda okay
 			} else {
-				frappe.throw('[Slide Viewer] cannot edit/create document with a Slide View without reference_doctype')
+				this.throwDevError('cannot open Slide View with neither reference_doctype nor slides', 'constructor')
 			}
 			return
 		}
@@ -142,7 +150,6 @@ frappe.ui.SlideViewer = class SlideViewer {
 		// check permissions
 		let mode = 'Error'
 		let error = ''
-		let fetchFromLocals = false
 
 		const meta = frappe.get_meta(reference_doctype)
 
@@ -155,8 +162,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 			this.documentName = meta.name
 		} else if (in_locals && is_new) {
 			// edit if the document exists in locals and the name looks like a new name
-			mode = 'Edit'
-			fetchFromLocals = true
+			mode = 'EditLocals'
 		} else if (is_new) {
 			// create if the name looks like a new name but the document is not in locals
 			mode = 'Create'
@@ -167,7 +173,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 			mode = 'Create'
 		}
 
-		if (mode === 'Create' && !can_create_doc) {
+		if ((mode === 'Create' || mode === 'EditLocals') && !can_create_doc) {
 			mode = 'Error'
 			error = 'cannot create'
 		}
@@ -176,10 +182,8 @@ frappe.ui.SlideViewer = class SlideViewer {
 			error = 'cannot edit'
 		}
 
-		if (mode === 'Edit') {
-			// edit mode / duplicate mode
-
-			if (fetchFromLocals) {
+		if (mode === 'Edit' || mode === 'EditLocals') {
+			if (mode === 'EditLocals') {
 				this.doc = frappe.get_doc(reference_doctype, this.documentName)
 
 				if (!this.doc) {
@@ -206,14 +210,15 @@ frappe.ui.SlideViewer = class SlideViewer {
 				// okay
 				this.documentName = this.doc.name
 
-				if (this.route) {
-				// if (frappe.router.get_sub_path().startsWith('slide-viewer')) {
+				// if (cur_page.slideViewer === this) {
+				if (this.route && frappe.router.get_sub_path().startsWith('slide-viewer')) {
 					let newUrl = ['slide-viewer', this.slideView.route, this.documentName]
 					newUrl = frappe.router.get_route_from_arguments(newUrl)
 					newUrl = frappe.router.convert_to_standard_route(newUrl)
 					newUrl = frappe.router.make_url(newUrl)
 					setTimeout(() => {
-						frappe.router.push_state(newUrl)
+						history.replaceState(null, null, newUrl)
+						// frappe.router.route()
 					}, 0) // run after page_show event
 				}
 			} else {
@@ -221,20 +226,9 @@ frappe.ui.SlideViewer = class SlideViewer {
 			}
 		}
 
-		if (error === 'cannot edit') {
-			frappe.show_not_permitted(__("Slide View"))
-			throw new Error('[Slide Viewer] cannot edit document with this Slide View')
-		} else if (error === 'cannot create') {
-			frappe.show_not_permitted(__("Slide View"))
-			throw new Error('[Slide Viewer] cannot create document with this Slide View')
-		} else if (error === 'missing document') {
-			frappe.show_not_found(__(reference_doctype) + " - " + __(this.documentName));
-			throw new Error('[Slide Viewer] ' + __("{0} {1} not found", [__(reference_doctype), __(this.documentName)]))
-		} else if (error === 'forbidden') {
-			frappe.show_not_permitted(__(reference_doctype) + " - " + __(this.documentName));
-			throw new Error('[Slide Viewer] ' + __("You don't have the permissions to access this document"))
-		} else if (error) {
-			return frappe.throw('[Slide Viewer] an unknown error: ' + error)
+		if (error) {
+			this.showUserError(error)
+			throw new Error(error) // fallback
 		}
 	}
 
@@ -246,15 +240,12 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 	_checkSlideViewPermissions() {
 		if (!this.slideView) {
-			// @todo
-			return frappe.throw('[Slide Viewer] missing Slide View')
+			this.showUserError('missing slide view')
 		}
 
 		const perms = frappe.perm.get_perm('Slide View', this.slideView.name)
 		if (!perms.some(x => x.read)) {
-			// @todo
-			frappe.show_not_permitted(__(this.slideView.doctype) + " " + this.slideView.name);
-			throw new Error('[Slide View] Insufficient Permission for Slide View: ' + this.slideView.name)
+			this.showUserError('slide view permissions')
 		}
 	}
 
@@ -273,8 +264,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 	async renderInWrapper(wrapper) {
 		await this._fetch()
 		if (!this.doc || !this.slideView) {
-			frappe.show_not_found('');
-			throw new Error("[SlideViewer.renderInWrapper]: missing .doc or .slideView");
+			return this.throwDevError('missing .doc or .slideView', 'renderInWrapper')
 		}
 
 		this.update_page_title();
@@ -297,8 +287,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 		await this._fetch()
 		if (!this.doc || !this.slideView) {
-			frappe.show_not_found('');
-			throw new Error("[SlideViewer.renderInDialog]: missing .doc or .slideView");
+			return this.throwDevError('missing .doc or .slideView', 'renderInDialog')
 		}
 
 		// make the Slides instance with optional values to populate the form.
@@ -344,7 +333,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 						freeze_message: __('Loading'),
 					})
 				} else {
-					console.warn('[SlideViewer Dialog] cannot save document without doctype');
+					this.showDevWarning('cannot save document without doctype', 'Dialog')
 				}
 			}
 		}
@@ -355,7 +344,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 	_renderWithSettings(slidesSettings) {
 		if (!slidesSettings) {
-			this.showErrorNoSlides();
+			this.showUserError('no slides');
 			return;
 		}
 
@@ -367,14 +356,43 @@ frappe.ui.SlideViewer = class SlideViewer {
 		this.show();
 	}
 
-	showErrorNoSlides() {
-		const msg = __("Oops, there are no slides to display.", null, "Slide View")
-		const img = 'empty.svg'
-		frappe.show_message_page({
-			page_name: msg,
-			message: msg,
-			img: `/assets/frappe/images/ui/${img}`
-		})
+	showUserError(error) {
+		// const canRedirect = Boolean(this.route)
+		// const canRedirect = cur_page.slideViewer === this
+		const canRedirect = frappe.router.get_sub_path().startsWith('slide-viewer')
+
+		if (error === 'cannot edit') {
+			canRedirect && frappe.show_not_permitted(__("Slide View"))
+			throw new Error('[Slide Viewer] cannot edit document with this Slide View')
+		} else if (error === 'cannot create') {
+			canRedirect && frappe.show_not_permitted(__("Slide View"))
+			throw new Error('[Slide Viewer] cannot create document with this Slide View')
+		} else if (error === 'missing document') {
+			canRedirect && frappe.show_not_found(__(this.slideView.reference_doctype) + " - " + __(this.documentName))
+			throw new Error('[Slide Viewer] ' + __("{0} {1} not found", [__(this.slideView.reference_doctype), __(this.documentName)]))
+		} else if (error === 'forbidden') {
+			canRedirect && frappe.show_not_permitted(__(this.slideView.reference_doctype) + " - " + __(this.documentName))
+			throw new Error('[Slide Viewer] ' + __("You don't have the permissions to access this document"))
+		} else if (error === 'slide view permissions') {
+			canRedirect && frappe.show_not_permitted(__(this.slideView.doctype) + " " + this.slideView.name)
+			throw new Error('[Slide View] Insufficient Permission for Slide View: ' + this.slideView.name)
+		} else if (error === 'missing slide view') {
+			return frappe.throw('[Slide Viewer] missing Slide View')
+		} else if (error === 'no slides') {
+			const msg = __("Oops, there are no slides to display.", null, "Slide View")
+			if (canRedirect) {
+				frappe.show_message_page({
+					page_name: msg,
+					message: msg,
+					img: `/assets/frappe/images/ui/empty.svg`
+				})
+			} else {
+				frappe.throw(msg)
+			}
+			throw new Error('[Slide View] ' + msg)
+		} else if (error) {
+			return frappe.throw('[Slide Viewer] ' + error)
+		}
 	}
 
 	async getSlidesSettings(params) {
@@ -784,7 +802,7 @@ function fieldGroupsToSlides({
 					fields: section,
 				}
 			} else {
-				console.warn('[Slide Viewer: getSlidesForSlideView] no such section with name/label: ' + sectionName)
+				frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'no such section with name/label:', sectionName)
 			}
 		} else if (group === '*') {
 			if (meta) {
@@ -792,6 +810,8 @@ function fieldGroupsToSlides({
 				const slide = groupToSlide(missingFields, index)
 				slide.should_skip = () => true
 				return slide
+			} else {
+				frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'cannot use `*` shorthand if no doctype is provided')
 			}
 		} else if (Array.isArray(group)) {
 			return {
@@ -811,6 +831,8 @@ function fieldGroupsToSlides({
 			const slide = group(index, groupToSlide, globalTitle)
 			slide.fields = mapFieldsIfArray(slide.fields)
 			return slide
+		} else {
+			frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'invalid slide descriptor:', group)
 		}
 	}
 
@@ -826,8 +848,8 @@ function fieldGroupsToSlides({
 	 * @returns {{ section?: DocField[]; sectionBreak?: DocField; }}
 	 */
 	function sectionByNameOrLabel(_name) {
-		// if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `section:` shorthand if no doctype is provided')
-		if (!meta) return { section: null, sectionBreak: null }
+		if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `section:` shorthand if no doctype is provided')
+		// if (!meta) return { section: null, sectionBreak: null }
 
 		if (_name === '') return { section: sections[''], sectionBreak: null }
 
@@ -840,7 +862,7 @@ function fieldGroupsToSlides({
 
 	function mapToField(fn) {
 		if (typeof fn === 'string') {
-			// if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `field_name` shorthand if no doctype is provided')
+			if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `field_name` shorthand if no doctype is provided')
 			if (fn === '__newname') {
 				if (is_new && meta && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
 					return getNewNameFieldForDocType(meta.name)
@@ -954,49 +976,7 @@ function getAliases(meta) {
 	return { fields_dict, sections }
 }
 
-frappe.slide_viewer_templates = {
-	'Booking Credits Addition': {
-		title: 'Booking Credits Addition',
-		with_form: true,
-		additional_settings(sv) {
-			Object.assign(sv.doc, {
-				rule_type: "Booking Credits Addition",
-				conditions: "doc.subscription",
-				include_item_in_manufacturing: 0,
-			})
-		},
-		slideView: {
-			title: "Booking Credits Addition",
-			reference_doctype: "Booking Credit Rule",
-			add_fullpage_edit_btn: true,
-			slides: [
-				"section:",
-				"section:triggers_section",
-				// "section:posting_date_section",
-				// "section:expiration_section",
-				// "section:recurrence_section",
-				(index, groupToSlide, globalTitle) => {
-					const slide = groupToSlide([], index) // empty slide
-					const posting_date_fields = groupToSlide('section:posting_date_section').fields
-					const expiration_fields = groupToSlide('section:expiration_section').fields
-					const recurrence_fields = groupToSlide('section:recurrence_section').fields
-					slide.fields = [
-						...posting_date_fields,
-						{ fieldtype: 'Section Break' },
-						...expiration_fields,
-						{ fieldtype: 'Section Break' },
-						...recurrence_fields,
-					]
-					return slide
-				},
-				"section:fields_map",
-				// "section:applicable_deduction_rules_section",
-				// "section:custom_rules_section",
-				"*",
-			]
-		},
-	}
-}
+frappe.provide('frappe.slide_viewer_templates')
 
 /**
  * Open a Slide Viewer dialog with the given template name.
@@ -1014,4 +994,46 @@ frappe.show_slide_viewer_template = async function (template_name, docname = nul
 		...template,
 	})
 	await slideViewer.renderInDialog()
+}
+
+frappe.slide_viewer_templates['Booking Credits Addition'] = {
+	title: __('Booking Credits Addition'),
+	with_form: true,
+	additional_settings(sv) {
+		Object.assign(sv.doc, {
+			rule_type: "Booking Credits Addition",
+			conditions: "doc.subscription",
+			include_item_in_manufacturing: 0,
+		})
+	},
+	slideView: {
+		title: __("Booking Credits Addition"),
+		reference_doctype: "Booking Credit Rule",
+		add_fullpage_edit_btn: true,
+		slides: [
+			"section:",
+			"section:triggers_section",
+			// "section:posting_date_section",
+			// "section:expiration_section",
+			// "section:recurrence_section",
+			(index, groupToSlide, globalTitle) => {
+				const slide = groupToSlide([], index) // empty slide
+				const posting_date_fields = groupToSlide('section:posting_date_section').fields
+				const expiration_fields = groupToSlide('section:expiration_section').fields
+				const recurrence_fields = groupToSlide('section:recurrence_section').fields
+				slide.fields = [
+					...posting_date_fields,
+					{ fieldtype: 'Section Break' },
+					...expiration_fields,
+					{ fieldtype: 'Section Break' },
+					...recurrence_fields,
+				]
+				return slide
+			},
+			"section:fields_map",
+			// "section:applicable_deduction_rules_section",
+			// "section:custom_rules_section",
+			"*",
+		]
+	},
 }
