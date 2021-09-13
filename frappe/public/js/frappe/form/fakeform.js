@@ -153,18 +153,6 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		this.__defer_execute();
 	}
 
-	/**
-	 * This overriden method has two purposes:
-	 * 1. Removing any watcher added by a previous form,
-	 *    but preserving them to restore them later.
-	 * 2. Preparing the `FakeForm.unwatch_model_updates` call by keeping
-	 *    track of the watchers added by `super.watch_model_updates`.
-	 */
-	watch_model_updates() {
-		if (this.__stored_values['model events'].value !== undefined) { return }
-		super.watch_model_updates()
-	}
-
 	fakeform_store_environment () {
 		for (const k in this.__stored_values) {
 			const s = this.__stored_values[k]
