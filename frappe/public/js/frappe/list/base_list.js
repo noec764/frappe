@@ -6,7 +6,11 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	show() {
-		frappe.run_serially([
+		return frappe.run_serially([
+			() => this.show_skeleton(),
+			() => this.fetch_meta(),
+			() => this.hide_skeleton(),
+			() => this.check_permissions(),
 			() => this.init(),
 			() => this.before_refresh(),
 			() => this.refresh(),
