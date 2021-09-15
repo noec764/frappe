@@ -25,7 +25,7 @@
 0 - Draft; 1 - Submitted; 2 - Cancelled,0 - Brouillon; 1 - Soumis; 2 - Annulé,
 0 is highest,0 est le plus élevé,
 "1 Currency = [?] Fraction
-For e.g. 1 USD = 100 Cent","1 Devise = [?] Fraction 
+For e.g. 1 USD = 100 Cent","1 Devise = [?] Fraction
 E.g. 1 USD = 100 centimes",
 1 Google Calendar Event synced.,1 événement Google Agenda synchronisé,
 1 Report,1 rapport,
@@ -53,24 +53,24 @@ E.g. 1 USD = 100 centimes",
 <p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>
 <pre><code>
 
-// fetch local_tax_no on selection of customer 
-// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+// fetch local_tax_no on selection of customer
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname);
 cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
 
-// additional validation on dates 
+// additional validation on dates
 frappe.ui.form.on('Task',  'validate',  function(frm) {
     if (frm.doc.from_date &lt; get_today()) {
         msgprint('You can not select past date in From Date');
         validated = false;
-    } 
+    }
 });
 
-// make a field read-only after saving 
+// make a field read-only after saving
 frappe.ui.form.on('Task',  {
     refresh: function(frm) {
         // use the __islocal value of doc,  to check if the doc is saved or not
         frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
-    } 
+    }
 });
 
 // additional permission check
@@ -80,7 +80,7 @@ frappe.ui.form.on('Task',  {
             msgprint('You are only allowed Material Receipt');
             validated = false;
         }
-    } 
+    }
 });
 
 // calculate sales incentive
@@ -97,31 +97,31 @@ frappe.ui.form.on('Sales Invoice',  {
             total_incentive += flt(d.incentives)
         });
         frm.doc.total_incentive = total_incentive;
-    } 
+    }
 })
 
 </code></pre>","<h3>Aide pour les scrips clients</h3>
 <p>Les scripts clients sont exécutés uniquement côté client (i.e. dans les formulaires). Voici quelques exemples pour démarrer</p>
 <pre><code>
 
-// récupérer le champ local_tax_no à la sélection du client 
-// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname); 
+// récupérer le champ local_tax_no à la sélection du client
+// cur_frm.add_fetch(link_field,  source_fieldname,  target_fieldname);
 cur_frm.add_fetch('customer',  'local_tax_no',  'local_tax_no');
 
-// validations additionnelles sur les dates 
+// validations additionnelles sur les dates
 frappe.ui.form.on('Task',  'validate',  function(frm) {
     if (frm.doc.from_date &lt; get_today()) {
         msgprint('Vous ne pouvez pas sélectionner une date passée dans le champ Date de début');
         validated = false;
-    } 
+    }
 });
 
-// mettre un champ en lecture seule après l'enregistrement 
+// mettre un champ en lecture seule après l'enregistrement
 frappe.ui.form.on('Task',  {
     refresh: function(frm) {
         // utilisez la valeur __islocal du document pour vérifier si le document est enregistré ou non
         frm.set_df_property('myfield',  'read_only',  frm.doc.__islocal ? 0 : 1);
-    } 
+    }
 });
 
 // vérification d'autorisations additionnelles
@@ -131,7 +131,7 @@ frappe.ui.form.on('Task',  {
             msgprint('Vous ne pouvez créer que des reçus d'achat');
             validated = false;
         }
-    } 
+    }
 });
 
 // calculer les commissions de vente
@@ -148,7 +148,7 @@ frappe.ui.form.on('Sales Invoice',  {
             total_incentive += flt(d.incentives)
         });
         frm.doc.total_incentive = total_incentive;
-    } 
+    }
 })
 
 </code></pre>",
@@ -337,17 +337,17 @@ frappe.ui.form.on('Sales Invoice',  {
 {% if phone %}Phone: {{ phone }}&lt;br&gt;{% endif -%}
 {% if fax %}Fax: {{ fax }}&lt;br&gt;{% endif -%}
 {% if email_id %}Email: {{ email_id }}&lt;br&gt;{% endif -%}
-</code></pre>","<H4> Modèle par défaut </ h4> 
- <p> <a Utilise href=""http://jinja.pocoo.org/docs/templates/""> Jinja Templating </a> et tous les champs d'adresse ( y compris les champs personnalisés le cas échéant) sera disponible </ p> 
- <pre> <code> {{address_line1}} & lt; br & gt; 
- {% si address_line2%} {{address_line2}} & lt; br & gt; { % endif -%} 
- {{ville}} & lt; br & gt; 
- {% si l'état%} {{}} Etat & lt; br & gt; {% endif -%} {% if 
- code PIN%} PIN: {{code PIN}} & lt; br & gt; {% endif -%} 
- {{pays}} & lt; br & gt; 
- {% si le téléphone%} Téléphone: {{téléphone}} & lt; br & gt; { % endif -%} 
- {% if télécopieur%} Fax: {{fax}} & lt; br & gt; {% endif -%} 
- {% si email_id%} Email: {{email_id}} & lt; br & gt ; {% endif -%} 
+</code></pre>","<H4> Modèle par défaut </ h4>
+ <p> <a Utilise href=""http://jinja.pocoo.org/docs/templates/""> Jinja Templating </a> et tous les champs d'adresse ( y compris les champs personnalisés le cas échéant) sera disponible </ p>
+ <pre> <code> {{address_line1}} & lt; br & gt;
+ {% si address_line2%} {{address_line2}} & lt; br & gt; { % endif -%}
+ {{ville}} & lt; br & gt;
+ {% si l'état%} {{}} Etat & lt; br & gt; {% endif -%} {% if
+ code PIN%} PIN: {{code PIN}} & lt; br & gt; {% endif -%}
+ {{pays}} & lt; br & gt;
+ {% si le téléphone%} Téléphone: {{téléphone}} & lt; br & gt; { % endif -%}
+ {% if télécopieur%} Fax: {{fax}} & lt; br & gt; {% endif -%}
+ {% si email_id%} Email: {{email_id}} & lt; br & gt ; {% endif -%}
  </ code> </ pre>",
 "<h5 class=""text-muted uppercase"">Or</h5>","<h5 class=""text-muted uppercase"">Ou</h5>",
 "<h5>Message Example</h5>
@@ -432,7 +432,7 @@ Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions: 
+<p>Allowed functions:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -445,7 +445,7 @@ Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Les conditions doivent être écrites en simple Python. Veuillez utiliser les propriétés disponibles dans le formulaire uniquement.</p>
-<p>Fonctions disponibles: 
+<p>Fonctions disponibles:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -5248,7 +5248,7 @@ This email was sent to {0} and copied to {1},Cet email a été envoyé à {0} et
 This email was sent to {0},Cet email a été envoyé à {0},
 This event is not publicly available,Cet événement n'est pas public,
 This feature is brand new and still experimental,Cette fonctionnalité est toute nouvelle et encore expérimentale,
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
 eval:doc.age&gt;18","Ce champ apparaît uniquement si le nom de champ défini ici a une valeur ou si les règles sont vrai. Ex. eval:doc.myfield=='My Value'
@@ -6486,3 +6486,4 @@ zoom-out,Réduire,
 {} has been disabled. It can only be enabled if {} is checked.,{} est désactivé. Il ne peut être activé que si {} est coché.,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,
+DocType View,Vue,
