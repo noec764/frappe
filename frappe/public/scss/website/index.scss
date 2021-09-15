@@ -37,6 +37,8 @@ body {
 .ql-editor.read-mode {
 	padding: 0;
 	line-height: 1.6;
+	background-color: transparent;
+	overflow: hidden;
 
 	h1,
 	h2,
