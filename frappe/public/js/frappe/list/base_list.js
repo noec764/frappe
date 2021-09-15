@@ -155,6 +155,22 @@ frappe.views.BaseList = class BaseList {
 		}
 	}
 
+	fetch_meta() {
+		return frappe.model.with_doctype(this.doctype);
+	}
+
+	show_skeleton() {
+
+	}
+
+	hide_skeleton() {
+
+	}
+
+	check_permissions() {
+		return true;
+	}
+
 	setup_page() {
 		this.page = this.parent.page;
 		this.$page = $(this.parent);
