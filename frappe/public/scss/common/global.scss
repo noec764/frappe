@@ -76,7 +76,6 @@ input[type="checkbox"] {
 		display: block;
 		text-align: center;
 		line-height: 11px;
-		content: '';
 		visibility: visible;
 		border: 1px solid var(--gray-400);
 		box-sizing: border-box;
@@ -84,13 +83,15 @@ input[type="checkbox"] {
 		border-radius: 2px;
 		cursor: pointer;
 		background: var(--fg-color);
+
+		color: transparent;
+		content: '\e9c3';
+		font-family: 'unicons';
 	}
 
 	&:checked:before {
 		//content: url("data: image/svg+xml;utf8, <svg width='8' height='7' viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4.00001L2.66667 5.80001L7 1.20001' stroke='white' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 		//background: linear-gradient(180deg, #4AC3F8 -124.51%, #2490EF 100%);
-		content: '\e9c3';
-		font-family: 'unicons';
 		font-size: 1em;
 		color: var(--blue-500);
 		background-color: var(--blue-50);

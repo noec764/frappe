@@ -1122,7 +1122,7 @@ Object.assign(frappe.utils, {
 					}
 				}
 			} else if (type === "report") {
-				if (item.is_query_report) {
+				if (item.is_query_report || !item.doctype) {
 					route = "query-report/" + item.name;
 				} else if (!item.doctype) {
 					route = "/report/" + item.name;
