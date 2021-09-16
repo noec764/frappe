@@ -1,0 +1,139 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_rename": 1,
+ "autoname": "format: {route}",
+ "beta": 1,
+ "creation": "2021-08-02 11:17:35.915015",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "title",
+  "route",
+  "_cb_1",
+  "allow_back",
+  "allow_any",
+  "done_state",
+  "_section_document",
+  "reference_doctype",
+  "_cb_2",
+  "can_create_doc",
+  "can_edit_doc",
+  "add_fullpage_edit_btn",
+  "html_invalid_doc_settings"
+ ],
+ "fields": [
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Title",
+   "reqd": 1
+  },
+  {
+   "allow_in_quick_entry": 1,
+   "fieldname": "reference_doctype",
+   "fieldtype": "Link",
+   "label": "Reference DocType",
+   "options": "DocType"
+  },
+  {
+   "fetch_if_empty": 1,
+   "fieldname": "route",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Route",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "done_state",
+   "fieldtype": "Check",
+   "label": "Show completed slides in the progress bar"
+  },
+  {
+   "default": "1",
+   "depends_on": "reference_doctype",
+   "fieldname": "can_edit_doc",
+   "fieldtype": "Check",
+   "label": "Allow document edition"
+  },
+  {
+   "default": "1",
+   "depends_on": "reference_doctype",
+   "fieldname": "can_create_doc",
+   "fieldtype": "Check",
+   "label": "Allow document creation"
+  },
+  {
+   "default": "1",
+   "description": "Allow users to go back and edit values in previous slides.",
+   "fieldname": "allow_back",
+   "fieldtype": "Check",
+   "label": "Allow to go back"
+  },
+  {
+   "default": "0",
+   "depends_on": "allow_back",
+   "description": "Allow users to jump to any slide by clicking on the progress dots.",
+   "fieldname": "allow_any",
+   "fieldtype": "Check",
+   "label": "Allow to go to any slide"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.reference_doctype && (doc.can_create_doc||doc.can_edit_doc)",
+   "fieldname": "add_fullpage_edit_btn",
+   "fieldtype": "Check",
+   "label": "Edit in full page"
+  },
+  {
+   "depends_on": "eval:doc.reference_doctype && !(doc.can_create_doc || doc.can_edit_doc)",
+   "fieldname": "html_invalid_doc_settings",
+   "fieldtype": "HTML",
+   "read_only": 1,
+   "report_hide": 1
+  },
+  {
+   "fieldname": "_cb_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "_section_document",
+   "fieldtype": "Section Break",
+   "label": "Document"
+  },
+  {
+   "fieldname": "_cb_2",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2021-09-01 14:53:31.903384",
+ "modified_by": "Administrator",
+ "module": "Custom",
+ "name": "Slide View",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "title",
+ "track_changes": 1
+}
