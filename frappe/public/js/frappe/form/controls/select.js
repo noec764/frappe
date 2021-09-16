@@ -112,9 +112,15 @@ frappe.ui.form.ControlSelect = frappe.ui.form.ControlData.extend({
 				var is_label_null = is_null(v.label);
 				var is_disabled = Boolean(v.disabled);
 
- 				if (is_value_null && is_label_null) {
-					value = v;
-					label = __(v, null, doctype);
+				if (is_value_null && is_label_null) {
+					if (typeof v === 'object') {
+						// e.g. { value: '', label: '' }
+						value = cstr(v.value).trim();
+						label = __(cstr(v.label).trim(), null, doctype);
+					} else {
+						value = v;
+						label = __(v, null, doctype);
+					}
 				} else {
 					value = is_value_null ? "" : v.value;
 					label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
