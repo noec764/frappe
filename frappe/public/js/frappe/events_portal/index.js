@@ -23,8 +23,8 @@ class EventsPortalView {
 
 	show() {
 		frappe.require([
-			'/assets/js/moment-bundle.min.js',
-			'/assets/js/control.min.js'
+			'libs.bundle.js',
+			'controls.bundle.js'
 		], () => {
 			this.build_calendar()
 		});
