@@ -59,5 +59,5 @@ setup(
 	{
 		'clean': CleanCommand
 	},
-	python_requires='>=3.6'
+	python_requires='>=3.7'
 )
