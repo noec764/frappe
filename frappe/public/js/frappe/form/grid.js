@@ -843,9 +843,11 @@ export default class Grid {
 										var fieldname = fieldnames[ci];
 										var df = frappe.meta.get_docfield(me.df.options, fieldname);
 
-										d[fieldnames[ci]] = value_formatter_map[df.fieldtype]
-											? value_formatter_map[df.fieldtype](value)
-											: value;
+										if (df) {
+											d[fieldnames[ci]] = value_formatter_map[df.fieldtype]
+												? value_formatter_map[df.fieldtype](value)
+												: value;
+										}
 									});
 								}
 							}
