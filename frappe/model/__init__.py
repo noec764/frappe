@@ -42,6 +42,7 @@ data_fieldtypes = (
 no_value_fields = (
 	'Section Break',
 	'Column Break',
+	'Tab Break',
 	'HTML',
 	'Table',
 	'Table MultiSelect',
@@ -54,6 +55,7 @@ no_value_fields = (
 display_fieldtypes = (
 	'Section Break',
 	'Column Break',
+	'Tab Break',
 	'HTML',
 	'Button',
 	'Image',

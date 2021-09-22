@@ -5,7 +5,6 @@ frappe.provide('frappe.ui');
 frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
 	constructor(opts) {
 		super(opts);
-		this.first_button = false;
 		$.each(this.fields || [], function(i, f) {
 			if(!f.fieldname && f.label) {
 				f.fieldname = f.label.replace(/ /g, "_").toLowerCase();
@@ -126,7 +125,7 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
 	set_value(key, val){
 		return new Promise(resolve => {
 			var f = this.fields_dict[key];
-			if(f) {
+			if (f) {
 				f.set_value(val).then(() => {
 					f.set_input(val);
 					this.refresh_dependency();
