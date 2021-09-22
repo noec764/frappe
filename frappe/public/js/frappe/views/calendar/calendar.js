@@ -48,7 +48,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		super.setup_defaults();
 		this.page_title = __('{0} Calendar', [this.page_title]);
 		this.calendar_settings = frappe.views.calendar[this.doctype] || {};
-		this.calendar_name = frappe.utils.to_title_case(frappe.get_route()[3] || '');
+		this.calendar_name = frappe.get_route()[3];
 	}
 
 	before_refresh() {
