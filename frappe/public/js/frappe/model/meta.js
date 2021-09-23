@@ -255,7 +255,7 @@ $.extend(frappe.meta, {
 		if (df && df.precision) {
 			precision = cint(df.precision);
 		} else if(df && df.fieldtype === "Currency") {
-			precision = cint(frappe.defaults.get_default("currency_precision"));
+			precision = cint(frappe.defaults.get_default("currency_precision")) || cint(frappe.boot.sysdefaults.float_precision);
 			if(!precision) {
 				var number_format = get_number_format();
 				var number_format_info = get_number_format_info(number_format);
