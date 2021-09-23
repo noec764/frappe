@@ -10,11 +10,12 @@ frappe.ui.form.ControlCurrency = frappe.ui.form.ControlFloat.extend({
 		if (!this.df.precision) {
 			if(frappe.boot.sysdefaults.currency_precision) {
 				this.df.precision = frappe.boot.sysdefaults.currency_precision;
+			} else if(frappe.boot.sysdefaults.float_precision) {
+					this.df.precision = frappe.boot.sysdefaults.float_precision;
 			} else {
 				this.df.precision = get_number_format_info(this.get_number_format()).precision;
 			}
 		}
-
 		return this.df.precision;
 	}
 });
