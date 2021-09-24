@@ -423,8 +423,11 @@ def get_email_without_link(email):
 	if not frappe.get_all("Email Account", filters={"enable_automatic_linking": 1}):
 		return email
 
-	email_id = email.split("@")[0].split("+")[0]
-	email_host = email.split("@")[1]
+	try:
+		email_id = email.split("@")[0].split("+")[0]
+		email_host = email.split("@")[1]
+	except Exception:
+		return
 
 	return "{0}@{1}".format(email_id, email_host)
 
