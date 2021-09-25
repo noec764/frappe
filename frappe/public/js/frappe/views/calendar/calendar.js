@@ -92,7 +92,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		const calendar_name = this.calendar_name;
 
 		return new Promise(resolve => {
-			if (calendar_name === 'Default') {
+			if (calendar_name.toLowerCase() === 'default') {
 				Object.assign(options, frappe.views.calendar[this.doctype]);
 				resolve(options);
 			} else {
