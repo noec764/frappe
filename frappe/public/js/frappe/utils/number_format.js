@@ -125,7 +125,7 @@ function format_currency(v, currency, decimals) {
 	var format = get_number_format(currency);
 	var symbol = get_currency_symbol(currency);
 	if(decimals === undefined) {
-		decimals = frappe.boot.sysdefaults.currency_precision || null;
+		decimals = frappe.boot.sysdefaults.currency_precision || frappe.boot.sysdefaults.float_precision || null;
 	}
 
 	if (symbol) {

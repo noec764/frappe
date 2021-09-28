@@ -100,7 +100,7 @@ frappe.ui.form.on("Customize Form", {
 
 			if (f.fieldtype == "Table") {
 				frm.add_custom_button(
-					f.options,
+					__(f.options),
 					function() {
 						frm.set_value("doc_type", f.options);
 					},

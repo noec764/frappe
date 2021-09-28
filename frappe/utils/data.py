@@ -807,7 +807,7 @@ def fmt_money(amount, precision=None, currency=None, format=None):
 	"""
 	number_format = format or frappe.db.get_default("number_format") or "#,###.##"
 	if precision is None:
-		precision = cint(frappe.db.get_default('currency_precision')) or None
+		precision = cint(frappe.db.get_default('currency_precision')) or cint(frappe.db.get_default("float_precision")) or None
 
 	decimal_str, comma_str, number_format_precision = get_number_format_info(number_format)
 

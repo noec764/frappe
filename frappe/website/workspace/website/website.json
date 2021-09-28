@@ -207,6 +207,24 @@
   },
   {
    "hidden": 0,
+   "is_query_report": 0,
+   "label": "Shopping Cart Settings",
+   "link_to": "Shopping Cart Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Products Settings",
+   "link_to": "Products Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
    "icon": "project",
    "is_query_report": 0,
    "label": "Knowledge Base",
@@ -237,7 +255,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-08-16 12:59:07.479578",
+ "modified": "2021-09-25 18:35:36.667029",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
