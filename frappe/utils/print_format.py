@@ -149,8 +149,8 @@ def get_formatted_letter(title, message, letterhead=None):
 
 
 @frappe.whitelist()
-def print_by_server(doctype, name, print_format=None, doc=None, no_letterhead=0):
-	print_settings = frappe.get_doc("Print Settings")
+def print_by_server(doctype, name, printer_setting, print_format=None, doc=None, no_letterhead=0, file_path=None):
+	print_settings = frappe.get_doc("Network Printer Settings", printer_setting)
 	try:
 		import cups
 	except ImportError:
@@ -162,16 +162,17 @@ def print_by_server(doctype, name, print_format=None, doc=None, no_letterhead=0)
 		conn = cups.Connection()
 		output = PdfFileWriter()
 		output = frappe.get_print(doctype, name, print_format, doc=doc, no_letterhead=no_letterhead, as_pdf = True, output = output)
-		file = os.path.join("/", "tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
-		output.write(open(file,"wb"))
-		conn.printFile(print_settings.printer_name,file , name, {})
+		if not file_path:
+			file_path = os.path.join("/", "tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
+		output.write(open(file_path,"wb"))
+		conn.printFile(print_settings.printer_name,file_path , name, {})
 	except IOError as e:
-		if ("ContentNotFoundError" in str(e)
-			or "ContentOperationNotPermittedError" in str(e)
-			or "UnknownContentError" in str(e)
-			or "RemoteHostClosedError" in str(e)):
+		if ("ContentNotFoundError" in e.message
+			or "ContentOperationNotPermittedError" in e.message
+			or "UnknownContentError" in e.message
+			or "RemoteHostClosedError" in e.message):
 			frappe.throw(_("PDF generation failed"))
 	except cups.IPPError:
 		frappe.throw(_("Printing failed"))
 	finally:
-		cleanup(file,{})
+		return
