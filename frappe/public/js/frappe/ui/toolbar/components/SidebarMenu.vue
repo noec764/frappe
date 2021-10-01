@@ -163,7 +163,7 @@
 		setIsCollapsed(value) {
 			this.isCollapsed = value;
 			document.getElementsByClassName("page-container").forEach(elem => {
-				elem.style.paddingLeft = `${this.isCollapsed ? "0px" : "calc(" + this.width + " - 40px)"}`;
+				elem.style.paddingLeft = `${(this.isCollapsed || !this.customizeView) ? "0px" : "calc(" + this.width + " - 40px)"}`;
 			})
 		},
 		registerItems() {
