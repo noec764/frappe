@@ -239,7 +239,8 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			"indent": __("Indent"),
 			"table": __("Add a table"),
 			"clean": __("Remove formatting"),
-			"templateblot": __("Add a variable")
+			"templateblot": __("Add a variable"),
+			"direction": __("Direction")
 		}
 	}
 
