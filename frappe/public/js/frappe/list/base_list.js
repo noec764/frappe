@@ -174,7 +174,7 @@ frappe.views.BaseList = class BaseList {
 	setup_page() {
 		this.page = this.parent.page;
 		this.$page = $(this.parent);
-		this.page.main.addClass('frappe-card');
+		!this.hide_card_layout && this.page.main.addClass('frappe-card');
 		this.page.page_form.removeClass("row").addClass("flex");
 		this.hide_page_form && this.page.page_form.hide();
 		this.hide_sidebar && this.$page.addClass('no-list-sidebar');
@@ -360,16 +360,12 @@ frappe.views.BaseList = class BaseList {
 			`<div class="list-paging-area level">
 				<div class="level-left">
 					<div class="btn-group">
-						${paging_values
-							.map(
-								(value) => `
+						${paging_values.map((value) => `
 							<button type="button" class="btn btn-default btn-sm btn-paging"
 								data-value="${value}">
 								${value}
 							</button>
-						`
-							)
-							.join("")}
+						`).join("")}
 					</div>
 				</div>
 				<div class="level-right">
@@ -396,6 +392,7 @@ frappe.views.BaseList = class BaseList {
 
 				this.start = 0;
 				this.page_length = $this.data().value;
+				this.refresh();
 			} else if ($this.is(".btn-more")) {
 				this.start = this.start + this.page_length;
 			}
@@ -435,8 +432,7 @@ frappe.views.BaseList = class BaseList {
 		// filters might have a fifth param called hidden,
 		// we don't want to pass that server side
 		return this.filter_area
-			? this.filter_area.get()
-			.map((filter) => filter.slice(0, 4))
+			? this.filter_area.get().map((filter) => filter.slice(0, 4))
 			: [];
 	}
 
@@ -543,12 +539,15 @@ class FilterArea {
 	constructor(list_view) {
 		this.list_view = list_view;
 		this.list_view.page.page_form.append(`<div class="standard-filter-section flex"></div>`);
+
 		const filter_area = this.list_view.hide_page_form
 			? this.list_view.page.custom_actions
 			: this.list_view.page.page_form;
+
 		this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(
 			filter_area
-		)
+		);
+
 		this.$filter_list_wrapper = this.list_view.$filter_section;
 		this.trigger_refresh = true;
 		this.setup();
@@ -726,21 +725,19 @@ class FilterArea {
 
 		const doctype_fields = this.list_view.meta.fields;
 		const title_field = this.list_view.meta.title_field;
+
 		const standard_filter_fields = doctype_fields
-			.filter(
-				(df) =>
-					df.fieldname === title_field ||
-					(df.in_standard_filter &&
-						frappe.model.is_value_type(df.fieldtype))
-			)
+			.filter((df) => df.fieldname === title_field || (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype)))
 
 		fields = fields.concat(
-				standard_filter_fields.map(df => {
+			standard_filter_fields
+				.map(df => {
 					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
 						return Object.assign(df, {condition: "value or descendants of"})
 					}
 					return df
-				}).map((df) => {
+				})
+				.map((df) => {
 					let options = df.options;
 					let condition = df.condition || "=";
 					let fieldtype = df.fieldtype;
@@ -772,7 +769,6 @@ class FilterArea {
 					if (["__default", "__global"].includes(default_value)) {
 						default_value = null;
 					}
-
 					return {
 						fieldtype: fieldtype,
 						label: __(df.label, null, context),

@@ -418,6 +418,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		if (
 			!this.settings.hide_name_column &&
+			this.meta.title_field &&
 			this.meta.title_field !== 'name'
 		) {
 			this.columns.push({
@@ -652,12 +653,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 				return `
 				<div class="${classes}">
-					${
-						col.type === "Subject"
-							? subject_html
-							: `
-					<span>${__((col.df && col.df.label) || col.type)}</span>`
-					}
+					${col.type === "Subject" ? subject_html : `
+						<span>${__((col.df && col.df.label) || col.type)}</span>`}
 				</div>
 			`;
 			})
@@ -671,7 +668,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	get_header_html_skeleton(left = "", right = "") {
 		return `
-			<header class="level list-row list-row-head text-muted">
+			<header class="level list-row-head text-muted">
 				<div class="level-left list-header-subject">
 					${left}
 				</div>
@@ -750,7 +747,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				return value;
 			} else if (df.fieldtype === "Percent") {
 				return `<div class="progress" style="margin: 0px;">
-						<div class="progress-bar bg-success" role="progressbar"
+						<div class="progress-bar progress-bar-success" role="progressbar"
 							aria-valuenow="${value}"
 							aria-valuemin="0" aria-valuemax="100" style="width: ${Math.round(value)}%;">
 						</div>
@@ -763,7 +760,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const field_html = () => {
 			let html;
 			let _value;
-			// listview_setting formatter
 			let strip_html_required =
 				df.fieldtype == "Text Editor" ||
 				(df.fetch_from &&
@@ -779,10 +775,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			}
 
 			if (df.fieldtype === "Image") {
-				html = df.options
-					? `<img src="${
-							doc[df.options]
-					  }" style="max-height: 30px; max-width: 100%;">`
+				html = df.options ? `<img src="${doc[df.options]}"
+					style="max-height: 30px; max-width: 100%;">`
 					: `<div class="missing-image small">
 						${frappe.utils.icon('restriction')}
 					</div>`;
@@ -861,7 +855,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 				return `<div class="tag-pill ellipsis" title="${tag}" style="${style}">${tag}</div>`;
 			}
-		}
+		};
 		return user_tags.split(',').slice(1, limit + 1).map(get_tag_html).join('');
 	}
 
@@ -995,12 +989,12 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				</span>
 			</span>
 			<span class="level-item ${seen} ellipsis" title="${escaped_subject}">
-				<a class="ellipsis" href="${this.get_form_link(
-					doc
-				)}" title="${escaped_subject}" data-doctype="${
-			this.doctype
-		}" data-name="${doc.name}">
-				${subject}
+				<a class="ellipsis"
+					href="${this.get_form_link(doc)}"
+					title="${escaped_subject}"
+					data-doctype="${this.doctype}"
+					data-name="${doc.name}">
+					${subject}
 				</a>
 			</span>
 		`;
@@ -1306,6 +1300,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				this.filter_area.remove("_liked_by");
 			}
 		});
+
 	}
 
 	setup_new_doc_event() {
