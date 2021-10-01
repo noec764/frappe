@@ -7,7 +7,8 @@
  "disable_user_customization": 1,
  "docstatus": 0,
  "doctype": "Workspace",
- "extends_another_page": 0,
+ "extends": "Settings",
+ "extends_another_page": 1,
  "hide_custom": 0,
  "icon": "setting",
  "idx": 0,
@@ -392,7 +393,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-08-16 12:59:07.554895",
+ "modified": "2021-10-01 17:22:06.946745",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",
@@ -402,7 +403,7 @@
  "pin_to_top": 0,
  "public": 1,
  "roles": [],
- "sequence_id": 4,
+ "sequence_id": 14,
  "shortcuts": [
   {
    "icon": "setting",

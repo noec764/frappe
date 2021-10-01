@@ -24,7 +24,7 @@ class Workspace(Document):
 		except Exception:
 			frappe.throw(_("Content data shoud be a list"))
 
-		if self.is_default and self.name and frappe.db.exists("Desk Page", {
+		if self.is_default and self.name and frappe.db.exists("Workspace", {
 			"name": ["!=", self.name], 'is_default': 1, 'extends': self.extends
 		}):
 			frappe.throw(_("You can only have one default page that extends a particular standard page."))

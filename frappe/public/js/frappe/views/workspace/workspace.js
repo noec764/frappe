@@ -284,6 +284,13 @@ frappe.views.Workspace = class Workspace {
 			this.setup_actions(page);
 			this.content = this_page && JSON.parse(this_page.content || "[]");
 
+			// __("Your Shortcuts"), __("Reports &amp; Masters")
+			this.content.map(c => {
+				if (c.data.text && ["Your Shortcuts", "Reports &amp; Masters"].includes(c.data.text)) {
+					return c.data.text = __(c.data.text)
+				}
+			})
+
 			this.add_custom_cards_in_content();
 
 			$('.item-anchor').addClass('disable-click');

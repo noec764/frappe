@@ -1,7 +1,7 @@
 {
  "category": "Administration",
  "charts": [],
- "content": "[{\"type\": \"header\", \"data\": {\"text\": \"Your Shortcuts\", \"level\": 4, \"col\": 12}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"User\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Role\", \"col\": 4}},\n {\"type\": \"shortcut\",\n  \"data\": {\"shortcut_name\": \"Permission Manager\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"User Profile\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"User Type\", \"col\": 4}},\n {\"type\": \"spacer\", \"data\": {\"col\": 12}},\n {\"type\": \"header\",\n  \"data\": {\"text\": \"Reports & Masters\", \"level\": 4, \"col\": 12}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Users\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Logs\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Permissions\", \"col\": 4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Your Shortcuts\",\"level\":4,\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Role\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Permission Manager\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Profile\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Type\",\"col\":4}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"Reports &amp; Masters\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Logs\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Permissions\",\"col\":4}}]",
  "creation": "2020-03-02 15:12:16.754449",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -150,16 +150,17 @@
    "type": "Link"
   }
  ],
- "modified": "2021-08-13 18:30:43.011481",
+ "modified": "2021-10-01 17:52:23.171283",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Users",
  "owner": "Administrator",
+ "parent_page": "",
  "pin_to_bottom": 0,
  "pin_to_top": 0,
  "public": 1,
  "roles": [],
- "sequence_id": 0,
+ "sequence_id": 18,
  "shortcuts": [
   {
    "label": "User",

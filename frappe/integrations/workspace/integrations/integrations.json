@@ -1,7 +1,7 @@
 {
  "category": "Administration",
  "charts": [],
- "content": "[{\"type\": \"header\", \"data\": {\"text\": \"Reports & Masters\", \"level\": 4, \"col\": 12}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Backup\", \"col\": 4}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Google Services\", \"col\": 4}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Authentication\", \"col\": 4}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Payments\", \"col\": 4}}, {\"type\": \"card\", \"data\": {\"card_name\": \"Settings\", \"col\": 4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Reports &amp; Masters\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Backup\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Payments\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
  "creation": "2020-03-02 15:16:18.714190",
  "developer_mode_only": 0,
  "disable_user_customization": 1,
@@ -265,7 +265,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-08-16 12:59:07.664891",
+ "modified": "2021-10-01 17:52:21.800794",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integrations",
@@ -275,7 +275,7 @@
  "pin_to_top": 0,
  "public": 1,
  "roles": [],
- "sequence_id": 5,
+ "sequence_id": 11,
  "shortcuts": [],
  "title": "Integrations"
 }

@@ -42,6 +42,7 @@ class Workspace:
 		self.user = frappe.get_user()
 		self.allowed_modules = self.get_cached('user_allowed_modules', self.get_allowed_modules)
 
+		# self.get_pages_to_extend()
 		self.doc = frappe.get_cached_doc("Workspace", self.page_name)
 
 		if self.doc and self.doc.module and self.doc.module not in self.allowed_modules and not self.workspace_manager:
@@ -404,13 +405,14 @@ def get_wspace_sidebar_items():
 
 	filters = {
 		'restrict_to_domain': ['in', frappe.get_active_domains()],
-		'extends_another_page': 0,
 		'for_user': '',
 		'module': ['not in', blocked_modules]
 	}
 
 	if has_access:
-		filters = []
+		filters = {
+			'extends_another_page': 0
+		}
 
 	# pages sorted based on sequence id
 	order_by = "sequence_id asc"

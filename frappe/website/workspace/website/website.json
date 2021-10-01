@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "content": "[{\"type\": \"onboarding\", \"data\": {\"onboarding_name\": \"Website\", \"col\": 12}},\n {\"type\": \"header\", \"data\": {\"text\": \"Your Shortcuts\", \"level\": 4, \"col\": 12}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Blog Post\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Blogger\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Web Page\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Web Form\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Website Settings\", \"col\": 4}},\n {\"type\": \"spacer\", \"data\": {\"col\": 12}},\n {\"type\": \"header\",\n  \"data\": {\"text\": \"Reports & Masters\", \"level\": 4, \"col\": 12}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Setup\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Blog\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Web Site\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Portal\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Knowledge Base\", \"col\": 4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Your Shortcuts\",\"level\":4,\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blog Post\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blogger\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Page\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Form\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"Reports &amp; Masters\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":3}},{\"type\":\"card\",\"data\":{\"card_name\":\"Blog\",\"col\":3}},{\"type\":\"card\",\"data\":{\"card_name\":\"Web Site\",\"col\":3}},{\"type\":\"card\",\"data\":{\"card_name\":\"Portal\",\"col\":3}},{\"type\":\"card\",\"data\":{\"card_name\":\"Knowledge Base\",\"col\":3}}]",
  "creation": "2020-03-02 14:13:51.089373",
  "developer_mode_only": 0,
  "disable_user_customization": 0,
@@ -209,6 +209,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Shopping Cart Settings",
+   "link_count": 0,
    "link_to": "Shopping Cart Settings",
    "link_type": "DocType",
    "onboard": 0,
@@ -218,6 +219,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Products Settings",
+   "link_count": 0,
    "link_to": "Products Settings",
    "link_type": "DocType",
    "onboard": 0,
@@ -255,7 +257,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-09-25 18:35:36.667029",
+ "modified": "2021-10-01 17:52:20.107260",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
@@ -266,7 +268,7 @@
  "pin_to_top": 0,
  "public": 1,
  "roles": [],
- "sequence_id": 3,
+ "sequence_id": 2,
  "shortcuts": [
   {
    "color": "Green",
