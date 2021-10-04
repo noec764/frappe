@@ -1,7 +1,7 @@
 {
  "category": "Modules",
  "charts": [],
- "content": "[{\"type\": \"header\", \"data\": {\"text\": \"Settings\", \"level\": 4, \"col\": 12}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"System Settings\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Print Settings\", \"col\": 4}},\n {\"type\": \"shortcut\", \"data\": {\"shortcut_name\": \"Website Settings\", \"col\": 4}},\n {\"type\": \"spacer\", \"data\": {\"col\": 12}},\n {\"type\": \"header\",\n  \"data\": {\"text\": \"Reports & Masters\", \"level\": 4, \"col\": 12}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Data\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Email / Notifications\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Website\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Core\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Printing\", \"col\": 4}},\n {\"type\": \"card\", \"data\": {\"card_name\": \"Workflow\", \"col\": 4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Settings\",\"level\":4,\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Settings\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Print Settings\",\"col\":4}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":4}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"Reports &amp; Masters\",\"level\":4,\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Data\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Email / Notifications\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Core\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Printing\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Workflow\",\"col\":4}}]",
  "creation": "2020-03-02 15:09:40.527211",
  "developer_mode_only": 0,
  "disable_user_customization": 1,
@@ -392,7 +392,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-10-01 17:55:30.741184",
+ "modified": "2021-10-02 07:14:30.433368",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",

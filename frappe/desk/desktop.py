@@ -42,7 +42,6 @@ class Workspace:
 		self.user = frappe.get_user()
 		self.allowed_modules = self.get_cached('user_allowed_modules', self.get_allowed_modules)
 
-		# self.get_pages_to_extend()
 		self.doc = frappe.get_cached_doc("Workspace", self.page_name)
 
 		if self.doc and self.doc.module and self.doc.module not in self.allowed_modules and not self.workspace_manager:

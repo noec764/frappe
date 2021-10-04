@@ -244,6 +244,7 @@
    "default": "[]",
    "fieldname": "content",
    "fieldtype": "Long Text",
+   "hidden": 1,
    "label": "Content"
   },
   {
@@ -265,7 +266,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2021-10-01 17:23:09.423431",
+ "modified": "2021-10-02 07:15:42.442253",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
