@@ -107,7 +107,7 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
 &lt;/ul&gt;
 </pre>
 			`;
-		} else if (in_list(['Slack', 'System Notification', 'SMS'], frm.doc.channel)) {
+		} else if (in_list(['External Collaboration Tool', 'System Notification', 'SMS'], frm.doc.channel)) {
 			template = `<h5>Message Example</h5>
 <pre>*Order Overdue*
 Transaction {{ doc.name }} has exceeded Due Date. Please take necessary action.
