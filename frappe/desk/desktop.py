@@ -299,8 +299,9 @@ class Workspace:
 			for chart in charts:
 				if frappe.has_permission('Dashboard Chart', doc=chart.chart_name):
 					# Translate label
-					chart.original_label = chart.label if chart.label else chart.chart_name
-					chart.label = _(chart.label) if chart.label else _(chart.chart_name)
+					chart = chart.as_dict()
+					chart["original_label"] = chart.label if chart.label else chart.chart_name
+					chart["label"] = _(chart.label) if chart.label else _(chart.chart_name)
 					all_charts.append(chart)
 
 		return all_charts

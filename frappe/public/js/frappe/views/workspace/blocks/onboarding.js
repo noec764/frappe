@@ -66,7 +66,7 @@ export default class Onboarding extends Block {
 
 	make(block, block_name) {
 		let block_data = this.config.page_data['onboardings'].items.find(obj => {
-			return obj.label == block_name;
+			return obj.original_label == block_name;
 		});
 		if (!block_data) return false;
 		this.wrapper.innerHTML = '';
