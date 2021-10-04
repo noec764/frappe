@@ -27,15 +27,17 @@
    "reqd": 1
   },
   {
+   "bold": 1,
    "fieldname": "service",
    "fieldtype": "Select",
+   "in_global_search": 1,
    "label": "Service",
    "options": "Slack\nRocket.Chat\nGoogle Chat",
    "reqd": 1
   }
  ],
  "links": [],
- "modified": "2021-10-04 15:49:16.990052",
+ "modified": "2021-10-04 16:20:19.177536",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Incoming Webhook URL",
@@ -57,5 +59,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "service",
  "track_changes": 1
 }

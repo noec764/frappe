@@ -48,6 +48,6 @@ frappe.tour['Note'] = [
 	{
 		fieldname: "public",
 		title: __("Sets the Note to Public"),
-		description: __("You can change the visibility of the note with this, setting it to public will allow other users to view it."),
+		description: __("You can change the visibility of the note with this field, setting it to public will allow other users to view it."),
 	},
 ];
