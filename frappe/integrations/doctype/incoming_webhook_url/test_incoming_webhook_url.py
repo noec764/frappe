@@ -5,5 +5,5 @@ from __future__ import unicode_literals
 
 import unittest
 
-class TestSlackWebhookURL(unittest.TestCase):
+class TestIncomingWebhookURL(unittest.TestCase):
 	pass

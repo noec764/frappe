@@ -363,7 +363,8 @@ def raise_if_disabled(path):
 		fields=['route', 'enabled'],
 		filters={
 			'enabled': 0,
-			'route': ['like', '%{0}'.format(path)]
+			'route': ['like', '%{0}'.format(path)],
+			'parentfield': "custom_menu" if frappe.db.get_single_value("Portal Settings", "hide_standard_menu") else "menu"
 		}
 	)
 
