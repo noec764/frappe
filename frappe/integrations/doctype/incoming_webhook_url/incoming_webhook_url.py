@@ -64,6 +64,16 @@ class GoogleChatParameters:
 	def get_error_messages():
 		return {}
 
+class MattermostParameters:
+	@staticmethod
+	def get_attachments(data, doc_url):
+		data["text"] = f'{data["text"]}\n<{doc_url}|{_("Document link")}>'
+
+	@staticmethod
+	def get_error_messages():
+		return {}
+
+
 class IncomingWebhookURL(Document):
 	def get_service_class(self):
 		try:
