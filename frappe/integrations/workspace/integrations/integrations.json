@@ -246,9 +246,8 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Slack Webhook URL",
-   "link_count": 0,
-   "link_to": "Slack Webhook URL",
+   "label": "Incoming Webhook URL",
+   "link_to": "Incoming Webhook URL",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"

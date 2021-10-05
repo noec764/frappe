@@ -5,5 +5,5 @@
 
 import unittest
 
-class TestSlackWebhookURL(unittest.TestCase):
+class TestIncomingWebhookURL(unittest.TestCase):
 	pass

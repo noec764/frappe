@@ -10,7 +10,6 @@ from frappe.utils import validate_email_address, nowdate, parse_val, is_html, ad
 from frappe.utils.jinja import validate_template
 from frappe.utils.safe_exec import get_safe_globals
 from frappe.modules.utils import export_module_json, get_doc_module
-from frappe.integrations.doctype.slack_webhook_url.slack_webhook_url import send_slack_message
 from frappe.core.doctype.sms_settings.sms_settings import send_sms
 from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
 
@@ -25,7 +24,7 @@ class Notification(Document):
 			self.name = self.subject
 
 	def validate(self):
-		if self.channel in ("Email", "Slack", "System Notification"):
+		if self.channel in ("Email", "External Collaboration Tool", "System Notification"):
 			validate_template(self.subject)
 
 		validate_template(self.message)
@@ -127,8 +126,8 @@ def get_context(context):
 			if self.channel == 'Email':
 				self.send_an_email(doc, context)
 
-			if self.channel == 'Slack':
-				self.send_a_slack_msg(doc, context)
+			if self.channel == 'External Collaboration Tool':
+				self.send_an_external_collaboration_tool_msg(doc, context)
 
 			if self.channel == 'SMS':
 				self.send_sms(doc, context)
@@ -256,12 +255,12 @@ def get_context(context):
 			frappe.log_error(frappe.get_traceback(), _("Notification communication creation error"))
 			return
 
-	def send_a_slack_msg(self, doc, context):
-		send_slack_message(
-			webhook_url=self.slack_webhook_url,
-			message=frappe.render_template(self.message, context),
+	def send_an_external_collaboration_tool_msg(self, doc, context):
+		frappe.get_doc("Incoming Webhook URL", self.incoming_webhook_url).send(
+			message = frappe.render_template(self.message, context),
 			reference_doctype = doc.doctype,
-			reference_name = doc.name)
+			reference_name = doc.name
+		)
 
 	def send_sms(self, doc, context):
 		send_sms(
@@ -387,7 +386,7 @@ def get_context(context):
 
 		self.message = self.get_template()
 
-		if not is_html(self.message) and self.channel != "Slack":
+		if not is_html(self.message) and self.channel != "External Collaboration Tool":
 			self.message = frappe.utils.md_to_html(self.message)
 
 @frappe.whitelist()
