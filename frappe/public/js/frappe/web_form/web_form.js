@@ -153,12 +153,12 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					this.disable_enable_save_btns(false)
 
 					// args doctype and docname added to link doctype in file manager
-					if (is_new) {
+					if (is_new && (response.message.attachment || response.message.file)) {
 						frappe.call({
 							type: 'POST',
 							method: "frappe.handler.upload_file",
 							args: {
-								file_url: response.message.attachment,
+								file_url: response.message.attachment || response.message.file,
 								doctype: response.message.doctype,
 								docname: response.message.name
 							}
