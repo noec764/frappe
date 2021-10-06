@@ -4,7 +4,7 @@
     "build": "node esbuild",
     "production": "node esbuild --production",
     "watch": "node esbuild --watch",
-    "snyk-protect": "snyk protect"
+    "coverage:report": "npx nyc report --reporter=clover"
   },
   "repository": {
     "type": "git",
@@ -85,5 +85,8 @@
   },
   "peerDependencies": {
     "postcss": "8"
+  },
+  "nyc": {
+    "report-dir": ".cypress-coverage"
   }
 }
