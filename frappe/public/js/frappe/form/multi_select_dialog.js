@@ -70,6 +70,7 @@ frappe.ui.form.MultiSelectDialog = class MultiSelectDialog {
 		this.dialog = new frappe.ui.Dialog({
 			title: title,
 			fields: this.fields,
+			size: this.size,
 			primary_action_label: this.primary_action_label || __("Get Items"),
 			secondary_action_label: __("Make {0}", [__(this.doctype)]),
 			primary_action: () => {
