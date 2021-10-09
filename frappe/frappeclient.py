@@ -2,6 +2,7 @@ from __future__ import print_function, unicode_literals
 import requests
 import json
 import frappe
+import base64
 from six import iteritems, string_types
 
 '''
