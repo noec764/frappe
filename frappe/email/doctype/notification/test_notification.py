@@ -268,3 +268,8 @@ class TestNotification(unittest.TestCase):
 		recipients = [d.recipient for d in email_queue.recipients]
 		self.assertTrue('test2@example.com' in recipients)
 		self.assertTrue('test1@example.com' in recipients)
+
+	@classmethod
+	def tearDownClass(cls):
+		frappe.delete_doc_if_exists("Notification", "ToDo Status Update")
+		frappe.delete_doc_if_exists("Notification", "Contact Status Update")

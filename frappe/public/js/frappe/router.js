@@ -55,11 +55,6 @@ $('body').on('click', 'a', function(e) {
 		// target startswith "#", this is a v1 style route, so remake it.
 		return override(e.currentTarget.hash);
 	}
-
-	if (frappe.router.is_app_route(e.currentTarget.pathname)) {
-		// target has "/app, this is a v2 style route.
-		return override(e.currentTarget.pathname + e.currentTarget.hash);
-	}
 });
 
 frappe.router = {
@@ -263,7 +258,9 @@ frappe.router = {
 		return new Promise(resolve => {
 			route = this.get_route_from_arguments(route);
 			route = this.convert_from_standard_route(route);
-			const sub_path = this.make_url(route);
+			let sub_path = this.make_url(route);
+			// replace each # occurrences in the URL with encoded character except for last
+			// sub_path = sub_path.replace(/[#](?=.*[#])/g, "%23");
 			this.push_state(sub_path);
 
 			setTimeout(() => {
@@ -347,7 +344,7 @@ frappe.router = {
 				return null;
 			} else {
 				a = String(a);
-				if (a && a.match(/[%'"\s\t]/)) {
+				if (a && a.match(/[%'"#\s\t]/)) {
 					// if special chars, then encode
 					a = encodeURIComponent(a);
 				}
@@ -374,7 +371,7 @@ frappe.router = {
 		// return clean sub_path from hash or url
 		// supports both v1 and v2 routing
 		if (!route) {
-			route = window.location.pathname + window.location.hash + window.location.search;
+			route = window.location.pathname;
 			if (route.includes('app#')) {
 				// to support v1
 				route = window.location.hash;
