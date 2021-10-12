@@ -82,7 +82,7 @@ frappe.tour["Event"] = [
 	{
 		fieldname: "sync_with_google_calendar",
 		title: __("Synchronize with Google Calendar"),
-		description: __("If the box is checked then the event will be synchronized to your Google calendar. Note: You will need to have your Google calendar settings set up correctly.",
+		description: __("If the box is checked then the event will be synchronized to your Google calendar. Note: You will need to have your Google calendar settings set up correctly."),
 	},
 	{
 		fieldname: "event_participants",

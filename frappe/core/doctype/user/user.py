@@ -117,12 +117,13 @@ class User(Document):
 		now = frappe.flags.in_test or frappe.flags.in_install
 		self.send_password_notification(self.__new_password)
 		if self.flags.create_contact_immediately:
-			create_contact(user=self, ignore_mandatory=True)
+			create_contact(user=self, ignore_mandatory=True, ignore_links=True)
 		else:
 			frappe.enqueue(
 				'frappe.core.doctype.user.user.create_contact',
 				user=self,
 				ignore_mandatory=True,
+				ignore_links=True,
 				now=now
 			)
 		if self.name not in ('Administrator', 'Guest') and not self.user_image:
