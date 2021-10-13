@@ -87,7 +87,8 @@
   "is_published_field",
   "website_search_field",
   "advanced",
-  "engine"
+  "engine",
+  "migration_hash"
  ],
  "fields": [
   {
@@ -619,7 +620,12 @@
  "label": "Naming Rule",
  "length": 40,
  "options": "\nSet by user\nBy fieldname\nBy \"Naming Series\" field\nExpression\nExpression (old style)\nRandom\nBy script"
-  }
+  },
+  {
+   "fieldname": "migration_hash",
+   "fieldtype": "Data",
+   "hidden": 1
+ }
  ],
  "idx": 6,
  "links": [
