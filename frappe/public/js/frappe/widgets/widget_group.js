@@ -32,7 +32,6 @@ export default class WidgetGroup {
 		Object.assign(this, opts);
 		this.widgets_list = [];
 		this.widgets_dict = {};
-		this.widget_order = [];
 		this.make();
 	}
 

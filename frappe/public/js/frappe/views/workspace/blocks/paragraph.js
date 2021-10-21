@@ -61,7 +61,7 @@ export default class Paragraph extends Block {
 			this.wrapper.appendChild(this._element);
 			this._element.classList.remove('widget');
 			$para_control.appendTo(this.wrapper);
-			
+
 			this.wrapper.classList.add('widget');
 
 			frappe.utils.add_custom_button(
@@ -177,7 +177,7 @@ export default class Paragraph extends Block {
 	set data(data) {
 		this._data = data || {};
 
-		this._element.innerHTML = this._data.text || '';
+		this._element.innerHTML = __(this._data.text) || '';
 	}
 
 	static get pasteConfig() {
