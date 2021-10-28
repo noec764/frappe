@@ -131,10 +131,10 @@ lang = local("lang")
 if typing.TYPE_CHECKING:
 	from frappe.database.mariadb.database import MariaDBDatabase
 	from frappe.database.postgres.database import PostgresDatabase
-	from pypika import Query
+	from frappe.query_builder.builder import MariaDB, Postgres
 
 	db: typing.Union[MariaDBDatabase, PostgresDatabase]
-	qb: Query
+	qb: typing.Union[MariaDB, Postgres]
 # end: static analysis hack
 
 def init(site, sites_path=None, new_site=False):
