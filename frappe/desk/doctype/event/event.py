@@ -351,6 +351,9 @@ def insert_event_to_calendar(account, event, recurrence=None):
 	"""
 		Inserts event in Frappe Calendar during Sync
 	"""
+	start = event.get("start")
+	end = event.get("end")
+
 	calendar_event = {
 		"doctype": "Event",
 		"subject": event.get("summary"),
@@ -374,6 +377,9 @@ def update_event_in_calendar(account, event, recurrence=None):
 	"""
 		Updates Event in Frappe Calendar if any existing Google Calendar Event is updated
 	"""
+	start = event.get("start")
+	end = event.get("end")
+
 	calendar_event = frappe.get_doc("Event", {"google_calendar_event_id": event.get("id")})
 	calendar_event.subject = event.get("summary")
 	calendar_event.description = event.get("description")

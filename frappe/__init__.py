@@ -25,7 +25,7 @@ from .utils.lazy_loader import lazy_import
 
 from frappe.query_builder import get_query_builder, patch_query_execute
 
-__version__ = '2.2.1'
+__version__ = '2.2.2'
 __title__ = "Dodock Framework"
 
 local = Local()
