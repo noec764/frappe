@@ -355,7 +355,7 @@
    "type": "Link"
   }
  ],
- "modified": "2021-04-28 10:22:12.168738",
+ "modified": "2021-10-31 01:30:04.163563",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",
@@ -379,6 +379,12 @@
    "icon": "website",
    "label": "Website Settings",
    "link_to": "Website Settings",
+   "type": "DocType"
+  },
+  {
+   "icon": "setting",
+   "label": "Navbar Settings",
+   "link_to": "Navbar Settings",
    "type": "DocType"
   }
  ],
