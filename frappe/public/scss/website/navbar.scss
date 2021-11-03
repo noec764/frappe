@@ -18,6 +18,10 @@
 
 .navbar-light {
 	background: $navbar-bg;
+
+	.navbar-toggler .icon {
+		stroke: none;
+	}
 }
 
 .navbar-primary {
@@ -28,6 +32,10 @@
 			color: white;
 			font-weight: 400;
 		}
+	}
+
+	.navbar-brand {
+		color: white;
 	}
 
 	.navbar-search {
@@ -41,6 +49,13 @@
 		}
 	}
 
+	.navbar-toggler {
+		border-color: rgba(255,255,255, 0.1);
+
+		.icon {
+			stroke: none;
+		}
+	}
 
 	svg use {
 		--icon-stroke: white;
