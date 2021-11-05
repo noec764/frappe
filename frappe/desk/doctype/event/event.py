@@ -2,20 +2,20 @@
 # MIT License. See license.txt
 
 from __future__ import unicode_literals
-from six.moves import range
 from six import string_types
 import frappe
 import json
 
-from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
-	nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime)
+from googleapiclient.errors import HttpError
+
+from frappe.utils import (getdate, cint, nowdate, get_datetime, now_datetime, format_datetime)
 from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 from frappe.utils.user import get_enabled_system_users
 from frappe.desk.reportview import get_filters_cond
 from frappe.desk.calendar import process_recurring_events
-from frappe.integrations.doctype.google_calendar.google_calendar import get_google_calendar_object, \
-	format_date_according_to_google_calendar, get_timezone_naive_datetime
+from frappe.integrations.doctype.google_calendar.google_calendar import (get_google_calendar_object,
+	format_date_according_to_google_calendar, get_timezone_naive_datetime)
 from frappe.www.printview import get_html_and_style
 
 weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
@@ -371,7 +371,8 @@ def insert_event_to_calendar(account, event, recurrence=None):
 			else get_timezone_naive_datetime(start),
 		"ends_on": get_datetime(end.get("date")) if end.get("date") else get_timezone_naive_datetime(end),
 		"all_day": 1 if start.get("date") else 0,
-		"repeat_this_event": 1 if recurrence else 0
+		"repeat_this_event": 1 if recurrence else 0,
+		"owner": account.user
 	}
 	doc = frappe.get_doc(calendar_event)
 	doc.flags.pulled_from_google_calendar = True
