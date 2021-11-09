@@ -10,6 +10,7 @@ from frappe.model.naming import validate_name
 from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
 from frappe.utils import cint, nowdate
 from frappe.utils.password import rename_password
+from frappe.query_builder import Field
 
 @frappe.whitelist()
 def update_document_title(doctype, docname, title_field=None, old_title=None, new_title=None, new_name=None, merge=False):
@@ -210,8 +211,14 @@ def update_autoname_field(doctype, new, meta):
 
 def validate_rename(doctype, new, meta, merge, force, ignore_permissions):
 	# using for update so that it gets locked and someone else cannot edit it while this rename is going on!
-	exists = frappe.db.sql("select name from `tab{doctype}` where name=%s for update".format(doctype=doctype), new)
-	exists = exists[0][0] if exists else None
+	exists = (
+		frappe.qb.from_(doctype)
+		.where(Field("name") == new)
+		.for_update()
+		.select("name")
+		.run(pluck=True)
+	)
+	exists = exists[0] if exists else None
 
 	if merge and not exists:
 		frappe.msgprint(_("{0} {1} does not exist, select a new target to merge").format(_(doctype), new), raise_exception=1)
