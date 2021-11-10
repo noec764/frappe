@@ -10,7 +10,7 @@
 @import "../common/flex";
 @import "../common/buttons";
 @import "../common/modal";
-@import "../desk/toast";
+@import "../common/toast";
 @import "../common/css_variables.scss";
 @import "../common/indicator";
 @import "../common/controls";
@@ -29,7 +29,6 @@
 @import 'navbar';
 @import 'footer';
 @import 'contact';
-@import "../common/toast";
 
 body {
 	display: flex;
