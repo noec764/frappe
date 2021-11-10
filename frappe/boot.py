@@ -327,7 +327,7 @@ def get_desk_settings():
 	))
 	desk_settings = {}
 
-	desk_properties = ("search_bar", "notifications", "chat", "list_sidebar",
+	desk_properties = ("search_bar", "notifications", "list_sidebar",
 		"bulk_actions", "view_switcher", "form_sidebar", "timeline", "dashboard")
 
 	for role in role_list:

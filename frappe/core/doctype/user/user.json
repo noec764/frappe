@@ -619,11 +619,6 @@
   },
   {
    "group": "Profile",
-   "link_doctype": "Chat Profile",
-   "link_fieldname": "user"
-  },
-  {
-   "group": "Profile",
    "link_doctype": "Blogger",
    "link_fieldname": "user"
   },
@@ -674,7 +669,7 @@
   }
  ],
  "max_attachments": 5,
- "modified": "2021-10-27 17:17:16.098457",
+ "modified": "2021-10-28 17:17:16.098457",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
