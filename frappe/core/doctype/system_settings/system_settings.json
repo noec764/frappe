@@ -25,6 +25,7 @@
   "currency_symbol_position",
   "sec_backup_limit",
   "backup_limit",
+  "encrypt_backup",
   "background_workers",
   "enable_scheduler",
   "restricted_jobs_logs",
@@ -486,12 +487,18 @@
       "fieldname": "strip_exif_metadata_from_uploaded_images",
       "fieldtype": "Check",
       "label": "Strip EXIF tags from uploaded images"
+   },
+   {
+    "default": "0",
+    "fieldname": "encrypt_backup",
+    "fieldtype": "Check",
+    "label": "Encrypt Backups"
    }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2021-04-25 17:54:32.668876",
+ "modified": "2021-10-21 19:24:15.232430",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
