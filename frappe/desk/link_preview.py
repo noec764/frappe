@@ -1,12 +1,12 @@
 import frappe
 from frappe.model import no_value_fields, table_fields
-import json
+from frappe import _
 
 @frappe.whitelist()
-def get_preview_data(doctype, docname):
+def get_preview_data(doctype, docname, force=False):
 	preview_fields = []
 	meta = frappe.get_meta(doctype)
-	if not meta.show_preview_popup: return
+	if not meta.show_preview_popup and not force: return
 
 	preview_fields = [field.fieldname for field in meta.fields \
 		if field.in_preview and field.fieldtype not in no_value_fields \
@@ -40,6 +40,10 @@ def get_preview_data(doctype, docname):
 
 	for key, val in preview_data.items():
 		if val and meta.has_field(key) and key not in [image_field, title_field, 'name']:
-			formatted_preview_data[meta.get_field(key).label] = frappe.format(val, meta.get_field(key).fieldtype)
+			formatted_preview_data[meta.get_field(key).label] = frappe.format(
+				val,
+				meta.get_field(key).fieldtype,
+				translated=True,
+			)
 
 	return formatted_preview_data

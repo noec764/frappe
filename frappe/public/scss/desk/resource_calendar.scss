@@ -1,7 +1,7 @@
-.link-preview-popover {
+.resource-event-preview {
 	max-width: 100%;
 
-	.popover-content {
+	.resource-event-content {
 		padding: var(--padding-md) 25px;
 
 		.preview-header {
@@ -31,7 +31,7 @@
 			font-size: var(--text-md);
 		}
 
-		.popover-body {
+		.resource-event-body {
 			padding: 0;
 			.preview-table {
 				padding-bottom: var(--padding-xs);

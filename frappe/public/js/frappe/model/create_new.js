@@ -181,7 +181,7 @@ $.extend(frappe.model, {
 						user_default = user_defaults[0];
 					}
 				}
-	
+
 				if (!user_default) {
 					user_default = frappe.defaults.get_user_default(df.fieldname);
 				} else if (
@@ -191,12 +191,12 @@ $.extend(frappe.model, {
 				) {
 					user_default = frappe.boot.user.last_selected_values[df.options];
 				}
-	
+
 				var is_allowed_user_default =
 					user_default &&
 					(!has_user_permissions ||
 						allowed_records.includes(user_default));
-	
+
 				// is this user default also allowed as per user permissions?
 				if (is_allowed_user_default) {
 					value = user_default;
