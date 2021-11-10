@@ -61,7 +61,7 @@ frappe.ui.toolbar.Toolbar = class {
 					props: {
 						categories: [
 							'Public',
-							frappe.user.first_name() || 'Private'
+							frappe.user.full_name() || 'Private'
 						],
 						pages: all_pages
 					}
