@@ -1,8 +1,6 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
-
 import FormTimeline from "./form_timeline";
-
 frappe.ui.form.Footer = Class.extend({
 	init: function(opts) {
 		$.extend(this, opts);
@@ -32,7 +30,7 @@ frappe.ui.form.Footer = Class.extend({
 				fieldname: 'comment'
 			},
 			on_submit: (comment) => {
-				if (strip_html(comment).trim() != "") {
+				if (strip_html(comment).trim() != "" || comment.includes('img')) {
 					this.frm.comment_box.disable();
 					frappe.xcall("frappe.desk.form.utils.add_comment", {
 						reference_doctype: this.frm.doctype,
@@ -40,7 +38,7 @@ frappe.ui.form.Footer = Class.extend({
 						content: comment,
 						comment_email: frappe.session.user,
 						comment_by: frappe.session.user_fullname
-					}).then((r) => {
+					}).then((comment) => {
 						let comment_item = this.frm.timeline.get_comment_timeline_item(comment);
 						this.frm.comment_box.set_value('');
 						frappe.utils.play_sound("click");
