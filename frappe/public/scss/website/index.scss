@@ -111,6 +111,12 @@ body {
 	}
 }
 
+.page-header-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
 .breadcrumb-container {
 	margin-top: 1rem;
 	padding-top:  0.25rem;
