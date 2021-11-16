@@ -1,6 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
 import frappe
 import unittest
 from bs4 import BeautifulSoup
@@ -47,7 +46,7 @@ class TestBlogPost(unittest.TestCase):
 
 	def test_category_link(self):
 		# Make a temporary Blog Post (and a Blog Category)
-		blog = make_test_blog()
+		blog = make_test_blog('Test Category Link')
 
 		# Visit the blog post page
 		set_request(path=blog.route)
@@ -141,3 +140,4 @@ def make_test_blog(category_title="Test Blog Category"):
 	)).insert()
 
 	return test_blog
+

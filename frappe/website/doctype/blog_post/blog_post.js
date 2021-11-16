@@ -6,6 +6,7 @@ frappe.ui.form.on('Blog Post', {
 		frappe.db.get_single_value('Blog Settings', 'show_cta_in_blog').then(value => {
 			frm.set_df_property("hide_cta", "hidden", !value);
 		});
+
 		generate_google_search_preview(frm);
 	},
 	title: function(frm) {

@@ -1,7 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
-
 
 import frappe
 from frappe import _
@@ -68,7 +66,7 @@ class BlogPost(WebsiteGenerator):
 	def get_context(self, context):
 		# this is for double precaution. usually it wont reach this code if not published
 		if not cint(self.published):
-			raise Exception(_("This blog has not been published yet!"))
+			raise Exception("This blog has not been published yet!")
 
 		context.no_breadcrumbs = True
 
@@ -268,7 +266,6 @@ def get_blog_list(doctype, txt=None, filters=None, limit_start=0, limit_page_len
 	posts = frappe.db.sql(query, as_dict=1)
 
 	for post in posts:
-
 		post.content = get_html_content_based_on_type(post, 'content', post.content_type)
 		if not post.cover_image:
 			post.cover_image = find_first_image(post.content)
