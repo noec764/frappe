@@ -69,7 +69,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	setup_charts_area() {
 		this.$charts_wrapper = $(`<div class="charts-wrapper hidden">
 			<div class="text-right"><button class="btn btn-default btn-xs btn-chart-configure"
-				style="margin-right: 15px; margin-top: 15px">Configure</button></div>
+				style="margin-right: 15px; margin-top: 15px">${__("Configure")}</button></div>
 			<div class="charts-inner-wrapper"></div>
 		</div>`);
 		this.$result.append(this.$charts_wrapper);
@@ -347,7 +347,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 						],
 						primary_action: ({ column, insert_before }) => {
 							if (!columns_in_picker.map(col => col.value).includes(column)) {
-								frappe.show_alert({message: __('Invalid column'), indicator: 'orange'});
+								frappe.show_alert({ message: __('Invalid column'), indicator: 'orange' });
 								d.hide();
 								return;
 							}
@@ -592,7 +592,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	set_control_value(doctype, docname, fieldname, value) {
 		this.last_updated_doc = docname;
 		return new Promise((resolve, reject) => {
-			frappe.db.set_value(doctype, docname, {[fieldname]: value})
+			frappe.db.set_value(doctype, docname, { [fieldname]: value })
 				.then(r => {
 					if (r.message) {
 						resolve(r.message);
@@ -840,7 +840,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		let doctype_fields = frappe.meta.get_docfields(this.doctype).filter(standard_fields_filter);
 
 		// filter out docstatus field from picker
-		let std_fields = frappe.model.std_fields.filter( df => df.fieldname !== 'docstatus');
+		let std_fields = frappe.model.std_fields.filter(df => df.fieldname !== 'docstatus');
 
 		// add status field derived from docstatus, if status is not a standard field
 		let has_status_values = false;
@@ -952,7 +952,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 		for (let f of this.fields) {
 			let column;
-			if (f[0]!=='docstatus') {
+			if (f[0] !== 'docstatus') {
 				column = this.build_column(f);
 			} else {
 				// if status is not in fields append status column derived from docstatus
@@ -994,10 +994,10 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			docfield = frappe.model.get_std_field(fieldname, true);
 
 			if (docfield) {
-				if(!docfield.label) {
+				if (!docfield.label) {
 					docfield.label = toTitle(fieldname);
-					if(docfield.label.includes('_')) {
-						docfield.label = docfield.label.replace('_',' ');
+					if (docfield.label.includes('_')) {
+						docfield.label = docfield.label.replace('_', ' ');
 					}
 				}
 				docfield.parent = this.doctype;
@@ -1202,12 +1202,12 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					doctype: this.doctype,
 					json: JSON.stringify(report_settings)
 				},
-				callback:(r) => {
-					if(r.exc) {
+				callback: (r) => {
+					if (r.exc) {
 						frappe.msgprint(__("Report was not saved (there were errors)"));
 						return;
 					}
-					if(r.message != this.report_name) {
+					if (r.message != this.report_name) {
 						// Rerender the reports dropdown,
 						// so that this report is included in the dropdown as well.
 						frappe.boot.user.all_reports[r.message] = {
@@ -1227,10 +1227,10 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 		};
 
-		if(this.report_name && save_type == "save") {
+		if (this.report_name && save_type == "save") {
 			_save_report(this.report_name);
 		} else {
-			frappe.prompt({fieldname: 'name', label: __('New Report name'), reqd: 1, fieldtype: 'Data'}, (data) => {
+			frappe.prompt({ fieldname: 'name', label: __('New Report name'), reqd: 1, fieldtype: 'Data' }, (data) => {
 				_save_report(data.name);
 			}, __('Save As'));
 		}
@@ -1321,7 +1321,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					}
 
 					frappe.ui.get_print_settings(false, (print_settings) => {
-						var title =  this.report_name || __(this.doctype);
+						var title = this.report_name || __(this.doctype);
 						frappe.render_grid({
 							title: title,
 							subtitle: this.get_filters_html_for_print(),
@@ -1397,7 +1397,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 						{
 							fieldtype: 'Select',
 							label: __('Select File Type'),
-							fieldname:'file_format_type',
+							fieldname: 'file_format_type',
 							options: ['Excel', 'CSV'],
 							default: 'Excel'
 						}
@@ -1412,7 +1412,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					}
 
 					const d = new frappe.ui.Dialog({
-						title: __("Export Report: {0}",[__(this.doctype)]),
+						title: __("Export Report: {0}", [__(this.doctype)]),
 						fields: fields,
 						primary_action_label: __('Download'),
 						primary_action: (data) => {
@@ -1420,11 +1420,11 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 							args.file_format_type = data.file_format_type;
 							args.title = this.report_name || this.doctype;
 
-							if(this.add_totals_row) {
+							if (this.add_totals_row) {
 								args.add_totals_row = 1;
 							}
 
-							if(selected_items.length > 0) {
+							if (selected_items.length > 0) {
 								args.selected_items = selected_items;
 							}
 
@@ -1450,8 +1450,8 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		items.push({
 			label: __("Setup Auto Email"),
 			action: () => {
-				if(this.report_name) {
-					frappe.set_route('List', 'Auto Email Report', {'report' : this.report_name});
+				if (this.report_name) {
+					frappe.set_route('List', 'Auto Email Report', { 'report': this.report_name });
 				} else {
 					frappe.msgprint(__('Please save the report first'));
 				}
@@ -1459,7 +1459,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		});
 
 		// save buttons
-		if(frappe.user.is_report_manager()) {
+		if (frappe.user.is_report_manager()) {
 			items = items.concat([
 				{ label: __('Save'), action: () => this.save_report('save') },
 				{ label: __('Save As'), action: () => this.save_report('save_as') }
@@ -1467,7 +1467,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		}
 
 		// user permissions
-		if(this.report_name && frappe.model.can_set_user_permissions("Report")) {
+		if (this.report_name && frappe.model.can_set_user_permissions("Report")) {
 			items.push({
 				label: __("User Permissions"),
 				action: () => {
