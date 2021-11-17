@@ -490,7 +490,7 @@ def delete_event_in_google_calendar(doc, method=None):
 	"""
 
 	if not frappe.db.exists("Google Calendar", {"name": doc.google_calendar}) \
-		or doc.flags.pulled_from_google_calendar:
+		or doc.flags.pulled_from_google_calendar or not doc.google_calendar_event_id:
 		return
 
 	google_calendar, account = get_google_calendar_object(doc.google_calendar)
