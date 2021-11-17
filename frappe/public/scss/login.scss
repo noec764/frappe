@@ -139,6 +139,10 @@ body {
 						min-width: 50%;
 						padding: 0 4px;
 						margin-bottom: var(--margin-sm);
+
+						img {
+							max-width: 20px;
+						}
 					}
 				}
 			}
