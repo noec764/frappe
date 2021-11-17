@@ -17,7 +17,9 @@
   "section_break_9",
   "default_calendar",
   "user",
-  "seen"
+  "seen",
+  "system_notifications_section",
+  "energy_points_system_notifications"
  ],
  "fields": [
   {
@@ -86,6 +88,17 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Seen"
+},
+{
+ "fieldname": "system_notifications_section",
+ "fieldtype": "Section Break",
+ "label": "System Notifications"
+},
+{
+ "default": "1",
+ "fieldname": "energy_points_system_notifications",
+ "fieldtype": "Check",
+ "label": "Energy Points"
   },
   {
    "fieldname": "section_break_9",
@@ -99,10 +112,11 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2020-11-04 12:54:57.989317",
+ "modified": "2021-11-16 12:18:46.955501",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Notification Settings",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
