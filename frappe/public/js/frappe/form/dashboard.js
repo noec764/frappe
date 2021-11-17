@@ -14,6 +14,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		this.progress_area = this.make_section({
 			css_class: 'progress-area',
 			hidden: 1,
+			collapsible: 1,
 			is_dashboard_section: 1,
 		});
 
@@ -21,6 +22,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			label: __("Overview"),
 			css_class: 'form-heatmap',
 			hidden: 1,
+			collapsible: 1,
 			is_dashboard_section: 1,
 			body_html: `
 				<div id="heatmap-${frappe.model.scrub(this.frm.doctype)}" class="heatmap"></div>
@@ -32,6 +34,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			label: __("Graph"),
 			css_class: 'form-graph',
 			hidden: 1,
+			collapsible: 1,
 			is_dashboard_section: 1
 		});
 
@@ -40,6 +43,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			label: __("Stats"),
 			css_class: 'form-stats',
 			hidden: 1,
+			collapsible: 1,
 			is_dashboard_section: 1,
 			body_html: this.stats_area_row
 		});
@@ -49,6 +53,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			label: __("Connections"),
 			css_class: 'form-links',
 			hidden: 1,
+			collapsible: 1,
 			is_dashboard_section: 1,
 			body_html: this.transactions_area
 		});
@@ -83,9 +88,10 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			hidden,
 			body_html,
 			make_card: true,
+			collapsible: 1,
 			is_dashboard_section: 1
 		};
-		return new Section(this.frm.layout.wrapper, options).body;
+		return new Section(this.parent, options).body;
 	}
 
 	add_progress(title, percent, message) {
@@ -201,7 +207,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 	after_refresh() {
 		this.links_area.body.find('.btn-new').each((i, el) => {
-			if (this.frm.can_create($(this).attr('data-doctype'))) {
+			if (this.frm.can_create($(el).attr('data-doctype'))) {
 				$(el).removeClass('hidden');
 			}
 		});
