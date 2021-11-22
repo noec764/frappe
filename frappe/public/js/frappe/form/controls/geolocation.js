@@ -2,6 +2,12 @@ frappe.provide('frappe.utils');
 
 frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.form.ControlData {
 	static horizontal = false
+
+	async make() {
+		await frappe.require(this.required_libs);
+		super.make();
+	}
+
 	make_wrapper() {
 		// Create the elements for map area
 		super.make_wrapper();
@@ -199,5 +205,18 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 		this.editableLayers.eachLayer((l)=>{
 			this.editableLayers.removeLayer(l);
 		});
+	}
+
+	get required_libs() {
+		return [
+			"assets/frappe/js/lib/leaflet/easy-button.css",
+			"assets/frappe/js/lib/leaflet/L.Control.Locate.css",
+			"assets/frappe/js/lib/leaflet/leaflet.draw.css",
+			"assets/frappe/js/lib/leaflet/leaflet.css",
+			"assets/frappe/js/lib/leaflet/leaflet.js",
+			"assets/frappe/js/lib/leaflet/easy-button.js",
+			"assets/frappe/js/lib/leaflet/leaflet.draw.js",
+			"assets/frappe/js/lib/leaflet/L.Control.Locate.js",
+		];
 	}
 };
