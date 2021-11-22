@@ -245,7 +245,7 @@ def send_event_digest():
 			for e in events:
 				e.starts_on = format_datetime(e.starts_on, 'hh:mm a')
 				if e.all_day:
-					e.starts_on = "All Day"
+					e.starts_on = _("All Day")
 
 			frappe.sendmail(
 				recipients=user.email,

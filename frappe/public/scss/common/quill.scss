@@ -22,15 +22,12 @@
 	a[href] {
 		text-decoration: underline;
 	}
-	&:not(.read-mode) {
-		background-color: var(--control-bg);
-	}
 }
 
 .ql-toolbar.ql-snow {
 	border-top-left-radius: var(--border-radius);
 	border-top-right-radius: var(--border-radius);
-	background-color: var(--control-bg);
+	background-color: var(--fg-color);
 	box-shadow: var(--shadow-inset);
 	padding-bottom: 0;
 }
@@ -38,21 +35,14 @@
 .ql-container.ql-snow {
 	border-bottom-left-radius: var(--border-radius);
 	border-bottom-right-radius: var(--border-radius);
-	border-width: 1px;
-	border-color: var(--gray-400);
-	border-style: none none solid;
-	overflow: hidden;
-}
-
-.ql-snow .ql-editor {
-	min-height: 400px;
-	max-height: 600px;
 }
 
 .ql-snow {
 	.ql-editor {
 		min-height: 400px;
 		max-height: 600px;
+		border-bottom-left-radius: var(--border-radius);
+		border-bottom-right-radius: var(--border-radius);
 	}
 	.ql-stroke {
 		stroke: var(--icon-stroke);
@@ -71,6 +61,7 @@
 		color: var(--text-color);
 		box-shadow: var(--shadow-base);
 	}
+
 }
 
 .print-format {
@@ -186,7 +177,7 @@
 }
 
 .ql-editor.read-mode {
-	max-height: 100%;
+	height: unset;
 	padding: 0;
 	.mention {
 		--user-mention-bg-color: var(--control-bg);
@@ -205,16 +196,6 @@
 
 .mention>span {
 	margin: 0 3px;
-}
-
-.print-format {
-	.ql-snow {
-		.ql-editor.read-mode {
-			min-height: 0;
-			background-color: transparent;
-			overflow: hidden;
-		}
-	}
 }
 
 .mention[data-is-group="true"] {

@@ -235,7 +235,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			callback: function(r) {
 				if(!r.exc) {
 					frappe.show_alert({
-						message: __("{0} created successfully", [form_values.interaction_type]),
+						message: __("{0} created successfully", [__(form_values.interaction_type)]),
 						indicator: 'green'
 					});
 					if ("assigned_to" in form_values) {
