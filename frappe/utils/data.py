@@ -875,9 +875,9 @@ def fmt_money(amount, precision=None, currency=None, format=None):
 		symbol = frappe.db.get_value("Currency", currency, "symbol", cache=True) or currency
 
 		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
-			amount = symbol + " " + amount
+			amount = frappe._(symbol) + " " + amount
 		else:
-			amount = amount + " " + symbol
+			amount = amount + " " + frappe._(symbol)
 
 	return amount
 

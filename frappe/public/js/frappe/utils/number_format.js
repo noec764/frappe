@@ -130,9 +130,9 @@ function format_currency(v, currency, decimals) {
 
 	if (symbol) {
 		if (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.currency_symbol_position === "Left") {
-			return symbol + " " + format_number(v, format, decimals);
+			return __(symbol) + " " + format_number(v, format, decimals);
 		} else {
-			return format_number(v, format, decimals) + " " + symbol;
+			return format_number(v, format, decimals) + " " + __(symbol);
 		}
 	} else {
 		return format_number(v, format, decimals);
