@@ -160,7 +160,7 @@ class TestDocument(unittest.TestCase):
 
 	def test_varchar_length(self):
 		d = self.test_insert()
-		d.subject = "abcde"*100
+		d.sender = "abcde"*100 + "@user.com"
 		self.assertRaises(frappe.CharacterLengthExceededError, d.save)
 
 	def test_xss_filter(self):
