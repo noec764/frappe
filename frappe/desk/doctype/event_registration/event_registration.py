@@ -55,17 +55,23 @@ def get_user_info(user=None):
 	if not user:
 		user = frappe.session.user
 
+	if user == "Guest":
+		return {}
+
 	return frappe.db.get_value("User", user, ["first_name", "last_name", "email", "mobile_no"], as_dict=True)
 
 
 @frappe.whitelist(allow_guest=True)
 def register_to_event(event, data, user=None):
+	if user is None:
+		user = frappe.session.user != "Guest" and frappe.session.user
+
 	try:
 		registration = frappe.get_doc(
-			dict({ 
+			dict({
 				"doctype": "Event Registration",
 				"event": event,
-				"user": user or frappe.session.user
+				"user": user
 			}, **frappe.parse_json(data))
 		)
 

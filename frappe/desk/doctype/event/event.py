@@ -2,6 +2,7 @@
 # MIT License. See license.txt
 
 from __future__ import unicode_literals
+from frappe.utils.data import add_days
 from six import string_types
 import frappe
 import json
@@ -185,7 +186,7 @@ class Event(WebsiteGenerator):
 				fields.append(field)
 
 		context.registration_form = frappe.as_json(fields)
-		context.is_registered = frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
+		context.is_registered = frappe.session.user != "Guest" and frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
 
 		context.attachments = frappe.get_all("File", fields=["name", "file_name", "file_url"],
 			filters = {"attached_to_name": self.name, "attached_to_doctype": "Event", "is_private": 0}) if self.display_public_files else []
@@ -196,6 +197,20 @@ class Event(WebsiteGenerator):
 
 	def show_permission_error(self):
 		frappe.throw(_("This event is not publicly available"), frappe.PermissionError)
+
+def get_list_context(context=None):
+	context.update({
+		"title": _('Events'),
+		"no_cache": 1,
+		"no_breadcrumbs": True,
+		"show_sidebar": frappe.session.user != "Guest",
+		"get_list": get_events_list,
+		"row_template": "desk/doctype/event/templates/event_row.html",
+		"header_action": frappe.render_template("desk/doctype/event/templates/event_list_action.html", {})
+	})
+
+def get_events_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"):
+	return get_prepared_events(nowdate(), add_days(nowdate(), 99999))
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
@@ -245,7 +260,7 @@ def send_event_digest():
 			for e in events:
 				e.starts_on = format_datetime(e.starts_on, 'hh:mm a')
 				if e.all_day:
-					e.starts_on = "All Day"
+					e.starts_on = _("All Day")
 
 			frappe.sendmail(
 				recipients=user.email,
@@ -490,7 +505,7 @@ def delete_event_in_google_calendar(doc, method=None):
 	"""
 
 	if not frappe.db.exists("Google Calendar", {"name": doc.google_calendar}) \
-		or doc.flags.pulled_from_google_calendar:
+		or doc.flags.pulled_from_google_calendar or not doc.google_calendar_event_id:
 		return
 
 	google_calendar, account = get_google_calendar_object(doc.google_calendar)

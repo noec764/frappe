@@ -1,21 +1,15 @@
 // Copyright (c) 2020, Dokos SAS and Contributors
 // See license.txt
 
+frappe.provide("frappe.events")
+
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
-frappe.ready(function() {
-	frappe.provide("frappe.events");
-	frappe.events.EventsPortalView = new EventsPortalView({
-		parent: document.getElementById("events-calendar")
-	});
-
-});
-
-class EventsPortalView {
+frappe.events.EventsPortalView = class EventsPortalView {
 	constructor(options) {
 		Object.assign(this, options);
 		this.show()
@@ -31,10 +25,9 @@ class EventsPortalView {
 	}
 
 	build_calendar() {
-		this.calendarEl = $('<div id="calendar">').appendTo(this.parent);
-		this.eventEl = $('<div id="event">').appendTo(this.parent);
+		const calendarEl = $('<div></div>').appendTo($(this.parent));
 		this.fullcalendar = new Calendar(
-			this.calendarEl[0],
+			calendarEl[0],
 			this.calendar_options()
 		)
 		this.fullcalendar.render();
@@ -43,11 +36,12 @@ class EventsPortalView {
 	calendar_options() {
 		return {
 			eventClassNames: "events-calendar",
+			contentHeight: "auto",
 			initialView: frappe.is_mobile() ? "listDay" : "dayGridMonth",
 			headerToolbar: {
 				left: frappe.is_mobile() ? 'today' : 'dayGridMonth,timeGridWeek',
 				center: "prev,title,next",
-				right: frappe.is_mobile() ? "" : "prev,next today",
+				right: frappe.is_mobile() ? "" : "today",
 			},
 			weekends: true,
 			buttonText: {
@@ -62,15 +56,15 @@ class EventsPortalView {
 				interactionPlugin,
 				listPlugin
 			],
-			locale: frappe.boot.lang || 'en',
+			locale: frappe.get_cookie('preferred_language') || frappe.boot.lang || 'en',
 			timeZone: frappe.boot.timeZone || 'UTC',
 			events: this.getEvents,
 			eventClick: this.eventClick,
 			selectable: true,
+			noEventsContent: __("No events to display"),
 			allDayContent: function() {
 				return __("All Day");
-			},
-			height: "auto"
+			}
 		}
 	}
 

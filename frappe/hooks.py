@@ -44,7 +44,8 @@ doctype_js = {
 }
 
 web_include_js = [
-	"website_script.js"
+	"website_script.js",
+	"assets/js/events-portal.min.js"
 ]
 
 web_include_css = []
@@ -55,6 +56,7 @@ website_route_rules = [
 	{"from_route": "/newsletters", "to_route": "Newsletter"},
 	{"from_route": "/profile", "to_route": "me"},
 	{"from_route": "/app/<path:app_path>", "to_route": "app"},
+	{"from_route": "/events", "to_route": "Event"},
 ]
 
 website_redirects = [
