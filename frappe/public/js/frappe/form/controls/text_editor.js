@@ -229,6 +229,7 @@ frappe.ui.form.ControlTextEditor = frappe.ui.form.ControlCode.extend({
 			"image": __("Image"),
 			"orderedlist": __("Ordered list"),
 			"bulletlist": __("Bullet list"),
+			"checklist": __("Check list"),
 			"align": __("Align"),
 			"indent": __("Indent"),
 			"table": __("Add a table"),
