@@ -6,7 +6,7 @@
 import frappe, os, re, git
 from frappe.utils import touch_file, cstr
 
-def make_boilerplate(dest, app_name):
+def make_boilerplate(dest, app_name, no_git=False):
 	if not os.path.exists(dest):
 		print("Destination directory does not exist")
 		return
@@ -66,9 +66,6 @@ def make_boilerplate(dest, app_name):
 	with open(os.path.join(dest, hooks.app_name, "MANIFEST.in"), "w") as f:
 		f.write(frappe.as_unicode(manifest_template.format(**hooks)))
 
-	with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
-		f.write(frappe.as_unicode(gitignore_template.format(app_name = hooks.app_name)))
-
 	with open(os.path.join(dest, hooks.app_name, "requirements.txt"), "w") as f:
 		f.write("# frappe -- https://gitlab.com/dokos/dodock is installed via 'bench init'")
 
@@ -101,11 +98,16 @@ def make_boilerplate(dest, app_name):
 	with open(os.path.join(dest, hooks.app_name, hooks.app_name, "config", "docs.py"), "w") as f:
 		f.write(frappe.as_unicode(docs_template.format(**hooks)))
 
-	# initialize git repository
 	app_directory = os.path.join(dest, hooks.app_name)
-	app_repo = git.Repo.init(app_directory)
-	app_repo.git.add(A=True)
-	app_repo.index.commit("feat: Initialize App")
+
+	if not no_git:
+		with open(os.path.join(dest, hooks.app_name, ".gitignore"), "w") as f:
+			f.write(frappe.as_unicode(gitignore_template.format(app_name = hooks.app_name)))
+
+		# initialize git repository
+		app_repo = git.Repo.init(app_directory)
+		app_repo.git.add(A=True)
+		app_repo.index.commit("feat: Initialize App")
 
 	print("'{app}' created at {path}".format(app=app_name, path=app_directory))
 
