@@ -204,3 +204,37 @@
 		margin-left: 4px;
 	}
 }
+
+
+.ql-editor li[data-list=unchecked]>.ql-ui:before,
+.ql-editor li[data-list=checked]>.ql-ui:before {
+	--cb-size: 12px;
+
+	content: "\fe0f";
+	color: var(--text-color);
+	opacity: 0.6;
+
+	border: none;
+	box-shadow: 0 0 0 2px currentColor;
+
+	font-weight: bold;
+	height: var(--cb-size);
+	width: var(--cb-size);
+	font-size: var(--cb-size);
+	line-height: 1;
+	text-align: center;
+	vertical-align: calc(7px - var(--cb-size)/2);
+
+	border-radius: 1px;
+//	border-radius: 999px;
+}
+.ql-editor li[data-list=checked]>.ql-ui:before {
+	content: "\2713";
+	color: var(--primary);
+	opacity: 1;
+}
+// .ql-editor li[data-list=checked] {
+// 	text-decoration: line-through;
+// 	text-decoration-color: var(--disabled-text-color);
+// 	text-decoration-thickness: 1px;
+// }
