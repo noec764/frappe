@@ -30,13 +30,15 @@ class EventRegistration(Document):
 			contact = frappe.db.get_value("Contact", dict(user=self.user))
 
 		if not contact:
-			contact = frappe.get_doc({
+			contact_doc = frappe.get_doc({
+				"doctype": "Contact",
 				"first_name": self.first_name,
 				"last_name": self.last_name,
 				"user": self.user
 			})
-			contact.add_email(self.email, is_primary=1)
-			contact.insert(ignore_permissions=True)
+			contact_doc.add_email(self.email, is_primary=1)
+			contact_doc.insert(ignore_permissions=True)
+			contact = contact_doc.name
 
 		self.contact = contact
 
@@ -63,8 +65,8 @@ def get_user_info(user=None):
 
 @frappe.whitelist(allow_guest=True)
 def register_to_event(event, data, user=None):
-	if user is None:
-		user = frappe.session.user != "Guest" and frappe.session.user
+	if user is None and frappe.session.user != "Guest":
+		user = frappe.session.user
 
 	try:
 		registration = frappe.get_doc(
@@ -79,7 +81,7 @@ def register_to_event(event, data, user=None):
 		registration.submit()
 		return registration
 	except Exception:
-		return
+		frappe.log_error(frappe.get_traceback(), "Event registration error")
 
 @frappe.whitelist()
 def cancel_registration(event, user=None):
