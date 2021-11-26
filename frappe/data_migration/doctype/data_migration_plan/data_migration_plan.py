@@ -1,13 +1,25 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
-
 
 import frappe
 from frappe.modules import get_module_path, scrub_dt_dn
 from frappe.modules.export_file import export_to_files, create_init_py
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.model.document import Document
+
+
+def get_mapping_module(module, mapping_name):
+	app_name = frappe.db.get_value("Module Def", module, "app_name")
+	mapping_name = frappe.scrub(mapping_name)
+	module = frappe.scrub(module)
+
+	try:
+		return frappe.get_module(
+			f"{app_name}.{module}.data_migration_mapping.{mapping_name}"
+		)
+	except ImportError:
+		return None
+
 
 class DataMigrationPlan(Document):
 	def on_update(self):
@@ -33,8 +45,6 @@ class DataMigrationPlan(Document):
 		frappe.flags.ignore_in_install = True
 		label = self.name + ' ID'
 		fieldname = frappe.scrub(label)
-		deletion_label = self.name + ' Deletion'
-		deletion_fieldname = frappe.scrub(deletion_label)
 
 		df = {
 			'label': label,
@@ -46,21 +56,10 @@ class DataMigrationPlan(Document):
 			'no_copy': 1
 		}
 
-		deletion_df = {
-			'label': deletion_label,
-			'fieldname': deletion_fieldname,
-			'fieldtype': 'Check',
-			'hidden': 1,
-			'read_only': 1,
-			'no_copy': 1
-		}
-
 		for m in self.mappings:
 			mapping = frappe.get_doc('Data Migration Mapping', m.mapping)
 			create_custom_field(mapping.local_doctype, df)
-			create_custom_field('Deleted Document', deletion_df)
 			mapping.migration_id_field = fieldname
-			mapping.migration_deletion_field = deletion_fieldname
 			mapping.save()
 
 		# Create custom field in Deleted Document
@@ -68,26 +67,14 @@ class DataMigrationPlan(Document):
 		frappe.flags.ignore_in_install = False
 
 	def pre_process_doc(self, mapping_name, doc):
-		module = self.get_mapping_module(mapping_name)
+		module = get_mapping_module(self.module, mapping_name)
 
 		if module and hasattr(module, 'pre_process'):
 			return module.pre_process(doc)
 		return doc
 
 	def post_process_doc(self, mapping_name, local_doc=None, remote_doc=None):
-		module = self.get_mapping_module(mapping_name)
+		module = get_mapping_module(self.module, mapping_name)
 
 		if module and hasattr(module, 'post_process'):
 			return module.post_process(local_doc=local_doc, remote_doc=remote_doc)
-
-	def get_mapping_module(self, mapping_name):
-		try:
-			module_def = frappe.get_doc("Module Def", self.module)
-			module = frappe.get_module('{app}.{module}.data_migration_mapping.{mapping_name}'.format(
-				app= module_def.app_name,
-				module=frappe.scrub(self.module),
-				mapping_name=frappe.scrub(mapping_name)
-			))
-			return module
-		except ImportError:
-			return None
