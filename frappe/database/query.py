@@ -1,15 +1,19 @@
 import operator
+import re
 from typing import Any, Dict, List, Tuple, Union
 
 import frappe
-from frappe.query_builder import Criterion, Order, Field
+from frappe import _
+from frappe.query_builder import Criterion, Field, Order
 
 
 def like(key: str, value: str) -> frappe.qb:
 	"""Wrapper method for `LIKE`
+
 	Args:
 		key (str): field
 		value (str): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `LIKE`
 	"""
@@ -18,9 +22,11 @@ def like(key: str, value: str) -> frappe.qb:
 
 def func_in(key: str, value: Union[List, Tuple]) -> frappe.qb:
 	"""Wrapper method for `IN`
+
 	Args:
 		key (str): field
 		value (Union[int, str]): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `IN`
 	"""
@@ -29,9 +35,11 @@ def func_in(key: str, value: Union[List, Tuple]) -> frappe.qb:
 
 def not_like(key: str, value: str) -> frappe.qb:
 	"""Wrapper method for `NOT LIKE`
+
 	Args:
 		key (str): field
 		value (str): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `NOT LIKE`
 	"""
@@ -40,9 +48,11 @@ def not_like(key: str, value: str) -> frappe.qb:
 
 def func_not_in(key: str, value: Union[List, Tuple]):
 	"""Wrapper method for `NOT IN`
+
 	Args:
 		key (str): field
 		value (Union[int, str]): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `NOT IN`
 	"""
@@ -51,9 +61,11 @@ def func_not_in(key: str, value: Union[List, Tuple]):
 
 def func_regex(key: str, value: str) -> frappe.qb:
 	"""Wrapper method for `REGEX`
+
 	Args:
 		key (str): field
 		value (str): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `REGEX`
 	"""
@@ -62,9 +74,11 @@ def func_regex(key: str, value: str) -> frappe.qb:
 
 def func_between(key: str, value: Union[List, Tuple]) -> frappe.qb:
 	"""Wrapper method for `BETWEEN`
+
 	Args:
 		key (str): field
 		value (Union[int, str]): criterion
+
 	Returns:
 		frappe.qb: `frappe.qb object with `BETWEEN`
 	"""
@@ -72,9 +86,11 @@ def func_between(key: str, value: Union[List, Tuple]) -> frappe.qb:
 
 def make_function(key: Any, value: Union[int, str]):
 	"""returns fucntion query
+
 	Args:
 		key (Any): field
 		value (Union[int, str]): criterion
+
 	Returns:
 		frappe.qb: frappe.qb object
 	"""
@@ -83,8 +99,10 @@ def make_function(key: Any, value: Union[int, str]):
 
 def change_orderby(order: str):
 	"""Convert orderby to standart Order object
+
 	Args:
 		order (str): Field, order
+
 	Returns:
 		tuple: field, order
 	"""
@@ -117,8 +135,10 @@ OPERATOR_MAP = {
 class Query:
 	def get_condition(self, table: str, **kwargs) -> frappe.qb:
 		"""Get initial table object
+
 		Args:
 			table (str): DocType
+
 		Returns:
 			frappe.qb: DocType with initial condition
 		"""
@@ -130,9 +150,11 @@ class Query:
 
 	def criterion_query(self, table: str, criterion: Criterion, **kwargs) -> frappe.qb:
 		"""Generate filters from Criterion objects
+
 		Args:
 			table (str): DocType
 			criterion (Criterion): Filters
+
 		Returns:
 			frappe.qb: condition object
 		"""
@@ -141,8 +163,10 @@ class Query:
 
 	def add_conditions(self, conditions: frappe.qb, **kwargs):
 		"""Adding additional conditions
+
 		Args:
 			conditions (frappe.qb): built conditions
+
 		Returns:
 			conditions (frappe.qb): frappe.qb object
 		"""
@@ -166,6 +190,7 @@ class Query:
 
 	def misc_query(self, table: str, filters: Union[List, Tuple] = None, **kwargs):
 		"""Build conditions using the given Lists or Tuple filters
+
 		Args:
 			table (str): DocType
 			filters (Union[List, Tuple], optional): Filters. Defaults to None.
@@ -191,14 +216,17 @@ class Query:
 
 	def dict_query(self, table: str, filters: Dict[str, Union[str, int]] = None, **kwargs) -> frappe.qb:
 		"""Build conditions using the given dictionary filters
+
 		Args:
 			table (str): DocType
 			filters (Dict[str, Union[str, int]], optional): Filters. Defaults to None.
+
 		Returns:
 			frappe.qb: conditions object
 		"""
 		conditions = self.get_condition(table, **kwargs)
 		if not filters:
+			conditions = self.add_conditions(conditions, **kwargs)
 			return conditions
 
 		for key in filters:
@@ -220,21 +248,83 @@ class Query:
 		conditions = self.add_conditions(conditions, **kwargs)
 		return conditions
 
-	def build_conditions(self, table: str, filters: Union[Dict[str, Union[str, int]], str, int] = None, **kwargs) -> frappe.qb:
+	def build_conditions(
+		self,
+		table: str,
+		filters: Union[Dict[str, Union[str, int]], str, int] = None,
+		**kwargs
+	) -> frappe.qb:
 		"""Build conditions for sql query
+
 		Args:
 			filters (Union[Dict[str, Union[str, int]], str, int]): conditions in Dict
 			table (str): DocType
+
 		Returns:
 			frappe.qb: frappe.qb conditions object
 		"""
-		if isinstance(filters, Criterion):
-			return self.criterion_query(table, filters, **kwargs)
-
 		if isinstance(filters, int) or isinstance(filters, str):
 			filters = {"name": str(filters)}
 
-		if isinstance(filters, (list, tuple)):
-			return self.misc_query(table, filters, **kwargs)
+		if isinstance(filters, Criterion):
+			criterion = self.criterion_query(table, filters, **kwargs)
 
-		return self.dict_query(filters=filters, table=table, **kwargs)
+		elif isinstance(filters, (list, tuple)):
+			criterion = self.misc_query(table, filters, **kwargs)
+
+		else:
+			criterion = self.dict_query(filters=filters, table=table, **kwargs)
+
+		return criterion
+
+	def get_sql(
+		self,
+		table: str,
+		fields: Union[List, Tuple],
+		filters: Union[Dict[str, Union[str, int]], str, int] = None,
+		**kwargs
+	):
+		criterion = self.build_conditions(table, filters, **kwargs)
+		if isinstance(fields, (list, tuple)):
+			query = criterion.select(*kwargs.get("field_objects"))
+
+		elif isinstance(fields, Criterion):
+			query = criterion.select(fields)
+
+		else:
+			if fields=="*":
+				query = criterion.select(fields)
+
+		return query
+
+
+class Permission:
+	@classmethod
+	def check_permissions(cls, query, **kwargs):
+		if not isinstance(query, str):
+			query = query.get_sql()
+
+		doctype = cls.get_tables_from_query(query)
+		if isinstance(doctype, str):
+			doctype = [doctype]
+
+		for dt in doctype:
+			dt = re.sub("tab", "", dt)
+			if not frappe.has_permission(
+				dt,
+				"select",
+				user=kwargs.get("user"),
+				parent_doctype=kwargs.get("parent_doctype"),
+			) and not frappe.has_permission(
+				dt,
+				"read",
+				user=kwargs.get("user"),
+				parent_doctype=kwargs.get("parent_doctype"),
+			):
+				frappe.throw(
+					_("Insufficient Permission for {0}").format(frappe.bold(dt))
+				)
+
+	@staticmethod
+	def get_tables_from_query(query: str):
+		return [table for table in re.findall(r"\w+", query) if table.startswith("tab")]
