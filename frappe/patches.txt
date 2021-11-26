@@ -193,6 +193,7 @@ frappe.patches.v13_0.drop_unused_pages
 execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02
 frappe.patches.v14_0.drop_data_import_legacy
+frappe.patches.v14_0.copy_mail_data
 frappe.patches.v14_0.update_workspace2 #2
 frappe.patches.v14_0.update_github_endpoints
 

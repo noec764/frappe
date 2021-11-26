@@ -52,6 +52,7 @@
   "email_inbox",
   "message_id",
   "uid",
+  "imap_folder",
   "email_status",
   "has_attachment",
   "feedback_section",
@@ -391,12 +392,19 @@
    "fieldtype": "Check",
    "label": "Not added to reference timeline",
    "read_only": 1
+  },
+  {
+   "fieldname": "imap_folder",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "IMAP Folder",
+   "read_only": 1
   }
  ],
  "icon": "fa fa-comment",
  "idx": 1,
  "links": [],
- "modified": "2021-03-25 09:44:28.963538",
+ "modified": "2021-10-25 09:44:28.963538",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Communication",
