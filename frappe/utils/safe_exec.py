@@ -83,6 +83,7 @@ def get_safe_globals():
 			loads=json.loads,
 			dumps=json.dumps
 		),
+		as_json=frappe.as_json,
 		dict=dict,
 		log=frappe.log,
 		frappe=NamespaceDict(
