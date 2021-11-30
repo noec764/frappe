@@ -1515,7 +1515,7 @@ def get_print(doctype=None, name=None, print_format=None, style=None,
 
 	if as_pdf:
 		cover = db.get_value("Print Format", print_format, "cover_page")
-		return get_pdf(html, output = output, options = options)
+		return get_pdf(html, output = output, options = options, cover = cover)
 	else:
 		return html
 

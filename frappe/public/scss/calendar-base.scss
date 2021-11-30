@@ -2,6 +2,8 @@
 @import '~@fullcalendar/list/main.css';
 @import '~@fullcalendar/daygrid/main.css';
 @import '~@fullcalendar/timegrid/main.css';
+@import '~@fullcalendar/premium-common/main.css';
+@import '~@fullcalendar/adaptive/main.css';
 
 .fc {
 	font-size: 1em;
@@ -113,7 +115,7 @@
 	.fc-now-indicator {
 		border-color: var(--primary) !important;
 	}
-	
+
 	.fc-now-indicator-arrow {
 		display: none !important;
 	}
