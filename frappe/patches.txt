@@ -196,6 +196,7 @@ frappe.patches.v14_0.drop_data_import_legacy
 frappe.patches.v14_0.copy_mail_data
 frappe.patches.v14_0.update_workspace2 #2
 frappe.patches.v14_0.update_github_endpoints
+frappe.patches.v14_0.remove_db_aggregation
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
