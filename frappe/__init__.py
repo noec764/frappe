@@ -27,7 +27,7 @@ from .utils.lazy_loader import lazy_import
 # Lazy imports
 faker = lazy_import('faker')
 
-__version__ = '2.3.2'
+__version__ = '2.3.3'
 __title__ = "Dodock Framework"
 
 local = Local()
@@ -1515,7 +1515,7 @@ def get_print(doctype=None, name=None, print_format=None, style=None,
 
 	if as_pdf:
 		cover = db.get_value("Print Format", print_format, "cover_page")
-		return get_pdf(html, output = output, options = options)
+		return get_pdf(html, output = output, options = options, cover = cover)
 	else:
 		return html
 
