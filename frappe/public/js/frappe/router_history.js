@@ -6,9 +6,10 @@ const save_routes = frappe.utils.debounce(() => {
 	const routes = frappe.route_history_queue;
 	frappe.route_history_queue = [];
 
-	frappe.xcall('frappe.deferred_insert.deferred_insert', {
-		'doctype': 'Route History',
-		'records': routes
+	if (!routes.length) return;
+
+	frappe.xcall('frappe.desk.doctype.route_history.route_history.deferred_insert', {
+		'routes': routes
 	}).catch(() => {
 		frappe.route_history_queue.concat(routes);
 	});
@@ -19,7 +20,6 @@ frappe.router.on('change', () => {
 	const route = frappe.get_route();
 	if (is_route_useful(route)) {
 		frappe.route_history_queue.push({
-			'user': frappe.session.user,
 			'creation': frappe.datetime.now_datetime(),
 			'route': frappe.get_route_str()
 		});
