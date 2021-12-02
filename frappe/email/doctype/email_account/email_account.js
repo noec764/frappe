@@ -185,9 +185,7 @@ frappe.ui.form.on("Email Account", {
 		// confirm if the ALL sync option is selected
 
 		if(frm.doc.email_sync_option == "ALL"){
-			var msg = __("You are selecting Sync Option as ALL, It will resync all \
-				read as well as unread message from server. This may also cause the duplication\
-				of Communication (emails).");
+			var msg = __("You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails).");
 			frappe.confirm(msg, null, function() {
 				frm.set_value("email_sync_option", "UNSEEN");
 			});
