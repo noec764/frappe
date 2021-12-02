@@ -175,7 +175,7 @@ frappe.form.formatters = {
 				m = m.tz(frappe.boot.sysdefaults.time_zone);
 			}
 			return m.format(frappe.boot.sysdefaults.date_format.toUpperCase()
-				+  ' ' + frappe.boot.sysdefaults.time_format || "HH:mm");
+				+  ' ' + (frappe.boot.sysdefaults.time_format || "HH:mm"));
 		} else {
 			return "";
 		}
