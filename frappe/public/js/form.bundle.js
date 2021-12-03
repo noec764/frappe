@@ -16,4 +16,5 @@ import "./frappe/form/form.js";
 import "./frappe/form/fakeform.js";
 import "./frappe/meta_tag.js";
 import "./frappe/calendar_recurrence.js";
+import "./frappe/doctype/"
 
