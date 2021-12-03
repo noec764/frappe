@@ -230,9 +230,9 @@ export default class OnboardingWidget extends Widget {
 					},
 				});
 			};
-
+			const tour_name = step.form_tour;
 			frm.tour
-				.init({ on_finish })
+				.init({ tour_name, on_finish })
 				.then(() => frm.tour.start());
 		};
 
@@ -325,8 +325,9 @@ export default class OnboardingWidget extends Widget {
 					this.mark_complete(step);
 				};
 			};
+			const tour_name = step.form_tour;
 			frm.tour
-				.init({ on_finish })
+				.init({ tour_name, on_finish })
 				.then(() => frm.tour.start());
 		};
 
