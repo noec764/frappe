@@ -22,7 +22,7 @@ function prettyDate(date, mini) {
 				return __("{0} h", [Math.floor(diff / 3600)]);
 			}
 		} else {
-			if (day_diff < 7) {
+			if (day_diff < 14) {
 				return __("{0} d", [day_diff]);
 			} else if (day_diff < 31) {
 				return __("{0} w", [Math.floor(day_diff / 7)]);
