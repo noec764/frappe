@@ -9,6 +9,7 @@
 		const content = document.getElementsByClassName("page_content")[0]
 		const calendar = content.appendChild(document.createElement('div'))
 		const listview = content.getElementsByClassName("website-list")[0]
+		const header = document.getElementsByClassName("page-header")[0]
 
 		if (listview) {
 			listview.classList.add("d-block");
@@ -28,11 +29,13 @@
 					new frappe.events.EventsPortalView({
 						parent: document.getElementById("calendar-section")
 					})
+					header.innerHTML = '<h2>{{ _("All Events") }}</h2>'
 				} else {
 					switcher.innerHTML = __("Calendar view")
 					switcher.classList.replace("calendar-view", "list-view")
 					calendar.classList.replace("d-block", "d-none");
 					listview.classList.replace("d-none", "d-block");
+					header.innerHTML = '<h2>{{ _("Upcoming Events") }}</h2>'
 				}
 			})
 		} else {

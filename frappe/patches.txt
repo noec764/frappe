@@ -350,7 +350,6 @@ execute:frappe.delete_doc_if_exists('Page', 'dashboard', force=1)
 frappe.patches.v13_0.drop_unused_pages
 execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02
-execute:frappe.delete_doc("Web Form", dict(name="event", is_standard=1))
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version
@@ -362,3 +361,4 @@ frappe.patches.dokos.v2_0.correct_desk_shortcuts_color
 execute:frappe.db.set_value("System Settings", "System Settings", "restricted_jobs_logs", 1)
 frappe.patches.dokos.v2_0.add_masters_to_custom_workspaces
 frappe.patches.dokos.v2_2.slack_webhook_to_incoming_webhook
+frappe.patches.dokos.v2_3.remove_standard_event_webform
