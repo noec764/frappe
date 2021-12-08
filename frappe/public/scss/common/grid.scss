@@ -252,6 +252,13 @@
 		position: relative;
 	}
 
+	[data-fieldtype="Attach"],
+	[data-fieldtype="Attach Image"] {
+		.attached-file {
+			height: 39px;
+		}
+	}
+
 	.col-sm-6 {
 		.editor-toolbar-text-group,
 		.editor-toolbar-align-group {

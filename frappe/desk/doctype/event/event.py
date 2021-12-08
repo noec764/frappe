@@ -27,10 +27,7 @@ FIELD_MAP = {
 	"start": "starts_on",
 	"end": "ends_on",
 	"allDay": "all_day",
-	"title": "subject",
-	"description": "description",
-	"route": "route",
-	"published": "published"
+	"title": "subject"
 }
 
 class Event(WebsiteGenerator):
@@ -200,7 +197,7 @@ class Event(WebsiteGenerator):
 
 def get_list_context(context=None):
 	context.update({
-		"title": _('Events'),
+		"title": _('Upcoming Events'),
 		"no_cache": 1,
 		"no_breadcrumbs": True,
 		"show_sidebar": frappe.session.user != "Guest",
@@ -210,7 +207,7 @@ def get_list_context(context=None):
 	})
 
 def get_events_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"):
-	return get_prepared_events(nowdate(), add_days(nowdate(), 99999))
+	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True)
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
@@ -273,7 +270,7 @@ def send_event_digest():
 			)
 
 @frappe.whitelist()
-def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None):
+def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None, limit_start=0, limit_page_length=None, additional_condition=None):
 	if not user:
 		user = frappe.session.user
 
@@ -293,6 +290,8 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 	events = frappe.db.sql("""
 		SELECT `tabEvent`.name,
 				`tabEvent`.subject,
+				`tabEvent`.image,
+				`tabEvent`.status,
 				`tabEvent`.description,
 				`tabEvent`.color,
 				`tabEvent`.starts_on,
@@ -333,28 +332,33 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 						AND `tabDocShare`.user=%(user)s
 				)
 			)
-		ORDER BY `tabEvent`.starts_on""".format(
+		{additional_condition}
+		ORDER BY `tabEvent`.starts_on
+		{limit_condition}""".format(
 			additional_fields=additional_fields,
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
-			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else ""
+			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else "",
+			limit_condition = "LIMIT %s OFFSET %s" % (limit_page_length, limit_start) if limit_page_length else "",
+			additional_condition = additional_condition or ""
 		), {
 			"start": start,
 			"end": end,
 			"user": user,
 		}, as_dict=1)
 
-	# process recurring events
 	result = []
 	for event in events:
 		result.append(event)
 		if event.get("repeat_this_event"):
-			result = [x for x in result if x.get("name") != event.get("name")]
 			start = get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
 			end = get_datetime(end).replace(hour=23, minute=59, second=0) if event.get("all_day") else end
-			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
+			recurring_events = process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule")
+			if recurring_events:
+				result = [x for x in result if x.get("name") != event.get("name")]
+				result.extend(recurring_events)
 
-	return result
+	return sorted(result, key=lambda d: d['starts_on'])
 
 # Close events if ends_on or repeat_till is less than now_datetime
 def set_status_of_events():
@@ -527,15 +531,34 @@ def delete_event_in_google_calendar(doc, method=None):
 			).format(doc.name, err.resp.status))
 
 @frappe.whitelist(allow_guest=True)
-def get_prepared_events(start, end):
-	events = get_events(start, end, field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"})
+def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False):
 	roles = frappe.get_roles(frappe.session.user)
+	events = get_events(
+		start,
+		end,
+		filters={
+			"published": 1
+		},
+		additional_condition=f" AND (`tabEvent`.visible_for='All' OR (`tabEvent`.visible_for='Role' AND `tabEvent`.role in {tuple(roles)}))",
+		field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"},
+		limit_start=limit_start,
+		limit_page_length=limit_page_length
+	)
 
+	result = []
 	for event in events:
-		if event.get("published") and (event.get("visible_for") == "All" or (event.get("visible_for") == "Role" and event.get("role") in roles)):
-			for field in FIELD_MAP:
-				event.update({
-					field: event.get(FIELD_MAP[field])
-				})
+		for field in FIELD_MAP:
+			event.update({
+				field: event.get(FIELD_MAP[field])
+			})
 
-	return events
+		if merge_recurrences and event.get("repeat_this_event") and any(r['name'] == event.get("name") for r in result):
+			existing_event = next(r for r in result if r['name'] == event.get("name"))
+			if "recurrences" in existing_event:
+				existing_event["recurrences"].append(event)
+			else:
+				existing_event["recurrences"] = [event]
+		else:
+			result.append(frappe._dict(event))
+
+	return result

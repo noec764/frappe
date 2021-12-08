@@ -93,7 +93,6 @@ frappe.events.EventsPortalView = class EventsPortalView {
 		event.event.extendedProps.route&&dialog.set_primary_action(__("See details"), () => {
 			window.location.href = event.event.extendedProps.route;
 		})
-
 		dialog.fields_dict.event_description.$wrapper.html(event_details(event));
 		dialog.show()
 	}
@@ -101,14 +100,16 @@ frappe.events.EventsPortalView = class EventsPortalView {
 
 
 const event_details = (event) => {
-	const image = event.event.extendedProps.image ? `<img class="card-img-top" src="${event.event.extendedProps.image}" alt="${event.event.extendedProps.subject}">` : "";
-	const description = event.event.extendedProps.description ? `<p class="card-text">${event.event.extendedProps.description}</p>` : `<div>${__("No description")}</div>`;
+	const image = event.event.extendedProps.image ? `<div style="background: url(${event.event.extendedProps.image}) center/contain no-repeat;min-width: 10%;"></div>` : ""
+	const description = event.event.extendedProps.description ? event.event.extendedProps.description : `<div>${__("No description")}</div>`;
 	return `
 		<div class="calendar-event">
-			${image}
-			<div class="card-body">
-				<h5 class="card-title">${event.event.extendedProps.subject}</h5>
-				${description}
+			<div class="card-body flex justify-content-start">
+				${image}
+				<div class=${event.event.extendedProps.image ? "pl-2" : ""}>
+					<h5 class="card-title">${event.event.extendedProps.subject}</h5>
+					${description}
+				</div>
 			</div>
 		</div>
 	`
