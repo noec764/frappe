@@ -98,6 +98,9 @@ frappe.ready(function() {
 						if (field.fieldtype === "Link") {
 							field.only_select = true;
 						}
+						if (field.fieldname == "name") {
+							field.hidden = true;
+						}
 						field.is_web_form = true;
 						field.read_only = df.read_only ? df.read_only : (!is_new && !allow_edit);
 					});
