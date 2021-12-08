@@ -1377,5 +1377,18 @@ Object.assign(frappe.utils, {
 			return array;
 		}
 		return undefined;
+	},
+
+	// simple implementation of python's range
+	range(start, end) {
+		if (!end) {
+			end = start;
+			start = 0;
+		}
+		let arr = [];
+		for (let i = start; i < end; i++) {
+			arr.push(i);
+		}
+		return arr;
 	}
 });

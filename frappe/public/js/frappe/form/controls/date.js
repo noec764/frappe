@@ -76,7 +76,8 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 					.text(this.today_text);
 
 				this.update_datepicker_position();
-			}
+			},
+			...(this.get_df_options())
 		};
 	}
 
@@ -159,5 +160,21 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 			return '';
 		}
 		return value;
+	}
+
+	get_df_options() {
+		let options = {};
+		let df_options = this.df.options || '';
+		if (typeof df_options === 'string') {
+			try {
+				options = JSON.parse(df_options);
+			} catch (error) {
+				console.warn(`Invalid JSON in options of "${this.df.fieldname}"`);
+			}
+		}
+		else if (typeof df_options === 'object') {
+			options = df_options;
+		}
+		return options;
 	}
 };
