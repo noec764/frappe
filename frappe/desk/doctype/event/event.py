@@ -207,7 +207,7 @@ def get_list_context(context=None):
 	})
 
 def get_events_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"):
-	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True, ignore_permissions=True)
+	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True)
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
@@ -532,7 +532,7 @@ def delete_event_in_google_calendar(doc, method=None):
 			).format(doc.name, err.resp.status))
 
 @frappe.whitelist(allow_guest=True)
-def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False, ignore_permissions=False):
+def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False):
 	roles = frappe.get_roles(frappe.session.user)
 	roles_string = ', '.join(['"%s"'] * len(roles)) % tuple(roles)
 	events = get_events(
@@ -545,7 +545,7 @@ def get_prepared_events(start, end, limit_start=None, limit_page_length=None, me
 		field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"},
 		limit_start=limit_start,
 		limit_page_length=limit_page_length,
-		ignore_permissions=ignore_permissions
+		ignore_permissions=True
 	)
 
 	result = []
