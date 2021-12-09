@@ -207,7 +207,7 @@ def get_list_context(context=None):
 	})
 
 def get_events_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"):
-	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True)
+	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True, ignore_permissions=True)
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
@@ -270,7 +270,8 @@ def send_event_digest():
 			)
 
 @frappe.whitelist()
-def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None, limit_start=0, limit_page_length=None, additional_condition=None):
+def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None,
+	limit_start=0, limit_page_length=None, additional_condition=None, ignore_permissions=False):
 	if not user:
 		user = frappe.session.user
 
@@ -281,7 +282,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 	if field_map:
 		additional_fields = ", " + ", ".join([f"`tabEvent`.{f}" for f in frappe.parse_json(field_map).values()])
 
-	filter_condition = get_filters_cond('Event', filters, [])
+	filter_condition = get_filters_cond('Event', filters, [], ignore_permissions=ignore_permissions)
 
 	tables = ["`tabEvent`"]
 	if "`tabEvent Participants`" in filter_condition:
@@ -531,18 +532,20 @@ def delete_event_in_google_calendar(doc, method=None):
 			).format(doc.name, err.resp.status))
 
 @frappe.whitelist(allow_guest=True)
-def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False):
+def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False, ignore_permissions=False):
 	roles = frappe.get_roles(frappe.session.user)
+	roles_string = ', '.join(['"%s"'] * len(roles)) % tuple(roles)
 	events = get_events(
 		start,
 		end,
 		filters={
 			"published": 1
 		},
-		additional_condition=f" AND (`tabEvent`.visible_for='All' OR (`tabEvent`.visible_for='Role' AND `tabEvent`.role in {tuple(roles)}))",
+		additional_condition=f" AND (`tabEvent`.visible_for='All' OR (`tabEvent`.visible_for='Role' AND `tabEvent`.role in ({roles_string})))",
 		field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"},
 		limit_start=limit_start,
-		limit_page_length=limit_page_length
+		limit_page_length=limit_page_length,
+		ignore_permissions=ignore_permissions
 	)
 
 	result = []
