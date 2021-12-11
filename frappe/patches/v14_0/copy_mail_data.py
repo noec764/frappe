@@ -4,7 +4,6 @@ import frappe
 
 def execute():
 	frappe.reload_doc("email", "doctype", "imap_folder")
-	frappe.reload_doc("email", "doctype", "Email Flag Queue", force=True)
 	frappe.reload_doc("email", "doctype", "Email Account", force=True)
 
 	# patch for all Email Account with the flag use_imap
