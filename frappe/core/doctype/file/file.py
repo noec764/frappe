@@ -566,6 +566,23 @@ class File(Document):
 		frappe.local.rollback_observers.append(self)
 		self.save()
 
+	@staticmethod
+	def zip_files(files):
+		from six import string_types
+
+		zip_file = io.BytesIO()
+		zf = zipfile.ZipFile(zip_file, "w", zipfile.ZIP_DEFLATED)
+		for _file in files:
+			if isinstance(_file, string_types):
+				_file = frappe.get_doc("File", _file)
+			if not isinstance(_file, File):
+				continue
+			if _file.is_folder:
+				continue
+			zf.writestr(_file.file_name, _file.get_content())
+		zf.close()
+		return zip_file.getvalue()
+
 def on_doctype_update():
 	frappe.db.add_index("File", ["attached_to_doctype", "attached_to_name"])
 
@@ -607,6 +624,14 @@ def move_file(file_list, new_parent, old_parent):
 	# recalculate sizes
 	frappe.get_doc("File", old_parent).save()
 	frappe.get_doc("File", new_parent).save()
+
+@frappe.whitelist()
+def zip_files(files):
+	files = frappe.parse_json(files)
+	zipped_files = File.zip_files(files)
+	frappe.response["filename"] = "files.zip"
+	frappe.response["filecontent"] = zipped_files
+	frappe.response["type"] = "download"
 
 def setup_folder_path(filename, new_parent):
 	file = frappe.get_doc("File", filename)
