@@ -365,6 +365,7 @@ class ShortcutDialog extends WidgetDialog {
 				label: __("Color"),
 				options: indicator_colors,
 				default: "Gray",
+				input_class: "color-select",
 				onchange: () => {
 					let color = this.dialog.fields_dict.color.value.toLowerCase();
 					let $select = this.dialog.fields_dict.color.$input;

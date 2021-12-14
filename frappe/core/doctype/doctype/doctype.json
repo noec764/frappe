@@ -78,6 +78,8 @@
   "actions",
   "links_section",
   "links",
+  "document_states_section",
+  "states",
   "web_view",
   "has_web_view",
   "index_web_pages_for_search",
@@ -625,6 +627,18 @@
    "fieldname": "migration_hash",
    "fieldtype": "Data",
    "hidden": 1
+ },
+ {
+  "fieldname": "states",
+  "fieldtype": "Table",
+  "label": "States",
+  "options": "DocType State"
+ },
+ {
+  "collapsible": 1,
+  "fieldname": "document_states_section",
+  "fieldtype": "Section Break",
+  "label": "Document States"
  }
  ],
  "idx": 6,
@@ -705,7 +719,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2021-10-29 11:39:13.233403",
+ "modified": "2021-12-09 14:53:10.717788",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
