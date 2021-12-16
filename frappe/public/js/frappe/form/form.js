@@ -87,7 +87,7 @@ frappe.ui.form.Form = class FrappeForm {
 		});
 
 		// navigate records keyboard shortcuts
-		this.add_nav_keyboard_shortcuts();
+		this.add_form_keyboard_shortcuts();
 
 		// 2 column layout
 		this.setup_std_layout();
@@ -118,7 +118,8 @@ frappe.ui.form.Form = class FrappeForm {
 		this.setup_done = true;
 	}
 
-	add_nav_keyboard_shortcuts() {
+	add_form_keyboard_shortcuts() {
+		// Navigate to next record
 		frappe.ui.keys.add_shortcut({
 			shortcut: 'shift+ctrl+>',
 			action: () => this.navigate_records(0),
@@ -128,6 +129,7 @@ frappe.ui.form.Form = class FrappeForm {
 			condition: () => !this.is_new()
 		});
 
+		// Navigate to previous record
  		frappe.ui.keys.add_shortcut({
 			shortcut: 'shift+ctrl+<',
 			action: () => this.navigate_records(1),
@@ -135,6 +137,55 @@ frappe.ui.form.Form = class FrappeForm {
 			description: __('Go to previous record'),
 			ignore_inputs: true,
 			condition: () => !this.is_new()
+		});
+
+		let grid_shortcut_keys = [
+			{
+				'shortcut': 'Up Arrow',
+				'description': __('Move cursor to above row')
+			},
+			{
+				'shortcut': 'Down Arrow',
+				'description': __('Move cursor to below row')
+			},
+			{
+				'shortcut': 'tab',
+				'description': __('Move cursor to next column')
+			},
+			{
+				'shortcut': 'shift+tab',
+				'description': __('Move cursor to previous column')
+			},
+			{
+				'shortcut': 'Ctrl+up',
+				'description': __('Add a row above the current row')
+			},
+			{
+				'shortcut': 'Ctrl+down',
+				'description': __('Add a row below the current row')
+			},
+			{
+				'shortcut': 'Ctrl+shift+up',
+				'description': __('Add a row at the top')
+			},
+			{
+				'shortcut': 'Ctrl+shift+down',
+				'description': __('Add a row at the bottom')
+			},
+			{
+				'shortcut': 'shift+alt+down',
+				'description': __('To duplcate current row')
+			}
+		];
+
+		grid_shortcut_keys.forEach(row => {
+			frappe.ui.keys.add_shortcut({
+				shortcut: row.shortcut,
+				page: this,
+				description: __(row.description),
+				ignore_inputs: true,
+				condition: () => !this.is_new()
+			});
 		});
 	}
 
