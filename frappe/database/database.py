@@ -1,10 +1,8 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
 # Database Module
 # --------------------
-
-
 
 import re
 import time
@@ -23,6 +21,7 @@ from frappe.query_builder.functions import Min, Max, Avg, Sum
 from frappe.query_builder.utils import Column
 from .query import Query
 from pypika.terms import Criterion, PseudoColumn
+
 
 class Database(object):
 	"""
@@ -85,7 +84,7 @@ class Database(object):
 		pass
 
 	def sql(self, query, values=(), as_dict = 0, as_list = 0, formatted = 0,
-		debug=0, ignore_ddl=0, as_utf8=0, auto_commit=0, update=None,
+			debug=0, ignore_ddl=0, as_utf8=0, auto_commit=0, update=None,
 			explain=False, run=True, pluck=False):
 		"""Execute a SQL query and fetch all rows.
 
@@ -100,7 +99,6 @@ class Database(object):
 		:param auto_commit: Commit after executing the query.
 		:param update: Update this dict to all rows (if returned `as_dict`).
 		:param run: Returns query without executing it if False.
-
 		Examples:
 
 			# return customer names as dicts
@@ -262,6 +260,7 @@ class Database(object):
 		self.commit()
 		self.sql(query, debug=debug)
 
+
 	def check_transaction_status(self, query):
 		"""Raises exception if more than 20,000 `INSERT`, `UPDATE` queries are
 		executed in one transaction. This is to ensure that writes are always flushed otherwise this
@@ -336,8 +335,21 @@ class Database(object):
 		"""Returns `get_value` with fieldname='*'"""
 		return self.get_value(doctype, filters, "*", as_dict=as_dict, cache=cache)
 
-	def get_value(self, doctype, filters=None, fieldname="name", ignore=None, as_dict=False,
-		debug=False, order_by="KEEP_DEFAULT_ORDERING", cache=False, for_update=False, run=True, pluck=False):
+	def get_value(
+		self,
+		doctype,
+		filters=None,
+		fieldname="name",
+		ignore=None,
+		as_dict=False,
+		debug=False,
+		order_by="KEEP_DEFAULT_ORDERING",
+		cache=False,
+		for_update=False,
+		run=True,
+		pluck=False,
+		distinct=False,
+	):
 		"""Returns a document property or list of properties.
 
 		:param doctype: DocType name.
@@ -364,7 +376,7 @@ class Database(object):
 		"""
 
 		ret = self.get_values(doctype, filters, fieldname, ignore, as_dict, debug,
-			order_by, cache=cache, for_update=for_update, run=run, pluck=pluck)
+			order_by, cache=cache, for_update=for_update, run=run, pluck=pluck, distinct=distinct)
 
 		if not run:
 			return ret
@@ -373,7 +385,7 @@ class Database(object):
 
 	def get_values(self, doctype, filters=None, fieldname="name", ignore=None, as_dict=False,
 		debug=False, order_by="KEEP_DEFAULT_ORDERING", update=None, cache=False, for_update=False,
-		run=True, pluck=False):
+		run=True, pluck=False, distinct=False):
 		"""Returns multiple document properties.
 
 		:param doctype: DocType name.
@@ -382,7 +394,8 @@ class Database(object):
 		:param ignore: Don't raise exception if table, column is missing.
 		:param as_dict: Return values as dict.
 		:param debug: Print query in error log.
-		:param order_by: Column to order by
+		:param order_by: Column to order by,
+		:param distinct: Get Distinct results.
 
 		Example:
 
@@ -397,8 +410,20 @@ class Database(object):
 			(doctype, filters, fieldname) in self.value_cache:
 			return self.value_cache[(doctype, filters, fieldname)]
 
+		if distinct:
+			order_by = None
+
 		if isinstance(filters, list):
-			out = self._get_value_for_many_names(doctype, filters, fieldname, order_by, debug=debug, run=run, pluck=pluck)
+			out = self._get_value_for_many_names(
+				doctype,
+				filters,
+				fieldname,
+				order_by,
+				debug=debug,
+				run=run,
+				pluck=pluck,
+				distinct=distinct,
+			)
 
 		else:
 			fields = fieldname
@@ -423,6 +448,7 @@ class Database(object):
 						for_update=for_update,
 						run=run,
 						pluck=pluck,
+						distinct=distinct
 					)
 				except Exception as e:
 					if ignore and (frappe.db.is_missing_column(e) or frappe.db.is_table_missing(e)):
@@ -430,12 +456,12 @@ class Database(object):
 						out = None
 					elif (not ignore) and frappe.db.is_table_missing(e):
 						# table not found, look in singles
-						out = self.get_values_from_single(fields, filters, doctype, as_dict, debug, update, run=run)
+						out = self.get_values_from_single(fields, filters, doctype, as_dict, debug, update, run=run, distinct=distinct)
 
 					else:
 						raise
 			else:
-				out = self.get_values_from_single(fields, filters, doctype, as_dict, debug, update, run=run, pluck=pluck)
+				out = self.get_values_from_single(fields, filters, doctype, as_dict, debug, update, run=run, pluck=pluck, distinct=distinct)
 
 		if cache and isinstance(filters, str):
 			self.value_cache[(doctype, filters, fieldname)] = out
@@ -452,6 +478,7 @@ class Database(object):
 		update=None,
 		run=True,
 		pluck=False,
+		distinct=False,
 	):
 		"""Get values from `tabSingles` (Single DocTypes) (internal).
 
@@ -478,19 +505,15 @@ class Database(object):
 				return [map(values.get, fields)]
 
 		else:
-			r = self.sql(
-				"""select field, value
-				from `tabSingles` where field in (%s) and doctype=%s"""
-				% (", ".join(["%s"] * len(fields)), "%s"),
-				tuple(fields) + (doctype,),
-				as_dict=False,
-				debug=debug,
-				run=run,
-				pluck=pluck,
-			)
+			r = self.query.get_sql(
+				"Singles",
+				filters={"field": ("in", tuple(fields)), "doctype": doctype},
+				fields=["field", "value"],
+				distinct=distinct,
+			).run(pluck=pluck, debug=debug, as_dict=False)
+
 			if not run:
 				return r
-
 			if as_dict:
 				if r:
 					r = frappe._dict(r)
@@ -501,6 +524,7 @@ class Database(object):
 					return []
 			else:
 				return r and [[i[1] for i in r]] or []
+
 
 	def get_singles_dict(self, doctype, debug = False):
 		"""Get Single DocType as dict.
@@ -515,9 +539,7 @@ class Database(object):
 		result = self.query.get_sql(
 			"Singles", filters={"doctype": doctype}, fields=["field", "value"]
 		).run()
-
 		dict_  = frappe._dict(result)
-
 		return dict_
 
 	@staticmethod
@@ -580,6 +602,7 @@ class Database(object):
 		for_update=False,
 		run=True,
 		pluck=False,
+		distinct=False,
 	):
 		field_objects = []
 
@@ -597,6 +620,7 @@ class Database(object):
 			for_update=for_update,
 			field_objects=field_objects,
 			fields=fields,
+			distinct=distinct,
 		)
 		if (
 			fields == "*"
@@ -608,10 +632,9 @@ class Database(object):
 		r = self.sql(
 			query, as_dict=as_dict, debug=debug, update=update, run=run, pluck=pluck
 		)
-
 		return r
 
-	def _get_value_for_many_names(self, doctype, names, field, order_by, debug=False, run=True, pluck=False):
+	def _get_value_for_many_names(self, doctype, names, field, order_by, debug=False, run=True, pluck=False, distinct=False):
 		names = list(filter(None, names))
 		if names:
 			return self.get_all(
@@ -623,6 +646,7 @@ class Database(object):
 				debug=debug,
 				as_list=1,
 				run=run,
+				distinct=distinct,
 			)
 		else:
 			return {}
@@ -675,7 +699,6 @@ class Database(object):
 				self.sql("""update `tab{0}`
 					set {1} where name=%(name)s""".format(dt, ', '.join(set_values)),
 					values, debug=debug)
-
 		else:
 			# for singles
 			keys = list(to_update)
@@ -849,6 +872,7 @@ class Database(object):
 		query = self.query.get_sql(table=dt, filters=filters, fields=Count("*"))
 		if filters:
 			count = self.sql(query, debug=debug)[0][0]
+			return count
 		else:
 			count = self.sql(query, debug=debug)[0][0]
 			if cache:
@@ -971,20 +995,20 @@ class Database(object):
 	def delete(self, doctype: str, filters: Union[Dict, List] = None, debug=False, **kwargs):
 		"""Delete rows from a table in site which match the passed filters. This
 		does trigger DocType hooks. Simply runs a DELETE query in the database.
+
 		Doctype name can be passed directly, it will be pre-pended with `tab`.
 		"""
 		values = ()
 		filters = filters or kwargs.get("conditions")
 		query = self.query.build_conditions(table=doctype, filters=filters).delete()
-
 		if "debug" not in kwargs:
 			kwargs["debug"] = debug
-
 		return self.sql(query, values, **kwargs)
 
 	def truncate(self, doctype: str):
 		"""Truncate a table in the database. This runs a DDL command `TRUNCATE TABLE`.
 		This cannot be rolled back.
+
 		Doctype name can be passed directly, it will be pre-pended with `tab`.
 		"""
 		table = doctype if doctype.startswith("__") else f"tab{doctype}"
@@ -1031,6 +1055,7 @@ class Database(object):
 	def bulk_insert(self, doctype, fields, values, ignore_duplicates=False):
 		"""
 			Insert multiple records at a time
+
 			:param doctype: Doctype name
 			:param fields: list of fields
 			:params values: list of list of values

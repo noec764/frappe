@@ -1,9 +1,7 @@
 #  -*- coding: utf-8 -*-
 
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
-
 
 import unittest
 from random import choice
@@ -40,24 +38,50 @@ class TestDB(unittest.TestCase):
 				"User", Field("name") == "Administrator", for_update=True, run=False
 			).lower(),
 		)
-		doctype = frappe.qb.DocType("User")
+		user_doctype = frappe.qb.DocType("User")
 		self.assertEqual(
-			frappe.qb.from_(doctype).select(doctype.name, doctype.email).run(),
+			frappe.qb.from_(user_doctype).select(user_doctype.name, user_doctype.email).run(),
 			frappe.db.get_values(
-				doctype,
+				user_doctype,
 				filters={},
-				fieldname=[doctype.name, doctype.email],
+				fieldname=[user_doctype.name, user_doctype.email],
 				order_by=None,
 			),
 		)
-
 		self.assertEqual(frappe.db.sql("""SELECT name FROM `tabUser` WHERE name > 's' ORDER BY MODIFIED DESC""")[0][0],
 			frappe.db.get_value("User", {"name": [">", "s"]}))
 
 		self.assertEqual(frappe.db.sql("""SELECT name FROM `tabUser` WHERE name >= 't' ORDER BY MODIFIED DESC""")[0][0],
 			frappe.db.get_value("User", {"name": [">=", "t"]}))
+		self.assertEqual(
+			frappe.db.get_values(
+				"User",
+				filters={"name": "Administrator"},
+				distinct=True,
+				fieldname="email",
+			),
+			frappe.qb.from_(user_doctype)
+			.where(user_doctype.name == "Administrator")
+			.select("email")
+			.distinct()
+			.run(),
+		)
 
-		self.assertIn("concat_ws", frappe.db.get_value("User", filters={"name": "Administrator"}, fieldname=Concat_ws(" ", "LastName"), run=False).lower())
+		self.assertIn(
+			"concat_ws",
+			frappe.db.get_value(
+				"User",
+				filters={"name": "Administrator"},
+				fieldname=Concat_ws(" ", "LastName"),
+				run=False,
+			).lower(),
+		)
+		self.assertEqual(
+			frappe.db.sql("select email from tabUser where name='Administrator' order by modified DESC"),
+			frappe.db.get_values(
+				"User", filters=[["name", "=", "Administrator"]], fieldname="email"
+			),
+		)
 
 	def test_set_value(self):
 		todo1 = frappe.get_doc(dict(doctype='ToDo', description = 'test_set_value 1')).insert()
@@ -141,6 +165,7 @@ class TestDB(unittest.TestCase):
 		frappe.flags.in_migrate = False
 		frappe.flags.touched_tables.clear()
 
+
 	def test_db_keywords_as_fields(self):
 		"""Tests if DB keywords work as docfield names. If they're wrapped with grave accents."""
 		# Using random.choices, picked out a list of 40 keywords for testing
@@ -160,7 +185,7 @@ class TestDB(unittest.TestCase):
 
 		# edit by rushabh: added [:1]
 		# don't run every keyword! - if one works, they all do
-		fields = all_keywords[frappe.conf.db_type or "mariadb"][:1]
+		fields = all_keywords[frappe.conf.db_type][:1]
 		test_doctype = "ToDo"
 
 		def add_custom_field(field):
@@ -219,6 +244,7 @@ class TestDB(unittest.TestCase):
 		for doc in created_docs:
 			frappe.delete_doc(test_doctype, doc)
 		clear_custom_fields(test_doctype)
+
 
 @run_only_if(db_type_is.MARIADB)
 class TestDDLCommandsMaria(unittest.TestCase):
