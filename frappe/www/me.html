@@ -33,6 +33,16 @@
 				</div>
 			</li>
 			{% endif %}
+			{% if frappe.db.get_single_value("Website Settings", "show_account_deletion_link") %}
+			<li>
+				<div class="card">
+					<div class="card-body">
+						<h5 class="card-title">{{ _("Account Deletion") }}</h5>
+						<a href="/request-for-account-deletion?new=1">{{ _("Request for Account Deletion") }}</a>
+					</div>
+				</div>
+			</li>
+			{% endif %}
 		</ul>
 	</div>
 </div>

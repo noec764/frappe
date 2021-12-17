@@ -253,7 +253,8 @@ scheduler_events = {
 		"frappe.core.doctype.scheduled_job_log.scheduled_job_log.flush",
 		"frappe.core.doctype.prepared_report.prepared_report.delete_expired_prepared_reports",
 		"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
-		"frappe.email.doctype.email_group.email_group.auto_update_email_groups"
+		"frappe.email.doctype.email_group.email_group.auto_update_email_groups",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request"
 	],
 	"daily_long": [
 		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
