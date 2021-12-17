@@ -193,7 +193,6 @@ frappe.ui.form.Control = class BaseControl {
 				}
 			]);
 		};
-
 		value = this.validate(value);
 		if (value && value.then) {
 			// got a promise

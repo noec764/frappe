@@ -10,6 +10,7 @@ context('Control Rating', () => {
 			fields: [{
 				'fieldname': 'rate',
 				'fieldtype': 'Rating',
+				'options': 7
 			}]
 		});
 	}
@@ -39,5 +40,14 @@ context('Control Rating', () => {
 			.should('have.class', 'star-hover')
 			.invoke('trigger', 'mouseleave')
 			.should('not.have.class', 'star-hover');
+	});
+
+	it('check number of stars in rating', () => {
+		get_dialog_with_rating();
+
+		cy.get('div.rating')
+			.first()
+			.children('svg')
+			.should('have.length', 7);
 	});
 });
