@@ -800,7 +800,7 @@ def setup_user_email_inbox(email_account, awaiting_password, email_id, enable_ou
 	if update_user_email_settings:
 		UserEmail = frappe.qb.DocType("User Email")
 		frappe.qb.update(UserEmail) \
-			.set(UserEmail.awaiting_password, awaiting_password or 0) \
+			.set(UserEmail.awaiting_password, (awaiting_password or 0)) \
 			.set(UserEmail.enable_outgoing, enable_outgoing) \
 			.where(UserEmail.email_account == email_account).run()
 	else:
