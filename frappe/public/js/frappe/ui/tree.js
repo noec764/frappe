@@ -295,7 +295,6 @@ frappe.ui.Tree = class {
 				.appendTo($toolbar);
 			$link.on('click', () => {
 				obj.click(node);
-				this.refresh();
 			});
 		});
 
