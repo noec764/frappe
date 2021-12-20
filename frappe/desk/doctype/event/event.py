@@ -250,7 +250,7 @@ def has_permission(doc, user):
 def send_event_digest():
 	today = nowdate()
 	for user in get_enabled_system_users():
-		events = get_events(today, today, user.name, for_reminder=True)
+		events = get_events(today, today, user.name, filters={"status": ("not in", ("Closed", "Cancelled"))}, for_reminder=True)
 		if events:
 			frappe.set_user_lang(user.name, user.language)
 
