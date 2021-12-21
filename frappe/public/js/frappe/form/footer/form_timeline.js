@@ -4,6 +4,7 @@ import BaseTimeline from "./base_timeline";
 import { get_version_timeline_content } from "./version_timeline_content_builder";
 
 class FormTimeline extends BaseTimeline {
+
 	make() {
 		super.make();
 		this.setup_timeline_actions();
@@ -39,9 +40,6 @@ class FormTimeline extends BaseTimeline {
 
 	setup_activity_toggle() {
 		let doc_info = this.doc_info || this.frm.get_docinfo();
-
-		this.document_email_link_wrapper && this.document_email_link_wrapper.remove();
-
 		let has_communications = () => {
 			let communications = doc_info.communications;
 			let comments = doc_info.comments;
@@ -71,6 +69,8 @@ class FormTimeline extends BaseTimeline {
 
 	setup_document_email_link() {
 		let doc_info = this.doc_info || this.frm.get_docinfo();
+
+		this.document_email_link_wrapper && this.document_email_link_wrapper.remove();
 
 		if (doc_info.document_email) {
 			const link = `<a class="document-email-link">${doc_info.document_email}</a>`;
@@ -149,7 +149,7 @@ class FormTimeline extends BaseTimeline {
 
 	get_user_link(user) {
 		const user_display_text = (
-			(frappe.session.user == user ? "You" : frappe.user_info(user).fullname) || ''
+			(frappe.session.user == user ? __("You") : frappe.user_info(user).fullname) || ''
 		).bold();
 		return frappe.utils.get_form_link('User', user, true, user_display_text);
 	}
@@ -347,7 +347,7 @@ class FormTimeline extends BaseTimeline {
 				icon_size: 'sm',
 				creation: like_log.creation,
 				content: __('{0} Liked', [this.get_user_link(like_log.owner)]),
-				title: "Like",
+				title: __("Like"),
 			});
 		});
 		return like_timeline_contents;
@@ -452,7 +452,6 @@ class FormTimeline extends BaseTimeline {
 		let edit_box = this.make_editable(edit_wrapper);
 		let content_wrapper = comment_wrapper.find('.content');
 		let more_actions_wrapper = comment_wrapper.find('.more-actions');
-
 		if (frappe.model.can_delete("Comment")) {
 			const delete_option = $(`
 				<li>

@@ -522,13 +522,13 @@ frappe.request.report_error = function(xhr, request_opts) {
 		var communication_composer = new frappe.views.CommunicationComposer({
 			subject: 'Error Report [' + frappe.datetime.nowdate() + ']',
 			recipients: error_report_email,
-			message: error_report_message,
+			txt: error_report_message,
 			doc: {
 				doctype: "User",
 				name: frappe.session.user
 			}
 		});
-		communication_composer.dialog.$wrapper.css("z-index", cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1);
+		frappe.msg_dialog&&communication_composer.dialog.$wrapper.css("z-index", cint(frappe.msg_dialog.$wrapper.css("z-index")) + 1);
 	}
 
 	if (exc) {

@@ -1,21 +1,15 @@
 // Copyright (c) 2020, Dokos SAS and Contributors
 // See license.txt
 
+frappe.provide("frappe.events")
+
 import { Calendar } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
-frappe.ready(function() {
-	frappe.provide("frappe.events");
-	frappe.events.EventsPortalView = new EventsPortalView({
-		parent: document.getElementById("events-calendar")
-	});
-
-});
-
-class EventsPortalView {
+frappe.events.EventsPortalView = class EventsPortalView {
 	constructor(options) {
 		Object.assign(this, options);
 		this.show()
@@ -31,10 +25,9 @@ class EventsPortalView {
 	}
 
 	build_calendar() {
-		this.calendarEl = $('<div id="calendar">').appendTo(this.parent);
-		this.eventEl = $('<div id="event">').appendTo(this.parent);
+		const calendarEl = $('<div></div>').appendTo($(this.parent));
 		this.fullcalendar = new Calendar(
-			this.calendarEl[0],
+			calendarEl[0],
 			this.calendar_options()
 		)
 		this.fullcalendar.render();
@@ -43,11 +36,12 @@ class EventsPortalView {
 	calendar_options() {
 		return {
 			eventClassNames: "events-calendar",
+			contentHeight: "auto",
 			initialView: frappe.is_mobile() ? "listDay" : "dayGridMonth",
 			headerToolbar: {
 				left: frappe.is_mobile() ? 'today' : 'dayGridMonth,timeGridWeek',
 				center: "prev,title,next",
-				right: frappe.is_mobile() ? "" : "prev,next today",
+				right: frappe.is_mobile() ? "" : "today",
 			},
 			weekends: true,
 			buttonText: {
@@ -62,15 +56,15 @@ class EventsPortalView {
 				interactionPlugin,
 				listPlugin
 			],
-			locale: frappe.boot.lang || 'en',
+			locale: frappe.get_cookie('preferred_language') || frappe.boot.lang || 'en',
 			timeZone: frappe.boot.timeZone || 'UTC',
 			events: this.getEvents,
 			eventClick: this.eventClick,
 			selectable: true,
+			noEventsContent: __("No events to display"),
 			allDayContent: function() {
 				return __("All Day");
-			},
-			height: "auto"
+			}
 		}
 	}
 
@@ -99,7 +93,6 @@ class EventsPortalView {
 		event.event.extendedProps.route&&dialog.set_primary_action(__("See details"), () => {
 			window.location.href = event.event.extendedProps.route;
 		})
-
 		dialog.fields_dict.event_description.$wrapper.html(event_details(event));
 		dialog.show()
 	}
@@ -107,14 +100,16 @@ class EventsPortalView {
 
 
 const event_details = (event) => {
-	const image = event.event.extendedProps.image ? `<img class="card-img-top" src="${event.event.extendedProps.image}" alt="${event.event.extendedProps.subject}">` : "";
-	const description = event.event.extendedProps.description ? `<p class="card-text">${event.event.extendedProps.description}</p>` : `<div>${__("No description")}</div>`;
+	const image = event.event.extendedProps.image ? `<div style="background: url(${event.event.extendedProps.image}) center/contain no-repeat;min-width: 10%;"></div>` : ""
+	const description = event.event.extendedProps.description ? event.event.extendedProps.description : `<div>${__("No description")}</div>`;
 	return `
 		<div class="calendar-event">
-			${image}
-			<div class="card-body">
-				<h5 class="card-title">${event.event.extendedProps.subject}</h5>
-				${description}
+			<div class="card-body flex justify-content-start">
+				${image}
+				<div class=${event.event.extendedProps.image ? "pl-2" : ""}>
+					<h5 class="card-title">${event.event.extendedProps.subject}</h5>
+					${description}
+				</div>
 			</div>
 		</div>
 	`

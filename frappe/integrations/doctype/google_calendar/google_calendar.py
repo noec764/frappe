@@ -2,14 +2,13 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 from urllib.parse import quote
 import json
 import arrow
 
 import google.oauth2.credentials
 import requests
-from dateutil import parser
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -17,8 +16,7 @@ import frappe
 from frappe import _
 from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.model.document import Document
-from frappe.utils import (add_days, add_to_date, get_datetime,
-	get_request_site_address, get_time_zone, get_weekdays, now_datetime, convert_utc_to_user_timezone)
+from frappe.utils import (get_datetime, get_request_site_address, get_time_zone, convert_utc_to_user_timezone)
 from frappe.utils.password import set_encrypted_password
 
 SCOPES = "https://www.googleapis.com/auth/calendar"

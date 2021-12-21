@@ -3,15 +3,16 @@
 import frappe
 import json
 
-from frappe.utils import (getdate, cint, add_months, date_diff, add_days,
-	nowdate, get_datetime_str, cstr, get_datetime, now_datetime, format_datetime)
+from googleapiclient.errors import HttpError
+
+from frappe.utils import (getdate, cint, nowdate, get_datetime, now_datetime, format_datetime, add_days)
 from frappe import _
 from frappe.website.website_generator import WebsiteGenerator
 from frappe.utils.user import get_enabled_system_users
 from frappe.desk.reportview import get_filters_cond
 from frappe.desk.calendar import process_recurring_events
-from frappe.integrations.doctype.google_calendar.google_calendar import get_google_calendar_object, \
-	format_date_according_to_google_calendar, get_timezone_naive_datetime
+from frappe.integrations.doctype.google_calendar.google_calendar import (get_google_calendar_object,
+	format_date_according_to_google_calendar, get_timezone_naive_datetime)
 from frappe.www.printview import get_html_and_style
 from frappe.desk.doctype.notification_settings.notification_settings import is_email_notifications_enabled_for_type
 
@@ -23,10 +24,7 @@ FIELD_MAP = {
 	"start": "starts_on",
 	"end": "ends_on",
 	"allDay": "all_day",
-	"title": "subject",
-	"description": "description",
-	"route": "route",
-	"published": "published"
+	"title": "subject"
 }
 
 class Event(WebsiteGenerator):
@@ -182,7 +180,7 @@ class Event(WebsiteGenerator):
 				fields.append(field)
 
 		context.registration_form = frappe.as_json(fields)
-		context.is_registered = frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
+		context.is_registered = frappe.session.user != "Guest" and frappe.db.exists("Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1))
 
 		context.attachments = frappe.get_all("File", fields=["name", "file_name", "file_url"],
 			filters = {"attached_to_name": self.name, "attached_to_doctype": "Event", "is_private": 0}) if self.display_public_files else []
@@ -193,6 +191,20 @@ class Event(WebsiteGenerator):
 
 	def show_permission_error(self):
 		frappe.throw(_("This event is not publicly available"), frappe.PermissionError)
+
+def get_list_context(context=None):
+	context.update({
+		"title": _('Upcoming Events'),
+		"no_cache": 1,
+		"no_breadcrumbs": True,
+		"show_sidebar": frappe.session.user != "Guest",
+		"get_list": get_events_list,
+		"row_template": "desk/doctype/event/templates/event_row.html",
+		"header_action": frappe.render_template("desk/doctype/event/templates/event_list_action.html", {})
+	})
+
+def get_events_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"):
+	return get_prepared_events(nowdate(), add_days(nowdate(), 365), limit_start, limit_page_length, merge_recurrences=True)
 
 @frappe.whitelist()
 def delete_communication(event, reference_doctype, reference_docname):
@@ -247,7 +259,7 @@ def send_event_digest():
 			for e in events:
 				e.starts_on = format_datetime(e.starts_on, 'hh:mm a')
 				if e.all_day:
-					e.starts_on = "All Day"
+					e.starts_on = _("All Day")
 
 			frappe.sendmail(
 				recipients=user.email,
@@ -260,7 +272,8 @@ def send_event_digest():
 			)
 
 @frappe.whitelist()
-def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None):
+def get_events(start, end, user=None, for_reminder=False, filters=None, field_map=None,
+	limit_start=0, limit_page_length=None, additional_condition=None, ignore_permissions=False):
 	if not user:
 		user = frappe.session.user
 
@@ -271,7 +284,7 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 	if field_map:
 		additional_fields = ", " + ", ".join([f"`tabEvent`.{f}" for f in frappe.parse_json(field_map).values()])
 
-	filter_condition = get_filters_cond('Event', filters, [])
+	filter_condition = get_filters_cond('Event', filters, [], ignore_permissions=ignore_permissions)
 
 	tables = ["`tabEvent`"]
 	if "`tabEvent Participants`" in filter_condition:
@@ -280,6 +293,8 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 	events = frappe.db.sql("""
 		SELECT `tabEvent`.name,
 				`tabEvent`.subject,
+				`tabEvent`.image,
+				`tabEvent`.status,
 				`tabEvent`.description,
 				`tabEvent`.color,
 				`tabEvent`.starts_on,
@@ -320,28 +335,33 @@ def get_events(start, end, user=None, for_reminder=False, filters=None, field_ma
 						AND `tabDocShare`.user=%(user)s
 				)
 			)
-		ORDER BY `tabEvent`.starts_on""".format(
+		{additional_condition}
+		ORDER BY `tabEvent`.starts_on
+		{limit_condition}""".format(
 			additional_fields=additional_fields,
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
-			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else ""
+			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else "",
+			limit_condition = "LIMIT %s OFFSET %s" % (limit_page_length, limit_start) if limit_page_length else "",
+			additional_condition = additional_condition or ""
 		), {
 			"start": start,
 			"end": end,
 			"user": user,
 		}, as_dict=1)
 
-	# process recurring events
 	result = []
 	for event in events:
 		result.append(event)
 		if event.get("repeat_this_event"):
-			result = [x for x in result if x.get("name") != event.get("name")]
 			start = get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
 			end = get_datetime(end).replace(hour=23, minute=59, second=0) if event.get("all_day") else end
-			result.extend(process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule"))
+			recurring_events = process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule")
+			if recurring_events:
+				result = [x for x in result if x.get("name") != event.get("name")]
+				result.extend(recurring_events)
 
-	return result
+	return sorted(result, key=lambda d: d['starts_on'])
 
 # Close events if ends_on or repeat_till is less than now_datetime
 def set_status_of_events():
@@ -373,7 +393,8 @@ def insert_event_to_calendar(account, event, recurrence=None):
 			else get_timezone_naive_datetime(start),
 		"ends_on": get_datetime(end.get("date")) if end.get("date") else get_timezone_naive_datetime(end),
 		"all_day": 1 if start.get("date") else 0,
-		"repeat_this_event": 1 if recurrence else 0
+		"repeat_this_event": 1 if recurrence else 0,
+		"owner": account.user
 	}
 	doc = frappe.get_doc(calendar_event)
 	doc.flags.pulled_from_google_calendar = True
@@ -491,7 +512,7 @@ def delete_event_in_google_calendar(doc, method=None):
 	"""
 
 	if not frappe.db.exists("Google Calendar", {"name": doc.google_calendar}) \
-		or doc.flags.pulled_from_google_calendar:
+		or doc.flags.pulled_from_google_calendar or not doc.google_calendar_event_id:
 		return
 
 	google_calendar, account = get_google_calendar_object(doc.google_calendar)
@@ -513,15 +534,36 @@ def delete_event_in_google_calendar(doc, method=None):
 			).format(doc.name, err.resp.status))
 
 @frappe.whitelist(allow_guest=True)
-def get_prepared_events(start, end):
-	events = get_events(start, end, field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"})
+def get_prepared_events(start, end, limit_start=None, limit_page_length=None, merge_recurrences=False):
 	roles = frappe.get_roles(frappe.session.user)
+	roles_string = ', '.join(['"%s"'] * len(roles)) % tuple(roles)
+	events = get_events(
+		start,
+		end,
+		filters={
+			"published": 1
+		},
+		additional_condition=f" AND (`tabEvent`.visible_for='All' OR (`tabEvent`.visible_for='Role' AND `tabEvent`.role in ({roles_string})))",
+		field_map={"route": "route", "published": "published", "image": "image", "visible_for": "visible_for", "role": "role"},
+		limit_start=limit_start,
+		limit_page_length=limit_page_length,
+		ignore_permissions=True
+	)
 
+	result = []
 	for event in events:
-		if event.get("published") and (event.get("visible_for") == "All" or (event.get("visible_for") == "Role" and event.get("role") in roles)):
-			for field in FIELD_MAP:
-				event.update({
-					field: event.get(FIELD_MAP[field])
-				})
+		for field in FIELD_MAP:
+			event.update({
+				field: event.get(FIELD_MAP[field])
+			})
 
-	return events
+		if merge_recurrences and event.get("repeat_this_event") and any(r['name'] == event.get("name") for r in result):
+			existing_event = next(r for r in result if r['name'] == event.get("name"))
+			if "recurrences" in existing_event:
+				existing_event["recurrences"].append(event)
+			else:
+				existing_event["recurrences"] = [event]
+		else:
+			result.append(frappe._dict(event))
+
+	return result

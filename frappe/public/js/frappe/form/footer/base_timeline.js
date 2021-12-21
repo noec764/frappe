@@ -46,7 +46,6 @@ class BaseTimeline {
 		this.timeline_items = [];
 		this.doc_info = this.frm && this.frm.get_docinfo() || {};
 		let response = this.prepare_timeline_contents();
-
 		if (response instanceof Promise) {
 			response.then(() => {
 				this.timeline_items.sort((item1, item2) =>  new Date(item2.creation) - new Date(item1.creation));

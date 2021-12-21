@@ -215,8 +215,9 @@ body.modal-open[style^="padding-right"] {
 			margin-bottom: 0px;
 		}
 		.frappe-control:last-child {
+			flex: 1;
 			margin-left: 10px;
-			margin-bottom: -24px;
+			// margin-bottom: -24px;
 			button {
 				// same as form-control input
 				height: calc(1.5em + .75rem + 2px);

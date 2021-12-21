@@ -239,6 +239,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			"image": __("Image"),
 			"orderedlist": __("Ordered list"),
 			"bulletlist": __("Bullet list"),
+			"checklist": __("Check list"),
 			"align": __("Align"),
 			"indent": __("Indent"),
 			"table": __("Add a table"),

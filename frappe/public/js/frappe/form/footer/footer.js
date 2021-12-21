@@ -1,6 +1,5 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
-
 import FormTimeline from "./form_timeline";
 
 frappe.ui.form.Footer = class FormFooter {
@@ -42,7 +41,7 @@ frappe.ui.form.Footer = class FormFooter {
 						content: comment,
 						comment_email: frappe.session.user,
 						comment_by: frappe.session.user_fullname
-					}).then((r) => {
+					}).then((comment) => {
 						let comment_item = this.frm.timeline.get_comment_timeline_item(comment);
 						this.frm.comment_box.set_value('');
 						frappe.utils.play_sound("click");

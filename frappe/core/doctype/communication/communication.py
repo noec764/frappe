@@ -451,10 +451,14 @@ def get_email_without_link(email):
 		return email
 
 	try:
-		email_id = email.split("@")[0].split("+")[0]
+		split_email = email.split("@")[0].split("+")
+		if not len(split_email) >= 3:
+			return email
+
+		email_id = split_email[0] if len(split_email) == 3 else "+".join(split_email[:-2])
 		email_host = email.split("@")[1]
 	except Exception:
-		return
+		return email
 
 	return "{0}@{1}".format(email_id, email_host)
 

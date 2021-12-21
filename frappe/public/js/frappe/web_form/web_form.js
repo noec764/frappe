@@ -166,7 +166,8 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					}
 				}
 			},
-			always: function() {
+			always: () => {
+				this.disable_enable_save_btns(true)
 				window.saving = false;
 			}
 		});

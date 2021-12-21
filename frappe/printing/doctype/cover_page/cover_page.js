@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Cover Page', {
-	setup: function(frm) {
+	refresh: function(frm) {
 		frm.get_field('cover_page').df.options = {
 			restrictions: {
 				allowed_file_types: ['application/pdf']

@@ -96,13 +96,14 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2020-11-20 18:05:48.495676",
+ "modified": "2021-11-22 15:03:45.269567",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event Registration",
  "owner": "Administrator",
  "permissions": [
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -112,6 +113,7 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {
@@ -127,6 +129,7 @@
    "write": 1
   },
   {
+   "cancel": 1,
    "create": 1,
    "delete": 1,
    "email": 1,
@@ -136,6 +139,7 @@
    "report": 1,
    "role": "Venue Manager",
    "share": 1,
+   "submit": 1,
    "write": 1
   },
   {

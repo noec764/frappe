@@ -69,3 +69,10 @@ article {
 		font-size:1.125rem;
 	}
 }
+
+.event-row-content {
+	display: flex;
+	flex-basis: 100%;
+	flex-shrink: 0;
+	justify-content: space-between;
+}
