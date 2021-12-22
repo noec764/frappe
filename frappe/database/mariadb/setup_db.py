@@ -94,7 +94,7 @@ def bootstrap_database(db_name, verbose, source_sql=None):
 	import_db_from_sql(source_sql, verbose)
 
 	frappe.connect(db_name=db_name)
-	if 'tabDefaultValue' not in frappe.db.get_tables():
+	if 'tabDefaultValue' not in frappe.db.get_tables(cached=False):
 		from click import secho
 		secho(
 			"Table 'tabDefaultValue' missing in the restored site. "
