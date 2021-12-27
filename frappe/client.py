@@ -31,6 +31,7 @@ def get_list(doctype, fields=None, filters=None, order_by=None,
 
 	args = frappe._dict(
 		doctype=doctype,
+		parent_doctype=parent,
 		fields=fields,
 		filters=filters,
 		or_filters=or_filters,
