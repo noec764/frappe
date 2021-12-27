@@ -162,11 +162,11 @@
 .layout-main-section {
 	.frappe-list, .report-wrapper {
 		padding: 0 var(--padding-xs);
-	}
 
-	//.result,
-	.no-result, .freeze {
-		min-height: #{"calc(100vh - 284px)"};
+		// .result,
+		.no-result, .freeze {
+			min-height: #{"calc(100vh - 284px)"};
+		}
 	}
 
 	.msg-box {
@@ -181,6 +181,9 @@
 			img {
 				fill: var(--fg-color);
 			}
+		}
+		p {
+			font-size: var(--text-md);
 		}
 
 		.meta-description {
