@@ -102,7 +102,7 @@ frappe.ui.Slide = class Slide {
 			this.$content.append($(`<img src="${this.image_src}" style="margin: 20px;">`));
 		}
 		if (this.help) {
-			this.$content.append($(`<p class="slide-help">${this.help}</p>`));
+			this.$content.append($(`<p class="slide-help">${__(this.help)}</p>`));
 		}
 
 		this.reqd_fields = [];
@@ -489,6 +489,7 @@ frappe.ui.Slides = class Slides {
 
 	refresh(id) {
 		this.render_progress_dots();
+		this.make_prev_next_buttons();
 		this.show_hide_prev_next(id);
 		this.current_slide && this.current_slide.refresh();
 	}
