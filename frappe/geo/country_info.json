@@ -1804,10 +1804,10 @@
  },
  "New Caledonia": {
   "code": "nc",
-  "currency_fraction": "Centime",
-  "currency_fraction_units": 100,
-  "currency_symbol": "Fr",
-  "number_format": "#,###.##",
+  "currency": "XPF",
+  "currency_name": "CFP franc",
+  "currency_symbol": "₣",
+  "number_format": "# ###,##",
   "timezones": [
    "Pacific/Noumea"
   ]
