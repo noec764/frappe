@@ -322,7 +322,7 @@ def send_summary(timespan):
 	to_date = getdate()
 
 	# select only those users that have energy point email notifications enabled
-	all_users = [user.email for user in get_enabled_system_users() if
+	all_users = [user for user in get_enabled_system_users() if
 		is_email_notifications_enabled_for_type(user.name, 'Energy Point')]
 
 	for user in all_users:
