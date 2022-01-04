@@ -514,6 +514,7 @@ docfield_properties = {
 	'options': 'Text',
 	'fetch_from': 'Small Text',
 	'fetch_if_empty': 'Check',
+	'show_dashboard': 'Check',
 	'permlevel': 'Int',
 	'width': 'Data',
 	'print_width': 'Data',
