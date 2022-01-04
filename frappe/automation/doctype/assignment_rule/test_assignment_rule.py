@@ -1,14 +1,22 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 
+import unittest
 
 import frappe
-import unittest
-from frappe.utils import random_string
 from frappe.test_runner import make_test_records
+from frappe.utils import random_string
+
 
 class TestAutoAssign(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls):
+		frappe.db.delete("Assignment Rule")
+
+	@classmethod
+	def tearDownClass(cls):
+		frappe.db.rollback()
+
 	def setUp(self):
 		make_test_records("User")
 		days = [
@@ -100,7 +108,7 @@ class TestAutoAssign(unittest.TestCase):
 			reference_type = 'Note',
 			reference_name = note.name,
 			status = 'Open'
-		), 'allocated_to'), 'test1@example.com')
+		), 'owner'), 'test1@example.com')
 
 		frappe.set_user('test2@example.com')
 		note = make_note(dict(public=1))
@@ -109,7 +117,7 @@ class TestAutoAssign(unittest.TestCase):
 			reference_type = 'Note',
 			reference_name = note.name,
 			status = 'Open'
-		), 'allocated_to'), 'test2@example.com')
+		), 'owner'), 'test2@example.com')
 
 		frappe.set_user('Administrator')
 
@@ -131,7 +139,7 @@ class TestAutoAssign(unittest.TestCase):
 			reference_type = 'Note',
 			reference_name = note.name,
 			status = 'Open'
-		))[0]
+		), limit=1)[0]
 
 		todo = frappe.get_doc('ToDo', todo['name'])
 		self.assertEqual(todo.allocated_to, 'test@example.com')
@@ -153,7 +161,7 @@ class TestAutoAssign(unittest.TestCase):
 			reference_type = 'Note',
 			reference_name = note.name,
 			status = 'Open'
-		))[0]
+		), limit=1)[0]
 
 		todo = frappe.get_doc('ToDo', todo['name'])
 		self.assertEqual(todo.allocated_to, 'test@example.com')

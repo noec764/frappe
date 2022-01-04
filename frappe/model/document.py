@@ -497,10 +497,12 @@ class Document(BaseDocument):
 		self._original_modified = self.modified
 		self.modified = now()
 		self.modified_by = frappe.session.user
-		if not self.creation:
-			self.creation = self.modified
+
+		# We'd probably want the creation and owner to be set via API
+		# or Data import at some point, that'd have to be handled here
 		if self.is_new():
-			self.owner = self.flags.owner or self.modified_by
+			self.creation = self.modified
+			self.owner = self.modified_by
 
 		for d in self.get_all_children():
 			d.modified = self.modified
@@ -530,7 +532,6 @@ class Document(BaseDocument):
 		self._sanitize_content()
 		self._save_passwords()
 		self.validate_workflow()
-		self.validate_owner()
 
 		children = self.get_all_children()
 		for d in children:
@@ -573,11 +574,6 @@ class Document(BaseDocument):
 			if not self._action == 'save':
 				set_workflow_state_on_action(self, workflow, self._action)
 
-	def validate_owner(self):
-		"""Validate if the owner of the Document has changed"""
-		if not self.is_new() and self.has_value_changed('owner'):
-			frappe.throw(_('Document owner cannot be changed'))
-
 	def validate_set_only_once(self):
 		"""Validate that fields are not changed if not in insert"""
 		set_only_once_fields = self.meta.get_set_only_once_fields()
@@ -597,8 +593,12 @@ class Document(BaseDocument):
 					fail = value != original_value
 
 				if fail:
-					frappe.throw(_("Value cannot be changed for {0}").format(self.meta.get_label(field.fieldname)),
-						frappe.CannotChangeConstantError)
+					frappe.throw(
+						_("Value cannot be changed for {0}").format(
+							frappe.bold(self.meta.get_label(field.fieldname))
+						),
+						exc=frappe.CannotChangeConstantError
+					)
 
 		return False
 
