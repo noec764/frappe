@@ -200,6 +200,7 @@ frappe.patches.v14_0.update_github_endpoints
 frappe.patches.v14_0.remove_db_aggregation
 frappe.patches.v14_0.save_ratings_in_fraction #23-12-2021
 frappe.patches.v14_0.update_color_names_in_kanban_board_column
+frappe.patches.v14_0.transform_todo_schema
 
 frappe.patches.dokos.v1_0.make_auto_repeat_non_submittable
 frappe.patches.dokos.v1_2.reset_user_last_version

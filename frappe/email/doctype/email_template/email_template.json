@@ -11,8 +11,7 @@
      "subject",
      "use_html",
      "response_html",
-     "response",
-     "owner"
+     "response"
     ],
     "fields": [
      {
@@ -31,14 +30,6 @@
       "mandatory_depends_on": "eval:!doc.use_html"
      },
      {
-      "default": "user",
-      "fieldname": "owner",
-      "fieldtype": "Link",
-      "hidden": 1,
-      "label": "Owner",
-      "options": "User"
-     },
-     {
       "default": "0",
       "fieldname": "use_html",
       "fieldtype": "Check",
@@ -54,7 +45,7 @@
     ],
     "icon": "fa fa-comment",
     "links": [],
-    "modified": "2020-11-30 14:12:50.321633",
+    "modified": "2022-01-04 14:12:50.321633",
     "modified_by": "Administrator",
     "module": "Email",
     "name": "Email Template",

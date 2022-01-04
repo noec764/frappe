@@ -389,6 +389,7 @@ class User(Document):
 			frappe.local.login_manager.logout(user=self.name)
 
 		# delete todos
+		frappe.db.delete("ToDo", {"allocated_to": self.name})
 		todo_table = DocType("ToDo")
 		(
 			frappe.qb.update(todo_table)

@@ -470,8 +470,8 @@ def send_test_notification(notification, document):
 def get_assignees(doc):
 	assignees = []
 	assignees = frappe.get_all('ToDo', filters={'status': 'Open', 'reference_name': doc.name,
-		'reference_type': doc.doctype}, fields=['owner'])
+		'reference_type': doc.doctype}, fields=['allocated_to'])
 
-	recipients = [d.owner for d in assignees]
+	recipients = [d.allocated_to for d in assignees]
 
 	return recipients
