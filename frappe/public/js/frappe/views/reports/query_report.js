@@ -86,7 +86,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					this.refresh();
 				} else {
 					let alert_message = `Report ${this.report_name} generated.
-						<a href="/app/query-report/${this.report_name}/?prepared_report_name=${data.name}">View</a>`;
+						<a href="/app/query-report/${this.report_name}/?prepared_report_name=${data.name}">${__("View")}</a>`;
 					frappe.show_alert({message: alert_message, indicator: 'orange'});
 				}
 			}
@@ -527,7 +527,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		});
 	}
 
-	set_route_filters() {
+	set_route_filters(route_options) {
 		if (!route_options) route_options = frappe.route_options;
 
 		if (route_options) {
@@ -638,6 +638,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				this.render_datatable();
 				this.add_chart_buttons_to_toolbar(true);
 				this.add_card_button_to_toolbar();
+				this.$report.show();
 			} else {
 				this.data = [];
 				this.toggle_nothing_to_show(true);
@@ -888,7 +889,6 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 
 	hide_loading_screen() {
 		this.$loading.hide();
-		this.$report.show();
 	}
 
 	get_chart_options(data) {
@@ -1696,7 +1696,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 		$(".page-head-content").removeClass('border-bottom');
 
 		let page_form = this.page.main.find('.page-form');
-		this.$status = $(`<div class="form-message small"></div>`)
+		this.$status = $(`<div class="form-message text-muted small"></div>`)
 			.hide().insertAfter(page_form);
 
 		this.$summary = $(`<div class="report-summary"></div>`)
