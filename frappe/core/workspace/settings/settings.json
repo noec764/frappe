@@ -259,6 +259,16 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
+   "label": "Domain Settings",
+   "link_to": "Domain Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
    "label": "Error Log",
    "link_count": 0,
    "link_to": "Error Log",
@@ -278,12 +288,10 @@
    "type": "Link"
   },
   {
-   "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Domain Settings",
-   "link_count": 0,
-   "link_to": "Domain Settings",
+   "label": "Success Action",
+   "link_to": "Success Action",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -390,9 +398,44 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Energy Points",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Energy Point Settings",
+   "link_to": "Energy Point Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Energy Point Rule",
+   "link_to": "Energy Point Rule",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Energy Point Log",
+   "link_to": "Energy Point Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2021-10-31 01:30:04.163563",
+ "modified": "2022-01-04 16:53:27.392167",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",

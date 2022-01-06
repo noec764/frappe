@@ -29,7 +29,7 @@ from frappe.query_builder import (
 	patch_query_aggregation,
 )
 
-__version__ = '2.3.9'
+__version__ = '2.3.11'
 __title__ = "Dodock Framework"
 
 local = Local()
