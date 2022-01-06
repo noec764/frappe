@@ -179,6 +179,7 @@ frappe.patches.v13_0.queryreport_columns
 execute:frappe.reload_doc('core', 'doctype', 'doctype')
 frappe.patches.v13_0.jinja_hook
 frappe.patches.v13_0.update_notification_channel_if_empty
+frappe.patches.v13_0.set_first_day_of_the_week
 execute:frappe.delete_doc_if_exists("DocType", "Package Document Type")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Tool")

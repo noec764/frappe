@@ -18,11 +18,12 @@
   "date_and_number_format",
   "date_format",
   "time_format",
-  "column_break_7",
   "number_format",
+  "column_break_7",
   "float_precision",
   "currency_precision",
   "currency_symbol_position",
+  "first_day_of_the_week",
   "sec_backup_limit",
   "backup_limit",
   "encrypt_backup",
@@ -480,12 +481,19 @@
     "fieldname": "encrypt_backup",
     "fieldtype": "Check",
     "label": "Encrypt Backups"
+   },
+   {
+    "default": "Sunday",
+    "fieldname": "first_day_of_the_week",
+    "fieldtype": "Select",
+    "label": "First Day of the Week",
+    "options": "Sunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
    }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2021-10-22 19:24:15.232430",
+ "modified": "2022-01-04 11:28:34.881192",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
@@ -502,5 +510,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }
