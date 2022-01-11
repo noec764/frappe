@@ -1,4 +1,4 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
 # Tree (Hierarchical) Nested Set Model (nsm)
@@ -109,7 +109,6 @@ def update_move_node(doc, parent_field):
 		new_parent = frappe.db.sql("""select lft, rgt from `tab%s`
 			where name = %s for update""" % (doc.doctype, '%s'), parent, as_dict=1)[0]
 
-
 		# set parent lft, rgt
 		frappe.db.sql("""update `tab{0}` set rgt = rgt + %s
 			where name = %s""".format(doc.doctype), (diff, parent))
@@ -122,7 +121,6 @@ def update_move_node(doc, parent_field):
 		frappe.db.sql("""update `tab{0}` set rgt = rgt + %s
 			where lft < %s and rgt > %s""".format(doc.doctype),
 			(diff, new_parent.lft, new_parent.rgt))
-
 
 		new_diff = new_parent.rgt - doc.lft
 	else:
@@ -153,7 +151,6 @@ def rebuild_tree(doctype, parent_field):
 	right = 1
 	table = DocType(doctype)
 	column = getattr(table, parent_field)
-
 	result = (
 		frappe.qb.from_(table)
 		.where(
