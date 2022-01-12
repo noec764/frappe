@@ -11,7 +11,7 @@ from frappe.model.utils.user_settings import get_user_settings
 from frappe.permissions import get_doc_permissions
 from frappe.desk.form.document_follow import is_document_followed
 from frappe import _
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 
 @frappe.whitelist(allow_guest=True)
 def getdoc(doctype, name, user=None):
@@ -180,6 +180,12 @@ def _get_communications(doctype, name, start=0, limit=20):
 					"attached_to_name": c.name}
 				))
 
+		if not c.seen_internally:
+			comm = frappe.get_doc("Communication", c.name)
+			comm.seen_internally = True
+			comm.save()
+			frappe.db.commit()
+
 	return communications
 
 def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=None,
@@ -192,7 +198,7 @@ def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=
 			C.sender, C.sender_full_name, C.cc, C.bcc,
 			C.creation AS creation, C.subject, C.delivery_status,
 			C._liked_by, C.reference_doctype, C.reference_name,
-			C.read_by_recipient, C.rating, C.recipients
+			C.read_by_recipient, C.rating, C.recipients, C.seen_internally
 		'''
 
 	conditions = ''

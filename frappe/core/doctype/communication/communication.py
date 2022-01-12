@@ -10,10 +10,10 @@ from frappe.utils import validate_email_address, strip_html, cstr, time_diff_in_
 from frappe.core.doctype.communication.email import validate_email, notify, _notify
 from frappe.core.utils import get_parent_doc
 from frappe.utils.bot import BotReply
-from frappe.utils import parse_addr, cint
+from frappe.utils import parse_addr
 from frappe.core.doctype.comment.comment import update_comment_in_doc
 from email.utils import parseaddr
-from six.moves.urllib.parse import unquote
+from urllib.parse import unquote
 from frappe.utils.user import is_system_user
 from frappe.contacts.doctype.contact.contact import get_contact_name
 from frappe.automation.doctype.assignment_rule.assignment_rule import apply as apply_assignment_rule
@@ -456,9 +456,9 @@ def update_parent_document_on_communication(doc):
 		if ("Replied" in options) and doc.sent_or_received == "Received":
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
-		else:
-			# update the modified date for document
-			parent.update_modified()
+
+	# update the modified date for document
+	parent.update_modified()
 
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)
