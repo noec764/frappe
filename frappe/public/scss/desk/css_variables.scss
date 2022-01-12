@@ -4,15 +4,6 @@ $input-height: 28px !default;
 
 :root,
 [data-theme="light"] {
-	--text-xs: 12px;
-	--text-sm: 13px;
-	--text-md: 14px;
-	--text-base: 15px;
-	--text-lg: 17px;
-	--text-xl: 18px;
-	--text-2xl: 22px;
-	--text-3xl: 24px;
-
 	// breakpoints
 	--xxl-width: map-get($grid-breakpoints, '2xl');
 	--xl-width: map-get($grid-breakpoints, 'xl');

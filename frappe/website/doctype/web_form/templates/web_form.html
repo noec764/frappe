@@ -3,7 +3,7 @@
 {% block title %}{{ _(title) }}{% endblock %}
 
 {% block header %}
-<h2>{{ _(title) }}</h2>
+<h3>{{ _(title) }}</h3>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -32,8 +32,8 @@ data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}"
 	{% if is_list %}
 	{# web form list #}
 	<div class="web-form-wrapper" {{ container_attributes() }}></div>
-	<div id="list-filters" class="row"></div>
-	<div id="datatable" class="pt-4"></div>
+	<div id="list-filters" class="row mt-4"></div>
+	<div id="datatable" class="pt-4 overflow-auto"></div>
 	<div class="list-view-footer text-right"></div>
 	{% else %}
 	{# web form #}

@@ -30,11 +30,12 @@
 @import 'footer';
 @import 'contact';
 @import 'error-state';
+@import 'my_account';
 
 body {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
+	@include media-breakpoint-up(sm) {
+		background-color: var(--bg-color);
+	}
 }
 
 .ql-editor.read-mode {
@@ -176,6 +177,10 @@ a.card {
 
 .indicator {
 	font-size: inherit;
+}
+
+.indicator-pill {
+	font-size: var(--font-size-xs)
 }
 
 h4.modal-title {
@@ -349,4 +354,8 @@ h5.modal-title {
 .visually-hidden {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
+}
+
+.empty-list-icon {
+	height: 70px;
 }
