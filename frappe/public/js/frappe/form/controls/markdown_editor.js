@@ -34,7 +34,9 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends frapp
 	}
 
 	set_language() {
-		this.df.options = 'Markdown';
+		if (!this.df.options) {
+			this.df.options = 'Markdown';
+		}
 		super.set_language();
 	}
 
