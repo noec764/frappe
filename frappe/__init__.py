@@ -6,6 +6,8 @@ globals attached to frappe module
 """
 import os, warnings
 
+STANDARD_USERS = ('Guest', 'Administrator')
+
 _dev_server = os.environ.get('DEV_SERVER', False)
 
 if _dev_server:
@@ -115,6 +117,7 @@ def set_user_lang(user, user_language=None):
 	local.lang = get_user_lang(user)
 
 # local-globals
+
 db = local("db")
 qb = local("qb")
 conf = local("conf")

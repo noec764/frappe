@@ -22,7 +22,7 @@ from frappe.rate_limiter import rate_limit
 from frappe.core.doctype.user_type.user_type import user_linked_with_permission_on_doctype
 from frappe.query_builder import DocType
 
-STANDARD_USERS = ("Guest", "Administrator")
+STANDARD_USERS = frappe.STANDARD_USERS
 
 class User(Document):
 	__new_password = None
