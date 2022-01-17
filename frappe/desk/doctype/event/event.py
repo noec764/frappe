@@ -18,6 +18,7 @@ from frappe.desk.calendar import process_recurring_events
 from frappe.integrations.doctype.google_calendar.google_calendar import (get_google_calendar_object,
 	format_date_according_to_google_calendar, get_timezone_naive_datetime)
 from frappe.www.printview import get_html_and_style
+from frappe.desk.doctype.notification_settings.notification_settings import is_email_notifications_enabled_for_type
 
 weekdays = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
 communication_mapping = {"": "Event", "Event": "Event", "Meeting": "Meeting", "Call": "Phone", "Sent/Received Email": "Email", "Other": "Other"}
@@ -249,8 +250,13 @@ def has_permission(doc, user):
 
 def send_event_digest():
 	today = nowdate()
-	for user in get_enabled_system_users():
-		events = get_events(today, today, user.name, filters={"status": ("not in", ("Closed", "Cancelled"))}, for_reminder=True)
+
+	# select only those users that have event reminder email notifications enabled
+	users = [user for user in get_enabled_system_users() if
+		is_email_notifications_enabled_for_type(user.name, 'Event Reminders')]
+
+	for user in users:
+		events = get_events(today, today, user.name, for_reminder=True)
 		if events:
 			frappe.set_user_lang(user.name, user.language)
 
