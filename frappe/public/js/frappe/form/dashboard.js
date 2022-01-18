@@ -522,7 +522,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			args: args,
 
 			callback: function(r) {
-				if (r.message) {
+				if (Object.keys(r.message).length) {
 					me.render_graph(r.message);
 					me.show();
 				} else {
