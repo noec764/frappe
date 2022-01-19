@@ -47,7 +47,6 @@
   "unread_notification_sent",
   "seen",
   "_user_tags",
-  "seen_internally",
   "timeline_links_sections",
   "timeline_links",
   "email_inbox",
@@ -65,6 +64,7 @@
    "fieldtype": "Small Text",
    "in_global_search": 1,
    "label": "Subject",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -77,6 +77,7 @@
    "depends_on": "eval:doc.communication_type===\"Communication\"",
    "fieldname": "communication_medium",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Type",
    "options": "\nEmail\nChat\nPhone\nSMS\nEvent\nMeeting\nVisit\nOther"
   },
@@ -87,7 +88,8 @@
    "in_global_search": 1,
    "label": "From",
    "length": 255,
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_4",
@@ -97,27 +99,31 @@
    "fieldname": "recipients",
    "fieldtype": "Code",
    "label": "To",
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.communication_medium===\"Email\"",
    "fieldname": "cc",
    "fieldtype": "Code",
    "label": "CC",
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.communication_medium===\"Email\"",
    "fieldname": "bcc",
    "fieldtype": "Code",
    "label": "BCC",
-   "options": "Email"
+   "options": "Email",
+   "read_only": 1
   },
   {
    "depends_on": "eval:in_list([\"Phone\",\"SMS\"],doc.communication_medium)",
    "fieldname": "phone_no",
    "fieldtype": "Data",
-   "label": "Phone No."
+   "label": "Phone No.",
+   "read_only": 1
   },
   {
    "description": "Integrations can use this field to set email delivery status",
@@ -133,8 +139,9 @@
   },
   {
    "fieldname": "content",
-   "fieldtype": "Text Editor",
+   "fieldtype": "Long Text",
    "label": "Message",
+   "read_only": 1,
    "width": "400"
   },
   {
@@ -153,6 +160,7 @@
    "default": "Communication",
    "fieldname": "communication_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Communication Type",
    "options": "Communication\nComment\nChat\nBot\nNotification\nFeedback\nAutomated Message",
    "read_only": 1,
@@ -162,7 +170,6 @@
    "fieldname": "comment_type",
    "fieldtype": "Select",
    "hidden": 1,
-   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Comment Type",
    "options": "\nComment\nLike\nInfo\nLabel\nWorkflow\nCreated\nSubmitted\nCancelled\nUpdated\nDeleted\nAssigned\nAssignment Completed\nAttachment\nAttachment Removed\nShared\nUnshared\nBot\nRelinked",
@@ -391,19 +398,12 @@
    "fieldtype": "Check",
    "label": "Not added to reference timeline",
    "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "seen_internally",
-   "fieldtype": "Check",
-   "label": "Seen Internally",
-   "read_only": 1
   }
  ],
  "icon": "fa fa-comment",
  "idx": 1,
  "links": [],
- "modified": "2022-01-12 18:35:48.459420",
+ "modified": "2022-01-19 13:24:21.626406",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Communication",

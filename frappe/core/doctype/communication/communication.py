@@ -42,6 +42,8 @@ class Communication(Document):
 				"uid": self.uid,
 				"email_account": self.email_account
 			}).insert(ignore_permissions=True)
+
+			self.db_set("seen", 1)
 			frappe.db.commit()
 
 	def validate(self):
@@ -456,9 +458,9 @@ def update_parent_document_on_communication(doc):
 		if ("Replied" in options) and doc.sent_or_received == "Received":
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
-
-	# update the modified date for document
-	parent.update_modified()
+		else:
+			# update the modified date for document
+			parent.update_modified()
 
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)
