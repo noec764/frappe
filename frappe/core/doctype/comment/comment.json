@@ -53,10 +53,11 @@
    "label": "Published"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "seen",
    "fieldtype": "Check",
-   "label": "Seen"
+   "label": "Seen",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_5",
@@ -107,7 +108,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-14 08:41:06.117190",
+ "modified": "2022-01-19 20:45:45.552984",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Comment",
