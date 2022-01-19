@@ -47,7 +47,6 @@
   "unread_notification_sent",
   "seen",
   "_user_tags",
-  "seen_internally",
   "timeline_links_sections",
   "timeline_links",
   "email_inbox",
@@ -391,19 +390,12 @@
    "fieldtype": "Check",
    "label": "Not added to reference timeline",
    "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "seen_internally",
-   "fieldtype": "Check",
-   "label": "Seen Internally",
-   "read_only": 1
   }
  ],
  "icon": "fa fa-comment",
  "idx": 1,
  "links": [],
- "modified": "2022-01-12 18:35:48.459420",
+ "modified": "2022-01-13 18:35:48.459420",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Communication",

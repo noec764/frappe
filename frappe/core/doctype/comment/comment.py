@@ -121,7 +121,7 @@ def update_comment_in_doc(doc):
 		for c in _comments:
 			if c.get("name")==doc.name:
 				c["comment"] = get_truncated(doc.content)
-				c["seen_internally"] = doc.seen_internally
+				c["seen"] = doc.seen
 				updated = True
 
 		if not updated:
@@ -131,7 +131,7 @@ def update_comment_in_doc(doc):
 				# "comment_email" for Comment and "sender" for Communication
 				"by": getattr(doc, 'comment_email', None) or getattr(doc, 'sender', None) or doc.owner,
 				"name": doc.name,
-				"seen_internally": doc.seen_internally
+				"seen": doc.seen
 			})
 
 		update_comments_in_parent(doc.reference_doctype, doc.reference_name, _comments)

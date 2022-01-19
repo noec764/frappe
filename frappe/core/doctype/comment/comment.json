@@ -11,7 +11,6 @@
   "comment_by",
   "published",
   "seen",
-  "seen_internally",
   "column_break_5",
   "reference_doctype",
   "reference_name",
@@ -104,18 +103,11 @@
    "ignore_xss_filter": 1,
    "in_list_view": 1,
    "label": "Content"
-  },
-  {
-   "default": "0",
-   "fieldname": "seen_internally",
-   "fieldtype": "Check",
-   "label": "Seen Internally",
-   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-01-13 08:41:06.117190",
+ "modified": "2022-01-14 08:41:06.117190",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Comment",
