@@ -458,7 +458,8 @@ def update_parent_document_on_communication(doc):
 			apply_assignment_rule(parent)
 
 	# update the modified date for document
-	parent.update_modified()
+	if not doc.flags.document_load:
+		parent.update_modified()
 
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)

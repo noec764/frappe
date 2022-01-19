@@ -183,6 +183,7 @@ def _get_communications(doctype, name, start=0, limit=20):
 		if not c.seen_internally:
 			comm = frappe.get_doc("Communication", c.name)
 			comm.seen_internally = True
+			comm.flags.document_load = True
 			comm.save()
 			frappe.db.commit()
 
