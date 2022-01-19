@@ -87,6 +87,11 @@
 		}
 	}
 
+	.dt-cell__resize-handle {
+		right: -3px !important;
+		left: unset !important;
+	}
+
 	.dt-row.dt-row-totalRow {
 		font-weight: bold;
 	}
@@ -114,12 +119,12 @@
 		overflow-y: scroll !important;
 		border-top: 0 !important;
 	}
-	
+
 	.dt-scrollable::-webkit-scrollbar {
 		width: 5px;
 		background: transparent;
 	}
-	
+
 	.dt-scrollable::-webkit-scrollbar-thumb {
 		background: #f0f4f7;
 	}
