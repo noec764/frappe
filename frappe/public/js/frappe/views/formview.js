@@ -97,6 +97,7 @@ frappe.views.FormFactory = class FormFactory extends frappe.views.Factory {
 		if (new_name===name) {
 			this.render(doctype_layout, name);
 		} else {
+			frappe.route_flags.replace_route = true;
 			frappe.set_route("Form", doctype_layout, new_name);
 		}
 	}
