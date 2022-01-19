@@ -303,7 +303,7 @@ def get_html_content_based_on_type(doc, fieldname, content_type):
 		elif content_type == 'HTML':
 			content = doc.get(fieldname + '_html')
 
-		if content == None:
+		if content is None:
 			content = ''
 
 		return content
