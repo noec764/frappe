@@ -42,6 +42,8 @@ class Communication(Document):
 				"uid": self.uid,
 				"email_account": self.email_account
 			}).insert(ignore_permissions=True)
+
+			self.db_set("seen", 1)
 			frappe.db.commit()
 
 	def validate(self):
