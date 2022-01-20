@@ -44,6 +44,8 @@ class Communication(Document, CommunicationEmailMixin):
 				"uid": self.uid,
 				"email_account": self.email_account
 			}).insert(ignore_permissions=True)
+
+			self.db_set("seen", 1)
 			frappe.db.commit()
 
 	def validate(self):
@@ -478,8 +480,8 @@ def update_parent_document_on_communication(doc):
 		options = (status_field.options or "").splitlines()
 
 		# if status has a "Replied" option, then update the status for received communication
+		# In Dokos: Don't reopen the document as it may be misleading for users
 		if ("Replied" in options) and doc.sent_or_received == "Received":
-			parent.db_set("status", "Open")
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
 		else:

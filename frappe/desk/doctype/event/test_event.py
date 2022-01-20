@@ -6,6 +6,7 @@
 
 import frappe
 import frappe.defaults
+from frappe.utils import get_datetime
 import unittest
 import json
 
@@ -117,13 +118,13 @@ class TestEvent(unittest.TestCase):
 		ev.insert()
 
 		ev_list = get_events("2020-01-05", "2020-01-05", "Administrator", for_reminder=True)
-		self.assertTrue(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list))))
+		self.assertTrue(bool(list(filter(lambda e: (e.get("name")==ev.name and e.get("starts_on") == get_datetime("2020-01-05")), ev_list))))
 
 		ev_list1 = get_events("2021-01-20", "2021-01-20", "Administrator", for_reminder=True)
-		self.assertFalse(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list1))))
+		self.assertFalse(bool(list(filter(lambda e: (e.get("name")==ev.name and e.get("starts_on") == get_datetime("2021-01-20")), ev_list1))))
 
 		ev_list2 = get_events("2020-01-20", "2020-01-20", "Administrator", for_reminder=True)
-		self.assertFalse(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list2))))
+		self.assertFalse(bool(list(filter(lambda e: (e.get("name")==ev.name and e.get("starts_on") == get_datetime("2020-01-20")), ev_list2))))
 
 		ev_list3 = get_events("2023-01-05", "2023-01-05", "Administrator", for_reminder=True)
-		self.assertTrue(bool(list(filter(lambda e: e.get("name")==ev.name, ev_list3))))
+		self.assertTrue(bool(list(filter(lambda e: (e.get("name")==ev.name and e.get("starts_on") == get_datetime("2023-01-05")), ev_list3))))

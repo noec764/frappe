@@ -235,6 +235,14 @@ def _get_communications(doctype, name, start=0, limit=20):
 					"attached_to_name": c.name}
 				))
 
+		if not c.seen:
+			comm = frappe.get_doc("Communication", c.name)
+			comm.seen = True
+			comm.flags.document_load = True
+			comm.flags.ignore_permissions=True
+			comm.save()
+			frappe.db.commit()
+
 	return communications
 
 def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=None,
@@ -247,7 +255,7 @@ def get_communication_data(doctype, name, start=0, limit=20, after=None, fields=
 			C.sender, C.sender_full_name, C.cc, C.bcc,
 			C.creation AS creation, C.subject, C.delivery_status,
 			C._liked_by, C.reference_doctype, C.reference_name,
-			C.read_by_recipient, C.rating, C.recipients
+			C.read_by_recipient, C.rating, C.recipients, C.seen
 		'''
 
 	conditions = ''

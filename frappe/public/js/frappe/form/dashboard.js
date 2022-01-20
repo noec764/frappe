@@ -545,6 +545,10 @@ frappe.ui.form.Dashboard = class FormDashboard {
 	}
 
 	render_graph(args) {
+		if (!Object.keys(args).length) {
+			return
+		}
+
 		this.chart_area.show();
 		this.chart_area.body.empty();
 		args = Object.assign({

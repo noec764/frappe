@@ -121,6 +121,12 @@
 
 		.comment-count {
 			min-width: 35px;
+
+			&.unseen {
+				color: var(--blue-600);
+				--icon-stroke: var(--blue-600);
+				--icon-fill: var(--blue-50);
+			}
 		}
 
 		.frappe-timestamp {
