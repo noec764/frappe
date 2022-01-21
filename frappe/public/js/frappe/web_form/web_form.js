@@ -163,17 +163,17 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	setup_primary_action() {
-		this.add_button_to_header('header_save_btn', this.button_label || __("Save"), "primary", () =>
+		this.add_button_to_header('header_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
 			this.save()
 		);
 
-		this.add_button_to_footer('footer_save_btn', this.button_label || __("Save"), "primary", () =>
+		this.add_button_to_footer('footer_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
 			this.save()
 		);
 	}
 
 	setup_cancel_button() {
-		this.add_button_to_header('cancel_btn', __("Cancel"), "light", () => this.cancel());
+		this.add_button_to_header('cancel_btn', __("Cancel", null, "Button in web form"), "light", () => this.cancel());
 	}
 
 	setup_delete_button() {
@@ -221,16 +221,18 @@ export default class WebForm extends frappe.ui.FieldGroup {
 
 		let message = '';
 		if (invalid_values.length) {
-			message += __('Invalid values for fields:') + '<br><br><ul><li>' + invalid_values.join('<li>') + '</ul>';
+			message += __('Invalid values for fields:', null, 'Error message in web form');
+			message += '<br><br><ul><li>' + invalid_values.join('<li>') + '</ul>';
 		}
 
 		if (errors.length) {
-			message += __('Mandatory fields required:') + '<br><br><ul><li>' + errors.join('<li>') + '</ul>';
+			message += __('Mandatory fields required:', null, 'Error message in web form');
+			message += '<br><br><ul><li>' + errors.join('<li>') + '</ul>';
 		}
 
 		if (invalid_values.length || errors.length) {
 			frappe.msgprint({
-				title: __('Error'),
+				title: __('Error', null, 'Title of error message in web form'),
 				message: message,
 				indicator: 'orange'
 			});
