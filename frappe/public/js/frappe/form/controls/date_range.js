@@ -17,7 +17,8 @@ frappe.ui.form.ControlDateRange = class ControlDateRange extends frappe.ui.form.
 			language: lang,
 			range: true,
 			autoClose: true,
-			toggleSelected: false
+			toggleSelected: false,
+			firstDay: frappe.datetime.get_first_day_of_the_week_index()
 		};
 		this.datepicker_options.dateFormat =
 			(frappe.boot.sysdefaults.date_format || 'yyyy-mm-dd');
