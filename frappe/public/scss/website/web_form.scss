@@ -5,7 +5,7 @@
 
 		.breadcrumb-container.container {
 			@include media-breakpoint-up(sm) {
-				padding-left: var(--padding-sm);
+				padding-left: 0;
 			}
 		}
 
