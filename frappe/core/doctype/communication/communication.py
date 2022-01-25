@@ -55,7 +55,7 @@ class Communication(Document):
 		if not self.subject:
 			self.subject = strip_html((self.content or "")[:141])
 
-		if not self.sent_or_received:
+		if not self.sent_or_received or self.sent_or_received == "Sent":
 			self.seen = 1
 			self.sent_or_received = "Sent"
 
