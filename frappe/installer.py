@@ -337,14 +337,15 @@ def post_install(rebuild_website=False):
 	frappe.clear_cache()
 
 def set_all_patches_as_completed(app):
-	patch_path = os.path.join(frappe.get_pymodule_path(app), "patches.txt")
-	if os.path.exists(patch_path):
-		for patch in frappe.get_file_items(patch_path):
-			frappe.get_doc({
-				"doctype": "Patch Log",
-				"patch": patch
-			}).insert(ignore_permissions=True)
-		frappe.db.commit()
+	from frappe.modules.patch_handler import get_patches_from_app
+
+	patches = get_patches_from_app(app)
+	for patch in patches:
+		frappe.get_doc({
+			"doctype": "Patch Log",
+			"patch": patch
+		}).insert(ignore_permissions=True)
+	frappe.db.commit()
 
 def init_singles():
 	singles = [single['name'] for single in frappe.get_all("DocType", filters={'issingle': True})]

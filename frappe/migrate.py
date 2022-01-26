@@ -21,6 +21,7 @@ from frappe.modules.utils import sync_customizations
 from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 from frappe.search.website_search import build_index_for_all_routes
 from frappe.database.schema import add_column
+from frappe.modules.patch_handler import PatchType
 
 
 def migrate(verbose=True, skip_failing=False, skip_search_index=False):
@@ -60,15 +61,13 @@ def migrate(verbose=True, skip_failing=False, skip_search_index=False):
 
 		clear_global_cache()
 
-		#run before_migrate hooks
 		for app in frappe.get_installed_apps():
 			for fn in frappe.get_hooks('before_migrate', app_name=app):
 				frappe.get_attr(fn)()
 
-		# run patches
-		frappe.modules.patch_handler.run_all(skip_failing)
-		# sync
+		frappe.modules.patch_handler.run_all(skip_failing=skip_failing, patch_type=PatchType.pre_model_sync)
 		frappe.model.sync.sync_all()
+		frappe.modules.patch_handler.run_all(skip_failing=skip_failing, patch_type=PatchType.post_model_sync)
 		frappe.translate.clear_cache()
 		sync_jobs()
 		sync_fixtures()
@@ -78,18 +77,16 @@ def migrate(verbose=True, skip_failing=False, skip_search_index=False):
 
 		frappe.get_doc('Portal Settings', 'Portal Settings').sync_menu()
 
-		# syncs statics
+		# syncs static files
 		clear_website_cache()
 
 		# updating installed applications data
 		frappe.get_single('Installed Applications').update_versions()
 
-		#run after_migrate hooks
 		for app in frappe.get_installed_apps():
 			for fn in frappe.get_hooks('after_migrate', app_name=app):
 				frappe.get_attr(fn)()
 
-		# build web_routes index
 		if not skip_search_index:
 			# Run this last as it updates the current session
 			print('Building search index for {}'.format(frappe.local.site))
