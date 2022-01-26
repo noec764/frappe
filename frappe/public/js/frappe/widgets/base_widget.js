@@ -31,14 +31,6 @@ export default class Widget {
 				"drag-handle",
 			);
 
-		options.allow_delete &&
-			frappe.utils.add_custom_button(
-				frappe.utils.icon('delete', 'xs'),
-				() => this.delete(),
-				"",
-				`${__('Delete')}`
-			);
-
 		if (options.allow_hiding) {
 			if (this.hidden) {
 				this.widget.removeClass("hidden");
@@ -66,27 +58,11 @@ export default class Widget {
 			frappe.utils.add_custom_button(
 				frappe.utils.icon("edit", "xs"),
 				() => this.edit(),
-				null,
+				"edit-button",
 				`${__('Edit')}`,
 				null,
 				this.action_area
 			);
-
-		if (options.allow_resize) {
-			const title = this.width == 'Full'? `${__('Collapse')}` : `${__('Expand')}`;
-			frappe.utils.add_custom_button(
-				'<i class="uil uil-maximize-left" aria-hidden="true"></i>',
-				() => this.toggle_width(),
-				"resize-button",
-				title,
-				null,
-				this.action_area
-			);
-
-			this.resize_button = this.action_area.find(
-				".resize-button"
-			);
-		}
 	}
 
 	make() {
@@ -95,10 +71,7 @@ export default class Widget {
 	}
 
 	make_widget() {
-		this.widget = $(`<div class="widget
-			${ this.hidden ? "hidden" : " " }
-			${ this.shadow ? "widget-shadow" : " " }
-		" data-widget-name="${this.name ? this.name : ''}">
+		this.widget = $(`<div class="widget" data-widget-name="${this.name ? this.name : ''}">
 			<div class="widget-head">
 				<div class="widget-label">
 					<div class="widget-title"></div>
@@ -106,10 +79,8 @@ export default class Widget {
 				</div>
 				<div class="widget-control"></div>
 			</div>
-			<div class="widget-body">
-			</div>
-			<div class="widget-footer">
-			</div>
+			<div class="widget-body"></div>
+			<div class="widget-footer"></div>
 		</div>`);
 
 		this.title_field = this.widget.find(".widget-title");

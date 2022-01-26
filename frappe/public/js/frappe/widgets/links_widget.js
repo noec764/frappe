@@ -71,10 +71,13 @@ export default class LinksWidget extends Widget {
 
 			const route = frappe.utils.generate_route(opts);
 
-			return $(`<a href="${route}" class="link-item ellipsis ${item.onboard ? "onboard-spotlight" : ""
-			} ${disabled_dependent(item)}" type="${item.type}">
+			return $(`<a href="${route}" class="link-item ellipsis ${
+				item.onboard ? "onboard-spotlight" : ""
+			} ${disabled_dependent(item)}" type="${item.type}" title="${
+				item.label ? item.label : item.name
+			}">
+					<span class="indicator-pill no-margin ${get_indicator_color(item)}"></span>
 					${get_link_for_item(item)}
-					${item.open_count ? `<span class="badge badge-info">${item.open_count}</span>` : ''}
 			</a>`);
 		});
 		if (this.in_customize_mode) {
