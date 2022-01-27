@@ -23,7 +23,6 @@ function clean_dist_files(new_files) {
 			const pattern = prefix_pattern.concat(["*"]).concat(suffix_pattern).join(".")
 			glob.sync(pattern).forEach(
 				file_to_delete => {
-					console.log(file_to_delete, file_to_delete.startsWith(file))
 					if (file_to_delete.startsWith(file)) return;
 
 					fs.unlink(path.resolve(file_to_delete), err => {
