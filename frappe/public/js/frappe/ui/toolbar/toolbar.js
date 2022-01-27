@@ -1,16 +1,11 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 
-import SidebarMenu from './components/SidebarMenu.vue'
-import smoothscroll from 'smoothscroll-polyfill';
-
 frappe.provide("frappe.ui.toolbar");
 frappe.provide('frappe.search');
-frappe.provide('frappe.sidebar_update')
-frappe.utils.make_event_emitter(frappe.sidebar_update);
 
 frappe.ui.toolbar.Toolbar = class {
-	constructor() {
+	constructor () {
 		$('header').replaceWith(frappe.render_template("navbar", {
 			avatar: frappe.avatar(frappe.session.user, 'avatar-medium'),
 			navbar_settings: frappe.boot.navbar_settings
@@ -18,20 +13,17 @@ frappe.ui.toolbar.Toolbar = class {
 		$('.dropdown-toggle').dropdown();
 
 		this.setup_awesomebar();
-
 		this.setup_notifications();
 		this.setup_help();
 		this.make();
 	}
 
-	make() {
-		this.setup_modules_menu();
-		this.setup_home_navigation();
+	make () {
 		this.bind_events();
 		$(document).trigger('toolbar_setup');
 	}
 
-	bind_events() {
+	bind_events () {
 		// clear all custom menus on page change
 		$(document).on("page-change", function() {
 			$("header .navbar .custom-menu").remove();
@@ -46,39 +38,6 @@ frappe.ui.toolbar.Toolbar = class {
 		});
 	}
 
-	setup_modules_menu() {
-		frappe.xcall("frappe.desk.desktop.get_wspace_sidebar_items")
-		.then(pages => {
-			const all_pages = pages.pages
-			all_pages.forEach(page => {
-				page.is_editable = !page.public || pages.has_access;
-			});
-
-			smoothscroll.polyfill();
-			this.menu_sidebar = new Vue({
-				el: '#modules-menu',
-				render: h => h(SidebarMenu, {
-					props: {
-						categories: [
-							'Public',
-							frappe.user.full_name() || 'Private'
-						],
-						pages: all_pages
-					}
-				})
-			});
-		})
-	}
-
-	setup_home_navigation() {
-		$('header').find(".navbar-home").on("click", function() {
-			if (frappe.is_mobile()) {
-				frappe.sidebar_update.trigger('toggle_mobile_menu')
-			} else {
-				frappe.set_route("/")
-			}
-		});
-	}
 
 	setup_help () {
 		if (!frappe.boot.desk_settings.notifications) {
@@ -87,7 +46,6 @@ frappe.ui.toolbar.Toolbar = class {
 			$('.dropdown-help').removeClass('d-lg-block');
 			return;
 		}
-
 		frappe.provide('frappe.help');
 		frappe.help.show_results = show_results;
 
@@ -166,19 +124,21 @@ frappe.ui.toolbar.Toolbar = class {
 		if (frappe.boot.desk_settings.search_bar) {
 			let awesome_bar = new frappe.search.AwesomeBar();
 			awesome_bar.setup("#navbar-search");
-		}
 
-		// TODO: Remove this in v3
-		frappe.search.utils.make_function_searchable(function() {
-			frappe.set_route("List", "Client Script");
-		}, __("Custom Script List"));
+			// TODO: Remove this in v14
+			frappe.search.utils.make_function_searchable(function() {
+				frappe.set_route("List", "Client Script");
+			}, __("Custom Script List"));
+
+		}
 	}
 
-	setup_notifications() {
+	setup_notifications () {
 		if (frappe.boot.desk_settings.notifications && frappe.session.user !== 'Guest') {
 			this.notifications = new frappe.ui.Notifications();
 		}
 	}
+
 };
 
 $.extend(frappe.ui.toolbar, {
@@ -221,7 +181,7 @@ $.extend(frappe.ui.toolbar, {
 		e.preventDefault();
 		frappe.ui.keys.show_keyboard_shortcut_dialog();
 		return false;
-	}
+	},
 });
 
 frappe.ui.toolbar.clear_cache = frappe.utils.throttle(function() {
@@ -234,7 +194,6 @@ frappe.ui.toolbar.clear_cache = frappe.utils.throttle(function() {
 		location.reload(true);
 	});
 }, 10000);
-
 
 frappe.ui.toolbar.show_about = function() {
 	try {
@@ -252,7 +211,7 @@ frappe.ui.toolbar.route_to_user = function() {
 frappe.ui.toolbar.view_website = function() {
 	let website_tab = window.open();
 	website_tab.opener = null;
-	website_tab.location = '/me';
+	website_tab.location = '/index';
 };
 
 frappe.ui.toolbar.setup_session_defaults = function() {
