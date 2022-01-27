@@ -823,7 +823,6 @@ body {
 			height: calc(100vh - var(--navbar-height) - var(--page-head-height) - 5px);
 			.layout-side-section, .layout-main-section-wrapper {
 				height: 100%;
-				overflow-y: auto;
 				scrollbar-color: var(--gray-200) transparent;
 				[data-theme="dark"] & {
 					scrollbar-color: var(--gray-800) transparent;
@@ -843,6 +842,7 @@ body {
 
 			.layout-side-section {
 				padding-right: 15px;
+				overflow-y: auto;
 			}
 
 			.layout-main-section {
