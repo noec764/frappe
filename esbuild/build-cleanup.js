@@ -18,9 +18,12 @@ function clean_dist_files(new_files) {
 		file => {
 			if (file.endsWith(".map")) return;
 
-			const pattern = file.split(".").slice(0, -2).join(".") + "*";
+			const prefix_pattern = file.split(".").slice(0, -2);
+			const suffix_pattern = file.split(".").slice(-1)
+			const pattern = prefix_pattern.concat(["*"]).concat(suffix_pattern).join(".")
 			glob.sync(pattern).forEach(
 				file_to_delete => {
+					console.log(file_to_delete, file_to_delete.startsWith(file))
 					if (file_to_delete.startsWith(file)) return;
 
 					fs.unlink(path.resolve(file_to_delete), err => {
