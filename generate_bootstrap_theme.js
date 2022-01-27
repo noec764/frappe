@@ -2,7 +2,6 @@ const sass = require('node-sass');
 const fs = require('fs');
 const sass_options = require('./esbuild/sass_options');
 let output_path = process.argv[2];
-
 let scss_content = process.argv[3];
 scss_content = scss_content.replace(/\\n/g, '\n');
 
