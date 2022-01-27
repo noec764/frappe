@@ -240,8 +240,11 @@ def _get_communications(doctype, name, start=0, limit=20):
 			comm.seen = True
 			comm.flags.document_load = True
 			comm.flags.ignore_permissions=True
-			comm.save()
-			frappe.db.commit()
+			try:
+				comm.save()
+				frappe.db.commit()
+			except Exception:
+				frappe.clear_messages()
 
 	return communications
 

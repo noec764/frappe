@@ -57,7 +57,7 @@ class Communication(Document, CommunicationEmailMixin):
 		if not self.subject:
 			self.subject = strip_html((self.content or "")[:141])
 
-		if not self.sent_or_received:
+		if not self.sent_or_received or self.sent_or_received == "Sent":
 			self.seen = 1
 			self.sent_or_received = "Sent"
 
@@ -484,7 +484,7 @@ def update_parent_document_on_communication(doc):
 		if ("Replied" in options) and doc.sent_or_received == "Received":
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
-		else:
+		elif not doc.flags.document_load:
 			# update the modified date for document
 			parent.update_modified()
 

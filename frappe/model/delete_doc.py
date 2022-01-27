@@ -298,8 +298,8 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					raise_link_exists_exception(doc, reference_doctype, reference_docname, at_position)
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=''):
-	doc_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(_(doc.doctype), doc.name, _(doc.name))
-	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(_(reference_doctype), reference_docname, _(reference_docname))
+	doc_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(doc.doctype, doc.name, _(doc.name))
+	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(reference_doctype, reference_docname, _(reference_docname))
 
 	#hack to display Single doctype only once in message
 	if reference_doctype == reference_docname:
