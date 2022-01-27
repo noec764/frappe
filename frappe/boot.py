@@ -285,12 +285,6 @@ def get_unseen_notes():
 def get_success_action():
 	return frappe.get_all("Success Action", fields=["*"])
 
-@frappe.whitelist()
-def frequently_visited_links():
-	return frappe.get_all('Route History', fields=['route', 'count(name) as count'], filters={
-		'user': frappe.session.user
-	}, group_by="route", order_by="count desc", limit=5)
-
 def get_link_preview_doctypes():
 	from frappe.utils import cint
 
@@ -326,8 +320,7 @@ def get_desk_settings():
 	))
 	desk_settings = {}
 
-	desk_properties = ("search_bar", "notifications", "list_sidebar",
-		"bulk_actions", "view_switcher", "form_sidebar", "timeline", "dashboard")
+	from frappe.core.doctype.role.role import desk_properties
 
 	for role in role_list:
 		for key in desk_properties:

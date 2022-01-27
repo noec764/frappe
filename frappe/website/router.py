@@ -1,5 +1,6 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import io
 import os
 import re
@@ -198,20 +199,21 @@ def setup_source(page_info):
 
 	if 	page_info.template.endswith(('.html', '.md', )) and \
 		'{%- extends' not in source and '{% extends' not in source:
+		# set the source only if it contains raw content
 		html = source
 
-		# load css/js files
-		js_path = os.path.join(page_info.basepath, (page_info.basename or 'index') + '.js')
-		if os.path.exists(js_path) and '{% block script %}' not in html:
-			with io.open(js_path, 'r', encoding = 'utf-8') as f:
-				js = f.read()
-				page_info.colocated_js = js
+	# load css/js files
+	js_path = os.path.join(page_info.basepath, (page_info.basename or 'index') + '.js')
+	if os.path.exists(js_path) and '{% block script %}' not in html:
+		with io.open(js_path, 'r', encoding = 'utf-8') as f:
+			js = f.read()
+			page_info.colocated_js = js
 
-		css_path = os.path.join(page_info.basepath, (page_info.basename or 'index') + '.css')
-		if os.path.exists(css_path) and '{% block style %}' not in html:
-			with io.open(css_path, 'r', encoding='utf-8') as f:
-				css = f.read()
-				page_info.colocated_css = css
+	css_path = os.path.join(page_info.basepath, (page_info.basename or 'index') + '.css')
+	if os.path.exists(css_path) and '{% block style %}' not in html:
+		with io.open(css_path, 'r', encoding='utf-8') as f:
+			css = f.read()
+			page_info.colocated_css = css
 
 	if html:
 		page_info.source = html

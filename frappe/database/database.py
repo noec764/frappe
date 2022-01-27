@@ -705,7 +705,7 @@ class Database(object):
 					set {1} where name=%(name)s""".format(dt, ', '.join(set_values)),
 					values, debug=debug)
 
-			frappe.clear_document_cache(dt, values['name'])
+				frappe.clear_document_cache(dt, values['name'])
 		else:
 			# for singles
 			keys = list(to_update)
