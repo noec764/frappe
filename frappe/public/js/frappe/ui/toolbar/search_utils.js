@@ -154,6 +154,7 @@ frappe.search.utils = {
 		var option = function(type, route, order) {
 			// check to skip extra list in the text
 			// eg. Price List List should be only Price List
+			let skip_list = type === 'List' && target.endsWith('List');
 			let label_without_type = me.bolden_match_part(__(target), keywords);
 			if (skip_list) {
 				var label = label_without_type;

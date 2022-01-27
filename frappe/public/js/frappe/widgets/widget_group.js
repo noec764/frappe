@@ -32,6 +32,7 @@ export default class WidgetGroup {
 		Object.assign(this, opts);
 		this.widgets_list = [];
 		this.widgets_dict = {};
+		this.widget_order = [];
 		this.make();
 	}
 
@@ -102,7 +103,6 @@ export default class WidgetGroup {
 
 	customize() {
 		if (!this.hidden) this.widget_area.show();
-		this.widget_area.show();
 		this.widgets_list.forEach((wid) => {
 			wid.customize(this.options);
 		});
@@ -191,7 +191,6 @@ export class SingleWidgetGroup {
 		Object.assign(this, opts);
 		this.widgets_list = [];
 		this.widgets_dict = {};
-		this.widget_order = [];
 		this.make();
 	}
 
