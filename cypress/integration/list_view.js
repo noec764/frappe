@@ -43,4 +43,3 @@ context('List View', () => {
 		});
 	});
 });
-

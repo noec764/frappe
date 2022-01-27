@@ -21,6 +21,7 @@ context('Form', () => {
 		cy.get('.page-head').findByTitle('To Do').should('exist');
 		cy.get('.list-row').should('contain', 'this is a test todo');
 	});
+
 	it('navigates between documents with child table list filters applied', () => {
 		cy.visit('/app/contact');
 

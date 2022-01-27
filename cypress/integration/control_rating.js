@@ -52,4 +52,5 @@ context('Control Rating', () => {
 			.children('svg')
 			.should('have.length', 7);
 	});
+
 });

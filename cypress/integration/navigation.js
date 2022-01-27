@@ -10,6 +10,7 @@ context('Navigation', () => {
 		cy.go('back');
 		cy.title().should('eq', 'Website');
 	});
+
 	it.only('Navigate to previous page after login', () => {
 		cy.visit('/app/todo');
 		cy.get('.page-head').findByTitle('To Do').should('be.visible');

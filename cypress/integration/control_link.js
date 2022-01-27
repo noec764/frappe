@@ -73,6 +73,7 @@ context('Control Link', () => {
 			cy.get('@input').focus();
 			cy.findByTitle('Open Link')
 				.should('be.visible')
+				.click();
 			cy.location('pathname').should('eq', `/app/todo/${todos[0]}`);
 		});
 	});
@@ -90,4 +91,5 @@ context('Control Link', () => {
 			);
 		});
 	});
+
 });

@@ -55,7 +55,7 @@ context('MultiSelectDialog', () => {
 		cy.get_open_dialog()
 			.get(`.dt-row-header`).should('not.exist');
 
-			cy.get_open_dialog()
+		cy.get_open_dialog()
 			.get(`.frappe-control[data-fieldname="allow_child_item_selection"]`)
 			.find('input[data-fieldname="allow_child_item_selection"]')
 			.should('exist')
@@ -80,7 +80,7 @@ context('MultiSelectDialog', () => {
 			.get(`.frappe-control[data-fieldname="more_child_btn"]`)
 			.should('exist')
 			.as('more-btn');
-
+		
 		cy.get_open_dialog().get('.datatable .dt-scrollable .dt-row').should(($rows) => {
 			expect($rows).to.have.length(20);
 		});
@@ -94,5 +94,6 @@ context('MultiSelectDialog', () => {
 				throw new Error("More button doesn't work");
 			}
 		});
+
 	});
 });

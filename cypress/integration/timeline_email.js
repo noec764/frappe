@@ -6,7 +6,6 @@ context('Timeline Email', () => {
 	});
 
 	it('Adding new ToDo', () => {
-		//Adding new ToDo
 		cy.click_listview_primary_button('Add ToDo');
 		cy.get('.custom-actions:visible > .btn').contains("Edit in full page").click({delay: 500});
 		cy.fill_field("description", "Test ToDo",  "Text Editor");

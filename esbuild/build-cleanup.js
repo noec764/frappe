@@ -8,7 +8,7 @@ module.exports = {
 	setup(build) {
 		build.onEnd(result => {
 			if (result.errors.length) return;
-			// clean_dist_files(Object.keys(result.metafile.outputs));
+			clean_dist_files(Object.keys(result.metafile.outputs));
 		});
 	},
 };

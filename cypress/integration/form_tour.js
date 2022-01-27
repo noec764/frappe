@@ -75,7 +75,6 @@ context('Form Tour', () => {
 		cy.wait(500);
 		cy.get('.driver-popover-title').contains('Test Title 4').siblings().get('@next_btn').click();
 		cy.wait(500);
-
 		// collapse row
 		cy.get('.grid-row-open .grid-collapse-row').click();
 		cy.wait(500);

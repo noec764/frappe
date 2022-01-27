@@ -4,7 +4,6 @@ context('Timeline', () => {
 	before(() => {
 		cy.visit('/login');
 		cy.login();
-		cy.visit('/app/todo');
 	});
 
 	it('Adding new ToDo, adding new comment, verifying comment addition & deletion and deleting ToDo', () => {

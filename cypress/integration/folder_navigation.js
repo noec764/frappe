@@ -18,7 +18,7 @@ context('Folder Navigation', () => {
 		cy.get('.menu-btn-group > .btn').click();
 		cy.get('.menu-btn-group [data-label="New Folder"]').click();
 		cy.get('form > [data-fieldname="value"]').type('Test Folder');
-		cy.findByRole('button', {name: 'Create'}).click();
+		cy.findByRole('button', {name: 'Create'}).click();   
 	});
 
 	it('Navigating the nested folders, checking if the URL formed is correct, checking if the added content in the child folder is correct', () => {
@@ -64,7 +64,7 @@ context('Folder Navigation', () => {
 		cy.visit('/app/file/view/home/Attachments');
 		cy.get('.list-row-checkbox').eq(0).click();
 		cy.findByRole('button', {name: 'Actions'}).click();
-		cy.get('.actions-btn-group [data-label="Delete"]').click();
+		cy.get('.actions-btn-group [data-label="Delete"]').click();  
 		cy.findByRole('button', {name: 'Yes'}).click();
 	});
 
@@ -76,4 +76,4 @@ context('Folder Navigation', () => {
 		cy.get('.actions-btn-group [data-label="Delete"]').click();
 		cy.findByRole('button', {name: 'Yes'}).click();
 	});
-});
+}); 

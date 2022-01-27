@@ -48,7 +48,6 @@ context('Sidebar', () => {
 		cy.get('.assignments > .avatar-group > .avatar > .avatar-frame').click();
 		cy.get('.remove-btn').click({force: true});
 		cy.hide_dialog();
-
 		cy.visit('/app/doctype');
 		cy.click_sidebar_button("Assigned To");
 		cy.get('.empty-state').should('contain', 'No filters found');
