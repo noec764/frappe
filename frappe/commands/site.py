@@ -624,6 +624,7 @@ def _set_limits(context, site, limits):
 def clear_limits(context, site, limits):
 	"""Clears given limit from the site config, and removes limit from site config if its empty"""
 	from frappe.limits import clear_limit as _clear_limit
+	from frappe.installer import update_site_config
 	if not limits:
 		return
 
