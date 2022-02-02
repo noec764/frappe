@@ -41,7 +41,7 @@ def getdoc(doctype, name, user=None):
 
 		# add file list
 		doc.add_viewed()
-		get_docinfo(doc)
+		frappe.response["docinfo"] = get_docinfo(doc)
 
 	except Exception:
 		frappe.errprint(frappe.utils.get_traceback())
@@ -90,8 +90,8 @@ def get_docinfo(doc=None, doctype=None, name=None):
 			raise frappe.PermissionError
 
 	all_communications = _get_communications(doc.doctype, doc.name)
-	automated_messages = filter(lambda x: x['communication_type'] == 'Automated Message', all_communications)
-	communications_except_auto_messages = filter(lambda x: x['communication_type'] != 'Automated Message', all_communications)
+	automated_messages = [msg for msg in all_communications if msg['communication_type'] == 'Automated Message']
+	communications_except_auto_messages = [msg for msg in all_communications if msg['communication_type'] != 'Automated Message']
 
 	docinfo = frappe._dict(user_info = {})
 
@@ -117,7 +117,7 @@ def get_docinfo(doc=None, doctype=None, name=None):
 
 	update_user_info(docinfo)
 
-	frappe.response["docinfo"] = docinfo
+	return docinfo
 
 def add_comments(doc, docinfo):
 	# divide comments into separate lists
