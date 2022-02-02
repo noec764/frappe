@@ -1,10 +1,10 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 import json
 import mimetypes
 import os
 import re
-from functools import wraps
+from functools import lru_cache, wraps
 from typing import Dict, Optional
 
 import yaml
@@ -512,3 +512,11 @@ def add_preload_headers(response):
 	except Exception:
 		import traceback
 		traceback.print_exc()
+
+@lru_cache()
+def is_binary_file(path):
+	# ref: https://stackoverflow.com/a/7392391/10309266
+	textchars = bytearray({7,8,9,10,12,13,27} | set(range(0x20, 0x100)) - {0x7f})
+	with open(path, 'rb') as f:
+		content = f.read(1024)
+		return bool(content.translate(None, textchars))
