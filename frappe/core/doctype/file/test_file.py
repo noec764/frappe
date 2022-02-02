@@ -7,7 +7,7 @@ import frappe
 import os
 import unittest
 from frappe import _
-from frappe.core.doctype.file.file import get_attached_images, move_file, get_files_in_folder, unzip_file
+from frappe.core.doctype.file.file import File, get_attached_images, move_file, get_files_in_folder, unzip_file
 from frappe.utils import get_files_path
 # test_records = frappe.get_test_records('File')
 
@@ -24,8 +24,6 @@ def make_test_doc():
 
 
 class TestSimpleFile(unittest.TestCase):
-
-
 	def setUp(self):
 		self.attached_to_doctype, self.attached_to_docname = make_test_doc()
 		self.test_content = test_content1
@@ -38,21 +36,12 @@ class TestSimpleFile(unittest.TestCase):
 		_file.save()
 		self.saved_file_url = _file.file_url
 
-
 	def test_save(self):
 		_file = frappe.get_doc("File", {"file_url": self.saved_file_url})
 		content = _file.get_content()
 		self.assertEqual(content, self.test_content)
 
-
-	def tearDown(self):
-		# File gets deleted on rollback, so blank
-		pass
-
-
 class TestBase64File(unittest.TestCase):
-
-
 	def setUp(self):
 		self.attached_to_doctype, self.attached_to_docname = make_test_doc()
 		self.test_content = base64.b64encode(test_content1.encode('utf-8'))
@@ -181,23 +170,14 @@ class TestSameContent(unittest.TestCase):
 
 		_file2.save()
 
-
 	def test_saved_content(self):
 		self.assertFalse(os.path.exists(get_files_path(self.dup_filename)))
-
-
-	def tearDown(self):
-		# File gets deleted on rollback, so blank
-		pass
 
 
 class TestFile(unittest.TestCase):
 	def setUp(self):
 		frappe.set_user('Administrator')
 		self.delete_test_data()
-		if not frappe.db.exists("File", {"is_home_folder": 1}):
-			make_home_folder()
-			frappe.db.commit()
 		self.upload_file()
 
 	def tearDown(self):
@@ -375,7 +355,7 @@ class TestFile(unittest.TestCase):
 		file1.save()
 
 	def test_file_url_validation(self):
-		test_file = frappe.get_doc({
+		test_file: File = frappe.get_doc({
 			"doctype": "File",
 			"file_name": 'logo',
 			"file_url": 'https://frappe.io/files/frappe.png'

@@ -1,23 +1,27 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
-import unittest
-import frappe
-
-from frappe.utils import evaluate_filters, money_in_words, scrub_urls, get_url
-from frappe.utils import validate_url, validate_email_address
-from frappe.utils import ceil, floor
-from frappe.utils.data import cast, validate_python_code
-from frappe.utils.diff import get_version_diff, version_query, _get_value_from_version
-
-from PIL import Image
-from frappe.utils.image import strip_exif_data, optimize_image
 import io
+import json
+import unittest
+from datetime import date, datetime, time, timedelta
+from decimal import Decimal
+from enum import Enum
 from mimetypes import guess_type
-from datetime import datetime, timedelta, date
-
 from unittest.mock import patch
+
+import pytz
+from PIL import Image
+
+import frappe
+from frappe.utils import ceil, evaluate_filters, floor, format_timedelta
+from frappe.utils import get_url, money_in_words, parse_timedelta, scrub_urls
+from frappe.utils import validate_email_address, validate_url
+from frappe.utils.data import cast, validate_python_code
+from frappe.utils.diff import _get_value_from_version, get_version_diff, version_query
+from frappe.utils.image import optimize_image, strip_exif_data
+from frappe.utils.response import json_handler
+
 
 class TestFilters(unittest.TestCase):
 	def test_simple_dict(self):
@@ -51,13 +55,13 @@ class TestFilters(unittest.TestCase):
 class TestMoney(unittest.TestCase):
 	def test_money_in_words(self):
 		nums_bhd = [
-			(5000, "Five Thousand Bahraini Dinar"), (5000.0, "Five Thousand Bahraini Dinar"),
-			(0.1, "One Hundred Fils"), (0, "Zero Bahraini Dinar"), ("Fail", "")
+			(5000, "BHD Five Thousand only."), (5000.0, "BHD Five Thousand only."),
+			(0.1, "One Hundred Fils only."), (0, "BHD Zero only."), ("Fail", "")
 		]
 
 		nums_ngn = [
-			(5000, "Five Thousand Naira"), (5000.0, "Five Thousand Naira"),
-			(0.1, "Ten Kobo"), (0, "Zero Naira"), ("Fail", "")
+			(5000, "NGN Five Thousand only."), (5000.0, "NGN Five Thousand only."),
+			(0.1, "Ten Kobo only."), (0, "NGN Zero only."), ("Fail", "")
 		]
 
 		for num in nums_bhd:
@@ -141,7 +145,7 @@ class TestFieldCasting(unittest.TestCase):
 class TestMathUtils(unittest.TestCase):
 	def test_floor(self):
 		from decimal import Decimal
-		self.assertEqual(floor(2), 2)
+		self.assertEqual(floor(2),              2)
 		self.assertEqual(floor(12.32904),       12)
 		self.assertEqual(floor(22.7330),        22)
 		self.assertEqual(floor('24.7'),         24)
@@ -150,7 +154,7 @@ class TestMathUtils(unittest.TestCase):
 
 	def test_ceil(self):
 		from decimal import Decimal
-		self.assertEqual(ceil(2), 2)
+		self.assertEqual(ceil(2),               2)
 		self.assertEqual(ceil(12.32904),        13)
 		self.assertEqual(ceil(22.7330),         23)
 		self.assertEqual(ceil('24.7'),          25)
@@ -225,7 +229,6 @@ class TestValidationUtils(unittest.TestCase):
 			throw=True
 		)
 
-@unittest.skip("Skipped in CI")
 class TestImage(unittest.TestCase):
 	def test_strip_exif_data(self):
 		original_image = Image.open("../apps/frappe/frappe/tests/data/exif_sample_image.jpg")
@@ -277,7 +280,6 @@ class TestPythonExpressions(unittest.TestCase):
 			self.assertRaises(frappe.ValidationError, validate_python_code, expr)
 
 class TestDiffUtils(unittest.TestCase):
-
 	@classmethod
 	def setUpClass(cls):
 		cls.doc = frappe.get_doc(doctype="Client Script", dt="Client Script")
@@ -332,8 +334,59 @@ class TestDateUtils(unittest.TestCase):
 		self.assertEqual(frappe.utils.get_last_day_of_week("2020-12-28"),
 			frappe.utils.getdate("2021-01-02"))
 
-class TestXlsxUtils(unittest.TestCase):
+class TestResponse(unittest.TestCase):
+	def test_json_handler(self):
+		class TEST(Enum):
+			ABC = "!@)@)!"
+			BCE = "ENJD"
 
+		GOOD_OBJECT = {
+			"time_types": [
+				date(year=2020, month=12, day=2),
+				datetime(year=2020, month=12, day=2, hour=23, minute=23, second=23, microsecond=23, tzinfo=pytz.utc),
+				time(hour=23, minute=23, second=23, microsecond=23, tzinfo=pytz.utc),
+				timedelta(days=10, hours=12, minutes=120, seconds=10),
+			],
+			"float": [
+				Decimal(29.21),
+			],
+			"doc": [
+				frappe.get_doc("System Settings"),
+			],
+			"iter": [
+				{1, 2, 3},
+				(1, 2, 3),
+				"abcdef",
+			],
+			"string": "abcdef"
+		}
+
+		BAD_OBJECT = {"Enum": TEST}
+
+		processed_object = json.loads(json.dumps(GOOD_OBJECT, default=json_handler))
+
+		self.assertTrue(all([isinstance(x, str) for x in processed_object["time_types"]]))
+		self.assertTrue(all([isinstance(x, float) for x in processed_object["float"]]))
+		self.assertTrue(all([isinstance(x, (list, str)) for x in processed_object["iter"]]))
+		self.assertIsInstance(processed_object["string"], str)
+		with self.assertRaises(TypeError):
+			json.dumps(BAD_OBJECT, default=json_handler)
+
+class TestTimeDeltaUtils(unittest.TestCase):
+	def test_format_timedelta(self):
+		self.assertEqual(format_timedelta(timedelta(seconds=0)), "0:00:00")
+		self.assertEqual(format_timedelta(timedelta(hours=10)), "10:00:00")
+		self.assertEqual(format_timedelta(timedelta(hours=100)), "100:00:00")
+		self.assertEqual(format_timedelta(timedelta(seconds=100, microseconds=129)), "0:01:40.000129")
+		self.assertEqual(format_timedelta(timedelta(seconds=100, microseconds=12212199129)), "3:25:12.199129")
+
+	def test_parse_timedelta(self):
+		self.assertEqual(parse_timedelta("0:0:0"), timedelta(seconds=0))
+		self.assertEqual(parse_timedelta("10:0:0"), timedelta(hours=10))
+		self.assertEqual(parse_timedelta("7 days, 0:32:18.192221"), timedelta(days=7, seconds=1938, microseconds=192221))
+		self.assertEqual(parse_timedelta("7 days, 0:32:18"), timedelta(days=7, seconds=1938))
+
+class TestXlsxUtils(unittest.TestCase):
 	def test_unescape(self):
 		from frappe.utils.xlsxutils import handle_html
 
