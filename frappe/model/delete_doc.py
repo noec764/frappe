@@ -217,7 +217,7 @@ def check_permission_and_not_submitted(doc):
 			.format(doc.doctype, doc.name), raise_exception=frappe.PermissionError)
 
 	# check if submitted
-	if doc.docstatus == 1:
+	if doc.docstatus.is_submitted():
 		frappe.msgprint(_("{0} {1}: Submitted Record cannot be deleted. You must Cancel it first.").format(_(doc.doctype), doc.name),
 			raise_exception=True)
 

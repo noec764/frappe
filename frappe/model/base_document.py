@@ -11,6 +11,7 @@ from frappe.model import display_fieldtypes
 from frappe.utils import (cint, flt, now, cstr, strip_html,
 	sanitize_html, sanitize_email, cast_fieldtype)
 from frappe.utils.html_utils import unescape_html
+from frappe.model.docstatus import DocStatus
 
 max_positive_value = {
 	'smallint': 2 ** 15,
@@ -220,7 +221,7 @@ class BaseDocument(object):
 		value.parentfield = key
 
 		if value.docstatus is None:
-			value.docstatus = 0
+			value.docstatus = DocStatus.draft()
 
 		if not getattr(value, "idx", None):
 			value.idx = len(self.get(key) or []) + 1
@@ -279,8 +280,11 @@ class BaseDocument(object):
 			if key not in self.__dict__:
 				self.__dict__[key] = None
 
-			if key in ("idx", "docstatus") and self.__dict__[key] is None:
-				self.__dict__[key] = 0
+			if self.__dict__[key] is None:
+				if key == "docstatus":
+					self.docstatus = DocStatus.draft()
+				elif key == "idx":
+					self.__dict__[key] = 0
 
 		for key in self.get_valid_columns():
 			if key not in self.__dict__:
@@ -300,6 +304,14 @@ class BaseDocument(object):
 
 	def is_new(self):
 		return self.get("__islocal")
+
+	@property
+	def docstatus(self):
+		return DocStatus(self.get("docstatus"))
+
+	@docstatus.setter
+	def docstatus(self, value):
+		self.__dict__["docstatus"] = DocStatus(cint(value))
 
 	def as_dict(self, no_nulls=False, no_default_fields=False, convert_dates_to_str=False):
 		doc = self.get_valid_dict(convert_dates_to_str=convert_dates_to_str)
@@ -484,7 +496,7 @@ class BaseDocument(object):
 					self.set(df.fieldname, flt(self.get(df.fieldname)))
 
 		if self.docstatus is not None:
-			self.docstatus = cint(self.docstatus)
+			self.docstatus = DocStatus(cint(self.docstatus))
 
 	def _get_missing_mandatory_fields(self):
 		"""Get mandatory fields that do not have any values"""
@@ -575,7 +587,7 @@ class BaseDocument(object):
 					setattr(self, df.fieldname, values.name)
 
 					for _df in fields_to_fetch:
-						if self.is_new() or self.docstatus != 1 or _df.allow_on_submit:
+						if self.is_new() or not self.docstatus.is_submitted() or _df.allow_on_submit:
 							self.set_fetch_from_value(doctype, _df, values)
 
 					notify_link_count(doctype, docname)
@@ -585,7 +597,7 @@ class BaseDocument(object):
 
 					elif (df.fieldname != "amended_from"
 						and (is_submittable or self.meta.is_submittable) and frappe.get_meta(doctype).is_submittable
-						and cint(frappe.db.get_value(doctype, docname, "docstatus"))==2):
+						and cint(frappe.db.get_value(doctype, docname, "docstatus")) == DocStatus.cancelled()):
 
 						cancelled_links.append((df.fieldname, docname, get_msg(df, docname)))
 
@@ -797,8 +809,8 @@ class BaseDocument(object):
 				or (df.get("fieldtype") in ("Data", "Small Text", "Text") and df.get("options")=="Email")
 				or df.get("fieldtype") in ("Attach", "Attach Image", "Barcode", "Code")
 				# cancelled and submit but not update after submit should be ignored
-				or self.docstatus==2
-				or (self.docstatus==1 and not df.get("allow_on_submit"))):
+				or self.docstatus.is_cancelled()
+				or (self.docstatus.is_submitted() and not df.get("allow_on_submit"))):
 				continue
 
 			else:
