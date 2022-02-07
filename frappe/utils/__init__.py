@@ -25,9 +25,6 @@ import frappe
 from frappe.utils.data import *
 from frappe.utils.html_utils import sanitize_html
 
-default_fields = ['doctype', 'name', 'owner', 'creation', 'modified', 'modified_by',
-	'parent', 'parentfield', 'parenttype', 'idx', 'docstatus']
-
 def get_fullname(user=None):
 	"""get the full name (first name + last name) of the user from User"""
 	if not user:
