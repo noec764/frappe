@@ -170,11 +170,11 @@ class CardDialog extends WidgetDialog {
 						fieldname: "label",
 						fieldtype: "Data",
 						in_list_view: 1,
-						label: "Label"
+						label: "Label",
 					},
 					{
 						fieldname: "icon",
-						fieldtype: "Data",
+						fieldtype: "Icon",
 						label: "Icon"
 					},
 					{
@@ -182,6 +182,7 @@ class CardDialog extends WidgetDialog {
 						fieldtype: "Select",
 						in_list_view: 1,
 						label: "Link Type",
+						reqd: 1,
 						options: ["DocType", "Page", "Report"]
 					},
 					{
@@ -189,6 +190,7 @@ class CardDialog extends WidgetDialog {
 						fieldtype: "Dynamic Link",
 						in_list_view: 1,
 						label: "Link To",
+						reqd: 1,
 						get_options: (df) => {
 							return df.doc.link_type;
 						}
@@ -226,6 +228,31 @@ class CardDialog extends WidgetDialog {
 	}
 
 	process_data(data) {
+		data.links.map((item, idx) => {
+			let message = '';
+			let row = idx+1;
+
+			if (!item.link_type) {
+				message = "Following fields have missing values: <br><br><ul>";
+				message += `<li>Link Type in Row ${row}</li>`;
+			}
+
+			if (!item.link_to) {
+				message += `<li>Link To in Row ${row}</li>`;
+			}
+
+			if (message) {
+				message += "</ul>";
+				frappe.throw({
+					message: __(message),
+					title: __("Missing Values Required"),
+					indicator: 'orange'
+				});
+			}
+
+			item.label = item.label ? item.label : item.link_to;
+		});
+
 		data.label = data.label ? data.label : data.chart_name;
 		return data;
 	}

@@ -161,6 +161,7 @@ body {
 				svg {
 					flex: none;
 					margin-right: 6px;
+					margin-left: -2px;
 					box-shadow: none;
 				}
 			}
@@ -566,21 +567,29 @@ body {
 	}
 
 	&.links-widget-box {
+		padding: 18px 12px;
+
 		.link-item {
 			display: flex;
 			text-decoration: none;
+			font-size: var(--text-md);
 			color: var(--text-color);
-			padding: var(--padding-xs);
-			margin-left: -5px;
+			padding: 4px;
+			margin-left: -4px;
+			margin-bottom: 4px;
 			border-radius: var(--border-radius-md);
 			cursor: pointer;
 
 			&:hover {
-				background-color: var(--bg-color);
+				background-color: var(--fg-hover-color);
+
+				.indicator-pill {
+					background-color: var(--fg-color);
+				}
 			}
 
 			&:first-child {
-				margin-top: 15px;
+				margin-top: 18px;
 			}
 
 			&:last-child {
@@ -607,6 +616,8 @@ body {
 
 			.indicator-pill {
 				margin-right: var(--margin-sm);
+				height: 20px;
+				padding: 3px 8px;
 			}
 		}
 	}
@@ -845,9 +856,16 @@ body {
 				overflow-y: auto;
 			}
 
+			.layout-main-section-wrapper {
+				margin-top: -5px;
+				padding-top: 5px;
+			}
+
 			.layout-main-section {
-				padding: var(--padding-md);
-				margin-bottom: var(--margin-sm);
+				background-color: var(--fg-color);
+				box-shadow: var(--card-shadow);
+				border-radius: var(--border-radius-lg);
+				padding: var(--padding-sm);
 			}
 
 			.desk-sidebar {
