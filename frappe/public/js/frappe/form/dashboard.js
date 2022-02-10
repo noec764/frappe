@@ -551,7 +551,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 		this.chart_area.show();
 		this.chart_area.body.empty();
-		$.extend(args, {
+		args = Object.assign({
 			type: 'line',
 			colors: ['green'],
 			truncateLegends: 1,
