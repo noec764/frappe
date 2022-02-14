@@ -415,6 +415,9 @@ class CustomizeForm(Document):
 		return property_value
 
 	def validate_fieldtype_change(self, df, old_value, new_value):
+		if df.is_virtual:
+			return
+
 		allowed = self.allow_fieldtype_change(old_value, new_value)
 		if allowed:
 			old_value_length = cint(frappe.db.type_map.get(old_value)[1])
@@ -428,7 +431,7 @@ class CustomizeForm(Document):
 			else:
 				self.flags.update_db = True
 
-		if not allowed:
+		else:
 			frappe.throw(_("Fieldtype cannot be changed from {0} to {1} in row {2}").format(_(old_value), _(new_value), df.idx))
 
 	def validate_fieldtype_length(self):
@@ -556,7 +559,8 @@ docfield_properties = {
 	'allow_in_quick_entry': 'Check',
 	'hide_border': 'Check',
 	'hide_days': 'Check',
-	'hide_seconds': 'Check'
+	'hide_seconds': 'Check',
+	'is_virtual': 'Check',
 }
 
 doctype_link_properties = {

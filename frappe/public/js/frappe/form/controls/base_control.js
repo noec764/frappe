@@ -40,6 +40,9 @@ frappe.ui.form.Control = class BaseControl {
 		if (this.df.get_status) {
 			return this.df.get_status(this);
 		}
+		if (this.df.is_virtual) {
+			return "Read";
+		}
 
 		if ((!this.doctype && !this.docname) || this.df.parenttype === 'Web Form' || this.df.webform_field) {
 			// like in case of a dialog box
@@ -53,7 +56,7 @@ frappe.ui.form.Control = class BaseControl {
 				if(explain) console.log("By Hidden Dependency: None"); // eslint-disable-line no-console
 				return "None";
 
-			} else if (cint(this.df.read_only)) {
+			} else if (cint(this.df.read_only || this.df.is_virtual)) {
 				// eslint-disable-next-line
 				if (explain) console.log("By Read Only: Read"); // eslint-disable-line no-console
 				return "Read";

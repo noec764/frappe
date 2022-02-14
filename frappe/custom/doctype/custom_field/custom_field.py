@@ -55,7 +55,7 @@ class CustomField(Document):
 		old_fieldtype = self.db_get('fieldtype')
 		is_fieldtype_changed = (not self.is_new()) and (old_fieldtype != self.fieldtype)
 
-		if is_fieldtype_changed and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype):
+		if not self.is_virtual and is_fieldtype_changed and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype):
 			frappe.throw(_("Fieldtype cannot be changed from {0} to {1}").format(_(old_fieldtype), _(self.fieldtype)))
 
 		if not self.fieldname:
@@ -66,7 +66,7 @@ class CustomField(Document):
 
 		if not self.flags.ignore_validate:
 			from frappe.core.doctype.doctype.doctype import check_fieldname_conflicts
-			check_fieldname_conflicts(self.dt, self.fieldname)
+			check_fieldname_conflicts(self)
 
 	def on_update(self):
 		if not frappe.flags.in_setup_wizard:

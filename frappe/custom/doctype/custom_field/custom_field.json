@@ -34,6 +34,7 @@
     "non_negative",
     "reqd",
     "unique",
+    "is_virtual",
     "read_only",
     "ignore_user_permissions",
     "hidden",
@@ -242,6 +243,12 @@
     },
     {
       "default": "0",
+      "fieldname": "is_virtual",
+      "fieldtype": "Check",
+      "label": "Is Virtual"
+     },
+    {
+      "default": "0",
       "fieldname": "read_only",
       "fieldtype": "Check",
       "label": "Read Only"
@@ -424,7 +431,7 @@
   "idx": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2021-09-04 12:45:23.810120",
+  "modified": "2022-01-27 21:47:01.065556",
   "modified_by": "Administrator",
   "module": "Custom",
   "name": "Custom Field",
