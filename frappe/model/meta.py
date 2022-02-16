@@ -1,4 +1,4 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
 # metadata
@@ -14,16 +14,28 @@ Example:
 
 
 '''
+import json
+import os
 from datetime import datetime
+
 import click
-import frappe, json, os
-from frappe.utils import cstr, cint, cast
-from frappe.model import default_fields, no_value_fields, optional_fields, data_fieldtypes, table_fields, child_table_fields
-from frappe.model.document import Document
-from frappe.model.base_document import BaseDocument
-from frappe.modules import load_doctype_module
-from frappe.model.workflow import get_workflow_name
+
+import frappe
 from frappe import _
+from frappe.model import (
+	child_table_fields,
+	data_fieldtypes,
+	default_fields,
+	no_value_fields,
+	optional_fields,
+	table_fields,
+)
+from frappe.model.base_document import BaseDocument
+from frappe.model.document import Document
+from frappe.model.workflow import get_workflow_name
+from frappe.modules import load_doctype_module
+from frappe.utils import cast, cint, cstr
+
 
 def get_meta(doctype, cached=True):
 	if cached:
@@ -455,7 +467,6 @@ class Meta(Document):
 
 		return [df.fieldname for df in self.fields if is_value_field(df)]
 
-
 	def get_fields_to_check_permissions(self, user_permission_doctypes):
 		fields = self.get("fields", {
 			"fieldtype":"Link",
@@ -554,7 +565,7 @@ class Meta(Document):
 				# For internal links parent doctype will be the key
 				doctype = link.parent_doctype or link.link_doctype
 				# group found
-				if link.group and group.label == _(link.group):
+				if link.group and _(group.label) == _(link.group):
 					if doctype not in group.get('items'):
 						group.get('items').append(doctype)
 					link.added = True
@@ -658,7 +669,7 @@ def get_field_currency(df, doc=None):
 				.setdefault(df.fieldname, currency)
 
 	return frappe.local.field_currency.get((doc.doctype, doc.name), {}).get(df.fieldname) or \
-		(doc.parent and frappe.local.field_currency.get((doc.doctype, doc.parent), {}).get(df.fieldname))
+		(doc.get("parent") and frappe.local.field_currency.get((doc.doctype, doc.parent), {}).get(df.fieldname))
 
 def get_field_precision(df, doc=None, currency=None):
 	"""get precision based on DocField options and fieldvalue in doc"""
@@ -697,6 +708,7 @@ def get_default_df(fieldname):
 			fieldtype = "Data"
 		)
 
+
 def trim_tables(doctype=None, dry_run=False, quiet=False):
 	"""
 	Removes database fields that don't exist in the doctype (json or custom field). This may be needed
@@ -705,7 +717,6 @@ def trim_tables(doctype=None, dry_run=False, quiet=False):
 	"""
 	UPDATED_TABLES = {}
 	filters = {"issingle": 0}
-
 	if doctype:
 		filters["name"] = doctype
 
@@ -725,6 +736,7 @@ def trim_tables(doctype=None, dry_run=False, quiet=False):
 			click.echo(e, err=True)
 
 	return UPDATED_TABLES
+
 
 def trim_table(doctype, dry_run=True):
 	frappe.cache().hdel('table_columns', f"tab{doctype}")
