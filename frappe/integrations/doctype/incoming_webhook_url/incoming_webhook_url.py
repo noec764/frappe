@@ -105,7 +105,7 @@ class IncomingWebhookURL(Document):
 			else:
 				err_message = f"{r.status_code}: {r.text}"
 
-			frappe.log_error(err_message, _('Slack Webhook Error'))
+			frappe.log_error(err_message, _('{0} Webhook Error').format(self.service))
 			return 'error'
 
 		return 'success'
