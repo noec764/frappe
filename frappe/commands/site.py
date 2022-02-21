@@ -439,20 +439,17 @@ def disable_user(context, email):
 @pass_context
 def migrate(context, skip_failing=False, skip_search_index=False):
 	"Run patches, sync schema and rebuild files/translations"
-	from frappe.migrate import migrate
+	from frappe.migrate import SiteMigration
 
 	for site in context.sites:
 		click.secho(f"Migrating {site}", fg="green")
-		frappe.init(site=site)
-		frappe.connect()
 		try:
-			migrate(
-				context.verbose,
+			SiteMigration(
 				skip_failing=skip_failing,
-				skip_search_index=skip_search_index
-			)
+				skip_search_index=skip_search_index,
+			).run(site=site)
 		finally:
-			frappe.destroy()
+			print()
 	if not context.sites:
 		raise SiteNotSpecifiedError
 

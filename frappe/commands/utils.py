@@ -27,7 +27,7 @@ DATA_IMPORT_DEPRECATION = (
 @click.option('--verbose', is_flag=True, default=False, help='Verbose')
 def build(app=None, apps=None, hard_link=False, make_copy=False, restore=False, production=False, verbose=False, force=False):
 	"Compile JS and CSS source files"
-	from frappe.build import bundle, download_frappe_assets
+	from frappe.build import bundle
 	frappe.init('')
 
 	if not apps and app:
