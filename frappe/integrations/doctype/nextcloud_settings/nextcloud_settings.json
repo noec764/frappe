@@ -1,0 +1,180 @@
+{
+ "actions": [],
+ "beta": 1,
+ "creation": "2022-02-11 23:54:25.714339",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enabled",
+  "_toggle_ssection",
+  "enable_sync",
+  "enable_backups",
+  "_login_section",
+  "cloud_url",
+  "username",
+  "password",
+  "webdav_url",
+  "_file_sync_section",
+  "path_to_files_folder",
+  "last_filesync_dt",
+  "next_filesync_ignore_id_conflicts",
+  "not_implemented",
+  "path_to_upload_folder",
+  "send_email_for_successful_backup",
+  "send_notifications_to",
+  "path_to_backups_folder",
+  "backup_frequency"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enable Nextcloud Integration"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "_login_section",
+   "fieldtype": "Section Break",
+   "label": "Login Details"
+  },
+  {
+   "description": "You can also provide a port number after the URL e.g. https://example.com:443",
+   "fieldname": "cloud_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nextcloud URL",
+   "mandatory_depends_on": "enabled"
+  },
+  {
+   "description": "By default: /remote.php/dav/files/{username}",
+   "fieldname": "webdav_url",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "WebDav URL"
+  },
+  {
+   "fieldname": "username",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Nextcloud Username",
+   "mandatory_depends_on": "enabled"
+  },
+  {
+   "fieldname": "password",
+   "fieldtype": "Password",
+   "label": "Password",
+   "mandatory_depends_on": "enabled"
+  },
+  {
+   "default": "0",
+   "description": "Enable this option to store your files only on your Nextcloud Drive.",
+   "fieldname": "enable_sync",
+   "fieldtype": "Check",
+   "label": "Enable File Sync"
+  },
+  {
+   "depends_on": "eval: doc.enabled && doc.enable_sync",
+   "fieldname": "_file_sync_section",
+   "fieldtype": "Section Break",
+   "label": "File Synchronisation"
+  },
+  {
+   "fieldname": "path_to_files_folder",
+   "fieldtype": "Data",
+   "label": "Path to Files Folder"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "not_implemented",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "not implemented"
+  },
+  {
+   "depends_on": "enabled",
+   "description": "Path where backups will be uploaded, if not provided default is Frappe Backups",
+   "fieldname": "path_to_upload_folder",
+   "fieldtype": "Data",
+   "label": "[dep] Path to Upload Folder"
+  },
+  {
+   "default": "0",
+   "description": "Note: By default emails for failed backups are sent.",
+   "fieldname": "send_email_for_successful_backup",
+   "fieldtype": "Check",
+   "label": "Send Email for Successful Backup"
+  },
+  {
+   "fieldname": "send_notifications_to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Send Notifications To",
+   "options": "Email"
+  },
+  {
+   "fieldname": "path_to_backups_folder",
+   "fieldtype": "Data",
+   "label": "Path to Backups Folder"
+  },
+  {
+   "default": "Daily",
+   "fieldname": "backup_frequency",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Backup Frequency",
+   "mandatory_depends_on": "enabled",
+   "options": "Daily\nWeekly"
+  },
+  {
+   "default": "0",
+   "depends_on": "enabled",
+   "fieldname": "enable_backups",
+   "fieldtype": "Check",
+   "label": "Enable Backups"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "_toggle_ssection",
+   "fieldtype": "Section Break",
+   "label": "Enabled Features"
+  },
+  {
+   "fieldname": "last_filesync_dt",
+   "fieldtype": "Datetime",
+   "label": "Last File Sync"
+  },
+  {
+   "default": "0",
+   "fieldname": "next_filesync_ignore_id_conflicts",
+   "fieldtype": "Check",
+   "label": "next_filesync_ignore_id_conflicts"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2022-02-21 22:02:50.492973",
+ "modified_by": "Administrator",
+ "module": "Integrations",
+ "name": "Nextcloud Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}
