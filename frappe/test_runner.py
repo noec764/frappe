@@ -395,7 +395,7 @@ def make_test_objects(doctype, test_records=None, verbose=None, reset=False):
 		try:
 			d.run_method("before_test_insert")
 			d.flags.ignore_permissions = True
-			d.insert()
+			d.insert(ignore_if_duplicate=True)
 
 			if docstatus == 1:
 				d.submit()
