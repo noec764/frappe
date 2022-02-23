@@ -123,7 +123,6 @@ def before_tests():
 	frappe.clear_cache()
 
 	# complete setup if missing
-	from frappe.desk.page.setup_wizard.setup_wizard import setup_complete
 	if not int(frappe.db.get_single_value('System Settings', 'setup_complete') or 0):
 		complete_setup_wizard()
 
