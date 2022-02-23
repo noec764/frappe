@@ -273,7 +273,7 @@ def check_email_limit(recipients):
 		this_month = get_emails_sent_this_month()
 
 		if (this_month + len(recipients)) > monthly_email_limit:
-			throw(_("Cannot send this email. You have crossed the sending limit of {0} emails for this month.").format(monthly_email_limit),
+			frappe.throw(_("Cannot send this email. You have crossed the sending limit of {0} emails for this month.").format(monthly_email_limit),
 				EmailLimitCrossedError)
 
 def get_emails_sent_this_month():
