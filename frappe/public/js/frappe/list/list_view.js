@@ -845,9 +845,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 
 		const unseen_communication = JSON.parse(doc._comments || "[]").filter(c => c.hasOwnProperty("seen") && !c.seen)
+		const comments_tooltip = `data-toggle="tooltip" data-placement="top" title="${unseen_communication.length || 0} ${__('unseen communications')}"`
 		const comment_count = `<span class="${
 			!doc._comment_count ? "text-extra-muted" : (unseen_communication.length ? "unseen" : "")
-		} comment-count">
+		} comment-count" ${comments_tooltip}>
 				${frappe.utils.icon('small-message')}
 				${doc._comment_count > 99 ? "99+" : doc._comment_count}
 			</span>`;
