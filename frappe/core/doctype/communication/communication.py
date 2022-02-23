@@ -466,7 +466,7 @@ def update_parent_document_on_communication(doc):
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)
 	parent.run_method("notify_communication", doc)
-	parent.notify_update()
+	parent.notify_update(all_users=True)
 
 def update_first_response_time(parent, communication):
 	if parent.meta.has_field("first_response_time") and not parent.get("first_response_time"):

@@ -1060,8 +1060,11 @@ class Document(BaseDocument):
 		if getattr(self.meta, 'track_seen', False):
 			frappe.db.set_value(self.doctype, self.name, "_seen", json.dumps([frappe.session.user]), update_modified=False)
 
-	def notify_update(self):
-		"""Publish realtime that the current document is modified"""
+	def notify_update(self, all_users=False):
+		"""Publish realtime that the current document is modified
+
+		:param all_users: Updates the list for all users instead of the session user
+		"""
 		if frappe.flags.in_patch: return
 
 		frappe.publish_realtime("doc_update", {"modified": self.modified, "doctype": self.doctype, "name": self.name},
@@ -1072,7 +1075,7 @@ class Document(BaseDocument):
 			data = {
 				"doctype": self.doctype,
 				"name": self.name,
-				"user": frappe.session.user
+				"user": None if all_users else frappe.session.user
 			}
 			frappe.publish_realtime("list_update", data, after_commit=True)
 
