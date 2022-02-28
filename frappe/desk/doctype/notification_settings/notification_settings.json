@@ -14,6 +14,7 @@
   "enable_email_assignment",
   "enable_email_energy_point",
   "enable_email_share",
+  "enable_email_event_reminders",
   "section_break_9",
   "default_calendar",
   "user",
@@ -95,11 +96,18 @@
    "fieldname": "default_calendar",
    "fieldtype": "Select",
    "label": "Default displayed calendar"
-  }
+  },
+  {
+    "default": "1",
+    "depends_on": "enable_email_notifications",
+    "fieldname": "enable_email_event_reminders",
+    "fieldtype": "Check",
+    "label": "Event Reminders"
+   }
  ],
  "in_create": 1,
  "links": [],
- "modified": "2020-11-04 12:54:57.989317",
+ "modified": "2021-11-24 14:45:31.931154",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Notification Settings",
