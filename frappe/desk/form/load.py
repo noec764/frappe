@@ -11,6 +11,7 @@ from frappe.model.utils.user_settings import get_user_settings
 from frappe.permissions import get_doc_permissions
 from frappe.desk.form.document_follow import is_document_followed
 from frappe import _
+from frappe import _dict
 from urllib.parse import quote
 
 @frappe.whitelist()
@@ -49,6 +50,8 @@ def getdoc(doctype, name, user=None):
 
 	doc.add_seen()
 	set_link_titles(doc)
+	if frappe.response.docs is None:
+		frappe.response = _dict({"docs": []})
 	frappe.response.docs.append(doc)
 
 @frappe.whitelist()
