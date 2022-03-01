@@ -42,6 +42,7 @@
   "copyright",
   "address",
   "footer_items",
+  "footer_powered",
   "footer_template",
   "footer_template_values",
   "edit_footer_template_values",
@@ -144,7 +145,6 @@
   },
   {
    "collapsible": 1,
-   "collapsible_depends_on": "top_bar_items",
    "fieldname": "top_bar",
    "fieldtype": "Section Break",
    "label": "Navbar"
@@ -191,7 +191,8 @@
    "description": "Address and other legal information you may want to put in the footer.",
    "fieldname": "address",
    "fieldtype": "Text Editor",
-   "label": "Address"
+   "label": "Address",
+   "max_height": "8rem"
   },
   {
    "fieldname": "footer_items",
@@ -405,6 +406,7 @@
  "label": "App Logo"
 },
 {
+ "collapsible": 1,
  "fieldname": "account_deletion_settings_section",
  "fieldtype": "Section Break",
  "label": "Account Deletion Settings"
@@ -420,6 +422,11 @@
  "fieldname": "auto_account_deletion",
  "fieldtype": "Int",
  "label": "Auto Account Deletion within (Days)"
+},
+{
+ "fieldname": "footer_powered",
+ "fieldtype": "Small Text",
+ "label": "Footer \"Powered By\""
   }
  ],
  "icon": "fa fa-cog",
@@ -428,7 +435,7 @@
  "issingle": 1,
  "links": [],
  "max_attachments": 10,
- "modified": "2021-12-15 17:28:59.255184",
+ "modified": "2022-02-28 23:05:42.493192",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Settings",
@@ -451,5 +458,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }

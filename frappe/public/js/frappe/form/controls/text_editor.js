@@ -136,6 +136,9 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 		if (this.quill) return;
 		const show_template = this.df.options == "Template" ? true : false;
 		this.quill_container = $(frappe.render_template("text_editor", {...this.get_tooltips(), showtemplate: show_template})).appendTo(this.input_area);
+		if (this.df.max_height) {
+			$(this.quill_container).css({'max-height': this.df.max_height, 'overflow': 'auto'});
+		}
 		this.quill = new Quill(this.quill_container[2], this.get_quill_options());
 
 		this.make_template_editor()
