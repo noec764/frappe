@@ -16,6 +16,8 @@ from frappe.core.doctype.user_permission.user_permission import clear_user_permi
 from frappe.desk.form.load import getdoc
 from frappe.utils.data import now_datetime
 
+from frappe.tests.test_utils import FrappeTestCase
+
 test_dependencies = ['Blogger', 'Blog Post', "User", "Contact", "Salutation"]
 
 class TestPermissions(unittest.TestCase):
@@ -225,7 +227,7 @@ class TestPermissions(unittest.TestCase):
 
 		# check that Document.owner cannot be changed
 		user.reload()
-		user.owner = frappe.db.get_value("User", {"name": ("!=", user.name)})
+		user.owner = "Guest"
 		self.assertRaises(frappe.CannotChangeConstantError, user.save)
 
 	def test_set_only_once(self):
