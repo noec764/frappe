@@ -1,0 +1,26 @@
+{
+ "__unsaved": 1,
+ "creation": "2022-03-01 15:11:03.980981",
+ "docstatus": 0,
+ "doctype": "Web Template",
+ "fields": [
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "fieldname": "role",
+   "fieldtype": "Link",
+   "label": "Role",
+   "options": "Role",
+   "reqd": 1
+  }
+ ],
+ "idx": 0,
+ "modified": "2022-03-01 15:54:54.005878",
+ "modified_by": "Administrator",
+ "module": "Website",
+ "name": "Organization Chart",
+ "owner": "Administrator",
+ "standard": 1,
+ "template": "",
+ "type": "Section"
+}
