@@ -16,7 +16,7 @@ from frappe.desk.doctype.notification_log.notification_log import enqueue_create
 class Notification(Document):
 	def onload(self):
 		'''load message'''
-		if self.is_standard and not frappe.conf.developer_mode:
+		if self.is_standard and self.enabled and not frappe.conf.developer_mode:
 			self.message = self.get_template()
 
 	def autoname(self):
