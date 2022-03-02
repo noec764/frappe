@@ -5,17 +5,64 @@
  "doctype": "Web Template",
  "fields": [
   {
-   "__islocal": 1,
-   "__unsaved": 1,
    "fieldname": "role",
    "fieldtype": "Link",
    "label": "Role",
    "options": "Role",
    "reqd": 1
+  },
+  {
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "bio",
+   "fieldtype": "Check",
+   "label": "Display Biography",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "interest",
+   "fieldtype": "Check",
+   "label": "Display Interests",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "email",
+   "fieldtype": "Check",
+   "label": "Display Email Address",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "phone",
+   "fieldtype": "Check",
+   "label": "Display Phone Number",
+   "reqd": 0
+  },
+  {
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "birth_date",
+   "fieldtype": "Check",
+   "label": "Display Birth Date",
+   "reqd": 0
+  },
+  {
+   "__islocal": 1,
+   "__unsaved": 1,
+   "default": "1",
+   "fieldname": "website",
+   "fieldtype": "Check",
+   "label": "Display Website",
+   "reqd": 0
   }
  ],
  "idx": 0,
- "modified": "2022-03-01 15:54:54.005878",
+ "modified": "2022-03-02 09:07:12.985338",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Organization Chart",
