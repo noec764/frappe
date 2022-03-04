@@ -17,6 +17,9 @@ if any((os.getenv('CI'), frappe.conf.developer_mode, frappe.conf.allow_tests)):
 	# os.environ['CI_NEXTCLOUD_DISABLE'] = '1'
 
 
+class NextcloudException(Exception):
+	pass
+
 class NextcloudSettings(Document):
 	enabled: bool = False
 	cloud_url: str = ''
@@ -51,6 +54,9 @@ class NextcloudSettings(Document):
 			return f"/remote.php/dav/files/{self.username}"
 
 	def nc_connect(self, **kwargs):
+		if not self.nc_ping_server():
+			raise NextcloudException('nextcloud server is down')
+
 		username, password = self._get_credentials()
 		cloud_url = self._get_cloud_url()
 
@@ -59,6 +65,23 @@ class NextcloudSettings(Document):
 		client.login(username, password)
 
 		return client
+
+	def nc_ping_server(self, n_tries = 2, t_timeout = 5):
+		from urllib.parse import urlsplit
+		o = urlsplit(self._get_cloud_url())
+		default_port = {'http': 80, 'https': 443}
+		port = o.port or default_port.get(o.scheme, 80)
+		host = o.hostname
+
+		import socket
+		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		sock.settimeout(t_timeout)
+
+		for _ in range(n_tries):
+			res = sock.connect_ex((host, port))
+			if res == 0:
+				return True
+		return False
 
 	def get_path_to_files_folder(self):
 		return self.path_to_files_folder
