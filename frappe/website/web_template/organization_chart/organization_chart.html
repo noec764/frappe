@@ -1,12 +1,31 @@
 <div class="row">
-	{% set users = frappe.get_all("Has Role", filters={"role": role}, pluck="parent") %}
-	{% for d in frappe.get_all("User", filters={"enabled": 1, "name": ("in", users)}, fields=["full_name", "bio", "user_image", "name", "interest"]) %}
+	{% for d in frappe.get_all("User",
+		filters=[["User", "enabled", "=", 1], ["Has Role", "role", "=", role]],
+		fields=["full_name", "bio", "user_image", "name", "interest", "email", "phone", "mobile_no", "birth_date", "website"],
+		order_by="full_name ASC"
+	) %}
 	<div class="col-12 col-sm-6 col-lg-3 mt-4" itemscope itemtype="http://schema.org/Person">
 		<div class="frappe-card h-100 text-center" style="word-break: break-word;">
 			<img class="card card-md w-100" src="{{ d.user_image or '/assets/frappe/images/default-avatar.png' }}" itemprop="image">
 			<h5 class="mt-3" itemprop="name">{{ d.full_name or d.name }}</h5>
-			<p class="small text-muted mt-2" itemprop="description">{{ d.bio or "" }}</p>
-			<p class="small text-muted mt-2" itemprop="description">{{ d.interest or "" }}</p>
+			{% if email %}
+			<div><i class="uil uil-mailbox"></i><span class="small text-muted">{{ d.email or "" }}</span></div>
+			{% endif %}
+			{% if phone and (d.phone or d.mobile_no) %}
+			<div><i class="uil uil-phone"></i><span class="small text-muted">{{ d.phone or "" }}{% if d.phone and d.mobile_no %} / {% endif %}{{ d.mobile_no or "" }}</span></div>
+			{% endif %}
+			{% if website and d.website %}
+			<div><a href="{{ d.website }}" target="_blank" class="small text-muted"><i class="uil uil-globe"></i>{{ d.website }}</a></div>
+			{% endif %}
+			{% if (bio or interest) and (d.bio or d.interest) %}
+			<div class="dropdown-divider"></div>
+			{% endif %}
+			{% if bio %}
+			<p class="small mt-2" itemprop="description">{{ d.bio or "" }}</p>
+			{% endif %}
+			{% if interest %}
+			<p class="small mt-2" itemprop="description">{{ d.interest or "" }}</p>
+			{% endif %}
 		</div>
 	</div>
 	{% endfor %}

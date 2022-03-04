@@ -39,6 +39,7 @@
   "mute_sounds",
   "column_break_22",
   "mobile_no",
+  "website",
   "change_password",
   "new_password",
   "logout_all_sessions",
@@ -602,6 +603,11 @@
    "fieldtype": "Link",
    "label": "Module Profile",
    "options": "Module Profile"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Website"
   }
  ],
  "icon": "fa fa-user",
@@ -664,13 +670,13 @@
    "link_fieldname": "owner"
   },
   {
-    "group": "Integrations",
-    "link_doctype": "Token Cache",
-    "link_fieldname": "user"
+   "group": "Integrations",
+   "link_doctype": "Token Cache",
+   "link_fieldname": "user"
   }
  ],
  "max_attachments": 5,
- "modified": "2021-02-02 16:11:06.037543",
+ "modified": "2022-03-02 09:06:10.062518",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
