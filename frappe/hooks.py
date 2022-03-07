@@ -235,7 +235,8 @@ scheduler_events = {
 		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
 		"frappe.desk.form.document_follow.send_hourly_updates",
-		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email"
+		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
+		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request"
 	],
 	"daily": [
 		"frappe.email.queue.set_expiry_for_email_queue",
@@ -255,8 +256,7 @@ scheduler_events = {
 		"frappe.core.doctype.scheduled_job_log.scheduled_job_log.flush",
 		"frappe.core.doctype.prepared_report.prepared_report.delete_expired_prepared_reports",
 		"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
-		"frappe.email.doctype.email_group.email_group.auto_update_email_groups",
-		"frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request.process_data_deletion_request"
+		"frappe.email.doctype.email_group.email_group.auto_update_email_groups"
 	],
 	"daily_long": [
 		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
