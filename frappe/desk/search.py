@@ -11,8 +11,6 @@ from six import string_types
 import re
 import wrapt
 
-UNTRANSLATED_DOCTYPES = ["DocType", "Role", "Module Def", "Report", "Dashboard", "Page", "Dashboard Chart", "Number Card"]
-
 def sanitize_searchfield(searchfield):
 	blacklisted_keywords = ['select', 'delete', 'drop', 'update', 'case', 'and', 'or', 'like']
 
@@ -64,7 +62,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 
 	if isinstance(filters, string_types):
 		filters = json.loads(filters)
-	
+
 	if searchfield:
 		sanitize_searchfield(searchfield)
 
@@ -114,6 +112,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 			or_filters = []
 
 
+			translated_search_doctypes = frappe.get_hooks("translated_search_doctypes")
 			# build from doctype
 			if txt:
 				search_fields = ["name"]
@@ -125,7 +124,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 
 				for f in search_fields:
 					fmeta = meta.get_field(f.strip())
-					if (doctype not in UNTRANSLATED_DOCTYPES) and (f == "name" or (fmeta and fmeta.fieldtype in ["Data", "Text", "Small Text", "Long Text",
+					if (doctype not in translated_search_doctypes) and (f == "name" or (fmeta and fmeta.fieldtype in ["Data", "Text", "Small Text", "Long Text",
 						"Link", "Select", "Read Only", "Text Editor"])):
 							or_filters.append([doctype, f.strip(), "like", "%{0}%".format(txt)])
 
@@ -154,7 +153,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 			ptype = 'select' if frappe.only_has_select_perm(doctype) else 'read'
 			ignore_permissions = True if doctype == "DocType" else (cint(ignore_user_permissions) and has_permission(doctype, ptype=ptype))
 
-			if doctype in UNTRANSLATED_DOCTYPES:
+			if doctype in translated_search_doctypes:
 				page_length = None
 
 			values = frappe.get_list(doctype,
@@ -169,7 +168,7 @@ def search_widget(doctype, txt, query=None, searchfield=None, start=0,
 				as_list=not as_dict,
 				strict=False)
 
-			if doctype in UNTRANSLATED_DOCTYPES:
+			if doctype in translated_search_doctypes:
 				values = tuple([v for v in list(values) if re.search(re.escape(txt)+".*", (_(v.name) if as_dict else _(v[0])), re.IGNORECASE)])
 
 			# remove _relevance from results
