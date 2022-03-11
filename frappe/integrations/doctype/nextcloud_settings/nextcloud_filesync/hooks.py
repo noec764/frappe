@@ -1,46 +1,30 @@
 import frappe
 
-from contextlib import contextmanager
-
-from frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.sync import NextcloudFileSync
-
-@contextmanager
-def _sync_module():
-	# frappe.db.begin()  # begin transaction
-	# frappe.db.commit()  # begin transaction
-	try:
-		if frappe.flags.cached_nextcloud_sync_client:
-			yield frappe.flags.cached_nextcloud_sync_client
-		else:
-			sync = NextcloudFileSync()
-			frappe.flags.cached_nextcloud_sync_client = sync
-			yield sync
-
-		# if len(frappe.message_log) > 0:
-		# 	frappe.msgprint(None, json.dumps(sync._timing, indent=2))
-		frappe.db.commit()
-	except:
-		frappe.db.rollback()  # rollback on error
-		raise
+from .sync import sync_log, sync_module
+from .diff_engine.utils import check_flag
 
 @frappe.whitelist()
 def check_id_of_home():
-	with _sync_module() as syncer:
+	with sync_module() as syncer:
+		if not syncer: return 'skip'
 		return syncer.check_id_of_home()
 
 @frappe.whitelist()
 def clear_id_of_home():
-	with _sync_module() as syncer:
+	with sync_module() as syncer:
+		if not syncer: return 'skip'
 		return syncer.check_id_of_home()
 
 @frappe.whitelist()
 def sync_from_remote_all():
-	with _sync_module() as syncer:
+	with sync_module() as syncer:
+		if not syncer: return 'skip'
 		syncer.sync_from_remote_all()
 
 @frappe.whitelist()
 def sync_from_remote_since_last_update():
-	with _sync_module() as syncer:
+	with sync_module() as syncer:
+		if not syncer: return 'skip'
 		syncer.sync_from_remote_since_last_update()
 
 # @frappe.whitelist()
@@ -51,24 +35,33 @@ def sync_from_remote_since_last_update():
 
 # @frappe.whitelist()
 # def save_file_doc_to_remote(doc, event=None):
-# 	with _sync_module() as sync:
+# 	with sync_module() as sync:
 # 		sync.save_to_remote(doc, event)
 
 
-# @frappe.whitelist()
-# def file_on_trash(doc, event):
-# 	# event == 'on_trash'
-# 	with _sync_module() as sync:
-# 		sync.file_on_trash(doc)
+@frappe.whitelist()
+def file_on_trash(doc, event):
+	# sync_log(f'file_on_trash({doc}, {event})')
+	if check_flag(doc): return
+	with sync_module() as syncer:
+		if syncer:
+			syncer.file_on_trash(doc)
 
 
-# @frappe.whitelist()
-# def file_on_update(doc, event):
-# 	with _sync_module() as sync:
-# 		sync.file_on_update(doc)
+@frappe.whitelist()
+def file_on_update(doc, event):
+	# sync_log(f'file_on_update({doc}, {event})')
+	if check_flag(doc): return
+	if doc.get('nextcloud_id', None) is None: return
+	with sync_module() as syncer:
+		if syncer:
+			syncer.file_on_update(doc)
 
 
-# @frappe.whitelist()
-# def sync_to_remote():
-# 	with _sync_module() as sync:
-# 		sync.sync_to_remote()
+@frappe.whitelist()
+def file_on_create(doc, event):
+	# sync_log(f'file_on_create({doc}, {event})')
+	if check_flag(doc): return
+	with sync_module() as syncer:
+		if syncer:
+			syncer.file_on_create(doc)
