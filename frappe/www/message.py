@@ -26,4 +26,7 @@ def get_context(context):
 			if message.get('http_status_code'):
 				frappe.local.response['http_status_code'] = message['http_status_code']
 
+	elif frappe.local.form_dict:
+		message_context.update(frappe.local.form_dict)
+
 	return message_context
