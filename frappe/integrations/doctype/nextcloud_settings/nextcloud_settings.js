@@ -1,12 +1,12 @@
 // Copyright (c) 2022, Dokos SAS and contributors
 // For license information, please see license.txt
 
-function nextcloud_hook_xcall(s, params = null) {
+function nextcloud_hook_xcall(s, opts = {}) {
 	return new Promise((resolve, reject) => {
 		frappe.call({
 			method: 'frappe.integrations.doctype.nextcloud_settings.' + s,
-			args: params,
-			freeze: true,
+			args: opts.params,
+			freeze: opts.freeze,
 			callback: (r) => {
 				resolve(r.message);
 			},
@@ -15,6 +15,14 @@ function nextcloud_hook_xcall(s, params = null) {
 			}
 		});
 	});
+}
+
+async function nextcloud_form_xcall(frm, s) {
+	if (frm.is_dirty()) {
+		await frm.save()
+	}
+	await nextcloud_hook_xcall(s, { freeze: true })
+	await frm.reload_doc()
 }
 
 frappe.ui.form.on('Nextcloud Settings', {
@@ -56,16 +64,14 @@ frappe.ui.form.on('Nextcloud Settings', {
 				label: __('Force sync from Nextcloud', 'Nextcloud'),
 				onsubmit: () => {
 					// force sync from nextcloud
-					nextcloud_hook_xcall('nextcloud_filesync.hooks.sync_from_remote_all')
-						.then(() => frm.reload_doc());
+					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all')
 				},
 			},
 			lorem: {
 				label: __('Force upload to Nextcloud', 'Nextcloud'),
 				onsubmit: () => {
 					// force sync-upload to nextcloud
-					nextcloud_hook_xcall('nextcloud_filesync.hooks.sync_to_remote_force')
-						.then(() => frm.reload_doc());
+					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_to_remote_force')
 				},
 			},
 		}
@@ -105,7 +111,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	add_migrate_button: function (frm) {
 		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
 			frm.add_custom_button(__('Migrate Now'), function() {
-				nextcloud_hook_xcall('nextcloud_filesync.hooks.migrate_to_nextcloud');
+				nextcloud_hook_xcall('nextcloud_filesync.hooks.migrate_to_nextcloud', {freeze: true});
 			}).addClass('btn-primary');
 		}
 	},
@@ -113,8 +119,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	add_backup_button: function(frm) {
 		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
 			frm.add_custom_button(__('Backup Now'), function() {
-				nextcloud_hook_xcall('nextcloud_backups.backup_now')
-					.then(() => frm.reload_doc());
+				nextcloud_form_xcall(frm, 'nextcloud_backups.backup_now')
 			}).addClass('btn-primary');
 		}
 	},
@@ -122,8 +127,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	add_sync_all_button: function(frm) {
 		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
 			frm.add_custom_button(__('Sync Now'), function() {
-				nextcloud_hook_xcall('nextcloud_filesync.hooks.sync_from_remote_all')
-					.then(() => frm.reload_doc());
+				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all')
 			}).addClass('btn-secondary');
 		}
 	},
@@ -131,8 +135,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	add_sync_recent_button: function(frm) {
 		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
 			frm.add_custom_button(__('Last Update'), function() {
-				nextcloud_hook_xcall('nextcloud_filesync.hooks.sync_from_remote_since_last_update')
-					.then(() => frm.reload_doc());
+				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_since_last_update')
 			}).addClass('btn-secondary');
 		}
 	},
@@ -140,8 +143,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	add_sync_to_remote_button: function(frm) {
 		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
 			frm.add_custom_button(__('Sync To Remote'), function() {
-				nextcloud_hook_xcall('nextcloud_filesync.hooks.sync_to_remote')
-					.then(() => frm.reload_doc());
+				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_to_remote')
 			}).addClass('btn-secondary');
 		}
 	},

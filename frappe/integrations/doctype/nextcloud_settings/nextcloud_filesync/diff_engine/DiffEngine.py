@@ -6,8 +6,8 @@ from .Common import Common
 
 
 class DiffEngine(BaseDiffEngineNC):
-	def __init__(self, common: Common):
-		super().__init__(logger=common.logger)
+	def __init__(self, common: Common, **kwargs):
+		super().__init__(logger=common.logger, **kwargs)
 		self.common = common
 
 	def get_local_entry_by_id(self, id: int) -> Optional[EntryLocal]:

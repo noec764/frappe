@@ -36,7 +36,7 @@ def util_normalize_local_path(folder: str, file_name: str, is_dir: bool) -> str:
 
 
 def util_denormalize_to_remote_path(path: str, root: str):
-	return '/' + '/'.join([root.rstrip('/'), path.lstrip('/')]).strip('/')
+	return '/' + (root.rstrip('/') + '/' + path.lstrip('/')).strip('/')
 
 
 def util_normalize_remote_path(path: str, is_dir: bool, root: str) -> str:

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Dict, Optional, Tuple
+from typing import Dict, Optional, Tuple, Union
 from typing_extensions import Literal
 
 # from frappe.core.doctype.file.file import File
@@ -16,8 +16,6 @@ class Entry():
 	last_updated: Optional[datetime] = None
 
 	_type: Literal['local', 'remote', None] = None
-
-	extra: Optional[Dict] = None
 
 	# _hint_deletion: Optional[
 	#     Literal['deletedFromLocal', 'deletedFromRemote']] = None
@@ -55,6 +53,17 @@ class Entry():
 		# return f"{i}@{l}:{p}[{e}|{u}]"
 		return f"\x1b[{c};2m{i}@{l}:\x1b[22m{p}\x1b[2m[{e}|{u}]\x1b[m"
 
+	def toJSON(self):
+		l = (self._type or '?')[0].upper()
+		p = self.path
+		e = (self.etag or '')[:8] or '?'
+		i = self.nextcloud_id
+		if type(self.last_updated).__name__ == 'datetime':
+			u = self.last_updated.strftime('%m-%d %H:%M')
+		else:
+			u = self.last_updated or ''
+
+		return f"{i}@{l}:{p}[{e}|{u}]"
 
 @dataclass
 class EntryLocal(Entry):
@@ -64,6 +73,18 @@ class EntryLocal(Entry):
 	__hash__ = Entry.__hash__
 	__eq__ = Entry.__eq__
 	__repr__ = Entry.__repr__
+
+	def make_copy(self) -> 'EntryLocal':
+		return EntryLocal(
+			path=self.path,
+			etag=self.etag,
+			nextcloud_id=self.nextcloud_id,
+			parent_id=self.parent_id,
+			last_updated=self.last_updated,
+
+			_frappe_name=self._frappe_name,
+		)
+
 
 
 @dataclass
@@ -76,8 +97,28 @@ class EntryRemote(Entry):
 	__eq__ = Entry.__eq__
 	__repr__ = Entry.__repr__
 
+	def make_copy(self) -> 'EntryRemote':
+		return EntryRemote(
+			path=self.path,
+			etag=self.etag,
+			nextcloud_id=self.nextcloud_id,
+			parent_id=self.parent_id,
+			last_updated=self.last_updated,
+
+			_file_info=self._file_info,
+		)
+
+
+def convert_entry_local_to_remote(local: EntryLocal):
+	return EntryRemote(
+		path=local.path,
+		etag=local.etag,
+		nextcloud_id=local.nextcloud_id,
+		parent_id=local.parent_id,
+		last_updated=local.last_updated,
+	)
 
 EntryPair = Tuple[EntryLocal, EntryRemote]
 EntryPairOptLoc = Tuple[Optional[EntryLocal], EntryRemote]
 EntryPairOptRem = Tuple[EntryLocal, Optional[EntryRemote]]
-EntryPairOptional = Tuple[Optional[EntryLocal], Optional[EntryRemote]]
+EntryPairOptional = Union[EntryPair, Tuple[EntryLocal, None], Tuple[None, EntryRemote]]

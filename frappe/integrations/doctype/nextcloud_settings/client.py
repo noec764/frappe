@@ -9,14 +9,10 @@ import frappe
 from owncloud.owncloud import Client, FileInfo, HTTPResponseError
 from six.moves.urllib.parse import quote
 
-def get_client_with_stored_settings(**kwargs):
-	settings = frappe.get_single('Nextcloud Settings')
-	return settings.nc_connect(), settings
 
 class NextcloudIntegrationClient(Client):
 	def __init__(self, url, **kwargs):
 		super().__init__(url, dav_endpoint_version=999, **kwargs)
-		# self._debug = True
 
 	def _make_dav_root_request(self, method, path, **kwargs):
 		"""Makes a WebDAV request from the DAV root
@@ -29,6 +25,7 @@ class NextcloudIntegrationClient(Client):
 		if it didn't
 		"""
 
+		# url = self._webdav_url + '/' + path.lstrip('/')
 		url = self.url + 'remote.php/dav/' + path
 
 		if self._debug:
@@ -61,33 +58,34 @@ class NextcloudIntegrationClient(Client):
 
 		return self._make_dav_root_request('SEARCH', path, headers=headers, data=data)
 
-	def get_properties_for_list_updated_since(self):
+	@property
+	def _QUERY_PROPS(self):
 		return [
 			'{http://owncloud.org/ns}fileid',
 			'{DAV:}getetag',
-			'{DAV:}getcontentlength',
-			'{DAV:}getcontenttype',
+			# '{DAV:}getcontentlength',
+			# '{DAV:}getcontenttype',
 			'{DAV:}getlastmodified',
 		]
 
 	def list_updated_since(
 			self,
 			dt: datetime,
-			props: List[str] = None,
 			path: Optional[str] = None,
 			depth: Union[int, Literal['infinity']] = 'infinity',
+			props: List[str] = None,
 	) -> List[FileInfo]:
 		dt_string = dt.strftime('%FT%TZ')  # yyyy-mm-ddThh:mm:ssZ
 
 		if props == None:
-			props = self.get_properties_for_list_updated_since()
+			props = self._QUERY_PROPS
 
 		search_where = f'''
 			<d:gt>
 				<d:prop>
 					<d:getlastmodified />
 				</d:prop>
-				<d:literal>{dt}</d:literal>
+				<d:literal>{dt_string}</d:literal>
 			</d:gt>
 		'''
 
@@ -192,7 +190,7 @@ class NextcloudIntegrationClient(Client):
 		:raises: HTTPResponseError in case an HTTP error status was returned
 		"""
 		if not properties:
-			properties = self.get_properties_for_list_updated_since()
+			properties = self._QUERY_PROPS
 
 		res = self.basic_search_select_from_where(
 			properties,

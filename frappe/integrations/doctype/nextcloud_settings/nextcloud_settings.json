@@ -14,17 +14,18 @@
   "cloud_url",
   "username",
   "password",
-  "webdav_url",
   "_file_sync_section",
   "path_to_files_folder",
   "last_filesync_dt",
   "next_filesync_ignore_id_conflicts",
+  "filesync_override_conflict_strategy",
   "not_implemented",
   "path_to_upload_folder",
   "send_email_for_successful_backup",
   "send_notifications_to",
   "path_to_backups_folder",
-  "backup_frequency"
+  "backup_frequency",
+  "webdav_url"
  ],
  "fields": [
   {
@@ -150,13 +151,19 @@
    "fieldname": "next_filesync_ignore_id_conflicts",
    "fieldtype": "Check",
    "label": "next_filesync_ignore_id_conflicts"
+  },
+  {
+   "default": "0",
+   "fieldname": "filesync_override_conflict_strategy",
+   "fieldtype": "Data",
+   "label": "filesync_override_conflict_strategy"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-02-21 22:02:50.492973",
+ "modified": "2022-03-04 16:13:23.471694",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Nextcloud Settings",

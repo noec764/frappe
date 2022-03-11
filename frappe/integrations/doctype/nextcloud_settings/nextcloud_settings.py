@@ -23,7 +23,6 @@ class NextcloudException(Exception):
 class NextcloudSettings(Document):
 	enabled: bool = False
 	cloud_url: str = ''
-	webdav_url: str = ''
 	username: str = ''
 	# password: str = ''
 
@@ -34,6 +33,7 @@ class NextcloudSettings(Document):
 	path_to_files_folder: str = ''
 	last_filesync_dt: str = None
 	next_filesync_ignore_id_conflicts: bool = False
+	filesync_override_conflict_strategy: str = ''
 	# TODO: store sync_datetime for each of the 3 modules + configurable interval
 
 	# path_to_upload_folder: ? = None
@@ -48,10 +48,7 @@ class NextcloudSettings(Document):
 		return username, password
 
 	def _get_cloud_url(self):
-		if self.cloud_url:
-			return self.cloud_url
-		else:
-			return f"/remote.php/dav/files/{self.username}"
+		return self.cloud_url.strip('/') + '/'
 
 	def nc_connect(self, **kwargs):
 		if not self.nc_ping_server():
