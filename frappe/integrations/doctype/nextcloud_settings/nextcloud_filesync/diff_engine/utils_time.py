@@ -18,15 +18,10 @@ def cache_once(func):
 	return cached_func
 
 
-# a couple hundreds of nanoseconds per call
 @cache_once
 def get_local_tzinfo():
 	from pytz import timezone
 	return timezone(get_time_zone())
-
-	# https://dateutil.readthedocs.io/en/stable/tz.html#dateutil.tz.gettz
-	# from dateutil.tz import gettz  # type: ignore
-	# return gettz(get_time_zone())
 
 
 def set_timezone_to_local(dt: datetime):
@@ -41,17 +36,12 @@ def set_timezone_to_local(dt: datetime):
 	Returns:
 		datetime: A datetime object, whose values are in the local timezone, and whose tzinfo property is None.
 	"""
-	# tzinfo = get_local_tzinfo()
-	# return dt.replace(tzinfo=tzinfo).astimezone(tzinfo).replace(tzinfo=None)
 	return dt.replace(tzinfo=None)
 
 
 def convert_local_time_to_utc(dt: datetime):
 	tzinfo = get_local_tzinfo()
-	# first replace: keep the date/time raw numbers, but replace the timezone
-	# astimezone:    convert to UTC, changing the time value by adding/removing an offset
-	# last replace:  strip the timezone from the datetime object
-	return dt.replace(tzinfo=tzinfo).astimezone(None).replace(tzinfo=None)
+	return tzinfo.localize(dt).astimezone(None).replace(tzinfo=None)
 
 
 def convert_utc_to_local_time(dt: datetime):
@@ -79,11 +69,7 @@ def convert_utc_to_local_time(dt: datetime):
 		datetime.datetime(2021, 1, 1, 14, 30, 0)
 	"""
 	tzinfo = get_local_tzinfo()
-	# first replace: keep the date/time raw numbers, but replace the timezone
-	# astimezone:    convert to local timezone, by adding/removing a time offset
-	# last replace:  strip the timezone from the datetime object
-	return dt.replace(tzinfo=None).astimezone(tzinfo).replace(tzinfo=None)
-
+	return dt.astimezone(tzinfo).replace(tzinfo=None)
 
 def strip_datetime_milliseconds(dt: datetime):
 	return dt.replace(microsecond=0)
