@@ -5,6 +5,8 @@ import frappe  # type: ignore
 import owncloud  # type: ignore
 from owncloud import HTTPResponseError  # type: ignore
 
+from frappe.core.doctype.file.file import File
+from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings
 from frappe.integrations.doctype.nextcloud_settings.client import NextcloudIntegrationClient
 
 from .Entry import Entry, EntryLocal, EntryRemote
@@ -26,17 +28,17 @@ class Common:
 		return Common(client, settings, logger)
 
 	@staticmethod
-	def Test(logger=None, test_root_dir_name='@test'):
+	def Test(logger: Callable = None, test_root_dir_name='@test'):
 		from frappe.integrations.doctype.nextcloud_settings import get_nextcloud_settings_and_client  # type: ignore
 
 		client, settings = get_nextcloud_settings_and_client(debug=False)
-		settings.path_to_files_folder = test_root_dir_name
+		settings.get_path_to_files_folder = lambda: test_root_dir_name
 
 		if not logger:
 			def logger(*args, **kwargs):
 				print('\x1b[35;2mtest\x1b[m\x1b[2m', *args, '\x1b[m', **kwargs)
 
-		return Common(client, settings, logger)
+		return Common(client=client, settings=settings, logger=logger)
 
 	@staticmethod
 	def sort_key(entry: Entry):
@@ -44,11 +46,11 @@ class Common:
 
 	def __init__(
 		self,
-		owncloud_client: NextcloudIntegrationClient,
-		settings: 'NextcloudSettings',  # type: ignore
-		logger: Callable[..., None],
+		client: NextcloudIntegrationClient,
+		settings: NextcloudSettings,  # type: ignore
+		logger: Callable,
 	):
-		self.cloud_client: NextcloudIntegrationClient = owncloud_client
+		self.cloud_client = client
 		self.cloud_settings = settings
 		self.logger = logger
 
@@ -64,7 +66,7 @@ class Common:
 			# '{DAV:}getcontenttype',
 			'{DAV:}getlastmodified',
 		]
-		# self._QUERY_PROPS = self.cloud_client.get_properties_for_list_updated_since()
+		# self._QUERY_PROPS = self.cloud_client._QUERY_PROPS
 
 		self._map_remote_path_to_id: Dict[str, int] = {}
 
@@ -102,6 +104,21 @@ class Common:
 			_file_info=file,
 			last_updated=last_updated,
 			# extra=dict(file=file)
+		)
+
+	def convert_local_doc_to_entry(self, doc: File) -> EntryLocal:
+		path = util_normalize_local_path(doc.folder, doc.file_name, doc.is_folder)
+
+		last_updated = frappe.utils.get_datetime(doc.modified)
+		last_updated = strip_datetime_milliseconds(last_updated)
+
+		return EntryLocal(
+			path=path,
+			etag=doc.content_hash or '?',
+			nextcloud_id=doc.nextcloud_id or None,
+			parent_id=doc.nextcloud_parent_id or None,
+			last_updated=last_updated,
+			_frappe_name=doc.name,
 		)
 
 	def _get_remote_entry_by_norm_path(self, path: str):
@@ -189,20 +206,38 @@ class Common:
 		:return: EntryRemote if found
 		"""
 		remote_path = self.denormalize_remote(path)
-		props = self._QUERY_PROPS
+		return self.get_remote_entry_by_real_path(remote_path)
+
+	def get_remote_entry_by_real_path(self, remote_path: str) -> Optional[EntryRemote]:
+		"""
+		:param path: denormalized path
+		:return: EntryRemote if found
+		"""
 		try:
-			file = self.cloud_client.file_info(remote_path, props)
+			file = self.cloud_client.file_info(remote_path, self._QUERY_PROPS)
 			return self.convert_remote_file_to_entry(file)
 		except HTTPResponseError:
 			return None
 		return None
 
-	def get_local_children_ids(self, of_dir: Entry) -> Set[int]:
+	# def get_local_children_ids(self, local_dir: EntryLocal) -> Set[int]:
+	# 	folder = '/'.join(util_denormalize_to_local_path(local_dir.path))
+	# 	old_children_ids = set(map(
+	# 		lambda x: int(x[0]),
+	# 		frappe.db.get_values(
+	# 			'File',
+	# 			filters={'folder': folder},
+	# 			fieldname='nextcloud_id'
+	# 		)
+	# 	))
+	# 	return old_children_ids
+
+	def get_local_children_ids(self, remote_dir: EntryRemote) -> Set[int]:
 		old_children_ids = set(map(
 			lambda x: int(x[0]),
 			frappe.db.get_values(
 				'File',
-				filters={'nextcloud_parent_id': of_dir.nextcloud_id},
+				filters={'nextcloud_parent_id': remote_dir.nextcloud_id},
 				fieldname='nextcloud_id'
 			)
 		))

@@ -1,6 +1,7 @@
 from typing import Iterable
 
 from .Common import Common
+from .DeferredTasks import DeferredTasks
 from .utils_normalize_paths import util_denormalize_to_local_path
 from .Action import Action
 
@@ -89,6 +90,7 @@ class ConflictResolverNCF(ConflictTracker):
 	def __init__(self, common: Common):
 		super().__init__()
 		self.common = common
+		self.deferred_tasks = DeferredTasks()
 		# self.repaired_list = []
 
 	def chain(self, it: Iterable[Action]):
@@ -96,11 +98,21 @@ class ConflictResolverNCF(ConflictTracker):
 		Returns an iterator over the non-conflicted actions, and resolves conflicts if possible.
 		"""
 		for action in it:
-			actions_to_resolve = self.on_before_action_run(action)
-			if actions_to_resolve:
-				yield from actions_to_resolve
+			actions_to_resolve_now = self.on_before_action_run(action)
+			if actions_to_resolve_now:
+				yield from actions_to_resolve_now
 			else:
 				yield action
+
+		# run deferred task and emit their actions too
+		for actions in self.deferred_tasks:
+			if actions:
+				yield from actions
+
+
+	@staticmethod
+	def _upload_frappe_file(action: Action):
+		yield Action(type='remote.createOrForceUpdate', local=action.local, remote=action.remote)
 
 	def _resolve_conflict(self, action: Action):
 		t = action.type
@@ -118,13 +130,16 @@ class ConflictResolverNCF(ConflictTracker):
 		#     exit()
 
 		if t == 'conflict.localIsNewer':
+			return self.deferred_tasks.push(self._upload_frappe_file, action)
+			# raise NotImplementedError
 			assert l
 			doc = frappe.get_doc('File', l._frappe_name)
 			doc.save()
 			# self.common.cloud_client.put_file_contents(l.path, l)
-			yield
+			yield  # empty generator
 			return print('save file')
 		elif t == 'conflict.incompatibleTypesDirVsFile':
+			raise NotImplementedError
 			assert l
 			assert r
 			# rename the file by appending __local
@@ -141,8 +156,11 @@ class ConflictResolverNCF(ConflictTracker):
 				print(f"move({p}, {p + '__conflicted'})")
 				# self.common.cloud_client.move(p, p + '__conflicted')
 
-			yield
+			yield  # empty generator
 			return print('delete file')
+		elif t == 'conflict.differentIds':
+			yield
+			raise NotImplementedError
 		else:
 			yield
 			raise NotImplementedError

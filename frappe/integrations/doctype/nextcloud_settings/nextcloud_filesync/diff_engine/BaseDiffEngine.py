@@ -22,13 +22,14 @@ class BaseDiffEngineNC():
 		print("\x1b[35;2m" "∂" "\x1b[m", *args, **kwargs)
 
 	# Constructor
-	def __init__(self, logger=None, use_conflict_detection=True):
+	def __init__(self, logger=None, use_conflict_detection=True, continue_diffing_after_conflict=False):
 		self.seen_pairs: Set[EntryPairOptional] = set()
 		self.potential_deletions: Set[int] = set()
 		self.pairs_queue: List[EntryPairOptional] = []
 
 		self.sort_key = attrgetter('path')
 		self.use_conflict_detection = use_conflict_detection
+		self.continue_diffing_after_conflict = continue_diffing_after_conflict
 		self.logger = logger
 
 	# Local access
@@ -56,6 +57,7 @@ class BaseDiffEngineNC():
 		dir_entry: EntryRemote = directory[1]
 
 		# self.log(' · find renames and deletions in', dir_entry.path)
+		# old_children_ids = self.get_local_children_ids(directory[0])
 		old_children_ids = self.get_local_children_ids(dir_entry)
 		new_children = self.get_remote_children_entries(dir_entry)
 
@@ -114,18 +116,52 @@ class BaseDiffEngineNC():
 				add_or_updates.append(id)
 				# deletions.append(id)
 
-		# self.log(" -", f"{renames=}")
-		# self.log(" -", f"{deletions=}")
-		# self.log(" -", f"{add_or_updates=}")
+		# self.log(" m", f"{renames}")
+		# self.log(" -", f"{deletions}")
+		# self.log(" +", f"{add_or_updates}")
 		return renames, deletions, add_or_updates
 
-	def _examine_now(self, pairs: Iterable[EntryPairOptional]):
-		"""insert all the pairs at the beginning of the queue"""
+	def _examine(self, pairs: Iterable[EntryPairOptional]):
+		# pairs = list(pairs)
+		# print('✅ examine', pairs)
+		"""insert all the pairs in the queue"""
 		self.pairs_queue[0:0] = pairs
+		self._sort_queue()
+
+	def _sort_queue(self):
+		self.pairs_queue.sort(key=lambda p: (p[0] or p[1]).path)
+		# self.pairs_queue.sort(key=lambda p: (p[1] or p[0]).path)
+
+	def _fetch_pair_by_id(self, id: int):
+		existing_pair = self._find_in_queue_by_id(id)
+		if existing_pair: return existing_pair
+		l = self.get_local_entry_by_id(id)
+		r = self.get_remote_entry_by_id(id)
+		return (l, r)
+
+	def _iterate_pairs(self):
+		while self.pairs_queue:
+			# print('\x1b[35;2m', ', '.join(map(lambda p: (p[0] or p[1]).path, self.pairs_queue)), '\x1b[m')
+			yield self.pairs_queue.pop(0)
+
+	def _find_in_queue_by_id(self, id: int):
+		for pair in self.pairs_queue:
+			l, r = pair
+			l_ok = (l is None) or (l.nextcloud_id == id)
+			r_ok = (r is None) or (r.nextcloud_id == id)
+			if l_ok and r_ok:
+				return pair
+		return None
 
 	def diff_file(self, local: EntryLocal, remote: EntryRemote) -> Generator[Action, None, None]:
-		if local.path != remote.path:
+		changed_parent = ((local.parent_id is not None) and (remote.parent_id is not None)) and (local.parent_id != remote.parent_id)
+		if (local.path != remote.path) or changed_parent:
 			yield Action(type='local.file.moveRename', local=local, remote=remote)
+			# if local.path.count('/') != remote.path.count('/'):
+			# 	ld, ln = local.path.rsplit('/', 1)
+			# 	rd, rn = local.path.rsplit('/', 1)
+			# 	if ln != rn:
+			# 		yield Action(type='local.file.moveRename', local=local, remote=remote)
 
 		if local.etag != remote.etag:
 			yield Action(type='local.file.updateContent', local=local, remote=remote)
@@ -139,24 +175,17 @@ class BaseDiffEngineNC():
 			renames, deletions, add_or_updates = self._find_renames_and_deletions(
 				(local, remote))
 
+			# self.log('pot. del.', self.potential_deletions, '+', deletions, '-', add_or_updates)
 			self.potential_deletions.update(deletions)
 			self.potential_deletions.difference_update(add_or_updates)
+			# self.log('=', self.potential_deletions)
 
-			def id_to_pair(id: int):
-				l = self.get_local_entry_by_id(id)
-				r = self.get_remote_entry_by_id(id)
-				return (l, r)
-
-			add_or_updates = map(id_to_pair, add_or_updates)
-			it: Iterable[EntryPair] = itertools.chain(renames, add_or_updates)
-			it = filter(itemgetter(1), it)
-			it = sorted(
-				it,
-				key=lambda x: self.sort_key(x[1]),
-				reverse=True)
-
-			self._examine_now(it)
-			# self.log()
+			it = filter(itemgetter(1), itertools.chain(
+				renames,
+				map(self._fetch_pair_by_id, add_or_updates),
+				map(self._fetch_pair_by_id, deletions)
+				))
+			self._examine(it)
 
 			yield Action(type='meta.updateEtag', local=local, remote=remote)
 
@@ -178,16 +207,17 @@ class BaseDiffEngineNC():
 		if local.is_dir() != remote.is_dir():
 			yield Action('conflict.incompatibleTypesDirVsFile', local, remote)
 
-	def conflicts(self, local: EntryLocal, remote: EntryRemote, source='remote'):
+	def _conflicts(self, local: EntryLocal, remote: EntryRemote, source='remote'):
 		it = self.yield_if_conflict(local, remote, source)
 		return list(it)
 
 	def diff_pair(self, local: EntryLocal, remote: EntryRemote):
 		if self.use_conflict_detection:
-			c = self.conflicts(local, remote, source='remote')
-			if c:
-				yield from c
-				return
+			conflicts = self._conflicts(local, remote, source='remote')
+			if conflicts:
+				yield from conflicts
+				if not self.continue_diffing_after_conflict:
+					return
 
 		is_dir = remote.path.endswith('/')
 		if is_dir:
@@ -202,10 +232,11 @@ class BaseDiffEngineNC():
 			return
 
 		if self.use_conflict_detection:
-			c = self.conflicts(potential_local, remote, 'remote')
-			if c:
-				yield from c
-				return
+			conflicts = self._conflicts(potential_local, remote, source='remote')
+			if conflicts:
+				yield from conflicts
+				if not self.continue_diffing_after_conflict:
+					return
 
 		yield Action(type='local.join', local=potential_local, remote=remote)
 
@@ -216,10 +247,11 @@ class BaseDiffEngineNC():
 			return
 
 		if self.use_conflict_detection:
-			c = self.conflicts(local, potential_remote, 'local')
-			if c:
-				yield from c
-				return
+			conflicts = self._conflicts(local, potential_remote, source='local')
+			if conflicts:
+				yield from conflicts
+				if not self.continue_diffing_after_conflict:
+					return
 
 		yield Action(type='remote.join', local=local, remote=potential_remote)
 
@@ -245,19 +277,20 @@ class BaseDiffEngineNC():
 			yield from self.diff_pair_from_local(local, remote)
 
 	def diff_from_remote(self, remote_entries: List[EntryRemote]):
+		out = []
+
 		remote_entries.sort(key=self.sort_key)
 
-		self.pairs_queue.extend(
+		self._examine(
 			(self.get_local_entry_by_id(remote.nextcloud_id), remote)
 			for remote in remote_entries
 		)
 
-		while self.pairs_queue:
-			pair = self.pairs_queue.pop(0)
+		for pair in self._iterate_pairs():
 			local, remote = pair
 
 			if not remote:
-				self.log('\x1b[31mSKIP\x1b[m', local, remote)
+				self.log('\x1b[31m' 'DiffEngine.diff_from_remote: skip (missing .remote)' '\x1b[m', local, remote)
 				continue
 
 			# self.log()
@@ -271,15 +304,17 @@ class BaseDiffEngineNC():
 			# self.log('\x1b[32mPAIR\x1b[m', pair)
 			self.seen_pairs.add(pair)
 
-			yield from self.diff_pair_from_remote(local, remote)
+			actions = self.diff_pair_from_remote(local, remote)
+			out.extend(actions)
 
 		seen_ids = set(
 			map(lambda p: p[0].nextcloud_id if p[0] else None, self.seen_pairs))
 		for deletion in self.potential_deletions:
-			self.log('\x1b[31mdel ???', deletion, '\x1b[m')
 			if deletion is not None and deletion not in seen_ids:
-				self.log('\x1b[31mdel ...', deletion, '\x1b[m')
 				local = self.get_local_entry_by_id(deletion)
 				if local:
-					self.log('\x1b[31;1mDEL !!!', local, '\x1b[m')
-					yield Action(type='local.delete', local=local)
+					out.append(Action(type='local.delete', local=local))
+			# elif deletion is not None and deletion in seen_ids:
+			# 		self.log('pot. del. is not a del.', deletion)
+
+		return out
