@@ -7,6 +7,7 @@ from ..DiffEngine import DiffEngine
 from ..ActionRunner import ActionRunner_NexcloudFrappe
 from ..Common import Common
 from ..RemoteFetcher import RemoteFetcher
+from ..utils import set_flag
 
 def using_local_files(local_files: List[dict]):
 	def decorate(func):
@@ -16,12 +17,16 @@ def using_local_files(local_files: List[dict]):
 
 			for d in local_files:
 				try:
-					frappe.get_doc('File', d).delete()
+					doc = frappe.get_doc('File', d)
+					set_flag(doc)
+					doc.delete()
 				except:
 					pass
 
 				d["doctype"] = "File"
-				doc = frappe.get_doc(d).insert()
+				doc = frappe.get_doc(d)
+				set_flag(doc)
+				doc.insert()
 				if 'file_name' in d:
 					doc.db_set('file_name', d['file_name'])
 				self._local_files.append(doc)
@@ -31,6 +36,7 @@ def using_local_files(local_files: List[dict]):
 			res = func(self, *args, **kwargs)
 
 			for n in self._local_files:
+				set_flag(n)
 				n.delete()
 
 			self._local_files = []
@@ -79,7 +85,9 @@ class Tester(unittest.TestCase):
 		if not frappe.get_single('Nextcloud Settings').enabled:
 			raise unittest.SkipTest("Nextcloud Integration is disabled")
 
-		frappe.db.commit()
+		frappe.db.rollback()
+		frappe.db.begin()
+		frappe.flags.nextcloud_disable_filesync_hooks = True
 
 		root_dir = '@test-' + _slugify(f'{self.__class__.__name__}-{self._testMethodName}')
 		self.common = Common.Test(logger=self.logger, test_root_dir_name=root_dir)
@@ -101,6 +109,7 @@ class Tester(unittest.TestCase):
 		self.fetcher = None
 
 		frappe.db.rollback()
+		frappe.flags.nextcloud_disable_filesync_hooks = None
 
 	def remote_mk_dir(self, p):
 		if p != '/':
@@ -148,14 +157,23 @@ class Tester(unittest.TestCase):
 				self._local_files[i].name = n.replace(old_name, new_name, 1)
 				self._local_files[i].reload()
 
-	def join(self, path: str):
-		l = self.differ.get_local_entry_by_path(path)
-		r = self.differ.get_remote_entry_by_path(path)
+	def join(self, remote_path: str, local_path: str = None):
+		if local_path is None:
+			local_path = remote_path
+		l = self.differ.get_local_entry_by_path(local_path)
+		r = self.differ.get_remote_entry_by_path(remote_path)
 		assert l  # for mypy
 		assert r  # for mypy
 		# print('r.last_updated', r.last_updated)
 		frappe.db.set_value('File', l._frappe_name, {
+			# NOTE: l._frappe_name might not be synced with the actual name
 			'content_hash': r.etag,
 			'nextcloud_id': r.nextcloud_id,
 			'nextcloud_parent_id': r.parent_id,
 		}, modified=r.last_updated)
+
+		for f in self._local_files:
+			if f.name == l._frappe_name:
+				f.reload()
+
+		return r.nextcloud_id

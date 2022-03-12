@@ -1,12 +1,41 @@
-import frappe  # type: ignore
+import frappe
+
+from frappe.core.doctype.file.file import File
 
 from ..Action import Action
-from ..Entry import EntryLocal
+from ..Entry import EntryLocal, convert_entry_local_to_remote
 
 from ._tester import Tester, using_local_files, using_remote_files
 
 
 class TestNCActions(Tester):
+	@using_local_files([
+		dict(file_name='_test.actions', folder='Home', is_folder=1),
+		dict(file_name='meta.updateEtag', folder='Home/_test.actions', content='x'),
+	])
+	def test_actions(self):
+		def get_doc(name) -> File:
+			return frappe.get_doc('File', {'folder': 'Home/_test.actions', 'file_name': name})
+		def get_entry(name) -> File:
+			return self.common.get_local_entry_by_path('_test.actions/' + name)
+
+		etagInitial = frappe.utils.random_string(16)
+		etagFinal = frappe.utils.random_string(16)
+
+		doc = get_doc('meta.updateEtag')
+		doc.content_hash = etagInitial
+		doc.save()
+
+		local = get_entry('meta.updateEtag')
+		remote = convert_entry_local_to_remote(local)
+		remote.etag = etagFinal
+		self.runner.run_actions([
+			Action('meta.updateEtag', local, remote)
+		])
+
+		doc.reload()
+		self.assertEqual(doc.content_hash, etagFinal)
+
 	@using_remote_files([
 		'/create',
 	])
@@ -60,6 +89,9 @@ class TestNCActions(Tester):
 		dict(file_name='old_name', folder='Home/mv_file', content='x'),
 	])
 	def test_file_mv(self):
+		self.join('/mv_file')
+		self.join(remote_path='/mv_file/new_name', local_path='/mv_file/old_name')
+
 		d = self.differ.get_local_entry_by_path('/mv_file')
 		l = self.differ.get_local_entry_by_path('/mv_file/old_name')
 		r = self.differ.get_remote_entry_by_path('/mv_file/new_name')
@@ -85,18 +117,25 @@ class TestNCActions(Tester):
 		'/mv_dir.RENAMED/child',
 		'/mv_dir.RENAMED/child_dir/',
 		'/mv_dir.RENAMED/child_dir/deep_file',
-		'/mv_dirzz/',
-		'/mv_dirzz/UNTOUCHED',
+		'/mv_dir.untouched/',
+		'/mv_dir.untouched/file',
 	])
 	@using_local_files([
 		dict(file_name='mv_dir', folder='Home', is_folder=1),
 		dict(file_name='child', folder='Home/mv_dir', content='x'),
 		dict(file_name='child_dir', folder='Home/mv_dir', is_folder=1),
 		dict(file_name='deep_file', folder='Home/mv_dir/child_dir', content='y'),
-		dict(file_name='mv_dirzz', folder='Home', is_folder=1),
-		dict(file_name='UNTOUCHED', folder='Home/mv_dirzz', content='z'),
+		dict(file_name='mv_dir.untouched', folder='Home', is_folder=1),
+		dict(file_name='file', folder='Home/mv_dir.untouched', content='z'),
 	])
 	def test_dir_mv(self):
+		self.join('/mv_dir.RENAMED/', '/mv_dir/')
+		self.join('/mv_dir.RENAMED/child', '/mv_dir/child')
+		self.join('/mv_dir.RENAMED/child_dir/', '/mv_dir/child_dir/')
+		self.join('/mv_dir.RENAMED/child_dir/deep_file', '/mv_dir/child_dir/deep_file')
+		self.join('/mv_dir.untouched/')
+		self.join('/mv_dir.untouched/file')
+
 		l = self.differ.get_local_entry_by_path('/mv_dir')
 		r = self.differ.get_remote_entry_by_path('/mv_dir.RENAMED')
 		a = Action('local.dir.moveRenamePlusChildren', l, r)
@@ -253,6 +292,7 @@ class TestNCActions(Tester):
 			remote_1_new,
 			remote_2_new,
 		])
+		actions = iter(actions)
 
 		# show_state('- - Initial state - -')
 
@@ -327,25 +367,3 @@ class TestNCActions(Tester):
 				f = frappe.get_doc('File', {'nextcloud_id': f.nextcloud_id})
 				self.assertEqual(
 					f.name, f'{f.folder}/{f.file_name}'.strip('/'))
-
-
-# try:
-# 	frappe.db.rollback()
-# 	t = TestActions()
-# 	t.setUp()
-# 	t.test_create()
-# 	t.test_join()
-# 	t.test_file_mv()
-# 	t.test_dir_mv()
-# 	t.test_dir_cross_rename()
-# except Exception as e:
-# 	print(e)
-# 	import traceback
-# 	traceback.print_exc()
-
-# 	import pdb
-# 	pdb.post_mortem()
-# 	raise
-# finally:
-# 	t.tearDown()
-# 	frappe.db.rollback()

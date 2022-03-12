@@ -53,6 +53,7 @@ class TestNCIdempotence(Tester):
 		dict(file_name='idempotence_rename', folder='Home', content=b'x'),
 	])
 	def test_idempotence_for_rename(self):
+		self.join(remote_path='/idempotence_RENAMED', local_path='/idempotence_rename')
 		r = self.differ.get_remote_entry_by_path('/idempotence_RENAMED')
 		l = self.differ.get_local_entry_by_path('/idempotence_rename')
 		a = Action('local.file.moveRename', l, r)

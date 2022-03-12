@@ -36,6 +36,17 @@ class TestNCFetcher(Tester):
 		files = self.fetcher.fetch_since_utc(convert_local_time_to_utc(before_now_dt))
 		self.assertEqual(len(files), 2) # root + the file
 
+
+	def test_fetch_not_too_much(self):
+		now_dt = frappe.utils.now_datetime()
+		after_now_dt = now_dt + timedelta(hours=1)
+
+		s = convert_local_time_to_utc(now_dt).strftime('%FT%TZ')
+		self.remote_mk_file(f'/file created after {s.replace(":",".")}')
+
+		files = self.fetcher.fetch_since_utc(convert_local_time_to_utc(after_now_dt))
+		self.assertEqual(len(files), 1) # just the root, always included
+
 	@using_remote_files([
 		'/yes/',
 		'/yes/yes/',

@@ -12,7 +12,31 @@ def using_test_differ(func):
 		all_local = list(res.get('l', []))
 		all_remote = list(res.get('r', []))
 
-		expected_actions = set(res.get('a', {}))
+		for child in all_local:
+			if child.path == '/': continue
+			_, file_name = ('/' + child.path.strip('/')).rsplit('/', 1)
+			is_dir = child.path.endswith('/')
+			if is_dir:
+				file_name += '/'
+			for parent in all_local:
+				if parent.path.endswith('/'):
+					if child.path == parent.path + file_name:
+						# if parent.nextcloud_id is not None and child.parent_id is not None:
+						# 	print(child, parent)
+						# if parent.nextcloud_id is None and child.parent_id is not None:
+						# 	print('unlinked parent, weird but won’t cause bugs')
+						# 	print(child, parent)
+						# if parent.nextcloud_id is not None and child.parent_id is None:
+						# 	print('parent has nextcloud_id on local but child has no parent_id')
+						# 	print(child, parent)
+						# if parent.nextcloud_id is None and child.parent_id is None:
+						# 	print(child, parent)
+						if parent.nextcloud_id is not None\
+							and child.parent_id is not None\
+							and parent.nextcloud_id != child.parent_id:
+							print('parent.nextcloud_id != child.nextcloud_parent_id', child, parent)
+
+		expected_actions = list(res.get('a', {}))
 
 		if 'diff_direction' in res:
 			diff_direction = 'fromRemote' if res.get('diff_direction') == 'fromRemote' is None else 'toRemote'
@@ -35,19 +59,24 @@ def using_test_differ(func):
 
 		actions = list(it)
 		if len(actions) != len(list(set(actions))):
-			raise ValueError('Duplicate action')
-
-		self.assertEqual(set(actions), expected_actions)
+			raise ValueError('Duplicate action in', actions)
+		try:
+			self.assertEqual(set(actions), set(expected_actions))
+		except AssertionError as e:
+			err = []
+			err.append('Received Actions:' + (' EMPTY' if len(actions) == 0 else ''))
+			for a in actions:
+				err.append('- ' + str(a))
+			err.append('')
+			err.append('Expected Actions:' + (' EMPTY' if len(expected_actions) == 0 else ''))
+			for a in expected_actions:
+				err.append('- ' + str(a))
+			err = "Action list is incorrect.\n" + "\n".join(err)
+			raise AssertionError(err) from None
 		return res
 	return wrapper
 
 class TestNCBaseDiffEngine(unittest.TestCase):
-	def setUp(self) -> None:
-		self.differ = None
-
-	def diff_from_remote(known_local_files, unknown_remote_files, known_remote_files):
-		pass
-
 	@using_test_differ
 	def test_file_created(self):
 		L = [
@@ -241,7 +270,8 @@ class TestNCBaseDiffEngine(unittest.TestCase):
 	def test_merge_local_file_with_no_nextcloud_id(self):
 		L = [
 			EntryLocal('/', '', 0, parent_id=None),
-			EntryLocal('/a', '', 'NOT LINKED', parent_id='NO PARENT'),
+			# not linked, no parent
+			EntryLocal('/a', '', None, parent_id=None),
 		]
 		R = [
 			EntryRemote('/', 'C', 0, parent_id=None),
@@ -259,8 +289,8 @@ class TestNCBaseDiffEngine(unittest.TestCase):
 	def test_merge_local_file_without_nextcloud_id_with_conflicts(self):
 		L = [
 			EntryLocal('/', '', 0, parent_id=None, last_updated=1),
-			EntryLocal('/a', '', None,
-										parent_id='NO PARENT', last_updated=99),
+			# not linked, no parent
+			EntryLocal('/a', '', None, parent_id=None, last_updated=99),
 		]
 		R = [
 			EntryRemote('/', 'C', 0, parent_id=None, last_updated=1),
@@ -348,9 +378,9 @@ class TestNCBaseDiffEngine(unittest.TestCase):
 			EntryRemote('/', 'r', 0, parent_id=None, last_updated=1),
 		), (
 			# almost identical
-			EntryLocal('/dir', 'd', None, parent_id=0, last_updated=1),
+			EntryLocal('/dir/', 'd', None, parent_id=0, last_updated=1),
 			# dir is not linked ----^^^^
-			EntryRemote('/dir', 'd', 1, parent_id=0, last_updated=1),
+			EntryRemote('/dir/', 'd', 1, parent_id=0, last_updated=1),
 		), (
 			EntryLocal('/dir/alpha', 'A', 2, parent_id=1, last_updated=1),
 			EntryRemote('/dir/alpha', 'A', 2, parent_id=1, last_updated=1),
@@ -375,6 +405,44 @@ class TestNCBaseDiffEngine(unittest.TestCase):
 		kR = R  # [R[1]]
 		expected = set([
 			Action('local.join', L[0], R[0]),
+		])
+		config = {'use_conflict_detection': True}
+		return dict(l=L, r=R, kR=kR, a=expected, **config)
+
+	@using_test_differ
+	def test_cross_rename_no_move(self):
+		"""Cross-rename, move back"""
+		L, R = map(list, zip(*[(
+			EntryLocal('/CR/', 'X', 0, None),
+			EntryRemote('/CR/', 'Y', 0, None),
+		), (
+			# cross-rename a -> b
+			EntryLocal('/CR/a/', 'x=3', 1, 0),
+			EntryRemote('/CR/b/', 'y=4', 1, 0),
+		),(
+			# cross-rename b -> a
+			EntryLocal('/CR/b/', 'y=4', 2, 0),
+			EntryRemote('/CR/a/', 'x=3', 2, 0),
+		), (
+			# move /CR/a/x (id=/0/1/3)
+			#   -> /CR/a/x (id=/0/2/3)
+			EntryLocal('/CR/a/x', '', 3, 1),
+			EntryRemote('/CR/a/x', '', 3, 2),
+		), (
+			# move /CR/b/y (id=/0/2/4)
+			#   -> /CR/b/y (id=/0/1/4)
+			EntryLocal('/CR/b/y', '', 4, 2),
+			EntryRemote('/CR/b/y', '', 4, 1),
+		)]))
+		kR = [R[0]]
+		expected = set([
+			Action('meta.updateEtag', L[0], R[0]),
+			Action('local.dir.moveRenamePlusChildren', L[2], R[2]),
+			Action('meta.updateEtag', L[2], R[2]),
+			Action('local.file.moveRename', L[3], R[3]),
+			Action('local.dir.moveRenamePlusChildren', L[1], R[1]),
+			Action('meta.updateEtag', L[1], R[1]),
+			Action('local.file.moveRename', L[4], R[4]),
 		])
 		config = {'use_conflict_detection': True}
 		return dict(l=L, r=R, kR=kR, a=expected, **config)
