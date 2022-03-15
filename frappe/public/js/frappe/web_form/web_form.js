@@ -403,9 +403,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	handle_success(data) {
 		if (this.accept_payment && !this.doc.paid) {
 			window.location.href = data;
-		}
-
-		if (this.success_url) {
+		} else if (this.success_url) {
 			window.location.href = this.success_url;
 		} else if(this.login_required) {
 			window.location.href =

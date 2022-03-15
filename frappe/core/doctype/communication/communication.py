@@ -529,14 +529,15 @@ def update_parent_document_on_communication(doc):
 		if ("Replied" in options) and doc.sent_or_received == "Received":
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
-		elif not doc.flags.document_load:
-			# update the modified date for document
-			parent.update_modified()
+
+	if not doc.flags.document_load:
+		# update the modified date for document
+		parent.update_modified()
 
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)
 	parent.run_method("notify_communication", doc)
-	parent.notify_update()
+	parent.notify_update(all_users=True)
 
 def update_first_response_time(parent, communication):
 	if parent.meta.has_field("first_response_time") and not parent.get("first_response_time"):

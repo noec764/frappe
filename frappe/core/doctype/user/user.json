@@ -39,6 +39,7 @@
   "mute_sounds",
   "column_break_22",
   "mobile_no",
+  "website",
   "change_password",
   "new_password",
   "logout_all_sessions",
@@ -606,6 +607,11 @@
    "fieldtype": "Link",
    "label": "Module Profile",
    "options": "Module Profile"
+  },
+  {
+   "fieldname": "website",
+   "fieldtype": "Data",
+   "label": "Website"
   }
  ],
  "icon": "fa fa-user",
@@ -663,9 +669,9 @@
    "link_fieldname": "allocated_to"
   },
   {
-    "group": "Integrations",
-    "link_doctype": "Token Cache",
-    "link_fieldname": "user"
+   "group": "Integrations",
+   "link_doctype": "Token Cache",
+   "link_fieldname": "user"
   }
  ],
  "modified": "2022-03-09 01:47:56.745069",

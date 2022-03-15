@@ -481,7 +481,7 @@ def format_datetime(datetime_string, format_string=None, lang=None):
 		formatted_datetime = datetime.strftime('%Y-%m-%d %H:%M:%S')
 	return formatted_datetime
 
-def format_duration(seconds, hide_days=False):
+def format_duration(seconds, hide_days=False, hide_seconds=False):
 	"""Converts the given duration value in float(seconds) to duration format
 	example: converts 12885 to '3h 34m 45s' where 12885 = seconds in float
 	"""
@@ -509,7 +509,7 @@ def format_duration(seconds, hide_days=False):
 		if total_duration.get('minutes'):
 			duration += ' ' if len(duration) else ''
 			duration += str(total_duration.get('minutes')) + 'm'
-		if total_duration.get('seconds'):
+		if total_duration.get('seconds') and not hide_seconds:
 			duration += ' ' if len(duration) else ''
 			duration += str(total_duration.get('seconds')) + 's'
 

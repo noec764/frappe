@@ -109,14 +109,14 @@
    "fieldname": "default_calendar",
    "fieldtype": "Select",
    "label": "Default displayed calendar"
-},
-{
- "default": "1",
- "depends_on": "enable_email_notifications",
- "fieldname": "enable_email_event_reminders",
- "fieldtype": "Check",
- "label": "Event Reminders"
-  }
+  },
+  {
+    "default": "1",
+    "depends_on": "enable_email_notifications",
+    "fieldname": "enable_email_event_reminders",
+    "fieldtype": "Check",
+    "label": "Event Reminders"
+   }
  ],
  "in_create": 1,
  "links": [],
