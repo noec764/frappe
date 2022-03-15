@@ -10,7 +10,7 @@ from frappe.modules import get_module_path, scrub_dt_dn
 from frappe.query_builder import DocType
 from frappe.utils import get_datetime, now
 
-def caclulate_hash(path: str) -> str:
+def calculate_hash(path: str) -> str:
 	"""Calculate md5 hash of the file in binary mode
 	Args:
 		path (str): Path to the file to be hashed
@@ -86,7 +86,7 @@ def import_file_by_path(path: str,force: bool = False,data_import: bool = False,
 		print(f"{path} missing")
 		return
 
-	calculated_hash = caclulate_hash(path)
+	calculated_hash = calculate_hash(path)
 
 	if docs:
 		if not isinstance(docs, list):
