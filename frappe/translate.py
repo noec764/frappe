@@ -442,6 +442,10 @@ def get_messages_from_doctype(name, context=True):
 			messages.extend(get_messages_from_file(doctype_regional_file_path + ".js"))
 			messages.extend(get_messages_from_file(doctype_regional_file_path + "_list.js"))
 
+		for hook in ["doctype_js", "doctype_list_js", "doctype_tree_js", "doctype_calendar_js"]:
+			for path in get_code_files_via_hooks(hook, name):
+				messages.extend(get_messages_from_file(path))
+
 	# workflow based on doctype
 	messages.extend(get_messages_from_workflow(doctype=name))
 
@@ -968,3 +972,21 @@ def get_all_languages(with_language_name=False):
 @frappe.whitelist(allow_guest=True)
 def set_preferred_language_cookie(preferred_language):
 	frappe.local.cookie_manager.set_cookie("preferred_language", preferred_language)
+
+# TODO: Commonify with function in frappe.desk.form.meta
+def get_code_files_via_hooks(hook, name):
+	code_files = []
+	for app_name in frappe.get_installed_apps():
+		code_hook = frappe.get_hooks(hook, default={}, app_name=app_name)
+		if not code_hook:
+			continue
+
+		files = code_hook.get(name, [])
+		if not isinstance(files, list):
+			files = [files]
+
+		for file in files:
+			path = frappe.get_app_path(app_name, *file.strip("/").split("/"))
+			code_files.append(path)
+
+	return code_files
