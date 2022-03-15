@@ -1,4 +1,4 @@
-/* .tree {
+.tree {
   padding: 15px;
 }
 .tree li {
@@ -24,7 +24,7 @@ ul.tree-children {
 }
 .tree-link .node-parent,
 .tree-link .node-leaf {
-  margin-right: 5px;
+  margin-right: 8px;
 }
 .tree-link.active i {
   color: #6195FF;
@@ -92,4 +92,4 @@ ul.tree-children {
 }
 .tree-link.active ~ .balance-area {
   color: #36414C !important;
-} */
+}
