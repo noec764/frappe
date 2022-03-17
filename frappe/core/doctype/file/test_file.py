@@ -315,9 +315,19 @@ class TestFile(unittest.TestCase):
 			"folder": folder.name,
 			"content": "Testing folder copy example"})
 		_file.save()
-
-		folder = frappe.get_doc("File", "Home/Test Folder 1/Test Folder 3")
-		self.assertRaises(frappe.ValidationError, folder.delete)
+	
+	def test_folder_delete(self):
+		folder = self.get_folder("Test Folder Delete")
+		file = frappe.get_doc({
+			"doctype": "File",
+			"file_name": "should_be_deleted.txt",
+			"attached_to_name": "",
+			"attached_to_doctype": "",
+			"folder": folder.name,
+			"content": "Testing folder recursive delete example"})
+		file.save()
+		folder.delete()
+		self.assertRaises(frappe.DoesNotExistError, file.reload)
 
 	def test_same_file_url_update(self):
 		attached_to_doctype1, attached_to_docname1 = make_test_doc()

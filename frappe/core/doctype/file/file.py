@@ -261,7 +261,8 @@ class File(Document):
 	def on_trash(self):
 		if self.is_home_folder or self.is_attachments_folder:
 			frappe.throw(_("Cannot delete Home and Attachments folders"))
-		self.check_folder_is_empty()
+		# self.check_folder_is_empty()
+		self.folder_delete_children()
 		self.call_delete_file()
 		if not self.is_folder:
 			self.add_comment_in_reference_doc('Attachment Removed', _("Removed {0}").format(self.file_name))
@@ -314,6 +315,19 @@ class File(Document):
 
 		if self.is_folder and files:
 			frappe.throw(_("Folder {0} is not empty").format(self.name), FolderNotEmpty)
+
+	def folder_delete_children(self, flags=None):
+		"""Delete all children of folder"""
+		if self.is_folder:
+			files = self.get_successor()
+			for (f,) in files:
+				doc = frappe.get_doc("File", f)
+				if flags:
+					doc.flags.update(flags)
+				doc.flags.in_parent_delete = True
+				if doc.is_folder:
+					doc.folder_delete_children(flags=flags)
+				doc.delete()
 
 	def call_delete_file(self):
 		"""If file not attached to any other record, delete it"""
