@@ -202,6 +202,17 @@ doc_events = {
 	"Page": {
 		"after_insert": "frappe.cache_manager.build_domain_restricted_page_cache",
 		"after_save": "frappe.cache_manager.build_domain_restricted_page_cache"
+	},
+	"File": {
+		"after_insert": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_create",
+		],
+		"on_trash": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_trash",
+		],
+		"on_update": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_update",
+		],
 	}
 }
 
