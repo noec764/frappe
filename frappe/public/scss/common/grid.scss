@@ -89,7 +89,15 @@
 	height: 34px;
 	padding: 8px;
 	max-height: 200px;
-	// border-right: 1px solid var(--border-color);
+
+	&.search {
+		padding: 7px !important;
+
+		input {
+			height: -webkit-fill-available;
+			padding: 3px 7px;
+		}
+	}
 }
 
 .grid-row-check {
@@ -125,7 +133,6 @@
 
 .grid-row > .row {
 	.col:last-child {
-		margin-right: calc(-1 * var(--margin-sm));
 		border-right: none;
 	}
 
@@ -437,6 +444,7 @@
 }
 
 .page-number {
+	background-color: var(--fg-color);
 	padding: 0 3px;
 }
 
