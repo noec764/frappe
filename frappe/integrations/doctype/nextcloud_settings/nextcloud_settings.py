@@ -8,17 +8,18 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils.data import cint
 
-from .client import NextcloudIntegrationClient
+from owncloud import HTTPResponseError
 
+from .client import NextcloudIntegrationClient
+from .exceptions import NextcloudExceptionInvalidCredentials, NextcloudExceptionServerIsDown
 
 if any((os.getenv('CI'), frappe.conf.developer_mode, frappe.conf.allow_tests)):
 	# Do not check certificates when in developer mode or while testing
 	os.environ['NEXTCLOUD_DONT_VERIFY_CERTS'] = '1'
 	# os.environ['CI_NEXTCLOUD_DISABLE'] = '1'
 
-
-class NextcloudException(Exception):
-	pass
+if os.getenv('NEXTCLOUD_FORCE_VERIFY_CERTS'):
+	os.environ['NEXTCLOUD_DONT_VERIFY_CERTS'] = ''
 
 class NextcloudSettings(Document):
 	enabled: bool = False
@@ -27,48 +28,63 @@ class NextcloudSettings(Document):
 	# password: str = ''
 
 	enable_sync: bool = False
-	enable_backups: bool = False
-	enable_calendar: bool = False
+	# enable_backups: bool = False
+	# enable_calendar: bool = False
 
 	path_to_files_folder: str = ''
+
+	# TODO: store sync_datetime for each of the 3 modules + configurable interval
 	last_filesync_dt: str = None
+
+	# TODO: remove these properties (conflict override)
 	next_filesync_ignore_id_conflicts: bool = False
 	filesync_override_conflict_strategy: str = ''
-	# TODO: store sync_datetime for each of the 3 modules + configurable interval
-
-	# path_to_upload_folder: ? = None
-	# send_email_for_successful_backup: ? = None
-	# send_notifications_to: ? = None
-	# path_to_backups_folder: ? = None
-	# backup_frequency: ? = None
 
 	def _get_credentials(self):
-		password = self.get_password(fieldname='password', raise_exception=False)
-		username = self.username
+		password: str = self.get_password(fieldname='password', raise_exception=False)
+		username: str = self.username
 		return username, password
 
-	def _get_cloud_url(self):
-		return self.cloud_url.strip('/') + '/'
+	def _get_cloud_base_url(self):
+		from urllib.parse import urlsplit, urlunsplit
+		o = urlsplit(self.cloud_url)
+		clean_url = urlunsplit((o.scheme, o.netloc, '', '', ''))
+		return clean_url.strip('/')
 
 	def nc_connect(self, **kwargs):
 		if not self.nc_ping_server():
-			raise NextcloudException('nextcloud server is down')
+			raise NextcloudExceptionServerIsDown
 
 		username, password = self._get_credentials()
-		cloud_url = self._get_cloud_url()
+		cloud_url = self._get_cloud_base_url() + '/'
 
 		verify_certs = not cint(os.environ.get('NEXTCLOUD_DONT_VERIFY_CERTS', False))
 		client = NextcloudIntegrationClient(cloud_url, verify_certs=verify_certs, **kwargs)
-		client.login(username, password)
+		try:
+			client.login(username, password)
+			client.list('/', depth=0, properties=[])  # query to check that credentials are valid
+			# https://github.com/nextcloud/server/issues/13561
+		except HTTPResponseError as e:
+			if e.status_code == 401:
+				# unauthorized access (probably invalid credentials)
+				raise NextcloudExceptionInvalidCredentials
+			else:
+				raise
+		except Exception as e:
+			raise
 
 		return client
 
 	def nc_ping_server(self, n_tries = 2, t_timeout = 5):
 		from urllib.parse import urlsplit
-		o = urlsplit(self._get_cloud_url())
+		url = self._get_cloud_base_url().strip('/')
+		o = urlsplit(url)
 		default_port = {'http': 80, 'https': 443}
 		port = o.port or default_port.get(o.scheme, 80)
 		host = o.hostname
+
+		if not host:
+			raise ValueError(frappe._('Invalid URL'))
 
 		import socket
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
