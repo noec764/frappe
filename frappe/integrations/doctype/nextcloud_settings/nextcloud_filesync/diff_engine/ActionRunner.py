@@ -4,14 +4,15 @@ from typing import Iterable, Optional, Set, Union
 
 import frappe  # type: ignore
 from frappe.model.rename_doc import rename_doc  # type: ignore
-from frappe.core.doctype.file.file import File  # type: ignore
+from frappe.core.doctype.file.file import File
+from frappe.utils.data import cint, cstr  # type: ignore
 
 from .Action import Action
 from .BaseActionRunner import _BaseActionRunner
 from .Common import Common
 from .DeferredTasks import DeferredTasks
 from .Entry import EntryRemote, EntryLocal
-from .utils import set_flag
+from .utils import FLAG_NEXTCLOUD_IGNORE, set_flag
 from .utils_normalize_paths import util_denormalize_to_local_path
 
 def is_iterable(obj):
@@ -21,72 +22,11 @@ def is_iterable(obj):
 	except TypeError:
 		return False
 
-# def path_to_owner_dir_name(path: str):
-#     """
-#     `path` should be relative to root files dir (`.../Frappe Files/$path`)
-#     """
-#     path = path.strip('/')
-#     basename = os.path.basename(path)
-#     splits = os.path.dirname(path).split('/', maxsplit=1)
-#     owner, dir = (splits + ['', ''])[:2]
-
-#     if owner and owner != 'Administrator':
-#         dir = f'{owner}/{dir}'
-
-#     return owner, dir.strip('/'), basename
-
-
-# def get_local_parent_folder_and_file_name(path: str):
-#     owner, dir, basename = path_to_owner_dir_name(path)
-#     folder = os.path.join('Home', dir).rstrip('/')
-#     file_name = basename
-#     return folder, file_name
 
 def make_folder_docname(parent_folder: str, file_name: str):
 	if parent_folder:
 		return parent_folder + '/' + file_name
 	return file_name
-
-
-"""
-def descendants_of(folder: str):
-	or_filters = [
-		{'folder': folder},
-		{'folder': ('like', f'{folder}/%')},
-	]
-	fields = ['name', 'folder', 'file_name', 'is_folder']
-	return frappe.get_list('File', or_filters=or_filters, fields=fields)
-
-def repath_descendants_of(old_path: str, new_path: str, ignore_list: set = set()):
-	# print(f'mv {old_path}/** {new_path}/**')
-	files = descendants_of(old_path)
-	for file in files:
-		# print(file)
-		# try:
-		#     while True:
-		#         cmd = input("break> ")
-		#         if not cmd:
-		#             break
-		#         print(eval(cmd))
-		# except EOFError:
-		#     raise SystemExit()
-
-		if file.name in ignore_list:
-			# print(f'skipping {file.name} (aka {file.folder}/{file.file_name})')
-			continue
-
-		folder: str = file.folder
-		if folder == old_path:
-			folder = new_path
-		elif folder.startswith(old_path + '/'):
-			folder = folder.replace(old_path, new_path, 1)
-		else:
-			print(f'{file.name} has unexpected folder {file.folder}')
-			continue
-
-		frappe.db.set_value('File', file.name, 'folder', folder)
-		yield file
-"""
 
 
 class ActionRunner_NexcloudFrappe(_BaseActionRunner):
@@ -107,6 +47,9 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 
 		# self._all_runned_actions: List[Action] = []
 		# self._add_rollback_observer()
+
+	def log(self, *args, **kwargs):
+		self.common.log(*args, **kwargs)
 
 	def get_remote_content(self, remote_real_path: str):
 		try:
@@ -186,11 +129,10 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		# 	#return self.folder_renamer.get(local._frappe_name) or local._frappe_name
 		# 	return local._frappe_name
 
-		if local.nextcloud_id:
+		if local.nextcloud_id is not None:
 			return self._get_frappe_name_by_id(local.nextcloud_id) or local._frappe_name
 		elif local._frappe_name:
 			# no .nextcloud_id, but ._frappe_name
-			# -> works well for `local.delete`
 			return local._frappe_name
 
 		# TODO: else, find by path?
@@ -246,7 +188,11 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		assert action.local
 		frappe_name = self._get_frappe_name(action.local)
 		assert frappe_name
-		frappe.delete_doc('File', frappe_name)
+
+		if not frappe.db.exists('File', frappe_name):
+			return  # skip, deletion should be idempotent
+
+		delete_filedoc_and_children_by_name(frappe_name)
 
 	def action_local_file_update_content(self, action: Action):
 		l, r = action.local, action.remote
@@ -272,7 +218,6 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		})
 
 	def action_remote_create_or_update(self, action: Action):
-		from ..sync import sync_log
 		frappe_name = self._get_frappe_name(action.local)
 		assert frappe_name
 
@@ -284,29 +229,29 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		if not is_folder:  # find file path for upload
 			data_path = os.path.abspath(doc.get_full_path())
 			if not os.path.exists(data_path):
-				sync_log('Missing data file')
+				self.log('Missing data file')
 				raise Exception('Missing data file')
 
 		if action.remote:  # just update the remote file/dir
 			old_remote_path = self.common.denormalize_remote(action.remote.path)
 			if old_remote_path != new_remote_path:
-				sync_log(f'self.cloud_client.move({old_remote_path}, {new_remote_path})')
+				self.log(f'C.move({old_remote_path}, {new_remote_path})')
 				self.cloud_client.move(old_remote_path, new_remote_path)
 
 			if not is_folder:
-				sync_log(f'C.put_file({new_remote_path}, {data_path})')
+				self.log(f'C.put_file({new_remote_path}, {data_path})')
 				self.cloud_client.put_file(new_remote_path, data_path)
 		else:  # create the remote file/dir
 			if is_folder:
-				sync_log(f'C.mkdir({new_remote_path})')
+				self.log(f'C.mkdir({new_remote_path})')
 				self.cloud_client.mkdir(new_remote_path)
 			else:
-				sync_log(f'C.put_file({new_remote_path}, {data_path})')
+				self.log(f'C.put_file({new_remote_path}, {data_path})')
 				self.cloud_client.put_file(new_remote_path, data_path)
 
 		new_remote = self.common.get_remote_entry_by_real_path(new_remote_path)
 		if new_remote is None:
-			sync_log('Failed to create file/dir')
+			self.log('Failed to create file/dir')
 			raise Exception('Failed to create file/dir')
 
 		parent_id = new_remote.parent_id
@@ -333,21 +278,21 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 					parent_id2 = self._fetch_parent_id(new_remote_path)
 
 				if new_remote.nextcloud_id != new_remote2.nextcloud_id:
-					sync_log('NCID:', new_remote, new_remote2)
+					self.log('NCID:', new_remote, new_remote2)
 					doc.db_set('nextcloud_id', new_remote2.nextcloud_id, update_modified=False)
 				if parent_id != parent_id2:
-					sync_log('P_ID:', new_remote, new_remote2)
+					self.log('P_ID:', new_remote, new_remote2)
 					doc.db_set('nextcloud_parent_id', parent_id2, update_modified=False)
 				if new_remote.etag != new_remote2.etag:
-					sync_log('ETAG:', new_remote, new_remote2)
+					self.log('ETAG:', new_remote, new_remote2)
 					doc.db_set('content_hash', new_remote2.etag, update_modified=False)
 				if new_remote.last_updated != new_remote2.last_updated:
-					sync_log('UPDT:', new_remote, new_remote2)
+					self.log('UPDT:', new_remote, new_remote2)
 					doc.db_set('modified', new_remote2.last_updated, update_modified=False)
 
 			self.deferred_tasks.push(f)
 
-		sync_log()
+		self.log()
 
 
 	def action_local_create(self, action: Action):
@@ -431,7 +376,9 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 			# nextcloud
 			"nextcloud_id": remote.nextcloud_id,
 		}
-		if remote.parent_id:
+		# TODO: what if we move the remote home
+		# inside of a new handmade home with the same path?
+		if remote.parent_id is not None:
 			data["nextcloud_parent_id"] = remote.parent_id
 
 		post_insert_data = {
@@ -494,7 +441,12 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		# if idx is not None:
 		# 	cur_docname = self.folder_renamer.get(cur_docname, -idx)  # apply posterior renames
 
-		rename_folder__depr(cur_docname, new_docname)
+		if not frappe.flags.nextcloud_in_rename:
+			frappe.flags.nextcloud_in_rename = 0
+
+		frappe.flags.nextcloud_in_rename += 1
+		frappe_rename_folder(cur_docname, new_docname)
+		frappe.flags.nextcloud_in_rename -= 1
 		# return self.folder_renamer.register_folder_move(cur_docname, new_docname)
 
 	def _fetch_parent_id(self, real_path: str):
@@ -544,12 +496,20 @@ class TheData:
 			file_doc.db_set({**self.data, **self.post_insert_data}, update_modified=False)
 
 		# if file_doc.is_folder:
-		# 	auto_rename_folder__depr(file_doc)
+		# 	old_name = file_doc.name
+		# 	file_doc.autoname()
+		# 	new_name = file_doc.name
+		# 	if old_name != new_name:
+		# 		frappe_rename_folder()
 
 
-
-def rename_folder__depr(old_name: str, new_name: str):
+def frappe_rename_folder(old_name: str, new_name: str):
 	rename_doc('File', old_name, new_name, ignore_permissions=True)
 
-def auto_rename_folder__depr(file_doc: 'File'):
-	rename_folder__depr(file_doc.name, file_doc.get_name_based_on_parent_folder())
+def delete_filedoc_and_children_by_name(frappe_name: str):
+	doc: File = frappe.get_doc('File', frappe_name)
+	set_flag(doc)
+	is_folder = doc.is_folder
+	if is_folder:
+		doc.folder_delete_children(flags={FLAG_NEXTCLOUD_IGNORE: True})
+	doc.delete()
