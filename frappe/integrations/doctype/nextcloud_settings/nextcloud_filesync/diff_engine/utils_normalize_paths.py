@@ -1,5 +1,7 @@
 import unicodedata
 
+from .utils import get_home_folder_name
+
 
 def _remove_prefix(s: str, prefix: str) -> str:
 	if s.startswith(prefix):
@@ -8,29 +10,30 @@ def _remove_prefix(s: str, prefix: str) -> str:
 
 
 def util_denormalize_to_local_path(path: str):
+	home = get_home_folder_name()
 	p = path.strip('/')
 	if not p:  # empty
-		return (None, 'Home')  # The root dir is 'Home'
+		return (None, home)  # The root dir is 'Home'
 	elif '/' not in p:
-		return ('Home', p)  # Direct child of 'Home'
+		return (home, p)  # Direct child of 'Home'
 	else:
 		# NOTE: components are stripped of leading and trailing slashes
 		# folder and file_name are both NOT empty
 		folder, file_name = p.rsplit('/', 1)
-		folder = 'Home/' + folder
+		folder = home + '/' + folder
 		return (folder, file_name)
 
 
 def util_normalize_local_path(folder: str, file_name: str, is_dir: bool) -> str:
-	if not folder and file_name == 'Home':
+	home = get_home_folder_name()
+	if not folder and file_name == home:
 		return '/'
 
 	folder = unicodedata.normalize('NFC', folder or '')
 	file_name = unicodedata.normalize('NFC', file_name or '')
-	# print('\x1b[33;7m', folder, file_name, '\x1b[m')
 
 	p = folder + '/' + file_name
-	p = '/' + _remove_prefix(p, 'Home/')
+	p = '/' + _remove_prefix(p, home + '/')
 	terminator = '/' if is_dir else ''
 	return '/' + p.strip('/') + terminator
 
