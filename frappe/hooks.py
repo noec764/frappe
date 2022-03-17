@@ -205,13 +205,13 @@ doc_events = {
 	},
 	"File": {
 		"after_insert": [
-			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_create",
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_create",
 		],
 		"on_trash": [
-			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_trash",
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_trash",
 		],
 		"on_update": [
-			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.hooks.file_on_update",
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_update",
 		],
 	}
 }

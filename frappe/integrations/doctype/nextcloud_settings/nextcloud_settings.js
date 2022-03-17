@@ -61,7 +61,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	},
 
 	check_server: function(frm) {
-		nextcloud_hook_xcall('nextcloud_filesync.hooks.check_server').then((x) => {
+		nextcloud_hook_xcall('nextcloud_filesync.api.check_server').then((x) => {
 			console.log(x)
 			if (x.status === 'ok') {
 				console.log('ok')
@@ -72,7 +72,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 	},
 
 	check_id_of_home: function(frm) {
-		nextcloud_hook_xcall('nextcloud_filesync.hooks.check_id_of_home').then((x) => {
+		nextcloud_hook_xcall('nextcloud_filesync.api.check_id_of_home').then((x) => {
 			if (x.type === 'error' && x.reason === 'different-ids') {
 				frm.events.show_id_mismatch_dialog(frm, x.localId, x.remoteId);
 			} else if (x.type === 'warn' && x.message === 'never-synced') {
@@ -109,14 +109,14 @@ frappe.ui.form.on('Nextcloud Settings', {
 				label: __('Force sync from Nextcloud', 'Nextcloud'),
 				onsubmit: () => {
 					// force sync from nextcloud
-					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all__force')
+					nextcloud_form_xcall(frm, 'nextcloud_filesync.api.sync_from_remote_all__force')
 				},
 			},
 			lorem: {
 				label: __('Force upload to Nextcloud', 'Nextcloud'),
 				onsubmit: () => {
 					// force sync-upload to nextcloud
-					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_to_remote_force')
+					nextcloud_form_xcall(frm, 'nextcloud_filesync.api.sync_to_remote_force')
 				},
 			},
 		}
@@ -160,23 +160,23 @@ frappe.ui.form.on('Nextcloud Settings', {
 
 	add_button_sync_migrate: function (frm) {
 		frm.add_custom_button(__('Migrate Now'), function() {
-			nextcloud_hook_xcall('nextcloud_filesync.hooks.migrate_to_nextcloud', {freeze: true});
+			nextcloud_hook_xcall('nextcloud_filesync.api.migrate_to_nextcloud', {freeze: true});
 		}).addClass('btn-primary');
 	},
 
 	add_button_sync_all_forced: function(frm) {
-		nextcloud_add_button(frm, __('FORCE SYNC'), 'nextcloud_filesync.hooks.sync_from_remote_all__force')
+		nextcloud_add_button(frm, __('FORCE SYNC'), 'nextcloud_filesync.api.sync_from_remote_all__force')
 	},
 
 	add_button_sync_all: function(frm) {
-		nextcloud_add_button(frm, __('Sync Now'), 'nextcloud_filesync.hooks.sync_from_remote_all')
+		nextcloud_add_button(frm, __('Sync Now'), 'nextcloud_filesync.api.sync_from_remote_all')
 	},
 
 	add_button_sync_recent: function(frm) {
-		nextcloud_add_button(frm, __('Last Update'), 'nextcloud_filesync.hooks.sync_from_remote_since_last_update')
+		nextcloud_add_button(frm, __('Last Update'), 'nextcloud_filesync.api.sync_from_remote_since_last_update')
 	},
 
 	add_button_sync_to_remote: function(frm) {
-		nextcloud_add_button(frm, __('Sync To Remote'), 'nextcloud_filesync.hooks.sync_to_remote')
+		nextcloud_add_button(frm, __('Sync To Remote'), 'nextcloud_filesync.api.sync_to_remote')
 	},
 });

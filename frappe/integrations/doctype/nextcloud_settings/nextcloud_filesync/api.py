@@ -4,11 +4,6 @@ from frappe.integrations.doctype.nextcloud_settings import get_nextcloud_setting
 from .sync import sync_log, sync_module
 from .diff_engine.utils import check_flag, get_home_folder
 
-def can_run_hook(doc=None):
-	if frappe.flags.nextcloud_disable_filesync_hooks: return False
-	if frappe.flags.nextcloud_disable_filesync: return False
-	if doc and check_flag(doc): return False
-	return True
 
 @frappe.whitelist()
 def check_id_of_home():
@@ -16,9 +11,11 @@ def check_id_of_home():
 		if not syncer: return 'skip'
 		return syncer.check_id_of_home()
 
+
 @frappe.whitelist()
 def clear_id_of_home():
 	get_home_folder().db_set('nextcloud_id', None)
+
 
 @frappe.whitelist()
 def sync_from_remote_all():
@@ -26,11 +23,13 @@ def sync_from_remote_all():
 		if not syncer: return 'skip'
 		syncer.sync_from_remote_all()
 
+
 @frappe.whitelist()
 def sync_from_remote_since_last_update():
 	with sync_module() as syncer:
 		if not syncer: return 'skip'
 		syncer.sync_from_remote_since_last_update()
+
 
 @frappe.whitelist()
 def sync_from_remote_all__force():
@@ -59,6 +58,7 @@ def sync_from_remote_all__force():
 		if not syncer: return 'skip'
 		syncer.sync_from_remote_all()
 
+
 # @frappe.whitelist()
 # def enable_conflict_resolution_for_next_sync():
 # 	frappe.get_single("Nextcloud Settings")\
@@ -70,6 +70,26 @@ def sync_from_remote_all__force():
 # 	with sync_module() as sync:
 # 		sync.save_to_remote(doc, event)
 
+
+@frappe.whitelist()
+def check_server():
+	try:
+		settings = get_nextcloud_settings()
+		settings.nc_connect()
+		# no exception raised
+		return {'status': 'ok'}
+	except Exception as e:
+		frappe.clear_last_message()
+		msg = '\n'.join(map(str, e.args))
+		return {'status': 'error', 'error': msg}
+
+
+## HOOKS
+def can_run_hook(doc=None):
+	if frappe.flags.nextcloud_disable_filesync_hooks: return False
+	if frappe.flags.nextcloud_disable_filesync: return False
+	if doc and check_flag(doc): return False
+	return True
 
 @frappe.whitelist()
 def file_on_trash(doc, event):
@@ -131,16 +151,3 @@ def file_on_create(doc, event):
 	except Exception as e:
 		sync_log(e)
 		return
-
-
-@frappe.whitelist()
-def check_server():
-	try:
-		settings = get_nextcloud_settings()
-		settings.nc_connect()
-		# no exception raised
-		return {'status': 'ok'}
-	except Exception as e:
-		frappe.clear_last_message()
-		msg = '\n'.join(map(str, e.args))
-		return {'status': 'error', 'error': msg}
