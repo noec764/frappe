@@ -6,19 +6,12 @@ We assume that these datetime objects are:
 - offset-naive (with no timezone information, .tzinfo is None)
 """
 
+from functools import lru_cache
 from frappe.utils import get_time_zone  # type: ignore
 from datetime import datetime
 
 
-def cache_once(func):
-	def cached_func():
-		if not hasattr(cached_func, 'result'):
-			cached_func.result = func()
-		return cached_func.result
-	return cached_func
-
-
-@cache_once
+@lru_cache(maxsize=None)
 def get_local_tzinfo():
 	from pytz import timezone
 	return timezone(get_time_zone())
@@ -40,8 +33,10 @@ def set_timezone_to_local(dt: datetime):
 
 
 def convert_local_time_to_utc(dt: datetime):
-	tzinfo = get_local_tzinfo()
-	return tzinfo.localize(dt).astimezone(None).replace(tzinfo=None)
+	if not dt.tzinfo:
+		tzinfo = get_local_tzinfo()
+		dt = tzinfo.localize(dt)
+	return dt.astimezone(None).replace(tzinfo=None)
 
 
 def convert_utc_to_local_time(dt: datetime):
