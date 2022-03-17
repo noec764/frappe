@@ -1,9 +1,9 @@
 import os
-from typing import Callable, Dict, Optional, Set
+from typing import Callable, Dict, List, Optional, Set
 
 import frappe  # type: ignore
 import owncloud  # type: ignore
-from owncloud import HTTPResponseError  # type: ignore
+from owncloud import HTTPResponseError, FileInfo  # type: ignore
 
 from frappe.core.doctype.file.file import File
 from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings
@@ -70,13 +70,16 @@ class Common:
 
 		self._map_remote_path_to_id: Dict[str, int] = {}
 
+	def log(self, *args, **kwargs):
+		self.logger(*args, **kwargs)
+
 	def _normalize_remote_path(self, path: str, is_dir: bool) -> str:
 		return util_normalize_remote_path(path, is_dir, self.remote_prefix_to_remove)
 
 	def denormalize_remote(self, path: str) -> str:
 		return util_denormalize_to_remote_path(path, self.remote_prefix_to_remove)
 
-	def convert_remote_file_to_entry(self, file: owncloud.FileInfo) -> EntryRemote:
+	def convert_remote_file_to_entry(self, file: FileInfo) -> EntryRemote:
 		path = self._normalize_remote_path(file.path, file.is_dir())
 
 		nextcloud_id = int(file.attributes[self._FILE_ID])
@@ -265,3 +268,12 @@ class Common:
 			children_ids[entry.nextcloud_id] = entry
 
 		return children_ids
+
+	def _filter(self, files: List[FileInfo]) -> List[FileInfo]:
+		def f(file: FileInfo) -> bool:
+			path = file.path
+			return all((
+				path.startswith(self.root),
+				'/.' not in path[len(self.root)-1:],
+			))
+		return list(filter(f, files))

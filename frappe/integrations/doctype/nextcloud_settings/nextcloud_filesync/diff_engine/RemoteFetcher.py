@@ -1,68 +1,63 @@
 from datetime import datetime
-from operator import attrgetter
 from typing import List
 
-from owncloud import HTTPResponseError, FileInfo  # type: ignore
+from owncloud import HTTPResponseError, FileInfo
+
+from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudSyncCannotCreateRoot, NextcloudSyncCannotFetchRoot, NextcloudSyncMissingRoot
 
 from .Common import Common
-
 
 class RemoteFetcher:
 	def __init__(self, common: Common):
 		super().__init__()
-		self.common = common
 
-		self.cloud_client = common.cloud_client
-		self.cloud_settings = common.cloud_settings
-		self.logger = common.logger
-		self._FILE_ID = common._FILE_ID
-		self._QUERY_PROPS = common._QUERY_PROPS
+		self.filter = common._filter
+		self.properties = common._QUERY_PROPS
+		self.client = common.cloud_client
 		self.root = common.root
+		self.log = common.logger
 
 		self.last_update = None
 
-	def _filter(self, files: List[FileInfo]) -> List[FileInfo]:
-		def f(file: FileInfo) -> bool:
-			path = file.path
-			return all((
-				path.startswith(self.common.root),
-				'/.' not in path[len(self.common.root)-1:],
-			))
-		return list(filter(f, files))
+	def create_root(self) -> FileInfo:
+		p = self.root
+		self.client.mkdir_p(p)
+		msg = f'initializing empty root directory on remote ({p})'
+		self.log(msg)
 
-	def fetch_root(self) -> FileInfo:
-		p = self.root.strip('/')
-		props = self._QUERY_PROPS
+		f = self.client.file_info(p, properties=self.properties)
+		if f:
+			self.log('-> ok')
+			return f
+
+		self.log('-> failed to create root directory ({p})')
+		raise NextcloudSyncCannotCreateRoot()
+
+	def fetch_root(self, create_if_missing=False) -> FileInfo:
+		p = self.root
 		try:
-			return self.cloud_client.file_info(p, properties=props)
+			return self.client.file_info(p, properties=self.properties)
 		except HTTPResponseError as e:
 			if e.status_code == 404:
-				self.cloud_client.mkdir_p(p)
-				msg = f'initializing empty root directory on remote ({p})'
-				self.logger(msg)
-
-				f = self.cloud_client.file_info(p, properties=props)
-				if f:
-					self.logger('-> ok')
-					return f
-
-				self.logger('-> failed to create root directory ({p})')
-				raise Exception('failed to create root directory')
+				if create_if_missing:
+					return self.create_root()
+				else:
+					raise NextcloudSyncMissingRoot()
 			else:
 				raise
 		except Exception as e:
-			raise Exception(['failed to fetch root directory', e])
+			raise NextcloudSyncCannotFetchRoot()
 
 	def fetch_all(self):
 		root = self.fetch_root()
 
-		files: List[FileInfo] = self.cloud_client.list(
-			self.root.strip('/'),
+		files: List[FileInfo] = self.client.list(
+			self.root,
 			depth='infinity',
-			properties=self._QUERY_PROPS,
+			properties=self.properties,
 		) or []
 
-		files = self._filter(files)
+		files = self.filter(files)
 
 		# insert in first position, even if there is a subsequent sorting
 		files.insert(0, root)
@@ -79,55 +74,13 @@ class RemoteFetcher:
 
 		root = self.fetch_root()
 
-		files: List[FileInfo] = self.cloud_client.list_updated_since(
+		files: List[FileInfo] = self.client.list_updated_since(
 			last_update,
-			path=self.root.strip('/')
+			path=self.root
 		) or []
 
-		files = self._filter(files)
+		files = self.filter(files)
 
 		# insert in first position, even if there is a subsequent sorting
 		files.insert(0, root)
 		return files
-
-
-# def main():
-# 	from .DiffEngine import DiffEngine
-# 	from frappe.integrations.doctype.nextcloud_settings import get_nextcloud_settings_and_client  # type: ignore
-
-# 	def logger(*args, **kwargs):
-# 		print('\x1b[35;1m×\x1b[m', *args, **kwargs)
-
-# 	common = Common(*get_nextcloud_settings_and_client(), logger)
-# 	fetcher = RemoteFetcher(common)
-# 	convert = fetcher.common.convert_remote_file_to_entry
-
-# 	files = fetcher.fetch_all()
-# 	files.sort(key=attrgetter('path'))
-# 	files = list(map(convert, files))
-# 	for f in files:
-# 		print(f.last_updated, f)
-# 	else:
-# 		print('no files found')
-
-# 	print('\x1b[32;2m' + '- '*20 + '\x1b[m')
-
-# 	fetcher.last_update = '2021-12-15 18:00:00'
-# 	print(f"Query is:\nUPDATED SINCE\n   {fetcher.last_update}")
-# 	files = fetcher.fetch_since_last_update()
-# 	files.sort(key=attrgetter('path'))
-# 	files = list(map(convert, files))
-# 	for f in files:
-# 		print(' ·', f.last_updated, f.path)
-# 	else:
-# 		print('no files found')
-
-# 	print()
-
-# 	most_recent_changed_file = max(files, key=attrgetter('last_updated'))
-# 	print(f'last change: {most_recent_changed_file.last_updated}')
-
-# 	differ = DiffEngine(common)
-# 	actions = differ.diff_from_remote(files)
-# 	for action in actions:
-# 		print(' •', action)
