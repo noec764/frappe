@@ -30,6 +30,7 @@ from frappe.query_builder import (
 	patch_query_execute,
 	patch_query_aggregation,
 )
+from frappe.utils.data import cstr
 
 __version__ = '2.8.0'
 __title__ = "Dodock Framework"
@@ -207,6 +208,7 @@ def init(site, sites_path=None, new_site=False):
 	local.cache = {}
 	local.document_cache = {}
 	local.meta_cache = {}
+	local.autoincremented_status_map = {site: -1}
 	local.form_dict = _dict()
 	local.session = _dict()
 	local.dev_server = _dev_server
@@ -1006,7 +1008,7 @@ def get_module(modulename):
 
 def scrub(txt):
 	"""Returns sluggified string. e.g. `Sales Order` becomes `sales_order`."""
-	return txt.replace(' ', '_').replace('-', '_').lower()
+	return cstr(txt).replace(' ', '_').replace('-', '_').lower()
 
 def unscrub(txt):
 	"""Returns titlified string. e.g. `sales_order` becomes `Sales Order`."""
