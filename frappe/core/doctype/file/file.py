@@ -52,7 +52,7 @@ class File(Document):
 			self.file_name = re.sub(r'/', '', self.file_name)
 		self.content = self.get("content", None)
 		self.decode = self.get("decode", False)
-		if self.content:
+		if self.has_content():
 			self.save_file(content=self.content, decode=self.decode)
 
 	def get_name_based_on_parent_folder(self):
@@ -303,6 +303,11 @@ class File(Document):
 
 			return thumbnail_url
 
+	def has_content(self):
+		# return content or content == '' or content == b''
+		content = self.get('content', None)
+		return isinstance(content, (str, bytes, *string_types))
+
 	def check_folder_is_empty(self):
 		"""Throw exception if folder is not empty"""
 		files = frappe.get_all("File", filters={"folder": self.name}, fields=("name", "file_name"))
@@ -371,7 +376,7 @@ class File(Document):
 		if self.is_folder:
 			frappe.throw(_("Cannot get file contents of a Folder"))
 
-		if self.get('content'):
+		if self.has_content():
 			return self.content
 
 		self.validate_url()
@@ -456,7 +461,7 @@ class File(Document):
 
 	def save_uploaded(self):
 		self.content = self.get_uploaded_content()
-		if self.content:
+		if self.has_content():
 			return self.save()
 		else:
 			raise Exception
@@ -469,7 +474,7 @@ class File(Document):
 				frappe.form_dict.filedata = frappe.form_dict.filedata.rsplit(",", 1)[1]
 			frappe.uploaded_content = base64.b64decode(frappe.form_dict.filedata)
 			return frappe.uploaded_content
-		elif self.content:
+		elif self.has_content():
 			return self.content
 		frappe.msgprint(_('No file attached'))
 		return None
@@ -514,7 +519,7 @@ class File(Document):
 		if duplicate_file:
 			file_doc = frappe.get_cached_doc('File', duplicate_file.name)
 			if file_doc.exists_on_disk():
-				self.file_url  = duplicate_file.file_url
+				self.file_url = duplicate_file.file_url
 				file_exists = True
 
 		if os.path.exists(encode(get_files_path(self.file_name, is_private=self.is_private))):
