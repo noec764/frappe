@@ -3,14 +3,16 @@ import json
 import os
 from datetime import datetime
 from operator import attrgetter
+from typing import Optional, Generator
 
 import frappe
 from frappe.core.doctype.file.file import File
 
 from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings, get_nextcloud_settings
+from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudSyncMissingRoot
 
 from .diff_engine.Action import Action
-from .diff_engine.utils import check_flag
+from .diff_engine.utils import check_flag, get_home_folder
 from .diff_engine.Entry import Entry
 from .diff_engine.ConflictTracker import ConflictResolverNCF, ConflictStopper
 from .diff_engine.utils_time import convert_local_time_to_utc
@@ -22,10 +24,10 @@ from frappe.utils.data import cstr
 from .diff_engine import Common, DiffEngine, ActionRunner, RemoteFetcher
 
 @contextmanager
-def sync_module():
+def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True) -> Generator[Optional['NextcloudFileSync'], None, None]:
 	settings = get_nextcloud_settings()
 
-	if frappe.flags.nextcloud_disable_filesync_hooks:
+	if frappe.flags.nextcloud_disable_filesync:
 		yield None
 		return
 
@@ -36,20 +38,17 @@ def sync_module():
 	# frappe.db.begin()  # begin transaction
 	# frappe.db.commit()  # begin transaction
 	try:
-		if frappe.flags.cached_nextcloud_sync_client:
-			x: NextcloudFileSync = frappe.flags.cached_nextcloud_sync_client
-			yield x
-		else:
-			sync = NextcloudFileSync(settings=settings)
-			frappe.flags.cached_nextcloud_sync_client = sync
-			yield sync
+		sync = NextcloudFileSync(settings=settings)
+		yield sync
+		sync.client.logout()
 
-		# if len(frappe.message_log) > 0:
-		# 	frappe.msgprint(None, json.dumps(sync._timing, indent=2))
-		frappe.db.commit()
+		if commit_after:
+			frappe.db.commit()
 	except:
-		frappe.db.rollback()  # rollback on error
-		raise
+		if rollback_on_exception:
+			frappe.db.rollback()  # rollback on error
+		if raise_exception:
+			raise
 
 def sync_log(*args):
 	with open('/tmp/nc_sync.txt', 'a') as f:
@@ -112,7 +111,7 @@ class NextcloudFileSync:
 		if self.settings.filesync_override_conflict_strategy:
 			self.conflict_strategy = self.settings.filesync_override_conflict_strategy
 
-		self.client = self.settings.nc_connect(debug=True)
+		self.client = self.settings.nc_connect()
 
 		self.common = Common(
 			client=self.client,
@@ -129,6 +128,9 @@ class NextcloudFileSync:
 		elif self.conflict_strategy == 'resolve-from-diff':
 			# emit conflicts, but also emit corrective actions from differ
 			use_conflict_detection, diff_even_when_conflict = True, True
+		elif self.conflict_strategy == 'UNSAFE-disable-conflict-detection':
+			# emit conflicts, but also emit corrective actions from differ
+			use_conflict_detection, diff_even_when_conflict = False, True
 		else:
 			use_conflict_detection, diff_even_when_conflict = True, False
 
@@ -144,8 +146,11 @@ class NextcloudFileSync:
 
 		self.use_profiler = False
 
-	def log(self, *args):
+	def _log(self, *args):
 		sync_log(*args)
+
+	def log(self, *args):
+		self._log(*args)
 
 	def _fetch(self, last_update_dt: datetime = None):
 		if last_update_dt is None:
@@ -231,7 +236,7 @@ class NextcloudFileSync:
 		...
 		# self.timer_start('sync_to')
 
-		# files = frappe.db.get_list(
+		# files = frappe.db.get_all(
 		# 	'File', filters={'is_folder': 0}, fields=['name', 'nextcloud_id'])
 
 		# files_with_id, unsynced_files = partition(
@@ -358,7 +363,7 @@ class NextcloudFileSync:
 		# 	update_with_link(doc, build_link(nextcloud_settings, remote_path))
 
 	def file_on_trash(self, doc: File):
-		sync_log(f'* on_trash: {doc}')
+		self.log(f'* on_trash: {doc}')
 
 		nextcloud_id = doc.get('nextcloud_id', None)
 		if nextcloud_id is None: return
@@ -366,15 +371,16 @@ class NextcloudFileSync:
 
 		try:  # remove remote file
 			remote_file = self.client.file_info_by_fileid(nextcloud_id)
+			assert remote_file is not None
 			self.client.delete(remote_file.path)
-			sync_log(f'* {doc} ({nextcloud_id}@nextcloud): removed nextcloud file')
+			self.log(f'* {doc} ({nextcloud_id}@nextcloud): removed nextcloud file')
 		except Exception:
-			sync_log(f'! {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file')
+			self.log(f'! {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file')
 
 	def file_on_create(self, doc: File):
 		nextcloud_id = doc.get('nextcloud_id', None)
 		if nextcloud_id is not None:
-			raise 'File already have a nextcloud_id'
+			raise 'File already has a nextcloud_id'
 		self.file_on_update(doc)
 
 	def file_on_update(self, doc: File):
@@ -383,7 +389,7 @@ class NextcloudFileSync:
 		local = self.common.convert_local_doc_to_entry(doc)
 
 		remote = None
-		if doc.nextcloud_id:
+		if doc.nextcloud_id is not None:
 			remote = self.common.get_remote_entry_by_id(doc.nextcloud_id)
 		if remote is None:
 			remote = self.common.get_remote_entry_by_path(local.path)
@@ -394,27 +400,31 @@ class NextcloudFileSync:
 
 	def check_id_of_home(self):
 		try:
-			local_home = frappe.get_doc('File', 'Home')
+			local_home = get_home_folder()
 		except:
 			raise  # TODO: this is bad
 
 		try:
-			remote_home = self.fetcher.fetch_root()
+			remote_home = self.fetcher.fetch_root(create_if_missing=False)
+		except NextcloudSyncMissingRoot:
+			remote_home = None
 		except:
-			raise  # failed to make root
+			raise
 
-		local_id = cstr(local_home.nextcloud_id)
-		remote_id = cstr(remote_home.attributes[self.common._FILE_ID])
+		local_id = cstr(local_home.nextcloud_id) \
+			if local_home else None
+		remote_id = cstr(remote_home.attributes[self.common._FILE_ID]) \
+			if remote_home else None
 
 		# local_etag = cstr(local_home.content_hash)
 		# remote_etag = cstr(remote_home.get_etag()).strip('"')
 
-		if not local_id:
-			# never synced
-			return { 'type': 'ok', 'message': 'never-synced', 'remoteId': local_id }
-		elif not remote_id:
-			# TODO: bad
-			raise ValueError('could not get the fileid of the remote home')
+		if (not local_id) and (not remote_id):  # never synced
+			return { 'type': 'warn', 'message': 'never-synced', 'remoteId': local_id }
+		elif local_id and (not remote_id):  # root was removed
+			return { 'type': 'warn', 'message': 'no-remote', 'remoteId': local_id }
+		elif (not local_id) and remote_id:  # root exists but is not synced
+			return { 'type': 'warn', 'message': 'to-migrate', 'remoteId': None }
 		elif local_id == remote_id:
 			return { 'type': 'ok', 'message': 'same-ids', 'localId': local_id }
 		elif local_id != remote_id:
@@ -426,7 +436,7 @@ class NextcloudFileSync:
 			# 		'remoteId': remote_id,
 			# 	}
 			return {
-				'type':'error',
+				'type': 'error',
 				'localId': local_id,
 				'remoteId': remote_id,
 				'reason': 'different-ids',
