@@ -1,9 +1,9 @@
 import frappe  # type: ignore
 
-from ._tester import Tester, using_local_files, using_remote_files
+from ._tester import NextcloudTester, using_local_files, using_remote_files
 
 
-class TestNCDiffing(Tester):
+class TestNCDiffing(NextcloudTester):
 	@using_remote_files([
 		'/SR1/',
 		'/SR1/a/',

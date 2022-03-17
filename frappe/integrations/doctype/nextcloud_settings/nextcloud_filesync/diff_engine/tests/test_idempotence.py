@@ -4,10 +4,10 @@ import frappe  # type: ignore
 
 from ..Action import Action
 
-from ._tester import Tester, using_local_files, using_remote_files
+from ._tester import NextcloudTester, using_local_files, using_remote_files
 
 
-class TestNCIdempotence(Tester):
+class TestNCIdempotence(NextcloudTester):
 	@using_remote_files([
 		'/idempotence_create',
 	])
@@ -20,7 +20,7 @@ class TestNCIdempotence(Tester):
 
 		for _ in range(3):
 			self.runner.run_actions([a])
-			self.assertEqual(len(frappe.get_list(*args)), 1)
+			self.assertEqual(len(frappe.get_all(*args)), 1)
 
 		doc = frappe.get_doc(*args)
 		self.assertEqual(doc.file_name, args[1]['file_name'])

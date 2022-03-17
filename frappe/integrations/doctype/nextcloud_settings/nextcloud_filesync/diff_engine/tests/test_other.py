@@ -1,12 +1,12 @@
 import frappe  # type: ignore
 
-from ._tester import Tester, using_local_files, using_remote_files
+from ._tester import NextcloudTester, using_local_files, using_remote_files
 
 
 FILENAME_TEST_timezone = '__test Time Zone is converted to UTC.txt'
 
 
-class TestNCOther(Tester):
+class TestNCOther(NextcloudTester):
 	@using_remote_files(['/' + FILENAME_TEST_timezone])
 	@using_local_files([
 		dict(file_name=FILENAME_TEST_timezone, folder='Home', content=b'x')

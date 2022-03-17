@@ -7,18 +7,27 @@ from ..DiffEngine import DiffEngine
 from ..ActionRunner import ActionRunner_NexcloudFrappe
 from ..Common import Common
 from ..RemoteFetcher import RemoteFetcher
-from ..utils import set_flag
+from ..utils import get_home_folder_name, set_flag, FLAG_NEXTCLOUD_IGNORE
 
 def using_local_files(local_files: List[dict]):
 	def decorate(func):
-		def wrapper(self: Tester, *args, **kwargs):
+		def wrapper(self: NextcloudTester, *args, **kwargs):
 			# print('🚧 setting up local files…')
 			self._local_files = []
 
 			for d in local_files:
 				try:
+					# # home might not be 'Home'…
+					# if 'folder' in d:
+					# 	if d['folder'] == 'Home':
+					# 		d['folder'] = self.home
+					# 	elif d['folder'].startswith('Home/'):
+					# 		d['folder'] = d['folder'].replace('Home/', self.home + '/', 1)
+
 					doc = frappe.get_doc('File', d)
 					set_flag(doc)
+					if doc.is_folder:
+						doc.folder_delete_children(flags={FLAG_NEXTCLOUD_IGNORE: True})
 					doc.delete()
 				except:
 					pass
@@ -35,9 +44,11 @@ def using_local_files(local_files: List[dict]):
 
 			res = func(self, *args, **kwargs)
 
-			for n in self._local_files:
-				set_flag(n)
-				n.delete()
+			for doc in self._local_files:
+				set_flag(doc)
+				if doc.is_folder:
+					doc.folder_delete_children(flags={FLAG_NEXTCLOUD_IGNORE: True})
+				doc.delete()
 
 			self._local_files = []
 
@@ -48,7 +59,7 @@ def using_local_files(local_files: List[dict]):
 
 def using_remote_files(remote_files: List[str]):
 	def decorate(func):
-		def wrapper(self: Tester, *args, **kwargs):
+		def wrapper(self: NextcloudTester, *args, **kwargs):
 			# print('🚧 setting up remote files…')
 			self._remote_files = []
 
@@ -77,17 +88,39 @@ def _slugify(s: str) -> str:
 	import re
 	return re.sub('[^a-zA-Z0-9_-]', '', s)
 
-class Tester(unittest.TestCase):
+class NextcloudTester(unittest.TestCase):
+	@classmethod
+	def setUpClass(cls) -> None:
+			cls.home = get_home_folder_name()
+			cls._prev_flag_value = frappe.flags.nextcloud_disable_filesync_hooks
+			frappe.flags.nextcloud_disable_filesync_hooks = 1
+			return super().setUpClass()
+
+	@classmethod
+	def tearDownClass(cls) -> None:
+			frappe.flags.nextcloud_disable_filesync_hooks = cls._prev_flag_value
+			return super().tearDownClass()
+
 	def logger(self, *args,  **kwargs):
 		print(*args, **kwargs)
 
 	def setUp(self):
+		import os
+		should_test = os.getenv('CI_NEXTCLOUD_TESTS')
+		if not should_test:
+			msg = 'Nextcloud Integration testing is disabled by default.\nTo enable it, either set the CI_NEXTCLOUD_TESTS environment variable to `1` to run all the tests, or set it to `skip` to skip the tests.'
+			if should_test == 'skip':
+				raise unittest.SkipTest(msg)
+			elif should_test in ('0', 'no'):
+				pass
+			else:
+				self.fail(msg)
+
 		if not frappe.get_single('Nextcloud Settings').enabled:
 			raise unittest.SkipTest("Nextcloud Integration is disabled")
 
 		frappe.db.rollback()
 		frappe.db.begin()
-		frappe.flags.nextcloud_disable_filesync_hooks = True
 
 		root_dir = '@test-' + _slugify(f'{self.__class__.__name__}-{self._testMethodName}')
 		self.common = Common.Test(logger=self.logger, test_root_dir_name=root_dir)
@@ -109,7 +142,6 @@ class Tester(unittest.TestCase):
 		self.fetcher = None
 
 		frappe.db.rollback()
-		frappe.flags.nextcloud_disable_filesync_hooks = None
 
 	def remote_mk_dir(self, p):
 		if p != '/':

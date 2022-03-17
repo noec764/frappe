@@ -12,29 +12,29 @@ def using_test_differ(func):
 		all_local = list(res.get('l', []))
 		all_remote = list(res.get('r', []))
 
-		for child in all_local:
-			if child.path == '/': continue
-			_, file_name = ('/' + child.path.strip('/')).rsplit('/', 1)
-			is_dir = child.path.endswith('/')
-			if is_dir:
-				file_name += '/'
-			for parent in all_local:
-				if parent.path.endswith('/'):
-					if child.path == parent.path + file_name:
-						# if parent.nextcloud_id is not None and child.parent_id is not None:
-						# 	print(child, parent)
-						# if parent.nextcloud_id is None and child.parent_id is not None:
-						# 	print('unlinked parent, weird but won’t cause bugs')
-						# 	print(child, parent)
-						# if parent.nextcloud_id is not None and child.parent_id is None:
-						# 	print('parent has nextcloud_id on local but child has no parent_id')
-						# 	print(child, parent)
-						# if parent.nextcloud_id is None and child.parent_id is None:
-						# 	print(child, parent)
-						if parent.nextcloud_id is not None\
-							and child.parent_id is not None\
-							and parent.nextcloud_id != child.parent_id:
-							print('parent.nextcloud_id != child.nextcloud_parent_id', child, parent)
+		# for child in all_local:
+		# 	if child.path == '/': continue
+		# 	_, file_name = ('/' + child.path.strip('/')).rsplit('/', 1)
+		# 	is_dir = child.path.endswith('/')
+		# 	if is_dir:
+		# 		file_name += '/'
+		# 	for parent in all_local:
+		# 		if parent.path.endswith('/'):
+		# 			if child.path == parent.path + file_name:
+		# 				# if parent.nextcloud_id is not None and child.parent_id is not None:
+		# 				# 	print(child, parent)
+		# 				# if parent.nextcloud_id is None and child.parent_id is not None:
+		# 				# 	print('unlinked parent, weird but won’t cause bugs')
+		# 				# 	print(child, parent)
+		# 				# if parent.nextcloud_id is not None and child.parent_id is None:
+		# 				# 	print('parent has nextcloud_id on local but child has no parent_id')
+		# 				# 	print(child, parent)
+		# 				# if parent.nextcloud_id is None and child.parent_id is None:
+		# 				# 	print(child, parent)
+		# 				if parent.nextcloud_id is not None\
+		# 					and child.parent_id is not None\
+		# 					and parent.nextcloud_id != child.parent_id:
+		# 					print('parent.nextcloud_id != child.nextcloud_parent_id', child, parent)
 
 		expected_actions = list(res.get('a', {}))
 

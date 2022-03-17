@@ -2,9 +2,9 @@ from datetime import timedelta
 import frappe  # type: ignore
 from frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.diff_engine.utils_time import convert_local_time_to_utc
 
-from ._tester import Tester, using_remote_files
+from ._tester import NextcloudTester, using_remote_files
 
-class TestNCFetcher(Tester):
+class TestNCFetcher(NextcloudTester):
 	@using_remote_files([
 		'/fetch/',
 		'/fetch/a/',

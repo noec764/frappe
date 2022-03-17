@@ -5,10 +5,10 @@ from frappe.core.doctype.file.file import File
 from ..Action import Action
 from ..Entry import EntryLocal, convert_entry_local_to_remote
 
-from ._tester import Tester, using_local_files, using_remote_files
+from ._tester import NextcloudTester, using_local_files, using_remote_files
 
 
-class TestNCActions(Tester):
+class TestNCActions(NextcloudTester):
 	@using_local_files([
 		dict(file_name='_test.actions', folder='Home', is_folder=1),
 		dict(file_name='meta.updateEtag', folder='Home/_test.actions', content='x'),
@@ -48,7 +48,7 @@ class TestNCActions(Tester):
 
 		self.runner.run_actions([a])
 
-		list1 = frappe.get_list(*args)
+		list1 = frappe.get_all(*args)
 		self.assertEqual(len(list1), 1)
 
 		doc = frappe.get_doc(*args)
@@ -218,7 +218,7 @@ class TestNCActions(Tester):
 		#     if msg:
 		#         print()
 		#         print(msg)
-		#     all_files = frappe.get_list('File', filters={
+		#     all_files = frappe.get_all('File', filters={
 		#         'folder': ('like', 'Home/cross_rename%'),
 		#     }, fields=['name', 'file_name', 'folder', 'nextcloud_id'])
 		#     all_files.sort(key=lambda x: x['nextcloud_id'] or -1)
