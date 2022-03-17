@@ -260,6 +260,7 @@ class Common:
 			of_dir._file_info.path,
 			depth=1,
 			properties=self._QUERY_PROPS)
+		cur_list = self._filter(cur_list)
 		cur_list.sort(key=self.sort_key)
 
 		children_ids = {}
