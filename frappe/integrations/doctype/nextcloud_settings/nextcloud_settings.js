@@ -19,40 +19,85 @@ function nextcloud_hook_xcall(s, opts = {}) {
 
 async function nextcloud_form_xcall(frm, s) {
 	if (frm.is_dirty()) {
-		await frm.save()
+		frm.validate_and_save()
+		const has_error = frm.is_dirty()
+		if (has_error) { return false }
 	}
 	await nextcloud_hook_xcall(s, { freeze: true })
 	await frm.reload_doc()
+	return true
+}
+
+function can_sync(frm) {
+	return frm.doc.enabled && frm.doc.enable_sync && frm.doc.username && frm.doc.password
+}
+
+function nextcloud_add_button(frm, label, url, className) {
+	frm.add_custom_button(label, () => {
+		nextcloud_form_xcall(frm, url)
+	}).addClass(className || 'btn-secondary');
 }
 
 frappe.ui.form.on('Nextcloud Settings', {
 	refresh: function(frm) {
 		frm.clear_custom_buttons();
-		// frm.events.add_migrate_button(frm);
-		// frm.events.add_backup_button(frm);
-		frm.events.add_sync_all_button(frm);
-		frm.events.add_sync_recent_button(frm);
-		// frm.events.add_sync_to_remote_button(frm);
 
 		if (frm.doc.last_filesync_dt) {
 			frm.set_df_property('last_filesync_dt', 'read_only', 1);
 		}
 
-		// frappe.model.with_doc('File', 'Home').then(console.log)
-
-		if (frm.doc.enabled && frm.doc.enable_sync) {
-			nextcloud_hook_xcall('nextcloud_filesync.hooks.check_id_of_home').then((x) => {
-				if (x.type === 'error' && x.reason === 'different-ids') {
-					frm.events.showIdMismatchDialog(frm, x.localId, x.remoteId);
-				}
-			})
+		// frm.events.add_backup_button(frm);
+		if (can_sync(frm)) {
+			// frm.events.add_button_sync_migrate(frm);
+			frm.events.add_button_sync_all_forced(frm);
+			frm.events.add_button_sync_all(frm);
+			frm.events.add_button_sync_recent(frm);
+			// frm.events.add_button_sync_to_remote(frm);
 		}
+
+		// run checks
+		// frm.events.check_id_of_home(frm)
+		frm.events.check_server(frm)
 	},
 
-	showIdMismatchDialog: function(frm, localId, remoteId) {
+	check_server: function(frm) {
+		nextcloud_hook_xcall('nextcloud_filesync.hooks.check_server').then((x) => {
+			console.log(x)
+			if (x.status === 'ok') {
+				console.log('ok')
+			} else if (x.error) {
+				frappe.throw(x.error)
+			}
+		})
+	},
+
+	check_id_of_home: function(frm) {
+		nextcloud_hook_xcall('nextcloud_filesync.hooks.check_id_of_home').then((x) => {
+			if (x.type === 'error' && x.reason === 'different-ids') {
+				frm.events.show_id_mismatch_dialog(frm, x.localId, x.remoteId);
+			} else if (x.type === 'warn' && x.message === 'never-synced') {
+				frm.events.show_dialog_never_synced(frm)
+			} else if (x.type === 'ok') {
+				// ok
+			} else {
+				console.error(x)
+			}
+		})
+	},
+
+	// TODO: to remove, all should be automated
+	show_dialog_never_synced: function(frm) {
+		const title = __('Never synced [placeholder text]', [], 'Nextcloud')
+		const description = __('If you just enabled the feature, click on "Sync now"')
+		frappe.msgprint(title)
+	},
+
+	// TODO: to remove, all should be automated
+	// but how? the user can't just delete the Home folder
+	show_id_mismatch_dialog: function(frm, localId, remoteId) {
 		if (!localId && !remoteId) return;
-		const title = __('The root folder appears to have changed.', 'Nextcloud')
-		const description = __('', 'Nextcloud')
+		const title = __('The root folder appears to have changed', [], 'Nextcloud')
+		const description = __('Lorem ipsum dolor', [], 'Nextcloud')
 		const actions = {
 			ignore: {
 				label: __('Ignore and disable sync', 'Nextcloud'),
@@ -64,7 +109,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 				label: __('Force sync from Nextcloud', 'Nextcloud'),
 				onsubmit: () => {
 					// force sync from nextcloud
-					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all')
+					nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all__force')
 				},
 			},
 			lorem: {
@@ -94,7 +139,7 @@ frappe.ui.form.on('Nextcloud Settings', {
 		dialog.fields_dict._html.wrapper.textContent = description
 		dialog.fields_dict._html.wrapper.innerHTML += `
 			<details open>
-				<summary>${__('More information')}</summary>
+				<summary>${__('Details')}</summary>
 				<div style="font-family: monospace;">
 					<b>Remote root directory id:</b> ${remoteId}<br/>
 					<b>Local stored expected id:</b> ${localId}
@@ -108,43 +153,30 @@ frappe.ui.form.on('Nextcloud Settings', {
 		frm.refresh();
 	},
 
-	add_migrate_button: function (frm) {
-		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
-			frm.add_custom_button(__('Migrate Now'), function() {
-				nextcloud_hook_xcall('nextcloud_filesync.hooks.migrate_to_nextcloud', {freeze: true});
-			}).addClass('btn-primary');
-		}
+	// Buttons
+	add_button_backup: function(frm) {
+		nextcloud_add_button(frm, __('Backup Now'), 'nextcloud_backups.backup_now', 'btn-primary')
 	},
 
-	add_backup_button: function(frm) {
-		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
-			frm.add_custom_button(__('Backup Now'), function() {
-				nextcloud_form_xcall(frm, 'nextcloud_backups.backup_now')
-			}).addClass('btn-primary');
-		}
+	add_button_sync_migrate: function (frm) {
+		frm.add_custom_button(__('Migrate Now'), function() {
+			nextcloud_hook_xcall('nextcloud_filesync.hooks.migrate_to_nextcloud', {freeze: true});
+		}).addClass('btn-primary');
 	},
 
-	add_sync_all_button: function(frm) {
-		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
-			frm.add_custom_button(__('Sync Now'), function() {
-				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_all')
-			}).addClass('btn-secondary');
-		}
+	add_button_sync_all_forced: function(frm) {
+		nextcloud_add_button(frm, __('FORCE SYNC'), 'nextcloud_filesync.hooks.sync_from_remote_all__force')
 	},
 
-	add_sync_recent_button: function(frm) {
-		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
-			frm.add_custom_button(__('Last Update'), function() {
-				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_from_remote_since_last_update')
-			}).addClass('btn-secondary');
-		}
+	add_button_sync_all: function(frm) {
+		nextcloud_add_button(frm, __('Sync Now'), 'nextcloud_filesync.hooks.sync_from_remote_all')
 	},
 
-	add_sync_to_remote_button: function(frm) {
-		if (frm.doc.enabled && frm.doc.username && frm.doc.password) {
-			frm.add_custom_button(__('Sync To Remote'), function() {
-				nextcloud_form_xcall(frm, 'nextcloud_filesync.hooks.sync_to_remote')
-			}).addClass('btn-secondary');
-		}
+	add_button_sync_recent: function(frm) {
+		nextcloud_add_button(frm, __('Last Update'), 'nextcloud_filesync.hooks.sync_from_remote_since_last_update')
+	},
+
+	add_button_sync_to_remote: function(frm) {
+		nextcloud_add_button(frm, __('Sync To Remote'), 'nextcloud_filesync.hooks.sync_to_remote')
 	},
 });

@@ -7,9 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "enabled",
-  "_toggle_ssection",
+  "_toggles_section",
   "enable_sync",
-  "enable_backups",
   "_login_section",
   "cloud_url",
   "username",
@@ -20,12 +19,8 @@
   "next_filesync_ignore_id_conflicts",
   "filesync_override_conflict_strategy",
   "not_implemented",
-  "path_to_upload_folder",
-  "send_email_for_successful_backup",
-  "send_notifications_to",
   "path_to_backups_folder",
-  "backup_frequency",
-  "webdav_url"
+  "backup_frequency"
  ],
  "fields": [
   {
@@ -46,14 +41,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Nextcloud URL",
-   "mandatory_depends_on": "enabled"
-  },
-  {
-   "description": "By default: /remote.php/dav/files/{username}",
-   "fieldname": "webdav_url",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "WebDav URL"
+   "mandatory_depends_on": "enabled",
+   "options": "URL"
   },
   {
    "fieldname": "username",
@@ -70,7 +59,6 @@
   },
   {
    "default": "0",
-   "description": "Enable this option to store your files only on your Nextcloud Drive.",
    "fieldname": "enable_sync",
    "fieldtype": "Check",
    "label": "Enable File Sync"
@@ -94,27 +82,6 @@
    "label": "not implemented"
   },
   {
-   "depends_on": "enabled",
-   "description": "Path where backups will be uploaded, if not provided default is Frappe Backups",
-   "fieldname": "path_to_upload_folder",
-   "fieldtype": "Data",
-   "label": "[dep] Path to Upload Folder"
-  },
-  {
-   "default": "0",
-   "description": "Note: By default emails for failed backups are sent.",
-   "fieldname": "send_email_for_successful_backup",
-   "fieldtype": "Check",
-   "label": "Send Email for Successful Backup"
-  },
-  {
-   "fieldname": "send_notifications_to",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Send Notifications To",
-   "options": "Email"
-  },
-  {
    "fieldname": "path_to_backups_folder",
    "fieldtype": "Data",
    "label": "Path to Backups Folder"
@@ -127,19 +94,6 @@
    "label": "Backup Frequency",
    "mandatory_depends_on": "enabled",
    "options": "Daily\nWeekly"
-  },
-  {
-   "default": "0",
-   "depends_on": "enabled",
-   "fieldname": "enable_backups",
-   "fieldtype": "Check",
-   "label": "Enable Backups"
-  },
-  {
-   "depends_on": "enabled",
-   "fieldname": "_toggle_ssection",
-   "fieldtype": "Section Break",
-   "label": "Enabled Features"
   },
   {
    "fieldname": "last_filesync_dt",
@@ -157,13 +111,19 @@
    "fieldname": "filesync_override_conflict_strategy",
    "fieldtype": "Data",
    "label": "filesync_override_conflict_strategy"
+  },
+  {
+   "depends_on": "enabled",
+   "fieldname": "_toggles_section",
+   "fieldtype": "Section Break",
+   "label": "Enabled Features"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-03-04 16:13:23.471694",
+ "modified": "2022-03-17 18:06:57.651075",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Nextcloud Settings",
