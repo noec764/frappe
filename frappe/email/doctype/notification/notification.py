@@ -155,6 +155,9 @@ def get_context(context):
 					if doc.meta.get_field(fieldname).fieldtype in frappe.model.numeric_fieldtypes:
 						value = frappe.utils.cint(value)
 
+					# Reload doc to avoid timestamp mismatch error
+					doc.reload()
+
 					doc.set(self.set_property_after_alert, self.property_value)
 					doc.flags.updater_reference = {
 						'doctype': self.doctype,
