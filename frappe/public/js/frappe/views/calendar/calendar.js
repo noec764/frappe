@@ -98,6 +98,11 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 			} else {
 				frappe.model.with_doc('Calendar View', calendar_name, () => {
 					const doc = frappe.get_doc('Calendar View', calendar_name);
+					if (!doc) {
+						frappe.show_alert(__("{0} is not a valid Calendar. Redirecting to default Calendar.", [calendar_name.bold()]));
+						frappe.set_route("List", this.doctype, "Calendar", "default");
+						return;
+					}
 					Object.assign(options, {
 						field_map: {
 							id: "name",
