@@ -11,7 +11,7 @@ from frappe.core.doctype.communication.email import validate_email, notify, _not
 from frappe.core.utils import get_parent_doc
 from frappe.utils.bot import BotReply
 from frappe.utils import parse_addr
-from frappe.core.doctype.comment.comment import update_comment_in_doc
+from frappe.core.doctype.comment.comment import update_comment_in_doc, delete_comments_from_doc
 from email.utils import parseaddr
 from urllib.parse import unquote
 from frappe.utils.user import is_system_user
@@ -125,6 +125,8 @@ class Communication(Document):
 	def on_trash(self):
 		if self.communication_type == "Communication":
 			self.notify_change('delete')
+
+		delete_comments_from_doc(self)
 
 	def notify_change(self, action):
 		frappe.publish_realtime('update_docinfo_for_{}_{}'.format(self.reference_doctype, self.reference_name), {
