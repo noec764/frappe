@@ -441,6 +441,18 @@ $.extend(frappe, {
 				frappe.boot.lang = r.message || 'en'
 			}
 		})
+	},
+	setup_videos: () => {
+		// converts video images into youtube embeds (via Page Builder)
+		$('.section-video-wrapper').on('click', (e) => {
+			let $video = $(e.currentTarget);
+			let id = $video.data('youtubeId');
+			console.log(id);
+			$video.find(".video-thumbnail").hide();
+			$video.append(`
+				<iframe allowfullscreen="" class="section-video" f;rameborder="0" src="//youtube.com/embed/${id}?autoplay=1"></iframe>
+			`);
+		});
 	}
 });
 
@@ -666,5 +678,6 @@ $(document).on("page-change", function() {
 
 frappe.ready(function() {
 	frappe.show_language_picker();
+	frappe.setup_videos();
 	frappe.socketio.init(window.socketio_port);
 });

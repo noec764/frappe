@@ -79,9 +79,9 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		}
 
 		$('.web-form-footer').after(`
-			<div id="form-step-footer" class="pull-right">
-				<button class="btn btn-primary btn-previous btn-sm ml-2">${__("Previous")}</button>
-				<button class="btn btn-primary btn-next btn-sm ml-2">${__("Next")}</button>
+			<div id="form-step-footer" class="text-right">
+				<button class="btn btn-default btn-previous btn-sm ml-2">${__("Previous")}</button>
+				<button class="btn btn-default btn-next btn-sm ml-2">${__("Next")}</button>
 			</div>
 		`);
 
@@ -141,7 +141,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	set_form_description(intro) {
 		let intro_wrapper = document.getElementById('introduction');
 		intro_wrapper.innerHTML = intro;
-		intro_wrapper.classList.add('introduction');
+		intro_wrapper.classList.remove('hidden');
 	}
 
 	add_button(id, name, type, action, wrapper_class=".web-form-actions") {
@@ -167,9 +167,11 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			this.save()
 		);
 
-		this.add_button_to_footer('footer_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
-			this.save()
-		);
+		if (!this.is_multi_step_form && $('.frappe-card').height() > 600) {
+			this.add_button_to_footer('footer_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
+				this.save()
+			);
+		}
 	}
 
 	setup_cancel_button() {
@@ -401,16 +403,20 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	handle_success(data) {
-		if (this.accept_payment && !this.doc.paid) {
-			window.location.href = data;
-		} else if (this.success_url) {
-			window.location.href = this.success_url;
-		} else if(this.login_required) {
-			window.location.href =
-				window.location.pathname + "?name=" + data.name;
-		}
 		const success_message =
-			this.success_message || __("Your information has been submitted");
-		frappe.show_alert({message: success_message, indicator: "green"})
+			this.success_message || __("Submitted");
+		frappe.toast({message: success_message, indicator:'green'});
+
+		// redirect
+		setTimeout(() => {
+			if (this.accept_payment && !this.doc.paid) {
+				window.location.href = data;
+			} else if (this.success_url) {
+				window.location.href = this.success_url;
+			} else if(this.login_required) {
+				window.location.href =
+					window.location.pathname + "?name=" + data.name;
+			}
+		}, 2000);
 	}
 }

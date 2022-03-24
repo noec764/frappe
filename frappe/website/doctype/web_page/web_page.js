@@ -14,6 +14,15 @@ frappe.ui.form.on('Web Page', {
 	insert_code: function(frm) {
 		frm.events.layout(frm);
 	},
+	onload: function(frm) {
+		frm.set_query('web_template', 'page_blocks', function() {
+			return {
+				filters: {
+					"type": ['in', ['Section', 'Component']]
+				}
+			};
+		});
+	},
 	validate: function(frm) {
 		if (frm.doc.title && !frm.doc.route) {
 			frm.set_value('route', frappe.scrub(frm.doc.title, '-'));
