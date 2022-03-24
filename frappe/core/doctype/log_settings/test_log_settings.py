@@ -13,6 +13,8 @@ class TestLogSettings(unittest.TestCase):
 	def setUpClass(cls):
 
 		cls.savepoint = "TestLogSettings"
+		# SAVEPOINT can only be used in transaction blocks and we don't wan't to take chances
+		frappe.db.begin()
 		frappe.db.savepoint(cls.savepoint)
 
 		frappe.db.set_single_value(
