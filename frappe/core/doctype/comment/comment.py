@@ -195,3 +195,17 @@ def update_comments_in_parent_after_request():
 			update_comments_in_parent(reference_doctype, reference_name, _comments)
 
 		frappe.db.commit()
+
+def delete_comments_from_doc(doc):
+	"""Updates `_comments` (JSON) property in parent Document when a communication is deleted.
+	"""
+
+	# only comments get updates, not likes, assignments etc.
+	if doc.doctype == 'Comment' and doc.comment_type != 'Comment':
+		return
+
+	if doc.reference_doctype and doc.reference_name and doc.name:
+		_comments = get_comments_from_parent(doc)
+		_comments = [c for c in _comments if c.get("name") != doc.name]
+
+		update_comments_in_parent(doc.reference_doctype, doc.reference_name, _comments)
