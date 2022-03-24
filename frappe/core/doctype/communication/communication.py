@@ -461,7 +461,7 @@ def update_parent_document_on_communication(doc):
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
 
-	if not doc.flags.document_load:
+	if doc.sent_or_received == "Received" and not doc.flags.document_load:
 		# update the modified date for document
 		parent.update_modified()
 
