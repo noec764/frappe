@@ -1,8 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
-
-
 import frappe
 import unittest, json, sys, os
 import time
@@ -195,7 +192,8 @@ def _run_unittest(modules, verbose=False, tests=(), profile=False, failfast=Fals
 	frappe.db.begin()
 
 	test_suite = unittest.TestSuite()
-@@ -200,7 +200,10 @@ def _run_unittest(modules, verbose=False, tests=(), profile=False, failfast=Fals
+
+	if not isinstance(modules, (list, tuple)):
 		modules = [modules]
 
 	for module in modules:
@@ -391,7 +389,6 @@ def make_test_objects(doctype, test_records=None, verbose=None, reset=False):
 
 		try:
 			d.run_method("before_test_insert")
-			d.flags.ignore_permissions = True
 			d.insert(ignore_if_duplicate=True)
 
 			if docstatus == 1:
