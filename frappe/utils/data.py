@@ -1260,7 +1260,8 @@ def get_filter(doctype, f, filters_config=None):
 
 	f = frappe._dict(doctype=f[0], fieldname=f[1], operator=f[2], value=f[3])
 
-	sanitize_column(f.fieldname)
+	if f.fieldname:
+		sanitize_column(f.fieldname)
 
 	if not f.operator:
 		# if operator is missing
@@ -1281,7 +1282,7 @@ def get_filter(doctype, f, filters_config=None):
 		frappe.throw(frappe._("Operator must be one of {0}").format(", ".join(valid_operators)))
 
 
-	if f.doctype and (f.fieldname not in default_fields + optional_fields):
+	if f.doctype and f.fieldname and (f.fieldname not in default_fields + optional_fields):
 		# verify fieldname belongs to the doctype
 		meta = frappe.get_meta(f.doctype)
 		if not meta.has_field(f.fieldname):
