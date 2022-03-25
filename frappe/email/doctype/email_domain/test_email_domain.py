@@ -36,4 +36,4 @@ class TestDomain(unittest.TestCase):
 		self.assertEqual(mail_account.use_tls, mail_domain.use_tls)
 		self.assertEqual(mail_account.attachment_limit, mail_domain.attachment_limit)
 		self.assertEqual(mail_account.smtp_server, mail_domain.smtp_server)
-		self.assertEqual(mail_account.smtp_port, mail_domain.smtp_port)s
+		self.assertEqual(mail_account.smtp_port, mail_domain.smtp_port)
