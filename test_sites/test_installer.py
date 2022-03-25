@@ -26,8 +26,8 @@ def main():
 	_new_site(
 		None,
 		site_name,
-		mariadb_root_username=mariadb_root_username,
-		mariadb_root_password=mariadb_root_password,
+		db_root_username=mariadb_root_username,
+		db_root_password=mariadb_root_password,
 		admin_password='admin',
 		verbose=True,
 		source_sql=None,
