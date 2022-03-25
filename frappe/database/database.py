@@ -624,6 +624,7 @@ class Database(object):
 		run=True,
 		pluck=False,
 		distinct=False,
+		limit=None,
 	):
 		field_objects = []
 
