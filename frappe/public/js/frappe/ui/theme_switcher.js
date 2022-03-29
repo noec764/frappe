@@ -120,7 +120,7 @@ frappe.ui.ThemeSwitcher = class ThemeSwitcher {
 	toggle_theme(theme, preview=false) {
 		if (!preview) {
 			document.body.dataset.theme = theme.toLowerCase();
-			frappe.show_alert("Theme Changed", 3);
+			frappe.show_alert(__("Theme Changed"), 3);
 
 			frappe.call('frappe.core.doctype.user.user.switch_theme', {
 				theme: toTitle(theme)
