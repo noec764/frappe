@@ -4,7 +4,7 @@ from frappe.model.meta import get_table_columns
 
 def execute():
 	frappe.reload_doc('core', 'doctype', 'Translation')
-	
+
 	if "source_name" in get_table_columns("Translation"):
 		rename_field("Translation", "source_name", "source_text")
 

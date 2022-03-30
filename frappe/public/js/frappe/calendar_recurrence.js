@@ -274,7 +274,7 @@ frappe.CalendarRecurrence = class {
 function dict_reverse(obj) {
 	const new_obj = {}
 	const rev_obj = Object.keys(obj).reverse();
-	rev_obj.forEach(function(i, j) { 
+	rev_obj.forEach(function(i, j) {
 		new_obj[obj[i]] = i;
 	})
 	return new_obj;

@@ -1,5 +1,5 @@
 // Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-// MIT License. See license.txt 
+// MIT License. See license.txt
 
 frappe.ui.form.on('Property Setter', {
 	validate: function(frm) {

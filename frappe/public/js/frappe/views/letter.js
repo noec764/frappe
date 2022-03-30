@@ -78,7 +78,7 @@ frappe.views.LetterComposer = class LetterComposer {
 					me.reply_added = email_template;
 					me.title = reply.subject;
 				}
-	
+
 				frappe.call({
 					method: 'frappe.email.doctype.email_template.email_template.get_email_template',
 					args: {
@@ -138,12 +138,12 @@ frappe.views.LetterComposer = class LetterComposer {
 		xhr.open("POST", '/api/method/frappe.utils.print_format.letter_to_pdf');
 		xhr.setRequestHeader("X-Frappe-CSRF-Token", frappe.csrf_token);
 		xhr.responseType = "arraybuffer";
-	
+
 		xhr.onload = function(success) {
 			if (this.status === 200) {
 				let blob = new Blob([success.currentTarget.response], {type: "application/pdf"});
 				let objectUrl = URL.createObjectURL(blob);
-	
+
 				//Open report in a new window
 				let w = window.open(objectUrl);
 				me.frm.sidebar.reload_docinfo();

@@ -7,6 +7,6 @@ frappe.ui.ModulesMenu = class ModulesMenu {
 	}
 
 	make_menu() {
-		
+
 	}
 }
