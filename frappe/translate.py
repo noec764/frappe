@@ -441,8 +441,10 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 					raise Exception
 
 		# module_onboarding
-		for name in frappe.db.sql_list("""select name from `tabModule Onboarding`
-			where module in ({})""".format(modules)):
+		module_onboarding = DocType("Module Onboarding")
+		for name in frappe.qb.from_(module_onboarding).where(
+			Field("module").isin(modules)
+		).select(module_onboarding.name).run(pluck=True):
 			messages.extend(get_messages_from_module_onboarding(name))
 			for i in messages:
 				if not isinstance(i, tuple):
@@ -456,12 +458,19 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 						raise Exception
 
 		# workspaces
-		for name in frappe.db.sql_list("""select name from `tabWorkspace`
-			where module in ({}) and is_standard=1""".format(modules)):
+		workspace = DocType("Workspace")
+		for name in frappe.qb.from_(workspace).where(
+			Field("module").isin(modules)
+		).select(workspace.name).run(pluck=True):
 			messages.extend(get_messages_from_workspaces(name))
 
-		for name in frappe.db.sql_list("""select chart_name from `tabDashboard Chart`
-			where module in ({}) and is_standard=1""".format(modules)):
+		dashboard_chart = DocType("Dashboard Chart")
+		for name in frappe.qb.from_(dashboard_chart).where(
+			(
+				Field("module").isin(modules) &
+				(dashboard_chart.is_standard == 1)
+			)
+		).select(dashboard_chart.name).run(pluck=True):
 			messages.append(('Dashboard Chart: ' + name, name))
 
 	if app == "frappe":
