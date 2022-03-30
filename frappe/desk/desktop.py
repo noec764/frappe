@@ -355,11 +355,6 @@ def get_workspace_sidebar_items():
 		'module': ['not in', blocked_modules]
 	}
 
-	if has_access:
-		filters = {
-			'extends_another_page': 0
-		}
-
 	# pages sorted based on sequence id
 	order_by = "sequence_id asc"
 	fields = ["name", "title", "for_user", "parent_page", "content", "public",  "module", "icon"]
@@ -407,7 +402,7 @@ def get_custom_reports_and_doctypes(module):
 	]
 
 def get_custom_doctype_list(module):
-	doctypes =  frappe.get_all("DocType", fields=["name"], filters={"custom": 1, "istable": 0, "module": module}, order_by="name")
+	doctypes = frappe.get_all("DocType", fields=["name"], filters={"custom": 1, "istable": 0, "module": module}, order_by="name")
 
 	out = []
 	for d in doctypes:
