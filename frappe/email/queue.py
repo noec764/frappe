@@ -65,10 +65,10 @@ def get_emails_sent_today(email_account=None):
 
 def get_unsubscribe_message(unsubscribe_message, expose_recipients):
 	if unsubscribe_message:
-		unsubscribe_html = '''<a href="<!--unsubscribe url-->"
+		unsubscribe_html = '''<a href="<!--unsubscribe_url-->"
 			target="_blank">{0}</a>'''.format(unsubscribe_message)
 	else:
-		unsubscribe_link = '''<a href="<!--unsubscribe url-->"
+		unsubscribe_link = '''<a href="<!--unsubscribe_url-->"
 			target="_blank">{0}</a>'''.format(_('Unsubscribe'))
 		unsubscribe_html = _("{0} to stop receiving emails of this type").format(unsubscribe_link)
 
@@ -83,7 +83,7 @@ def get_unsubscribe_message(unsubscribe_message, expose_recipients):
 		text = "\n<!--cc message-->"
 	else:
 		text = ""
-	text += "\n\n{unsubscribe_message}: <!--unsubscribe url-->\n".format(unsubscribe_message=unsubscribe_message)
+	text += "\n\n{unsubscribe_message}: <!--unsubscribe_url-->\n".format(unsubscribe_message=unsubscribe_message)
 
 	return frappe._dict({
 		"html": html,

@@ -6,6 +6,9 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 
+class DuplicateRegistration(Exception):
+	pass
+
 class EventRegistration(Document):
 	def validate(self):
 		self.check_duplicates()
@@ -19,7 +22,7 @@ class EventRegistration(Document):
 
 	def check_duplicates(self):
 		if frappe.db.exists("Event Registration", dict(email=self.email, event=self.event, name=("!=", self.name), docstatus=1)):
-			frappe.throw(_("User is already registered for this event."))
+			frappe.throw(_("User is already registered for this event."), DuplicateRegistration)
 
 	def create_or_link_with_contact(self):
 		contact = self.contact
@@ -77,11 +80,15 @@ def register_to_event(event, data, user=None):
 			}, **frappe.parse_json(data))
 		)
 
-		registration.insert(ignore_permissions=True, ignore_mandatory=True)
+		registration.flags.ignore_permissions=True
+		registration.flags.ignore_mandatory=True
 		registration.submit()
 		return registration
+	except DuplicateRegistration:
+		raise
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Event registration error")
+		frappe.clear_messages()
 
 @frappe.whitelist()
 def cancel_registration(event, user=None):

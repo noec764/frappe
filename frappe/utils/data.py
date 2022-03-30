@@ -1401,7 +1401,8 @@ def get_filter(doctype: str, f: Union[Dict, List, Tuple], filters_config=None) -
 
 	f = frappe._dict(doctype=f[0], fieldname=f[1], operator=f[2], value=f[3])
 
-	sanitize_column(f.fieldname)
+	if f.fieldname:
+		sanitize_column(f.fieldname)
 
 	if not f.operator:
 		# if operator is missing

@@ -83,7 +83,6 @@ frappe.ui.form.on('Dashboard Chart', {
 	},
 
 	chart_type: function(frm) {
-		frm.trigger('set_time_series');
 		if (frm.doc.chart_type == 'Report') {
 			frm.set_query('report_name', () => {
 				return {
@@ -94,15 +93,6 @@ frappe.ui.form.on('Dashboard Chart', {
 			});
 		} else {
 			frm.set_value('document_type', '');
-		}
-	},
-
-	set_time_series: function(frm) {
-		// set timeseries based on chart type
-		if (['Count', 'Average', 'Sum'].includes(frm.doc.chart_type)) {
-			frm.set_value('timeseries', 1);
-		} else {
-			frm.set_value('timeseries', 0);
 		}
 	},
 

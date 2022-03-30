@@ -8,11 +8,10 @@ from frappe.model.document import Document
 from frappe.utils import validate_email_address, strip_html, cstr, time_diff_in_seconds
 from frappe.core.doctype.communication.email import validate_email
 from frappe.core.doctype.communication.mixin import CommunicationEmailMixin
-from frappe.core.doctype.communication.email import validate_email
 from frappe.core.utils import get_parent_doc
 from frappe.utils.bot import BotReply
 from frappe.utils import parse_addr, split_emails
-from frappe.core.doctype.comment.comment import update_comment_in_doc
+from frappe.core.doctype.comment.comment import update_comment_in_doc, delete_comments_from_doc
 from email.utils import getaddresses
 from urllib.parse import unquote
 from frappe.utils.user import is_system_user
@@ -47,7 +46,7 @@ class Communication(Document, CommunicationEmailMixin):
 				"email_account": self.email_account
 			}).insert(ignore_permissions=True)
 
-			self.db_set("seen", 1)
+			self.db_set("seen", 1, update_modified=False)
 			frappe.db.commit()
 
 	def validate(self):
@@ -167,6 +166,8 @@ class Communication(Document, CommunicationEmailMixin):
 	def on_trash(self):
 		if self.communication_type == "Communication":
 			self.notify_change('delete')
+
+		delete_comments_from_doc(self)
 
 	@property
 	def sender_mailid(self):
@@ -530,7 +531,7 @@ def update_parent_document_on_communication(doc):
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
 
-	if not doc.flags.document_load:
+	if doc.sent_or_received == "Received" and not doc.flags.document_load:
 		# update the modified date for document
 		parent.update_modified()
 

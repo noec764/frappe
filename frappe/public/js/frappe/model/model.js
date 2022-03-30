@@ -57,6 +57,10 @@ $.extend(frappe.model, {
 					if(!frappe.ui.form.is_saving && data.modified!=cur_frm.doc.modified) {
 						doc.__needs_refresh = true;
 						cur_frm.check_doctype_conflict();
+
+						if (cur_frm.doc.__needs_refresh) {
+							cur_frm.show_conflict_message();
+						}
 					}
 				} else {
 					if(!doc.__unsaved) {
