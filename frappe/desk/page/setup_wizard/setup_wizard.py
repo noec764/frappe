@@ -1,6 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: See license.txt
 import frappe, json, os
+from frappe import _
 from frappe.utils import strip, cint
 from frappe.translate import (set_default_language, get_dict, send_translations)
 from frappe.geo.country_info import get_country_info
@@ -13,7 +14,7 @@ def get_setup_stages(args):
 	# That is done by frappe after successful completion of all stages
 	stages = [
 		{
-			'status': 'Updating global settings',
+			'status': _('Updating global settings'),
 			'fail_msg': 'Failed to update global settings',
 			'tasks': [
 				{
@@ -29,7 +30,7 @@ def get_setup_stages(args):
 
 	stages.append({
 		# post executing hooks
-		'status': 'Wrapping up',
+		'status': _('Wrapping up'),
 		'fail_msg': 'Failed to complete setup',
 		'tasks': [
 			{
@@ -349,7 +350,7 @@ def email_setup_wizard_exception(traceback, args):
 		args="\n".join(pretty_args),
 		user=frappe.session.user,
 		headers=frappe.request.headers,
-)
+	)
 
 	frappe.sendmail(recipients=frappe.conf.setup_wizard_exception_email,
 		sender=frappe.session.user,
