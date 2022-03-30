@@ -588,6 +588,8 @@ frappe.ui.Slides = class Slides {
 	}
 
 	make_prev_next_buttons() {
+		this.$footer.empty();
+
 		const $buttons = $(`<div class="flex flex-row">
 			<div class="col-sm-6 text-left prev-div">
 				<button class="btn btn-secondary prev-btn" tabindex="0">${this.text_prev_btn}</button>
