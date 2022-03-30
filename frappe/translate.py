@@ -726,7 +726,8 @@ def get_server_messages(app):
 	file_extensions = ('.py', '.html', '.js', '.vue')
 	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
 		for dontwalk in (".git", "public", "locale"):
-			if dontwalk in folders: folders.remove(dontwalk)
+			if dontwalk in folders:
+				folders.remove(dontwalk)
 
 		for f in files:
 			f = frappe.as_unicode(f)
@@ -754,23 +755,16 @@ def get_messages_from_include_files(app_name=None):
 		messages_from_file = get_messages_from_file(relative_path)
 		messages.extend(messages_from_file)
 
-	for app in ([app_name] if app_name else frappe.get_installed_apps()):
-		if os.path.isfile(frappe.get_app_path(app, "public/build.json")):
-			with open(frappe.get_app_path(app, "public/build.json"), 'r') as f:
-
-				for f in json.loads(f.read()):
-					if not f.startswith("concat:"):
-						messages.extend(get_messages_from_file(os.path.join(frappe.local.sites_path, "assets/" + f)))
-
 	return messages
 
 def get_all_messages_from_js_files(app_name=None):
 	"""Extracts all translatable strings from app `.js` files"""
 	messages = []
+	excluded_paths = ["frappe/public/js/lib", "frappe/public/dist"]
 	for app in ([app_name] if app_name else frappe.get_installed_apps()):
 		if os.path.exists(frappe.get_app_path(app, "public")):
 			for basepath, dummy, files in os.walk(frappe.get_app_path(app, "public")):
-				if "frappe/public/js/lib" in basepath:
+				if any(bp in basepath for bp in excluded_paths):
 					continue
 
 				for fname in files:
