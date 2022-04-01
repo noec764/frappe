@@ -364,3 +364,4 @@ frappe.patches.dokos.v2_2.slack_webhook_to_incoming_webhook
 frappe.patches.dokos.v2_3.remove_standard_event_webform
 frappe.patches.dokos.v2_4.remove_seen_internally_field
 execute:frappe.db.sql("""update `tabComment` set `seen`=1""")
+frappe.patches.dokos.v2_8.reset_list_comments
