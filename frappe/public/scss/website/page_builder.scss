@@ -473,6 +473,12 @@
 	}
 }
 
+.collapsible-item-title {
+	font-weight: 600;
+	color: var(--text-color);
+	font-size: var(--text-2xl);
+}
+
 .collapsible-title {
 	display: flex;
 	justify-content: space-between;
@@ -517,6 +523,7 @@
 	.section-description, .collapsible-items {
 		margin-left: auto;
 		margin-right: auto;
+		margin-top: 3rem;
 	}
 }
 
