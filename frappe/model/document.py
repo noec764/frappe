@@ -88,35 +88,29 @@ class Document(BaseDocument):
 		If DocType name and document name are passed, the object will load
 		all values (including child documents) from the database.
 		"""
-		self.doctype = self.name = self._draft_name = None
+		self.doctype = None
+		self.name = None
+		self._draft_name = None
 		self._default_new_docs = {}
 		self.flags = frappe._dict()
 
-		if args and args[0] and isinstance(args[0], str):
-			# first argument is doctype
-			if len(args)==1:
-				# single
-				self.doctype = self.name = args[0]
-			else:
+		if args and args[0]:
+			if isinstance(args[0], str):
+				# first arugment is doctype
 				self.doctype = args[0]
-				if isinstance(args[1], dict):
-					# filter
-					self.name = frappe.db.get_value(args[0], args[1], "name")
-					if self.name is None:
-						frappe.throw(_("{0} {1} not found").format(_(args[0]), args[1]),
-							frappe.DoesNotExistError)
-				else:
-					self.name = args[1]
 
-				if 'for_update' in kwargs:
-					self.flags.for_update = kwargs.get('for_update')
+				# doctype for singles, string value or filters for other documents
+				self.name = self.doctype if len(args) == 1 else args[1]
 
-			self.load_from_db()
-			return
+				# for_update is set in flags to avoid changing load_from_db signature
+				# since it is used in virtual doctypes and inherited in child classes
+				self.flags.for_update = kwargs.get("for_update")
+				self.load_from_db()
+				return
 
-		if args and args[0] and isinstance(args[0], dict):
-			# first argument is a dict
-			kwargs = args[0]
+			if isinstance(args[0], dict):
+				# first argument is a dict
+				kwargs = args[0]
 
 		if kwargs:
 			# init base document
@@ -127,17 +121,15 @@ class Document(BaseDocument):
 			# incorrect arguments. let's not proceed.
 			raise ValueError('Illegal arguments')
 
-	def reload(self):
-		"""Reload document from database"""
-		self.load_from_db()
-
 	def load_from_db(self):
 		"""Load document and children from database and create properties
 		from fields"""
 		if not getattr(self, "_metaclass", False) and self.meta.issingle:
-			single_doc = frappe.db.get_singles_dict(self.doctype)
+			single_doc = frappe.db.get_singles_dict(
+				self.doctype, for_update=self.flags.for_update
+			)
 			if not single_doc:
-				single_doc = frappe.new_doc(self.doctype).as_dict()
+				single_doc = frappe.new_doc(self.doctype, as_dict=True)
 				single_doc["name"] = self.doctype
 				del single_doc["__islocal"]
 
@@ -149,8 +141,8 @@ class Document(BaseDocument):
 			d = frappe.db.get_value(self.doctype, self.name, "*", as_dict=1, for_update=self.flags.for_update)
 
 			if not d:
-				frappe.throw(_("{0} {1} not found").format(_(self.doctype), self.name),\
-					 frappe.DoesNotExistError)
+				frappe.throw(_("{0} {1} not found").format(_(self.doctype), self.name),
+					frappe.DoesNotExistError)
 
 			super(Document, self).__init__(d)
 
@@ -172,6 +164,8 @@ class Document(BaseDocument):
 		# sometimes __setup__ can depend on child values, hence calling again at the end
 		if hasattr(self, "__setup__"):
 			self.__setup__()
+
+	reload = load_from_db
 
 	def get_latest(self):
 		if not getattr(self, "latest", None):
