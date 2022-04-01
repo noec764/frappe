@@ -442,6 +442,7 @@ class Database(object):
 				pluck=pluck,
 				distinct=distinct,
 				limit=limit,
+				as_dict=as_dict,
 			)
 
 		else:
@@ -668,7 +669,20 @@ class Database(object):
 		)
 		return r
 
-	def _get_value_for_many_names(self, doctype, names, field, order_by, *, debug=False, run=True, pluck=False, distinct=False, limit=None):
+	def _get_value_for_many_names(
+		self,
+		doctype,
+		names,
+		field,
+		order_by,
+		*,
+		debug=False,
+		run=True,
+		pluck=False,
+		distinct=False,
+		limit=None,
+		as_dict=False
+	):
 		names = list(filter(None, names))
 		if names:
 			return self.get_all(
@@ -678,7 +692,7 @@ class Database(object):
 				order_by=order_by,
 				pluck=pluck,
 				debug=debug,
-				as_list=1,
+				as_list=not as_dict,
 				run=run,
 				distinct=distinct,
 				limit_page_length=limit
