@@ -119,10 +119,6 @@ def update_move_node(doc: Document, parent_field: str):
 
 		# shift right at new parent
 		frappe.qb.update(Table).set(Table.lft, Table.lft + diff).set(Table.rgt, Table.rgt + diff).where(
-			(Table.lft >= new_parent.lft) & (Table.lft <= new_parent.rgt)
-		).run()
-
-		frappe.qb.update(Table).set(Table.lft, Table.lft + diff).set(Table.rgt, Table.rgt + diff).where(
 			Table.lft > new_parent.rgt
 		).run()
 
