@@ -73,14 +73,14 @@ def get_unsubscribe_message(unsubscribe_message, expose_recipients):
 		unsubscribe_html = _("{0} to stop receiving emails of this type").format(unsubscribe_link)
 
 	html = """<div class="email-unsubscribe">
-			<!--cc message-->
+			<!--cc_message-->
 			<div>
 				{0}
 			</div>
 		</div>""".format(unsubscribe_html)
 
 	if expose_recipients == "footer":
-		text = "\n<!--cc message-->"
+		text = "\n<!--cc_message-->"
 	else:
 		text = ""
 	text += "\n\n{unsubscribe_message}: <!--unsubscribe_url-->\n".format(unsubscribe_message=unsubscribe_message)
