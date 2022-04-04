@@ -363,7 +363,11 @@ frappe.ui.form.PrintView = class {
 		let doc_letterhead = this.frm.doc.letter_head;
 
 		return frappe.db
-			.get_list('Letter Head', { fields: ['name', 'is_default'], limit: 0 })
+			.get_list('Letter Head', {
+				filters: {'disabled': 0},
+				fields: ['name', 'is_default'],
+				limit: 0
+			})
 			.then((letterheads) => {
 				this.letterhead_selector.empty();
 				letterheads.map((letterhead) => {
