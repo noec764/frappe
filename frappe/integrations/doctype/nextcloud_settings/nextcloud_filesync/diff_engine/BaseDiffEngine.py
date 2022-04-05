@@ -39,7 +39,7 @@ class BaseDiffEngineNC():
 	def get_local_entry_by_path(self, path: str) -> Optional[EntryLocal]:
 		raise NotImplementedError
 
-	def get_local_children_ids(self, of_dir: Entry) -> Set[int]:
+	def get_local_children_ids(self, of_dir: EntryLocal) -> Set[int]:
 		raise NotImplementedError
 
 	# Remote access
@@ -54,12 +54,11 @@ class BaseDiffEngineNC():
 
 	# Individual diffing
 	def _find_renames_and_deletions(self, directory: EntryPair):
-		dir_entry: EntryRemote = directory[1]
+		local_dir, remote_dir = directory
 
-		# self.log(' · find renames and deletions in', dir_entry.path)
-		# old_children_ids = self.get_local_children_ids(directory[0])
-		old_children_ids = self.get_local_children_ids(dir_entry)
-		new_children = self.get_remote_children_entries(dir_entry)
+		# self.log(' · find renames and deletions in', remote_dir.path)
+		old_children_ids = self.get_local_children_ids(local_dir)
+		new_children = self.get_remote_children_entries(remote_dir)
 
 		# ids of deleted files (deleted from this dir, on the remote)
 		deletions: List[int] = []
@@ -88,7 +87,7 @@ class BaseDiffEngineNC():
 					#          remote, '[no local entry]')
 					continue
 
-				# dp = dir_entry.path
+				# dp = remote_dir.path
 				# lp = remove prefix of (local.path, dp)
 				# rp = remove prefix of (remote.path, dp)
 				# if lp != rp:

@@ -223,27 +223,23 @@ class Common:
 			return None
 		return None
 
-	# def get_local_children_ids(self, local_dir: EntryLocal) -> Set[int]:
-	# 	folder = '/'.join(util_denormalize_to_local_path(local_dir.path))
-	# 	old_children_ids = set(map(
-	# 		lambda x: int(x[0]),
-	# 		frappe.db.get_values(
-	# 			'File',
-	# 			filters={'folder': folder},
-	# 			fieldname='nextcloud_id'
-	# 		)
-	# 	))
-	# 	return old_children_ids
+	def get_local_children_ids(self, local_dir: EntryLocal) -> Set[int]:
+		filters = {}
+		filters['nextcloud_id'] = ('!=', '')
 
-	def get_local_children_ids(self, remote_dir: EntryRemote) -> Set[int]:
-		old_children_ids = set(map(
-			lambda x: int(x[0]),
-			frappe.db.get_values(
-				'File',
-				filters={'nextcloud_parent_id': remote_dir.nextcloud_id},
-				fieldname='nextcloud_id'
-			)
-		))
+		# dir_name = '/'.join(util_denormalize_to_local_path(local_dir.path))
+		dir_name = local_dir._frappe_name  # NOTE: optimization
+		# dir_name = frappe.db.exists('File', {'nextcloud_id': local_dir.nextcloud_id})
+		if dir_name:
+			filters['folder'] = dir_name
+		else:
+			filters['nextcloud_parent_id'] = local_dir.nextcloud_id
+
+		# get all children
+		old_children_ids = frappe.db.get_values(
+			'File', filters=filters, fieldname='nextcloud_id')
+		# keep only their nextcloud ids
+		old_children_ids = set(map(lambda x: int(x[0]), old_children_ids))
 		return old_children_ids
 
 	def get_remote_children_entries(self, of_dir: EntryRemote) -> Dict[int, EntryRemote]:

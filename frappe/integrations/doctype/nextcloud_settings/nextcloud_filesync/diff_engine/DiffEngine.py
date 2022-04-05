@@ -22,7 +22,7 @@ class DiffEngine(BaseDiffEngineNC):
 	def get_remote_entry_by_path(self, path: str) -> Optional[EntryRemote]:
 		return self.common.get_remote_entry_by_path(path)
 
-	def get_local_children_ids(self, of_dir: Entry) -> Set[int]:
+	def get_local_children_ids(self, of_dir: EntryLocal) -> Set[int]:
 		return self.common.get_local_children_ids(of_dir)
 
 	def get_remote_children_entries(self, of_dir: EntryRemote) -> Dict[int, EntryRemote]:
