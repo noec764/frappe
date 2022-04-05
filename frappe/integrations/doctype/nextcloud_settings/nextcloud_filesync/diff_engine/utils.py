@@ -37,3 +37,9 @@ def get_home_folder_name() -> str:
 	if not docname:
 		raise frappe.exceptions.DoesNotExistError('missing home folder')
 	return docname
+
+def doc_has_nextcloud_id(doc):
+	i = doc.get('nextcloud_id', None)
+	if i in (None, ''):
+		return False
+	return True

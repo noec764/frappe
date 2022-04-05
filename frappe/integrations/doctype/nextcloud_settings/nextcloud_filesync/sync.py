@@ -12,7 +12,7 @@ from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings, ge
 from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudSyncMissingRoot
 
 from .diff_engine.Action import Action
-from .diff_engine.utils import check_flag, get_home_folder
+from .diff_engine.utils import check_flag, doc_has_nextcloud_id, get_home_folder, set_flag
 from .diff_engine.Entry import Entry
 from .diff_engine.ConflictTracker import ConflictResolverNCF, ConflictStopper
 from .diff_engine.utils_time import convert_local_time_to_utc
@@ -24,20 +24,11 @@ from frappe.utils.data import cstr
 from .diff_engine import Common, DiffEngine, ActionRunner, RemoteFetcher
 
 @contextmanager
-def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True) -> Generator[Optional['NextcloudFileSync'], None, None]:
-	settings = get_nextcloud_settings()
-
-	if frappe.flags.nextcloud_disable_filesync:
-		yield None
-		return
-
-	if not (settings.enabled and settings.enable_sync):
-		yield None
-		return
-
+def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True):
 	# frappe.db.begin()  # begin transaction
 	# frappe.db.commit()  # begin transaction
 	try:
+		settings = get_nextcloud_settings()
 		sync = NextcloudFileSync(settings=settings)
 		yield sync
 		sync.client.logout()
@@ -49,6 +40,23 @@ def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exceptio
 			frappe.db.rollback()  # rollback on error
 		if raise_exception:
 			raise
+
+
+@contextmanager
+def optional_sync_module(**kwargs) -> Generator[Optional['NextcloudFileSync'], None, None]:
+	settings = get_nextcloud_settings()
+
+	if frappe.flags.nextcloud_disable_filesync:
+		yield None
+		return
+
+	if not (settings.enabled and settings.enable_sync):
+		yield None
+		return
+
+	with sync_module(**kwargs) as syncer:
+		yield syncer
+
 
 def sync_log(*args):
 	with open('/tmp/nc_sync.txt', 'a') as f:
@@ -301,98 +309,147 @@ class NextcloudFileSync:
 		# 	except HTTPResponseError:
 		# 		file = None
 
-		# 	if file is None:
-		# 		sync_log(f'  ! has nextcloud_id but no remote file')
-		# 		doc.nextcloud_id = None
-		# 	else:
-		# 		sync_log(f'  # skipping, is already remote')
-		# 		return
+	def file_on_trash(self, doc: File):
+		self.log(f'* DELETE: {doc}')
+		if not self.can_run_filesync(doc): return
 
-		# if doc.is_folder:
-		# 	sync_log(f'  - is folder')
-		# 	# folder, only create on remote
-		# 	base_path = self.settings.get_upload_path()
-		# 	remote_dir = path_join_strip(
-		# 		base_path, doc.folder.lstrip('Home/'), doc.file_name)
-		# 	sync_log(f'  - remote.mkdir_p: {remote_dir}')
-		# 	self.client.mkdir_p(remote_dir)
-		# 	return
+		if not doc_has_nextcloud_id(doc):
+			self.log(f'↳ skipping: no nextcloud_id')
+			return
 
-		# sync_log(f'  - is normal file')
-		# if not doc.file_url:
-		# 	sync_log(f'  ! missing file_url')
-		# 	# doc should at least have a file_url,
-		# 	# which should also be a filesystem path (check later)
-		# 	return
+		try:
+			self._delete_remote_file_of_doc(
+				doc,
+				update_doc=False,  # don't need to update document, because it will be deleted
+				update_parent_etag=True  # do update the parent's etag (its content changed)
+			)
+		except:
+			return
 
 		# site_path = frappe.utils.get_site_path()
 		# subdir = 'public' if not doc.is_private else None
 		# file_path = path_join_strip(site_path, subdir, doc.file_url)
 
-		# if not os.path.exists(file_path):
-		# 	sync_log(f'  ! missing file on filesystem')
-		# 	# missing file on Frappe's side,
-		# 	# therefore can't upload it to remote
-		# 	return
-
-		# base_path = self.settings.get_path_to_files_folder()
-		# remote_dir = path_join_strip(
-		# 	base_path, doc.owner, doc.attached_to_doctype)
-
-		# sync_log(f'  - remote.mkdir_p: "{remote_dir}"')
-		# self.client.mkdir_p(remote_dir)
-
-		# remote_path = path_join_strip(remote_dir, doc.file_name)
-		# sync_log(f'  - remote.put_file: "{remote_path}" <- "{file_path}"')
-		# self.client.put_file(remote_path, file_path)
-
-		# file: FileInfo = self.client.file_info(
-		# 	remote_path, properties=self._QUERY_PROPS)
-		# if file:
-		# 	res = self._get_res(file)
-		# 	nextcloud_id = res.file_id
-		# 	doc.db_set('nextcloud_id', nextcloud_id, update_modified=False)
-		# 	meta = create_or_update_filemeta(res)
-		# 	sync_log(f'  - .nextcloud_id: {nextcloud_id}')
-		# 	sync_log(f'  - .meta: {meta}')
-		# else:
-		# 	sync_log(f'  ! maybe failed to upload remote file')
-
-		# remove local file data
-		# if nextcloud_settings.enable_migrate_to_nextcloud:
-		# 	update_with_link(doc, build_link(nextcloud_settings, remote_path))
-
-	def file_on_trash(self, doc: File):
-		self.log(f'* on_trash: {doc}')
-
-		nextcloud_id = doc.get('nextcloud_id', None)
-		if nextcloud_id is None: return
-		if check_flag(doc): return
-
+	def _delete_remote_file_of_doc(
+		self,
+		doc,
+		*,
+		update_doc=False,
+		update_parent_etag=False,
+	):
+		nextcloud_id = doc.nextcloud_id
 		try:  # remove remote file
 			remote_file = self.client.file_info_by_fileid(nextcloud_id)
 			assert remote_file is not None
 			self.client.delete(remote_file.path)
-			self.log(f'* {doc} ({nextcloud_id}@nextcloud): removed nextcloud file')
-		except Exception:
-			self.log(f'! {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file')
+			self.log(f'↳ okay {doc} ({nextcloud_id}@nextcloud): removed nextcloud file')
+		except Exception as e:
+			self.log(f'↳ fail {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file')
+			self.log(e)
+			raise
+
+		if update_parent_etag:
+			if doc.nextcloud_parent_id:
+				self._update_etag_for_id(doc.nextcloud_parent_id)
+
+		if update_doc:
+			doc.nextcloud_id = None
+			doc.nextcloud_parent_id = None
+			set_flag(doc)
+
+
+	def _update_etag_for_id(self, nextcloud_id: int):
+		local = self.common.get_local_entry_by_id(nextcloud_id)
+		remote = self.common.get_remote_entry_by_id(nextcloud_id)
+		if local and remote:
+			self.runner.run_actions([
+				Action(type='meta.updateEtag', remote=remote, local=local)
+			])
+
 
 	def file_on_create(self, doc: File):
-		nextcloud_id = doc.get('nextcloud_id', None)
-		if nextcloud_id is not None:
-			raise 'File already has a nextcloud_id'
-		self.file_on_update(doc)
+		self.log(f'* CREATE: {doc}')
+		if not self.can_run_filesync(doc): return
+
+		if doc_has_nextcloud_id(doc):
+			raise ValueError('File already has a nextcloud_id')
+
+		self._create_or_force_update_doc_in_remote(doc, check_remote=True)
+		set_flag(doc)
+
 
 	def file_on_update(self, doc: File):
-		if check_flag(doc): return
+		self.log(f'* UPDATE: {doc}')
+		if not self.can_run_filesync(doc, ignore_private_check=True): return
 
+		is_excluded_because_private = doc.is_private and self.settings.filesync_exclude_private
+		if is_excluded_because_private:
+			self.log('↳ checking if private file was public…')
+			# We should not update this private file, but...
+
+			# if the file has been synced
+			if not doc_has_nextcloud_id(doc): return self.log(' → skip (not synced)')
+
+			# and if the file WAS public
+			prev_doc: dict = doc.get_doc_before_save() or {}
+			was_public = not prev_doc.get('is_private')
+			if not was_public: return self.log(' → skip (was not public)')
+
+			# then it is BECOMING private
+			# so, it must be deleted from the remote
+			# because it might have been uploaded before.
+			self.log('↳ file is becoming private: delete from remote')
+			self._delete_remote_file_of_doc(doc, update_doc=True, update_parent_etag=True)
+			return
+
+		if not self.can_run_filesync(doc): return  # maybe not needed
+		self._create_or_force_update_doc_in_remote(doc, check_remote=True)
+
+
+	def can_run_filesync(self, doc: File = None, *, ignore_private_check=False, is_hook=False):
+		if not self.settings.enabled:
+			self.log('↳ WILL NOT RUN: nextcloud integration disabled')
+			return False
+
+		if not self.settings.enable_sync:
+			self.log('↳ WILL NOT RUN: file sync disabled')
+			return False
+
+		if frappe.flags.nextcloud_disable_filesync:
+			self.log('↳ WILL NOT RUN: file sync disabled by flag')
+			return False
+
+		if is_hook and frappe.flags.nextcloud_disable_filesync_hooks:
+			self.log('↳ WILL NOT RUN: all hooks disabled')
+			return False
+
+		if doc:
+			if check_flag(doc):
+				# skipping because the file was already handled
+				self.log('↳ WILL NOT RUN: flag is set on file', doc)
+				return False
+
+			if self.settings.filesync_exclude_private and not ignore_private_check:
+				if doc.is_private:  # skipping private files
+					self.log('↳ WILL NOT RUN: file is private', doc)
+					return False
+
+		return True
+
+
+	def _create_or_force_update_doc_in_remote(self, doc: File, check_remote: bool = False):
+		"""
+			Upload the local file to the remote.
+			If `check_remote` is True, try to find the matching remote file first, in order to perform a smarter sync if possible.
+		"""
 		local = self.common.convert_local_doc_to_entry(doc)
 
 		remote = None
-		if doc.nextcloud_id is not None:
-			remote = self.common.get_remote_entry_by_id(doc.nextcloud_id)
-		if remote is None:
-			remote = self.common.get_remote_entry_by_path(local.path)
+		if check_remote:
+			if doc_has_nextcloud_id(doc):
+				remote = self.common.get_remote_entry_by_id(doc.nextcloud_id)
+			if remote is None:
+				remote = self.common.get_remote_entry_by_path(local.path)
 
 		self.runner.run_actions([
 			Action(type='remote.createOrForceUpdate', local=local, remote=remote)
