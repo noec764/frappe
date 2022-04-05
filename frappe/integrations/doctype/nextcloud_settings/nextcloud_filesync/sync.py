@@ -59,6 +59,7 @@ def optional_sync_module(**kwargs) -> Generator[Optional['NextcloudFileSync'], N
 
 
 def sync_log(*args):
+	print(*args)
 	with open('/tmp/nc_sync.txt', 'a') as f:
 		f.write(' '.join(map(str, args)) + '\n')
 
@@ -111,14 +112,6 @@ class NextcloudFileSync:
 
 		self.settings = settings
 
-		self.conflict_strategy = 'ignore'
-		if self.settings.next_filesync_ignore_id_conflicts:
-			self.conflict_strategy = 'resolve-from-diff'
-			# self.conflict_strategy = 'resolve'
-
-		if self.settings.filesync_override_conflict_strategy:
-			self.conflict_strategy = self.settings.filesync_override_conflict_strategy
-
 		self.client = self.settings.nc_connect()
 
 		self.common = Common(
@@ -126,6 +119,25 @@ class NextcloudFileSync:
 			settings=self.settings,
 			logger=self.log,
 		)
+
+		self.runner = ActionRunner(self.common)
+
+		self.fetcher = RemoteFetcher(self.common)
+
+		self.conflicts = []
+
+		if self.settings.filesync_override_conflict_strategy:
+			self.set_conflict_strategy(
+				self.settings.filesync_override_conflict_strategy
+			)
+		elif self.settings.next_filesync_ignore_id_conflicts:
+			self.set_conflict_strategy('resolve-from-diff')  # or 'resolve'
+		else:
+			self.set_conflict_strategy('ignore')
+
+
+	def set_conflict_strategy(self, new_conflict_strategy: str):
+		self.conflict_strategy = new_conflict_strategy
 
 		use_conflict_detection = True  # pessimistic
 		diff_even_when_conflict = False  # optimisation
