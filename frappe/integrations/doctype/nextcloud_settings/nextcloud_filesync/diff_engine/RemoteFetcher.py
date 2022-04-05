@@ -49,7 +49,7 @@ class RemoteFetcher:
 			raise NextcloudSyncCannotFetchRoot()
 
 	def fetch_all(self):
-		root = self.fetch_root()
+		root = self.fetch_root(create_if_missing=True)
 
 		files: List[FileInfo] = self.client.list(
 			self.root,
@@ -72,7 +72,7 @@ class RemoteFetcher:
 		if last_update is None:
 			return self.fetch_all()
 
-		root = self.fetch_root()
+		root = self.fetch_root(create_if_missing=True)
 
 		files: List[FileInfo] = self.client.list_updated_since(
 			last_update,
