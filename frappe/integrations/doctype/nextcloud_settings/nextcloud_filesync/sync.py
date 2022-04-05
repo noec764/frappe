@@ -160,11 +160,66 @@ class NextcloudFileSync:
 			continue_diffing_after_conflict=diff_even_when_conflict,
 		)
 
-		self.runner = ActionRunner(self.common)
 
-		self.fetcher = RemoteFetcher(self.common)
+	def complete_sync(
+		self,
+		conflict_strategy: str = None,
+		sync_all: bool = False,
+		force_migrate: bool = False,
+		interactive: bool = False,
+		log_conflicts: bool = True,
+		commit: bool = True,
+		rollback_on_error: bool = True,
+	):
+		"""
+		Do a complete sync, including uploading unsynced files, logging conflicts to the user, database commit/rollback.
 
-		self.use_profiler = False
+		Args:
+			conflict_strategy (str): The strategy to use for conflict resolution. Defaults to None (aka 'ignore').
+			sync_all (bool): Detect files even if their modification date is prior to the last sync. Defaults to False.
+
+			force_migrate (bool): Clear all the nextcloud_id's of the local Files before migrating-again. Defaults to False.
+
+			interactive (bool): Display real time messages to the user. Defaults to False.
+			log_conflicts (bool): Log conflicts to the Error Log. Defaults to False.
+			commit (bool): Defaults to True.
+			rollback_on_error (bool): Defaults to True.
+		"""
+
+		def b(x: bool):
+			return '\x1b[32mF\x1b[m' if x else '\x1b[31mF\x1b[m'
+		def h(x: str):
+			return f'\x1b[34m{x}\x1b[m'
+		self.log(f"complete_sync(conflict_strategy={h(conflict_strategy)}, sync_all={b(sync_all)}, force_migrate={b(force_migrate)})")
+
+		if not self.can_run_filesync():
+			self.log("↳ complete_sync cancelled")
+			return
+
+		if conflict_strategy:
+			self.set_conflict_strategy(conflict_strategy)
+
+		try:
+			# Perform a pre-sync migration to the cloud
+			self.migrate_to_remote(force=force_migrate)
+
+			# Perform the sync, mirroring the cloud
+			if sync_all:
+				self.sync_from_remote_all()
+			else:
+				self.sync_from_remote_since_last_update()
+
+			# Log conflicts to the user
+			self.log(self.conflicts)
+			if interactive:
+				frappe.msgprint(frappe._('Some conflicts were found during the Nextcloud sync, check the Error Log to find them.'))
+
+			# success
+			if commit: frappe.db.commit()
+		except Exception as e:
+			if rollback_on_error: frappe.db.rollback()
+			raise e
+
 
 	def _log(self, *args):
 		sync_log(*args)
@@ -185,9 +240,9 @@ class NextcloudFileSync:
 
 	def _sync(self, last_update_dt: datetime = None):
 		sync_start_dt = frappe.utils.now_datetime()
-		_profile_dt_start = frappe.utils.now_datetime()
+
 		self.log(frappe.now().center(40, '-'))
-		self.log(f'Sync started {last_update_dt.strftime("since %F %X (local time)") if last_update_dt else "from scratch"}')
+		self.log(f'Sync all {last_update_dt.strftime("updated since %F %X (local time)") if last_update_dt else "from scratch"}')
 		# self.log()
 
 		# fetch all remote entries
@@ -207,13 +262,12 @@ class NextcloudFileSync:
 		actions_iterator = self.differ.diff_from_remote(remote_entries)
 
 		if self.conflict_strategy == 'stop':
-			conflict_stopper = ConflictStopper(self.common)
-			actions_iterator = conflict_stopper.chain(actions_iterator)
+			conflict_stopper = ConflictStopper()
+			actions_iterator = list(conflict_stopper.chain(actions_iterator))
 		elif self.conflict_strategy == 'resolver-only':
 			conflict_resolver = ConflictResolverNCF(self.common)
-			actions_iterator = conflict_resolver.chain(actions_iterator)
+			actions_iterator = list(conflict_resolver.chain(actions_iterator))
 
-		actions_iterator = list(actions_iterator)
 		self.log(f'got {len(actions_iterator)} actions to run, conflict strategy is: {self.conflict_strategy}')
 		self.log(J(actions_iterator))
 		# self.log()
@@ -225,7 +279,8 @@ class NextcloudFileSync:
 		newest_remote_entry = max(remote_entries, key=attrgetter('last_updated'))
 
 		# self.log('* DONE at:', frappe.now())
-		self.log('duration:', (frappe.utils.now_datetime() - _profile_dt_start).total_seconds(), 'seconds')
+		sync_duration = frappe.utils.now_datetime() - sync_start_dt
+		self.log('duration:', sync_duration.total_seconds(), 'seconds')
 		self.log()
 
 		last_update_dt2 = min(sync_start_dt, newest_remote_entry.last_updated)
@@ -242,84 +297,61 @@ class NextcloudFileSync:
 
 	def sync_from_remote_since(self, last_update_dt: datetime):
 		self._sync(last_update_dt=last_update_dt)
-		# if last_update is None:
-		# 	last_update = datetime.fromordinal(1)  # smallest date
-		# for (i, d) in enumerate(dirs):
-		# 	frappe.publish_realtime("progress", {
-		# 		'progress': [i + 1, N],
-		# 		'title': 'Cleaning up',
-		# 		'description': d.file.path,
-		# 	}, task_id='sync', user=frappe.session.user)
-		# return last_update
 
-	def sync_to_remote(self):
-		...
-		# self.timer_start('sync_to')
 
-		# files = frappe.db.get_all(
-		# 	'File', filters={'is_folder': 0}, fields=['name', 'nextcloud_id'])
+	def _unjoin_all_files(self):
+		"""Clear the `nextcloud_id` and `nextcloud_parent_id` of all the local Files."""
+		frappe.db.sql("""
+			update `tabFile` set `nextcloud_id` = NULL, `nextcloud_parent_id` = NULL
+		""")
 
-		# files_with_id, unsynced_files = partition(
-		# 	lambda f: f['nextcloud_id'] is None, files)
 
-		# N = len(unsynced_files)
-		# for (i, f) in enumerate(unsynced_files):
-		# 	name = f['name']
-		# 	doc = frappe.get_doc('File', name)
-		# 	sync_log(f'* sync to remote: {doc} (no nextcloud id)')
-		# 	self.save_to_remote(doc, event='sync')
+	def migrate_to_remote(self, force=False, *, DANGER_clear_remote_files=False):
+		if not self.can_run_filesync(): return
 
-		# 	frappe.publish_realtime("progress", {
-		# 		'progress': [i + 1, N],
-		# 		'title': 'Syncing Files',
-		# 		'description': name,
-		# 	}, task_id='sync', user=frappe.session.user)
+		if DANGER_clear_remote_files:
+			self.client.delete(self.common.root)
 
-		# frappe.publish_realtime(
-		# 	"progress",
-		# 	{'progress': [100, 100]},
-		# 	task_id='sync',
-		# 	user=frappe.session.user,
-		# )
+		if force:
+			self._unjoin_all_files()
 
-		# N = len(files_with_id)
-		# for (i, f) in enumerate(files_with_id):
-		# 	name = f['name']
-		# 	nextcloud_id = f['nextcloud_id']
-		# 	doc = frappe.get_doc('File', name)
-		# 	sync_log(f'* sync to remote: {doc} ({nextcloud_id}@nextcloud)')
-		# 	self.save_to_remote(doc, event='sync')
+		# unsynced files are those that:
+		# - have no nextcloud_id
+		# - have been modified after the last sync
+		unsynced_files = frappe.db.sql("""
+			select `name` from `tabFile`
+			where (
+					ifnull(`nextcloud_id`, '') = ''
+					or `modified` > %(last_sync)s
+				) and not (`is_private` and %(exclude_private)s)
+			order by folder, file_name
+		""", values={
+			'last_sync': self.settings.get_last_filesync_dt(),
+			'exclude_private': self.settings.filesync_exclude_private,
+		},
+			as_dict=True,
+		)
 
-		# 	frappe.publish_realtime("progress", {
-		# 		'progress': [i + 1, N],
-		# 		'title': 'Syncing Files',
-		# 		'description': name,
-		# 	}, task_id='sync', user=frappe.session.user)
+		for f in unsynced_files:
+			name = f['name']
+			doc = frappe.get_doc('File', name)
+			self._upload_to_remote(doc, event='sync')
 
-		# frappe.publish_realtime(
-		# 	"progress",
-		# 	{'progress': [100, 100]},
-		# 	task_id='sync',
-		# 	user=frappe.session.user,
-		# )
 
-	def save_to_remote(self, doc: File, event=None):
-		...
-		# sync_log(f'* save to remote: {doc}')
+	def _upload_to_remote(self, doc: File, event=None):
+		self.log(f'* upload to remote: {doc} (event={event})')
 
-		# if check_flag(doc):
-		# 	sync_log(f'  # skipping, flag nextcloud_triggered_update is set')
-		# 	return  # avoid recursive updates
+		if check_flag(doc):
+			self.log(f'↳ skipping, flag nextcloud_triggered_update is set')
+			return  # avoid recursive updates
 
-		# if doc.is_private:
-		# 	sync_log(f'  # skipping, private file')
-		# 	return
+		if self.settings.filesync_exclude_private:
+			if doc.is_private:
+				self.log(f'↳ skipping, file is private')
+				return  # skipping private files
 
-		# if doc.nextcloud_id:
-		# 	try:
-		# 		file = self.client.file_info_by_fileid(doc.nextcloud_id)
-		# 	except HTTPResponseError:
-		# 		file = None
+		self._create_or_force_update_doc_in_remote(doc, check_remote=True)
+
 
 	def file_on_trash(self, doc: File):
 		self.log(f'* DELETE: {doc}')
@@ -338,9 +370,6 @@ class NextcloudFileSync:
 		except:
 			return
 
-		# site_path = frappe.utils.get_site_path()
-		# subdir = 'public' if not doc.is_private else None
-		# file_path = path_join_strip(site_path, subdir, doc.file_url)
 
 	def _delete_remote_file_of_doc(
 		self,
