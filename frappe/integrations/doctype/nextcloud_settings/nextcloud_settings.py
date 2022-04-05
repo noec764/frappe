@@ -32,6 +32,8 @@ class NextcloudSettings(Document):
 	# enable_calendar: bool = False
 
 	path_to_files_folder: str = ''
+	filesync_rename_folder_on_save: bool = False
+	filesync_exclude_private: bool = True
 
 	# TODO: store sync_datetime for each of the 3 modules + configurable interval
 	last_filesync_dt: str = None

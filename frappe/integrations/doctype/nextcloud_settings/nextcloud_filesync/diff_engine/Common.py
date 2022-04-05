@@ -193,6 +193,9 @@ class Common:
 		if folder:
 			filters['folder'] = folder
 
+		if self.cloud_settings.filesync_exclude_private:
+			filters['is_private'] = 0
+
 		# self.log(f"get_local_entry_by_path: {path} -> {folder}:{file_name}", filters)
 		return self._get_local_entry_from_frappe_db(filters)
 
@@ -234,6 +237,9 @@ class Common:
 			filters['folder'] = dir_name
 		else:
 			filters['nextcloud_parent_id'] = local_dir.nextcloud_id
+
+		if self.cloud_settings.filesync_exclude_private:
+			filters['is_private'] = '0'
 
 		# get all children
 		old_children_ids = frappe.db.get_values(
