@@ -5,12 +5,12 @@ from typing import List
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import validate_email_address, strip_html, cstr, time_diff_in_seconds
+from frappe.utils import validate_email_address, strip_html, cint, time_diff_in_seconds
 from frappe.core.doctype.communication.email import validate_email
 from frappe.core.doctype.communication.mixin import CommunicationEmailMixin
 from frappe.core.utils import get_parent_doc
 from frappe.utils import parse_addr, split_emails
-from frappe.core.doctype.comment.comment import update_comment_in_doc, delete_comments_from_doc
+from frappe.core.doctype.comment.comment import update_comment_in_doc, delete_comment_from_doc
 from email.utils import getaddresses
 from urllib.parse import unquote
 from frappe.utils.user import is_system_user
@@ -165,7 +165,7 @@ class Communication(Document, CommunicationEmailMixin):
 		if self.communication_type == "Communication":
 			self.notify_change('delete')
 
-		delete_comments_from_doc(self)
+		delete_comment_from_doc(self)
 
 	@property
 	def sender_mailid(self):
@@ -515,12 +515,14 @@ def update_parent_document_on_communication(doc):
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
 
-	if doc.sent_or_received == "Received" and not doc.flags.document_load:
+	update_condition = cint(frappe.db.get_default("update_document_timestamp_on_send")) or (doc.sent_or_received == "Received")
+	if update_condition and not doc.flags.document_load:
 		# update the modified date for document
 		parent.update_modified()
 
 	update_first_response_time(parent, doc)
 	set_avg_response_time(parent, doc)
+
 	parent.run_method("notify_communication", doc)
 	parent.notify_update(all_users=True)
 

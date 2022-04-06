@@ -32,7 +32,7 @@ from frappe.query_builder import (
 )
 from frappe.utils.data import cstr
 
-__version__ = '2.8.5'
+__version__ = '2.9.0'
 __title__ = "Dodock Framework"
 
 local = Local()

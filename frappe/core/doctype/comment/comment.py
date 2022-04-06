@@ -32,6 +32,8 @@ class Comment(Document):
 		self.remove_comment_from_cache()
 		self.notify_change('delete')
 
+		delete_comment_from_doc(self)
+
 	def notify_change(self, action):
 		key_map = {
 			'Like': 'like_logs',
@@ -194,7 +196,7 @@ def update_comments_in_parent_after_request():
 
 		frappe.db.commit()
 
-def delete_comments_from_doc(doc):
+def delete_comment_from_doc(doc):
 	"""Updates `_comments` (JSON) property in parent Document when a communication is deleted.
 	"""
 

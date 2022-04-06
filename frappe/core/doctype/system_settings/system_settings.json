@@ -1,7 +1,5 @@
 {
  "actions": [],
- "allow_read": 1,
- "allow_workflow": 1,
  "creation": "2014-04-17 16:53:52.640856",
  "doctype": "DocType",
  "document_type": "System",
@@ -69,6 +67,7 @@
   "disable_standard_email_footer",
   "hide_footer_in_auto_email_reports",
   "attach_view_link",
+  "update_document_timestamp_on_send",
   "prepared_report_section",
   "enable_prepared_report_auto_deletion",
   "prepared_report_expiry_period"
@@ -488,12 +487,18 @@
     "fieldtype": "Select",
     "label": "First Day of the Week",
     "options": "Sunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
-   }
+   },
+   {
+      "default": "0",
+      "fieldname": "update_document_timestamp_on_send",
+      "fieldtype": "Check",
+      "label": "Update document timestamp when sending emails"
+     }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2022-01-04 11:28:34.881192",
+ "modified": "2022-04-06 16:17:53.815570",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
