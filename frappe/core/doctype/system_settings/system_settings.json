@@ -1,7 +1,5 @@
 {
  "actions": [],
- "allow_read": 1,
- "allow_workflow": 1,
  "creation": "2014-04-17 16:53:52.640856",
  "doctype": "DocType",
  "document_type": "System",
@@ -67,6 +65,7 @@
   "disable_standard_email_footer",
   "hide_footer_in_auto_email_reports",
   "attach_view_link",
+  "update_document_timestamp_on_send",
   "prepared_report_section",
   "enable_prepared_report_auto_deletion",
   "prepared_report_expiry_period",
@@ -462,36 +461,42 @@
    "label": "Send document Web View link in email"
   },
   {
-	"default": "30",
-	"depends_on": "enable_prepared_report_auto_deletion",
-	"description": "System will auto-delete Prepared Reports permanently after these many days since creation",
-	"fieldname": "prepared_report_expiry_period",
-	"fieldtype": "Int",
-	"label": "Prepared Report Expiry Period (Days)"
-   },
-   {
-	"default": "1",
-	"fieldname": "enable_prepared_report_auto_deletion",
-	"fieldtype": "Check",
-	"label": "Enable Auto-deletion of Prepared Reports"
-   },
-   {
-	"collapsible": 1,
-	"fieldname": "prepared_report_section",
-	"fieldtype": "Section Break",
-	"label": "Prepared Report"
-   },
-   {
-      "default": "1",
-      "fieldname": "strip_exif_metadata_from_uploaded_images",
-      "fieldtype": "Check",
-      "label": "Strip EXIF tags from uploaded images"
-   }
+   "default": "30",
+   "depends_on": "enable_prepared_report_auto_deletion",
+   "description": "System will auto-delete Prepared Reports permanently after these many days since creation",
+   "fieldname": "prepared_report_expiry_period",
+   "fieldtype": "Int",
+   "label": "Prepared Report Expiry Period (Days)"
+  },
+  {
+   "default": "1",
+   "fieldname": "enable_prepared_report_auto_deletion",
+   "fieldtype": "Check",
+   "label": "Enable Auto-deletion of Prepared Reports"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "prepared_report_section",
+   "fieldtype": "Section Break",
+   "label": "Prepared Report"
+  },
+  {
+   "default": "1",
+   "fieldname": "strip_exif_metadata_from_uploaded_images",
+   "fieldtype": "Check",
+   "label": "Strip EXIF tags from uploaded images"
+  },
+  {
+   "default": "0",
+   "fieldname": "update_document_timestamp_on_send",
+   "fieldtype": "Check",
+   "label": "Update document timestamp when sending emails"
+  }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2021-04-25 17:54:32.668876",
+ "modified": "2022-04-06 16:17:53.815570",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
