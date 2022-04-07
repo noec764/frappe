@@ -63,7 +63,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 				}));
 			this.add_non_group_layers(data_layers, this.editableLayers);
 			try {
-				this.map.flyToBounds(this.editableLayers.getBounds(), {
+				this.map.fitBounds(this.editableLayers.getBounds(), {
 					animate: false,
 					padding: [50,50]
 				});
@@ -72,10 +72,10 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 				// suppress error if layer has a point.
 			}
 			this.editableLayers.addTo(this.map);
-			this.map._onResize();
-		} else if ((value===undefined) || (value == JSON.stringify(new L.FeatureGroup().toGeoJSON()))) {
-			this.locate_control.start();
+		} else {
+			this.map.setView(frappe.utils.map_defaults.center, frappe.utils.map_defaults.zoom);
 		}
+		this.map.invalidateSize();
 	}
 
 	bind_leaflet_map() {
