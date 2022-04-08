@@ -14,6 +14,10 @@
 	}
 }
 
+.blog-list-content {
+	margin-bottom: 3rem;
+}
+
 .blog-card {
 	margin-bottom: 2rem;
 	position: relative;
@@ -98,10 +102,14 @@
 
 		.blog-header {
 			margin-bottom: 3rem;
-			margin-top: 3rem;
+			margin-top: 5rem;
 		}
 	}
 
+	.blog-comments {
+		margin-top: 1rem;
+		margin-bottom: 5rem;
+	}
 
 	.feedback-item svg {
 		vertical-align: sub;
