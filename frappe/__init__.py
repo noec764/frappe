@@ -1785,6 +1785,7 @@ def ping():
 
 @whitelist(allow_guest=True)
 def get_user_lang():
+	from frappe import translate
 	return translate.get_user_lang()
 
 def safe_encode(param, encoding='utf-8'):
