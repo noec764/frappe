@@ -459,7 +459,7 @@ class Document(BaseDocument):
 
 	def register_seal(self):
 		if getattr(self.meta, 'is_submittable') and getattr(self.meta, 'is_sealed'):
-			frappe.enqueue("frappe.core.doctype.archived_document.archived_document.create_archive", doc=self)
+			frappe.enqueue("frappe.core.doctype.archived_document.archived_document.create_archive", doc=self, enqueue_after_commit=True)
 
 	def get_title(self):
 		"""Get the document title based on title_field or `title` or `name`"""

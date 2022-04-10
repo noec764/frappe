@@ -261,6 +261,16 @@ def get_group_by_chart_config(chart, filters):
 		ignore_ifnull = True
 	)
 
+	if group_by_field == "_assign":
+		user_names = list(set([frappe.parse_json(d.name)[0] for d in data if d.name]))
+		users = {
+			u.name: u.full_name for u
+			in frappe.get_all("User", filters={"name": ("in", user_names)}, fields=["name", "full_name"])
+		}
+		for d in data:
+			if d["name"]:
+				d["name"] = users.get(frappe.parse_json(d.name)[0])
+
 	if data:
 		if chart.number_of_groups and chart.number_of_groups < len(data):
 			other_count = 0

@@ -27,7 +27,7 @@ from .utils.lazy_loader import lazy_import
 # Lazy imports
 faker = lazy_import('faker')
 
-__version__ = '2.9.0'
+__version__ = '2.10.0'
 __title__ = "Dodock Framework"
 
 local = Local()
@@ -1785,6 +1785,7 @@ def ping():
 
 @whitelist(allow_guest=True)
 def get_user_lang():
+	from frappe import translate
 	return translate.get_user_lang()
 
 def safe_encode(param, encoding='utf-8'):
