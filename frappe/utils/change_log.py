@@ -54,7 +54,9 @@ def get_change_log_for_app(app, from_version, to_version):
 	lang = frappe.local.lang if frappe.local.lang in ["fr", "en"] else "en"
 	change_log_folder = os.path.join(frappe.get_app_path(app), "change_log", lang)
 	if not os.path.exists(change_log_folder):
-		return
+		change_log_folder = os.path.join(frappe.get_app_path(app), "change_log")
+		if not os.path.exists(change_log_folder):
+			return
 
 	from_version = Version(from_version)
 	to_version = Version(to_version)
