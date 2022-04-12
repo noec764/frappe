@@ -141,6 +141,7 @@ def get_safe_globals():
 			get_single_value = frappe.db.get_single_value,
 			get_default = frappe.db.get_default,
 			escape = frappe.db.escape,
+			commit=frappe.db.commit,
 			sql = read_sql
 		)
 

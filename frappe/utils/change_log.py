@@ -51,9 +51,11 @@ def get_change_log(user=None):
 	return change_log
 
 def get_change_log_for_app(app, from_version, to_version):
-	change_log_folder = os.path.join(frappe.get_app_path(app), "change_log")
+	change_log_folder = os.path.join(frappe.get_app_path(app), "change_log", frappe.local.lang)
 	if not os.path.exists(change_log_folder):
-		return
+		change_log_folder = os.path.join(frappe.get_app_path(app), "change_log")
+		if not os.path.exists(change_log_folder):
+			return
 
 	from_version = Version(from_version)
 	to_version = Version(to_version)
