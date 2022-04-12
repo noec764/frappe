@@ -148,6 +148,10 @@ class Contact(Document):
 				for d in data:
 					frappe.db.set_value(table, d.name, "parent", new_name)
 
+	def has_website_permission(self, ptype, user, verbose=False):
+		"""Returns true if the user is linked to the contact"""
+		return self.user == frappe.session.user
+
 def get_default_contact(doctype, name):
 	'''Returns default contact for the given doctype, name'''
 	out = frappe.db.sql('''select parent,
