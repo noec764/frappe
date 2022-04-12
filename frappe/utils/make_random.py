@@ -1,10 +1,13 @@
-import frappe, random
+import random
+
+import frappe
 
 settings = frappe._dict(
-	prob = {
-		"default": { "make": 0.6, "qty": (1,5) },
+	prob={
+		"default": {"make": 0.6, "qty": (1, 5)},
 	}
 )
+
 
 def add_random_children(doc, fieldname, rows, randomize, unique=None):
 	nrows = rows
@@ -20,13 +23,15 @@ def add_random_children(doc, fieldname, rows, randomize, unique=None):
 				d[key] = random.randrange(*val)
 
 		if unique:
-			if not doc.get(fieldname, {unique:d[unique]}):
+			if not doc.get(fieldname, {unique: d[unique]}):
 				doc.append(fieldname, d)
 		else:
 			doc.append(fieldname, d)
 
+
 def get_random(doctype, filters=None, doc=False):
 	from frappe.desk.reportview import get_filters_cond
+
 	condition = []
 	if filters:
 		get_filters_cond(doctype, filters, condition, ignore_permissions=True)
@@ -36,12 +41,16 @@ def get_random(doctype, filters=None, doc=False):
 	else:
 		condition = ""
 
-	out = frappe.db.multisql({
-		'mariadb': """select name from `tab%s` %s
-		order by RAND() limit 1 offset 0""" % (doctype, condition),
-		'postgres': """select name from `tab%s` %s
-		order by RANDOM() limit 1 offset 0""" % (doctype, condition)
-	})
+	out = frappe.db.multisql(
+		{
+			"mariadb": """select name from `tab%s` %s
+		order by RAND() limit 1 offset 0"""
+			% (doctype, condition),
+			"postgres": """select name from `tab%s` %s
+		order by RANDOM() limit 1 offset 0"""
+			% (doctype, condition),
+		}
+	)
 
 	out = out and out[0][0] or None
 
@@ -50,8 +59,10 @@ def get_random(doctype, filters=None, doc=False):
 	else:
 		return out
 
+
 def can_make(doctype):
 	return random.random() < settings.prob.get(doctype, settings.prob["default"])["make"]
+
 
 def how_many(doctype):
 	return random.randrange(*settings.prob.get(doctype, settings.prob["default"])["qty"])

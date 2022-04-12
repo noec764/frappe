@@ -100,6 +100,7 @@ def get_preview_from_template(data_import, import_file=None, google_sheets_url=N
 		import_file, google_sheets_url
 	)
 
+
 @frappe.whitelist()
 def form_start_import(data_import):
 	return frappe.get_doc("Data Import", data_import).start_import()
@@ -127,11 +128,11 @@ def download_template(
 ):
 	"""
 	Download template from Exporter
-		:param doctype: Document Type
-		:param export_fields=None: Fields to export as dict {'Sales Invoice': ['name', 'customer'], 'Sales Invoice Item': ['item_code']}
-		:param export_records=None: One of 'all', 'by_filter', 'blank_template'
-		:param export_filters: Filter dict
-		:param file_type: File type to export into
+	        :param doctype: Document Type
+	        :param export_fields=None: Fields to export as dict {'Sales Invoice': ['name', 'customer'], 'Sales Invoice Item': ['item_code']}
+	        :param export_records=None: One of 'all', 'by_filter', 'blank_template'
+	        :param export_filters: Filter dict
+	        :param file_type: File type to export into
 	"""
 
 	export_fields = frappe.parse_json(export_fields)
@@ -154,30 +155,38 @@ def download_errored_template(data_import_name):
 	data_import = frappe.get_doc("Data Import", data_import_name)
 	data_import.export_errored_rows()
 
+
 @frappe.whitelist()
 def download_import_log(data_import_name):
 	data_import = frappe.get_doc("Data Import", data_import_name)
 	data_import.download_import_log()
 
+
 @frappe.whitelist()
 def get_import_status(data_import_name):
 	import_status = {}
 
-	logs = frappe.get_all('Data Import Log', fields=['count(*) as count', 'success'],
-		filters={'data_import': data_import_name},
-		group_by='success')
+	logs = frappe.get_all(
+		"Data Import Log",
+		fields=["count(*) as count", "success"],
+		filters={"data_import": data_import_name},
+		group_by="success",
+	)
 
-	total_payload_count = frappe.db.get_value('Data Import', data_import_name, 'payload_count')
+	total_payload_count = frappe.db.get_value(
+		"Data Import", data_import_name, "payload_count"
+	)
 
 	for log in logs:
-		if log.get('success'):
-			import_status['success'] = log.get('count')
+		if log.get("success"):
+			import_status["success"] = log.get("count")
 		else:
-			import_status['failed'] = log.get('count')
+			import_status["failed"] = log.get("count")
 
-	import_status['total_records'] = total_payload_count
+	import_status["total_records"] = total_payload_count
 
 	return import_status
+
 
 def import_file(
 	doctype, file_path, import_type, submit_after_import=False, console=False
@@ -214,11 +223,7 @@ def import_doc(path, pre_process=None):
 		if f.endswith(".json"):
 			frappe.flags.mute_emails = True
 			import_file_by_path(
-				f,
-				data_import=True,
-				force=True,
-				pre_process=pre_process,
-				reset_permissions=True
+				f, data_import=True, force=True, pre_process=pre_process, reset_permissions=True
 			)
 			frappe.flags.mute_emails = False
 			frappe.db.commit()

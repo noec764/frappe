@@ -3,10 +3,12 @@
 # License: MIT. See LICENSE
 
 
-import frappe
 import unittest
 
+import frappe
+
 # test_records = frappe.get_test_records('OAuth Client')
+
 
 class TestOAuthClient(unittest.TestCase):
 	pass

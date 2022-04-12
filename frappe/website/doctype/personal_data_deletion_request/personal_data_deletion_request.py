@@ -2,16 +2,16 @@
 # Copyright (c) 2019, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
+import json
 import re
 
 import frappe
 from frappe import _
+from frappe.core.utils import find
 from frappe.model.document import Document
-from frappe.utils import get_fullname, time_diff_in_hours, get_datetime
+from frappe.utils import get_datetime, get_fullname, time_diff_in_hours
 from frappe.utils.user import get_system_managers
 from frappe.utils.verified_command import get_signed_params, verify_request
-import json
-from frappe.core.utils import find
 
 
 class PersonalDataDeletionRequest(Document):
@@ -131,7 +131,7 @@ class PersonalDataDeletionRequest(Document):
 				"host_name": frappe.utils.get_url(),
 			},
 			header=[_("Your account has been deleted"), "green"],
-			now=True
+			now=True,
 		)
 
 	def add_deletion_steps(self):
@@ -233,7 +233,10 @@ class PersonalDataDeletionRequest(Document):
 				self.anonymize_fields_dict[filter_by] = value
 
 		frappe.db.set_value(
-			ref["doctype"], doc["name"], self.anonymize_fields_dict, modified_by="Administrator",
+			ref["doctype"],
+			doc["name"],
+			self.anonymize_fields_dict,
+			modified_by="Administrator",
 		)
 
 		if ref.get("rename") and doc["name"] != self.anon:
@@ -285,7 +288,9 @@ class PersonalDataDeletionRequest(Document):
 			frappe.db.commit()
 
 	def set_step_status(self, step, status="Deleted"):
-		del_step = find(self.deletion_steps, lambda x: x.document_type == step and x.status != status)
+		del_step = find(
+			self.deletion_steps, lambda x: x.document_type == step and x.status != status
+		)
 
 		if not del_step:
 			del_step = find(self.deletion_steps, lambda x: x.document_type == step)
@@ -340,22 +345,29 @@ class PersonalDataDeletionRequest(Document):
 	def put_on_hold(self):
 		self.db_set("status", "On Hold")
 
+
 def process_data_deletion_request():
-	auto_account_deletion = frappe.db.get_single_value("Website Settings", "auto_account_deletion")
+	auto_account_deletion = frappe.db.get_single_value(
+		"Website Settings", "auto_account_deletion"
+	)
 	if auto_account_deletion < 1:
 		return
 
-	requests = frappe.get_all("Personal Data Deletion Request",
-		filters = {
-			"status": "Pending Approval"
-		},
-		pluck="name")
+	requests = frappe.get_all(
+		"Personal Data Deletion Request", filters={"status": "Pending Approval"}, pluck="name"
+	)
 
 	for request in requests:
 		doc = frappe.get_doc("Personal Data Deletion Request", request)
 		if time_diff_in_hours(get_datetime(), doc.creation) >= auto_account_deletion:
-			doc.add_comment("Comment", _("The User record for this request has been auto-deleted due to inactivity by system admins."))
+			doc.add_comment(
+				"Comment",
+				_(
+					"The User record for this request has been auto-deleted due to inactivity by system admins."
+				),
+			)
 			doc.trigger_data_deletion()
+
 
 def remove_unverified_record():
 	frappe.db.sql(
@@ -364,6 +376,7 @@ def remove_unverified_record():
 		WHERE `status` = 'Pending Verification'
 		AND `creation` < (NOW() - INTERVAL '7' DAY)"""
 	)
+
 
 @frappe.whitelist(allow_guest=True)
 def confirm_deletion(email, name, host_name):
@@ -380,8 +393,9 @@ def confirm_deletion(email, name, host_name):
 		frappe.db.commit()
 		frappe.respond_as_web_page(
 			_("Confirmed"),
-			_("The process for deletion of {0} data associated with {1} has been initiated.")
-			.format(host_name, email),
+			_(
+				"The process for deletion of {0} data associated with {1} has been initiated."
+			).format(host_name, email),
 			indicator_color="green",
 		)
 

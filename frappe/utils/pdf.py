@@ -3,8 +3,8 @@
 import io
 import os
 import re
-from distutils.version import LooseVersion
 import subprocess
+from distutils.version import LooseVersion
 
 import pdfkit
 from bs4 import BeautifulSoup
@@ -15,22 +15,23 @@ from frappe import _
 from frappe.utils import scrub_urls
 from frappe.utils.jinja_globals import bundled_asset, is_rtl
 
+PDF_CONTENT_ERRORS = [
+	"ContentNotFoundError",
+	"ContentOperationNotPermittedError",
+	"UnknownContentError",
+	"RemoteHostClosedError",
+]
 
-PDF_CONTENT_ERRORS = ["ContentNotFoundError", "ContentOperationNotPermittedError",
-	"UnknownContentError", "RemoteHostClosedError"]
 
 def get_pdf(html, options=None, output=None, cover=None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
 
-	options.update({
-		"disable-javascript": "",
-		"disable-local-file-access": ""
-	})
+	options.update({"disable-javascript": "", "disable-local-file-access": ""})
 
-	filedata = ''
+	filedata = ""
 
-	if LooseVersion(get_wkhtmltopdf_version()) > LooseVersion('0.12.3'):
+	if LooseVersion(get_wkhtmltopdf_version()) > LooseVersion("0.12.3"):
 		options.update({"disable-smart-shrinking": ""})
 
 	try:
@@ -42,7 +43,7 @@ def get_pdf(html, options=None, output=None, cover=None):
 		# create in-memory binary streams from filedata and create a PdfFileReader object
 		reader = PdfFileReader(io.BytesIO(filedata))
 
-		cover_reader = ''
+		cover_reader = ""
 		if cover:
 			cover_page = frappe.db.get_value("Cover Page", cover, "cover_page")
 			if frappe.db.exists("File", dict(file_url=cover_page)):
@@ -89,6 +90,7 @@ def get_pdf(html, options=None, output=None, cover=None):
 
 	return filedata
 
+
 def get_file_data_from_writer(writer_obj):
 
 	# https://docs.python.org/3/library/io.html
@@ -106,21 +108,23 @@ def prepare_options(html, options):
 	if not options:
 		options = {}
 
-	options.update({
-		'print-media-type': None,
-		'background': None,
-		'images': None,
-		'quiet': None,
-		# 'no-outline': None,
-		'encoding': "UTF-8",
-		# 'load-error-handling': 'ignore'
-	})
+	options.update(
+		{
+			"print-media-type": None,
+			"background": None,
+			"images": None,
+			"quiet": None,
+			# 'no-outline': None,
+			"encoding": "UTF-8",
+			# 'load-error-handling': 'ignore'
+		}
+	)
 
 	if not options.get("margin-right"):
-		options['margin-right'] = '15mm'
+		options["margin-right"] = "15mm"
 
 	if not options.get("margin-left"):
-		options['margin-left'] = '15mm'
+		options["margin-left"] = "15mm"
 
 	html, html_options = read_options_from_html(html)
 	options.update(html_options or {})
@@ -147,6 +151,7 @@ def prepare_options(html, options):
 
 	return html, options
 
+
 def get_cookie_options():
 	options = {}
 	if frappe.session and frappe.session.sid and hasattr(frappe.local, "request"):
@@ -156,14 +161,15 @@ def get_cookie_options():
 		# Remove port from request.host
 		# https://werkzeug.palletsprojects.com/en/0.16.x/wrappers/#werkzeug.wrappers.BaseRequest.host
 		domain = ""
-		if hasattr(frappe.local, 'request'):
+		if hasattr(frappe.local, "request"):
 			domain = frappe.utils.get_host_name().split(":", 1)[0]
 		with open(cookiejar, "w") as f:
 			f.write("sid={}; Domain={};\n".format(frappe.session.sid, domain))
 
-		options['cookie-jar'] = cookiejar
+		options["cookie-jar"] = cookiejar
 
 	return options
+
 
 def read_options_from_html(html):
 	options = {}
@@ -174,9 +180,21 @@ def read_options_from_html(html):
 	toggle_visible_pdf(soup)
 
 	# use regex instead of soup-parser
-	for attr in ("margin-top", "margin-bottom", "margin-left", "margin-right", "page-size", "header-spacing", "orientation", "page-width", "page-height"):
+	for attr in (
+		"margin-top",
+		"margin-bottom",
+		"margin-left",
+		"margin-right",
+		"page-size",
+		"header-spacing",
+		"orientation",
+		"page-width",
+		"page-height",
+	):
 		try:
-			pattern = re.compile(r"(\.print-format)([\S|\s][^}]*?)(" + str(attr) + r":)(.+)(mm;)")
+			pattern = re.compile(
+				r"(\.print-format)([\S|\s][^}]*?)(" + str(attr) + r":)(.+)(mm;)"
+			)
 			match = pattern.findall(html)
 			if match:
 				options[attr] = str(match[-1][3]).strip()
@@ -185,13 +203,14 @@ def read_options_from_html(html):
 
 	return str(soup), options
 
+
 def prepare_header_footer(soup):
 	options = {}
 
 	head = soup.find("head").contents
 	styles = soup.find_all("style")
 
-	print_css = bundled_asset('print.bundle.css').lstrip('/')
+	print_css = bundled_asset("print.bundle.css").lstrip("/")
 	css = frappe.read_file(os.path.join(frappe.local.sites_path, print_css))
 
 	# extract header and footer
@@ -203,15 +222,18 @@ def prepare_header_footer(soup):
 				tag.extract()
 
 			toggle_visible_pdf(content)
-			html = frappe.render_template("templates/print_formats/pdf_header_footer.html", {
-				"head": head,
-				"content": content,
-				"styles": styles,
-				"html_id": html_id,
-				"css": css,
-				"lang": frappe.local.lang,
-				"layout_direction": "rtl" if is_rtl() else "ltr"
-			})
+			html = frappe.render_template(
+				"templates/print_formats/pdf_header_footer.html",
+				{
+					"head": head,
+					"content": content,
+					"styles": styles,
+					"html_id": html_id,
+					"css": css,
+					"lang": frappe.local.lang,
+					"layout_direction": "rtl" if is_rtl() else "ltr",
+				},
+			)
 
 			# create temp file
 			fname = os.path.join("/tmp", "frappe-pdf-{0}.html".format(frappe.generate_hash()))
@@ -228,19 +250,22 @@ def prepare_header_footer(soup):
 
 	return options
 
+
 def cleanup(options):
 	for key in ("header-html", "footer-html", "cookie-jar"):
 		if options.get(key) and os.path.exists(options[key]):
 			os.remove(options[key])
 
+
 def toggle_visible_pdf(soup):
 	for tag in soup.find_all(attrs={"class": "visible-pdf"}):
 		# remove visible-pdf class to unhide
-		tag.attrs['class'].remove('visible-pdf')
+		tag.attrs["class"].remove("visible-pdf")
 
 	for tag in soup.find_all(attrs={"class": "hidden-pdf"}):
 		# remove tag from html
 		tag.extract()
+
 
 def get_wkhtmltopdf_version():
 	wkhtmltopdf_version = frappe.cache().hget("wkhtmltopdf_version", None)
@@ -248,9 +273,9 @@ def get_wkhtmltopdf_version():
 	if not wkhtmltopdf_version:
 		try:
 			res = subprocess.check_output(["wkhtmltopdf", "--version"])
-			wkhtmltopdf_version = res.decode('utf-8').split(" ")[1]
+			wkhtmltopdf_version = res.decode("utf-8").split(" ")[1]
 			frappe.cache().hset("wkhtmltopdf_version", None, wkhtmltopdf_version)
 		except Exception:
 			pass
 
-	return (wkhtmltopdf_version or '0')
+	return wkhtmltopdf_version or "0"

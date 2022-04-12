@@ -5,5 +5,6 @@
 
 import unittest
 
+
 class TestBraintreeSettings(unittest.TestCase):
 	pass

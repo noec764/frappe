@@ -2,9 +2,9 @@
 # License: MIT. See LICENSE
 
 import frappe
-
 from frappe import _
 from frappe.model.document import Document
+
 
 class ClientScript(Document):
 	def autoname(self):
@@ -14,12 +14,12 @@ class ClientScript(Document):
 		if not self.is_new():
 			return
 
-		exists = frappe.db.exists(
-			"Client Script", {"dt": self.dt, "view": self.view}
-		)
+		exists = frappe.db.exists("Client Script", {"dt": self.dt, "view": self.view})
 		if exists:
 			frappe.throw(
-				_("Client Script for {0} {1} already exists").format(frappe.bold(_(self.dt)), _(self.view)),
+				_("Client Script for {0} {1} already exists").format(
+					frappe.bold(_(self.dt)), _(self.view)
+				),
 				frappe.DuplicateEntryError,
 			)
 

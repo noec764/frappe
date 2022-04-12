@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.modules.export_file import export_to_files
 
+
 class FormTour(Document):
 	def before_save(self):
 		meta = frappe.get_meta(self.reference_doctype)
@@ -23,4 +24,4 @@ class FormTour(Document):
 
 	def on_update(self):
 		if frappe.conf.developer_mode and self.is_standard:
-			export_to_files([['Form Tour', self.name]], self.module)
+			export_to_files([["Form Tour", self.name]], self.module)

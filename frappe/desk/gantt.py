@@ -2,8 +2,10 @@
 # License: MIT. See LICENSE
 
 
+import json
 
-import frappe, json
+import frappe
+
 
 @frappe.whitelist()
 def update_task(args, field_map):

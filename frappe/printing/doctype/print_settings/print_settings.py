@@ -5,9 +5,9 @@
 
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.utils import cint
 
-from frappe.model.document import Document
 
 class PrintSettings(Document):
 	def validate(self):
@@ -18,6 +18,7 @@ class PrintSettings(Document):
 
 	def on_update(self):
 		frappe.clear_cache()
+
 
 @frappe.whitelist()
 def is_print_server_enabled():

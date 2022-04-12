@@ -2,12 +2,11 @@
 # License: MIT. See LICENSE
 
 
-
 import unittest
 
 import frappe
-from frappe.desk.query_report import build_xlsx_data
 import frappe.utils
+from frappe.desk.query_report import build_xlsx_data
 
 
 class TestQueryReport(unittest.TestCase):
@@ -19,7 +18,12 @@ class TestQueryReport(unittest.TestCase):
 		data.columns = [
 			{"label": "Column A", "fieldname": "column_a", "fieldtype": "Float"},
 			{"label": "Column B", "fieldname": "column_b", "width": 100, "fieldtype": "Float"},
-			{"label": "Column C", "fieldname": "column_c", "width": 150, "fieldtype": "Duration"},
+			{
+				"label": "Column C",
+				"fieldname": "column_c",
+				"width": 150,
+				"fieldtype": "Duration",
+			},
 		]
 		data.result = [
 			[1.0, 3.0, 600],

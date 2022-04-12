@@ -3,15 +3,14 @@
 # License: MIT. See LICENSE
 
 
-import frappe
 import unittest
-from frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request import (
-	remove_unverified_record, process_data_deletion_request,
-)
-from frappe.website.doctype.personal_data_download_request.test_personal_data_download_request import (
-	create_user_if_not_exists
-)
 from datetime import datetime, timedelta
+
+import frappe
+from frappe.website.doctype.personal_data_deletion_request.personal_data_deletion_request import (
+    process_data_deletion_request, remove_unverified_record)
+from frappe.website.doctype.personal_data_download_request.test_personal_data_download_request import \
+    create_user_if_not_exists
 
 
 class TestPersonalDataDeletionRequest(unittest.TestCase):
@@ -23,7 +22,9 @@ class TestPersonalDataDeletionRequest(unittest.TestCase):
 		self.delete_request.save(ignore_permissions=True)
 
 	def test_delete_request(self):
-		email_queue = frappe.get_all("Email Queue", fields=["*"], order_by="creation desc", limit=1)
+		email_queue = frappe.get_all(
+			"Email Queue", fields=["*"], order_by="creation desc", limit=1
+		)
 
 		self.assertEqual(self.delete_request.status, "Pending Verification")
 		self.assertTrue("Subject: Confirm Deletion of Account" in email_queue[0].message)
@@ -40,12 +41,20 @@ class TestPersonalDataDeletionRequest(unittest.TestCase):
 			fields=["first_name", "last_name", "phone", "birth_date"],
 		)[0]
 
-		self.assertEqual(deleted_user.first_name, self.delete_request.anonymization_value_map["Data"])
-		self.assertEqual(deleted_user.last_name, self.delete_request.anonymization_value_map["Data"])
-		self.assertEqual(deleted_user.phone, self.delete_request.anonymization_value_map["Phone"])
+		self.assertEqual(
+			deleted_user.first_name, self.delete_request.anonymization_value_map["Data"]
+		)
+		self.assertEqual(
+			deleted_user.last_name, self.delete_request.anonymization_value_map["Data"]
+		)
+		self.assertEqual(
+			deleted_user.phone, self.delete_request.anonymization_value_map["Phone"]
+		)
 		self.assertEqual(
 			deleted_user.birth_date,
-			datetime.strptime(self.delete_request.anonymization_value_map["Date"], "%Y-%m-%d").date()
+			datetime.strptime(
+				self.delete_request.anonymization_value_map["Date"], "%Y-%m-%d"
+			).date(),
 		)
 		self.assertEqual(self.delete_request.status, "Deleted")
 

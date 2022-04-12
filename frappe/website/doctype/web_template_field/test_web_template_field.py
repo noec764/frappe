@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestWebTemplateField(unittest.TestCase):
 	pass

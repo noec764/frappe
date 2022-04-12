@@ -4,9 +4,10 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-from werkzeug.wrappers import Response
 import time
+import unittest
+
+from werkzeug.wrappers import Response
 
 import frappe
 import frappe.rate_limiter

@@ -6,8 +6,10 @@
 import frappe
 from frappe.model.document import Document
 
+
 class GoogleSettings(Document):
 	pass
+
 
 def get_auth_url():
 	return "https://www.googleapis.com/oauth2/v4/token"
@@ -24,5 +26,5 @@ def get_file_picker_settings():
 		"enabled": True,
 		"appId": google_settings.app_id,
 		"developerKey": google_settings.api_key,
-		"clientId": google_settings.client_id
+		"clientId": google_settings.client_id,
 	}

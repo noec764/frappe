@@ -3,11 +3,13 @@
 # License: MIT. See LICENSE
 
 import frappe
-from frappe.model.document import Document
 from frappe import _
+from frappe.model.document import Document
+
 
 class DuplicateRegistration(Exception):
 	pass
+
 
 class EventRegistration(Document):
 	def validate(self):
@@ -21,7 +23,10 @@ class EventRegistration(Document):
 		self.remove_contact_from_event()
 
 	def check_duplicates(self):
-		if frappe.db.exists("Event Registration", dict(email=self.email, event=self.event, name=("!=", self.name), docstatus=1)):
+		if frappe.db.exists(
+			"Event Registration",
+			dict(email=self.email, event=self.event, name=("!=", self.name), docstatus=1),
+		):
 			frappe.throw(_("User is already registered for this event."), DuplicateRegistration)
 
 	def create_or_link_with_contact(self):
@@ -33,12 +38,14 @@ class EventRegistration(Document):
 			contact = frappe.db.get_value("Contact", dict(user=self.user))
 
 		if not contact:
-			contact_doc = frappe.get_doc({
-				"doctype": "Contact",
-				"first_name": self.first_name,
-				"last_name": self.last_name,
-				"user": self.user
-			})
+			contact_doc = frappe.get_doc(
+				{
+					"doctype": "Contact",
+					"first_name": self.first_name,
+					"last_name": self.last_name,
+					"user": self.user,
+				}
+			)
 			contact_doc.add_email(self.email, is_primary=1)
 			contact_doc.insert(ignore_permissions=True)
 			contact = contact_doc.name
@@ -55,6 +62,7 @@ class EventRegistration(Document):
 		event.remove_participant(self.contact)
 		event.save(ignore_permissions=True)
 
+
 @frappe.whitelist()
 def get_user_info(user=None):
 	if not user:
@@ -63,7 +71,9 @@ def get_user_info(user=None):
 	if user == "Guest":
 		return {}
 
-	return frappe.db.get_value("User", user, ["first_name", "last_name", "email", "mobile_no"], as_dict=True)
+	return frappe.db.get_value(
+		"User", user, ["first_name", "last_name", "email", "mobile_no"], as_dict=True
+	)
 
 
 @frappe.whitelist(allow_guest=True)
@@ -73,15 +83,14 @@ def register_to_event(event, data, user=None):
 
 	try:
 		registration = frappe.get_doc(
-			dict({
-				"doctype": "Event Registration",
-				"event": event,
-				"user": user
-			}, **frappe.parse_json(data))
+			dict(
+				{"doctype": "Event Registration", "event": event, "user": user},
+				**frappe.parse_json(data)
+			)
 		)
 
-		registration.flags.ignore_permissions=True
-		registration.flags.ignore_mandatory=True
+		registration.flags.ignore_permissions = True
+		registration.flags.ignore_mandatory = True
 		registration.submit()
 		return registration
 	except DuplicateRegistration:
@@ -90,16 +99,19 @@ def register_to_event(event, data, user=None):
 		frappe.log_error(frappe.get_traceback(), "Event registration error")
 		frappe.clear_messages()
 
+
 @frappe.whitelist()
 def cancel_registration(event, user=None):
 	if not user:
 		user = frappe.session.user
 
-	registration = frappe.get_value("Event Registration", dict(user=user, event=event, docstatus=1))
+	registration = frappe.get_value(
+		"Event Registration", dict(user=user, event=event, docstatus=1)
+	)
 
 	if registration:
 		doc = frappe.get_doc("Event Registration", registration)
-		doc.flags.ignore_permissions=True
+		doc.flags.ignore_permissions = True
 		doc.cancel()
 
 	return registration

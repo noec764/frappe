@@ -1,5 +1,6 @@
 import frappe
 
+
 def execute():
 	frappe.reload_doc("integrations", "doctype", "Social Login Key")
 

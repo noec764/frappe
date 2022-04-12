@@ -4,9 +4,10 @@
 from datetime import datetime
 
 import frappe
-from frappe.utils import now_datetime, add_to_date
 from frappe.core.doctype.log_settings.log_settings import run_log_clean_up
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import add_to_date, now_datetime
+
 
 class TestLogSettings(FrappeTestCase):
 	@classmethod

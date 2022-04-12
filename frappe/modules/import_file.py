@@ -10,18 +10,20 @@ from frappe.modules import get_module_path, scrub_dt_dn
 from frappe.query_builder import DocType
 from frappe.utils import get_datetime, now
 
+
 def calculate_hash(path: str) -> str:
 	"""Calculate md5 hash of the file in binary mode
 	Args:
-		path (str): Path to the file to be hashed
+	        path (str): Path to the file to be hashed
 	Returns:
-		str: The calculated hash
+	        str: The calculated hash
 	"""
 	hash_md5 = hashlib.md5()
 	with open(path, "rb") as f:
 		for chunk in iter(lambda: f.read(4096), b""):
 			hash_md5.update(chunk)
 	return hash_md5.hexdigest()
+
 
 ignore_values = {
 	"Report": ["disabled", "prepared_report", "add_total_row"],
@@ -34,20 +36,43 @@ ignore_values = {
 
 ignore_doctypes = [""]
 
-def import_files(module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False):
+
+def import_files(
+	module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False
+):
 	if type(module) is list:
 		out = []
 		for m in module:
-			out.append(import_file(m[0], m[1], m[2], force=force, pre_process=pre_process, reset_permissions=reset_permissions))
+			out.append(
+				import_file(
+					m[0],
+					m[1],
+					m[2],
+					force=force,
+					pre_process=pre_process,
+					reset_permissions=reset_permissions,
+				)
+			)
 		return out
 	else:
-		return import_file(module, dt, dn, force=force, pre_process=pre_process, reset_permissions=reset_permissions)
+		return import_file(
+			module,
+			dt,
+			dn,
+			force=force,
+			pre_process=pre_process,
+			reset_permissions=reset_permissions,
+		)
+
 
 def import_file(module, dt, dn, force=False, pre_process=None, reset_permissions=False):
 	"""Sync a file from txt if modifed, return false if not updated"""
 	path = get_file_path(module, dt, dn)
-	ret = import_file_by_path(path, force, pre_process=pre_process, reset_permissions=reset_permissions)
+	ret = import_file_by_path(
+		path, force, pre_process=pre_process, reset_permissions=reset_permissions
+	)
 	return ret
+
 
 def get_file_path(module, dt, dn):
 	dt, dn = scrub_dt_dn(dt, dn)
@@ -56,28 +81,36 @@ def get_file_path(module, dt, dn):
 
 	return path
 
-def import_file_by_path(path: str,force: bool = False,data_import: bool = False,pre_process = None,ignore_version: bool = None,reset_permissions: bool = False):
+
+def import_file_by_path(
+	path: str,
+	force: bool = False,
+	data_import: bool = False,
+	pre_process=None,
+	ignore_version: bool = None,
+	reset_permissions: bool = False,
+):
 	"""Import file from the given path
 	Some conditions decide if a file should be imported or not.
 	Evaluation takes place in the order they are mentioned below.
 	- Check if `force` is true. Import the file. If not, move ahead.
 	- Get `db_modified_timestamp`(value of the modified field in the database for the file).
-		If the return is `none,` this file doesn't exist in the DB, so Import the file. If not, move ahead.
+	        If the return is `none,` this file doesn't exist in the DB, so Import the file. If not, move ahead.
 	- Check if there is a hash in DB for that file. If there is, Calculate the Hash of the file to import and compare it with the one in DB if they are not equal.
-		Import the file. If Hash doesn't exist, move ahead.
+	        Import the file. If Hash doesn't exist, move ahead.
 	- Check if `db_modified_timestamp` is older than the timestamp in the file; if it is, we import the file.
 	If timestamp comparison happens for doctypes, that means the Hash for it doesn't exist.
 	So, even if the timestamp is newer on DB (When comparing timestamps), we import the file and add the calculated Hash to the DB.
 	So in the subsequent imports, we can use hashes to compare. As a precautionary measure, the timestamp is updated to the current time as well.
 	Args:
-		path (str): Path to the file.
-		force (bool, optional): Load the file without checking any conditions. Defaults to False.
-		data_import (bool, optional): [description]. Defaults to False.
-		pre_process ([type], optional): Any preprocesing that may need to take place on the doc. Defaults to None.
-		ignore_version (bool, optional): ignore current version. Defaults to None.
-		reset_permissions (bool, optional): reset permissions for the file. Defaults to False.
+	        path (str): Path to the file.
+	        force (bool, optional): Load the file without checking any conditions. Defaults to False.
+	        data_import (bool, optional): [description]. Defaults to False.
+	        pre_process ([type], optional): Any preprocesing that may need to take place on the doc. Defaults to None.
+	        ignore_version (bool, optional): ignore current version. Defaults to None.
+	        reset_permissions (bool, optional): reset permissions for the file. Defaults to False.
 	Returns:
-		[bool]: True if import takes place. False if it wasn't imported.
+	        [bool]: True if import takes place. False if it wasn't imported.
 	"""
 	frappe.flags.dt = frappe.flags.dt or []
 	try:
@@ -128,13 +161,9 @@ def import_file_by_path(path: str,force: bool = False,data_import: bool = False,
 
 			if doc["doctype"] == "DocType":
 				doctype_table = DocType("DocType")
-				frappe.qb.update(
-					doctype_table
-				).set(
+				frappe.qb.update(doctype_table).set(
 					doctype_table.migration_hash, calculated_hash
-				).where(
-					doctype_table.name == doc["name"]
-				).run()
+				).where(doctype_table.name == doc["name"]).run()
 
 			new_modified_timestamp = doc.get("modified")
 
@@ -147,10 +176,13 @@ def import_file_by_path(path: str,force: bool = False,data_import: bool = False,
 
 	return True
 
+
 def is_timestamp_changed(doc):
 	# check if timestamps match
 	db_modified = frappe.db.get_value(doc["doctype"], doc["name"], "modified")
-	return not (db_modified and get_datetime(doc.get("modified")) == get_datetime(db_modified))
+	return not (
+		db_modified and get_datetime(doc.get("modified")) == get_datetime(db_modified)
+	)
 
 
 def read_doc_from_file(path):
@@ -173,31 +205,36 @@ def update_modified(original_modified, doc):
 	if doc["doctype"] == doc["name"] and doc["name"] != "DocType":
 		singles_table = DocType("Singles")
 
-		frappe.qb.update(
-			singles_table
-		).set(
-			singles_table.value,original_modified
-		).where(
-			singles_table["field"] == "modified", # singles_table.field is a method of pypika Selectable
-		).where(
-			singles_table.doctype == doc["name"]
-		).run()
+		frappe.qb.update(singles_table).set(singles_table.value, original_modified).where(
+			singles_table["field"]
+			== "modified",  # singles_table.field is a method of pypika Selectable
+		).where(singles_table.doctype == doc["name"]).run()
 	else:
-		doctype_table = DocType(doc['doctype'])
+		doctype_table = DocType(doc["doctype"])
 
-		frappe.qb.update(doctype_table
-		).set(
-			doctype_table.modified, original_modified
-		).where(
+		frappe.qb.update(doctype_table).set(doctype_table.modified, original_modified).where(
 			doctype_table.name == doc["name"]
 		).run()
 
-def import_doc(docdict, force=False, data_import=False, pre_process=None, ignore_version=None, reset_permissions=False, path=None):
+
+def import_doc(
+	docdict,
+	force=False,
+	data_import=False,
+	pre_process=None,
+	ignore_version=None,
+	reset_permissions=False,
+	path=None,
+):
 	frappe.flags.in_import = True
 	docdict["__islocal"] = 1
 
 	controller = get_controller(docdict["doctype"])
-	if controller and hasattr(controller, "prepare_for_import") and callable(getattr(controller, "prepare_for_import")):
+	if (
+		controller
+		and hasattr(controller, "prepare_for_import")
+		and callable(getattr(controller, "prepare_for_import"))
+	):
 		controller.prepare_for_import(docdict)
 
 	doc = frappe.get_doc(docdict)
@@ -255,7 +292,9 @@ def delete_old_doc(doc, reset_permissions):
 			ignore.append(df.options)
 
 	# delete old
-	frappe.delete_doc(doc.doctype, doc.name, force=1, ignore_doctypes=ignore, for_reload=True)
+	frappe.delete_doc(
+		doc.doctype, doc.name, force=1, ignore_doctypes=ignore, for_reload=True
+	)
 
 	doc.flags.ignore_children_type = ignore
 

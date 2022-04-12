@@ -3,31 +3,35 @@
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
+
+import requests
+
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form
-from frappe import _
-import requests
+
 
 class SlackParameters:
 	@staticmethod
 	def get_attachments(data, doc_url):
-		data.update({
-			"attachments":
-			[
-				{
-					"fallback": _("See the document at {0}").format(doc_url),
-					"actions": [
-						{
-							"type": "button",
-							"text": _("Go to the document"),
-							"url": doc_url,
-							"style": "primary"
-						}
-					]
-				}
-			]
-		})
+		data.update(
+			{
+				"attachments": [
+					{
+						"fallback": _("See the document at {0}").format(doc_url),
+						"actions": [
+							{
+								"type": "button",
+								"text": _("Go to the document"),
+								"url": doc_url,
+								"style": "primary",
+							}
+						],
+					}
+				]
+			}
+		)
 
 	@staticmethod
 	def get_error_messages():
@@ -36,24 +40,19 @@ class SlackParameters:
 			403: "403: Action Prohibited",
 			404: "404: Channel not found",
 			410: "410: The Channel is Archived",
-			500: "500: Rollup Error, Slack seems to be down"
+			500: "500: Rollup Error, Slack seems to be down",
 		}
+
 
 class RocketChatParameters:
 	@staticmethod
 	def get_attachments(data, doc_url):
-		data.update({
-			"attachments": [
-				{
-					"title": _("Document link"),
-					"title_link": doc_url
-				}
-			]
-		})
+		data.update({"attachments": [{"title": _("Document link"), "title_link": doc_url}]})
 
 	@staticmethod
 	def get_error_messages():
 		return {}
+
 
 class GoogleChatParameters:
 	@staticmethod
@@ -63,6 +62,7 @@ class GoogleChatParameters:
 	@staticmethod
 	def get_error_messages():
 		return {}
+
 
 class MattermostParameters:
 	@staticmethod
@@ -92,7 +92,7 @@ class IncomingWebhookURL(Document):
 
 	def send(self, message, reference_doctype, reference_name):
 
-		data = { "text": message }
+		data = {"text": message}
 
 		self.add_attachments(data, reference_doctype, reference_name)
 
@@ -105,7 +105,7 @@ class IncomingWebhookURL(Document):
 			else:
 				err_message = f"{r.status_code}: {r.text}"
 
-			frappe.log_error(err_message, _('{0} Webhook Error').format(self.service))
-			return 'error'
+			frappe.log_error(err_message, _("{0} Webhook Error").format(self.service))
+			return "error"
 
-		return 'success'
+		return "success"

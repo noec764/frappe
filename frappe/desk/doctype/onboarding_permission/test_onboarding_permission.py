@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestOnboardingPermission(unittest.TestCase):
 	pass

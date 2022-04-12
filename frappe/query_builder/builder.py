@@ -6,6 +6,7 @@ from pypika.terms import Function
 from frappe.query_builder.terms import ParameterizedValueWrapper
 from frappe.utils import get_table_name
 
+
 class Base:
 	terms = terms
 	desc = Order.desc
@@ -32,6 +33,7 @@ class Base:
 		if isinstance(table, str):
 			table = cls.DocType(table)
 		return super().update(table, *args, **kwargs)
+
 
 class MariaDB(Base, MySQLQuery):
 	Field = terms.Field

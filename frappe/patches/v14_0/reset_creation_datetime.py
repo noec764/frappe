@@ -1,7 +1,8 @@
 import glob
 import json
-import frappe
 import os
+
+import frappe
 from frappe.query_builder import DocType as _DocType
 
 
@@ -36,6 +37,6 @@ def execute():
 				continue
 
 			if file_schema.creation != _site_schema[0].creation:
-				frappe.qb.update(DocType).set(
-					DocType.creation, file_schema.creation
-				).where(DocType.name == file_schema.name).run()
+				frappe.qb.update(DocType).set(DocType.creation, file_schema.creation).where(
+					DocType.name == file_schema.name
+				).run()

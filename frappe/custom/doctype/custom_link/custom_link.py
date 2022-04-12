@@ -6,5 +6,6 @@
 # import frappe
 from frappe.model.document import Document
 
+
 class CustomLink(Document):
 	pass

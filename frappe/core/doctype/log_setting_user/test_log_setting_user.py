@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestLogSettingUser(unittest.TestCase):
 	pass

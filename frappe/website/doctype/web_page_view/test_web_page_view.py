@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestWebPageView(unittest.TestCase):
 	pass

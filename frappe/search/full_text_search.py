@@ -1,17 +1,18 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+from whoosh.fields import ID, TEXT, Schema
+from whoosh.index import EmptyIndexError, create_in, open_dir
+from whoosh.qparser import FieldsPlugin, MultifieldParser, WildcardPlugin
+from whoosh.query import FuzzyTerm, Prefix
+from whoosh.writing import AsyncWriter
+
 import frappe
 from frappe.utils import update_progress_bar
 
-from whoosh.index import create_in, open_dir, EmptyIndexError
-from whoosh.fields import TEXT, ID, Schema
-from whoosh.qparser import MultifieldParser, FieldsPlugin, WildcardPlugin
-from whoosh.query import Prefix, FuzzyTerm
-from whoosh.writing import AsyncWriter
 
 class FullTextSearch:
-	""" Frappe Wrapper for Whoosh """
+	"""Frappe Wrapper for Whoosh"""
 
 	def __init__(self, index_name):
 		self.index_name = index_name
@@ -36,7 +37,7 @@ class FullTextSearch:
 		return {}
 
 	def build(self):
-		"""	Build search index for all documents """
+		"""Build search index for all documents"""
 		self.documents = self.get_items_to_index()
 		self.build_index()
 
@@ -45,8 +46,8 @@ class FullTextSearch:
 		and updates the index. This function changes the current user
 		and should only be run as administrator or in a background job.
 		Args:
-			self (object): FullTextSearch Instance
-			doc_name (str): name of the document to be updated
+		        self (object): FullTextSearch Instance
+		        doc_name (str): name of the document to be updated
 		"""
 		document = self.get_document_to_index(doc_name)
 		if document:
@@ -55,8 +56,8 @@ class FullTextSearch:
 	def remove_document_from_index(self, doc_name):
 		"""Remove document from search index
 		Args:
-			self (object): FullTextSearch Instance
-			doc_name (str): name of the document to be removed
+		        self (object): FullTextSearch Instance
+		        doc_name (str): name of the document to be removed
 		"""
 		if not doc_name:
 			return
@@ -70,8 +71,8 @@ class FullTextSearch:
 	def update_index(self, document):
 		"""Update search index for a document
 		Args:
-			self (object): FullTextSearch Instance
-			document (_dict): A dictionary with title, path and content
+		        self (object): FullTextSearch Instance
+		        document (_dict): A dictionary with title, path and content
 		"""
 		ix = self.get_index()
 
@@ -106,11 +107,11 @@ class FullTextSearch:
 	def search(self, text, scope=None, limit=20):
 		"""Search from the current index
 		Args:
-			text (str): String to search for
-			scope (str, optional): Scope to limit the search. Defaults to None.
-			limit (int, optional): Limit number of search results. Defaults to 20.
+		        text (str): String to search for
+		        scope (str, optional): Scope to limit the search. Defaults to None.
+		        limit (int, optional): Limit number of search results. Defaults to 20.
 		Returns:
-			[List(_dict)]: Search results
+		        [List(_dict)]: Search results
 		"""
 		ix = self.get_index()
 
@@ -125,7 +126,9 @@ class FullTextSearch:
 			fieldboosts[field] = 1.0 / idx
 
 		with ix.searcher() as searcher:
-			parser = MultifieldParser(search_fields, ix.schema, termclass=FuzzyTermExtended, fieldboosts=fieldboosts)
+			parser = MultifieldParser(
+				search_fields, ix.schema, termclass=FuzzyTermExtended, fieldboosts=fieldboosts
+			)
 			parser.remove_plugin_class(FieldsPlugin)
 			parser.remove_plugin_class(WildcardPlugin)
 			query = parser.parse(text)
@@ -140,11 +143,20 @@ class FullTextSearch:
 
 		return out
 
+
 class FuzzyTermExtended(FuzzyTerm):
-	def __init__(self, fieldname, text, boost=1.0, maxdist=2, prefixlength=1,
-			constantscore=True):
-		super().__init__(fieldname, text, boost=boost, maxdist=maxdist,
-				prefixlength=prefixlength, constantscore=constantscore)
+	def __init__(
+		self, fieldname, text, boost=1.0, maxdist=2, prefixlength=1, constantscore=True
+	):
+		super().__init__(
+			fieldname,
+			text,
+			boost=boost,
+			maxdist=maxdist,
+			prefixlength=prefixlength,
+			constantscore=constantscore,
+		)
+
 
 def get_index_path(index_name):
 	return frappe.get_site_path("indexes", index_name)

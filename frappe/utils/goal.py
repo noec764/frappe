@@ -1,6 +1,7 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+from contextlib import suppress
 from typing import Dict, Optional
 
 import frappe
@@ -9,7 +10,7 @@ from frappe.query_builder.functions import DateFormat, Function
 from frappe.query_builder.utils import DocType
 from frappe.utils.data import add_to_date, cstr, flt, now_datetime
 from frappe.utils.formatters import format_value
-from contextlib import suppress
+
 
 def get_monthly_results(
 	goal_doctype: str,
@@ -69,7 +70,10 @@ def get_monthly_goal_graph_data(
 	:return: dict of graph data
 	"""
 	if isinstance(filter_str, str):
-		frappe.throw("String filters have been deprecated. Pass Dict filters instead.", exc=DeprecationWarning) # nosemgrep
+		frappe.throw(
+			"String filters have been deprecated. Pass Dict filters instead.",
+			exc=DeprecationWarning,
+		)  # nosemgrep
 
 	doc = frappe.get_doc(doctype, docname)
 	doc.check_permission()
@@ -90,7 +94,7 @@ def get_monthly_goal_graph_data(
 		with suppress(ValueError):
 			month_to_value_dict = frappe.parse_json(history)
 
-	if month_to_value_dict is None: # nosemgrep
+	if month_to_value_dict is None:  # nosemgrep
 		doc_filter = {}
 		with suppress(ValueError):
 			doc_filter = frappe.parse_json(filters or "{}")
@@ -134,9 +138,7 @@ def get_monthly_goal_graph_data(
 		month_value = date_value.strftime("%m-%Y")  # eg: "02-2022"
 		val = month_to_value_dict.get(month_value, 0)
 		dataset_values.insert(0, val)
-		values_formatted.insert(
-			0, format_value(val, meta.get_field(goal_total_field), doc)
-		)
+		values_formatted.insert(0, format_value(val, meta.get_field(goal_total_field), doc))
 
 	return {
 		"title": title,

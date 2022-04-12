@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestInstalledApplications(unittest.TestCase):
 	pass

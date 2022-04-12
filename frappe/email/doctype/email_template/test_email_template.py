@@ -5,5 +5,6 @@
 
 import unittest
 
+
 class TestEmailTemplate(unittest.TestCase):
 	pass

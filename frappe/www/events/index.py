@@ -6,5 +6,6 @@ from frappe import _
 
 no_cache = 1
 
+
 def get_context(context):
 	context.show_sidebar = False if frappe.session.user == "Guest" else True

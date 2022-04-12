@@ -6,5 +6,6 @@
 # import frappe
 import unittest
 
+
 class TestRenamedDocument(unittest.TestCase):
 	pass

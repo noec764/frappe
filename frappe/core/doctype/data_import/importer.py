@@ -1,21 +1,23 @@
 # Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import os
 import io
-import frappe
-import timeit
 import json
-from datetime import datetime, date
+import os
+import timeit
+from datetime import date, datetime
+
+import frappe
 from frappe import _
-from frappe.utils import cint, flt, update_progress_bar, cstr, duration_to_seconds
-from frappe.utils.csvutils import read_csv_content, get_csv_content_from_google_sheets
-from frappe.utils.xlsxutils import (
-	read_xlsx_file_from_attached_file,
-	read_xls_file_from_attached_file,
-)
-from frappe.model import no_value_fields, table_fields as table_fieldtypes
 from frappe.core.doctype.version.version import get_diff
+from frappe.model import no_value_fields
+from frappe.model import table_fields as table_fieldtypes
+from frappe.utils import (cint, cstr, duration_to_seconds, flt,
+                          update_progress_bar)
+from frappe.utils.csvutils import (get_csv_content_from_google_sheets,
+                                   read_csv_content)
+from frappe.utils.xlsxutils import (read_xls_file_from_attached_file,
+                                    read_xlsx_file_from_attached_file)
 
 INVALID_VALUES = ("", None)
 MAX_ROWS_IN_PREVIEW = 10
@@ -49,9 +51,13 @@ class Importer:
 	def get_data_for_import_preview(self):
 		out = self.import_file.get_data_for_import_preview()
 
-		out.import_log = frappe.db.get_all("Data Import Log", fields=["row_indexes", "success"],
+		out.import_log = frappe.db.get_all(
+			"Data Import Log",
+			fields=["row_indexes", "success"],
 			filters={"data_import": self.data_import.name},
-			order_by="log_index", limit=10)
+			order_by="log_index",
+			limit=10,
+		)
 
 		return out
 
@@ -84,14 +90,23 @@ class Importer:
 			return
 
 		# setup import log
-		import_log = frappe.db.get_all("Data Import Log", fields=["row_indexes", "success", "log_index"],
-			filters={"data_import": self.data_import.name},
-			order_by="log_index") or []
+		import_log = (
+			frappe.db.get_all(
+				"Data Import Log",
+				fields=["row_indexes", "success", "log_index"],
+				filters={"data_import": self.data_import.name},
+				order_by="log_index",
+			)
+			or []
+		)
 
 		log_index = 0
 
 		# Do not remove rows in case of retry after an error or pending data import
-		if self.data_import.status == "Partial Success" and len(import_log) >= self.data_import.payload_count:
+		if (
+			self.data_import.status == "Partial Success"
+			and len(import_log) >= self.data_import.payload_count
+		):
 			# remove previous failures from import log only in case of retry after partial success
 			import_log = [log for log in import_log if log.get("success")]
 
@@ -156,11 +171,11 @@ class Importer:
 							},
 						)
 
-					create_import_log(self.data_import.name, log_index, {
-						'success': True,
-						'docname': doc.name,
-						'row_indexes': row_indexes
-					})
+					create_import_log(
+						self.data_import.name,
+						log_index,
+						{"success": True, "docname": doc.name, "row_indexes": row_indexes},
+					)
 
 					log_index += 1
 
@@ -177,19 +192,29 @@ class Importer:
 					# rollback if exception
 					frappe.db.rollback()
 
-					create_import_log(self.data_import.name, log_index, {
-						'success': False,
-						'exception': frappe.get_traceback(),
-						'messages': messages,
-						'row_indexes': row_indexes
-					})
+					create_import_log(
+						self.data_import.name,
+						log_index,
+						{
+							"success": False,
+							"exception": frappe.get_traceback(),
+							"messages": messages,
+							"row_indexes": row_indexes,
+						},
+					)
 
 					log_index += 1
 
 		# Logs are db inserted directly so will have to be fetched again
-		import_log = frappe.db.get_all("Data Import Log", fields=["row_indexes", "success", "log_index"],
-			filters={"data_import": self.data_import.name},
-			order_by="log_index") or []
+		import_log = (
+			frappe.db.get_all(
+				"Data Import Log",
+				fields=["row_indexes", "success", "log_index"],
+				filters={"data_import": self.data_import.name},
+				order_by="log_index",
+			)
+			or []
+		)
 
 		# set status
 		failures = [log for log in import_log if not log.get("success")]
@@ -274,9 +299,15 @@ class Importer:
 		if not self.data_import:
 			return
 
-		import_log = frappe.db.get_all("Data Import Log", fields=["row_indexes", "success"],
-			filters={"data_import": self.data_import.name},
-			order_by="log_index") or []
+		import_log = (
+			frappe.db.get_all(
+				"Data Import Log",
+				fields=["row_indexes", "success"],
+				filters={"data_import": self.data_import.name},
+				order_by="log_index",
+			)
+			or []
+		)
 
 		failures = [log for log in import_log if not log.get("success")]
 		row_indexes = []
@@ -299,9 +330,12 @@ class Importer:
 		if not self.data_import:
 			return
 
-		import_log = frappe.db.get_all("Data Import Log", fields=["row_indexes", "success", "messages", "exception", "docname"],
+		import_log = frappe.db.get_all(
+			"Data Import Log",
+			fields=["row_indexes", "success", "messages", "exception", "docname"],
 			filters={"data_import": self.data_import.name},
-			order_by="log_index")
+			order_by="log_index",
+		)
 
 		header_row = ["Row Numbers", "Status", "Message", "Exception"]
 
@@ -309,10 +343,13 @@ class Importer:
 
 		for log in import_log:
 			row_number = json.loads(log.get("row_indexes"))[0]
-			status = "Success" if log.get('success') else "Failure"
-			message = "Successfully Imported {0}".format(log.get('docname')) if log.get('success') else \
-				log.get("messages")
-			exception = frappe.utils.cstr(log.get("exception", ''))
+			status = "Success" if log.get("success") else "Failure"
+			message = (
+				"Successfully Imported {0}".format(log.get("docname"))
+				if log.get("success")
+				else log.get("messages")
+			)
+			exception = frappe.utils.cstr(log.get("exception", ""))
 			rows += [[row_number, status, message, exception]]
 
 		build_csv_response(rows, self.doctype)
@@ -592,7 +629,10 @@ class Row:
 				else "Row has more values than columns"
 			)
 			self.warnings.append(
-				{"row": self.row_number, "message": message,}
+				{
+					"row": self.row_number,
+					"message": message,
+				}
 			)
 
 	def parse_doc(self, doctype, parent_doc=None, table_df=None):
@@ -619,7 +659,9 @@ class Row:
 			)
 
 		# remove standard fields and __islocal
-		for key in frappe.model.default_fields + frappe.model.child_table_fields + ("__islocal",):
+		for key in (
+			frappe.model.default_fields + frappe.model.child_table_fields + ("__islocal",)
+		):
 			doc.pop(key, None)
 
 		for col, value in zip(columns, values):
@@ -662,7 +704,11 @@ class Row:
 				options_string = ", ".join(frappe.bold(d) for d in select_options)
 				msg = _("Value must be one of {0}").format(options_string)
 				self.warnings.append(
-					{"row": self.row_number, "field": df_as_json(df), "message": msg,}
+					{
+						"row": self.row_number,
+						"field": df_as_json(df),
+						"message": msg,
+					}
 				)
 				return
 
@@ -673,7 +719,11 @@ class Row:
 					frappe.bold(value), frappe.bold(df.options)
 				)
 				self.warnings.append(
-					{"row": self.row_number, "field": df_as_json(df), "message": msg,}
+					{
+						"row": self.row_number,
+						"field": df_as_json(df),
+						"message": msg,
+					}
 				)
 				return
 		elif df.fieldtype in ["Date", "Datetime"]:
@@ -693,7 +743,10 @@ class Row:
 				return
 		elif df.fieldtype == "Duration":
 			import re
-			is_valid_duration = re.match(r"^(?:(\d+d)?((^|\s)\d+h)?((^|\s)\d+m)?((^|\s)\d+s)?)$", value)
+
+			is_valid_duration = re.match(
+				r"^(?:(\d+d)?((^|\s)\d+h)?((^|\s)\d+m)?((^|\s)\d+s)?)$", value
+			)
 			if not is_valid_duration:
 				self.warnings.append(
 					{
@@ -702,7 +755,7 @@ class Row:
 						"field": df_as_json(df),
 						"message": _("Value {0} must be in the valid duration format: d h m s").format(
 							frappe.bold(value)
-						)
+						),
 					}
 				)
 
@@ -816,7 +869,9 @@ class Column:
 	seen = []
 	fields_column_map = {}
 
-	def __init__(self, index, header, doctype, column_values, map_to_field=None, seen=None):
+	def __init__(
+		self, index, header, doctype, column_values, map_to_field=None, seen=None
+	):
 		if seen is None:
 			seen = []
 		self.index = index
@@ -983,7 +1038,9 @@ class Column:
 				self.warnings.append(
 					{
 						"col": self.column_number,
-						"message": _("Date format could not be determined from the values in this column. Defaulting to yyyy-mm-dd."),
+						"message": _(
+							"Date format could not be determined from the values in this column. Defaulting to yyyy-mm-dd."
+						),
 						"type": "info",
 					}
 				)
@@ -1027,12 +1084,12 @@ def build_fields_dict_for_column_matching(parent_doctype):
 	Build a dict with various keys to match with column headers and value as docfield
 	The keys can be label or fieldname
 	{
-		'Customer': df1,
-		'customer': df1,
-		'Due Date': df2,
-		'due_date': df2,
-		'Item Code (Sales Invoice Item)': df3,
-		'Sales Invoice Item:item_code': df3,
+	        'Customer': df1,
+	        'customer': df1,
+	        'Due Date': df2,
+	        'due_date': df2,
+	        'Item Code (Sales Invoice Item)': df3,
+	        'Sales Invoice Item:item_code': df3,
 	}
 	"""
 
@@ -1082,15 +1139,15 @@ def build_fields_dict_for_column_matching(parent_doctype):
 
 		if doctype == parent_doctype:
 			name_headers = (
-				"name", # fieldname
-				"ID", # label
-				_("ID"), # translated label
+				"name",  # fieldname
+				"ID",  # label
+				_("ID"),  # translated label
 			)
 		else:
 			name_headers = (
-				"{0}.name".format(table_df.fieldname), # fieldname
-				"ID ({0})".format(table_df.label), # label
-				"{0} ({1})".format(_("ID"), translated_table_label), # translated label
+				"{0}.name".format(table_df.fieldname),  # fieldname
+				"ID ({0})".format(table_df.label),  # label
+				"{0} ({1})".format(_("ID"), translated_table_label),  # translated label
 			)
 
 			name_df.is_child_table_field = True
@@ -1122,7 +1179,7 @@ def build_fields_dict_for_column_matching(parent_doctype):
 				for header in (
 					df.fieldname,
 					f"{label} ({df.fieldname})",
-					f"{translated_label} ({df.fieldname})"
+					f"{translated_label} ({df.fieldname})",
 				):
 					out[header] = df
 
@@ -1155,9 +1212,8 @@ def build_fields_dict_for_column_matching(parent_doctype):
 	autoname_field = get_autoname_field(parent_doctype)
 	if autoname_field:
 		for header in (
-			"ID ({})".format(autoname_field.label), # label
-			"{0} ({1})".format(_("ID"), _(autoname_field.label)), # translated label
-
+			"ID ({})".format(autoname_field.label),  # label
+			"{0} ({1})".format(_("ID"), _(autoname_field.label)),  # translated label
 			# ID field should also map to the autoname field
 			"ID",
 			_("ID"),
@@ -1226,16 +1282,17 @@ def df_as_json(df):
 def get_select_options(df):
 	return [d for d in (df.options or "").split("\n") if d]
 
+
 def create_import_log(data_import, log_index, log_details):
-	frappe.get_doc({
-		'doctype': 'Data Import Log',
-		'log_index': log_index,
-		'success': log_details.get('success'),
-		'data_import': data_import,
-		'row_indexes': json.dumps(log_details.get('row_indexes')),
-		'docname': log_details.get('docname'),
-		'messages': json.dumps(log_details.get('messages', '[]')),
-		'exception': log_details.get('exception')
-	}).db_insert()
-
-
+	frappe.get_doc(
+		{
+			"doctype": "Data Import Log",
+			"log_index": log_index,
+			"success": log_details.get("success"),
+			"data_import": data_import,
+			"row_indexes": json.dumps(log_details.get("row_indexes")),
+			"docname": log_details.get("docname"),
+			"messages": json.dumps(log_details.get("messages", "[]")),
+			"exception": log_details.get("exception"),
+		}
+	).db_insert()

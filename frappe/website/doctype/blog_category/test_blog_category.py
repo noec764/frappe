@@ -2,8 +2,10 @@
 # License: MIT. See LICENSE
 
 
-import frappe
 import unittest
+
+import frappe
+
 
 class TestBlogCategory(unittest.TestCase):
 	pass

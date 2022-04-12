@@ -1,20 +1,16 @@
 import json
 from urllib.parse import quote, urlencode
+
 from oauthlib.oauth2 import FatalClientError, OAuth2Error
-from oauthlib.openid.connect.core.endpoints.pre_configured import (
-	Server as WebApplicationServer,
-)
+from oauthlib.openid.connect.core.endpoints.pre_configured import \
+    Server as WebApplicationServer
 
 import frappe
-from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import (
-	get_oauth_settings,
-)
-from frappe.oauth import (
-	OAuthWebRequestValidator,
-	generate_json_error_response,
-	get_server_url,
-	get_userinfo,
-)
+from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import \
+    get_oauth_settings
+from frappe.oauth import (OAuthWebRequestValidator,
+                          generate_json_error_response, get_server_url,
+                          get_userinfo)
 
 
 def get_oauth_server():
@@ -102,9 +98,7 @@ def authorize(**kwargs):
 				frappe.flags.oauth_credentials["client_id"],
 				"skip_authorization",
 			)
-			unrevoked_tokens = frappe.get_all(
-				"OAuth Bearer Token", filters={"status": "Active"}
-			)
+			unrevoked_tokens = frappe.get_all("OAuth Bearer Token", filters={"status": "Active"})
 
 			if skip_auth or (
 				get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens
@@ -115,9 +109,7 @@ def authorize(**kwargs):
 				# Show Allow/Deny screen.
 				response_html_params = frappe._dict(
 					{
-						"client_id": frappe.db.get_value(
-							"OAuth Client", kwargs["client_id"], "app_name"
-						),
+						"client_id": frappe.db.get_value("OAuth Client", kwargs["client_id"], "app_name"),
 						"success_url": success_url,
 						"failure_url": failure_url,
 						"details": scopes,
@@ -222,9 +214,7 @@ def introspect_token(token=None, token_type_hint=None):
 		if token_type_hint == "access_token":
 			bearer_token = frappe.get_doc("OAuth Bearer Token", {"access_token": token})
 		elif token_type_hint == "refresh_token":
-			bearer_token = frappe.get_doc(
-				"OAuth Bearer Token", {"refresh_token": token}
-			)
+			bearer_token = frappe.get_doc("OAuth Bearer Token", {"refresh_token": token})
 
 		client = frappe.get_doc("OAuth Client", bearer_token.client)
 

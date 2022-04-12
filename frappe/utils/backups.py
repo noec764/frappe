@@ -15,7 +15,7 @@ import click
 # imports - module imports
 import frappe
 from frappe import conf
-from frappe.utils import get_file_size, get_url, now, now_datetime, cint
+from frappe.utils import cint, get_file_size, get_url, now, now_datetime
 from frappe.utils.password import get_encryption_key
 
 # backup variable for backwards compatibility
@@ -211,7 +211,6 @@ class BackupGenerator:
 		enc = "-enc" if frappe.get_system_settings("encrypt_backup") else ""
 		self.todays_date = now_datetime().strftime("%Y%m%d_%H%M%S")
 
-
 		for_conf = f"{self.todays_date}-{self.site_slug}-site_config_backup{enc}.json"
 		for_db = f"{self.todays_date}-{self.site_slug}{partial}-database{enc}.sql.gz"
 		for_public_files = f"{self.todays_date}-{self.site_slug}-files{enc}.{ext}"
@@ -248,21 +247,23 @@ class BackupGenerator:
 
 				except Exception as err:
 					print(err)
-					click.secho("Error occurred during encryption. Files are stored without encryption.", fg="red")
+					click.secho(
+						"Error occurred during encryption. Files are stored without encryption.", fg="red"
+					)
 
 	def get_recent_backup(self, older_than, partial=False):
 		backup_path = get_backup_path()
 
 		if not frappe.get_system_settings("encrypt_backup"):
 			file_type_slugs = {
-				"database": "*-{{}}-{}database.sql.gz".format('*' if partial else ''),
+				"database": "*-{{}}-{}database.sql.gz".format("*" if partial else ""),
 				"public": "*-{}-files.tar",
 				"private": "*-{}-private-files.tar",
 				"config": "*-{}-site_config_backup.json",
 			}
 		else:
 			file_type_slugs = {
-				"database": "*-{{}}-{}database.enc.sql.gz".format('*' if partial else ''),
+				"database": "*-{{}}-{}database.enc.sql.gz".format("*" if partial else ""),
 				"public": "*-{}-files.enc.tar",
 				"private": "*-{}-private-files.enc.tar",
 				"config": "*-{}-site_config_backup.json",
@@ -363,9 +364,7 @@ class BackupGenerator:
 				cmd_string = "tar -cf {0} {1}"
 
 			frappe.utils.execute_in_shell(
-				cmd_string.format(backup_path, files_path),
-				verbose=self.verbose,
-				low_priority=True
+				cmd_string.format(backup_path, files_path), verbose=self.verbose, low_priority=True
 			)
 
 	def copy_site_config(self):
@@ -389,7 +388,7 @@ class BackupGenerator:
 			_exc = "gzip" if not gzip_exc else db_exc[0]
 			frappe.throw(
 				f"{_exc} not found in PATH! This is required to take a backup.",
-				exc=frappe.ExecutableNotFound
+				exc=frappe.ExecutableNotFound,
 			)
 		db_exc = db_exc[0]
 
@@ -411,12 +410,15 @@ class BackupGenerator:
 
 		if self.partial:
 			if self.verbose:
-				print(''.join(backup_info), "\n")
-			database_header_content.extend([
-				f"Partial Backup of Frappe Site {frappe.local.site}",
-				("Backup contains: " if self.backup_includes else "Backup excludes: ") + backup_info[1],
-				"",
-			])
+				print("".join(backup_info), "\n")
+			database_header_content.extend(
+				[
+					f"Partial Backup of Frappe Site {frappe.local.site}",
+					("Backup contains: " if self.backup_includes else "Backup excludes: ")
+					+ backup_info[1],
+					"",
+				]
+			)
 
 		generated_header = "\n".join(f"-- {x}" for x in database_header_content) + "\n"
 
@@ -430,7 +432,10 @@ class BackupGenerator:
 				)
 			elif self.backup_excludes:
 				args["exclude"] = " ".join(
-					["--exclude-table-data='public.\"{0}\"'".format(table) for table in self.backup_excludes]
+					[
+						"--exclude-table-data='public.\"{0}\"'".format(table)
+						for table in self.backup_excludes
+					]
 				)
 
 			cmd_string = (
@@ -508,13 +513,14 @@ download only after 24 hours.""" % {
 		frappe.sendmail(recipients=recipient_list, message=msg, subject=subject)
 		return recipient_list
 
+
 @frappe.whitelist()
 def fetch_latest_backups(partial=False):
 	"""Fetches paths of the latest backup taken in the last 30 days
 	Only for: System Managers
 
 	Returns:
-		dict: relative Backup Paths
+	        dict: relative Backup Paths
 	"""
 	frappe.only_for("System Manager")
 	odb = BackupGenerator(
@@ -525,7 +531,9 @@ def fetch_latest_backups(partial=False):
 		db_type=frappe.conf.db_type,
 		db_port=frappe.conf.db_port,
 	)
-	database, public, private, config = odb.get_recent_backup(older_than=24 * 30, partial=partial)
+	database, public, private, config = odb.get_recent_backup(
+		older_than=24 * 30, partial=partial
+	)
 
 	return {"database": database, "public": public, "private": private, "config": config}
 
@@ -648,16 +656,18 @@ def get_backup_path():
 	backup_path = frappe.utils.get_site_path(conf.get("backup_path", "private/backups"))
 	return backup_path
 
+
 @frappe.whitelist()
 def get_backup_encryption_key():
 	frappe.only_for("System Manager")
 	return frappe.conf.encryption_key
 
+
 class Backup:
 	def __init__(self, file_path):
 		self.file_path = file_path
 
-	def backup_decryption(self,passphrase):
+	def backup_decryption(self, passphrase):
 		"""
 		Decrypts backup at the given path using the passphrase.
 		"""
@@ -668,9 +678,7 @@ class Backup:
 			os.rename(self.file_path, self.file_path + ".gpg")
 			file_path = self.file_path + ".gpg"
 
-			cmd_string = (
-					"gpg --yes --passphrase {passphrase} --pinentry-mode loopback -o {decrypted_file} -d {file_location}"
-			)
+			cmd_string = "gpg --yes --passphrase {passphrase} --pinentry-mode loopback -o {decrypted_file} -d {file_location}"
 			command = cmd_string.format(
 				passphrase=passphrase,
 				file_location=file_path,
@@ -678,14 +686,13 @@ class Backup:
 			)
 		frappe.utils.execute_in_shell(command)
 
-
 	def decryption_rollback(self):
 		"""
 		Checks if the decrypted file exists at the given path.
 		if exists
-			Renames the orginal encrypted file.
+		        Renames the orginal encrypted file.
 		else
-			Removes the decrypted file and rename the original file.
+		        Removes the decrypted file and rename the original file.
 		"""
 		if os.path.exists(self.file_path + ".gpg"):
 			if os.path.exists(self.file_path):
@@ -693,6 +700,7 @@ class Backup:
 			if os.path.exists(self.file_path.rstrip(".gz")):
 				os.remove(self.file_path.rstrip(".gz"))
 			os.rename(self.file_path + ".gpg", self.file_path)
+
 
 def backup(
 	with_files=False,

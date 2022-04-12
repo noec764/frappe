@@ -6,5 +6,6 @@
 # import frappe
 from frappe.model.document import Document
 
+
 class LDAPGroupMapping(Document):
 	pass

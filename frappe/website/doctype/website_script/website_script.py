@@ -5,14 +5,14 @@
 
 
 import frappe
-
 from frappe.model.document import Document
 
-class WebsiteScript(Document):
 
+class WebsiteScript(Document):
 	def on_update(self):
 		"""clear cache"""
-		frappe.clear_cache(user = 'Guest')
+		frappe.clear_cache(user="Guest")
 
 		from frappe.website.utils import clear_cache
+
 		clear_cache()

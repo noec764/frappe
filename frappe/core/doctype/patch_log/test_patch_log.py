@@ -3,10 +3,12 @@
 # License: MIT. See LICENSE
 
 
-import frappe
 import unittest
 
+import frappe
+
 # test_records = frappe.get_test_records('Patch Log')
+
 
 class TestPatchLog(unittest.TestCase):
 	pass

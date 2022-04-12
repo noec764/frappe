@@ -6,11 +6,12 @@
 import frappe
 from frappe.model.document import Document
 
+
 class WebsiteSidebar(Document):
 	def get_items(self):
 		items = frappe.get_all(
 			"Website Sidebar Item",
-			filters={'parent': self.name},
+			filters={"parent": self.name},
 			fields=["title", "route", "group"],
 			order_by="idx asc",
 		)

@@ -13,8 +13,9 @@ from frappe.website.serve import get_response_content
 
 INDEX_NAME = "web_routes"
 
+
 class WebsiteSearch(FullTextSearch):
-	""" Wrapper for WebsiteSearch """
+	"""Wrapper for WebsiteSearch"""
 
 	def get_schema(self):
 		return Schema(
@@ -31,7 +32,7 @@ class WebsiteSearch(FullTextSearch):
 		"""Get all routes to be indexed, this includes the static pages
 		in www/ and routes from published documents
 		Returns:
-			self (object): FullTextSearch Instance
+		        self (object): FullTextSearch Instance
 		"""
 		if getattr(self, "_items_to_index", False):
 			return self._items_to_index
@@ -51,9 +52,9 @@ class WebsiteSearch(FullTextSearch):
 	def get_document_to_index(self, route):
 		"""Render a page and parse it using BeautifulSoup
 		Args:
-			path (str): route of the page to be parsed
+		        path (str): route of the page to be parsed
 		Returns:
-			document (_dict): A dictionary with title, path and content
+		        document (_dict): A dictionary with title, path and content
 		"""
 		frappe.set_user("Guest")
 		frappe.local.no_cache = True
@@ -86,7 +87,11 @@ class WebsiteSearch(FullTextSearch):
 
 def slugs_with_web_view(_items_to_index):
 	all_routes = []
-	filters = { "has_web_view": 1, "allow_guest_to_view": 1, "index_web_pages_for_search": 1}
+	filters = {
+		"has_web_view": 1,
+		"allow_guest_to_view": 1,
+		"index_web_pages_for_search": 1,
+	}
 	fields = ["name", "is_published_field", "website_search_field"]
 	doctype_with_web_views = frappe.get_all("DocType", filters=filters, fields=fields)
 
@@ -100,37 +105,44 @@ def slugs_with_web_view(_items_to_index):
 					content = frappe.utils.md_to_html(getattr(doc, doctype.website_search_field))
 					soup = BeautifulSoup(content, "html.parser")
 					text_content = soup.text if soup else ""
-					_items_to_index += [frappe._dict(title=doc.title, content=text_content, path=doc.route)]
+					_items_to_index += [
+						frappe._dict(title=doc.title, content=text_content, path=doc.route)
+					]
 			else:
 				docs = frappe.get_all(doctype.name, filters=filters, fields=fields)
 				all_routes += [route.route for route in docs]
 
 	return all_routes
 
+
 def get_static_pages_from_all_apps():
 	from glob import glob
+
 	apps = frappe.get_installed_apps()
 
 	routes_to_index = []
 	for app in apps:
-		path_to_index = frappe.get_app_path(app, 'www')
+		path_to_index = frappe.get_app_path(app, "www")
 
-		files_to_index = glob(path_to_index + '/**/*.html', recursive=True)
-		files_to_index.extend(glob(path_to_index + '/**/*.md', recursive=True))
+		files_to_index = glob(path_to_index + "/**/*.html", recursive=True)
+		files_to_index.extend(glob(path_to_index + "/**/*.md", recursive=True))
 		for file in files_to_index:
-			route = os.path.relpath(file, path_to_index).split('.')[0]
-			if route.endswith('index'):
-				route = route.rsplit('index', 1)[0]
+			route = os.path.relpath(file, path_to_index).split(".")[0]
+			if route.endswith("index"):
+				route = route.rsplit("index", 1)[0]
 			routes_to_index.append(route)
 	return routes_to_index
+
 
 def update_index_for_path(path):
 	ws = WebsiteSearch(INDEX_NAME)
 	return ws.update_index_by_name(path)
 
+
 def remove_document_from_index(path):
 	ws = WebsiteSearch(INDEX_NAME)
 	return ws.remove_document_from_index(path)
+
 
 def build_index_for_all_routes():
 	ws = WebsiteSearch(INDEX_NAME)

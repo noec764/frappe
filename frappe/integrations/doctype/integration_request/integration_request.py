@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
-import frappe
-from frappe.model.document import Document
 import json
+
+import frappe
 from frappe.integrations.utils import json_handler
+from frappe.model.document import Document
+
 
 class IntegrationRequest(Document):
 	def autoname(self):
@@ -39,15 +41,15 @@ class IntegrationRequest(Document):
 		handlers = frappe.get_hooks("webhooks_handler")
 		method = handlers.get(self.integration_request_service, [])
 		if method:
-			frappe.get_attr(method[0])(**{"doctype": "Integration Request", "docname": self.name})
+			frappe.get_attr(method[0])(
+				**{"doctype": "Integration Request", "docname": self.name}
+			)
 
 		return {"status": "executed"}
 
+
 def retry_failed_webhooks(service=None):
-	filters = {
-		"status": ["in", ["Failed", "Queued"]],
-		"integration_type": "Webhook"
-	}
+	filters = {"status": ["in", ["Failed", "Queued"]], "integration_type": "Webhook"}
 
 	if service:
 		filters["integration_request_service"] = service

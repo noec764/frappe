@@ -5,5 +5,6 @@
 
 import unittest
 
+
 class TestS3BackupSettings(unittest.TestCase):
 	pass

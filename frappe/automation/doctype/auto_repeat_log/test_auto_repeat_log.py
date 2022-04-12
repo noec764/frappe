@@ -3,8 +3,10 @@
 # License: MIT. See LICENSE
 
 
-import frappe
 import unittest
+
+import frappe
+
 
 class TestAutoRepeatLog(unittest.TestCase):
 	pass

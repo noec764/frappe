@@ -3,15 +3,16 @@
 # License: MIT. See LICENSE
 
 
-from collections import Counter
 import datetime
 import inspect
 import json
 import re
 import time
-import frappe
+from collections import Counter
+
 import sqlparse
 
+import frappe
 from frappe import _
 
 RECORDER_INTERCEPT_FLAG = "recorder-intercept"
@@ -183,11 +184,15 @@ def get(uuid=None, *args, **kwargs):
 		result = list(frappe.cache().hgetall(RECORDER_REQUEST_SPARSE_HASH).values())
 	return result
 
+
 frappe.whitelist()
+
+
 @do_not_record
 @administrator_only
 def export_data(*args, **kwargs):
 	return list(frappe.cache().hgetall(RECORDER_REQUEST_HASH).values())
+
 
 @frappe.whitelist()
 @do_not_record

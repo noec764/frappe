@@ -1,6 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+
 def resolve_class(classes):
 	if classes is None:
 		return ""
@@ -35,7 +36,7 @@ def web_block(template, values=None, **kwargs):
 
 
 def web_blocks(blocks):
-	from frappe import throw, _dict, _
+	from frappe import _, _dict, throw
 	from frappe.website.doctype.web_page.web_page import get_web_blocks_html
 
 	web_blocks = []
@@ -66,11 +67,14 @@ def web_blocks(blocks):
 
 	return html
 
+
 def get_dom_id(seed=None):
 	from frappe import generate_hash
+
 	if not seed:
-		seed = 'DOM'
-	return 'id-' + generate_hash(seed, 12)
+		seed = "DOM"
+	return "id-" + generate_hash(seed, 12)
+
 
 def include_script(path):
 	path = bundled_asset(path)
@@ -88,14 +92,16 @@ def bundled_asset(path, rtl=None):
 
 	if ".bundle." in path and not path.startswith("/assets"):
 		bundled_assets = get_assets_json()
-		if path.endswith('.css') and is_rtl(rtl):
+		if path.endswith(".css") and is_rtl(rtl):
 			path = f"rtl_{path}"
 		path = bundled_assets.get(path) or path
 
 	return abs_url(path)
 
+
 def is_rtl(rtl=None):
 	from frappe import local
+
 	if rtl is None:
 		return local.lang in ["ar", "he", "fa", "ps"]
 	return rtl

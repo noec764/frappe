@@ -6,7 +6,8 @@
 import frappe
 from frappe.model.document import Document
 from frappe.translate import clear_cache
-from frappe.utils import strip_html_tags, is_html
+from frappe.utils import is_html, strip_html_tags
+
 
 class Translation(Document):
 	def validate(self):
@@ -22,5 +23,6 @@ class Translation(Document):
 	def on_trash(self):
 		clear_user_translation_cache(self.language)
 
+
 def clear_user_translation_cache(lang):
-	frappe.cache().hdel('lang_user_translations', lang)
+	frappe.cache().hdel("lang_user_translations", lang)

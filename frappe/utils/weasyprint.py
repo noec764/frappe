@@ -38,11 +38,11 @@ class PrintFormatGenerator:
 		Parameters
 		----------
 		print_format: str
-			Name of the Print Format
+		        Name of the Print Format
 		doc: str
-			Document to print
+		        Document to print
 		letterhead: str
-			Letter Head to apply (optional)
+		        Letter Head to apply (optional)
 		"""
 		self.base_url = frappe.utils.get_url()
 		self.print_format = frappe.get_doc("Print Format", print_format)
@@ -108,7 +108,7 @@ class PrintFormatGenerator:
 		Returns
 		-------
 		pdf: a bytes sequence
-			The rendered PDF.
+		        The rendered PDF.
 		"""
 		HTML, CSS = import_weasyprint()
 
@@ -133,18 +133,21 @@ class PrintFormatGenerator:
 		Parameters
 		----------
 		element: str
-			Either 'header' or 'footer'
+		        Either 'header' or 'footer'
 
 		Returns
 		-------
 		element_body: BlockBox
-			A Weasyprint pre-rendered representation of an html element
+		        A Weasyprint pre-rendered representation of an html element
 		element_height: float
-			The height of this element, which will be then translated in a html height
+		        The height of this element, which will be then translated in a html height
 		"""
 		HTML, CSS = import_weasyprint()
 
-		html = HTML(string=getattr(self, f"{element}_html"), base_url=self.base_url,)
+		html = HTML(
+			string=getattr(self, f"{element}_html"),
+			base_url=self.base_url,
+		)
 		element_doc = html.render(
 			stylesheets=[CSS(string="@page {size: A4 portrait; margin: 0;}")]
 		)
@@ -171,11 +174,11 @@ class PrintFormatGenerator:
 		Parameters
 		----------
 		main_doc: Document
-			The top level representation for a PDF page in Weasyprint.
+		        The top level representation for a PDF page in Weasyprint.
 		header_body: BlockBox
-			A representation for an html element in Weasyprint.
+		        A representation for an html element in Weasyprint.
 		footer_body: BlockBox
-			A representation for an html element in Weasyprint.
+		        A representation for an html element in Weasyprint.
 		"""
 		for page in main_doc.pages:
 			page_body = PrintFormatGenerator.get_element(page._page_box.all_children(), "body")
@@ -248,18 +251,19 @@ class PrintFormatGenerator:
 				return box
 			return PrintFormatGenerator.get_element(box.all_children(), element)
 
+
 def import_weasyprint():
 	try:
-		from weasyprint import HTML, CSS
+		from weasyprint import CSS, HTML
+
 		return HTML, CSS
 	except OSError:
-		message = "\n".join([
-			"WeasyPrint depdends on additional system dependencies.",
-			"Follow instructions specific to your operating system:",
-			"https://doc.courtbouillon.org/weasyprint/stable/first_steps.html"
-		])
-		click.secho(
-			message,
-			fg="yellow"
+		message = "\n".join(
+			[
+				"WeasyPrint depdends on additional system dependencies.",
+				"Follow instructions specific to your operating system:",
+				"https://doc.courtbouillon.org/weasyprint/stable/first_steps.html",
+			]
 		)
+		click.secho(message, fg="yellow")
 		frappe.throw(message)

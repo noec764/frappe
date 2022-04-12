@@ -4,5 +4,6 @@
 
 import unittest
 
+
 class TestDataMigrationMapping(unittest.TestCase):
 	pass

@@ -1,17 +1,19 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-import frappe
 import json
+
+import frappe
 from frappe import _
-from frappe.model import default_fields, table_fields, child_table_fields
+from frappe.model import child_table_fields, default_fields, table_fields
 from frappe.utils import cstr
+
 
 @frappe.whitelist()
 def make_mapped_doc(method, source_name, selected_children=None, args=None):
-	'''Returns the mapped document calling the given mapper method.
+	"""Returns the mapped document calling the given mapper method.
 	Sets selected_children as flags for the `get_mapped_doc` method.
 
-	Called from `open_mapped_doc` from create_new.js'''
+	Called from `open_mapped_doc` from create_new.js"""
 
 	for hook in frappe.get_hooks("override_whitelisted_methods", {}).get(method, []):
 		# override using the first hook
@@ -33,13 +35,14 @@ def make_mapped_doc(method, source_name, selected_children=None, args=None):
 
 	return method(source_name)
 
+
 @frappe.whitelist()
 def map_docs(method, source_names, target_doc, args=None):
-	''' Returns the mapped document calling the given mapper method
+	'''Returns the mapped document calling the given mapper method
 	with each of the given source docs on the target doc
 
 	:param args: Args as string to pass to the mapper method
-	E.g. args: "{ 'supplier': 'XYZ' }" '''
+	E.g. args: "{ 'supplier': 'XYZ' }"'''
 
 	method = frappe.get_attr(method)
 	if method not in frappe.whitelisted:
@@ -50,10 +53,20 @@ def map_docs(method, source_names, target_doc, args=None):
 		target_doc = method(*_args)
 	return target_doc
 
-def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
-		postprocess=None, ignore_permissions=False, ignore_child_tables=False):
 
-	apply_strict_user_permissions = frappe.get_system_settings("apply_strict_user_permissions")
+def get_mapped_doc(
+	from_doctype,
+	from_docname,
+	table_maps,
+	target_doc=None,
+	postprocess=None,
+	ignore_permissions=False,
+	ignore_child_tables=False,
+):
+
+	apply_strict_user_permissions = frappe.get_system_settings(
+		"apply_strict_user_permissions"
+	)
 
 	# main
 	if not target_doc:
@@ -61,8 +74,11 @@ def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
 	elif isinstance(target_doc, str):
 		target_doc = frappe.get_doc(json.loads(target_doc))
 
-	if (not apply_strict_user_permissions
-		and not ignore_permissions and not target_doc.has_permission("create")):
+	if (
+		not apply_strict_user_permissions
+		and not ignore_permissions
+		and not target_doc.has_permission("create")
+	):
 		target_doc.raise_no_permission_to("create")
 
 	source_doc = frappe.get_doc(from_doctype, from_docname)
@@ -86,10 +102,13 @@ def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
 				target_df = target_doc.meta.get_field(df.fieldname)
 				if target_df:
 					target_child_doctype = target_df.options
-					if target_df and target_child_doctype==source_child_doctype and not df.no_copy and not target_df.no_copy:
-						table_map = {
-							"doctype": target_child_doctype
-						}
+					if (
+						target_df
+						and target_child_doctype == source_child_doctype
+						and not df.no_copy
+						and not target_df.no_copy
+					):
+						table_map = {"doctype": target_child_doctype}
 
 			if table_map:
 				for source_d in source_doc.get(df.fieldname):
@@ -99,9 +118,11 @@ def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
 
 					# if children are selected (checked from UI) for this table type,
 					# and this record is not in the selected children, then continue
-					if (frappe.flags.selected_children
+					if (
+						frappe.flags.selected_children
 						and (df.fieldname in frappe.flags.selected_children)
-						and source_d.name not in frappe.flags.selected_children[df.fieldname]):
+						and source_d.name not in frappe.flags.selected_children[df.fieldname]
+					):
 						continue
 
 					target_child_doctype = table_map["doctype"]
@@ -109,11 +130,13 @@ def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
 
 					# does row exist for a parentfield?
 					if target_parentfield not in row_exists_for_parentfield:
-						row_exists_for_parentfield[target_parentfield] = (True
-							if target_doc.get(target_parentfield) else False)
+						row_exists_for_parentfield[target_parentfield] = (
+							True if target_doc.get(target_parentfield) else False
+						)
 
-					if table_map.get("add_if_empty") and \
-						row_exists_for_parentfield.get(target_parentfield):
+					if table_map.get("add_if_empty") and row_exists_for_parentfield.get(
+						target_parentfield
+					):
 						continue
 
 					if table_map.get("filter") and table_map.get("filter")(source_d):
@@ -126,29 +149,46 @@ def get_mapped_doc(from_doctype, from_docname, table_maps, target_doc=None,
 
 	target_doc.set_onload("load_after_mapping", True)
 
-	if (apply_strict_user_permissions \
-		and not ignore_permissions and not target_doc.has_permission("create")):
+	if (
+		apply_strict_user_permissions
+		and not ignore_permissions
+		and not target_doc.has_permission("create")
+	):
 		target_doc.raise_no_permission_to("create")
 
 	return target_doc
+
 
 def map_doc(source_doc, target_doc, table_map, source_parent=None):
 	if table_map.get("validation"):
 		for key, condition in table_map["validation"].items():
 			if condition[0] == "=" and source_doc.get(key) != condition[1]:
-				frappe.throw(_("Cannot map because following condition fails:") + f" {key}={cstr(condition[1])}")
+				frappe.throw(
+					_("Cannot map because following condition fails:") + f" {key}={cstr(condition[1])}"
+				)
 
 	map_fields(source_doc, target_doc, table_map, source_parent)
 
 	if "postprocess" in table_map:
 		table_map["postprocess"](source_doc, target_doc, source_parent)
 
+
 def map_fields(source_doc, target_doc, table_map, source_parent):
-	no_copy_fields = set([d.fieldname for d in source_doc.meta.get("fields") if (d.no_copy==1 or d.fieldtype in table_fields)]
-		+ [d.fieldname for d in target_doc.meta.get("fields") if (d.no_copy==1 or d.fieldtype in table_fields)]
+	no_copy_fields = set(
+		[
+			d.fieldname
+			for d in source_doc.meta.get("fields")
+			if (d.no_copy == 1 or d.fieldtype in table_fields)
+		]
+		+ [
+			d.fieldname
+			for d in target_doc.meta.get("fields")
+			if (d.no_copy == 1 or d.fieldtype in table_fields)
+		]
 		+ list(default_fields)
 		+ list(child_table_fields)
-		+ list(table_map.get("field_no_map", [])))
+		+ list(table_map.get("field_no_map", []))
+	)
 
 	for df in target_doc.meta.get("fields"):
 		if df.fieldname not in no_copy_fields:
@@ -190,16 +230,20 @@ def map_fields(source_doc, target_doc, table_map, source_parent):
 		if target_doc.get(df.fieldname):
 			map_fetch_fields(target_doc, df, no_copy_fields)
 
+
 def map_fetch_fields(target_doc, df, no_copy_fields):
 	linked_doc = None
 
 	# options should be like "link_fieldname.fieldname_in_liked_doc"
-	for fetch_df in target_doc.meta.get("fields", {"fetch_from": "^{0}.".format(df.fieldname)}):
+	for fetch_df in target_doc.meta.get(
+		"fields", {"fetch_from": "^{0}.".format(df.fieldname)}
+	):
 		if not (fetch_df.fieldtype == "Read Only" or fetch_df.read_only):
 			continue
 
-		if ((not target_doc.get(fetch_df.fieldname) or fetch_df.fieldtype == "Read Only")
-			and fetch_df.fieldname not in no_copy_fields):
+		if (
+			not target_doc.get(fetch_df.fieldname) or fetch_df.fieldtype == "Read Only"
+		) and fetch_df.fieldname not in no_copy_fields:
 			source_fieldname = fetch_df.fetch_from.split(".")[1]
 
 			if not linked_doc:
@@ -212,6 +256,7 @@ def map_fetch_fields(target_doc, df, no_copy_fields):
 
 			if val not in (None, ""):
 				target_doc.set(fetch_df.fieldname, val)
+
 
 def map_child_doc(source_d, target_parent, table_map, source_parent=None):
 	target_child_doctype = table_map["doctype"]

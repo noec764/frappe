@@ -2,11 +2,14 @@
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 
-import frappe
 import unittest
+
 from bs4 import BeautifulSoup
+
+import frappe
 from frappe.utils import set_request
 from frappe.website.serve import get_response
+
 
 class TestWebTemplate(unittest.TestCase):
 	def test_render_web_template_with_values(self):
