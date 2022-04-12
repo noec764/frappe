@@ -1557,7 +1557,7 @@ def make_property_setter(
 			.select(DocField_doctype.parent)
 			.where(DocField_doctype.fieldname == args.fieldname)
 			.distinct()
-		).run(as_list=True)
+		).run(pluck=True)
 	else:
 		doctype_list = [args.doctype]
 
