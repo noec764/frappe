@@ -10,3 +10,6 @@
 
 # Replace use of Class.extend with native JS class
 fe20515c23a3ac41f1092bf0eaf0a0a452ec2e85
+
+# Format codebase and sort imports
+7c2ca6920ab6f1053a81e97ded01d2654882d391
