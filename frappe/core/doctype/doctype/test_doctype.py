@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
-
 import unittest
+from typing import Dict, List, Optional
 
 import frappe
 from frappe.core.doctype.doctype.doctype import (
-    CannotIndexedError, DoctypeLinkError,
-    HiddenAndMandatoryWithoutDefaultError, IllegalMandatoryError,
-    InvalidFieldNameError, UniqueFieldnameError, WrongOptionsDoctypeLinkError,
-    validate_links_table_fieldnames)
+	CannotIndexedError,
+	DoctypeLinkError,
+	HiddenAndMandatoryWithoutDefaultError,
+	IllegalMandatoryError,
+	InvalidFieldNameError,
+	UniqueFieldnameError,
+	WrongOptionsDoctypeLinkError,
+	validate_links_table_fieldnames,
+)
 
 # test_records = frappe.get_test_records('DocType')
 
@@ -25,9 +29,7 @@ class TestDocType(unittest.TestCase):
 		self.assertRaises(frappe.NameError, new_doctype("Some (DocType)").insert)
 		self.assertRaises(
 			frappe.NameError,
-			new_doctype(
-				"Some Doctype with a name whose length is more than 61 characters"
-			).insert,
+			new_doctype("Some Doctype with a name whose length is more than 61 characters").insert,
 		)
 		for name in ("Some DocType", "Some_DocType", "Some-DocType"):
 			if frappe.db.exists("DocType", name):
@@ -188,9 +190,7 @@ class TestDocType(unittest.TestCase):
 			# assert that field_order list is being created with the default order
 			test_doctype_json = frappe.get_file_json(path)
 			self.assertTrue(test_doctype_json.get("field_order"))
-			self.assertEqual(
-				len(test_doctype_json["fields"]), len(test_doctype_json["field_order"])
-			)
+			self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
 			self.assertListEqual(
 				[f["fieldname"] for f in test_doctype_json["fields"]],
 				test_doctype_json["field_order"],
@@ -217,9 +217,7 @@ class TestDocType(unittest.TestCase):
 			test_doctype.save()
 			test_doctype_json = frappe.get_file_json(path)
 			self.assertTrue(test_doctype_json.get("field_order"))
-			self.assertEqual(
-				len(test_doctype_json["fields"]), len(test_doctype_json["field_order"])
-			)
+			self.assertEqual(len(test_doctype_json["fields"]), len(test_doctype_json["field_order"]))
 			self.assertListEqual(
 				[f["fieldname"] for f in test_doctype_json["fields"]],
 				test_doctype_json["field_order"],
@@ -264,9 +262,7 @@ class TestDocType(unittest.TestCase):
 			)
 
 			# insert row in the middle and remove first row (field 3)
-			test_doctype.append(
-				"fields", {"label": "Field 5", "fieldname": "field_5", "fieldtype": "Data"}
-			)
+			test_doctype.append("fields", {"label": "Field 5", "fieldname": "field_5", "fieldtype": "Data"})
 			test_doctype.fields[4], test_doctype.fields[3] = (
 				test_doctype.fields[3],
 				test_doctype.fields[4],
@@ -288,7 +284,7 @@ class TestDocType(unittest.TestCase):
 			self.assertListEqual(
 				test_doctype_json["field_order"], ["field_4", "field_5", "field_1", "field_2"]
 			)
-		except:
+		except Exception:
 			raise
 		finally:
 			frappe.flags.allow_doctype_export = 0
@@ -358,8 +354,7 @@ class TestDocType(unittest.TestCase):
 	def test_cancel_link_doctype(self):
 		import json
 
-		from frappe.desk.form.linked_with import (cancel_all_linked_docs,
-		                                          get_submitted_linked_docs)
+		from frappe.desk.form.linked_with import cancel_all_linked_docs, get_submitted_linked_docs
 
 		# create doctype
 		link_doc = new_doctype("Test Linked Doctype")
@@ -415,8 +410,7 @@ class TestDocType(unittest.TestCase):
 	def test_ignore_cancelation_of_linked_doctype_during_cancel(self):
 		import json
 
-		from frappe.desk.form.linked_with import (cancel_all_linked_docs,
-		                                          get_submitted_linked_docs)
+		from frappe.desk.form.linked_with import cancel_all_linked_docs, get_submitted_linked_docs
 
 		# create linked doctype
 		link_doc = new_doctype("Test Linked Doctype 1")
@@ -521,9 +515,7 @@ class TestDocType(unittest.TestCase):
 		doc.links = []  # reset links table
 
 		# check invalid fieldname
-		doc.append(
-			"links", {"link_doctype": "User", "link_fieldname": "a_field_that_does_not_exists"}
-		)
+		doc.append("links", {"link_doctype": "User", "link_fieldname": "a_field_that_does_not_exists"})
 
 		self.assertRaises(InvalidFieldNameError, validate_links_table_fieldnames, doc)
 
@@ -554,9 +546,7 @@ class TestDocType(unittest.TestCase):
 
 	def test_autoincremented_doctype_transition(self):
 		frappe.delete_doc("testy_autoinc_dt")
-		dt = new_doctype("testy_autoinc_dt", autoincremented=True).insert(
-			ignore_permissions=True
-		)
+		dt = new_doctype("testy_autoinc_dt", autoname="autoincrement").insert(ignore_permissions=True)
 		dt.autoname = "hash"
 
 		try:
@@ -564,15 +554,15 @@ class TestDocType(unittest.TestCase):
 		except frappe.ValidationError as e:
 			self.assertEqual(e.args[0], "Cannot change to/from Autoincrement naming rule")
 		else:
-			self.fail(
-				"Shouldnt be possible to transition autoincremented doctype to any other naming rule"
-			)
+			self.fail("Shouldnt be possible to transition autoincremented doctype to any other naming rule")
 		finally:
 			# cleanup
 			dt.delete(ignore_permissions=True)
 
 
-def new_doctype(name, unique=0, depends_on="", fields=None, autoincremented=False):
+def new_doctype(
+	name, unique: bool = False, depends_on: str = "", fields: Optional[List[Dict]] = None, **kwargs
+):
 	doc = frappe.get_doc(
 		{
 			"doctype": "DocType",
@@ -594,7 +584,7 @@ def new_doctype(name, unique=0, depends_on="", fields=None, autoincremented=Fals
 				}
 			],
 			"name": name,
-			"autoname": "autoincrement" if autoincremented else "",
+			**kwargs,
 		}
 	)
 

@@ -5,15 +5,12 @@ import datetime
 import unittest
 
 import frappe
-from frappe.core.page.permission_manager.permission_manager import (add, reset,
-                                                                    update)
-from frappe.custom.doctype.property_setter.property_setter import \
-    make_property_setter
+from frappe.core.page.permission_manager.permission_manager import add, reset, update
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.desk.reportview import get_filters_cond
 from frappe.handler import execute_cmd
 from frappe.model.db_query import DatabaseQuery
-from frappe.permissions import (add_user_permission,
-                                clear_user_permissions_for_doctype)
+from frappe.permissions import add_user_permission, clear_user_permissions_for_doctype
 from frappe.query_builder import Column
 from frappe.utils.testutils import add_custom_field, clear_custom_fields
 
@@ -25,9 +22,7 @@ class TestReportview(unittest.TestCase):
 		frappe.set_user("Administrator")
 
 	def test_basic(self):
-		self.assertTrue(
-			{"name": "DocType"} in DatabaseQuery("DocType").execute(limit_page_length=None)
-		)
+		self.assertTrue({"name": "DocType"} in DatabaseQuery("DocType").execute(limit_page_length=None))
 
 	def test_extract_tables(self):
 		db_query = DatabaseQuery("DocType")
@@ -77,9 +72,7 @@ class TestReportview(unittest.TestCase):
 	def test_fields(self):
 		self.assertTrue(
 			{"name": "DocType", "issingle": 0}
-			in DatabaseQuery("DocType").execute(
-				fields=["name", "issingle"], limit_page_length=None
-			)
+			in DatabaseQuery("DocType").execute(fields=["name", "issingle"], limit_page_length=None)
 		)
 
 	def test_filters_1(self):
@@ -90,47 +83,37 @@ class TestReportview(unittest.TestCase):
 
 	def test_filters_2(self):
 		self.assertFalse(
-			{"name": "DocType"}
-			in DatabaseQuery("DocType").execute(filters=[{"name": ["like", "J%"]}])
+			{"name": "DocType"} in DatabaseQuery("DocType").execute(filters=[{"name": ["like", "J%"]}])
 		)
 
 	def test_filters_3(self):
 		self.assertFalse(
-			{"name": "DocType"}
-			in DatabaseQuery("DocType").execute(filters={"name": ["like", "J%"]})
+			{"name": "DocType"} in DatabaseQuery("DocType").execute(filters={"name": ["like", "J%"]})
 		)
 
 	def test_filters_4(self):
 		self.assertTrue(
-			{"name": "DocField"}
-			in DatabaseQuery("DocType").execute(filters={"name": "DocField"})
+			{"name": "DocField"} in DatabaseQuery("DocType").execute(filters={"name": "DocField"})
 		)
 
 	def test_in_not_in_filters(self):
 		self.assertFalse(DatabaseQuery("DocType").execute(filters={"name": ["in", None]}))
 		self.assertTrue(
-			{"name": "DocType"}
-			in DatabaseQuery("DocType").execute(filters={"name": ["not in", None]})
+			{"name": "DocType"} in DatabaseQuery("DocType").execute(filters={"name": ["not in", None]})
 		)
 
 		for result in [{"name": "DocType"}, {"name": "DocField"}]:
 			self.assertTrue(
-				result
-				in DatabaseQuery("DocType").execute(filters={"name": ["in", "DocType,DocField"]})
+				result in DatabaseQuery("DocType").execute(filters={"name": ["in", "DocType,DocField"]})
 			)
 
 		for result in [{"name": "DocType"}, {"name": "DocField"}]:
 			self.assertFalse(
-				result
-				in DatabaseQuery("DocType").execute(
-					filters={"name": ["not in", "DocType,DocField"]}
-				)
+				result in DatabaseQuery("DocType").execute(filters={"name": ["not in", "DocType,DocField"]})
 			)
 
 	def test_none_filter(self):
-		query = frappe.db.query.get_sql(
-			"DocType", fields="name", filters={"restrict_to_domain": None}
-		)
+		query = frappe.db.query.get_sql("DocType", fields="name", filters={"restrict_to_domain": None})
 		sql = str(query).replace("`", "").replace('"', "")
 		condition = "restrict_to_domain IS NULL"
 		self.assertIn(condition, sql)
@@ -158,9 +141,7 @@ class TestReportview(unittest.TestCase):
 		event4 = create_event(starts_on="2016-07-08 00:00:01")
 
 		# if the values are not passed in filters then event should be filter as current datetime
-		data = DatabaseQuery("Event").execute(
-			filters={"starts_on": ["between", None]}, fields=["name"]
-		)
+		data = DatabaseQuery("Event").execute(filters={"starts_on": ["between", None]}, fields=["name"])
 
 		self.assertTrue({"name": event1.name} not in data)
 
@@ -187,12 +168,8 @@ class TestReportview(unittest.TestCase):
 
 	def test_ignore_permissions_for_get_filters_cond(self):
 		frappe.set_user("test2@example.com")
-		self.assertRaises(
-			frappe.PermissionError, get_filters_cond, "DocType", dict(istable=1), []
-		)
-		self.assertTrue(
-			get_filters_cond("DocType", dict(istable=1), [], ignore_permissions=True)
-		)
+		self.assertRaises(frappe.PermissionError, get_filters_cond, "DocType", dict(istable=1), [])
+		self.assertTrue(get_filters_cond("DocType", dict(istable=1), [], ignore_permissions=True))
 		frappe.set_user("Administrator")
 
 	def test_query_fields_sanitizer(self):
@@ -643,9 +620,7 @@ class TestReportview(unittest.TestCase):
 	def test_cast_name(self):
 		from frappe.core.doctype.doctype.test_doctype import new_doctype
 
-		dt = new_doctype("autoinc_dt_test", autoincremented=True).insert(
-			ignore_permissions=True
-		)
+		dt = new_doctype("autoinc_dt_test", autoname="autoincrement").insert(ignore_permissions=True)
 
 		query = DatabaseQuery("autoinc_dt_test").execute(
 			fields=["locate('1', `tabautoinc_dt_test`.`name`)", "`tabautoinc_dt_test`.`name`"],
@@ -654,12 +629,8 @@ class TestReportview(unittest.TestCase):
 		)
 
 		if frappe.db.db_type == "postgres":
-			self.assertTrue(
-				'strpos( cast( "tabautoinc_dt_test"."name" as varchar), \'1\')' in query
-			)
-			self.assertTrue(
-				'where cast("tabautoinc_dt_test"."name" as varchar) = \'1\'' in query
-			)
+			self.assertTrue('strpos( cast( "tabautoinc_dt_test"."name" as varchar), \'1\')' in query)
+			self.assertTrue('where cast("tabautoinc_dt_test"."name" as varchar) = \'1\'' in query)
 		else:
 			self.assertTrue("locate('1', `tabautoinc_dt_test`.`name`)" in query)
 			self.assertTrue("where `tabautoinc_dt_test`.`name` = 1" in query)

@@ -3,13 +3,13 @@
 import hashlib
 import json
 import time
+from typing import List
 
 from werkzeug.exceptions import NotFound
 
 import frappe
 from frappe import _, is_whitelisted, msgprint
-from frappe.core.doctype.server_script.server_script_utils import \
-    run_server_script_for_doc_event
+from frappe.core.doctype.server_script.server_script_utils import run_server_script_for_doc_event
 from frappe.desk.form.document_follow import follow_document
 from frappe.integrations.doctype.webhook import run_webhooks
 from frappe.model import optional_fields, table_fields
@@ -17,14 +17,10 @@ from frappe.model.base_document import BaseDocument, get_controller
 from frappe.model.docstatus import DocStatus
 from frappe.model.naming import set_new_name, validate_name
 from frappe.model.rename_doc import rename_doc
-from frappe.model.workflow import (set_workflow_state_on_action,
-                                   validate_workflow)
+from frappe.model.workflow import set_workflow_state_on_action, validate_workflow
 from frappe.utils import cstr, date_diff, file_lock, flt, get_datetime_str, now
 from frappe.utils.data import get_absolute_url
 from frappe.utils.global_search import update_global_search
-
-# once_only validation
-# methods
 
 
 def get_doc(*args, **kwargs):
@@ -36,23 +32,23 @@ def get_doc(*args, **kwargs):
 
 	There are multiple ways to call `get_doc`
 
-	        # will fetch the latest user object (with child table) from the database
-	        user = get_doc("User", "test@example.com")
+	# will fetch the latest user object (with child table) from the database
+	user = get_doc("User", "test@example.com")
 
-	        # create a new object
-	        user = get_doc({
+	# create a new object
+	user = get_doc({
 	                "doctype":"User"
 	                "email_id": "test@example.com",
 	                "roles: [
-	                        {"role": "System Manager"}
+	                                {"role": "System Manager"}
 	                ]
-	        })
+	})
 
-	        # create new object with keyword arguments
-	        user = get_doc(doctype='User', email_id='test@example.com')
+	# create new object with keyword arguments
+	user = get_doc(doctype='User', email_id='test@example.com')
 
-	        # select a document for update
-	        user = get_doc("User", "test@example.com", for_update=True)
+	# select a document for update
+	user = get_doc("User", "test@example.com", for_update=True)
 	"""
 	if args:
 		if isinstance(args[0], BaseDocument):
@@ -130,9 +126,7 @@ class Document(BaseDocument):
 		"""Load document and children from database and create properties
 		from fields"""
 		if not getattr(self, "_metaclass", False) and self.meta.issingle:
-			single_doc = frappe.db.get_singles_dict(
-				self.doctype, for_update=self.flags.for_update
-			)
+			single_doc = frappe.db.get_singles_dict(self.doctype, for_update=self.flags.for_update)
 			if not single_doc:
 				single_doc = frappe.new_doc(self.doctype, as_dict=True)
 				single_doc["name"] = self.doctype
@@ -190,7 +184,7 @@ class Document(BaseDocument):
 		if not self.has_permission(permtype):
 			self.raise_no_permission_to(permlevel or permtype)
 
-	def has_permission(self, permtype="read", verbose=False):
+	def has_permission(self, permtype="read", verbose=False) -> bool:
 		"""Call `frappe.has_permission` if `self.flags.ignore_permissions`
 		is not set.
 
@@ -199,9 +193,7 @@ class Document(BaseDocument):
 
 		if self.flags.ignore_permissions:
 			return True
-		return frappe.permissions.has_permission(
-			self.doctype, permtype, self, verbose=verbose
-		)
+		return frappe.permissions.has_permission(self.doctype, permtype, self, verbose=verbose)
 
 	def raise_no_permission_to(self, perm_type):
 		"""Raise `frappe.PermissionError`."""
@@ -216,7 +208,7 @@ class Document(BaseDocument):
 		ignore_mandatory=None,
 		set_name=None,
 		set_child_names=True,
-	):
+	) -> "Document":
 		"""Insert the document in the database (as a new document).
 		This will check for user permissions and execute `before_insert`,
 		`validate`, `on_update`, `after_insert` methods if they are written.
@@ -246,8 +238,7 @@ class Document(BaseDocument):
 		self.check_permission("create")
 		self.run_method("before_insert")
 		self.set_new_name(
-			draft_name=getattr(self.meta, "name_after_submit", False)
-			and not self._action == "submit",
+			draft_name=getattr(self.meta, "name_after_submit", False) and not self._action == "submit",
 			set_name=set_name,
 			set_child_names=set_child_names,
 		)
@@ -291,9 +282,7 @@ class Document(BaseDocument):
 			delattr(self, "__unsaved")
 
 		if not (
-			frappe.flags.in_migrate
-			or frappe.local.flags.in_install
-			or frappe.flags.in_setup_wizard
+			frappe.flags.in_migrate or frappe.local.flags.in_install or frappe.flags.in_setup_wizard
 		):
 			if frappe.get_cached_value("User", frappe.session.user, "follow_created_documents"):
 				follow_document(self.doctype, self.name, frappe.session.user)
@@ -304,7 +293,7 @@ class Document(BaseDocument):
 		"""Wrapper for _save"""
 		return self._save(*args, **kwargs)
 
-	def _save(self, ignore_permissions=None, ignore_version=None):
+	def _save(self, ignore_permissions=None, ignore_version=None) -> "Document":
 		"""Save the current document in the database in the **DocType**'s table or
 		`tabSingles` (for single types).
 
@@ -321,9 +310,7 @@ class Document(BaseDocument):
 		if ignore_permissions is not None:
 			self.flags.ignore_permissions = ignore_permissions
 
-		self.flags.ignore_version = (
-			frappe.flags.in_test if ignore_version is None else ignore_version
-		)
+		self.flags.ignore_version = frappe.flags.in_test if ignore_version is None else ignore_version
 
 		if self.get("__islocal") or not self.get("name"):
 			return self.insert()
@@ -433,9 +420,7 @@ class Document(BaseDocument):
 			)
 			if len(deleted_rows) > 0:
 				# delete rows that do not match the ones in the document
-				frappe.db.delete(
-					df.options, {"name": ("in", tuple(row[0] for row in deleted_rows))}
-				)
+				frappe.db.delete(df.options, {"name": ("in", tuple(row[0] for row in deleted_rows))})
 
 		else:
 			# no rows found, delete all rows
@@ -452,9 +437,7 @@ class Document(BaseDocument):
 		previous = self.get_doc_before_save()
 		return previous.get(fieldname) != self.get(fieldname) if previous else True
 
-	def set_new_name(
-		self, draft_name=False, force=False, set_name=None, set_child_names=True
-	):
+	def set_new_name(self, draft_name=False, force=False, set_name=None, set_child_names=True):
 		"""Calls `frappe.naming.set_new_name` for parent and child docs."""
 
 		if draft_name and self.flags.draft_name_set and not force and not set_name:
@@ -474,9 +457,7 @@ class Document(BaseDocument):
 			set_new_name(self, draft_name=draft_name)
 
 		if draft_name and getattr(self.meta, "name_after_submit"):
-			frappe.db.set_value(
-				self.doctype, self.name, "_draft_name", self.name, update_modified=False
-			)
+			frappe.db.set_value(self.doctype, self.name, "_draft_name", self.name, update_modified=False)
 
 		if set_child_names:
 			# set name for children
@@ -588,8 +569,7 @@ class Document(BaseDocument):
 		self._save_passwords()
 		self.validate_workflow()
 
-		children = self.get_all_children()
-		for d in children:
+		for d in self.get_all_children():
 			d._validate_data_fields()
 			d._validate_selects()
 			d._validate_non_negative()
@@ -954,11 +934,9 @@ class Document(BaseDocument):
 
 		if cancelled_links:
 			msg = ", ".join((each[2] for each in cancelled_links))
-			frappe.throw(
-				_("Cannot link cancelled document: {0}").format(msg), frappe.CancelledLinkError
-			)
+			frappe.throw(_("Cannot link cancelled document: {0}").format(msg), frappe.CancelledLinkError)
 
-	def get_all_children(self, parenttype=None):
+	def get_all_children(self, parenttype=None) -> List["Document"]:
 		"""Returns all children documents from **Table** type fields in a list."""
 
 		children = []
@@ -1199,9 +1177,7 @@ class Document(BaseDocument):
 			}
 			frappe.publish_realtime("list_update", data, after_commit=True)
 
-	def db_set(
-		self, fieldname, value=None, update_modified=True, notify=False, commit=False
-	):
+	def db_set(self, fieldname, value=None, update_modified=True, notify=False, commit=False):
 		"""Set a value in the document object, update the timestamp and update the database.
 
 		WARNING: This method does not trigger controller validations and should
@@ -1256,8 +1232,7 @@ class Document(BaseDocument):
 
 	def check_no_back_links_exist(self):
 		"""Check if document links to any active document before Cancel."""
-		from frappe.model.delete_doc import (check_if_doc_is_dynamically_linked,
-		                                     check_if_doc_is_linked)
+		from frappe.model.delete_doc import check_if_doc_is_dynamically_linked, check_if_doc_is_linked
 
 		if not self.flags.ignore_links:
 			check_if_doc_is_linked(self, method="Cancel")
@@ -1327,9 +1302,9 @@ class Document(BaseDocument):
 			hooks = []
 			method = f.__name__
 			doc_events = frappe.get_doc_hooks()
-			for handler in doc_events.get(self.doctype, {}).get(method, []) + doc_events.get(
-				"*", {}
-			).get(method, []):
+			for handler in doc_events.get(self.doctype, {}).get(method, []) + doc_events.get("*", {}).get(
+				method, []
+			):
 				hooks.append(frappe.get_attr(handler))
 
 			composed = compose(f, *hooks)
@@ -1391,9 +1366,7 @@ class Document(BaseDocument):
 		if not fieldnames:
 			fieldnames = (
 				df.fieldname
-				for df in doc.meta.get(
-					"fields", {"fieldtype": ["in", ["Currency", "Float", "Percent"]]}
-				)
+				for df in doc.meta.get("fields", {"fieldtype": ["in", ["Currency", "Float", "Percent"]]})
 			)
 
 		for fieldname in fieldnames:
@@ -1445,9 +1418,7 @@ class Document(BaseDocument):
 
 			if user not in _seen:
 				_seen.append(user)
-				frappe.db.set_value(
-					self.doctype, self.name, "_seen", json.dumps(_seen), update_modified=False
-				)
+				frappe.db.set_value(self.doctype, self.name, "_seen", json.dumps(_seen), update_modified=False)
 				frappe.local.flags.commit = True
 
 	def add_viewed(self, user=None):

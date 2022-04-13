@@ -20,17 +20,11 @@ from frappe.utils.testutils import clear_custom_fields
 
 class TestDB(unittest.TestCase):
 	def test_get_value(self):
-		self.assertEqual(
-			frappe.db.get_value("User", {"name": ["=", "Administrator"]}), "Administrator"
-		)
-		self.assertEqual(
-			frappe.db.get_value("User", {"name": ["like", "Admin%"]}), "Administrator"
-		)
+		self.assertEqual(frappe.db.get_value("User", {"name": ["=", "Administrator"]}), "Administrator")
+		self.assertEqual(frappe.db.get_value("User", {"name": ["like", "Admin%"]}), "Administrator")
 		self.assertNotEqual(frappe.db.get_value("User", {"name": ["!=", "Guest"]}), "Guest")
 		self.assertEqual(frappe.db.get_value("User", {"name": ["<", "Adn"]}), "Administrator")
-		self.assertEqual(
-			frappe.db.get_value("User", {"name": ["<=", "Administrator"]}), "Administrator"
-		)
+		self.assertEqual(frappe.db.get_value("User", {"name": ["<=", "Administrator"]}), "Administrator")
 		self.assertEqual(
 			frappe.db.get_value("User", {}, ["Max(name)"], order_by=None),
 			frappe.db.sql("SELECT Max(name) FROM tabUser")[0][0],
@@ -56,16 +50,12 @@ class TestDB(unittest.TestCase):
 			),
 		)
 		self.assertEqual(
-			frappe.db.sql(
-				"""SELECT name FROM `tabUser` WHERE name > 's' ORDER BY MODIFIED DESC"""
-			)[0][0],
+			frappe.db.sql("""SELECT name FROM `tabUser` WHERE name > 's' ORDER BY MODIFIED DESC""")[0][0],
 			frappe.db.get_value("User", {"name": [">", "s"]}),
 		)
 
 		self.assertEqual(
-			frappe.db.sql(
-				"""SELECT name FROM `tabUser` WHERE name >= 't' ORDER BY MODIFIED DESC"""
-			)[0][0],
+			frappe.db.sql("""SELECT name FROM `tabUser` WHERE name >= 't' ORDER BY MODIFIED DESC""")[0][0],
 			frappe.db.get_value("User", {"name": [">=", "t"]}),
 		)
 		self.assertEqual(
@@ -92,12 +82,8 @@ class TestDB(unittest.TestCase):
 			).lower(),
 		)
 		self.assertEqual(
-			frappe.db.sql(
-				"select email from tabUser where name='Administrator' order by modified DESC"
-			),
-			frappe.db.get_values(
-				"User", filters=[["name", "=", "Administrator"]], fieldname="email"
-			),
+			frappe.db.sql("select email from tabUser where name='Administrator' order by modified DESC"),
+			frappe.db.get_values("User", filters=[["name", "=", "Administrator"]], fieldname="email"),
 		)
 
 	def test_get_value_limits(self):
@@ -154,9 +140,7 @@ class TestDB(unittest.TestCase):
 		for inp in test_inputs:
 			fieldname = f"test_{inp['fieldtype'].lower()}"
 			frappe.db.set_value("Print Settings", "Print Settings", fieldname, inp["value"])
-			self.assertEqual(
-				frappe.db.get_single_value("Print Settings", fieldname), inp["value"]
-			)
+			self.assertEqual(frappe.db.get_single_value("Print Settings", fieldname), inp["value"])
 
 		# teardown
 		clear_custom_fields("Print Settings")
@@ -306,9 +290,7 @@ class TestDB(unittest.TestCase):
 		# Create documents under that doctype and query them via ORM
 		for _ in range(10):
 			docfields = {key.lower(): random_string(10) for key in fields}
-			doc = frappe.get_doc(
-				{"doctype": test_doctype, "description": random_string(20), **docfields}
-			)
+			doc = frappe.get_doc({"doctype": test_doctype, "description": random_string(20), **docfields})
 			doc.insert()
 			created_docs.append(doc.name)
 
@@ -355,9 +337,7 @@ class TestDB(unittest.TestCase):
 
 		# Testing update
 		frappe.db.set_value(test_doctype, random_doc, random_field, random_value)
-		self.assertEqual(
-			frappe.db.get_value(test_doctype, random_doc, random_field), random_value
-		)
+		self.assertEqual(frappe.db.get_value(test_doctype, random_doc, random_field), random_value)
 
 		# Cleanup - delete records and remove custom fields
 		for doc in created_docs:
@@ -445,9 +425,7 @@ class TestDB(unittest.TestCase):
 	def test_pk_collision_ignoring(self):
 		# note has `name` generated from title
 		for _ in range(3):
-			frappe.get_doc(doctype="Note", title="duplicate name").insert(
-				ignore_if_duplicate=True
-			)
+			frappe.get_doc(doctype="Note", title="duplicate name").insert(ignore_if_duplicate=True)
 
 		with savepoint():
 			self.assertRaises(
@@ -465,9 +443,7 @@ class TestDB(unittest.TestCase):
 
 		filters = {"doctype": dt, "name": ("like", "Admin%")}
 		self.assertEqual(frappe.db.exists(filters), dn)
-		self.assertEqual(
-			filters["doctype"], dt
-		)  # make sure that doctype was not removed from filters
+		self.assertEqual(filters["doctype"], dt)  # make sure that doctype was not removed from filters
 
 		self.assertEqual(frappe.db.exists(dt, [["name", "=", dn]]), dn)
 
@@ -543,23 +519,17 @@ class TestDBSetValue(unittest.TestCase):
 		frappe.db.set_value(
 			"System Settings", "System Settings", "deny_multiple_sessions", changed_value
 		)
-		current_value = frappe.db.get_single_value(
-			"System Settings", "deny_multiple_sessions"
-		)
+		current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
 		self.assertEqual(current_value, changed_value)
 
 		changed_value = not current_value
 		frappe.db.set_value("System Settings", None, "deny_multiple_sessions", changed_value)
-		current_value = frappe.db.get_single_value(
-			"System Settings", "deny_multiple_sessions"
-		)
+		current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
 		self.assertEqual(current_value, changed_value)
 
 		changed_value = not current_value
 		frappe.db.set_single_value("System Settings", "deny_multiple_sessions", changed_value)
-		current_value = frappe.db.get_single_value(
-			"System Settings", "deny_multiple_sessions"
-		)
+		current_value = frappe.db.get_single_value("System Settings", "deny_multiple_sessions")
 		self.assertEqual(current_value, changed_value)
 
 	def test_update_single_row_single_column(self):
@@ -592,12 +562,8 @@ class TestDBSetValue(unittest.TestCase):
 			"ToDo", {"description": ("like", "%test_set_value%")}, "description", "change 2"
 		)
 
-		self.assertEqual(
-			frappe.db.get_value("ToDo", self.todo1.name, "description"), "change 2"
-		)
-		self.assertEqual(
-			frappe.db.get_value("ToDo", self.todo2.name, "description"), "change 2"
-		)
+		self.assertEqual(frappe.db.get_value("ToDo", self.todo1.name, "description"), "change 2")
+		self.assertEqual(frappe.db.get_value("ToDo", self.todo2.name, "description"), "change 2")
 
 	def test_update_multiple_rows_multiple_columns(self):
 		todos_to_update = frappe.get_all(
@@ -627,12 +593,8 @@ class TestDBSetValue(unittest.TestCase):
 		custom_modified = datetime.datetime.fromisoformat(add_days(now(), 10))
 		custom_modified_by = "user_that_doesnt_exist@example.com"
 
-		frappe.db.set_value(
-			"ToDo", todo.name, "description", updated_description, update_modified=False
-		)
-		self.assertEqual(
-			updated_description, frappe.db.get_value("ToDo", todo.name, "description")
-		)
+		frappe.db.set_value("ToDo", todo.name, "description", updated_description, update_modified=False)
+		self.assertEqual(updated_description, frappe.db.get_value("ToDo", todo.name, "description"))
 		self.assertEqual(todo.modified, frappe.db.get_value("ToDo", todo.name, "modified"))
 
 		frappe.db.set_value(
@@ -783,7 +745,9 @@ class TestDDLCommandsPost(unittest.TestCase):
 			modify_query(query),
 		)
 
-		query = 'select locate(".io", "frappe.io"), locate("3", cast(3 as varchar)), locate("3", 3::varchar)'
+		query = (
+			'select locate(".io", "frappe.io"), locate("3", cast(3 as varchar)), locate("3", 3::varchar)'
+		)
 		self.assertEqual(
 			'select strpos( "frappe.io", ".io"), strpos( cast(3 as varchar), "3"), strpos( 3::varchar, "3")',
 			modify_query(query),
@@ -797,16 +761,12 @@ class TestDDLCommandsPost(unittest.TestCase):
 			{"abcd": "23", "efgh": "23", "ijkl": 23.0345, "mnop": "wow"},
 			modify_values({"abcd": 23, "efgh": 23.0, "ijkl": 23.0345, "mnop": "wow"}),
 		)
-		self.assertEqual(
-			["23", "23", 23.00004345, "wow"], modify_values((23, 23.0, 23.00004345, "wow"))
-		)
+		self.assertEqual(["23", "23", 23.00004345, "wow"], modify_values((23, 23.0, 23.00004345, "wow")))
 
 	def test_sequence_table_creation(self):
 		from frappe.core.doctype.doctype.test_doctype import new_doctype
 
-		dt = new_doctype("autoinc_dt_seq_test", autoincremented=True).insert(
-			ignore_permissions=True
-		)
+		dt = new_doctype("autoinc_dt_seq_test", autoname="autoincrement").insert(ignore_permissions=True)
 
 		if frappe.db.db_type == "postgres":
 			self.assertTrue(
