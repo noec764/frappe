@@ -39,5 +39,8 @@ def create_archive(doc):
 			archive.flags.ignore_permissions = True
 			archive.insert()
 			archive.submit()
+		except frappe.exceptions.LinkValidationError:
+			# Don't throw if the reference has been deleted in the meantime
+			pass
 		except Exception:
 			frappe.log_error(frappe.get_traceback(), "Document archiving error")

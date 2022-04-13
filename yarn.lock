@@ -1395,10 +1395,10 @@ data-uri-to-buffer@0.0.3:
   resolved "https://registry.yarnpkg.com/data-uri-to-buffer/-/data-uri-to-buffer-0.0.3.tgz#18ae979a6a0ca994b0625853916d2662bbae0b1a"
   integrity sha1-GK6XmmoMqZSwYlhTkW0mYruuCxo=
 
-date-fns@^2.0.0-beta.4:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.8.1.tgz#2109362ccb6c87c3ca011e9e31f702bc09e4123b"
-  integrity sha512-EL/C8IHvYRwAHYgFRse4MGAPSqlJVlOrhVYZ75iQBKrnv+ZedmYsgwH3t+BCDuZDXpoo07+q9j4qgSSOa7irJg==
+date-fns@^2.17.0:
+  version "2.28.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.28.0.tgz#9570d656f5fc13143e50c975a3b6bbeb46cd08b2"
+  integrity sha512-8d35hViGYx/QH0icHYCeLmsLmMUheMmTyV9Fcm6gvNwdw31yXXH+O85sOBJ+OLnLQMKZowvpKb6FgMIQjcpvQw==
 
 dateformat@^3.0.3:
   version "3.0.3"
@@ -1514,11 +1514,6 @@ destroy@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.0.4.tgz#978857442c44749e4206613e37946205826abd80"
   integrity sha1-l4hXRCxEdJ5CBmE+N5RiBYJqvYA=
-
-diacriticless@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/diacriticless/-/diacriticless-1.0.1.tgz#e7dda978c2919609bb48aee1efc5de6a337bd4c3"
-  integrity sha1-592peMKRlgm7SK7h78XeajN71MM=
 
 diff@3.5.0:
   version "3.5.0"
@@ -3152,30 +3147,10 @@ lodash._topath@^3.0.0:
   dependencies:
     lodash.isarray "^3.0.0"
 
-lodash.assign@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/lodash.assign/-/lodash.assign-4.2.0.tgz#0d99f3ccd7a6d261d19bdaeb9245005d285808e7"
-  integrity sha1-DZnzzNem0mHRm9rrkkUAXShYCOc=
-
 lodash.camelcase@^4.3.0:
   version "4.3.0"
   resolved "https://registry.yarnpkg.com/lodash.camelcase/-/lodash.camelcase-4.3.0.tgz#b28aa6288a2b9fc651035c7711f65ab6190331a6"
   integrity sha1-soqmKIorn8ZRA1x3EfZathkDMaY=
-
-lodash.clonedeep@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.clonedeep/-/lodash.clonedeep-4.5.0.tgz#e23f3f9c4f8fbdde872529c1071857a086e5ccef"
-  integrity sha1-4j8/nE+Pvd6HJSnBBxhXoIblzO8=
-
-lodash.filter@^4.6.0:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/lodash.filter/-/lodash.filter-4.6.0.tgz#668b1d4981603ae1cc5a6fa760143e480b4c4ace"
-  integrity sha1-ZosdSYFgOuHMWm+nYBQ+SAtMSs4=
-
-lodash.foreach@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/lodash.foreach/-/lodash.foreach-4.5.0.tgz#1a6a35eace401280c7f06dddec35165ab27e3e53"
-  integrity sha1-Gmo16s5AEoDH8G3d7DUWWrJ+PlM=
 
 lodash.get@^4.4.2:
   version "4.4.2"
@@ -6071,19 +6046,13 @@ void-elements@^2.0.1:
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
   integrity sha1-wGavtYK7HLQSjWDqkjkulNXp2+w=
 
-vue-good-table@^2.20.0:
-  version "2.20.0"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.20.0.tgz#fb2e70758cd86b4ec1aa985369a8b58528cbe81c"
-  integrity sha512-KBOX0GUOOgpT5CPTr2HD0Po/j+GNjGiutF2OCaxhgB/897x40t1M5JlxUjHp2+F/0iZ9YtCZqc123e4CR6rC6w==
+vue-good-table@^2.21.11:
+  version "2.21.11"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.11.tgz#0d92a36f4119bc91825009780c09df38d27b5a4b"
+  integrity sha512-OpVPdxbBTahtfq1aXxEa5P1CMy1wiLcBg4mo7k6Qs537l9v8KVrvF+fXqbnxqNrAfmd1Mw9LidcjgTErjmVU8g==
   dependencies:
-    date-fns "^2.0.0-beta.4"
-    diacriticless "1.0.1"
-    lodash.assign "^4.2.0"
-    lodash.clonedeep "^4.5.0"
-    lodash.filter "^4.6.0"
-    lodash.foreach "^4.5.0"
+    date-fns "^2.17.0"
     lodash.isequal "^4.5.0"
-    vue-select "^3.1.0"
 
 vue-router@^2.0.0:
   version "2.8.1"
@@ -6094,11 +6063,6 @@ vue-runtime-helpers@^1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/vue-runtime-helpers/-/vue-runtime-helpers-1.1.2.tgz#446b7b820888ab0c5264d2c3a32468e72e4100f3"
   integrity sha512-pZfGp+PW/IXEOyETE09xQHR1CKkR9HfHZdnMD/FVLUNI+HxYTa82evx5WrF6Kz4s82qtqHvMZ8MZpbk2zT2E1Q==
-
-vue-select@^3.1.0:
-  version "3.10.7"
-  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.10.7.tgz#58d756a7159bf923ce99abf74c5d6309ea998136"
-  integrity sha512-6rvIYBNEp9y0xK/sq2ZzDCxKA2BoVNliyctOeMtzarQzvpLlab7l8zvqr2jhGZOxozp7jd2AvZxpF3Ivems2wQ==
 
 vue-template-compiler@^2.6.11:
   version "2.6.11"
