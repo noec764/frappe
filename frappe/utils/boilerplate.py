@@ -70,24 +70,14 @@ def make_boilerplate(dest, app_name, no_git=False):
 		os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "pages"),
 		with_init=True,
 	)
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes")
-	)
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True
-	)
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css")
-	)
-	frappe.create_folder(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js")
-	)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "templates", "includes"))
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "config"), with_init=True)
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "css"))
+	frappe.create_folder(os.path.join(dest, hooks.app_name, hooks.app_name, "public", "js"))
 
 	# add .gitkeep file so that public folder is committed to git
 	# this is needed because if public doesn't exist, bench build doesn't symlink the apps assets
-	with open(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "public", ".gitkeep"), "w"
-	) as f:
+	with open(os.path.join(dest, hooks.app_name, hooks.app_name, "public", ".gitkeep"), "w") as f:
 		f.write("")
 
 	with open(os.path.join(dest, hooks.app_name, hooks.app_name, "__init__.py"), "w") as f:
@@ -127,14 +117,10 @@ def make_boilerplate(dest, app_name, no_git=False):
 
 	touch_file(os.path.join(dest, hooks.app_name, hooks.app_name, "patches.txt"))
 
-	with open(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "config", "desktop.py"), "w"
-	) as f:
+	with open(os.path.join(dest, hooks.app_name, hooks.app_name, "config", "desktop.py"), "w") as f:
 		f.write(frappe.as_unicode(desktop_template.format(**hooks)))
 
-	with open(
-		os.path.join(dest, hooks.app_name, hooks.app_name, "config", "docs.py"), "w"
-	) as f:
+	with open(os.path.join(dest, hooks.app_name, hooks.app_name, "config", "docs.py"), "w") as f:
 		f.write(frappe.as_unicode(docs_template.format(**hooks)))
 
 	app_directory = os.path.join(dest, hooks.app_name)

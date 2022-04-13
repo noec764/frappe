@@ -8,12 +8,17 @@ import unittest
 import pyotp
 
 import frappe
-from frappe.auth import (HTTPRequest, get_login_attempt_tracker,
-                         validate_ip_address)
-from frappe.twofactor import (ExpiredLoginException, authenticate_for_2factor,
-                              confirm_otp_token, get_cached_user_pass,
-                              get_otpsecret_for_, get_verification_obj,
-                              should_run_2fa, two_factor_is_enabled_for_)
+from frappe.auth import HTTPRequest, get_login_attempt_tracker, validate_ip_address
+from frappe.twofactor import (
+	ExpiredLoginException,
+	authenticate_for_2factor,
+	confirm_otp_token,
+	get_cached_user_pass,
+	get_otpsecret_for_,
+	get_verification_obj,
+	should_run_2fa,
+	two_factor_is_enabled_for_,
+)
 from frappe.utils import cint, set_request
 
 from . import get_system_setting, update_system_settings
@@ -22,9 +27,7 @@ from . import get_system_setting, update_system_settings
 class TestTwoFactor(unittest.TestCase):
 	def __init__(self, *args, **kwargs):
 		super(TestTwoFactor, self).__init__(*args, **kwargs)
-		self.default_allowed_login_attempts = get_system_setting(
-			"allow_consecutive_login_attempts"
-		)
+		self.default_allowed_login_attempts = get_system_setting("allow_consecutive_login_attempts")
 
 	def setUp(self):
 		self.http_requests = create_http_request()
@@ -37,9 +40,7 @@ class TestTwoFactor(unittest.TestCase):
 		frappe.local.response["tmp_id"] = None
 		disable_2fa()
 		frappe.clear_cache(user=self.user)
-		update_system_settings(
-			{"allow_consecutive_login_attempts": self.default_allowed_login_attempts}
-		)
+		update_system_settings({"allow_consecutive_login_attempts": self.default_allowed_login_attempts})
 
 	def test_should_run_2fa(self):
 		"""Should return true if enabled."""
@@ -61,9 +62,7 @@ class TestTwoFactor(unittest.TestCase):
 		self.assertTrue(verification_obj)
 		self.assertTrue(tmp_id)
 		for k in ["_usr", "_pwd", "_otp_secret"]:
-			self.assertTrue(
-				frappe.cache().get("{0}{1}".format(tmp_id, k)), "{} not available".format(k)
-			)
+			self.assertTrue(frappe.cache().get("{0}{1}".format(tmp_id, k)), "{} not available".format(k))
 
 	def test_two_factor_is_enabled(self):
 		"""
@@ -217,9 +216,7 @@ def enable_2fa(bypass_two_factor_auth=0, bypass_restrict_ip_check=0):
 	system_settings = frappe.get_doc("System Settings")
 	system_settings.enable_two_factor_auth = 1
 	system_settings.bypass_2fa_for_retricted_ip_users = cint(bypass_two_factor_auth)
-	system_settings.bypass_restrict_ip_check_if_2fa_enabled = cint(
-		bypass_restrict_ip_check
-	)
+	system_settings.bypass_restrict_ip_check_if_2fa_enabled = cint(bypass_restrict_ip_check)
 	system_settings.two_factor_method = "OTP App"
 	system_settings.flags.ignore_mandatory = True
 	system_settings.save(ignore_permissions=True)

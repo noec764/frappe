@@ -9,17 +9,26 @@ import frappe.defaults
 import frappe.permissions
 import frappe.share
 from frappe import _, msgprint, throw
-from frappe.core.doctype.user_type.user_type import \
-    user_linked_with_permission_on_doctype
+from frappe.core.doctype.user_type.user_type import user_linked_with_permission_on_doctype
 from frappe.desk.doctype.notification_settings.notification_settings import (
-    create_notification_settings, toggle_notifications)
+	create_notification_settings,
+	toggle_notifications,
+)
 from frappe.desk.notifications import clear_notifications
 from frappe.model.document import Document
 from frappe.query_builder import DocType
 from frappe.rate_limiter import rate_limit
-from frappe.utils import (cint, escape_html, flt, format_datetime,
-                          get_formatted_email, get_time_zone, has_gravatar,
-                          now_datetime, today)
+from frappe.utils import (
+	cint,
+	escape_html,
+	flt,
+	format_datetime,
+	get_formatted_email,
+	get_time_zone,
+	has_gravatar,
+	now_datetime,
+	today,
+)
 from frappe.utils.password import check_password, get_password_reset_limit
 from frappe.utils.password import update_password as _update_password
 from frappe.utils.user import get_system_managers
@@ -135,9 +144,7 @@ class User(Document):
 				now=now,
 			)
 		if self.name not in ("Administrator", "Guest") and not self.user_image:
-			frappe.enqueue(
-				"frappe.core.doctype.user.user.update_gravatar", name=self.name, now=now
-			)
+			frappe.enqueue("frappe.core.doctype.user.user.update_gravatar", name=self.name, now=now)
 
 		# Set user selected timezone
 		if self.time_zone:
@@ -185,9 +192,7 @@ class User(Document):
 			and cint(frappe.db.get_single_value("System Settings", "setup_complete"))
 		):
 
-			msgprint(
-				_("Adding System Manager to this User as there must be atleast one System Manager")
-			)
+			msgprint(_("Adding System Manager to this User as there must be atleast one System Manager"))
 			self.append("roles", {"doctype": "Has Role", "role": "System Manager"})
 
 		if self.name == "Administrator":
@@ -202,17 +207,13 @@ class User(Document):
 
 	def email_new_password(self, new_password=None):
 		if new_password and not self.flags.in_insert:
-			_update_password(
-				user=self.name, pwd=new_password, logout_all_sessions=self.logout_all_sessions
-			)
+			_update_password(user=self.name, pwd=new_password, logout_all_sessions=self.logout_all_sessions)
 
 	def set_system_user(self):
 		"""For the standard users like admin and guest, the user type is fixed."""
 		user_type_mapper = {"Administrator": "System User", "Guest": "Website User"}
 
-		if self.user_type and not frappe.get_cached_value(
-			"User Type", self.user_type, "is_standard"
-		):
+		if self.user_type and not frappe.get_cached_value("User Type", self.user_type, "is_standard"):
 			if user_type_mapper.get(self.name):
 				self.user_type = user_type_mapper.get(self.name)
 			else:
@@ -245,9 +246,7 @@ class User(Document):
 		role_table = DocType("Role")
 		return frappe.db.count(
 			role_table,
-			(
-				(role_table.desk_access == 1) & (role_table.name.isin([d.role for d in self.roles]))
-			),
+			((role_table.desk_access == 1) & (role_table.name.isin([d.role for d in self.roles]))),
 		)
 
 	def share_with_self(self):
@@ -334,9 +333,7 @@ class User(Document):
 
 	def get_fullname(self):
 		"""get first_name space last_name"""
-		return (
-			(self.first_name or "") + (self.first_name and " " or "") + (self.last_name or "")
-		)
+		return (self.first_name or "") + (self.first_name and " " or "") + (self.last_name or "")
 
 	def password_reset_mail(self, link):
 		self.send_login_mail(_("Password Reset"), "password_reset", {"link": link}, now=True)
@@ -347,9 +344,7 @@ class User(Document):
 		link = self.reset_password()
 		subject = None
 
-		email_template = frappe.db.get_value(
-			"System Settings", None, "template_for_welcome_email"
-		)
+		email_template = frappe.db.get_value("System Settings", None, "template_for_welcome_email")
 		if email_template:
 			subject = frappe.db.get_value("Email Template", email_template, "subject")
 
@@ -404,9 +399,7 @@ class User(Document):
 			)
 
 		sender = (
-			frappe.session.user not in STANDARD_USERS
-			and get_formatted_email(frappe.session.user)
-			or None
+			frappe.session.user not in STANDARD_USERS and get_formatted_email(frappe.session.user) or None
 		)
 
 		frappe.sendmail(
@@ -510,9 +503,7 @@ class User(Document):
 				)
 
 		if frappe.db.exists("Notification Settings", old_name):
-			frappe.rename_doc(
-				"Notification Settings", old_name, new_name, force=True, show_alert=False
-			)
+			frappe.rename_doc("Notification Settings", old_name, new_name, force=True, show_alert=False)
 
 		# set email
 		frappe.db.update("User", new_name, "email", new_name)
@@ -673,9 +664,7 @@ class User(Document):
 		self.save()
 
 	@classmethod
-	def find_by_credentials(
-		cls, user_name: str, password: str, validate_password: bool = True
-	):
+	def find_by_credentials(cls, user_name: str, password: str, validate_password: bool = True):
 		"""Find the user by credentials.
 
 		This is a login utility that needs to check login related system settings while finding the user.
@@ -684,14 +673,10 @@ class User(Document):
 		3. If allow_login_using_user_name is set, you can use username while finding the user.
 		"""
 		login_with_mobile = cint(
-			frappe.db.get_value(
-				"System Settings", "System Settings", "allow_login_using_mobile_number"
-			)
+			frappe.db.get_value("System Settings", "System Settings", "allow_login_using_mobile_number")
 		)
 		login_with_username = cint(
-			frappe.db.get_value(
-				"System Settings", "System Settings", "allow_login_using_user_name"
-			)
+			frappe.db.get_value("System Settings", "System Settings", "allow_login_using_user_name")
 		)
 
 		or_filters = [{"name": user_name}]
@@ -700,9 +685,7 @@ class User(Document):
 		if login_with_username:
 			or_filters.append({"username": user_name})
 
-		users = frappe.db.get_all(
-			"User", fields=["name", "enabled"], or_filters=or_filters, limit=1
-		)
+		users = frappe.db.get_all("User", fields=["name", "enabled"], or_filters=or_filters, limit=1)
 		if not users:
 			return
 
@@ -805,8 +788,7 @@ def update_password(new_password, logout_all_sessions=0, key=None, old_password=
 
 @frappe.whitelist(allow_guest=True)
 def test_password_strength(new_password, key=None, old_password=None, user_data=None):
-	from frappe.utils.password_strength import \
-	    test_password_strength as _test_password_strength
+	from frappe.utils.password_strength import test_password_strength as _test_password_strength
 
 	password_policy = (
 		frappe.db.get_value(
@@ -839,9 +821,7 @@ def test_password_strength(new_password, key=None, old_password=None, user_data=
 		if result.get("score") and result.get("score") >= minimum_password_score:
 			password_policy_validation_passed = True
 
-		result["feedback"][
-			"password_policy_validation_passed"
-		] = password_policy_validation_passed
+		result["feedback"]["password_policy_validation_passed"] = password_policy_validation_passed
 		return result
 
 
@@ -1113,9 +1093,7 @@ def notify_admin_access_to_system_manager(login_manager=None):
 	):
 
 		site = '<a href="{0}" target="_blank">{0}</a>'.format(frappe.local.request.host_url)
-		date_and_time = "<b>{0}</b>".format(
-			format_datetime(now_datetime(), format_string="medium")
-		)
+		date_and_time = "<b>{0}</b>".format(format_datetime(now_datetime(), format_string="medium"))
 		ip_address = frappe.local.request_ip
 
 		access_message = _("Administrator accessed {0} on {1} via IP Address {2}.").format(
@@ -1150,14 +1128,10 @@ def extract_mentions(txt):
 
 
 def handle_password_test_fail(result):
-	suggestions = (
-		result["feedback"]["suggestions"][0] if result["feedback"]["suggestions"] else ""
-	)
+	suggestions = result["feedback"]["suggestions"][0] if result["feedback"]["suggestions"] else ""
 	warning = result["feedback"]["warning"] if "warning" in result["feedback"] else ""
 	suggestions += (
-		"<br>"
-		+ _("Hint: Include symbols, numbers and capital letters in the password")
-		+ "<br>"
+		"<br>" + _("Hint: Include symbols, numbers and capital letters in the password") + "<br>"
 	)
 	frappe.throw(" ".join([_("Invalid Password:"), warning, suggestions]))
 
@@ -1172,9 +1146,7 @@ def throttle_user_creation():
 	if frappe.flags.in_import:
 		return
 
-	if frappe.db.get_creation_count("User", 60) > frappe.local.conf.get(
-		"throttle_user_limit", 60
-	):
+	if frappe.db.get_creation_count("User", 60) > frappe.local.conf.get("throttle_user_limit", 60):
 		frappe.throw(_("Throttled"))
 
 
@@ -1186,9 +1158,7 @@ def get_role_profile(role_profile):
 
 @frappe.whitelist()
 def get_module_profile(module_profile):
-	module_profile = frappe.get_doc(
-		"Module Profile", {"module_profile_name": module_profile}
-	)
+	module_profile = frappe.get_doc("Module Profile", {"module_profile_name": module_profile})
 	return module_profile.get("block_modules")
 
 
@@ -1235,9 +1205,7 @@ def create_contact(user, ignore_links=False, ignore_mandatory=False):
 		contact.gender = user.gender
 
 		# Add mobile number if phone does not exists in contact
-		if user.phone and not any(
-			new_contact.phone == user.phone for new_contact in contact.phone_nos
-		):
+		if user.phone and not any(new_contact.phone == user.phone for new_contact in contact.phone_nos):
 			# Set primary phone if there is no primary phone number
 			contact.add_phone(
 				user.phone,

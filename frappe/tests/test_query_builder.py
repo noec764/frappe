@@ -4,15 +4,12 @@ from typing import Callable
 import frappe
 from frappe.query_builder import Case
 from frappe.query_builder.custom import ConstantColumn
-from frappe.query_builder.functions import (Cast_, Coalesce, CombineDatetime,
-                                            GroupConcat, Match)
+from frappe.query_builder.functions import Cast_, Coalesce, CombineDatetime, GroupConcat, Match
 from frappe.query_builder.utils import db_type_is
 
 
 def run_only_if(dbtype: db_type_is) -> Callable:
-	return unittest.skipIf(
-		db_type_is(frappe.conf.db_type) != dbtype, f"Only runs for {dbtype.value}"
-	)
+	return unittest.skipIf(db_type_is(frappe.conf.db_type) != dbtype, f"Only runs for {dbtype.value}")
 
 
 @run_only_if(db_type_is.MARIADB)
@@ -22,9 +19,7 @@ class TestCustomFunctionsMariaDB(unittest.TestCase):
 
 	def test_match(self):
 		query = Match("Notes").Against("text")
-		self.assertEqual(
-			" MATCH('Notes') AGAINST ('+text*' IN BOOLEAN MODE)", query.get_sql()
-		)
+		self.assertEqual(" MATCH('Notes') AGAINST ('+text*' IN BOOLEAN MODE)", query.get_sql())
 
 	def test_constant_column(self):
 		query = frappe.qb.from_("DocType").select("name", ConstantColumn("John").as_("User"))
@@ -53,9 +48,7 @@ class TestCustomFunctionsMariaDB(unittest.TestCase):
 			str(select_query).lower(),
 		)
 
-		select_query = select_query.orderby(
-			CombineDatetime(note.posting_date, note.posting_time)
-		)
+		select_query = select_query.orderby(CombineDatetime(note.posting_date, note.posting_time))
 		self.assertIn(
 			"order by timestamp(`tabnote`.`posting_date`,`tabnote`.`posting_time`)",
 			str(select_query).lower(),
@@ -119,9 +112,7 @@ class TestCustomFunctionsPostgres(unittest.TestCase):
 			'select "tabnote"."posting_date"+"tabnote"."posting_time"', str(select_query).lower()
 		)
 
-		select_query = select_query.orderby(
-			CombineDatetime(note.posting_date, note.posting_time)
-		)
+		select_query = select_query.orderby(CombineDatetime(note.posting_date, note.posting_time))
 		self.assertIn(
 			'order by "tabnote"."posting_date"+"tabnote"."posting_time"',
 			str(select_query).lower(),
@@ -168,9 +159,7 @@ class TestParameterization(unittest.TestCase):
 	def test_where_conditions(self):
 		DocType = frappe.qb.DocType("DocType")
 		query = (
-			frappe.qb.from_(DocType)
-			.select(DocType.name)
-			.where((DocType.owner == "Administrator' --"))
+			frappe.qb.from_(DocType).select(DocType.name).where((DocType.owner == "Administrator' --"))
 		)
 		self.assertTrue("walk" in dir(query))
 		query, params = query.walk()
@@ -250,23 +239,15 @@ class TestParameterization(unittest.TestCase):
 @run_only_if(db_type_is.MARIADB)
 class TestBuilderMaria(unittest.TestCase, TestBuilderBase):
 	def test_adding_tabs_in_from(self):
-		self.assertEqual(
-			"SELECT * FROM `tabNotes`", frappe.qb.from_("Notes").select("*").get_sql()
-		)
-		self.assertEqual(
-			"SELECT * FROM `__Auth`", frappe.qb.from_("__Auth").select("*").get_sql()
-		)
+		self.assertEqual("SELECT * FROM `tabNotes`", frappe.qb.from_("Notes").select("*").get_sql())
+		self.assertEqual("SELECT * FROM `__Auth`", frappe.qb.from_("__Auth").select("*").get_sql())
 
 
 @run_only_if(db_type_is.POSTGRES)
 class TestBuilderPostgres(unittest.TestCase, TestBuilderBase):
 	def test_adding_tabs_in_from(self):
-		self.assertEqual(
-			'SELECT * FROM "tabNotes"', frappe.qb.from_("Notes").select("*").get_sql()
-		)
-		self.assertEqual(
-			'SELECT * FROM "__Auth"', frappe.qb.from_("__Auth").select("*").get_sql()
-		)
+		self.assertEqual('SELECT * FROM "tabNotes"', frappe.qb.from_("Notes").select("*").get_sql())
+		self.assertEqual('SELECT * FROM "__Auth"', frappe.qb.from_("__Auth").select("*").get_sql())
 
 	def test_replace_tables(self):
 		info_schema = frappe.qb.Schema("information_schema")

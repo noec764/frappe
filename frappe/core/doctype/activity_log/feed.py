@@ -5,8 +5,7 @@
 import frappe
 import frappe.permissions
 from frappe import _
-from frappe.core.doctype.activity_log.activity_log import \
-    add_authentication_log
+from frappe.core.doctype.activity_log.activity_log import add_authentication_log
 from frappe.utils import get_fullname
 
 
@@ -98,9 +97,7 @@ def get_feed_match_conditions(user=None, doctype="Comment"):
 			can_read_docs = []
 			for dt, obj in user_permissions.items():
 				for n in obj:
-					can_read_docs.append(
-						"{}|{}".format(frappe.db.escape(dt), frappe.db.escape(n.get("doc", "")))
-					)
+					can_read_docs.append("{}|{}".format(frappe.db.escape(dt), frappe.db.escape(n.get("doc", ""))))
 
 			if can_read_docs:
 				conditions.append(

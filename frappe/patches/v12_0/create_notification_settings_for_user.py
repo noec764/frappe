@@ -1,6 +1,7 @@
 import frappe
-from frappe.desk.doctype.notification_settings.notification_settings import \
-    create_notification_settings
+from frappe.desk.doctype.notification_settings.notification_settings import (
+	create_notification_settings,
+)
 
 
 def execute():

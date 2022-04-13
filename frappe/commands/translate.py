@@ -39,9 +39,7 @@ def new_language(context, lang_code, app):
 	translations = frappe.translate.get_untranslated(
 		lang_code, get_all=all, app=APP_MAPPING.get(app, app), write=False
 	)
-	frappe.translate.write_translations_file(
-		APP_MAPPING.get(app, app), lang_code, translations
-	)
+	frappe.translate.write_translations_file(APP_MAPPING.get(app, app), lang_code, translations)
 
 	print(
 		"File created at ./apps/{app}/{app}/translations/{lang_code}.json".format(
@@ -104,9 +102,7 @@ def cleanup_translations(context, apps=None, langs=None):
 	try:
 		frappe.init(site=site)
 		frappe.connect()
-		frappe.translate.cleanup_translation_files(
-			[a.translate(APP_MAPPING) for a in apps], langs
-		)
+		frappe.translate.cleanup_translation_files([a.translate(APP_MAPPING) for a in apps], langs)
 	finally:
 		frappe.destroy()
 

@@ -2,9 +2,7 @@ import frappe
 
 
 def execute():
-	for dt in frappe.get_all(
-		"Workflow", fields=["name", "document_type", "workflow_state_field"]
-	):
+	for dt in frappe.get_all("Workflow", fields=["name", "document_type", "workflow_state_field"]):
 		fieldname = frappe.db.get_value(
 			"Custom Field",
 			filters={"dt": dt.document_type, "fieldname": dt.workflow_state_field},

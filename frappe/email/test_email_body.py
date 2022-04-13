@@ -6,11 +6,13 @@ import unittest
 
 import frappe
 from frappe import safe_decode
-from frappe.email.doctype.email_queue.email_queue import (QueueBuilder,
-                                                          SendMailContext)
-from frappe.email.email_body import (get_email, get_header,
-                                     inline_style_in_html,
-                                     replace_filename_with_cid)
+from frappe.email.doctype.email_queue.email_queue import QueueBuilder, SendMailContext
+from frappe.email.email_body import (
+	get_email,
+	get_header,
+	inline_style_in_html,
+	replace_filename_with_cid,
+)
 from frappe.email.receive import Email
 
 
@@ -167,9 +169,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		)
 
 		# REDESIGN-TODO: Add style for indicators in email
-		self.assertTrue(
-			"""<span class=3D"indicator indicator-green"></span>""" in email_string
-		)
+		self.assertTrue("""<span class=3D"indicator indicator-green"></span>""" in email_string)
 		self.assertTrue("<span>Email Title</span>" in email_string)
 
 	def test_get_email_header(self):
@@ -184,9 +184,7 @@ w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 		self.assertTrue("<span>This is string</span>" in html)
 
 	def test_8bit_utf_8_decoding(self):
-		text_content_bytes = (
-			b"\xed\x95\x9c\xea\xb8\x80\xe1\xa5\xa1\xe2\x95\xa5\xe0\xba\xaa\xe0\xa4\x8f"
-		)
+		text_content_bytes = b"\xed\x95\x9c\xea\xb8\x80\xe1\xa5\xa1\xe2\x95\xa5\xe0\xba\xaa\xe0\xa4\x8f"
 		text_content = text_content_bytes.decode("utf-8")
 
 		content_bytes = (

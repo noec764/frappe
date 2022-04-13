@@ -35,9 +35,7 @@ class DocumentNamingRule(Document):
 			):
 				return
 
-		counter = (
-			frappe.db.get_value(self.doctype, self.name, "counter", for_update=True) or 0
-		)
+		counter = frappe.db.get_value(self.doctype, self.name, "counter", for_update=True) or 0
 		naming_series = parse_naming_series(self.prefix, doc=doc)
 
 		doc.name = naming_series + ("%0" + str(self.prefix_digits) + "d") % (counter + 1)

@@ -11,9 +11,7 @@ import frappe
 
 class TestPreparedReport(unittest.TestCase):
 	def setUp(self):
-		self.report = frappe.get_doc(
-			{"doctype": "Report", "name": "Permitted Documents For User"}
-		)
+		self.report = frappe.get_doc({"doctype": "Report", "name": "Permitted Documents For User"})
 		self.filters = {"user": "Administrator", "doctype": "Role"}
 		self.prepared_report_doc = frappe.get_doc(
 			{

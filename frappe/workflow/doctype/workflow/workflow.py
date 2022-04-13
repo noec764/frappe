@@ -18,9 +18,7 @@ class Workflow(Document):
 	def on_update(self):
 		self.update_doc_status()
 		frappe.clear_cache(doctype=self.document_type)
-		frappe.cache().delete_key(
-			"workflow_" + self.name
-		)  # clear cache created in model/workflow.py
+		frappe.cache().delete_key("workflow_" + self.name)  # clear cache created in model/workflow.py
 
 	def create_custom_field_for_workflow_state(self):
 		frappe.clear_cache(doctype=self.document_type)
@@ -44,9 +42,7 @@ class Workflow(Document):
 			).save()
 
 			frappe.msgprint(
-				_("Created Custom Field {0} in {1}").format(
-					self.workflow_state_field, self.document_type
-				)
+				_("Created Custom Field {0} in {1}").format(self.workflow_state_field, self.document_type)
 			)
 
 	def update_default_workflow_status(self):
@@ -106,22 +102,18 @@ class Workflow(Document):
 
 			if state.doc_status == "2":
 				frappe.throw(
-					frappe._("Cannot change state of Cancelled Document. Transition row {0}").format(
-						t.idx
-					)
+					frappe._("Cannot change state of Cancelled Document. Transition row {0}").format(t.idx)
 				)
 
 			if state.doc_status == "1" and next_state.doc_status == "0":
 				frappe.throw(
-					frappe._(
-						"Submitted Document cannot be converted back to draft. Transition row {0}"
-					).format(t.idx)
+					frappe._("Submitted Document cannot be converted back to draft. Transition row {0}").format(
+						t.idx
+					)
 				)
 
 			if state.doc_status == "0" and next_state.doc_status == "2":
-				frappe.throw(
-					frappe._("Cannot cancel before submitting. See Transition {0}").format(t.idx)
-				)
+				frappe.throw(frappe._("Cannot cancel before submitting. See Transition {0}").format(t.idx))
 
 	def set_active(self):
 		if int(self.is_active or 0):
@@ -136,9 +128,7 @@ class Workflow(Document):
 @frappe.whitelist()
 def get_fieldnames_for(doctype):
 	return [
-		f.fieldname
-		for f in frappe.get_meta(doctype).fields
-		if f.fieldname not in no_value_fields
+		f.fieldname for f in frappe.get_meta(doctype).fields if f.fieldname not in no_value_fields
 	]
 
 

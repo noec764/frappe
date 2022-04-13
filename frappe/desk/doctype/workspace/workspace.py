@@ -287,9 +287,7 @@ def sort_pages(sb_public_items, sb_private_items):
 	sb_private_items = loads(sb_private_items)
 
 	workspace_public_pages = get_page_list(["name", "title"], {"public": 1})
-	workspace_private_pages = get_page_list(
-		["name", "title"], {"for_user": frappe.session.user}
-	)
+	workspace_private_pages = get_page_list(["name", "title"], {"for_user": frappe.session.user})
 
 	if sb_private_items:
 		return sort_page(workspace_private_pages, sb_private_items)
@@ -331,9 +329,7 @@ def last_sequence_id(doc):
 
 
 def get_page_list(fields, filters):
-	return frappe.get_list(
-		"Workspace", fields=fields, filters=filters, order_by="sequence_id asc"
-	)
+	return frappe.get_list("Workspace", fields=fields, filters=filters, order_by="sequence_id asc")
 
 
 def is_workspace_manager():

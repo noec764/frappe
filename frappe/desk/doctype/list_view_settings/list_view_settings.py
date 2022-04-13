@@ -84,9 +84,7 @@ def get_default_listview_fields(doctype):
 	)
 	doctype_json = frappe.get_file_json(path)
 
-	fields = [
-		f.get("fieldname") for f in doctype_json.get("fields") if f.get("in_list_view")
-	]
+	fields = [f.get("fieldname") for f in doctype_json.get("fields") if f.get("in_list_view")]
 
 	if meta.title_field:
 		if not meta.title_field.strip() in fields:

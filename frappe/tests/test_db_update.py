@@ -2,8 +2,7 @@ import unittest
 
 import frappe
 from frappe.core.utils import find
-from frappe.custom.doctype.property_setter.property_setter import \
-    make_property_setter
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.utils import cstr
 
 
@@ -35,9 +34,7 @@ class TestDBUpdate(unittest.TestCase):
 			default = field_def.default if field_def.default is not None else fallback_default
 
 			self.assertEqual(fieldtype, table_column.type)
-			self.assertIn(
-				cstr(table_column.default) or "NULL", [cstr(default), "'{}'".format(default)]
-			)
+			self.assertIn(cstr(table_column.default) or "NULL", [cstr(default), "'{}'".format(default)])
 
 	def test_index_and_unique_constraints(self):
 		doctype = "User"
@@ -124,9 +121,7 @@ def get_other_fields_meta(meta):
 
 	child_table_fields_map = {}
 	if meta.istable:
-		child_table_fields_map.update(
-			{field: ("Data", 0) for field in frappe.db.CHILD_TABLE_COLUMNS}
-		)
+		child_table_fields_map.update({field: ("Data", 0) for field in frappe.db.CHILD_TABLE_COLUMNS})
 
 	optional_fields_map = {field: ("Text", 0) for field in optional_fields}
 	fields = dict(default_fields_map, **optional_fields_map, **child_table_fields_map)

@@ -84,9 +84,7 @@ def get_monthly_goal_graph_data(
 
 	current_month_value = doc.get(goal_total_field)
 	current_month_year = today_date.strftime("%m-%Y")  # eg: "02-2022"
-	formatted_value = format_value(
-		current_month_value, meta.get_field(goal_total_field), doc
-	)
+	formatted_value = format_value(current_month_value, meta.get_field(goal_total_field), doc)
 	history = doc.get(goal_history_field)
 
 	month_to_value_dict = None
@@ -126,9 +124,7 @@ def get_monthly_goal_graph_data(
 				"value": f"{int(round(flt(current_month_value) / flt(goal) * 100))}%",
 			},
 		]
-		y_markers = {
-			"yMarkers": [{"label": _("Goal"), "lineType": "dashed", "value": flt(goal)}]
-		}
+		y_markers = {"yMarkers": [{"label": _("Goal"), "lineType": "dashed", "value": flt(goal)}]}
 
 	for i in range(12):
 		date_value = add_to_date(today_date, months=-i, as_datetime=True)

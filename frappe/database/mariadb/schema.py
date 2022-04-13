@@ -85,21 +85,15 @@ class MariaDBTable(DBTable):
 		columns_to_modify = set(self.change_type + self.add_unique + self.set_default)
 
 		for col in self.add_column:
-			add_column_query.append(
-				"ADD COLUMN `{}` {}".format(col.fieldname, col.get_definition())
-			)
+			add_column_query.append("ADD COLUMN `{}` {}".format(col.fieldname, col.get_definition()))
 
 		for col in columns_to_modify:
-			modify_column_query.append(
-				"MODIFY `{}` {}".format(col.fieldname, col.get_definition())
-			)
+			modify_column_query.append("MODIFY `{}` {}".format(col.fieldname, col.get_definition()))
 
 		for col in self.add_index:
 			# if index key does not exists
 			if not frappe.db.has_index(self.table_name, col.fieldname + "_index"):
-				add_index_query.append(
-					"ADD INDEX `{}_index`(`{}`)".format(col.fieldname, col.fieldname)
-				)
+				add_index_query.append("ADD INDEX `{}_index`(`{}`)".format(col.fieldname, col.fieldname))
 
 		for col in self.drop_index + self.drop_unique:
 			if col.fieldname != "name":  # primary key
@@ -157,9 +151,9 @@ class MariaDBTable(DBTable):
 			elif e.args[0] == 1062:
 				fieldname = str(e).split("'")[-2]
 				frappe.throw(
-					_(
-						"{0} field cannot be set as unique in {1}, as there are non-unique existing values"
-					).format(fieldname, self.table_name)
+					_("{0} field cannot be set as unique in {1}, as there are non-unique existing values").format(
+						fieldname, self.table_name
+					)
 				)
 			elif e.args[0] == 1067:
 				frappe.throw(str(e.args[1]))

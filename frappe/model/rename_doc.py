@@ -6,8 +6,7 @@ import frappe
 from frappe import _, bold
 from frappe.model.dynamic_links import get_dynamic_link_map
 from frappe.model.naming import validate_name
-from frappe.model.utils.user_settings import (sync_user_settings,
-                                              update_user_settings_data)
+from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
 from frappe.query_builder import Field
 from frappe.utils import cint, nowdate
 from frappe.utils.password import rename_password
@@ -90,9 +89,7 @@ def rename_doc(
 
 	if old == new:
 		frappe.errprint(
-			_(
-				"Ignored: {0} to {1} no changes made because old and new name are the same."
-			).format(old, new)
+			_("Ignored: {0} to {1} no changes made because old and new name are the same.").format(old, new)
 		)
 		return
 
@@ -151,9 +148,7 @@ def rename_doc(
 	)
 
 	if merge:
-		new_doc.add_comment(
-			"Edit", _("merged {0} into {1}").format(frappe.bold(old), frappe.bold(new))
-		)
+		new_doc.add_comment("Edit", _("merged {0} into {1}").format(frappe.bold(old), frappe.bold(new)))
 	else:
 		new_doc.add_comment(
 			"Edit", _("renamed from {0} to {1}").format(frappe.bold(old), frappe.bold(new))
@@ -198,9 +193,7 @@ def update_assignments(old: str, new: str, doctype: str) -> None:
 			frappe.delete_doc("ToDo", todo.name)
 
 	unique_assignments = list(set(old_assignments + new_assignments))
-	frappe.db.set_value(
-		doctype, new, "_assign", frappe.as_json(unique_assignments, indent=0)
-	)
+	frappe.db.set_value(doctype, new, "_assign", frappe.as_json(unique_assignments, indent=0))
 
 
 def update_user_settings(old: str, new: str, link_fields: List[Dict]) -> None:
@@ -239,17 +232,13 @@ def update_user_settings(old: str, new: str, link_fields: List[Dict]) -> None:
 		user_settings = user_settings_dict.get(fields.parent)
 		if user_settings:
 			for user_setting in user_settings:
-				update_user_settings_data(
-					user_setting, "value", old, new, "docfield", fields.fieldname
-				)
+				update_user_settings_data(user_setting, "value", old, new, "docfield", fields.fieldname)
 		else:
 			continue
 
 
 def update_customizations(old: str, new: str) -> None:
-	frappe.db.set_value(
-		"Custom DocPerm", {"parent": old}, "parent", new, update_modified=False
-	)
+	frappe.db.set_value("Custom DocPerm", {"parent": old}, "parent", new, update_modified=False)
 
 
 def update_attachments(doctype: str, old: str, new: str) -> None:
@@ -283,9 +272,7 @@ def rename_eps_records(doctype: str, old: str, new: str) -> None:
 
 def rename_parent_and_child(doctype: str, old: str, new: str, meta: "Meta") -> None:
 	# rename the doc
-	frappe.db.sql(
-		"UPDATE `tab{0}` SET `name`={1} WHERE `name`={1}".format(doctype, "%s"), (new, old)
-	)
+	frappe.db.sql("UPDATE `tab{0}` SET `name`={1} WHERE `name`={1}".format(doctype, "%s"), (new, old))
 	update_autoname_field(doctype, new, meta)
 	update_child_docs(old, new, meta)
 
@@ -311,31 +298,22 @@ def validate_rename(
 ) -> str:
 	# using for update so that it gets locked and someone else cannot edit it while this rename is going on!
 	exists = (
-		frappe.qb.from_(doctype)
-		.where(Field("name") == new)
-		.for_update()
-		.select("name")
-		.run(pluck=True)
+		frappe.qb.from_(doctype).where(Field("name") == new).for_update().select("name").run(pluck=True)
 	)
 	exists = exists[0] if exists else None
 
 	if merge and not exists:
-		frappe.throw(
-			_("{0} {1} does not exist, select a new target to merge").format(doctype, new)
-		)
+		frappe.throw(_("{0} {1} does not exist, select a new target to merge").format(doctype, new))
 
 	if exists and exists != new:
 		# for fixing case, accents
 		exists = None
 
 	if (not merge) and exists:
-		frappe.throw(
-			_("Another {0} with name {1} exists, select another name").format(doctype, new)
-		)
+		frappe.throw(_("Another {0} with name {1} exists, select another name").format(doctype, new))
 
 	if not (
-		ignore_permissions
-		or frappe.permissions.has_permission(doctype, "write", raise_exception=False)
+		ignore_permissions or frappe.permissions.has_permission(doctype, "write", raise_exception=False)
 	):
 		frappe.throw(_("You need write permission to rename"))
 
@@ -372,9 +350,7 @@ def update_child_docs(old: str, new: str, meta: "Meta") -> None:
 		)
 
 
-def update_link_field_values(
-	link_fields: List[Dict], old: str, new: str, doctype: str
-) -> None:
+def update_link_field_values(link_fields: List[Dict], old: str, new: str, doctype: str) -> None:
 	for field in link_fields:
 		if field["issingle"]:
 			try:
@@ -622,9 +598,7 @@ def update_parenttype_values(old: str, new: str):
 	child_doctypes += property_setter_child_doctypes
 
 	for doctype in child_doctypes:
-		frappe.db.sql(
-			f"update `tab{doctype}` set parenttype=%s where parenttype=%s", (new, old)
-		)
+		frappe.db.sql(f"update `tab{doctype}` set parenttype=%s where parenttype=%s", (new, old))
 
 
 def rename_dynamic_links(doctype: str, old: str, new: str):
@@ -720,9 +694,7 @@ def get_fetch_fields(
 
 	show_deprecation_warning("get_fetch_fields")
 
-	return get_fetch_fields(
-		doctype=doctype, linked_to=linked_to, ignore_doctypes=ignore_doctypes
-	)
+	return get_fetch_fields(doctype=doctype, linked_to=linked_to, ignore_doctypes=ignore_doctypes)
 
 
 def show_deprecation_warning(funct: str) -> None:

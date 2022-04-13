@@ -10,8 +10,7 @@ import copy
 
 import frappe
 import frappe.defaults
-from frappe.core.doctype.user_permission.user_permission import \
-    get_user_permissions
+from frappe.core.doctype.user_permission.user_permission import get_user_permissions
 from frappe.model import data_fieldtypes
 from frappe.permissions import filter_allowed_docs_for_doctype
 from frappe.utils import cstr, now_datetime, nowdate, nowtime
@@ -76,16 +75,12 @@ def set_user_and_static_default_values(doc):
 
 			else:
 				if df.fieldname != doc.meta.title_field:
-					static_default_value = get_static_default_value(
-						df, doctype_user_permissions, allowed_records
-					)
+					static_default_value = get_static_default_value(df, doctype_user_permissions, allowed_records)
 					if static_default_value is not None:
 						doc.set(df.fieldname, static_default_value)
 
 
-def get_user_default_value(
-	df, defaults, doctype_user_permissions, allowed_records, default_doc
-):
+def get_user_default_value(df, defaults, doctype_user_permissions, allowed_records, default_doc):
 	# don't set defaults for "User" link field using User Permissions!
 	if df.fieldtype == "Link" and df.options != "User":
 		#  If user permission has Is Default enabled or single-user permission has found against respective doctype.
@@ -122,11 +117,7 @@ def get_static_default_value(df, doctype_user_permissions, allowed_records):
 			if df.fieldtype != "Link" or df.options == "User" or is_allowed_default_value:
 				return df.default
 
-	elif (
-		df.fieldtype == "Select"
-		and df.options
-		and df.options not in ("[Select]", "Loading...")
-	):
+	elif df.fieldtype == "Select" and df.options and df.options not in ("[Select]", "Loading..."):
 		return df.options.split("\n")[0]
 
 
@@ -189,9 +180,7 @@ def get_default_based_on_another_field(df, user_permissions, parent_doc):
 		parent_doc.get(ref_fieldname) if parent_doc else frappe.db.get_default(ref_fieldname)
 	)
 	default_value = frappe.db.get_value(ref_doctype, reference_name, df.fieldname)
-	is_allowed_default_value = not user_permissions_exist(
-		df, user_permissions.get(df.options)
-	) or (
+	is_allowed_default_value = not user_permissions_exist(df, user_permissions.get(df.options)) or (
 		default_value in get_allowed_docs_for_doctype(user_permissions[df.options], df.parent)
 	)
 

@@ -9,8 +9,7 @@ from jinja2 import TemplateSyntaxError
 import frappe
 from frappe import _, throw
 from frappe.contacts.address_and_contact import set_link_title
-from frappe.core.doctype.dynamic_link.dynamic_link import \
-    deduplicate_dynamic_links
+from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 from frappe.utils import cstr
@@ -26,9 +25,7 @@ class Address(Document):
 				self.address_title = self.links[0].link_name
 
 		if self.address_title:
-			self.name = (
-				cstr(self.address_title).strip() + "-" + cstr(_(self.address_type)).strip()
-			)
+			self.name = cstr(self.address_title).strip() + "-" + cstr(_(self.address_type)).strip()
 			if frappe.db.exists("Address", self.name):
 				self.name = make_autoname(
 					cstr(self.address_title).strip() + "-" + cstr(self.address_type).strip() + "-.#"
@@ -50,9 +47,7 @@ class Address(Document):
 			if contact_name:
 				contact = frappe.get_cached_doc("Contact", contact_name)
 				for link in contact.links:
-					self.append(
-						"links", dict(link_doctype=link.link_doctype, link_name=link.link_name)
-					)
+					self.append("links", dict(link_doctype=link.link_doctype, link_name=link.link_name))
 				return True
 
 		return False
@@ -85,14 +80,12 @@ class Address(Document):
 		return False
 
 	def get_coordinates(self):
-		if frappe.db.get_single_value(
-			"Google Settings", "enable"
-		) and frappe.db.get_single_value("Google Settings", "api_key"):
+		if frappe.db.get_single_value("Google Settings", "enable") and frappe.db.get_single_value(
+			"Google Settings", "api_key"
+		):
 			address = get_condensed_address_for_gelocalisation(self)
 
-			gmaps = googlemaps.Client(
-				key=frappe.db.get_single_value("Google Settings", "api_key")
-			)
+			gmaps = googlemaps.Client(key=frappe.db.get_single_value("Google Settings", "api_key"))
 			geocode_result = gmaps.geocode(json.dumps(address))
 
 			if geocode_result:
@@ -174,9 +167,7 @@ def get_address_display(address_dict):
 		return
 
 	if not isinstance(address_dict, dict):
-		address_dict = (
-			frappe.db.get_value("Address", address_dict, "*", as_dict=True, cache=True) or {}
-		)
+		address_dict = frappe.db.get_value("Address", address_dict, "*", as_dict=True, cache=True) or {}
 
 	name, template = get_address_templates(address_dict)
 
@@ -213,9 +204,7 @@ def get_list_context(context=None):
 	}
 
 
-def get_address_list(
-	doctype, txt, filters, limit_start, limit_page_length=20, order_by=None
-):
+def get_address_list(doctype, txt, filters, limit_start, limit_page_length=20, order_by=None):
 	from frappe.www.list import get_list
 
 	user = frappe.session.user
@@ -251,9 +240,7 @@ def get_address_templates(address):
 	)
 
 	if not result:
-		result = frappe.db.get_value(
-			"Address Template", {"is_default": 1}, ["name", "template"]
-		)
+		result = frappe.db.get_value("Address Template", {"is_default": 1}, ["name", "template"])
 
 	if not result:
 		frappe.throw(
@@ -285,15 +272,11 @@ def address_query(doctype, txt, searchfield, start, page_len, filters):
 	meta = frappe.get_meta("Address")
 	for fieldname, value in filters.items():
 		if meta.get_field(fieldname) or fieldname in frappe.db.DEFAULT_COLUMNS:
-			condition += " and {field}={value}".format(
-				field=fieldname, value=frappe.db.escape(value)
-			)
+			condition += " and {field}={value}".format(field=fieldname, value=frappe.db.escape(value))
 
 	searchfields = meta.get_search_fields()
 
-	if searchfield and (
-		meta.get_field(searchfield) or searchfield in frappe.db.DEFAULT_COLUMNS
-	):
+	if searchfield and (meta.get_field(searchfield) or searchfield in frappe.db.DEFAULT_COLUMNS):
 		searchfields.append(searchfield)
 
 	search_condition = ""

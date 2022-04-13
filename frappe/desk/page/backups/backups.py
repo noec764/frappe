@@ -91,9 +91,7 @@ def schedule_files_backup(user_email):
 			queue="long",
 			user_email=user_email,
 		)
-		frappe.msgprint(
-			_("Queued for backup. You will receive an email with the download link")
-		)
+		frappe.msgprint(_("Queued for backup. You will receive an email with the download link"))
 	else:
 		frappe.msgprint(
 			_("Backup job is already queued. You will receive an email with the download link")

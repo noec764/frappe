@@ -22,6 +22,7 @@ from redis.exceptions import ConnectionError
 from werkzeug.test import Client
 
 import frappe
+
 # utility functions like cint, int, flt, etc.
 from frappe.utils.data import *
 from frappe.utils.html_utils import sanitize_html
@@ -111,9 +112,7 @@ def validate_name(name, throw=False):
 	match = re.match(r"^[\w][\w\'\-]*( \w[\w\'\-]*)*$", name)
 
 	if not match and throw:
-		frappe.throw(
-			frappe._("{0} is not a valid Name").format(name), frappe.InvalidNameError
-		)
+		frappe.throw(frappe._("{0} is not a valid Name").format(name), frappe.InvalidNameError)
 
 	return bool(match)
 
@@ -228,9 +227,7 @@ def has_gravatar(email):
 
 	hexdigest = hashlib.md5(frappe.as_unicode(email).encode("utf-8")).hexdigest()
 
-	gravatar_url = "https://secure.gravatar.com/avatar/{hash}?d=404&s=200".format(
-		hash=hexdigest
-	)
+	gravatar_url = "https://secure.gravatar.com/avatar/{hash}?d=404&s=200".format(hash=hexdigest)
 	try:
 		res = requests.get(gravatar_url)
 		if res.status_code == 200:
@@ -424,15 +421,11 @@ def get_site_path(*path):
 
 
 def get_files_path(*path, **kwargs):
-	return get_site_path(
-		"private" if kwargs.get("is_private") else "public", "files", *path
-	)
+	return get_site_path("private" if kwargs.get("is_private") else "public", "files", *path)
 
 
 def get_bench_path():
-	return os.path.realpath(
-		os.path.join(os.path.dirname(frappe.__file__), "..", "..", "..")
-	)
+	return os.path.realpath(os.path.join(os.path.dirname(frappe.__file__), "..", "..", ".."))
 
 
 def get_bench_id():
@@ -452,9 +445,7 @@ def get_request_site_address(full_address=False):
 
 
 def get_site_url(site):
-	return "http://{site}:{port}".format(
-		site=site, port=frappe.get_conf(site).webserver_port
-	)
+	return "http://{site}:{port}".format(site=site, port=frappe.get_conf(site).webserver_port)
 
 
 def encode_dict(d, encoding="utf-8"):
@@ -560,9 +551,7 @@ def get_html_format(print_path):
 		with open(print_path, "r") as f:
 			html_format = f.read()
 
-		for include_directive, path in re.findall(
-			"""({% include ['"]([^'"]*)['"] %})""", html_format
-		):
+		for include_directive, path in re.findall("""({% include ['"]([^'"]*)['"] %})""", html_format):
 			for app_name in frappe.get_installed_apps():
 				include_path = frappe.get_app_path(app_name, *path.split(os.path.sep))
 				if os.path.exists(include_path):

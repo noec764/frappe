@@ -6,10 +6,16 @@ import click
 import frappe
 from frappe.website.page_renderers.base_template_page import BaseTemplatePage
 from frappe.website.router import get_base_template, get_page_info
-from frappe.website.utils import (cache_html, extract_comment_tag,
-                                  extract_title, get_frontmatter,
-                                  get_next_link, get_sidebar_items, get_toc,
-                                  is_binary_file)
+from frappe.website.utils import (
+	cache_html,
+	extract_comment_tag,
+	extract_title,
+	get_frontmatter,
+	get_next_link,
+	get_sidebar_items,
+	get_toc,
+	is_binary_file,
+)
 
 WEBPAGE_PY_MODULE_PROPERTIES = (
 	"base_template_path",
@@ -65,8 +71,7 @@ class TemplatePage(BaseTemplatePage):
 	@staticmethod
 	def get_index_path_options(search_path):
 		return (
-			frappe.as_unicode(f"{search_path}{d}")
-			for d in ("", ".html", ".md", "/index.html", "/index.md")
+			frappe.as_unicode(f"{search_path}{d}") for d in ("", ".html", ".md", "/index.html", "/index.md")
 		)
 
 	def render(self):
@@ -99,9 +104,7 @@ class TemplatePage(BaseTemplatePage):
 
 	def add_sidebar_and_breadcrumbs(self):
 		if self.basepath:
-			self.context.sidebar_items = get_sidebar_items(
-				self.context.website_sidebar, self.basepath
-			)
+			self.context.sidebar_items = get_sidebar_items(self.context.website_sidebar, self.basepath)
 
 		if self.context.add_breadcrumbs and not self.context.parents:
 			parent_path = os.path.dirname(self.path)
@@ -135,9 +138,7 @@ class TemplatePage(BaseTemplatePage):
 		)
 
 		if os.path.exists(os.path.join(self.app_path, self.pymodule_path)):
-			self.pymodule_name = (
-				self.app + "." + self.pymodule_path.replace(os.path.sep, ".")[:-3]
-			)
+			self.pymodule_name = self.app + "." + self.pymodule_path.replace(os.path.sep, ".")[:-3]
 
 	def setup_template_source(self):
 		"""Setup template source, frontmatter and markdown conversion"""
@@ -169,9 +170,7 @@ class TemplatePage(BaseTemplatePage):
 				self.context[prop] = getattr(self.pymodule, prop)
 
 	def set_page_properties(self):
-		self.context.base_template = self.context.base_template or get_base_template(
-			self.path
-		)
+		self.context.base_template = self.context.base_template or get_base_template(self.path)
 
 		self.context.basepath = self.basepath
 		self.context.basename = self.basename
@@ -209,9 +208,7 @@ class TemplatePage(BaseTemplatePage):
 			comment_tag = f"<!-- {comment} -->"
 			if comment_tag in self.source:
 				self.context[context_key] = value
-				click.echo(
-					f"\n⚠️  DEPRECATION WARNING: {comment_tag} will be deprecated on 2021-12-31."
-				)
+				click.echo(f"\n⚠️  DEPRECATION WARNING: {comment_tag} will be deprecated on 2021-12-31.")
 				click.echo(f"Please remove it from {self.template_path} in {self.app}")
 
 	def run_pymodule_method(self, method_name):

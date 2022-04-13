@@ -18,9 +18,7 @@ class TestSafeExec(unittest.TestCase):
 
 	def test_safe_eval(self):
 		self.assertEqual(frappe.safe_eval("1+1"), 2)
-		self.assertRaises(
-			AttributeError, frappe.safe_eval, "frappe.utils.os.path", get_safe_globals()
-		)
+		self.assertRaises(AttributeError, frappe.safe_eval, "frappe.utils.os.path", get_safe_globals())
 
 	def test_sql(self):
 		_locals = dict(out=None)
@@ -53,9 +51,7 @@ class TestSafeExec(unittest.TestCase):
 
 	def test_call(self):
 		# call non whitelisted method
-		self.assertRaises(
-			frappe.PermissionError, safe_exec, """frappe.call("frappe.get_user")"""
-		)
+		self.assertRaises(frappe.PermissionError, safe_exec, """frappe.call("frappe.get_user")""")
 
 		# call whitelisted method
 		safe_exec("""frappe.call("ping")""")

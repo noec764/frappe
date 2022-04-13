@@ -240,9 +240,7 @@ class Query:
 				conditions = conditions.where(make_function(key, value))
 				continue
 			if isinstance(value, (list, tuple)):
-				if (
-					isinstance(value[1], (list, tuple)) or value[0] in list(OPERATOR_MAP.keys())[-4:]
-				):
+				if isinstance(value[1], (list, tuple)) or value[0] in list(OPERATOR_MAP.keys())[-4:]:
 					_operator = OPERATOR_MAP[value[0]]
 					conditions = conditions.where(_operator(key, value[1]))
 				else:
@@ -259,10 +257,7 @@ class Query:
 		return self.add_conditions(conditions, **kwargs)
 
 	def build_conditions(
-		self,
-		table: str,
-		filters: Union[Dict[str, Union[str, int]], str, int] = None,
-		**kwargs
+		self, table: str, filters: Union[Dict[str, Union[str, int]], str, int] = None, **kwargs
 	) -> frappe.qb:
 		"""Build conditions for sql query
 

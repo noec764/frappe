@@ -24,15 +24,19 @@ from typing import TYPE_CHECKING, Dict, List, Union
 import click
 from werkzeug.local import Local, release_local
 
-from frappe.query_builder import (get_query_builder, patch_query_aggregation,
-                                  patch_query_execute)
+from frappe.query_builder import get_query_builder, patch_query_aggregation, patch_query_execute
 from frappe.utils.data import cstr
 
 # Local application imports
 from .exceptions import *
 from .utils.data import now
-from .utils.jinja import (get_email_from_template, get_jenv, get_jloader,
-                          get_template, render_template)
+from .utils.jinja import (
+	get_email_from_template,
+	get_jenv,
+	get_jloader,
+	get_template,
+	render_template,
+)
 from .utils.lazy_loader import lazy_import
 
 __version__ = "2.9.0"
@@ -268,9 +272,7 @@ def connect_replica():
 		user = local.conf.replica_db_name
 		password = local.conf.replica_db_password
 
-	local.replica_db = get_db(
-		host=local.conf.replica_host, user=user, password=password, port=port
-	)
+	local.replica_db = get_db(host=local.conf.replica_host, user=user, password=password, port=port)
 
 	# swap db connections
 	local.primary_db = local.db
@@ -348,9 +350,7 @@ def cache() -> "RedisWrapper":
 	if not redis_server:
 		from frappe.utils.redis_wrapper import RedisWrapper
 
-		redis_server = RedisWrapper.from_url(
-			conf.get("redis_cache") or "redis://localhost:11311"
-		)
+		redis_server = RedisWrapper.from_url(conf.get("redis_cache") or "redis://localhost:11311")
 	return redis_server
 
 
@@ -489,9 +489,7 @@ def clear_last_message():
 		local.message_log = local.message_log[:-1]
 
 
-def throw(
-	msg, exc=ValidationError, title=None, is_minimizable=None, wide=None, as_list=False
-):
+def throw(msg, exc=ValidationError, title=None, is_minimizable=None, wide=None, as_list=False):
 	"""Throw execption and show message (`msgprint`).
 
 	:param msg: Message.
@@ -927,9 +925,7 @@ def has_permission(
 	return out
 
 
-def has_website_permission(
-	doc=None, ptype="read", user=None, verbose=False, doctype=None
-):
+def has_website_permission(doc=None, ptype="read", user=None, verbose=False, doctype=None):
 	"""Raises `frappe.PermissionError` if not permitted.
 
 	:param doctype: DocType for which permission is to be check.
@@ -1129,9 +1125,7 @@ def get_doc(*args, **kwargs):
 
 def get_last_doc(doctype, filters=None, order_by="creation desc"):
 	"""Get last created document of this type."""
-	d = get_all(
-		doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="name"
-	)
+	d = get_all(doctype, filters=filters, limit_page_length=1, order_by=order_by, pluck="name")
 	if d:
 		return get_doc(doctype, d[0])
 	else:
@@ -1220,9 +1214,7 @@ def reload_doc(module, dt=None, dn=None, force=False, reset_permissions=False):
 
 	import frappe.modules
 
-	return frappe.modules.reload_doc(
-		module, dt, dn, force=force, reset_permissions=reset_permissions
-	)
+	return frappe.modules.reload_doc(module, dt, dn, force=force, reset_permissions=reset_permissions)
 
 
 @whitelist()
@@ -1285,16 +1277,12 @@ def get_pymodule_path(modulename, *joins):
 	if joins and not "public" in joins and not "www" in joins[0]:
 		joins = [scrub(part) for part in joins]
 
-	return os.path.join(
-		os.path.dirname(get_module(scrub(modulename)).__file__ or ""), *joins
-	)
+	return os.path.join(os.path.dirname(get_module(scrub(modulename)).__file__ or ""), *joins)
 
 
 def get_module_list(app_name):
 	"""Get list of modules for given all via `app/modules.txt`."""
-	return get_file_items(
-		os.path.join(os.path.dirname(get_module(app_name).__file__), "modules.txt")
-	)
+	return get_file_items(os.path.join(os.path.dirname(get_module(app_name).__file__), "modules.txt"))
 
 
 def get_all_apps(with_internal_apps=True, sites_path=None):
@@ -1544,9 +1532,7 @@ def make_property_setter(
 		args.doctype_or_field = "DocField"
 		if not args.property_type:
 			args.property_type = (
-				db.get_value(
-					"DocField", {"parent": "DocField", "fieldname": args.property}, "fieldtype"
-				)
+				db.get_value("DocField", {"parent": "DocField", "fieldname": args.property}, "fieldtype")
 				or "Data"
 			)
 
@@ -1564,9 +1550,7 @@ def make_property_setter(
 	for doctype in doctype_list:
 		if not args.property_type:
 			args.property_type = (
-				db.get_value(
-					"DocField", {"parent": doctype, "fieldname": args.fieldname}, "fieldtype"
-				)
+				db.get_value("DocField", {"parent": doctype, "fieldname": args.fieldname}, "fieldtype")
 				or "Data"
 			)
 
@@ -1714,9 +1698,7 @@ def respond_as_web_page(
 	local.response["context"] = context
 
 
-def redirect_to_message(
-	title, html, http_status_code=None, context=None, indicator_color=None
-):
+def redirect_to_message(title, html, http_status_code=None, context=None, indicator_color=None):
 	"""Redirects to /message?id=random
 	Similar to respond_as_web_page, but used to 'redirect' and show message pages like success, failure, etc. with a detailed message
 
@@ -1751,9 +1733,7 @@ def build_match_conditions(doctype, as_condition=True):
 	"""Return match (User permissions) for given doctype as list or SQL."""
 	import frappe.desk.reportview
 
-	return frappe.desk.reportview.build_match_conditions(
-		doctype, as_condition=as_condition
-	)
+	return frappe.desk.reportview.build_match_conditions(doctype, as_condition=as_condition)
 
 
 def get_list(doctype, *args, **kwargs):
@@ -1836,9 +1816,7 @@ def as_json(obj: Union[Dict, List], indent=1) -> str:
 		# this would break in case the keys are not all os "str" type - as defined in the JSON
 		# adding this to ensure keys are sorted (expected behaviour)
 		sorted_obj = dict(sorted(obj.items(), key=lambda kv: str(kv[0])))
-		return json.dumps(
-			sorted_obj, indent=indent, default=json_handler, separators=(",", ": ")
-		)
+		return json.dumps(sorted_obj, indent=indent, default=json_handler, separators=(",", ": "))
 
 
 def are_emails_muted():
@@ -2130,13 +2108,15 @@ def log_error(message=None, title=_("Error")):
 	else:
 		error = get_traceback()
 
-	return get_doc(
-		dict(doctype="Error Log", error=as_unicode(error), method=title)
-	).insert(ignore_permissions=True)
+	return get_doc(dict(doctype="Error Log", error=as_unicode(error), method=title)).insert(
+		ignore_permissions=True
+	)
 
 
 def get_desk_link(doctype, name):
-	html = '<a href="/app/Form/{doctype}/{name}" style="font-weight: bold;">{doctype_local} {name}</a>'
+	html = (
+		'<a href="/app/Form/{doctype}/{name}" style="font-weight: bold;">{doctype_local} {name}</a>'
+	)
 	return html.format(doctype=doctype, name=name, doctype_local=_(doctype))
 
 
@@ -2190,8 +2170,7 @@ def get_system_settings(key):
 
 
 def get_active_domains():
-	from frappe.core.doctype.domain_settings.domain_settings import \
-	    get_active_domains
+	from frappe.core.doctype.domain_settings.domain_settings import get_active_domains
 
 	return get_active_domains()
 

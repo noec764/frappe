@@ -64,9 +64,7 @@ def get_mapped_doc(
 	ignore_child_tables=False,
 ):
 
-	apply_strict_user_permissions = frappe.get_system_settings(
-		"apply_strict_user_permissions"
-	)
+	apply_strict_user_permissions = frappe.get_system_settings("apply_strict_user_permissions")
 
 	# main
 	if not target_doc:
@@ -134,9 +132,7 @@ def get_mapped_doc(
 							True if target_doc.get(target_parentfield) else False
 						)
 
-					if table_map.get("add_if_empty") and row_exists_for_parentfield.get(
-						target_parentfield
-					):
+					if table_map.get("add_if_empty") and row_exists_for_parentfield.get(target_parentfield):
 						continue
 
 					if table_map.get("filter") and table_map.get("filter")(source_d):
@@ -235,9 +231,7 @@ def map_fetch_fields(target_doc, df, no_copy_fields):
 	linked_doc = None
 
 	# options should be like "link_fieldname.fieldname_in_liked_doc"
-	for fetch_df in target_doc.meta.get(
-		"fields", {"fetch_from": "^{0}.".format(df.fieldname)}
-	):
+	for fetch_df in target_doc.meta.get("fields", {"fetch_from": "^{0}.".format(df.fieldname)}):
 		if not (fetch_df.fieldtype == "Read Only" or fetch_df.read_only):
 			continue
 

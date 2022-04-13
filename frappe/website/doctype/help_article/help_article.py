@@ -36,9 +36,7 @@ class HelpArticle(WebsiteGenerator):
 
 	def get_context(self, context):
 		if self.login_required and frappe.session.user == "Guest":
-			frappe.throw(
-				_("You need to be logged in to access this page"), frappe.PermissionError
-			)
+			frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
 
 		if is_markdown(context.content):
 			context.content = markdown(context.content)
@@ -67,9 +65,7 @@ def get_list_context(context=None):
 
 	if category:
 		if cint(category.get("login_required")) and frappe.session.user == "Guest":
-			frappe.throw(
-				_("You need to be logged in to access this page"), frappe.PermissionError
-			)
+			frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
 
 		filters["category"] = category.get("name")
 		introduction = category.get("category_description")

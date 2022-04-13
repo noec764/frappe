@@ -112,9 +112,7 @@ class MariaDBDatabase(Database):
 	def escape(s, percent=True, full=True):
 		"""Excape quotes and percent in given string."""
 		# pymysql expects unicode argument to escape_string with Python 3
-		s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace(
-			"`", "\\`"
-		)
+		s = frappe.as_unicode(escape_string(frappe.as_unicode(s)), "utf-8").replace("`", "\\`")
 
 		# NOTE separating % escape, because % escape should only be done when using LIKE operator
 		# or when you use python format string to generate query that already has a %s
@@ -149,9 +147,7 @@ class MariaDBDatabase(Database):
 	) -> Union[List, Tuple]:
 		table_name = get_table_name(doctype)
 		null_constraint = "NOT NULL" if not nullable else ""
-		return self.sql(
-			f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}"
-		)
+		return self.sql(f"ALTER TABLE `{table_name}` MODIFY `{column}` {type} {null_constraint}")
 
 	# exception types
 	@staticmethod

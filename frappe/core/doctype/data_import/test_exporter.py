@@ -7,8 +7,7 @@ import unittest
 
 import frappe
 from frappe.core.doctype.data_import.exporter import Exporter
-from frappe.core.doctype.data_import.test_importer import \
-    create_doctype_if_not_exists
+from frappe.core.doctype.data_import.test_importer import create_doctype_if_not_exists
 
 doctype_name = "DocType for Export"
 

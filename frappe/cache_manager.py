@@ -5,8 +5,7 @@
 import json
 
 import frappe
-from frappe.desk.notifications import (clear_notifications,
-                                       delete_notification_count_for)
+from frappe.desk.notifications import clear_notifications, delete_notification_count_for
 from frappe.model.document import Document
 
 common_default_keys = ["__default", "__global"]
@@ -226,9 +225,7 @@ def build_domain_restricted_doctype_cache(*args, **kwargs):
 		return []
 	_cache = frappe.cache()
 	active_domains = frappe.get_active_domains()
-	doctypes = frappe.get_all(
-		"DocType", filters={"restrict_to_domain": ("IN", active_domains)}
-	)
+	doctypes = frappe.get_all("DocType", filters={"restrict_to_domain": ("IN", active_domains)})
 	doctypes = [doc.name for doc in doctypes]
 	_cache.set_value("domain_restricted_doctypes", doctypes)
 

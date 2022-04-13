@@ -233,9 +233,7 @@ class BackupGenerator:
 		paths = (self.backup_path_db, self.backup_path_files, self.backup_path_private_files)
 		for path in paths:
 			if os.path.exists(path):
-				cmd_string = (
-					"gpg --yes --passphrase {passphrase} --pinentry-mode loopback -c {filelocation}"
-				)
+				cmd_string = "gpg --yes --passphrase {passphrase} --pinentry-mode loopback -c {filelocation}"
 				try:
 					command = cmd_string.format(
 						passphrase=get_encryption_key(),
@@ -304,8 +302,7 @@ class BackupGenerator:
 	def zip_files(self):
 		# For backwards compatibility - pre v13
 		click.secho(
-			"BackupGenerator.zip_files has been deprecated in favour of"
-			" BackupGenerator.backup_files",
+			"BackupGenerator.zip_files has been deprecated in favour of" " BackupGenerator.backup_files",
 			fg="yellow",
 		)
 		return self.backup_files()
@@ -322,9 +319,7 @@ class BackupGenerator:
 			},
 		}
 
-		if os.path.exists(self.backup_path_files) and os.path.exists(
-			self.backup_path_private_files
-		):
+		if os.path.exists(self.backup_path_files) and os.path.exists(self.backup_path_private_files):
 			summary.update(
 				{
 					"public": {
@@ -354,9 +349,7 @@ class BackupGenerator:
 	def backup_files(self):
 		for folder in ("public", "private"):
 			files_path = frappe.get_site_path(folder, "files")
-			backup_path = (
-				self.backup_path_files if folder == "public" else self.backup_path_private_files
-			)
+			backup_path = self.backup_path_files if folder == "public" else self.backup_path_private_files
 
 			if self.compress_files:
 				cmd_string = "tar cf - {1} | gzip > {0}"
@@ -399,8 +392,7 @@ class BackupGenerator:
 
 		# escape reserved characters
 		args = frappe._dict(
-			[item[0], frappe.utils.esc(str(item[1]), "$ ")]
-			for item in self.__dict__.copy().items()
+			[item[0], frappe.utils.esc(str(item[1]), "$ ")] for item in self.__dict__.copy().items()
 		)
 
 		if self.backup_includes:
@@ -414,8 +406,7 @@ class BackupGenerator:
 			database_header_content.extend(
 				[
 					f"Partial Backup of Frappe Site {frappe.local.site}",
-					("Backup contains: " if self.backup_includes else "Backup excludes: ")
-					+ backup_info[1],
+					("Backup contains: " if self.backup_includes else "Backup excludes: ") + backup_info[1],
 					"",
 				]
 			)
@@ -432,10 +423,7 @@ class BackupGenerator:
 				)
 			elif self.backup_excludes:
 				args["exclude"] = " ".join(
-					[
-						"--exclude-table-data='public.\"{0}\"'".format(table)
-						for table in self.backup_excludes
-					]
+					["--exclude-table-data='public.\"{0}\"'".format(table) for table in self.backup_excludes]
 				)
 
 			cmd_string = (
@@ -485,12 +473,8 @@ class BackupGenerator:
 		from frappe.email import get_system_managers
 
 		recipient_list = get_system_managers()
-		db_backup_url = get_url(
-			os.path.join("backups", os.path.basename(self.backup_path_db))
-		)
-		files_backup_url = get_url(
-			os.path.join("backups", os.path.basename(self.backup_path_files))
-		)
+		db_backup_url = get_url(os.path.join("backups", os.path.basename(self.backup_path_db)))
+		files_backup_url = get_url(os.path.join("backups", os.path.basename(self.backup_path_files)))
 
 		msg = """Hello,
 
@@ -506,9 +490,7 @@ download only after 24 hours.""" % {
 		}
 
 		datetime_str = datetime.fromtimestamp(os.stat(self.backup_path_db).st_ctime)
-		subject = (
-			datetime_str.strftime("%d/%m/%Y %H:%M:%S") + """ - Backup ready to be downloaded"""
-		)
+		subject = datetime_str.strftime("%d/%m/%Y %H:%M:%S") + """ - Backup ready to be downloaded"""
 
 		frappe.sendmail(recipients=recipient_list, message=msg, subject=subject)
 		return recipient_list
@@ -531,9 +513,7 @@ def fetch_latest_backups(partial=False):
 		db_type=frappe.conf.db_type,
 		db_port=frappe.conf.db_port,
 	)
-	database, public, private, config = odb.get_recent_backup(
-		older_than=24 * 30, partial=partial
-	)
+	database, public, private, config = odb.get_recent_backup(older_than=24 * 30, partial=partial)
 
 	return {"database": database, "public": public, "private": private, "config": config}
 

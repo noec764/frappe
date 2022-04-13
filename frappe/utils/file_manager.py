@@ -13,8 +13,15 @@ from urllib.parse import unquote
 import frappe
 from frappe import _, conf
 from frappe.query_builder.utils import DocType
-from frappe.utils import (call_hook_method, cint, cstr, encode, get_files_path,
-                          get_hook_method, random_string)
+from frappe.utils import (
+	call_hook_method,
+	cint,
+	cstr,
+	encode,
+	get_files_path,
+	get_hook_method,
+	random_string,
+)
 from frappe.utils.image import optimize_image
 
 
@@ -35,9 +42,7 @@ def safe_b64decode(binary: bytes) -> bytes:
 
 
 def get_file_url(file_data_name):
-	data = frappe.db.get_value(
-		"File", file_data_name, ["file_name", "file_url"], as_dict=True
-	)
+	data = frappe.db.get_value("File", file_data_name, ["file_name", "file_url"], as_dict=True)
 	return data.file_url or data.file_name
 
 
@@ -61,9 +66,7 @@ def upload():
 			_("added {0}").format(
 				"<a href='{file_url}' target='_blank'>{file_name}</a>{icon}".format(
 					**{
-						"icon": ' <i class="uil uil-lock-alt text-info"></i>'
-						if file_doc.is_private
-						else "",
+						"icon": ' <i class="uil uil-lock-alt text-info"></i>' if file_doc.is_private else "",
 						"file_url": file_doc.file_url.replace("#", "%23")
 						if file_doc.file_name
 						else file_doc.file_url,
@@ -174,9 +177,7 @@ def save_file(fname, content, dt, dn, folder=None, decode=False, is_private=0, d
 		call_hook_method("before_write_file", file_size=file_size)
 
 		write_file_method = get_hook_method("write_file", fallback=save_file_on_filesystem)
-		file_data = write_file_method(
-			fname, content, content_type=content_type, is_private=is_private
-		)
+		file_data = write_file_method(fname, content, content_type=content_type, is_private=is_private)
 		file_data = copy(file_data)
 
 	file_data.update(
@@ -232,9 +233,7 @@ def check_max_file_size(content):
 
 	if file_size > max_file_size:
 		frappe.msgprint(
-			_("File size exceeded the maximum allowed size of {0} MB").format(
-				max_file_size / 1048576
-			),
+			_("File size exceeded the maximum allowed size of {0} MB").format(max_file_size / 1048576),
 			raise_exception=MaxFileSizeReachedError,
 		)
 
@@ -264,9 +263,7 @@ def remove_all(dt, dn, from_delete=False, delete_permanently=False):
 		):
 			if from_delete:
 				# If deleting a doc, directly delete files
-				frappe.delete_doc(
-					"File", fid, ignore_permissions=True, delete_permanently=delete_permanently
-				)
+				frappe.delete_doc("File", fid, ignore_permissions=True, delete_permanently=delete_permanently)
 			else:
 				# Removes file and adds a comment in the document it is attached to
 				remove_file(
@@ -317,9 +314,7 @@ def remove_file(
 
 
 def delete_file_data_content(doc, only_thumbnail=False):
-	method = get_hook_method(
-		"delete_file_data_content", fallback=delete_file_from_filesystem
-	)
+	method = get_hook_method("delete_file_data_content", fallback=delete_file_from_filesystem)
 	method(doc, only_thumbnail=only_thumbnail)
 
 
@@ -337,9 +332,7 @@ def delete_file(path):
 	if path:
 		if ".." in path.split("/"):
 			frappe.msgprint(
-				_(
-					"It is risky to delete this file: {0}. Please contact your System Manager."
-				).format(path)
+				_("It is risky to delete this file: {0}. Please contact your System Manager.").format(path)
 			)
 
 		parts = os.path.split(path.strip("/"))
@@ -394,9 +387,7 @@ def get_file_path(file_name):
 		file_path = "/files/" + file_path
 
 	if file_path.startswith("/private/files/"):
-		file_path = get_files_path(
-			*file_path.split("/private/files/", 1)[1].split("/"), is_private=1
-		)
+		file_path = get_files_path(*file_path.split("/private/files/", 1)[1].split("/"), is_private=1)
 
 	elif file_path.startswith("/files/"):
 		file_path = get_files_path(*file_path.split("/files/", 1)[1].split("/"))
@@ -424,9 +415,7 @@ def get_file_name(fname, optional_suffix):
 			partial, extn = f[0], ""
 		else:
 			partial, extn = f[0], "." + f[1]
-		return "{partial}{suffix}{extn}".format(
-			partial=partial, extn=extn, suffix=optional_suffix
-		)
+		return "{partial}{suffix}{extn}".format(partial=partial, extn=extn, suffix=optional_suffix)
 	return fname
 
 
@@ -465,9 +454,7 @@ def add_attachments(doctype, name, attachments):
 			)
 			# save attachments to new doc
 			folder = frappe.db.get_value("File", {"is_attachments_folder": 1})
-			f = save_url(
-				attach.file_url, attach.file_name, doctype, name, folder, attach.is_private
-			)
+			f = save_url(attach.file_url, attach.file_name, doctype, name, folder, attach.is_private)
 			files.append(f)
 
 	return files

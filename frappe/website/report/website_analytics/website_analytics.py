@@ -27,9 +27,7 @@ class WebsiteAnalytics(object):
 			self.filters.range = "Daily"
 
 		self.filters.to_date = frappe.utils.add_days(self.filters.to_date, 1)
-		self.query_filters = {
-			"creation": ["between", [self.filters.from_date, self.filters.to_date]]
-		}
+		self.query_filters = {"creation": ["between", [self.filters.from_date, self.filters.to_date]]}
 
 	def run(self):
 		columns = self.get_columns()
@@ -61,9 +59,7 @@ class WebsiteAnalytics(object):
 			frappe.qb.from_(WebPageView)
 			.select("path", count_all, count_is_unique)
 			.where(
-				Coalesce(WebPageView.creation, "0001-01-01")[
-					self.filters.from_date : self.filters.to_date
-				]
+				Coalesce(WebPageView.creation, "0001-01-01")[self.filters.from_date : self.filters.to_date]
 			)
 			.groupby(WebPageView.path)
 			.orderby("count", Order=frappe.qb.desc)

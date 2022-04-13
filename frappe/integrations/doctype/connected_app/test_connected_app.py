@@ -9,8 +9,9 @@ from urllib.parse import urljoin
 import requests
 
 import frappe
-from frappe.integrations.doctype.social_login_key.test_social_login_key import \
-    create_or_update_social_login_key
+from frappe.integrations.doctype.social_login_key.test_social_login_key import (
+	create_or_update_social_login_key,
+)
 
 
 def get_user(usr, pwd):
@@ -20,9 +21,7 @@ def get_user(usr, pwd):
 	user.first_name = "_Test"
 	user.new_password = pwd
 	user.roles = []
-	user.append(
-		"roles", {"doctype": "Has Role", "parentfield": "roles", "role": "System Manager"}
-	)
+	user.append("roles", {"doctype": "Has Role", "parentfield": "roles", "role": "System Manager"})
 	user.insert()
 
 	return user
@@ -80,9 +79,7 @@ class TestConnectedApp(unittest.TestCase):
 		self.oauth_client.reload()
 
 		redirect_uri = self.connected_app.get("redirect_uri")
-		self.oauth_client.update(
-			{"redirect_uris": redirect_uri, "default_redirect_uri": redirect_uri}
-		)
+		self.oauth_client.update({"redirect_uris": redirect_uri, "default_redirect_uri": redirect_uri})
 		self.oauth_client.save()
 
 		self.connected_app.update(
@@ -113,9 +110,7 @@ class TestConnectedApp(unittest.TestCase):
 		first_login = login()
 		self.assertEqual(first_login.status_code, 200)
 
-		authorization_url = self.connected_app.initiate_web_application_flow(
-			user=self.user_name
-		)
+		authorization_url = self.connected_app.initiate_web_application_flow(user=self.user_name)
 
 		auth_response = session.get(authorization_url)
 		self.assertEqual(auth_response.status_code, 200)
@@ -128,9 +123,7 @@ class TestConnectedApp(unittest.TestCase):
 		self.assertNotEqual(token, None)
 
 		oauth2_session = self.connected_app.get_oauth2_session(self.user_name)
-		resp = oauth2_session.get(
-			urljoin(self.base_url, "/api/method/frappe.auth.get_logged_user")
-		)
+		resp = oauth2_session.get(urljoin(self.base_url, "/api/method/frappe.auth.get_logged_user"))
 		self.assertEqual(resp.json().get("message"), self.user_name)
 
 	def tearDown(self):
@@ -143,16 +136,12 @@ class TestConnectedApp(unittest.TestCase):
 		delete_if_exists("connected_app")
 
 		if getattr(self, "oauth_client", None):
-			tokens = frappe.get_all(
-				"OAuth Bearer Token", filters={"client": self.oauth_client.name}
-			)
+			tokens = frappe.get_all("OAuth Bearer Token", filters={"client": self.oauth_client.name})
 			for token in tokens:
 				doc = frappe.get_doc("OAuth Bearer Token", token.name)
 				doc.delete()
 
-			codes = frappe.get_all(
-				"OAuth Authorization Code", filters={"client": self.oauth_client.name}
-			)
+			codes = frappe.get_all("OAuth Authorization Code", filters={"client": self.oauth_client.name})
 			for code in codes:
 				doc = frappe.get_doc("OAuth Authorization Code", code.name)
 				doc.delete()

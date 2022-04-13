@@ -6,8 +6,7 @@ import unittest
 
 import frappe
 import frappe.share
-from frappe.automation.doctype.auto_repeat.test_auto_repeat import \
-    create_submittable_doctype
+from frappe.automation.doctype.auto_repeat.test_auto_repeat import create_submittable_doctype
 
 test_dependencies = ["User"]
 
@@ -68,9 +67,7 @@ class TestDocShare(unittest.TestCase):
 
 	def test_permission_to_share(self):
 		frappe.set_user(self.user)
-		self.assertRaises(
-			frappe.PermissionError, frappe.share.add, "Event", self.event.name, self.user
-		)
+		self.assertRaises(frappe.PermissionError, frappe.share.add, "Event", self.event.name, self.user)
 
 		frappe.set_user("Administrator")
 		frappe.share.add("Event", self.event.name, self.user, write=1, share=1)
@@ -96,18 +93,12 @@ class TestDocShare(unittest.TestCase):
 
 		frappe.share.set_permission("Event", self.event.name, None, "read", everyone=1)
 		self.assertTrue(self.event.name in frappe.share.get_shared("Event", self.user))
-		self.assertTrue(
-			self.event.name in frappe.share.get_shared("Event", "test1@example.com")
-		)
+		self.assertTrue(self.event.name in frappe.share.get_shared("Event", "test1@example.com"))
 		self.assertTrue(self.event.name not in frappe.share.get_shared("Event", "Guest"))
 
-		frappe.share.set_permission(
-			"Event", self.event.name, None, "read", value=0, everyone=1
-		)
+		frappe.share.set_permission("Event", self.event.name, None, "read", value=0, everyone=1)
 		self.assertTrue(self.event.name not in frappe.share.get_shared("Event", self.user))
-		self.assertTrue(
-			self.event.name not in frappe.share.get_shared("Event", "test1@example.com")
-		)
+		self.assertTrue(self.event.name not in frappe.share.get_shared("Event", "test1@example.com"))
 		self.assertTrue(self.event.name not in frappe.share.get_shared("Event", "Guest"))
 
 	def test_share_with_submit_perm(self):
@@ -130,9 +121,7 @@ class TestDocShare(unittest.TestCase):
 		)
 
 		# test cascade
-		self.assertTrue(
-			frappe.has_permission(doctype, "read", doc=submittable_doc.name, user=self.user)
-		)
+		self.assertTrue(frappe.has_permission(doctype, "read", doc=submittable_doc.name, user=self.user))
 		self.assertTrue(
 			frappe.has_permission(doctype, "write", doc=submittable_doc.name, user=self.user)
 		)

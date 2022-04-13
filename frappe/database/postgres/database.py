@@ -310,9 +310,7 @@ class PostgresDatabase(Database):
 		index_name = index_name or self.get_index_name(fields)
 		fields_str = '", "'.join(re.sub(r"\(.*\)", "", field) for field in fields)
 
-		self.sql_ddl(
-			f'CREATE INDEX IF NOT EXISTS "{index_name}" ON `{table_name}` ("{fields_str}")'
-		)
+		self.sql_ddl(f'CREATE INDEX IF NOT EXISTS "{index_name}" ON `{table_name}` ("{fields_str}")')
 
 	def add_unique(self, doctype, fields, constraint_name=None):
 		if isinstance(fields, str):

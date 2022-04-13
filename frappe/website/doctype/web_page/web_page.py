@@ -9,11 +9,13 @@ from frappe import _
 from frappe.utils import get_datetime, now, quoted, strip_html
 from frappe.utils.jinja import render_template
 from frappe.utils.safe_exec import safe_exec
-from frappe.website.doctype.website_slideshow.website_slideshow import \
-    get_slideshow
-from frappe.website.utils import (extract_title, find_first_image,
-                                  get_comment_list,
-                                  get_html_content_based_on_type)
+from frappe.website.doctype.website_slideshow.website_slideshow import get_slideshow
+from frappe.website.utils import (
+	extract_title,
+	find_first_image,
+	get_comment_list,
+	get_html_content_based_on_type,
+)
 from frappe.website.website_generator import WebsiteGenerator
 
 
@@ -35,9 +37,7 @@ class WebPage(WebsiteGenerator):
 		super(WebPage, self).on_trash()
 
 	def get_context(self, context):
-		context.main_section = get_html_content_based_on_type(
-			self, "main_section", self.content_type
-		)
+		context.main_section = get_html_content_based_on_type(self, "main_section", self.content_type)
 		context.source_content_type = self.content_type
 		context.title = self.title
 
@@ -165,9 +165,7 @@ class WebPage(WebsiteGenerator):
 			if self.published and now() > self.end_date:
 				self.end_date = None
 
-				frappe.msgprint(
-					_("Clearing end date, as it cannot be in the past for published pages.")
-				)
+				frappe.msgprint(_("Clearing end date, as it cannot be in the past for published pages."))
 
 	def validate_server_scripts(self):
 		if self.context_script and not frappe.conf.server_script_enabled:
@@ -176,9 +174,7 @@ class WebPage(WebsiteGenerator):
 
 def check_publish_status():
 	# called via daily scheduler
-	web_pages = frappe.get_all(
-		"Web Page", fields=["name", "published", "start_date", "end_date"]
-	)
+	web_pages = frappe.get_all("Web Page", fields=["name", "published", "start_date", "end_date"])
 	now_date = get_datetime(now())
 
 	for page in web_pages:

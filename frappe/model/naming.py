@@ -255,16 +255,12 @@ def getseries(key, digits):
 	# series created ?
 	# Using frappe.qb as frappe.get_values does not allow order_by=None
 	series = DocType("Series")
-	current = (
-		frappe.qb.from_(series).where(series.name == key).for_update().select("current")
-	).run()
+	current = (frappe.qb.from_(series).where(series.name == key).for_update().select("current")).run()
 
 	if current and current[0][0] is not None:
 		current = current[0][0]
 		# yes, update it
-		frappe.db.sql(
-			"UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`=%s", (key,)
-		)
+		frappe.db.sql("UPDATE `tabSeries` SET `current` = `current` + 1 WHERE `name`=%s", (key,))
 		current = cint(current) + 1
 	else:
 		# no, create it
@@ -318,9 +314,7 @@ def revert_series_if_last(key, name, doc=None):
 	).run()
 
 	if current and current[0][0] == count:
-		frappe.db.sql(
-			"UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `name`=%s", prefix
-		)
+		frappe.db.sql("UPDATE `tabSeries` SET `current` = `current` - 1 WHERE `name`=%s", prefix)
 
 
 def get_default_naming_series(doctype):
@@ -344,9 +338,7 @@ def validate_name(doctype: str, name: Union[int, str], case: Optional[str] = Non
 			set_next_val(doctype, name, is_val_used=True)
 			return name
 
-		frappe.throw(
-			_("Invalid name type (integer) for varchar name column"), frappe.NameError
-		)
+		frappe.throw(_("Invalid name type (integer) for varchar name column"), frappe.NameError)
 
 	if name.startswith("New " + doctype):
 		frappe.throw(
@@ -359,11 +351,7 @@ def validate_name(doctype: str, name: Union[int, str], case: Optional[str] = Non
 		name = name.upper()
 	name = name.strip()
 
-	if (
-		not frappe.get_meta(doctype).get("issingle")
-		and (doctype == name)
-		and (name != "DocType")
-	):
+	if not frappe.get_meta(doctype).get("issingle") and (doctype == name) and (name != "DocType"):
 		frappe.throw(_("Name of {0} cannot be {1}").format(doctype, name), frappe.NameError)
 
 	special_characters = "<>"
@@ -377,9 +365,7 @@ def validate_name(doctype: str, name: Union[int, str], case: Optional[str] = Non
 	return name
 
 
-def append_number_if_name_exists(
-	doctype, value, fieldname="name", separator="-", filters=None
-):
+def append_number_if_name_exists(doctype, value, fieldname="name", separator="-", filters=None):
 	if not filters:
 		filters = dict()
 	filters.update({fieldname: value})

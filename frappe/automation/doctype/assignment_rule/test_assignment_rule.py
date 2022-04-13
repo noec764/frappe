@@ -254,8 +254,7 @@ class TestAutoAssign(unittest.TestCase):
 		frappe.db.delete("Assignment Rule")
 
 		# Add expiry_date custom field
-		from frappe.custom.doctype.custom_field.custom_field import \
-		    create_custom_field
+		from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 
 		df = dict(fieldname="expiry_date", label="Expiry Date", fieldtype="Date")
 		create_custom_field("Note", df)
@@ -352,9 +351,7 @@ def get_assignment_rule(days, assign=None):
 
 
 def make_note(values=None):
-	note = frappe.get_doc(
-		dict(doctype="Note", title=random_string(10), content=random_string(20))
-	)
+	note = frappe.get_doc(dict(doctype="Note", title=random_string(10), content=random_string(20)))
 
 	if values:
 		note.update(values)

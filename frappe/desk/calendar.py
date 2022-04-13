@@ -103,9 +103,7 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 	return events
 
 
-def process_recurring_events(
-	event, start, end, starts_on_field, ends_on_field, rrule_field
-):
+def process_recurring_events(event, start, end, starts_on_field, ends_on_field, rrule_field):
 	result = []
 	if rrule_field and event.get(rrule_field):
 		try:

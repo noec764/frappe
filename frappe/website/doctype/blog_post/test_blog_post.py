@@ -6,8 +6,7 @@ import unittest
 from bs4 import BeautifulSoup
 
 import frappe
-from frappe.custom.doctype.customize_form.customize_form import \
-    reset_customization
+from frappe.custom.doctype.customize_form.customize_form import reset_customization
 from frappe.utils import random_string, set_request
 from frappe.website.doctype.blog_post.blog_post import get_blog_list
 from frappe.website.serve import get_response
@@ -36,14 +35,11 @@ class TestBlogPost(unittest.TestCase):
 
 		html = response.get_data().decode()
 		self.assertTrue(
-			'<article class="blog-content" itemscope itemtype="http://schema.org/BlogPosting">'
-			in html
+			'<article class="blog-content" itemscope itemtype="http://schema.org/BlogPosting">' in html
 		)
 
 	def test_generator_not_found(self):
-		pages = frappe.get_all(
-			"Blog Post", fields=["name", "route"], filters={"published": 0}, limit=1
-		)
+		pages = frappe.get_all("Blog Post", fields=["name", "route"], filters={"published": 0}, limit=1)
 
 		route = f"test-route-{frappe.generate_hash(length=5)}"
 

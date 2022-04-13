@@ -83,10 +83,7 @@ def register_to_event(event, data, user=None):
 
 	try:
 		registration = frappe.get_doc(
-			dict(
-				{"doctype": "Event Registration", "event": event, "user": user},
-				**frappe.parse_json(data)
-			)
+			dict({"doctype": "Event Registration", "event": event, "user": user}, **frappe.parse_json(data))
 		)
 
 		registration.flags.ignore_permissions = True
@@ -105,9 +102,7 @@ def cancel_registration(event, user=None):
 	if not user:
 		user = frappe.session.user
 
-	registration = frappe.get_value(
-		"Event Registration", dict(user=user, event=event, docstatus=1)
-	)
+	registration = frappe.get_value("Event Registration", dict(user=user, event=event, docstatus=1))
 
 	if registration:
 		doc = frappe.get_doc("Event Registration", registration)

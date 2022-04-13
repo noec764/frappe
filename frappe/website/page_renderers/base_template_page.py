@@ -1,6 +1,5 @@
 import frappe
-from frappe.website.doctype.website_settings.website_settings import \
-    get_website_settings
+from frappe.website.doctype.website_settings.website_settings import get_website_settings
 from frappe.website.page_renderers.base_renderer import BaseRenderer
 from frappe.website.website_components.metatags import MetaTags
 
@@ -47,9 +46,7 @@ class BaseTemplatePage(BaseRenderer):
 			and self.context.title
 			and not self.context.title.startswith(self.context.title_prefix)
 		):
-			self.context.title = "{0} - {1}".format(
-				self.context.title_prefix, self.context.title
-			)
+			self.context.title = "{0} - {1}".format(self.context.title_prefix, self.context.title)
 
 	def set_missing_values(self):
 		# set using frappe.respond_as_web_page

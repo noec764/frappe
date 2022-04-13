@@ -37,9 +37,7 @@ ignore_values = {
 ignore_doctypes = [""]
 
 
-def import_files(
-	module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False
-):
+def import_files(module, dt=None, dn=None, force=False, pre_process=None, reset_permissions=False):
 	if type(module) is list:
 		out = []
 		for m in module:
@@ -161,9 +159,9 @@ def import_file_by_path(
 
 			if doc["doctype"] == "DocType":
 				doctype_table = DocType("DocType")
-				frappe.qb.update(doctype_table).set(
-					doctype_table.migration_hash, calculated_hash
-				).where(doctype_table.name == doc["name"]).run()
+				frappe.qb.update(doctype_table).set(doctype_table.migration_hash, calculated_hash).where(
+					doctype_table.name == doc["name"]
+				).run()
 
 			new_modified_timestamp = doc.get("modified")
 
@@ -180,9 +178,7 @@ def import_file_by_path(
 def is_timestamp_changed(doc):
 	# check if timestamps match
 	db_modified = frappe.db.get_value(doc["doctype"], doc["name"], "modified")
-	return not (
-		db_modified and get_datetime(doc.get("modified")) == get_datetime(db_modified)
-	)
+	return not (db_modified and get_datetime(doc.get("modified")) == get_datetime(db_modified))
 
 
 def read_doc_from_file(path):
@@ -206,8 +202,7 @@ def update_modified(original_modified, doc):
 		singles_table = DocType("Singles")
 
 		frappe.qb.update(singles_table).set(singles_table.value, original_modified).where(
-			singles_table["field"]
-			== "modified",  # singles_table.field is a method of pypika Selectable
+			singles_table["field"] == "modified",  # singles_table.field is a method of pypika Selectable
 		).where(singles_table.doctype == doc["name"]).run()
 	else:
 		doctype_table = DocType(doc["doctype"])
@@ -292,9 +287,7 @@ def delete_old_doc(doc, reset_permissions):
 			ignore.append(df.options)
 
 	# delete old
-	frappe.delete_doc(
-		doc.doctype, doc.name, force=1, ignore_doctypes=ignore, for_reload=True
-	)
+	frappe.delete_doc(doc.doctype, doc.name, force=1, ignore_doctypes=ignore, for_reload=True)
 
 	doc.flags.ignore_children_type = ignore
 

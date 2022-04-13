@@ -59,9 +59,7 @@ class TestFullTextSearch(unittest.TestCase):
 		self.assertEqual(res[0], "sw/erpnext")
 
 		# Update new doc
-		self.index.update_index(
-			{"name": "sw/frappebooks", "content": """DesktopAccounting"""}
-		)
+		self.index.update_index({"name": "sw/frappebooks", "content": """DesktopAccounting"""})
 
 		res = self.index.search("DesktopAccounting")
 		self.assertEqual(res[0], "sw/frappebooks")

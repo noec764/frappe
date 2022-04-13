@@ -8,9 +8,7 @@ from frappe.installer import _new_site
 
 def get_site_config(site_name):
 	site_config = None
-	with open(
-		"sites/{site_name}/site_config.json".format(site_name=site_name)
-	) as site_config_file:
+	with open("sites/{site_name}/site_config.json".format(site_name=site_name)) as site_config_file:
 		site_config = json.load(site_config_file)
 	return site_config
 

@@ -5,10 +5,8 @@
 import unittest
 
 import frappe
-from frappe.core.page.permission_manager.permission_manager import (add, reset,
-                                                                    update)
-from frappe.custom.doctype.property_setter.property_setter import \
-    make_property_setter
+from frappe.core.page.permission_manager.permission_manager import add, reset, update
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 from frappe.desk.form.load import get_docinfo, getdoc, getdoctype
 from frappe.utils.file_manager import save_file
 
@@ -48,9 +46,7 @@ class TestFormLoad(unittest.TestCase):
 		user.remove_roles(*user_roles)
 		user.add_roles("Blogger")
 
-		blog_post_property_setter = make_property_setter(
-			"Blog Post", "published", "permlevel", 1, "Int"
-		)
+		blog_post_property_setter = make_property_setter("Blog Post", "published", "permlevel", 1, "Int")
 		reset("Blog Post")
 
 		# test field level permission before role level permissions are defined

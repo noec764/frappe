@@ -32,9 +32,7 @@ def get_permission_query_conditions(user):
 	if user == "Administrator":
 		return ""
 
-	return """(`tabKanban Board`.private=0 or `tabKanban Board`.owner='{user}')""".format(
-		user=user
-	)
+	return """(`tabKanban Board`.private=0 or `tabKanban Board`.owner='{user}')""".format(user=user)
 
 
 def has_permission(doc, ptype, user):
@@ -200,9 +198,7 @@ def get_order_for_column(board, colname):
 	if board.filters:
 		filters.append(frappe.parse_json(board.filters)[0])
 
-	return frappe.as_json(
-		frappe.get_list(board.reference_doctype, filters=filters, pluck="name")
-	)
+	return frappe.as_json(frappe.get_list(board.reference_doctype, filters=filters, pluck="name"))
 
 
 @frappe.whitelist()
@@ -253,6 +249,4 @@ def set_indicator(board_name, column_name, indicator):
 @frappe.whitelist()
 def save_filters(board_name, filters):
 	"""Save filters silently"""
-	frappe.db.set_value(
-		"Kanban Board", board_name, "filters", filters, update_modified=False
-	)
+	frappe.db.set_value("Kanban Board", board_name, "filters", filters, update_modified=False)

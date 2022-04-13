@@ -8,8 +8,9 @@ import math
 
 import frappe
 from frappe import _
-from frappe.data_migration.doctype.data_migration_mapping.data_migration_mapping import \
-    get_source_value
+from frappe.data_migration.doctype.data_migration_mapping.data_migration_mapping import (
+	get_source_value,
+)
 from frappe.model.document import Document
 from frappe.utils import cstr
 
@@ -37,9 +38,7 @@ class DataMigrationRun(Document):
 				notify=True,
 				commit=True,
 			)
-			frappe.enqueue_doc(
-				self.doctype, self.name, "run_current_mapping", now=frappe.flags.in_test
-			)
+			frappe.enqueue_doc(self.doctype, self.name, "run_current_mapping", now=frappe.flags.in_test)
 		else:
 			self.complete()
 
@@ -61,9 +60,7 @@ class DataMigrationRun(Document):
 				self.trigger_name, {"progress_percent": percent_complete}, user=frappe.session.user
 			)
 
-		frappe.enqueue_doc(
-			self.doctype, self.name, "run_current_mapping", now=frappe.flags.in_test
-		)
+		frappe.enqueue_doc(self.doctype, self.name, "run_current_mapping", now=frappe.flags.in_test)
 
 	def run_current_mapping(self):
 		try:
@@ -149,9 +146,7 @@ class DataMigrationRun(Document):
 
 		self.execute_postprocess(status)
 
-		frappe.publish_realtime(
-			self.trigger_name, {"progress_percent": 100}, user=frappe.session.user
-		)
+		frappe.publish_realtime(self.trigger_name, {"progress_percent": 100}, user=frappe.session.user)
 
 	def execute_postprocess(self, status):
 		# Execute post process
@@ -460,9 +455,7 @@ class DataMigrationRun(Document):
 
 	def post_process_doc(self, local_doc=None, remote_doc=None):
 		plan = self.get_plan()
-		doc = plan.post_process_doc(
-			self.current_mapping, local_doc=local_doc, remote_doc=remote_doc
-		)
+		doc = plan.post_process_doc(self.current_mapping, local_doc=local_doc, remote_doc=remote_doc)
 		return doc
 
 	def set_log(self, key, value):
@@ -522,6 +515,4 @@ def update_local_doc(mapping, remote_doc, migration_id_value):
 
 
 def local_doc_exists(mapping, migration_id_value):
-	return frappe.db.exists(
-		mapping.local_doctype, {mapping.migration_id_field: migration_id_value}
-	)
+	return frappe.db.exists(mapping.local_doctype, {mapping.migration_id_field: migration_id_value})

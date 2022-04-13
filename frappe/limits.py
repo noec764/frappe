@@ -6,8 +6,7 @@ from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 import frappe
 from frappe import _
 from frappe.installer import update_site_config
-from frappe.utils import (cint, flt, get_fullname, get_site_info, getdate,
-                          now_datetime)
+from frappe.utils import cint, flt, get_fullname, get_site_info, getdate, now_datetime
 from frappe.utils.data import formatdate
 from frappe.utils.user import get_enabled_system_users
 

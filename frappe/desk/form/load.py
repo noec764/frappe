@@ -89,9 +89,7 @@ def get_meta_bundle(doctype):
 	bundle = [frappe.desk.form.meta.get_meta(doctype)]
 	for df in bundle[0].fields:
 		if df.fieldtype in frappe.model.table_fields:
-			bundle.append(
-				frappe.desk.form.meta.get_meta(df.options, not frappe.conf.developer_mode)
-			)
+			bundle.append(frappe.desk.form.meta.get_meta(df.options, not frappe.conf.developer_mode))
 	return bundle
 
 
@@ -126,13 +124,9 @@ def get_docinfo(doc=None, doctype=None, name=None):
 			"shared": frappe.share.get_users(doc.doctype, doc.name),
 			"views": get_view_logs(doc.doctype, doc.name),
 			"energy_point_logs": get_point_logs(doc.doctype, doc.name),
-			"additional_timeline_content": get_additional_timeline_content(
-				doc.doctype, doc.name
-			),
+			"additional_timeline_content": get_additional_timeline_content(doc.doctype, doc.name),
 			"milestones": get_milestones(doc.doctype, doc.name),
-			"is_document_followed": is_document_followed(
-				doc.doctype, doc.name, frappe.session.user
-			),
+			"is_document_followed": is_document_followed(doc.doctype, doc.name, frappe.session.user),
 			"tags": get_tags(doc.doctype, doc.name),
 			"document_email": get_document_email(doc.doctype, doc.name),
 		}
@@ -399,10 +393,7 @@ def run_onload(doc):
 def get_view_logs(doctype, docname):
 	"""get and return the latest view logs if available"""
 	logs = []
-	if (
-		hasattr(frappe.get_meta(doctype), "track_views")
-		and frappe.get_meta(doctype).track_views
-	):
+	if hasattr(frappe.get_meta(doctype), "track_views") and frappe.get_meta(doctype).track_views:
 		view_logs = frappe.get_all(
 			"View Log",
 			filters={
@@ -481,9 +472,7 @@ def get_title_values_for_link_and_dynamic_link_fields(doc, link_fields=None):
 		if not meta or not (meta.title_field and meta.show_title_field_in_link):
 			continue
 
-		link_title = frappe.db.get_value(
-			doctype, doc.get(field.fieldname), meta.title_field, cache=True
-		)
+		link_title = frappe.db.get_value(doctype, doc.get(field.fieldname), meta.title_field, cache=True)
 		link_titles.update({doctype + "::" + doc.get(field.fieldname): link_title})
 
 	return link_titles

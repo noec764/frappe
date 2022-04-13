@@ -29,9 +29,7 @@ class UserType(Document):
 
 	def on_trash(self):
 		if self.is_standard:
-			frappe.throw(
-				_("Standard user type {0} can not be deleted.").format(frappe.bold(self.name))
-			)
+			frappe.throw(_("Standard user type {0} can not be deleted.").format(frappe.bold(self.name)))
 
 	def set_modules(self):
 		if not self.user_doctypes:
@@ -53,9 +51,7 @@ class UserType(Document):
 
 		if not limit and frappe.session.user != "Administrator":
 			frappe.throw(
-				_("User does not have permission to create the new {0}").format(
-					frappe.bold(_("User Type"))
-				),
+				_("User does not have permission to create the new {0}").format(frappe.bold(_("User Type"))),
 				title=_("Permission Error"),
 			)
 
@@ -196,9 +192,7 @@ def get_non_standard_user_type_details():
 	)
 
 	if user_types:
-		user_type_details = {
-			d.name: [d.apply_user_permission_on, d.user_id_field] for d in user_types
-		}
+		user_type_details = {d.name: [d.apply_user_permission_on, d.user_id_field] for d in user_types}
 
 		frappe.cache().set_value("non_standard_user_types", user_type_details)
 
@@ -269,18 +263,12 @@ def user_linked_with_permission_on_doctype(doc, user):
 		return True
 
 	if not doc.user_id_field:
-		frappe.throw(
-			_("User Id Field is mandatory in the user type {0}").format(frappe.bold(doc.name))
-		)
+		frappe.throw(_("User Id Field is mandatory in the user type {0}").format(frappe.bold(doc.name)))
 
-	if frappe.db.get_value(
-		doc.apply_user_permission_on, {doc.user_id_field: user}, "name"
-	):
+	if frappe.db.get_value(doc.apply_user_permission_on, {doc.user_id_field: user}, "name"):
 		return True
 	else:
-		label = (
-			frappe.get_meta(doc.apply_user_permission_on).get_field(doc.user_id_field).label
-		)
+		label = frappe.get_meta(doc.apply_user_permission_on).get_field(doc.user_id_field).label
 
 		frappe.msgprint(
 			_(

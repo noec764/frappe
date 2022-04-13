@@ -11,8 +11,7 @@ from googleapiclient.errors import HttpError
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import \
-    get_auth_url
+from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.utils import get_request_site_address
 
 SCOPES = "https://www.googleapis.com/auth/indexing"
@@ -31,9 +30,7 @@ def authorize_access(reauthorize=None):
 	)
 
 	if not website_settings.indexing_authorization_code or reauthorize:
-		return get_authentication_url(
-			client_id=google_settings.client_id, redirect_uri=redirect_uri
-		)
+		return get_authentication_url(client_id=google_settings.client_id, redirect_uri=redirect_uri)
 	else:
 		try:
 			data = {
@@ -89,14 +86,10 @@ def get_google_indexing_object():
 
 	credentials_dict = {
 		"token": account.get_access_token(),
-		"refresh_token": account.get_password(
-			fieldname="indexing_refresh_token", raise_exception=False
-		),
+		"refresh_token": account.get_password(fieldname="indexing_refresh_token", raise_exception=False),
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id,
-		"client_secret": google_settings.get_password(
-			fieldname="client_secret", raise_exception=False
-		),
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
 		"scopes": "https://www.googleapis.com/auth/indexing",
 	}
 

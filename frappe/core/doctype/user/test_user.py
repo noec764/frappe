@@ -6,9 +6,14 @@ from unittest.mock import patch
 
 import frappe
 import frappe.exceptions
-from frappe.core.doctype.user.user import (extract_mentions, reset_password,
-	sign_up, test_password_strength,
-	update_password, verify_password)
+from frappe.core.doctype.user.user import (
+	extract_mentions,
+	reset_password,
+	sign_up,
+	test_password_strength,
+	update_password,
+	verify_password,
+)
 from frappe.frappeclient import FrappeClient
 from frappe.model.delete_doc import delete_doc
 from frappe.utils import get_url
@@ -21,9 +26,7 @@ class TestUser(unittest.TestCase):
 	def tearDown(self):
 		# disable password strength test
 		frappe.db.set_value("System Settings", "System Settings", "enable_password_policy", 0)
-		frappe.db.set_value(
-			"System Settings", "System Settings", "minimum_password_score", ""
-		)
+		frappe.db.set_value("System Settings", "System Settings", "minimum_password_score", "")
 		frappe.db.set_value("System Settings", "System Settings", "password_reset_limit", 3)
 		frappe.set_user("Administrator")
 
@@ -75,9 +78,7 @@ class TestUser(unittest.TestCase):
 		delete_doc("User", "_test@example.com")
 
 		self.assertTrue(
-			not frappe.db.sql(
-				"""select * from `tabToDo` where allocated_to=%s""", ("_test@example.com",)
-			)
+			not frappe.db.sql("""select * from `tabToDo` where allocated_to=%s""", ("_test@example.com",))
 		)
 
 		from frappe.core.doctype.role.test_role import test_records as role_records
@@ -86,9 +87,7 @@ class TestUser(unittest.TestCase):
 
 	def test_get_value(self):
 		self.assertEqual(frappe.db.get_value("User", "test@example.com"), "test@example.com")
-		self.assertEqual(
-			frappe.db.get_value("User", {"email": "test@example.com"}), "test@example.com"
-		)
+		self.assertEqual(frappe.db.get_value("User", {"email": "test@example.com"}), "test@example.com")
 		self.assertEqual(
 			frappe.db.get_value("User", {"email": "test@example.com"}, "email"),
 			"test@example.com",
@@ -106,9 +105,7 @@ class TestUser(unittest.TestCase):
 			("_Test", "test@example.com"),
 		)
 
-		test_user = frappe.db.sql(
-			"select * from tabUser where name='test@example.com'", as_dict=True
-		)[0]
+		test_user = frappe.db.sql("select * from tabUser where name='test@example.com'", as_dict=True)[0]
 		self.assertEqual(
 			frappe.db.get_value("User", {"email": "test@example.com"}, "*", as_dict=True),
 			test_user,
@@ -158,9 +155,7 @@ class TestUser(unittest.TestCase):
 
 	def test_delete_user(self):
 		new_user = frappe.get_doc(
-			dict(
-				doctype="User", email="test-for-delete@example.com", first_name="Tester Delete User"
-			)
+			dict(doctype="User", email="test-for-delete@example.com", first_name="Tester Delete User")
 		).insert(ignore_if_duplicate=True)
 		self.assertEqual(new_user.user_type, "Website User")
 
@@ -208,9 +203,7 @@ class TestUser(unittest.TestCase):
 		user = frappe.get_doc("User", "test@example.com")
 		frappe.flags.in_test = False
 		user.new_password = "password"
-		self.assertRaisesRegex(
-			frappe.exceptions.ValidationError, "Invalid Password", user.save
-		)
+		self.assertRaisesRegex(frappe.exceptions.ValidationError, "Invalid Password", user.save)
 		user.reload()
 		user.new_password = "Eastern_43A1W"
 		user.save()
@@ -272,9 +265,7 @@ class TestUser(unittest.TestCase):
 				please check
 			</div>
 		"""
-		self.assertListEqual(
-			extract_mentions(comment), ["test@example.com", "test1@example.com"]
-		)
+		self.assertListEqual(extract_mentions(comment), ["test@example.com", "test1@example.com"])
 
 	@unittest.skip("Skipped in CI")
 	def test_rate_limiting_for_reset_password(self):
@@ -309,9 +300,7 @@ class TestUser(unittest.TestCase):
 				"enabled": 1,
 				"first_name": "_Test",
 				"new_password": "Eastern_43A1W",
-				"roles": [
-					{"doctype": "Has Role", "parentfield": "roles", "role": "System Manager"}
-				],
+				"roles": [{"doctype": "Has Role", "parentfield": "roles", "role": "System Manager"}],
 			}
 		).insert(ignore_permissions=True, ignore_if_duplicate=True)
 
@@ -381,18 +370,14 @@ class TestUser(unittest.TestCase):
 		frappe.set_user("testpassword@example.com")
 		test_user = frappe.get_doc("User", "testpassword@example.com")
 		test_user.reset_password()
-		self.assertEqual(
-			update_password(new_password, key=test_user.reset_password_key), "/app"
-		)
+		self.assertEqual(update_password(new_password, key=test_user.reset_password_key), "/app")
 		self.assertEqual(
 			update_password(new_password, key="wrong_key"),
 			"The Link specified has either been used before or Invalid",
 		)
 
 		# password verification should fail with old password
-		self.assertRaises(
-			frappe.exceptions.AuthenticationError, verify_password, old_password
-		)
+		self.assertRaises(frappe.exceptions.AuthenticationError, verify_password, old_password)
 		verify_password(new_password)
 
 		# reset password
@@ -439,9 +424,7 @@ class TestUser(unittest.TestCase):
 			test_user = frappe.get_doc("User", "test2@example.com")
 			self.assertEqual(reset_password(user="test2@example.com"), None)
 			test_user.reload()
-			self.assertEqual(
-				update_password(new_password, key=test_user.reset_password_key), "/"
-			)
+			self.assertEqual(update_password(new_password, key=test_user.reset_password_key), "/")
 			update_password(old_password, old_password=new_password)
 			self.assertEqual(
 				json.loads(frappe.message_log[0]).get("message"),

@@ -4,12 +4,10 @@ from urllib.parse import quote
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import \
-    get_auth_url
+from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.model.document import Document
 from frappe.utils import encode, get_request_site_address
-from frappe.website.doctype.website_theme.website_theme import \
-    add_website_theme
+from frappe.website.doctype.website_theme.website_theme import add_website_theme
 
 INDEXING_SCOPES = "https://www.googleapis.com/auth/indexing"
 
@@ -43,9 +41,7 @@ class WebsiteSettings(Document):
 				if not parent_label_item:
 					# invalid item
 					frappe.throw(
-						_("{0} does not exist in row {1}").format(
-							top_bar_item.parent_label, top_bar_item.idx
-						)
+						_("{0} does not exist in row {1}").format(top_bar_item.parent_label, top_bar_item.idx)
 					)
 
 				elif not parent_label_item[0] or parent_label_item[0].url:
@@ -65,9 +61,7 @@ class WebsiteSettings(Document):
 				if not parent_label_item:
 					# invalid item
 					frappe.throw(
-						_("{0} does not exist in row {1}").format(
-							footer_item.parent_label, footer_item.idx
-						)
+						_("{0} does not exist in row {1}").format(footer_item.parent_label, footer_item.idx)
 					)
 
 				elif not parent_label_item[0] or parent_label_item[0].url:
@@ -79,9 +73,7 @@ class WebsiteSettings(Document):
 					)
 
 	def validate_google_settings(self):
-		if self.enable_google_indexing and not frappe.db.get_single_value(
-			"Google Settings", "enable"
-		):
+		if self.enable_google_indexing and not frappe.db.get_single_value("Google Settings", "enable"):
 			frappe.throw(_("Enable Google API in Google Settings."))
 
 	def on_update(self):
@@ -109,18 +101,12 @@ class WebsiteSettings(Document):
 
 		if not self.indexing_refresh_token:
 			button_label = frappe.bold(_("Allow API Indexing Access"))
-			raise frappe.ValidationError(
-				_("Click on {0} to generate Refresh Token.").format(button_label)
-			)
+			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
 			"client_id": google_settings.client_id,
-			"client_secret": google_settings.get_password(
-				fieldname="client_secret", raise_exception=False
-			),
-			"refresh_token": self.get_password(
-				fieldname="indexing_refresh_token", raise_exception=False
-			),
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False),
+			"refresh_token": self.get_password(fieldname="indexing_refresh_token", raise_exception=False),
 			"grant_type": "refresh_token",
 			"scope": INDEXING_SCOPES,
 		}
@@ -202,9 +188,7 @@ def get_website_settings(context=None):
 	translated_messages = {}
 	translated_messages.update(frappe.translate.get_dict("template"))
 	translated_messages.update(frappe.translate.get_dict("include"))
-	translated_messages.update(
-		frappe.translate.get_dict("jsfile", "assets/js/frappe-web.min.js")
-	)
+	translated_messages.update(frappe.translate.get_dict("jsfile", "assets/js/frappe-web.min.js"))
 	translated_messages.update(
 		frappe.translate.get_dict("jsfile", "assets/js/bootstrap-4-web.min.js")
 	)

@@ -6,8 +6,7 @@ import json
 import unittest
 
 import frappe
-from frappe.desk.listview import (get_group_by_count, get_list_settings,
-                                  set_list_settings)
+from frappe.desk.listview import get_group_by_count, get_list_settings, set_list_settings
 
 
 class TestListView(unittest.TestCase):
@@ -30,9 +29,7 @@ class TestListView(unittest.TestCase):
 		self.assertEqual(settings.disable_sidebar_stats, 0)
 
 	def test_get_list_settings_with_non_default_settings(self):
-		frappe.get_doc(
-			{"doctype": "List View Settings", "name": "DocType", "disable_count": 1}
-		).insert()
+		frappe.get_doc({"doctype": "List View Settings", "name": "DocType", "disable_count": 1}).insert()
 		settings = get_list_settings("DocType")
 		self.assertIsNotNone(settings)
 
@@ -49,12 +46,8 @@ class TestListView(unittest.TestCase):
 		self.assertEqual(settings.disable_sidebar_stats, 0)
 
 	def test_set_list_settings_with_existing_settings(self):
-		frappe.get_doc(
-			{"doctype": "List View Settings", "name": "DocType", "disable_count": 1}
-		).insert()
-		set_list_settings(
-			"DocType", json.dumps({"disable_count": 0, "disable_auto_refresh": 1})
-		)
+		frappe.get_doc({"doctype": "List View Settings", "name": "DocType", "disable_count": 1}).insert()
+		set_list_settings("DocType", json.dumps({"disable_count": 0, "disable_auto_refresh": 1}))
 		settings = frappe.get_doc("List View Settings", "DocType")
 
 		self.assertEqual(settings.disable_auto_refresh, 1)
@@ -77,8 +70,6 @@ class TestListView(unittest.TestCase):
 
 		data = {
 			d.name: d.count
-			for d in get_group_by_count(
-				"Note", '[["Note Seen By","user","=","Administrator"]]', "owner"
-			)
+			for d in get_group_by_count("Note", '[["Note Seen By","user","=","Administrator"]]', "owner")
 		}
 		self.assertEqual(data["Administrator"], 1)

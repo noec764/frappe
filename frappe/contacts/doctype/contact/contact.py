@@ -7,8 +7,7 @@ import functools
 import frappe
 from frappe import _
 from frappe.contacts.address_and_contact import set_link_title
-from frappe.core.doctype.dynamic_link.dynamic_link import \
-    deduplicate_dynamic_links
+from frappe.core.doctype.dynamic_link.dynamic_link import deduplicate_dynamic_links
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
 from frappe.utils import cstr, has_gravatar
@@ -103,9 +102,7 @@ class Contact(Document):
 			return
 
 		if len([email.email_id for email in self.email_ids if email.is_primary]) > 1:
-			frappe.throw(
-				_("Only one {0} can be set as primary.").format(frappe.bold("Email ID"))
-			)
+			frappe.throw(_("Only one {0} can be set as primary.").format(frappe.bold("Email ID")))
 
 		primary_email_exists = False
 		for d in self.email_ids:
@@ -129,9 +126,7 @@ class Contact(Document):
 
 		if len(is_primary) > 1:
 			frappe.throw(
-				_("Only one {0} can be set as primary.").format(
-					frappe.bold(frappe.unscrub(fieldname))
-				)
+				_("Only one {0} can be set as primary.").format(frappe.bold(frappe.unscrub(fieldname)))
 			)
 
 		primary_number_exists = False
@@ -350,18 +345,12 @@ def get_contacts_linking_to(doctype, docname, fields=None):
 
 def get_contacts_linked_from(doctype, docname, fields=None):
 	"""Return a list of contacts that are contained in (linked from) the given document."""
-	link_fields = frappe.get_meta(doctype).get(
-		"fields", {"fieldtype": "Link", "options": "Contact"}
-	)
+	link_fields = frappe.get_meta(doctype).get("fields", {"fieldtype": "Link", "options": "Contact"})
 	if not link_fields:
 		return []
 
-	contact_names = frappe.get_value(
-		doctype, docname, fieldname=[f.fieldname for f in link_fields]
-	)
+	contact_names = frappe.get_value(doctype, docname, fieldname=[f.fieldname for f in link_fields])
 	if not contact_names:
 		return []
 
-	return frappe.get_list(
-		"Contact", fields=fields, filters={"name": ("in", contact_names)}
-	)
+	return frappe.get_list("Contact", fields=fields, filters={"name": ("in", contact_names)})

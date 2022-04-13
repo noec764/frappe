@@ -14,11 +14,14 @@ from googleapiclient.errors import HttpError
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import \
-    get_auth_url
+from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.model.document import Document
-from frappe.utils import (convert_utc_to_user_timezone, get_datetime,
-                          get_request_site_address, get_time_zone)
+from frappe.utils import (
+	convert_utc_to_user_timezone,
+	get_datetime,
+	get_request_site_address,
+	get_time_zone,
+)
 from frappe.utils.password import set_encrypted_password
 
 SCOPES = "https://www.googleapis.com/auth/calendar"
@@ -42,15 +45,11 @@ class GoogleCalendar(Document):
 
 		if not self.refresh_token:
 			button_label = frappe.bold(_("Allow Google Calendar Access"))
-			raise frappe.ValidationError(
-				_("Click on {0} to generate Refresh Token.").format(button_label)
-			)
+			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
 			"client_id": google_settings.client_id or frappe.conf.google_client_id,
-			"client_secret": google_settings.get_password(
-				fieldname="client_secret", raise_exception=False
-			)
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 			or frappe.conf.google_client_secret,
 			"refresh_token": self.refresh_token,
 			"grant_type": "refresh_token",
@@ -98,13 +97,9 @@ def authorize_access(g_calendar, reauthorize=None):
 	else:
 		try:
 			data = {
-				"code": google_calendar.get_password(
-					fieldname="authorization_code", raise_exception=False
-				),
+				"code": google_calendar.get_password(fieldname="authorization_code", raise_exception=False),
 				"client_id": google_settings.client_id or frappe.conf.google_client_id,
-				"client_secret": google_settings.get_password(
-					fieldname="client_secret", raise_exception=False
-				)
+				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 				or frappe.conf.google_client_secret,
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code",
@@ -115,9 +110,7 @@ def authorize_access(g_calendar, reauthorize=None):
 				frappe.db.set_value(
 					"Google Calendar", google_calendar.name, "refresh_token", r.get("refresh_token")
 				)
-				frappe.db.set_value(
-					"Google Calendar", google_calendar.name, "next_sync_token", None
-				)
+				frappe.db.set_value("Google Calendar", google_calendar.name, "next_sync_token", None)
 				frappe.db.commit()
 
 				frappe.local.response["type"] = "redirect"
@@ -128,9 +121,7 @@ def authorize_access(g_calendar, reauthorize=None):
 				frappe.msgprint(_("Google Calendar has been configured."))
 			else:
 				frappe.msgprint(
-					_("Google Calendar configuration failed : {0}.").format(
-						r.get("error_description") or str(r)
-					)
+					_("Google Calendar configuration failed : {0}.").format(r.get("error_description") or str(r))
 				)
 
 		except Exception as e:
@@ -180,9 +171,7 @@ def get_google_calendar_object(g_calendar):
 		"refresh_token": account.refresh_token,
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id or frappe.conf.google_client_id,
-		"client_secret": google_settings.get_password(
-			fieldname="client_secret", raise_exception=False
-		)
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 		or frappe.conf.google_client_secret,
 		"scopes": "https://www.googleapis.com/auth/calendar/v3",
 	}
@@ -239,9 +228,7 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
 	if not account.pull_from_google_calendar:
 		return
 
-	sync_token = (
-		account.get_password(fieldname="next_sync_token", raise_exception=False) or None
-	)
+	sync_token = account.get_password(fieldname="next_sync_token", raise_exception=False) or None
 	events = frappe._dict()
 	results = []
 	while True:
@@ -260,9 +247,9 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
 				.execute()
 			)
 		except HttpError as err:
-			msg = _(
-				"Google Calendar - Could not fetch event from Google Calendar, error code {0}."
-			).format(err.resp.status)
+			msg = _("Google Calendar - Could not fetch event from Google Calendar, error code {0}.").format(
+				err.resp.status
+			)
 
 			if err.resp.status == 410:
 				set_encrypted_password("Google Calendar", account.name, "", "next_sync_token")
@@ -303,9 +290,9 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
 				call_calendar_hook(
 					"pull_insert", **{"account": account, "event": event, "recurrence": recurrence}
 				)
-			elif (
-				get_datetime(event.get("updated")) - get_datetime(event.get("created"))
-			) < timedelta(seconds=2):
+			elif (get_datetime(event.get("updated")) - get_datetime(event.get("created"))) < timedelta(
+				seconds=2
+			):
 				continue
 			else:
 				call_calendar_hook(
@@ -328,9 +315,7 @@ def call_calendar_hook(hook, **kwargs):
 	reference_document = kwargs.get("account", {}).get("reference_document")
 	if reference_document:
 		hook_method = (
-			frappe.get_hooks("gcalendar_integrations")
-			.get(reference_document, {})
-			.get(hook, [])[-1]
+			frappe.get_hooks("gcalendar_integrations").get(reference_document, {}).get(hook, [])[-1]
 		)
 		if hook_method:
 			method = frappe.get_attr(hook_method)

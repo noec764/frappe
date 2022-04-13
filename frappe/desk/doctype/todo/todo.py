@@ -58,9 +58,7 @@ class ToDo(Document):
 		if not (self.reference_type and self.reference_name):
 			return
 
-		frappe.get_doc(self.reference_type, self.reference_name).add_comment(
-			comment_type, text
-		)
+		frappe.get_doc(self.reference_type, self.reference_name).add_comment(comment_type, text)
 
 	def delete_communication_links(self):
 		# unlink todo from linked comments
@@ -131,10 +129,8 @@ def get_permission_query_conditions(user):
 	if any(check in todo_roles for check in frappe.get_roles(user)):
 		return None
 	else:
-		return (
-			"""(`tabToDo`.allocated_to = {user} or `tabToDo`.assigned_by = {user})""".format(
-				user=frappe.db.escape(user)
-			)
+		return """(`tabToDo`.allocated_to = {user} or `tabToDo`.assigned_by = {user})""".format(
+			user=frappe.db.escape(user)
 		)
 
 

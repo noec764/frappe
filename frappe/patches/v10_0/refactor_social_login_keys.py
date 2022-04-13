@@ -13,9 +13,7 @@ def execute():
 		return
 
 	social_login_keys = frappe.get_doc("Social Login Keys", "Social Login Keys")
-	if social_login_keys.get("facebook_client_id") or social_login_keys.get(
-		"facebook_client_secret"
-	):
+	if social_login_keys.get("facebook_client_id") or social_login_keys.get("facebook_client_secret"):
 		facebook_login_key = frappe.new_doc("Social Login Key")
 		facebook_login_key.get_social_login_provider("Facebook", initialize=True)
 		facebook_login_key.social_login_provider = "Facebook"
@@ -33,16 +31,12 @@ def execute():
 		frappe_login_key.client_id = social_login_keys.get("frappe_client_id")
 		frappe_login_key.client_secret = social_login_keys.get("frappe_client_secret")
 		if not (
-			frappe_login_key.client_secret
-			and frappe_login_key.client_id
-			and frappe_login_key.base_url
+			frappe_login_key.client_secret and frappe_login_key.client_id and frappe_login_key.base_url
 		):
 			frappe_login_key.enable_social_login = 0
 		frappe_login_key.save()
 
-	if social_login_keys.get("github_client_id") or social_login_keys.get(
-		"github_client_secret"
-	):
+	if social_login_keys.get("github_client_id") or social_login_keys.get("github_client_secret"):
 		github_login_key = frappe.new_doc("Social Login Key")
 		github_login_key.get_social_login_provider("GitHub", initialize=True)
 		github_login_key.social_login_provider = "GitHub"
@@ -52,9 +46,7 @@ def execute():
 			github_login_key.enable_social_login = 0
 		github_login_key.save()
 
-	if social_login_keys.get("google_client_id") or social_login_keys.get(
-		"google_client_secret"
-	):
+	if social_login_keys.get("google_client_id") or social_login_keys.get("google_client_secret"):
 		google_login_key = frappe.new_doc("Social Login Key")
 		google_login_key.get_social_login_provider("Google", initialize=True)
 		google_login_key.social_login_provider = "Google"
@@ -78,9 +70,7 @@ def run_patch():
 	for user in users:
 		idx = 0
 		if user.frappe_userid:
-			insert_user_social_login(
-				user.name, user.modified_by, "frappe", idx, userid=user.frappe_userid
-			)
+			insert_user_social_login(user.name, user.modified_by, "frappe", idx, userid=user.frappe_userid)
 			idx += 1
 
 		if user.fb_userid or user.fb_username:
@@ -106,15 +96,11 @@ def run_patch():
 			idx += 1
 
 		if user.google_userid:
-			insert_user_social_login(
-				user.name, user.modified_by, "google", idx, userid=user.google_userid
-			)
+			insert_user_social_login(user.name, user.modified_by, "google", idx, userid=user.google_userid)
 			idx += 1
 
 
-def insert_user_social_login(
-	user, modified_by, provider, idx, userid=None, username=None
-):
+def insert_user_social_login(user, modified_by, provider, idx, userid=None, username=None):
 	source_cols = get_standard_cols()
 
 	creation_time = frappe.utils.get_datetime_str(frappe.utils.get_datetime())

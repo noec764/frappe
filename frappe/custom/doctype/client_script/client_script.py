@@ -17,9 +17,7 @@ class ClientScript(Document):
 		exists = frappe.db.exists("Client Script", {"dt": self.dt, "view": self.view})
 		if exists:
 			frappe.throw(
-				_("Client Script for {0} {1} already exists").format(
-					frappe.bold(_(self.dt)), _(self.view)
-				),
+				_("Client Script for {0} {1} already exists").format(frappe.bold(_(self.dt)), _(self.view)),
 				frappe.DuplicateEntryError,
 			)
 

@@ -71,8 +71,6 @@ def set_next_val(
 		is_val_used = 1 if db.db_type == "mariadb" else "t"
 
 	if db.db_type == "postgres":
-		db.sql(
-			f"SELECT SETVAL('\"{scrub(doctype_name + slug)}\"', {next_val}, '{is_val_used}')"
-		)
+		db.sql(f"SELECT SETVAL('\"{scrub(doctype_name + slug)}\"', {next_val}, '{is_val_used}')")
 	else:
 		db.sql(f"SELECT SETVAL(`{scrub(doctype_name + slug)}`, {next_val}, {is_val_used})")

@@ -22,9 +22,7 @@ class AddressTemplate(Document):
 			if not self.defaults:
 				self.is_default = 1
 				if cint(frappe.db.get_single_value("System Settings", "setup_complete")):
-					frappe.msgprint(
-						_("Setting this Address Template as default as there is no other default")
-					)
+					frappe.msgprint(_("Setting this Address Template as default as there is no other default"))
 
 		validate_template(self.template)
 

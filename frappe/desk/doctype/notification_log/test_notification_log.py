@@ -44,17 +44,13 @@ class TestNotificationLog(unittest.TestCase):
 
 
 def get_last_email_queue():
-	res = frappe.db.get_all(
-		"Email Queue", fields=["message"], order_by="creation desc", limit=1
-	)
+	res = frappe.db.get_all("Email Queue", fields=["message"], order_by="creation desc", limit=1)
 	return res[0]
 
 
 def get_todo():
 	if not frappe.get_all("ToDo"):
-		return frappe.get_doc(
-			{"doctype": "ToDo", "description": "Test for Notification"}
-		).insert()
+		return frappe.get_doc({"doctype": "ToDo", "description": "Test for Notification"}).insert()
 
 	res = frappe.get_all("ToDo", limit=1)
 	return frappe.get_cached_doc("ToDo", res[0].name)

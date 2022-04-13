@@ -53,8 +53,7 @@ def get_permission_query_conditions(user=None):
 		frappe.db.escape(doctype) for doctype in frappe.permissions.get_doctypes_with_read()
 	]
 	allowed_modules = [
-		frappe.db.escape(module.get("module_name"))
-		for module in get_modules_from_all_apps_for_user()
+		frappe.db.escape(module.get("module_name")) for module in get_modules_from_all_apps_for_user()
 	]
 
 	if allowed_doctypes:
@@ -187,9 +186,7 @@ def get_cards_for_user(doctype, txt, searchfield, start, page_len, filters):
 	if txt:
 		for field in searchfields:
 			search_conditions.append(
-				"`tab{doctype}`.`{field}` like %(txt)s".format(
-					field=field, doctype=doctype, txt=txt
-				)
+				"`tab{doctype}`.`{field}` like %(txt)s".format(field=field, doctype=doctype, txt=txt)
 			)
 
 		search_conditions = " or ".join(search_conditions)

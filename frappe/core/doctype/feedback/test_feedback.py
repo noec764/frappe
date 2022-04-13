@@ -21,8 +21,7 @@ class TestFeedback(unittest.TestCase):
 
 		frappe.db.delete("Feedback", {"reference_doctype": "Blog Post"})
 
-		from frappe.templates.includes.feedback.feedback import (add_feedback,
-		                                                         update_feedback)
+		from frappe.templates.includes.feedback.feedback import add_feedback, update_feedback
 
 		frappe.form_dict.reference_doctype = "Blog Post"
 		frappe.form_dict.reference_name = test_blog.name

@@ -195,9 +195,7 @@ def login_oauth_user(
 		state = json.loads(state.decode("utf-8"))
 
 	if not (state and state["token"]):
-		frappe.respond_as_web_page(
-			_("Invalid Request"), _("Token is missing"), http_status_code=417
-		)
+		frappe.respond_as_web_page(_("Invalid Request"), _("Token is missing"), http_status_code=417)
 		return
 
 	user = get_email(data)
@@ -252,9 +250,7 @@ def update_oauth_user(user, data, provider):
 	if not frappe.db.exists("User", user):
 
 		# is signup disabled?
-		if frappe.utils.cint(
-			frappe.db.get_single_value("Website Settings", "disable_signup")
-		):
+		if frappe.utils.cint(frappe.db.get_single_value("Website Settings", "disable_signup")):
 			raise SignupDisabledError
 
 		save = True
@@ -284,19 +280,13 @@ def update_oauth_user(user, data, provider):
 	else:
 		user = frappe.get_doc("User", user)
 		if not user.enabled:
-			frappe.respond_as_web_page(
-				_("Not Allowed"), _("User {0} is disabled").format(user.email)
-			)
+			frappe.respond_as_web_page(_("Not Allowed"), _("User {0} is disabled").format(user.email))
 			return False
 
 	if provider == "facebook" and not user.get_social_login_userid(provider):
 		save = True
-		user.set_social_login_userid(
-			provider, userid=data["id"], username=data.get("username")
-		)
-		user.update(
-			{"user_image": "https://graph.facebook.com/{id}/picture".format(id=data["id"])}
-		)
+		user.set_social_login_userid(provider, userid=data["id"], username=data.get("username"))
+		user.update({"user_image": "https://graph.facebook.com/{id}/picture".format(id=data["id"])})
 
 	elif provider == "google" and not user.get_social_login_userid(provider):
 		save = True
@@ -320,9 +310,7 @@ def update_oauth_user(user, data, provider):
 
 	elif not user.get_social_login_userid(provider):
 		save = True
-		user_id_property = (
-			frappe.db.get_value("Social Login Key", provider, "user_id_property") or "sub"
-		)
+		user_id_property = frappe.db.get_value("Social Login Key", provider, "user_id_property") or "sub"
 		user.set_social_login_userid(provider, userid=data[user_id_property])
 
 	if save:

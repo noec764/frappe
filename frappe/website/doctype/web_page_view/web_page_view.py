@@ -12,9 +12,7 @@ class WebPageView(Document):
 
 
 @frappe.whitelist(allow_guest=True)
-def make_view_log(
-	path, referrer=None, browser=None, version=None, url=None, user_tz=None
-):
+def make_view_log(path, referrer=None, browser=None, version=None, url=None, user_tz=None):
 	if not is_tracking_enabled():
 		return
 
@@ -53,6 +51,4 @@ def get_page_view_count(path):
 
 
 def is_tracking_enabled():
-	return frappe.db.get_value(
-		"Website Settings", "Website Settings", "enable_view_tracking"
-	)
+	return frappe.db.get_value("Website Settings", "Website Settings", "enable_view_tracking")

@@ -13,9 +13,7 @@ def validate_route_conflict(doctype, name):
 		try:
 			all_names.extend(
 				[
-					slug(d)
-					for d in frappe.get_all(_doctype, pluck="name")
-					if (doctype != _doctype and d != name)
+					slug(d) for d in frappe.get_all(_doctype, pluck="name") if (doctype != _doctype and d != name)
 				]
 			)
 		except frappe.db.TableMissingError:

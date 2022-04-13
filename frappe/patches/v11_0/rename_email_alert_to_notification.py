@@ -9,8 +9,6 @@ def execute():
 		rename_doc("DocType", "Email Alert Recipient", "Notification Recipient")
 		frappe.reload_doc("email", "doctype", "notification_recipient")
 
-	if frappe.db.table_exists("Email Alert") and not frappe.db.table_exists(
-		"Notification"
-	):
+	if frappe.db.table_exists("Email Alert") and not frappe.db.table_exists("Notification"):
 		rename_doc("DocType", "Email Alert", "Notification")
 		frappe.reload_doc("email", "doctype", "notification")

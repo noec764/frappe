@@ -122,13 +122,11 @@ class DBTable:
 		self.setup_table_columns()
 
 		columns = [
-			frappe._dict({"fieldname": f, "fieldtype": "Data"})
-			for f in frappe.db.STANDARD_VARCHAR_COLUMNS
+			frappe._dict({"fieldname": f, "fieldtype": "Data"}) for f in frappe.db.STANDARD_VARCHAR_COLUMNS
 		]
 		if self.meta.get("istable"):
 			columns += [
-				frappe._dict({"fieldname": f, "fieldtype": "Data"})
-				for f in frappe.db.CHILD_TABLE_COLUMNS
+				frappe._dict({"fieldname": f, "fieldtype": "Data"}) for f in frappe.db.CHILD_TABLE_COLUMNS
 			]
 		columns += self.columns.values()
 
@@ -175,9 +173,7 @@ class DBTable:
 
 						info_message = _(
 							"Reverting length to {0} for '{1}' in '{2}'. Setting the length as {3} will cause truncation of data."
-						).format(
-							current_length, col.fieldname, self.doctype, new_length
-						)
+						).format(current_length, col.fieldname, self.doctype, new_length)
 						frappe.msgprint(info_message)
 
 	def is_new(self):
@@ -216,9 +212,7 @@ class DbColumn:
 		self.precision = precision
 
 	def get_definition(self, with_default=1):
-		column_def = get_definition(
-			self.fieldtype, precision=self.precision, length=self.length
-		)
+		column_def = get_definition(self.fieldtype, precision=self.precision, length=self.length)
 
 		if not column_def:
 			return column_def
@@ -296,9 +290,7 @@ class DbColumn:
 		):
 			self.table.drop_index.append(self)
 
-		elif (not current_def["index"] and self.set_index) and not (
-			column_type in ("text", "longtext")
-		):
+		elif (not current_def["index"] and self.set_index) and not (column_type in ("text", "longtext")):
 			self.table.add_index.append(self)
 
 	def default_changed(self, current_def):

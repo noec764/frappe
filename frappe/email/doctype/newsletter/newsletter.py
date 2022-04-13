@@ -10,8 +10,7 @@ from frappe.email.doctype.email_group.email_group import add_subscribers
 from frappe.utils.verified_command import get_signed_params, verify_request
 from frappe.website.website_generator import WebsiteGenerator
 
-from .exceptions import (NewsletterAlreadySentError, NewsletterNotSavedError,
-                         NoRecipientFoundError)
+from .exceptions import NewsletterAlreadySentError, NewsletterNotSavedError, NoRecipientFoundError
 
 
 class Newsletter(WebsiteGenerator):
@@ -89,15 +88,11 @@ class Newsletter(WebsiteGenerator):
 			frappe.throw(_("Newsletter has already been sent"), exc=NewsletterAlreadySentError)
 
 		if self.get("__islocal"):
-			frappe.throw(
-				_("Please save the Newsletter before sending"), exc=NewsletterNotSavedError
-			)
+			frappe.throw(_("Please save the Newsletter before sending"), exc=NewsletterNotSavedError)
 
 	def validate_newsletter_recipients(self):
 		if not self.newsletter_recipients:
-			frappe.throw(
-				_("Newsletter should have atleast one recipient"), exc=NoRecipientFoundError
-			)
+			frappe.throw(_("Newsletter should have atleast one recipient"), exc=NoRecipientFoundError)
 		self.validate_recipient_address()
 
 	def validate_sender_address(self):
@@ -105,9 +100,7 @@ class Newsletter(WebsiteGenerator):
 		if self.sender_email:
 			frappe.utils.validate_email_address(self.sender_email, throw=True)
 			self.send_from = (
-				f"{self.sender_name} <{self.sender_email}>"
-				if self.sender_name
-				else self.sender_email
+				f"{self.sender_name} <{self.sender_email}>" if self.sender_name else self.sender_email
 			)
 
 	def validate_recipient_address(self):
@@ -148,9 +141,7 @@ class Newsletter(WebsiteGenerator):
 		"""Get list of pending recipients of the newsletter. These
 		recipients may not have receive the newsletter in the previous iteration.
 		"""
-		return [
-			x for x in self.newsletter_recipients if x not in self.get_success_recipients()
-		]
+		return [x for x in self.newsletter_recipients if x not in self.get_success_recipients()]
 
 	def queue_all(self):
 		"""Queue Newsletter to all the recipients generated from the `Email Group` table"""
@@ -303,9 +294,7 @@ def confirm_subscription(email, email_group=_("Website")):
 		return
 
 	if not frappe.db.exists("Email Group", email_group):
-		frappe.get_doc({"doctype": "Email Group", "title": email_group}).insert(
-			ignore_permissions=True
-		)
+		frappe.get_doc({"doctype": "Email Group", "title": email_group}).insert(ignore_permissions=True)
 
 	frappe.flags.ignore_permissions = True
 
@@ -354,9 +343,7 @@ def send_scheduled_email():
 			# wasn't able to send emails :(
 			frappe.db.set_value("Newsletter", newsletter, "email_sent", 0)
 			message = (
-				f"Newsletter {newsletter} failed to send"
-				"\n\n"
-				f"Traceback: {frappe.get_traceback()}"
+				f"Newsletter {newsletter} failed to send" "\n\n" f"Traceback: {frappe.get_traceback()}"
 			)
 			frappe.log_error(title="Send Newsletter", message=message)
 

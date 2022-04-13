@@ -5,14 +5,12 @@ import datetime
 
 import frappe
 from frappe import _
-from frappe.model import (child_table_fields, default_fields,
-                          display_fieldtypes, table_fields)
+from frappe.model import child_table_fields, default_fields, display_fieldtypes, table_fields
 from frappe.model.docstatus import DocStatus
 from frappe.model.naming import set_new_name
 from frappe.model.utils.link_count import notify_link_count
 from frappe.modules import load_doctype_module
-from frappe.utils import (cast_fieldtype, cint, cstr, flt, now, sanitize_html,
-                          strip_html)
+from frappe.utils import cast_fieldtype, cint, cstr, flt, now, sanitize_html, strip_html
 from frappe.utils.html_utils import unescape_html
 
 max_positive_value = {"smallint": 2**15, "int": 2**31, "bigint": 2**63}
@@ -422,15 +420,13 @@ class BaseDocument(object):
 			return self.meta.get_field(fieldname).options
 		except AttributeError:
 			if self.doctype == "DocType":
-				return dict(
-					links="DocType Link", actions="DocType Action", states="DocType State"
-				).get(fieldname)
+				return dict(links="DocType Link", actions="DocType Action", states="DocType State").get(
+					fieldname
+				)
 			raise
 
 	def get_parentfield_of_doctype(self, doctype):
-		fieldname = [
-			df.fieldname for df in self.meta.get_table_fields() if df.options == doctype
-		]
+		fieldname = [df.fieldname for df in self.meta.get_table_fields() if df.options == doctype]
 		return fieldname[0] if fieldname else None
 
 	def db_insert(self, ignore_if_duplicate=False):
@@ -595,9 +591,7 @@ class BaseDocument(object):
 	def update_modified(self):
 		"""Update modified timestamp"""
 		self.set("modified", now())
-		frappe.db.set_value(
-			self.doctype, self.name, "modified", self.modified, update_modified=False
-		)
+		frappe.db.set_value(self.doctype, self.name, "modified", self.modified, update_modified=False)
 
 	def _fix_numeric_types(self):
 		for df in self.meta.get("fields"):
@@ -637,10 +631,7 @@ class BaseDocument(object):
 		missing = []
 
 		for df in self.meta.get("fields", {"reqd": ("=", 1)}):
-			if (
-				self.get(df.fieldname) in (None, [])
-				or not strip_html(cstr(self.get(df.fieldname))).strip()
-			):
+			if self.get(df.fieldname) in (None, []) or not strip_html(cstr(self.get(df.fieldname))).strip():
 				missing.append((df.fieldname, get_msg(df)))
 
 		# check for missing parent and parenttype
@@ -696,13 +687,9 @@ class BaseDocument(object):
 				if not frappe.get_meta(doctype).get("is_virtual"):
 					if not fields_to_fetch:
 						# cache a single value type
-						values = frappe._dict(
-							name=frappe.db.get_value(doctype, docname, "name", cache=True)
-						)
+						values = frappe._dict(name=frappe.db.get_value(doctype, docname, "name", cache=True))
 					else:
-						values_to_fetch = ["name"] + [
-							_df.fetch_from.split(".")[-1] for _df in fields_to_fetch
-						]
+						values_to_fetch = ["name"] + [_df.fetch_from.split(".")[-1] for _df in fields_to_fetch]
 
 						# don't cache if fetching other values too
 						values = frappe.db.get_value(doctype, docname, values_to_fetch, as_dict=True)
@@ -729,8 +716,7 @@ class BaseDocument(object):
 						df.fieldname != "amended_from"
 						and (is_submittable or self.meta.is_submittable)
 						and frappe.get_meta(doctype).is_submittable
-						and cint(frappe.db.get_value(doctype, docname, "docstatus"))
-						== DocStatus.cancelled()
+						and cint(frappe.db.get_value(doctype, docname, "docstatus")) == DocStatus.cancelled()
 					):
 
 						cancelled_links.append((df.fieldname, docname, get_msg(df, docname)))
@@ -743,15 +729,13 @@ class BaseDocument(object):
 		if df.fieldtype in ["Small Text", "Text", "Data"]:
 			from frappe.model.meta import get_default_df
 
-			fetch_from_df = get_default_df(fetch_from_fieldname) or frappe.get_meta(
-				doctype
-			).get_field(fetch_from_fieldname)
+			fetch_from_df = get_default_df(fetch_from_fieldname) or frappe.get_meta(doctype).get_field(
+				fetch_from_fieldname
+			)
 
 			if not fetch_from_df:
 				frappe.throw(
-					_('Please check the value of "Fetch From" set for field {0}').format(
-						frappe.bold(df.label)
-					),
+					_('Please check the value of "Fetch From" set for field {0}').format(frappe.bold(df.label)),
 					title=_("Wrong Fetch From value"),
 				)
 
@@ -822,9 +806,7 @@ class BaseDocument(object):
 		if frappe.flags.in_import or self.is_new() or self.flags.ignore_validate_constants:
 			return
 
-		constants = [
-			d.fieldname for d in self.meta.get("fields", {"set_only_once": ("=", 1)})
-		]
+		constants = [d.fieldname for d in self.meta.get("fields", {"set_only_once": ("=", 1)})]
 		if constants:
 			values = frappe.db.get_value(self.doctype, self.name, constants, as_dict=True)
 
@@ -882,9 +864,7 @@ class BaseDocument(object):
 			language = field.get("options")
 
 			if language == "Python":
-				frappe.utils.validate_python_code(
-					code_string, fieldname=field.label, is_expression=False
-				)
+				frappe.utils.validate_python_code(code_string, fieldname=field.label, is_expression=False)
 
 			elif language == "PythonExpression":
 				frappe.utils.validate_python_code(code_string, fieldname=field.label)
@@ -930,9 +910,7 @@ class BaseDocument(object):
 				else:
 					self_value = self.get_value(key)
 				# Postgres stores values as `datetime.time`, MariaDB as `timedelta`
-				if isinstance(self_value, datetime.timedelta) and isinstance(
-					db_value, datetime.time
-				):
+				if isinstance(self_value, datetime.timedelta) and isinstance(db_value, datetime.time):
 					db_value = datetime.timedelta(
 						hours=db_value.hour,
 						minutes=db_value.minute,
@@ -965,9 +943,7 @@ class BaseDocument(object):
 				# doesn't look like html so no need
 				continue
 
-			elif "<!-- markdown -->" in value and not bool(
-				BeautifulSoup(value, "html.parser").find()
-			):
+			elif "<!-- markdown -->" in value and not bool(BeautifulSoup(value, "html.parser").find()):
 				# should be handled separately via the markdown converter function
 				continue
 
@@ -976,10 +952,7 @@ class BaseDocument(object):
 
 			if df and (
 				df.get("ignore_xss_filter")
-				or (
-					df.get("fieldtype") in ("Data", "Small Text", "Text")
-					and df.get("options") == "Email"
-				)
+				or (df.get("fieldtype") in ("Data", "Small Text", "Text") and df.get("options") == "Email")
 				or df.get("fieldtype") in ("Attach", "Attach Image", "Barcode", "Code")
 				# cancelled and submit but not update after submit should be ignored
 				or self.docstatus.is_cancelled()
@@ -994,17 +967,13 @@ class BaseDocument(object):
 
 	def _save_passwords(self):
 		"""Save password field values in __Auth table"""
-		from frappe.utils.password import (remove_encrypted_password,
-		                                   set_encrypted_password)
+		from frappe.utils.password import remove_encrypted_password, set_encrypted_password
 
 		if self.flags.ignore_save_passwords is True:
 			return
 
 		for df in self.meta.get("fields", {"fieldtype": ("=", "Password")}):
-			if (
-				self.flags.ignore_save_passwords
-				and df.fieldname in self.flags.ignore_save_passwords
-			):
+			if self.flags.ignore_save_passwords and df.fieldname in self.flags.ignore_save_passwords:
 				continue
 			new_password = self.get(df.fieldname)
 
@@ -1038,9 +1007,7 @@ class BaseDocument(object):
 		:param parentfield: If fieldname is in child table."""
 		from frappe.model.meta import get_field_precision
 
-		if (
-			parentfield and not isinstance(parentfield, str) and parentfield.get("parentfield")
-		):
+		if parentfield and not isinstance(parentfield, str) and parentfield.get("parentfield"):
 			parentfield = parentfield.parentfield
 
 		cache_key = parentfield or "main"
@@ -1119,9 +1086,7 @@ class BaseDocument(object):
 		print_hide = 0
 
 		if self.get(fieldname) == 0 and not self.meta.istable:
-			print_hide = (df and df.print_hide_if_no_value) or (
-				meta_df and meta_df.print_hide_if_no_value
-			)
+			print_hide = (df and df.print_hide_if_no_value) or (meta_df and meta_df.print_hide_if_no_value)
 
 		if not print_hide:
 			if df and df.print_hide is not None:

@@ -12,10 +12,12 @@ from rq.timeouts import JobTimeoutException
 
 import frappe
 from frappe import _
-from frappe.integrations.offsite_backup_utils import (generate_files_backup,
-                                                      get_latest_backup_file,
-                                                      send_email,
-                                                      validate_file_size)
+from frappe.integrations.offsite_backup_utils import (
+	generate_files_backup,
+	get_latest_backup_file,
+	send_email,
+	validate_file_size,
+)
 from frappe.model.document import Document
 from frappe.utils import cint
 from frappe.utils.background_jobs import enqueue
@@ -131,16 +133,10 @@ def backup_to_s3():
 			backup_path_private_files=None,
 			force=True,
 		)
-		db_filename = os.path.join(
-			get_backups_path(), os.path.basename(backup.backup_path_db)
-		)
-		site_config = os.path.join(
-			get_backups_path(), os.path.basename(backup.backup_path_conf)
-		)
+		db_filename = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_db))
+		site_config = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_conf))
 		if backup_files:
-			files_filename = os.path.join(
-				get_backups_path(), os.path.basename(backup.backup_path_files)
-			)
+			files_filename = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_files))
 			private_files = os.path.join(
 				get_backups_path(), os.path.basename(backup.backup_path_private_files)
 			)

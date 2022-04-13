@@ -22,9 +22,7 @@ def is_notifications_enabled(user):
 
 
 def is_email_notifications_enabled(user):
-	enabled = frappe.db.get_value(
-		"Notification Settings", user, "enable_email_notifications"
-	)
+	enabled = frappe.db.get_value("Notification Settings", user, "enable_email_notifications")
 	if enabled is None:
 		return True
 	return enabled
@@ -89,9 +87,7 @@ def get_permission_query_conditions(user):
 
 @frappe.whitelist()
 def set_seen_value(value, user):
-	frappe.db.set_value(
-		"Notification Settings", user, "seen", value, update_modified=False
-	)
+	frappe.db.set_value("Notification Settings", user, "seen", value, update_modified=False)
 
 
 @frappe.whitelist()

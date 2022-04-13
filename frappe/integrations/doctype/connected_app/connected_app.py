@@ -24,8 +24,7 @@ class ConnectedApp(Document):
 	def validate(self):
 		base_url = frappe.utils.get_url()
 		callback_path = (
-			"/api/method/frappe.integrations.doctype.connected_app.connected_app.callback/"
-			+ self.name
+			"/api/method/frappe.integrations.doctype.connected_app.connected_app.callback/" + self.name
 		)
 		self.redirect_uri = urljoin(base_url, callback_path)
 
@@ -61,9 +60,7 @@ class ConnectedApp(Document):
 		user = user or frappe.session.user
 		oauth = self.get_oauth2_session(init=True)
 		query_params = self.get_query_params()
-		authorization_url, state = oauth.authorization_url(
-			self.authorization_uri, **query_params
-		)
+		authorization_url, state = oauth.authorization_url(self.authorization_uri, **query_params)
 		token_cache = self.get_token_cache(user)
 
 		if not token_cache:
@@ -120,9 +117,7 @@ def callback(code=None, state=None):
 
 	if frappe.session.user == "Guest":
 		frappe.local.response["type"] = "redirect"
-		frappe.local.response["location"] = "/login?" + urlencode(
-			{"redirect-to": frappe.request.url}
-		)
+		frappe.local.response["location"] = "/login?" + urlencode({"redirect-to": frappe.request.url})
 		return
 
 	path = frappe.request.path[1:].split("/")
@@ -130,9 +125,7 @@ def callback(code=None, state=None):
 		frappe.throw(_("Invalid Parameters."))
 
 	connected_app = frappe.get_doc("Connected App", path[3])
-	token_cache = frappe.get_doc(
-		"Token Cache", connected_app.name + "-" + frappe.session.user
-	)
+	token_cache = frappe.get_doc("Token Cache", connected_app.name + "-" + frappe.session.user)
 
 	if state != token_cache.state:
 		frappe.throw(_("Invalid state."))
@@ -149,6 +142,4 @@ def callback(code=None, state=None):
 	token_cache.update_data(token)
 
 	frappe.local.response["type"] = "redirect"
-	frappe.local.response["location"] = (
-		token_cache.get("success_uri") or connected_app.get_url()
-	)
+	frappe.local.response["location"] = token_cache.get("success_uri") or connected_app.get_url()

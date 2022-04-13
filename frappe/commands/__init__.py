@@ -114,11 +114,7 @@ def get_commands():
 
 	clickable_link = "\x1b]8;;https://doc.dokos.io/\x1b]8;;\a"
 	all_commands = (
-		scheduler_commands
-		+ site_commands
-		+ translate_commands
-		+ utils_commands
-		+ redis_commands
+		scheduler_commands + site_commands + translate_commands + utils_commands + redis_commands
 	)
 
 	for command in all_commands:

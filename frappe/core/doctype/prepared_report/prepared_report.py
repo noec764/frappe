@@ -36,9 +36,7 @@ def run_background(prepared_report):
 				if data:
 					report.custom_columns = data["columns"]
 
-		result = generate_report_result(
-			report=report, filters=instance.filters, user=instance.owner
-		)
+		result = generate_report_result(report=report, filters=instance.filters, user=instance.owner)
 		create_json_gz_file(result["result"], "Prepared Report", instance.name)
 
 		instance.status = "Completed"
@@ -80,9 +78,7 @@ def delete_expired_prepared_reports():
 		expiry_period = system_settings.prepared_report_expiry_period
 		prepared_reports_to_delete = frappe.get_all(
 			"Prepared Report",
-			filters={
-				"creation": ["<", frappe.utils.add_days(frappe.utils.now(), -expiry_period)]
-			},
+			filters={"creation": ["<", frappe.utils.add_days(frappe.utils.now(), -expiry_period)]},
 		)
 
 		batches = frappe.utils.create_batch(prepared_reports_to_delete, 100)

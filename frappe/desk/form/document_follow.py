@@ -48,9 +48,7 @@ def follow_document(doctype, doc_name, user):
 	if (not frappe.get_meta(doctype).track_changes) or user == "Administrator":
 		return
 
-	if not frappe.db.get_value(
-		"User", user, "document_follow_notify", ignore=True, cache=True
-	):
+	if not frappe.db.get_value("User", user, "document_follow_notify", ignore=True, cache=True):
 		return
 
 	if not is_document_followed(doctype, doc_name, user):
@@ -137,18 +135,14 @@ def get_message_for_user(frequency, user):
 	valid_document_follows = []
 
 	for document_follow in latest_document_follows:
-		content = get_message(
-			document_follow.ref_docname, document_follow.ref_doctype, frequency, user
-		)
+		content = get_message(document_follow.ref_docname, document_follow.ref_doctype, frequency, user)
 		if content:
 			message = message + content
 			valid_document_follows.append(
 				{
 					"reference_docname": document_follow.ref_docname,
 					"reference_doctype": document_follow.ref_doctype,
-					"reference_url": get_url_to_form(
-						document_follow.ref_doctype, document_follow.ref_docname
-					),
+					"reference_url": get_url_to_form(document_follow.ref_doctype, document_follow.ref_docname),
 				}
 			)
 	return message, valid_document_follows

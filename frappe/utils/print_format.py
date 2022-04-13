@@ -93,9 +93,7 @@ def download_multi_pdf(doctype, name, format=None, no_letterhead=False, options=
 						pdf_options=options,
 					)
 				except Exception:
-					frappe.log_error(
-						"Permission Error on doc {} of doctype {}".format(doc_name, doctype_name)
-					)
+					frappe.log_error("Permission Error on doc {} of doctype {}".format(doc_name, doctype_name))
 		frappe.local.response.filename = "{}.pdf".format(name)
 
 	frappe.local.response.filecontent = read_multi_pdf(output)
@@ -133,18 +131,14 @@ def report_to_pdf(html, orientation="Landscape"):
 
 
 @frappe.whitelist()
-def letter_to_pdf(
-	html, title, letterhead=None, attach=False, doctype=None, docname=None
-):
+def letter_to_pdf(html, title, letterhead=None, attach=False, doctype=None, docname=None):
 	html = get_formatted_letter(title, html, letterhead)
 	pdf = get_pdf(html)
 
 	if attach:
 		try:
 			private_files = frappe.get_site_path("private", "files")
-			fname = os.path.join(
-				private_files, "{0}-{1}.pdf".format(title, frappe.generate_hash(length=6))
-			)
+			fname = os.path.join(private_files, "{0}-{1}.pdf".format(title, frappe.generate_hash(length=6)))
 			with open(fname, "wb") as f:
 				f.write(pdf)
 
@@ -162,9 +156,7 @@ def letter_to_pdf(
 		except Exception:
 			frappe.log_error("Letter error", frappe.get_traceback())
 
-	frappe.local.response.filename = "{0}.pdf".format(
-		title.replace(" ", "-").replace("/", "-")
-	)
+	frappe.local.response.filename = "{0}.pdf".format(title.replace(" ", "-").replace("/", "-"))
 	frappe.local.response.filecontent = pdf
 	frappe.local.response.type = "pdf"
 
@@ -226,9 +218,7 @@ def print_by_server(
 			output=output,
 		)
 		if not file_path:
-			file_path = os.path.join(
-				"/", "tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash())
-			)
+			file_path = os.path.join("/", "tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
 		output.write(open(file_path, "wb"))
 		conn.printFile(print_settings.printer_name, file_path, name, {})
 	except IOError as e:

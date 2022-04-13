@@ -4,8 +4,9 @@
 
 import frappe
 from frappe import _
-from frappe.desk.doctype.global_search_settings.global_search_settings import \
-    update_global_search_doctypes
+from frappe.desk.doctype.global_search_settings.global_search_settings import (
+	update_global_search_doctypes,
+)
 from frappe.utils.dashboard import sync_dashboards
 
 

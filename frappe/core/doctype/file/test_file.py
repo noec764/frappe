@@ -7,9 +7,13 @@ import unittest
 
 import frappe
 from frappe import _
-from frappe.core.doctype.file.file import (File, get_attached_images,
-                                           get_files_in_folder, move_file,
-                                           unzip_file)
+from frappe.core.doctype.file.file import (
+	File,
+	get_attached_images,
+	get_files_in_folder,
+	move_file,
+	unzip_file,
+)
 from frappe.utils import get_files_path
 
 # test_records = frappe.get_test_records('File')
@@ -72,8 +76,7 @@ class TestBase64File(unittest.TestCase):
 
 	def test_attachment_limit(self):
 		doctype, docname = make_test_doc()
-		from frappe.custom.doctype.property_setter.property_setter import \
-		    make_property_setter
+		from frappe.custom.doctype.property_setter.property_setter import make_property_setter
 
 		limit_property = make_property_setter(
 			"ToDo", None, "max_attachments", 1, "int", for_doctype=True
@@ -504,9 +507,7 @@ class TestFile(unittest.TestCase):
 				"file_url": frappe.utils.get_url("/_test/assets/image.jpg"),
 			}
 		).insert(ignore_permissions=True)
-		self.assertRaisesRegex(
-			frappe.exceptions.ValidationError, "not a zip file", test_file.unzip
-		)
+		self.assertRaisesRegex(frappe.exceptions.ValidationError, "not a zip file", test_file.unzip)
 
 
 class TestAttachment(unittest.TestCase):
@@ -531,9 +532,7 @@ class TestAttachment(unittest.TestCase):
 		frappe.delete_doc("DocType", self.test_doctype)
 
 	def test_file_attachment_on_update(self):
-		doc = frappe.get_doc(
-			doctype=self.test_doctype, title="test for attachment on update"
-		).insert()
+		doc = frappe.get_doc(doctype=self.test_doctype, title="test for attachment on update").insert()
 
 		file = frappe.get_doc(
 			{"doctype": "File", "file_name": "test_attach.txt", "content": "Test Content"}
@@ -601,9 +600,7 @@ class TestAttachmentsAccess(unittest.TestCase):
 			}
 		).insert()
 
-		system_manager_files = [
-			file.file_name for file in get_files_in_folder("Home")["files"]
-		]
+		system_manager_files = [file.file_name for file in get_files_in_folder("Home")["files"]]
 		system_manager_attachments_files = [
 			file.file_name for file in get_files_in_folder("Home/Attachments")["files"]
 		]
@@ -639,9 +636,7 @@ class TestFileUtils(unittest.TestCase):
 		).insert()
 		self.assertTrue(frappe.db.exists("File", {"attached_to_name": todo.name}))
 		self.assertIn('<img src="/files/pix.png">', todo.description)
-		self.assertListEqual(
-			get_attached_images("ToDo", [todo.name])[todo.name], ["/files/pix.png"]
-		)
+		self.assertListEqual(get_attached_images("ToDo", [todo.name])[todo.name], ["/files/pix.png"])
 
 		# without filename in data URI
 		todo = frappe.get_doc(
@@ -651,9 +646,7 @@ class TestFileUtils(unittest.TestCase):
 			}
 		).insert()
 		filename = frappe.db.exists("File", {"attached_to_name": todo.name})
-		self.assertIn(
-			f'<img src="{frappe.get_doc("File", filename).file_url}', todo.description
-		)
+		self.assertIn(f'<img src="{frappe.get_doc("File", filename).file_url}', todo.description)
 
 	def test_create_new_folder(self):
 		from frappe.core.doctype.file.file import create_new_folder
@@ -664,9 +657,7 @@ class TestFileUtils(unittest.TestCase):
 
 class TestFileOptimization(unittest.TestCase):
 	def test_optimize_file(self):
-		file_path = frappe.get_app_path(
-			"frappe", "tests/data/sample_image_for_optimization.jpg"
-		)
+		file_path = frappe.get_app_path("frappe", "tests/data/sample_image_for_optimization.jpg")
 		with open(file_path, "rb") as f:
 			file_content = f.read()
 		test_file = frappe.get_doc(
@@ -713,9 +704,7 @@ class TestFileOptimization(unittest.TestCase):
 		self.assertRaises(TypeError, test_folder.optimize_file)
 
 	def test_revert_optimized_file_on_rollback(self):
-		file_path = frappe.get_app_path(
-			"frappe", "tests/data/sample_image_for_optimization.jpg"
-		)
+		file_path = frappe.get_app_path("frappe", "tests/data/sample_image_for_optimization.jpg")
 		with open(file_path, "rb") as f:
 			file_content = f.read()
 		test_file = frappe.get_doc(

@@ -7,25 +7,22 @@ bootstrap client session
 import frappe
 import frappe.defaults
 import frappe.desk.desk_page
-from frappe.core.doctype.navbar_settings.navbar_settings import (
-    get_app_logo, get_navbar_settings)
-from frappe.desk.doctype.route_history.route_history import \
-    frequently_visited_links
+from frappe.core.doctype.navbar_settings.navbar_settings import get_app_logo, get_navbar_settings
+from frappe.desk.doctype.route_history.route_history import frequently_visited_links
 from frappe.desk.form.load import get_meta_bundle
 from frappe.email.inbox import get_email_accounts
 from frappe.model.base_document import get_controller
 from frappe.query_builder import DocType
 from frappe.query_builder.functions import Count
 from frappe.query_builder.terms import subqry
-from frappe.social.doctype.energy_point_log.energy_point_log import \
-    get_energy_points
-from frappe.social.doctype.energy_point_settings.energy_point_settings import \
-    is_energy_point_enabled
+from frappe.social.doctype.energy_point_log.energy_point_log import get_energy_points
+from frappe.social.doctype.energy_point_settings.energy_point_settings import (
+	is_energy_point_enabled,
+)
 from frappe.translate import get_lang_dict
 from frappe.utils import add_user_info, get_time_zone
 from frappe.utils.change_log import get_versions
-from frappe.website.doctype.web_page_view.web_page_view import \
-    is_tracking_enabled
+from frappe.website.doctype.web_page_view.web_page_view import is_tracking_enabled
 
 
 def get_bootinfo():
@@ -177,10 +174,7 @@ def get_user_pages_or_reports(parent, cache=False):
 		.from_(hasRole)
 		.from_(parentTable)
 		.select(
-			customRole[parent.lower()].as_("name"),
-			customRole.modified,
-			customRole.ref_doctype,
-			*columns
+			customRole[parent.lower()].as_("name"), customRole.modified, customRole.ref_doctype, *columns
 		)
 		.where(
 			(hasRole.parent == customRole.name)
@@ -356,9 +350,7 @@ def get_success_action():
 def get_link_preview_doctypes():
 	from frappe.utils import cint
 
-	link_preview_doctypes = [
-		d.name for d in frappe.db.get_all("DocType", {"show_preview_popup": 1})
-	]
+	link_preview_doctypes = [d.name for d in frappe.db.get_all("DocType", {"show_preview_popup": 1})]
 	customizations = frappe.get_all(
 		"Property Setter",
 		fields=["doc_type", "value"],
@@ -385,15 +377,11 @@ def get_additional_filters_from_hooks():
 
 def add_layouts(bootinfo):
 	# add routes for readable doctypes
-	bootinfo.doctype_layouts = frappe.get_all(
-		"DocType Layout", ["name", "route", "document_type"]
-	)
+	bootinfo.doctype_layouts = frappe.get_all("DocType Layout", ["name", "route", "document_type"])
 
 
 def get_desk_settings():
-	role_list = frappe.get_all(
-		"Role", fields=["*"], filters=dict(name=["in", frappe.get_roles()])
-	)
+	role_list = frappe.get_all("Role", fields=["*"], filters=dict(name=["in", frappe.get_roles()]))
 	desk_settings = {}
 
 	from frappe.core.doctype.role.role import desk_properties
@@ -423,8 +411,6 @@ def get_link_title_doctypes():
 def set_time_zone(bootinfo):
 	bootinfo.time_zone = {
 		"system": get_time_zone(),
-		"user": bootinfo.get("user_info", {})
-		.get(frappe.session.user, {})
-		.get("time_zone", None)
+		"user": bootinfo.get("user_info", {}).get(frappe.session.user, {}).get("time_zone", None)
 		or get_time_zone(),
 	}

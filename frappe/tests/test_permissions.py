@@ -7,15 +7,17 @@
 import frappe
 import frappe.defaults
 import frappe.model.meta
-from frappe.core.doctype.user_permission.user_permission import \
-    clear_user_permissions
-from frappe.core.page.permission_manager.permission_manager import (reset,
-                                                                    update)
+from frappe.core.doctype.user_permission.user_permission import clear_user_permissions
+from frappe.core.page.permission_manager.permission_manager import reset, update
 from frappe.desk.form.load import getdoc
-from frappe.permissions import (add_permission, add_user_permission,
-                                clear_user_permissions_for_doctype,
-                                get_doc_permissions, remove_user_permission,
-                                update_permission_property)
+from frappe.permissions import (
+	add_permission,
+	add_user_permission,
+	clear_user_permissions_for_doctype,
+	get_doc_permissions,
+	remove_user_permission,
+	update_permission_property,
+)
 from frappe.test_runner import make_test_records_for_doctype
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils.data import now_datetime
@@ -106,9 +108,7 @@ class TestPermissions(unittest.TestCase):
 		add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
 
 		frappe.set_user("test2@example.com")
-		names = [
-			d.name for d in frappe.get_list("Blog Post", fields=["name", "blog_category"])
-		]
+		names = [d.name for d in frappe.get_list("Blog Post", fields=["name", "blog_category"])]
 
 		self.assertTrue("-test-blog-post-1" in names)
 		self.assertFalse("-test-blog-post" in names)
@@ -449,9 +449,7 @@ class TestPermissions(unittest.TestCase):
 			"Blogger", "_Test Blogger 1", "test2@example.com", applicable_for="Blog Post"
 		)
 		# should be applicable only while accessing User
-		add_user_permission(
-			"Blogger", "_Test Blogger 2", "test2@example.com", applicable_for="User"
-		)
+		add_user_permission("Blogger", "_Test Blogger 2", "test2@example.com", applicable_for="User")
 
 		posts = frappe.get_all("Blog Post", fields=["name", "blogger"])
 
@@ -639,9 +637,7 @@ class TestPermissions(unittest.TestCase):
 		add_user_permission("Blog Post", "-test-blog-post-2", "test2@example.com")
 		add_user_permission("Blog Category", "-test-blog-category-1", "test2@example.com")
 
-		deleted_user_permission_count = clear_user_permissions(
-			"test2@example.com", "Blog Post"
-		)
+		deleted_user_permission_count = clear_user_permissions("test2@example.com", "Blog Post")
 
 		self.assertEqual(deleted_user_permission_count, 2)
 
@@ -662,9 +658,7 @@ class TestPermissions(unittest.TestCase):
 
 	def test_child_table_permissions(self):
 		frappe.set_user("test@example.com")
-		self.assertIsInstance(
-			frappe.get_list("Has Role", parent_doctype="User", limit=1), list
-		)
+		self.assertIsInstance(frappe.get_list("Has Role", parent_doctype="User", limit=1), list)
 		self.assertRaisesRegex(
 			frappe.exceptions.ValidationError,
 			".* is not a valid parent DocType for .*",

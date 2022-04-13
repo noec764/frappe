@@ -61,9 +61,7 @@ class SiteMigration:
 	- run after migrate hooks
 	"""
 
-	def __init__(
-		self, skip_failing: bool = False, skip_search_index: bool = False
-	) -> None:
+	def __init__(self, skip_failing: bool = False, skip_search_index: bool = False) -> None:
 		self.skip_failing = skip_failing
 		self.skip_search_index = skip_search_index
 

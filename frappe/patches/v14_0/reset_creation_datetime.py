@@ -13,9 +13,7 @@ def execute():
 		os.path.join("..", "apps", "frappe", "frappe", "**", "doctype", "**", "*.json")
 	)
 
-	frappe_modules = frappe.get_all(
-		"Module Def", filters={"app_name": "frappe"}, pluck="name"
-	)
+	frappe_modules = frappe.get_all("Module Def", filters={"app_name": "frappe"}, pluck="name")
 	site_doctypes = frappe.get_all(
 		"DocType",
 		filters={"module": ("in", frappe_modules), "custom": False},

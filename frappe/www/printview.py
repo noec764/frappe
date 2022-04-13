@@ -33,9 +33,7 @@ def get_context(context):
 	else:
 		doc = frappe.get_doc(frappe.form_dict.doctype, frappe.form_dict.name)
 
-	settings = (
-		frappe.parse_json(frappe.form_dict.settings) if frappe.form_dict.settings else None
-	)
+	settings = frappe.parse_json(frappe.form_dict.settings) if frappe.form_dict.settings else None
 
 	letterhead = frappe.form_dict.letterhead if frappe.form_dict.letterhead else None
 
@@ -236,13 +234,9 @@ def set_title_values_for_link_and_dynamic_link_fields(meta, doc, parent_doc=None
 		if not meta or not (meta.title_field and meta.show_title_field_in_link):
 			continue
 
-		link_title = frappe.get_cached_value(
-			doctype, doc.get(field.fieldname), meta.title_field
-		)
+		link_title = frappe.get_cached_value(doctype, doc.get(field.fieldname), meta.title_field)
 		if parent_doc:
-			parent_doc.__link_titles[
-				"{0}::{1}".format(doctype, doc.get(field.fieldname))
-			] = link_title
+			parent_doc.__link_titles["{0}::{1}".format(doctype, doc.get(field.fieldname))] = link_title
 		elif doc:
 			doc.__link_titles["{0}::{1}".format(doctype, doc.get(field.fieldname))] = link_title
 
@@ -287,9 +281,7 @@ def get_html_and_style(
 	if isinstance(doc, str):
 		doc = frappe.get_doc(json.loads(doc))
 
-	print_format = get_print_format_doc(
-		print_format, meta=meta or frappe.get_meta(doc.doctype)
-	)
+	print_format = get_print_format_doc(print_format, meta=meta or frappe.get_meta(doc.doctype))
 	set_link_titles(doc)
 
 	try:
@@ -320,9 +312,7 @@ def get_rendered_raw_commands(doc, name=None, print_format=None, meta=None, lang
 	if isinstance(doc, str):
 		doc = frappe.get_doc(json.loads(doc))
 
-	print_format = get_print_format_doc(
-		print_format, meta=meta or frappe.get_meta(doc.doctype)
-	)
+	print_format = get_print_format_doc(print_format, meta=meta or frappe.get_meta(doc.doctype))
 
 	if not print_format or (print_format and not print_format.raw_printing):
 		frappe.throw(
@@ -331,9 +321,7 @@ def get_rendered_raw_commands(doc, name=None, print_format=None, meta=None, lang
 		)
 
 	return {
-		"raw_commands": get_rendered_template(
-			doc, name=name, print_format=print_format, meta=meta
-		)
+		"raw_commands": get_rendered_template(doc, name=name, print_format=print_format, meta=meta)
 	}
 
 
@@ -343,9 +331,7 @@ def validate_print_permission(doc):
 			return
 
 	for ptype in ("read", "print"):
-		if not frappe.has_permission(
-			doc.doctype, ptype, doc
-		) and not frappe.has_website_permission(doc):
+		if not frappe.has_permission(doc.doctype, ptype, doc) and not frappe.has_website_permission(doc):
 			raise frappe.PermissionError(_("No {0} permission").format(ptype))
 
 
@@ -353,19 +339,12 @@ def get_letter_head(doc, no_letterhead, letterhead=None):
 	if no_letterhead:
 		return {}
 	if letterhead:
-		return frappe.db.get_value(
-			"Letter Head", letterhead, ["content", "footer"], as_dict=True
-		)
+		return frappe.db.get_value("Letter Head", letterhead, ["content", "footer"], as_dict=True)
 	if doc.get("letter_head"):
-		return frappe.db.get_value(
-			"Letter Head", doc.letter_head, ["content", "footer"], as_dict=True
-		)
+		return frappe.db.get_value("Letter Head", doc.letter_head, ["content", "footer"], as_dict=True)
 	else:
 		return (
-			frappe.db.get_value(
-				"Letter Head", {"is_default": 1}, ["content", "footer"], as_dict=True
-			)
-			or {}
+			frappe.db.get_value("Letter Head", {"is_default": 1}, ["content", "footer"], as_dict=True) or {}
 		)
 
 
@@ -391,9 +370,7 @@ def get_print_format(doctype, print_format):
 		if print_format.html:
 			return print_format.html
 
-		frappe.throw(
-			_("No template found at path: {0}").format(path), frappe.TemplateNotFoundError
-		)
+		frappe.throw(_("No template found at path: {0}").format(path), frappe.TemplateNotFoundError)
 
 
 def make_layout(doc, meta, format_data=None):
@@ -579,9 +556,7 @@ def get_visible_columns(data, table_meta, df):
 	def add_column(col_df):
 		if col_df.fieldname in hide_in_print_layout:
 			return False
-		return is_visible(col_df, doc) and column_has_value(
-			data, col_df.get("fieldname"), col_df
-		)
+		return is_visible(col_df, doc) and column_has_value(data, col_df.get("fieldname"), col_df)
 
 	if df.get("visible_columns"):
 		# columns specified by column builder

@@ -8,8 +8,7 @@ import frappe
 import frappe.share
 from frappe import _dict
 from frappe.boot import get_allowed_reports
-from frappe.core.doctype.domain_settings.domain_settings import \
-    get_active_modules
+from frappe.core.doctype.domain_settings.domain_settings import get_active_modules
 from frappe.permissions import get_roles, get_valid_perms
 from frappe.query_builder import DocType, Order
 from frappe.query_builder.functions import Concat_ws
@@ -377,10 +376,7 @@ def get_enabled_system_users() -> List[Dict]:
 
 
 def is_website_user(username: Optional[str] = None) -> Optional[str]:
-	return (
-		frappe.db.get_value("User", username or frappe.session.user, "user_type")
-		== "Website User"
-	)
+	return frappe.db.get_value("User", username or frappe.session.user, "user_type") == "Website User"
 
 
 def is_system_user(username: Optional[str] = None) -> Optional[str]:

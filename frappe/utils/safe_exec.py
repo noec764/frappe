@@ -218,9 +218,7 @@ def safe_enqueue(function, **kwargs):
 	:param function: whitelised function or API Method set in Server Script
 	"""
 
-	return enqueue(
-		"frappe.utils.safe_exec.call_whitelisted_function", function=function, **kwargs
-	)
+	return enqueue("frappe.utils.safe_exec.call_whitelisted_function", function=function, **kwargs)
 
 
 def call_whitelisted_function(function, **kwargs):

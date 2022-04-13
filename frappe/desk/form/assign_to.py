@@ -11,7 +11,10 @@ import frappe.share
 import frappe.utils
 from frappe import _
 from frappe.desk.doctype.notification_log.notification_log import (
-    enqueue_create_notification, get_title, get_title_html)
+	enqueue_create_notification,
+	get_title,
+	get_title_html,
+)
 from frappe.desk.form.document_follow import follow_document
 
 
@@ -68,9 +71,7 @@ def add(args=None):
 			from frappe.utils import nowdate
 
 			if not args.get("description"):
-				args["description"] = _("Assignment for {0} {1}").format(
-					args["doctype"], args["name"]
-				)
+				args["description"] = _("Assignment for {0} {1}").format(args["doctype"], args["name"])
 
 			d = frappe.get_doc(
 				{
@@ -115,16 +116,12 @@ def add(args=None):
 	if shared_with_users:
 		user_list = format_message_for_assign_to(shared_with_users)
 		frappe.msgprint(
-			_("Shared with the following Users with Read access:{0}").format(
-				user_list, alert=True
-			)
+			_("Shared with the following Users with Read access:{0}").format(user_list, alert=True)
 		)
 
 	if users_with_duplicate_todo:
 		user_list = format_message_for_assign_to(users_with_duplicate_todo)
-		frappe.msgprint(
-			_("Already in the following Users ToDo list:{0}").format(user_list, alert=True)
-		)
+		frappe.msgprint(_("Already in the following Users ToDo list:{0}").format(user_list, alert=True))
 
 	return get(args)
 
@@ -178,9 +175,7 @@ def set_status(doctype, name, assign_to, status="Cancelled"):
 			todo.status = status
 			todo.save(ignore_permissions=True)
 
-			notify_assignment(
-				todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name
-			)
+			notify_assignment(todo.assigned_by, todo.allocated_to, todo.reference_type, todo.reference_name)
 	except frappe.DoesNotExistError:
 		pass
 
@@ -219,9 +214,7 @@ def notify_assignment(
 		return
 
 	# return if self assigned or user disabled
-	if assigned_by == allocated_to or not frappe.db.get_value(
-		"User", allocated_to, "enabled"
-	):
+	if assigned_by == allocated_to or not frappe.db.get_value("User", allocated_to, "enabled"):
 		return
 
 	# Search for email address in description -- i.e. assignee
@@ -237,9 +230,7 @@ def notify_assignment(
 		user_name = frappe.bold(user_name)
 		document_type = frappe.bold(doc_type)
 		title = get_title_html(title)
-		subject = _("{0} assigned a new task {1} {2} to you").format(
-			user_name, document_type, title
-		)
+		subject = _("{0} assigned a new task {1} {2} to you").format(user_name, document_type, title)
 
 	notification_doc = {
 		"type": "Assignment",

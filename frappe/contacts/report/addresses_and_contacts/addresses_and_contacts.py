@@ -71,10 +71,7 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 		filters = {"name": reference_name}
 
 	reference_list = [
-		d[0]
-		for d in frappe.get_list(
-			reference_doctype, filters=filters, fields=["name"], as_list=True
-		)
+		d[0] for d in frappe.get_list(reference_doctype, filters=filters, fields=["name"], as_list=True)
 	]
 
 	for d in reference_list:
@@ -101,9 +98,7 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 			max_length = max(len(addresses), len(contacts))
 			for idx in range(0, max_length):
 				result = [reference_name]
-				address = (
-					addresses[idx] if idx < len(addresses) else add_blank_columns_for("Address")
-				)
+				address = addresses[idx] if idx < len(addresses) else add_blank_columns_for("Address")
 				contact = contacts[idx] if idx < len(contacts) else add_blank_columns_for("Contact")
 				result.extend(address)
 				result.extend(contact)
@@ -113,9 +108,7 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 	return data
 
 
-def get_reference_details(
-	reference_doctype, doctype, reference_list, reference_details
-):
+def get_reference_details(reference_doctype, doctype, reference_list, reference_details):
 	filters = [
 		["Dynamic Link", "link_doctype", "=", reference_doctype],
 		["Dynamic Link", "link_name", "in", reference_list],

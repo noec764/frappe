@@ -52,9 +52,7 @@ class TestActivityLog(unittest.TestCase):
 		return auth_log
 
 	def test_brute_security(self):
-		update_system_settings(
-			{"allow_consecutive_login_attempts": 3, "allow_login_after_fail": 5}
-		)
+		update_system_settings({"allow_consecutive_login_attempts": 3, "allow_login_after_fail": 5})
 
 		frappe.local.form_dict = frappe._dict(
 			{"cmd": "login", "sid": "Guest", "pwd": "admin", "usr": "Administrator"}

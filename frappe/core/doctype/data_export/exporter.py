@@ -10,8 +10,7 @@ import frappe
 import frappe.permissions
 from frappe import _
 from frappe.core.doctype.access_log.access_log import make_access_log
-from frappe.utils import (cint, cstr, format_datetime, format_duration,
-                          formatdate, parse_json)
+from frappe.utils import cint, cstr, format_datetime, format_duration, formatdate, parse_json
 from frappe.utils.csvutils import UnicodeWriter
 
 reflags = {
@@ -179,11 +178,7 @@ class DataExporter:
 			[_('If you are uploading new records, leave the "name" (ID) column blank.')]
 		)
 		self.writer.writerow(
-			[
-				_(
-					'If you are uploading new records, "Naming Series" becomes mandatory, if present.'
-				)
-			]
+			[_('If you are uploading new records, "Naming Series" becomes mandatory, if present.')]
 		)
 		self.writer.writerow(
 			[
@@ -197,15 +192,9 @@ class DataExporter:
 			[_("You can only upload upto 5000 records in one go. (may be less in some cases)")]
 		)
 		if self.name_field == "parent":
+			self.writer.writerow([_('"Parent" signifies the parent table in which this row must be added')])
 			self.writer.writerow(
-				[_('"Parent" signifies the parent table in which this row must be added')]
-			)
-			self.writer.writerow(
-				[
-					_(
-						'If you are updating, please select "Overwrite" else existing rows will not be deleted.'
-					)
-				]
+				[_('If you are updating, please select "Overwrite" else existing rows will not be deleted.')]
 			)
 
 	def build_field_columns(self, dt, parentfield=None):
@@ -217,8 +206,7 @@ class DataExporter:
 		for f in frappe.db.get_table_columns_description(table_name):
 			field = meta.get_field(f.name)
 			if field and (
-				(self.select_columns and f.name in self.select_columns[dt])
-				or not self.select_columns
+				(self.select_columns and f.name in self.select_columns[dt]) or not self.select_columns
 			):
 				tablecolumns.append(field)
 
@@ -227,9 +215,7 @@ class DataExporter:
 		_column_start_end = frappe._dict(start=0)
 
 		if dt == self.doctype:
-			if (meta.get("autoname") and meta.get("autoname").lower() == "prompt") or (
-				self.with_data
-			):
+			if (meta.get("autoname") and meta.get("autoname").lower() == "prompt") or (self.with_data):
 				self._append_name_column()
 
 			# if importing only child table for new record, add parent field
@@ -242,9 +228,7 @@ class DataExporter:
 							"label": "Parent",
 							"fieldtype": "Data",
 							"reqd": 1,
-							"info": _(
-								"Parent is the name of the document to which the data will get added to."
-							),
+							"info": _("Parent is the name of the document to which the data will get added to."),
 						}
 					),
 					True,
@@ -447,9 +431,7 @@ class DataExporter:
 
 		from frappe.utils.xlsxutils import make_xlsx
 
-		xlsx_file = make_xlsx(
-			reader, "Data Import Template" if self.template else "Data Export"
-		)
+		xlsx_file = make_xlsx(reader, "Data Import Template" if self.template else "Data Export")
 
 		f.close()
 		os.remove(filename)

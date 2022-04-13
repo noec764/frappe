@@ -8,7 +8,10 @@ from frappe import _
 from frappe.core.doctype.user.user import extract_mentions
 from frappe.database.schema import add_column
 from frappe.desk.doctype.notification_log.notification_log import (
-    enqueue_create_notification, get_title, get_title_html)
+	enqueue_create_notification,
+	get_title,
+	get_title_html,
+)
 from frappe.exceptions import ImplicitCommitError
 from frappe.model.document import Document
 from frappe.utils import get_fullname
@@ -141,9 +144,7 @@ def update_comment_in_doc(doc):
 				{
 					"comment": get_truncated(doc.content),
 					# "comment_email" for Comment and "sender" for Communication
-					"by": getattr(doc, "comment_email", None)
-					or getattr(doc, "sender", None)
-					or doc.owner,
+					"by": getattr(doc, "comment_email", None) or getattr(doc, "sender", None) or doc.owner,
 					"name": doc.name,
 					"seen": doc.seen,
 				}
@@ -158,9 +159,7 @@ def get_comments_from_parent(doc):
 	`_comments`
 	"""
 	try:
-		_comments = (
-			frappe.db.get_value(doc.reference_doctype, doc.reference_name, "_comments") or "[]"
-		)
+		_comments = frappe.db.get_value(doc.reference_doctype, doc.reference_name, "_comments") or "[]"
 
 	except Exception as e:
 		if frappe.db.is_missing_table_or_column(e):
@@ -190,9 +189,7 @@ def update_comments_in_parent(reference_doctype, reference_name, _comments):
 	try:
 		# use sql, so that we do not mess with the timestamp
 		frappe.db.sql(
-			"""update `tab{0}` set `_comments`=%s where name=%s""".format(
-				reference_doctype
-			),  # nosec
+			"""update `tab{0}` set `_comments`=%s where name=%s""".format(reference_doctype),  # nosec
 			(json.dumps(_comments[-100:]), reference_name),
 		)
 

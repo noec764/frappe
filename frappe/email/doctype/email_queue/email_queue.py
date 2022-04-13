@@ -15,13 +15,11 @@ from rq.timeouts import JobTimeoutException
 import frappe
 from frappe import _, safe_encode, task
 from frappe.email.doctype.email_account.email_account import EmailAccount
-from frappe.email.email_body import (add_attachment, get_email,
-                                     get_formatted_html)
+from frappe.email.email_body import add_attachment, get_email, get_formatted_html
 from frappe.email.queue import get_unsubcribed_url, get_unsubscribe_message
 from frappe.model.document import Document
 from frappe.query_builder.utils import DocType
-from frappe.utils import (add_days, cint, cstr, get_hook_method, nowdate,
-                          split_emails)
+from frappe.utils import add_days, cint, cstr, get_hook_method, nowdate, split_emails
 
 MAX_RETRY_COUNT = 3
 
@@ -128,9 +126,7 @@ class EmailQueue(Document):
 					method(self, self.sender, recipient.recipient, message)
 				else:
 					if not frappe.flags.in_test:
-						ctx.smtp_session.sendmail(
-							from_addr=self.sender, to_addrs=recipient.recipient, msg=message
-						)
+						ctx.smtp_session.sendmail(from_addr=self.sender, to_addrs=recipient.recipient, msg=message)
 					ctx.add_to_sent_list(recipient)
 
 			if frappe.flags.in_test:
@@ -157,9 +153,7 @@ class SendMailContext:
 		self.is_background_task = is_background_task
 		self.email_account_doc = queue_doc.get_email_account()
 		self.smtp_server = self.email_account_doc.get_smtp_server()
-		self.sent_to = [
-			rec.recipient for rec in self.queue_doc.recipients if rec.is_main_sent()
-		]
+		self.sent_to = [rec.recipient for rec in self.queue_doc.recipients if rec.is_main_sent()]
 
 	def __enter__(self):
 		self.queue_doc.update_status(status="Sending", commit=True)
@@ -221,9 +215,7 @@ class SendMailContext:
 		self.sent_to.append(recipient.recipient)
 
 	def is_mail_sent_to_all(self):
-		return sorted(self.sent_to) == sorted(
-			[rec.recipient for rec in self.queue_doc.recipients]
-		)
+		return sorted(self.sent_to) == sorted([rec.recipient for rec in self.queue_doc.recipients])
 
 	def get_message_object(self, message):
 		return Parser(policy=SMTPUTF8).parsestr(message)
@@ -311,9 +303,7 @@ class SendMailContext:
 			if file_filters:
 				_file = frappe.get_doc("File", file_filters)
 				fcontent = _file.get_content()
-				attachment.update(
-					{"fname": _file.file_name, "fcontent": fcontent, "parent": message_obj}
-				)
+				attachment.update({"fname": _file.file_name, "fcontent": fcontent, "parent": message_obj})
 				attachment.pop("fid", None)
 				attachment.pop("file_url", None)
 				add_attachment(**attachment)
@@ -603,9 +593,7 @@ class QueueBuilder:
 		Sends email incase if it is requested to send now.
 		"""
 		final_recipients = self.final_recipients()
-		queue_separately = (final_recipients and self.queue_separately) or len(
-			final_recipients
-		) > 20
+		queue_separately = (final_recipients and self.queue_separately) or len(final_recipients) > 20
 		if not (final_recipients + self.final_cc()):
 			return []
 
@@ -616,16 +604,12 @@ class QueueBuilder:
 
 		if not queue_separately:
 			recipients = list(set(final_recipients + self.final_cc() + self.bcc))
-			q = EmailQueue.new(
-				{**queue_data, **{"recipients": recipients}}, ignore_permissions=True
-			)
+			q = EmailQueue.new({**queue_data, **{"recipients": recipients}}, ignore_permissions=True)
 			email_queues.append(q)
 		else:
 			for r in final_recipients:
 				recipients = [r] if email_queues else list(set([r] + self.final_cc() + self.bcc))
-				q = EmailQueue.new(
-					{**queue_data, **{"recipients": recipients}}, ignore_permissions=True
-				)
+				q = EmailQueue.new({**queue_data, **{"recipients": recipients}}, ignore_permissions=True)
 				email_queues.append(q)
 
 		if send_now:
@@ -635,9 +619,7 @@ class QueueBuilder:
 
 	def as_dict(self, include_recipients=True):
 		email_account = self.get_outgoing_email_account()
-		email_account_name = (
-			email_account and email_account.is_exists_in_db() and email_account.name
-		)
+		email_account_name = email_account and email_account.is_exists_in_db() and email_account.name
 
 		mail = self.prepare_email_content()
 		try:

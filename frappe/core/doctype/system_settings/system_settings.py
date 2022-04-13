@@ -31,9 +31,7 @@ class SystemSettings(Document):
 			if self.two_factor_method == "SMS":
 				if not frappe.db.get_value("SMS Settings", None, "sms_gateway_url"):
 					frappe.throw(
-						_(
-							"Please setup SMS before setting it as an authentication method, via SMS Settings"
-						)
+						_("Please setup SMS before setting it as an authentication method, via SMS Settings")
 					)
 			toggle_two_factor_auth(True, roles=["All"])
 		else:

@@ -27,9 +27,7 @@ def execute(filters=None):
 
 		data = list(data)
 		for i, doc in enumerate(data):
-			permission = frappe.permissions.get_doc_permissions(
-				frappe.get_doc(doctype, doc[0]), user
-			)
+			permission = frappe.permissions.get_doc_permissions(frappe.get_doc(doctype, doc[0]), user)
 			data[i] = doc + tuple(permission.get(right) for right in rights)
 
 	return columns, data

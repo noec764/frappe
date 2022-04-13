@@ -5,8 +5,7 @@ import frappe
 from frappe.utils import set_request
 from frappe.website.page_renderers.static_page import StaticPage
 from frappe.website.serve import get_response, get_response_content
-from frappe.website.utils import (build_response, clear_website_cache,
-                                  get_home_page)
+from frappe.website.utils import build_response, clear_website_cache, get_home_page
 
 
 class TestWebsite(unittest.TestCase):
@@ -44,9 +43,7 @@ class TestWebsite(unittest.TestCase):
 		frappe.db.set_value("Role", "home-page-test", "home_page", "")
 
 		# home page via portal settings
-		frappe.db.set_value(
-			"Portal Settings", None, "default_portal_home", "test-portal-home"
-		)
+		frappe.db.set_value("Portal Settings", None, "default_portal_home", "test-portal-home")
 
 		frappe.set_user("test-user-for-home-page@example.com")
 		frappe.cache().hdel("home_page", frappe.session.user)
@@ -166,9 +163,7 @@ class TestWebsite(unittest.TestCase):
 		]
 
 		website_settings = frappe.get_doc("Website Settings")
-		website_settings.append(
-			"route_redirects", {"source": "/testsource", "target": "/testtarget"}
-		)
+		website_settings.append("route_redirects", {"source": "/testsource", "target": "/testtarget"})
 		website_settings.save()
 
 		set_request(method="GET", path="/testfrom")
@@ -278,9 +273,7 @@ class TestWebsite(unittest.TestCase):
 	def test_raw_assets_are_loaded(self):
 		content = get_response_content("/_test/assets/js_asset.min.js")
 		# minified js files should not be passed through jinja renderer
-		self.assertEqual(
-			"//{% if title %} {{title}} {% endif %}\nconsole.log('in');", content
-		)
+		self.assertEqual("//{% if title %} {{title}} {% endif %}\nconsole.log('in');", content)
 
 		content = get_response_content("/_test/assets/css_asset.css")
 		self.assertEqual("""body{color:red}""", content)
@@ -352,6 +345,4 @@ class CustomPageRenderer:
 			return True
 
 	def render(self):
-		return build_response(
-			self.path, """<div>Custom Page Response</div>""", self.status_code
-		)
+		return build_response(self.path, """<div>Custom Page Response</div>""", self.status_code)

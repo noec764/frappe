@@ -54,9 +54,7 @@ def create_workspace(**args):
 
 
 def insert_card(workspace, card_label, doctype1, doctype2, country=None):
-	workspace.append(
-		"links", {"type": "Card Break", "label": card_label, "only_for": country}
-	)
+	workspace.append("links", {"type": "Card Break", "label": card_label, "only_for": country})
 
 	create_doctype(doctype1, "Test Module")
 	workspace.append(

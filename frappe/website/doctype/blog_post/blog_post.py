@@ -5,11 +5,21 @@ from math import ceil
 
 import frappe
 from frappe import _
-from frappe.utils import (cint, get_fullname, global_date_format, markdown,
-                          sanitize_html, strip_html_tags, today)
-from frappe.website.utils import (clear_cache, find_first_image,
-                                  get_comment_list,
-                                  get_html_content_based_on_type)
+from frappe.utils import (
+	cint,
+	get_fullname,
+	global_date_format,
+	markdown,
+	sanitize_html,
+	strip_html_tags,
+	today,
+)
+from frappe.website.utils import (
+	clear_cache,
+	find_first_image,
+	get_comment_list,
+	get_html_content_based_on_type,
+)
 from frappe.website.website_generator import WebsiteGenerator
 
 
@@ -116,9 +126,7 @@ class BlogPost(WebsiteGenerator):
 			{"name": "Blog", "route": "/blog"},
 			{"label": context.category.title, "route": context.category.route},
 		]
-		context.guest_allowed = frappe.db.get_single_value(
-			"Blog Settings", "allow_guest_to_comment"
-		)
+		context.guest_allowed = frappe.db.get_single_value("Blog Settings", "allow_guest_to_comment")
 
 	def fetch_cta(self):
 		if frappe.db.get_single_value("Blog Settings", "show_cta_in_blog", cache=True):
@@ -135,9 +143,7 @@ class BlogPost(WebsiteGenerator):
 		return {}
 
 	def fetch_social_links_info(self):
-		if not frappe.db.get_single_value(
-			"Blog Settings", "enable_social_sharing", cache=True
-		):
+		if not frappe.db.get_single_value("Blog Settings", "enable_social_sharing", cache=True):
 			return []
 
 		url = frappe.local.site + "/" + self.route
@@ -217,16 +223,12 @@ def get_list_context(context=None):
 		list_context.title = category_title
 
 	elif frappe.local.form_dict.blogger:
-		blogger = frappe.db.get_value(
-			"Blogger", {"name": frappe.local.form_dict.blogger}, "full_name"
-		)
+		blogger = frappe.db.get_value("Blogger", {"name": frappe.local.form_dict.blogger}, "full_name")
 		list_context.sub_title = _("Posts by {0}").format(blogger)
 		list_context.title = blogger
 
 	elif frappe.local.form_dict.txt:
-		list_context.sub_title = _('Filtered by "{0}"').format(
-			sanitize_html(frappe.local.form_dict.txt)
-		)
+		list_context.sub_title = _('Filtered by "{0}"').format(sanitize_html(frappe.local.form_dict.txt))
 
 	if list_context.sub_title:
 		list_context.parents = [
@@ -295,9 +297,7 @@ def get_blog_list(
 
 	if txt:
 		conditions.append(
-			'(t1.content like {0} or t1.title like {0}")'.format(
-				frappe.db.escape("%" + txt + "%")
-			)
+			'(t1.content like {0} or t1.title like {0}")'.format(frappe.db.escape("%" + txt + "%"))
 		)
 
 	if conditions:

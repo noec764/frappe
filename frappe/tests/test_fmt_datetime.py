@@ -6,9 +6,16 @@ import datetime
 import unittest
 
 import frappe
-from frappe.utils import (format_datetime, format_time, formatdate,
-                          get_datetime, get_time, get_user_date_format,
-                          get_user_time_format, getdate)
+from frappe.utils import (
+	format_datetime,
+	format_time,
+	formatdate,
+	get_datetime,
+	get_time,
+	get_user_date_format,
+	get_user_time_format,
+	getdate,
+)
 
 test_date_obj = datetime.datetime.now()
 test_date = test_date_obj.strftime("%Y-%m-%d")
@@ -68,12 +75,8 @@ class TestFmtDatetime(unittest.TestCase):
 
 	def test_formatdate_forced(self):
 		# Test with forced date formats
-		self.assertEqual(
-			formatdate(test_date, "dd-yyyy-mm"), test_date_obj.strftime("%d-%Y-%m")
-		)
-		self.assertEqual(
-			formatdate(test_date, "dd-yyyy-MM"), test_date_obj.strftime("%d-%Y-%m")
-		)
+		self.assertEqual(formatdate(test_date, "dd-yyyy-mm"), test_date_obj.strftime("%d-%Y-%m"))
+		self.assertEqual(formatdate(test_date, "dd-yyyy-MM"), test_date_obj.strftime("%d-%Y-%m"))
 
 	def test_formatdate_forced_broken_locale(self):
 		# Test with forced date formats
@@ -81,12 +84,8 @@ class TestFmtDatetime(unittest.TestCase):
 		# Force fallback from Babel
 		try:
 			frappe.local.lang = "FAKE"
-			self.assertEqual(
-				formatdate(test_date, "dd-yyyy-mm"), test_date_obj.strftime("%d-%Y-%m")
-			)
-			self.assertEqual(
-				formatdate(test_date, "dd-yyyy-MM"), test_date_obj.strftime("%d-%Y-%m")
-			)
+			self.assertEqual(formatdate(test_date, "dd-yyyy-mm"), test_date_obj.strftime("%d-%Y-%m"))
+			self.assertEqual(formatdate(test_date, "dd-yyyy-MM"), test_date_obj.strftime("%d-%Y-%m"))
 		finally:
 			frappe.local.lang = lang
 
@@ -101,9 +100,7 @@ class TestFmtDatetime(unittest.TestCase):
 	# Test time formatters
 	def test_format_time_forced(self):
 		# Test with forced time formats
-		self.assertEqual(
-			format_time(test_time, "ss:mm:HH"), test_date_obj.strftime("%S:%M:%H")
-		)
+		self.assertEqual(format_time(test_time, "ss:mm:HH"), test_date_obj.strftime("%S:%M:%H"))
 
 	def test_format_time(self):
 		# Test format_time with various default time formats set

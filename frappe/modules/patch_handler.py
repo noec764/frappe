@@ -212,9 +212,7 @@ def execute_patch(patchmodule, method=None, methodargs=None):
 
 def update_patch_log(patchmodule):
 	"""update patch_file in patch log"""
-	frappe.get_doc({"doctype": "Patch Log", "patch": patchmodule}).insert(
-		ignore_permissions=True
-	)
+	frappe.get_doc({"doctype": "Patch Log", "patch": patchmodule}).insert(ignore_permissions=True)
 
 
 def executed(patchmodule):

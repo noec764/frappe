@@ -4,8 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe.modules import get_module_name
-from frappe.search.website_search import (remove_document_from_index,
-                                          update_index_for_path)
+from frappe.search.website_search import remove_document_from_index, update_index_for_path
 from frappe.website.utils import cleanup_page_name, clear_cache
 
 

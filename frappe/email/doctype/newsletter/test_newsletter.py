@@ -9,10 +9,14 @@ from unittest.mock import MagicMock, PropertyMock, patch
 import frappe
 from frappe.desk.form.load import run_onload
 from frappe.email.doctype.newsletter.exceptions import (
-    NewsletterAlreadySentError, NoRecipientFoundError)
-from frappe.email.doctype.newsletter.newsletter import (Newsletter,
-                                                        confirmed_unsubscribe,
-                                                        send_scheduled_email)
+	NewsletterAlreadySentError,
+	NoRecipientFoundError,
+)
+from frappe.email.doctype.newsletter.newsletter import (
+	Newsletter,
+	confirmed_unsubscribe,
+	send_scheduled_email,
+)
 from frappe.email.queue import flush
 from frappe.utils import add_days, getdate
 
@@ -128,9 +132,7 @@ class TestNewsletter(TestNewsletterMixin, unittest.TestCase):
 	def test_send(self):
 		self.send_newsletter()
 
-		email_queue_list = [
-			frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")
-		]
+		email_queue_list = [frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")]
 		self.assertEqual(len(email_queue_list), 4)
 
 		recipients = {e.recipients[0].recipient for e in email_queue_list}
@@ -147,9 +149,7 @@ class TestNewsletter(TestNewsletterMixin, unittest.TestCase):
 		confirmed_unsubscribe(to_unsubscribe, group[0].email_group)
 
 		name = self.send_newsletter()
-		email_queue_list = [
-			frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")
-		]
+		email_queue_list = [frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")]
 		self.assertEqual(len(email_queue_list), 3)
 		recipients = [e.recipients[0].recipient for e in email_queue_list]
 
@@ -160,9 +160,7 @@ class TestNewsletter(TestNewsletterMixin, unittest.TestCase):
 	def test_schedule_send(self):
 		self.send_newsletter(schedule_send=add_days(getdate(), -1))
 
-		email_queue_list = [
-			frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")
-		]
+		email_queue_list = [frappe.get_doc("Email Queue", e.name) for e in frappe.get_all("Email Queue")]
 		self.assertEqual(len(email_queue_list), 4)
 		recipients = [e.recipients[0].recipient for e in email_queue_list]
 		for email in emails:

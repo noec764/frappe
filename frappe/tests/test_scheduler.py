@@ -9,8 +9,7 @@ from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 from frappe.utils import add_days, get_datetime
 from frappe.utils.background_jobs import enqueue, get_jobs
 from frappe.utils.doctor import purge_pending_jobs
-from frappe.utils.scheduler import (enqueue_events, is_dormant,
-                                    schedule_jobs_based_on_activity)
+from frappe.utils.scheduler import enqueue_events, is_dormant, schedule_jobs_based_on_activity
 
 
 def test_timeout():
@@ -32,20 +31,14 @@ class TestScheduler(TestCase):
 			sync_jobs()
 
 	def test_enqueue_jobs(self):
-		frappe.db.sql(
-			"update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'"
-		)
+		frappe.db.sql("update `tabScheduled Job Type` set last_execution = '2010-01-01 00:00:00'")
 
 		frappe.flags.execute_job = True
 		enqueue_events(site=frappe.local.site)
 		frappe.flags.execute_job = False
 
-		self.assertTrue(
-			"frappe.email.queue.set_expiry_for_email_queue", frappe.flags.enqueued_jobs
-		)
-		self.assertTrue(
-			"frappe.utils.change_log.check_for_update", frappe.flags.enqueued_jobs
-		)
+		self.assertTrue("frappe.email.queue.set_expiry_for_email_queue", frappe.flags.enqueued_jobs)
+		self.assertTrue("frappe.utils.change_log.check_for_update", frappe.flags.enqueued_jobs)
 		self.assertTrue(
 			"frappe.email.doctype.auto_email_report.auto_email_report.send_monthly",
 			frappe.flags.enqueued_jobs,
@@ -67,16 +60,12 @@ class TestScheduler(TestCase):
 
 	def test_is_dormant(self):
 		self.assertTrue(is_dormant(check_time=get_datetime("2100-01-01 00:00:00")))
-		self.assertTrue(
-			is_dormant(check_time=add_days(frappe.db.get_last_created("Activity Log"), 5))
-		)
+		self.assertTrue(is_dormant(check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)))
 		self.assertFalse(is_dormant(check_time=frappe.db.get_last_created("Activity Log")))
 
 	def test_once_a_day_for_dormant(self):
 		frappe.db.clear_table("Scheduled Job Log")
-		self.assertTrue(
-			schedule_jobs_based_on_activity(check_time=get_datetime("2100-01-01 00:00:00"))
-		)
+		self.assertTrue(schedule_jobs_based_on_activity(check_time=get_datetime("2100-01-01 00:00:00")))
 		self.assertTrue(
 			schedule_jobs_based_on_activity(
 				check_time=add_days(frappe.db.get_last_created("Activity Log"), 5)
@@ -84,9 +73,7 @@ class TestScheduler(TestCase):
 		)
 
 		# create a fake job executed 5 days from now
-		job = get_test_job(
-			method="frappe.tests.test_scheduler.test_method", frequency="Daily"
-		)
+		job = get_test_job(method="frappe.tests.test_scheduler.test_method", frequency="Daily")
 		job.execute()
 		job_log = frappe.get_doc("Scheduled Job Log", dict(scheduled_job_type=job.name))
 		job_log.db_set("creation", add_days(frappe.db.get_last_created("Activity Log"), 5))

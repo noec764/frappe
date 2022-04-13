@@ -11,9 +11,17 @@ from frappe import _
 from frappe.desk.query_report import build_xlsx_data
 from frappe.model.document import Document
 from frappe.model.naming import append_number_if_name_exists
-from frappe.utils import (add_to_date, format_time, get_link_to_form,
-                          get_url_to_report, global_date_format, now,
-                          now_datetime, today, validate_email_address)
+from frappe.utils import (
+	add_to_date,
+	format_time,
+	get_link_to_form,
+	get_url_to_report,
+	global_date_format,
+	now,
+	now_datetime,
+	today,
+	validate_email_address,
+)
 from frappe.utils.csvutils import to_csv
 from frappe.utils.xlsxutils import make_xlsx
 
@@ -50,18 +58,14 @@ class AutoEmailReport(Document):
 		max_reports_per_user = frappe.local.conf.max_reports_per_user or 3
 
 		if count > max_reports_per_user + (-1 if self.flags.in_insert else 0):
-			frappe.throw(
-				_("Only {0} emailed reports are allowed per user").format(max_reports_per_user)
-			)
+			frappe.throw(_("Only {0} emailed reports are allowed per user").format(max_reports_per_user))
 
 	def validate_report_format(self):
 		"""check if user has select correct report format"""
 		valid_report_formats = ["HTML", "XLSX", "CSV"]
 		if self.format not in valid_report_formats:
 			frappe.throw(
-				_(
-					"{0} is not a valid report format. Report format should one of the following {1}"
-				).format(
+				_("{0} is not a valid report format. Report format should one of the following {1}").format(
 					frappe.bold(self.format), frappe.bold(", ".join(valid_report_formats))
 				)
 			)
@@ -108,9 +112,7 @@ class AutoEmailReport(Document):
 			report_data["columns"] = columns
 			report_data["result"] = data
 
-			xlsx_data, column_widths = build_xlsx_data(
-				report_data, [], 1, ignore_visible_idx=True
-			)
+			xlsx_data, column_widths = build_xlsx_data(report_data, [], 1, ignore_visible_idx=True)
 			xlsx_file = make_xlsx(xlsx_data, "Auto Email Report", column_widths=column_widths)
 			return xlsx_file.getvalue()
 
@@ -119,9 +121,7 @@ class AutoEmailReport(Document):
 			report_data["columns"] = columns
 			report_data["result"] = data
 
-			xlsx_data, column_widths = build_xlsx_data(
-				report_data, [], 1, ignore_visible_idx=True
-			)
+			xlsx_data, column_widths = build_xlsx_data(report_data, [], 1, ignore_visible_idx=True)
 			return to_csv(xlsx_data)
 
 		else:
@@ -147,9 +147,7 @@ class AutoEmailReport(Document):
 		)
 
 	def get_file_name(self):
-		return "{0}.{1}".format(
-			self.report.replace(" ", "-").replace("/", "-"), self.format.lower()
-		)
+		return "{0}.{1}".format(self.report.replace(" ", "-").replace("/", "-"), self.format.lower())
 
 	def prepare_dynamic_filters(self):
 		self.filters = frappe.parse_json(self.filters)
@@ -246,16 +244,12 @@ def send_daily():
 		try:
 			auto_email_report.send()
 		except Exception as e:
-			frappe.log_error(
-				e, _("Failed to send {0} Auto Email Report").format(auto_email_report.name)
-			)
+			frappe.log_error(e, _("Failed to send {0} Auto Email Report").format(auto_email_report.name))
 
 
 def send_monthly():
 	"""Check reports to be sent monthly"""
-	for report in frappe.get_all(
-		"Auto Email Report", {"enabled": 1, "frequency": "Monthly"}
-	):
+	for report in frappe.get_all("Auto Email Report", {"enabled": 1, "frequency": "Monthly"}):
 		frappe.get_doc("Auto Email Report", report.name).send()
 
 
@@ -273,9 +267,7 @@ def make_links(columns, data):
 				if col.options and row.get(col.options):
 					row[col.fieldname] = get_link_to_form(row[col.options], row[col.fieldname])
 			elif col.fieldtype == "Currency":
-				doc = (
-					frappe.get_doc(col.parent, doc_name) if doc_name and col.get("parent") else None
-				)
+				doc = frappe.get_doc(col.parent, doc_name) if doc_name and col.get("parent") else None
 				# Pass the Document to get the currency based on docfield option
 				row[col.fieldname] = frappe.format_value(row[col.fieldname], col, doc=doc)
 
@@ -284,9 +276,7 @@ def make_links(columns, data):
 
 def update_field_types(columns):
 	for col in columns:
-		if (
-			col.fieldtype in ("Link", "Dynamic Link", "Currency") and col.options != "Currency"
-		):
+		if col.fieldtype in ("Link", "Dynamic Link", "Currency") and col.options != "Currency":
 			col.fieldtype = "Data"
 			col.options = ""
 	return columns

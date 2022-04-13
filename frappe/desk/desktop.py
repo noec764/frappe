@@ -7,11 +7,12 @@ from json import dumps, loads
 import frappe
 from frappe import DoesNotExistError, ValidationError, _, _dict
 from frappe.boot import get_allowed_pages, get_allowed_reports
-from frappe.cache_manager import (build_domain_restricted_doctype_cache,
-                                  build_domain_restricted_page_cache,
-                                  build_table_count_cache)
-from frappe.core.doctype.custom_role.custom_role import \
-    get_custom_allowed_roles
+from frappe.cache_manager import (
+	build_domain_restricted_doctype_cache,
+	build_domain_restricted_page_cache,
+	build_table_count_cache,
+)
+from frappe.core.doctype.custom_role.custom_role import get_custom_allowed_roles
 from frappe.desk.notifications import get_notification_for_doctype
 
 
@@ -37,9 +38,7 @@ class Workspace:
 		self.workspace_manager = "Workspace Manager" in frappe.get_roles()
 
 		self.user = frappe.get_user()
-		self.allowed_modules = self.get_cached(
-			"user_allowed_modules", self.get_allowed_modules
-		)
+		self.allowed_modules = self.get_cached("user_allowed_modules", self.get_allowed_modules)
 
 		self.doc = frappe.get_cached_doc("Workspace", self.page_name)
 
@@ -71,8 +70,7 @@ class Workspace:
 			or build_domain_restricted_doctype_cache()
 		)
 		self.restricted_pages = (
-			frappe.cache().get_value("domain_restricted_pages")
-			or build_domain_restricted_page_cache()
+			frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
 		)
 
 	def is_permitted(self):
@@ -80,10 +78,7 @@ class Workspace:
 		from frappe.utils import has_common
 
 		allowed = [
-			d.role
-			for d in frappe.get_all(
-				"Has Role", fields=["role"], filters={"parent": self.doc.name}
-			)
+			d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.doc.name})
 		]
 
 		custom_roles = get_custom_allowed_roles("page", self.doc.name)
@@ -192,9 +187,7 @@ class Workspace:
 
 			dependencies = [dep.strip() for dep in item.dependencies.split(",")]
 
-			incomplete_dependencies = [
-				d for d in dependencies if not self._doctype_contains_a_record(d)
-			]
+			incomplete_dependencies = [d for d in dependencies if not self._doctype_contains_a_record(d)]
 
 			if len(incomplete_dependencies):
 				item.incomplete_dependencies = incomplete_dependencies
@@ -440,9 +433,7 @@ def get_custom_doctype_list(module):
 
 	out = []
 	for d in doctypes:
-		out.append(
-			{"type": "Link", "link_type": "doctype", "link_to": d.name, "label": _(d.name)}
-		)
+		out.append({"type": "Link", "link_type": "doctype", "link_to": d.name, "label": _(d.name)})
 
 	return out
 
@@ -514,9 +505,7 @@ def clean_up(original_page, blocks):
 
 	for wid in ["shortcut", "card", "chart"]:
 		# get list of widget's name from blocks
-		page_widgets[wid] = [
-			x["data"][wid + "_name"] for x in loads(blocks) if x["type"] == wid
-		]
+		page_widgets[wid] = [x["data"][wid + "_name"] for x in loads(blocks) if x["type"] == wid]
 
 	# shortcut & chart cleanup
 	for wid in ["shortcut", "chart"]:
@@ -524,9 +513,7 @@ def clean_up(original_page, blocks):
 		original_page.get(wid + "s").reverse()
 
 		for w in original_page.get(wid + "s"):
-			if w.label in page_widgets[wid] and w.label not in [
-				x.label for x in updated_widgets
-			]:
+			if w.label in page_widgets[wid] and w.label not in [x.label for x in updated_widgets]:
 				updated_widgets.append(w)
 		original_page.set(wid + "s", updated_widgets)
 

@@ -57,9 +57,7 @@ class TestBoilerPlate(unittest.TestCase):
 
 	@classmethod
 	def tearDownClass(cls):
-		test_app_dirs = (
-			os.path.join(cls.bench_path, "apps", app_name) for app_name in cls.app_names
-		)
+		test_app_dirs = (os.path.join(cls.bench_path, "apps", app_name) for app_name in cls.app_names)
 		for test_app_dir in test_app_dirs:
 			if os.path.exists(test_app_dir):
 				shutil.rmtree(test_app_dir)
@@ -72,9 +70,7 @@ class TestBoilerPlate(unittest.TestCase):
 
 		paths = self.get_paths(new_app_dir, self.app_names[0])
 		for path in paths:
-			self.assertTrue(
-				os.path.exists(path), msg=f"{path} should exist in {self.app_names[0]} app"
-			)
+			self.assertTrue(os.path.exists(path), msg=f"{path} should exist in {self.app_names[0]} app")
 
 		self.check_parsable_python_files(new_app_dir)
 
@@ -91,9 +87,7 @@ class TestBoilerPlate(unittest.TestCase):
 					os.path.exists(path), msg=f"{path} shouldn't exist in {self.app_names[1]} app"
 				)
 			else:
-				self.assertTrue(
-					os.path.exists(path), msg=f"{path} should exist in {self.app_names[1]} app"
-				)
+				self.assertTrue(os.path.exists(path), msg=f"{path} should exist in {self.app_names[1]} app")
 
 		self.check_parsable_python_files(new_app_dir)
 

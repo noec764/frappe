@@ -5,9 +5,12 @@
 import unittest
 
 import frappe
-from frappe.model.workflow import (WorkflowPermissionError,
-                                   WorkflowTransitionError, apply_workflow,
-                                   get_common_transition_actions)
+from frappe.model.workflow import (
+	WorkflowPermissionError,
+	WorkflowTransitionError,
+	apply_workflow,
+	get_common_transition_actions,
+)
 from frappe.query_builder import DocType
 from frappe.test_runner import make_test_records
 from frappe.utils import random_string
@@ -179,9 +182,7 @@ class TestWorkflow(unittest.TestCase):
 		WorkflowAction = DocType("Workflow Action")
 		WorkflowActionPermittedRole = DocType("Workflow Action Permitted Role")
 		frappe.qb.update(WorkflowAction).set(WorkflowAction.user, "test2@example.com").run()
-		frappe.qb.update(WorkflowActionPermittedRole).set(
-			WorkflowActionPermittedRole.role, ""
-		).run()
+		frappe.qb.update(WorkflowActionPermittedRole).set(WorkflowActionPermittedRole.role, "").run()
 
 		self.test_approve(doc)
 
@@ -197,9 +198,7 @@ def create_todo_workflow():
 		frappe.delete_doc("Workflow", "Test ToDo")
 
 	if not frappe.db.exists("Role", "Test Approver"):
-		frappe.get_doc(dict(doctype="Role", role_name="Test Approver")).insert(
-			ignore_if_duplicate=True
-		)
+		frappe.get_doc(dict(doctype="Role", role_name="Test Approver")).insert(ignore_if_duplicate=True)
 	workflow = frappe.new_doc("Workflow")
 	workflow.workflow_name = "Test ToDo"
 	workflow.document_type = "ToDo"
@@ -253,6 +252,4 @@ def create_todo_workflow():
 
 
 def create_new_todo():
-	return frappe.get_doc(
-		dict(doctype="ToDo", description="workflow " + random_string(10))
-	).insert()
+	return frappe.get_doc(dict(doctype="ToDo", description="workflow " + random_string(10))).insert()

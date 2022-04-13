@@ -7,11 +7,14 @@ from frappe import _
 from frappe.desk.form.utils import get_pdf_link
 from frappe.desk.notifications import clear_doctype_notifications
 from frappe.model.document import Document
-from frappe.model.workflow import (apply_workflow, get_workflow_name,
-                                   get_workflow_state_field,
-                                   has_approval_access,
-                                   is_transition_condition_satisfied,
-                                   send_email_alert)
+from frappe.model.workflow import (
+	apply_workflow,
+	get_workflow_name,
+	get_workflow_state_field,
+	has_approval_access,
+	is_transition_condition_satisfied,
+	send_email_alert,
+)
 from frappe.query_builder import DocType
 from frappe.utils import get_datetime, get_url
 from frappe.utils.background_jobs import enqueue
@@ -28,9 +31,7 @@ def on_doctype_update():
 	# The search order in any use case is no ["reference_name", "reference_doctype", "status"]
 	# The index scan would happen from left to right
 	# so even if status is not in the where clause the index will be used
-	frappe.db.add_index(
-		"Workflow Action", ["reference_name", "reference_doctype", "status"]
-	)
+	frappe.db.add_index("Workflow Action", ["reference_name", "reference_doctype", "status"])
 
 
 def get_permission_query_conditions(user):
@@ -108,9 +109,7 @@ def process_workflow_actions(doc, state):
 
 
 @frappe.whitelist(allow_guest=True)
-def apply_action(
-	action, doctype, docname, current_state, user=None, last_modified=None
-):
+def apply_action(action, doctype, docname, current_state, user=None, last_modified=None):
 	if not verify_request():
 		return
 
@@ -194,18 +193,14 @@ def return_link_expired_page(doc, doc_workflow_state):
 	)
 
 
-def update_completed_workflow_actions(
-	doc, user=None, workflow=None, workflow_state=None
-):
+def update_completed_workflow_actions(doc, user=None, workflow=None, workflow_state=None):
 	allowed_roles = get_allowed_roles(user, workflow, workflow_state)
 	# There is no transaction leading upto this state
 	# so no older actions to complete
 	if not allowed_roles:
 		return
 	if workflow_action := get_workflow_action_by_role(doc, allowed_roles):
-		update_completed_workflow_actions_using_role(
-			doc, user, allowed_roles, workflow_action
-		)
+		update_completed_workflow_actions_using_role(doc, user, allowed_roles, workflow_action)
 	else:
 		# backwards compatibility
 		# for workflow actions saved using user
@@ -323,9 +318,7 @@ def get_next_possible_transitions(workflow_name, state, doc=None):
 	transitions_to_return = []
 
 	for transition in transitions:
-		is_next_state_optional = get_state_optional_field_value(
-			workflow_name, transition.next_state
-		)
+		is_next_state_optional = get_state_optional_field_value(workflow_name, transition.next_state)
 		# skip transition if next state of the transition is optional
 		if is_next_state_optional:
 			continue
@@ -476,9 +469,7 @@ def filter_allowed_users(users, doc, transition):
 
 	filtered_users = []
 	for user in users:
-		if has_approval_access(user, doc, transition) and has_permission(
-			doctype=doc, user=user
-		):
+		if has_approval_access(user, doc, transition) and has_permission(doctype=doc, user=user):
 			filtered_users.append(user)
 	return filtered_users
 

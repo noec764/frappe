@@ -10,8 +10,7 @@ import redis
 from redis.exceptions import BusyLoadingError, ConnectionError
 from rq import Connection, Queue, Worker
 from rq.logutils import setup_loghandlers
-from tenacity import (retry, retry_if_exception_type, stop_after_attempt,
-                      wait_fixed)
+from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 import frappe
 import frappe.monitor
@@ -76,9 +75,7 @@ def enqueue(
 			)
 		)
 
-	call_directly = (
-		now or frappe.flags.in_migrate or (not is_async and not frappe.flags.in_test)
-	)
+	call_directly = now or frappe.flags.in_migrate or (not is_async and not frappe.flags.in_test)
 	if call_directly:
 		return frappe.call(method, **kwargs)
 
@@ -103,9 +100,7 @@ def enqueue(
 		)
 		return frappe.flags.enqueue_after_commit
 
-	return q.enqueue_call(
-		execute_job, timeout=timeout, kwargs=queue_args, at_front=at_front
-	)
+	return q.enqueue_call(execute_job, timeout=timeout, kwargs=queue_args, at_front=at_front)
 
 
 def enqueue_doc(
@@ -128,9 +123,7 @@ def run_doc_method(doctype, name, doc_method, **kwargs):
 	getattr(frappe.get_doc(doctype, name), doc_method)(**kwargs)
 
 
-def execute_job(
-	site, method, event, job_name, kwargs, user=None, is_async=True, retry=0
-):
+def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True, retry=0):
 	"""Executes job in a worker, performs commit/rollback and logs if there is any error"""
 
 	if is_async:
@@ -165,9 +158,7 @@ def execute_job(
 			frappe.destroy()
 			time.sleep(retry + 1)
 
-			return execute_job(
-				site, method, event, job_name, kwargs, is_async=is_async, retry=retry + 1
-			)
+			return execute_job(site, method, event, job_name, kwargs, is_async=is_async, retry=retry + 1)
 
 		else:
 			frappe.log_error(title=method_name)
@@ -261,9 +252,7 @@ def get_queue_list(queue_list=None, build_queue_name=False):
 	else:
 		queue_list = default_queue_list
 
-	return (
-		[generate_qname(qtype) for qtype in queue_list] if build_queue_name else queue_list
-	)
+	return [generate_qname(qtype) for qtype in queue_list] if build_queue_name else queue_list
 
 
 def get_workers(queue=None):
@@ -300,8 +289,7 @@ def validate_queue(queue, default_queue_list=None):
 
 
 @retry(
-	retry=retry_if_exception_type(BusyLoadingError)
-	| retry_if_exception_type(ConnectionError),
+	retry=retry_if_exception_type(BusyLoadingError) | retry_if_exception_type(ConnectionError),
 	stop=stop_after_attempt(10),
 	wait=wait_fixed(1),
 )

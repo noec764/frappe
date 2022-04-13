@@ -11,14 +11,22 @@ from rq.timeouts import JobTimeoutException
 
 import frappe
 from frappe import _
-from frappe.integrations.offsite_backup_utils import (get_chunk_site,
-                                                      get_latest_backup_file,
-                                                      send_email,
-                                                      validate_file_size)
+from frappe.integrations.offsite_backup_utils import (
+	get_chunk_site,
+	get_latest_backup_file,
+	send_email,
+	validate_file_size,
+)
 from frappe.integrations.utils import make_post_request
 from frappe.model.document import Document
-from frappe.utils import (cint, encode, get_backups_path, get_files_path,
-                          get_request_site_address, get_url)
+from frappe.utils import (
+	cint,
+	encode,
+	get_backups_path,
+	get_files_path,
+	get_request_site_address,
+	get_url,
+)
 from frappe.utils.background_jobs import enqueue
 from frappe.utils.backups import new_backup
 
@@ -69,9 +77,7 @@ def take_backup_to_dropbox(retry_count=0, upload_db_backup=True):
 			if did_not_upload:
 				raise Exception
 
-			if cint(
-				frappe.db.get_value("Dropbox Settings", None, "send_email_for_successful_backup")
-			):
+			if cint(frappe.db.get_value("Dropbox Settings", None, "send_email_for_successful_backup")):
 				send_email(True, "Dropbox", "Dropbox Settings", "send_notifications_to")
 	except JobTimeoutException:
 		if retry_count < 2:
@@ -92,9 +98,7 @@ def take_backup_to_dropbox(retry_count=0, upload_db_backup=True):
 			file_and_error = [" - ".join(f) for f in zip(did_not_upload, error_log)]
 			error_message = "\n".join(file_and_error) + "\n" + frappe.get_traceback()
 
-		send_email(
-			False, "Dropbox", "Dropbox Settings", "send_notifications_to", error_message
-		)
+		send_email(False, "Dropbox", "Dropbox Settings", "send_notifications_to", error_message)
 
 
 def backup_to_dropbox(upload_db_backup=True):
@@ -124,9 +128,7 @@ def backup_to_dropbox(upload_db_backup=True):
 		if frappe.flags.create_new_backup:
 			backup = new_backup(ignore_files=True)
 			filename = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_db))
-			site_config = os.path.join(
-				get_backups_path(), os.path.basename(backup.backup_path_conf)
-			)
+			site_config = os.path.join(get_backups_path(), os.path.basename(backup.backup_path_conf))
 		else:
 			filename, site_config = get_latest_backup_file()
 
@@ -142,9 +144,7 @@ def backup_to_dropbox(upload_db_backup=True):
 	error_log = []
 
 	if dropbox_settings["file_backup"]:
-		upload_from_folder(
-			get_files_path(), 0, "/files", dropbox_client, did_not_upload, error_log
-		)
+		upload_from_folder(get_files_path(), 0, "/files", dropbox_client, did_not_upload, error_log)
 		upload_from_folder(
 			get_files_path(is_private=1),
 			1,
@@ -223,9 +223,7 @@ def upload_file_to_dropbox(filename, folder, dropbox_client):
 		if file_size <= chunk_size:
 			dropbox_client.files_upload(f.read(), path, mode)
 		else:
-			upload_session_start_result = dropbox_client.files_upload_session_start(
-				f.read(chunk_size)
-			)
+			upload_session_start_result = dropbox_client.files_upload_session_start(f.read(chunk_size))
 			cursor = dropbox.files.UploadSessionCursor(
 				session_id=upload_session_start_result.session_id, offset=f.tell()
 			)
@@ -292,9 +290,7 @@ def get_dropbox_settings(redirect_uri=False):
 		if settings.dropbox_access_token
 		else "",
 		"access_key": settings.get_password("dropbox_access_key", raise_exception=False),
-		"access_secret": settings.get_password(
-			"dropbox_access_secret", raise_exception=False
-		),
+		"access_secret": settings.get_password("dropbox_access_secret", raise_exception=False),
 		"file_backup": settings.file_backup,
 		"no_of_backups": settings.no_of_backups if settings.limit_no_of_backups else None,
 	}
@@ -335,10 +331,8 @@ def delete_older_backups(dropbox_client, folder_path, to_keep):
 def get_redirect_url():
 	if not frappe.conf.dropbox_broker_site:
 		frappe.conf.dropbox_broker_site = "https://dropbox.erpnext.com"
-	url = (
-		"{0}/api/method/dropbox_erpnext_broker.www.setup_dropbox.get_authotize_url".format(
-			frappe.conf.dropbox_broker_site
-		)
+	url = "{0}/api/method/dropbox_erpnext_broker.www.setup_dropbox.get_authotize_url".format(
+		frappe.conf.dropbox_broker_site
 	)
 
 	try:

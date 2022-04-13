@@ -11,11 +11,9 @@ from paytmchecksum import generateSignature, verifySignature
 
 import frappe
 from frappe import _
-from frappe.integrations.utils import (create_payment_gateway,
-                                       create_request_log)
+from frappe.integrations.utils import create_payment_gateway, create_request_log
 from frappe.model.document import Document
-from frappe.utils import (call_hook_method, cint, cstr, flt,
-                          get_request_site_address, get_url)
+from frappe.utils import call_hook_method, cint, cstr, flt, get_request_site_address, get_url
 from frappe.utils.password import get_decrypted_password
 
 
@@ -48,11 +46,7 @@ def get_paytm_config():
 
 	paytm_config = frappe.db.get_singles_dict("Paytm Settings")
 	paytm_config.update(
-		dict(
-			merchant_key=get_decrypted_password(
-				"Paytm Settings", "Paytm Settings", "merchant_key"
-			)
-		)
+		dict(merchant_key=get_decrypted_password("Paytm Settings", "Paytm Settings", "merchant_key"))
 	)
 
 	if cint(paytm_config.staging):
@@ -116,9 +110,7 @@ def verify_transaction(**paytm_params):
 
 	if paytm_params and paytm_config and paytm_checksum:
 		# Verify checksum
-		is_valid_checksum = verifySignature(
-			paytm_params, paytm_config.merchant_key, paytm_checksum
-		)
+		is_valid_checksum = verifySignature(paytm_params, paytm_config.merchant_key, paytm_checksum)
 
 	if is_valid_checksum and paytm_params.get("RESPCODE") == "01":
 		verify_transaction_status(paytm_config, paytm_params["ORDERID"])
@@ -144,9 +136,7 @@ def verify_transaction_status(paytm_config, order_id):
 	post_data = json.dumps(paytm_params)
 	url = paytm_config.transaction_status_url
 
-	response = requests.post(
-		url, data=post_data, headers={"Content-type": "application/json"}
-	).json()
+	response = requests.post(url, data=post_data, headers={"Content-type": "application/json"}).json()
 	finalize_request(order_id, response)
 
 

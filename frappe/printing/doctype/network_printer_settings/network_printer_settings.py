@@ -26,9 +26,7 @@ class NetworkPrinterSettings(Document):
 			conn = cups.Connection()
 			printers = conn.getPrinters()
 			for printer_id, printer in printers.items():
-				printer_list.append(
-					{"value": printer_id, "label": printer["printer-make-and-model"]}
-				)
+				printer_list.append({"value": printer_id, "label": printer["printer-make-and-model"]})
 
 		except RuntimeError:
 			frappe.throw(_("Failed to connect to server"))

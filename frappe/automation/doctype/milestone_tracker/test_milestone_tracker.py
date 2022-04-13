@@ -19,9 +19,7 @@ class TestMilestoneTracker(unittest.TestCase):
 			dict(doctype="Milestone Tracker", document_type="ToDo", track_field="status")
 		).insert()
 
-		todo = frappe.get_doc(
-			dict(doctype="ToDo", description="test milestone", status="Open")
-		).insert()
+		todo = frappe.get_doc(dict(doctype="ToDo", description="test milestone", status="Open")).insert()
 
 		milestones = frappe.get_all(
 			"Milestone",

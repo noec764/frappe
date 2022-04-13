@@ -80,9 +80,7 @@ def get_comment_list(doctype, name):
 		],
 	)
 
-	return sorted(
-		(comments + communications), key=lambda comment: comment["creation"], reverse=True
-	)
+	return sorted((comments + communications), key=lambda comment: comment["creation"], reverse=True)
 
 
 def get_home_page():
@@ -400,9 +398,7 @@ def get_frontmatter(string):
 	"Reference: https://github.com/jonbeebe/frontmatter"
 	frontmatter = ""
 	body = ""
-	result = re.compile(
-		r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M
-	).search(string)
+	result = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M).search(string)
 	if result:
 		frontmatter = result.group(1)
 		body = result.group(2)

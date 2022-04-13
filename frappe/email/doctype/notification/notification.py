@@ -8,12 +8,10 @@ import frappe
 from frappe import _
 from frappe.core.doctype.role.role import get_info_based_on_role, get_user_info
 from frappe.core.doctype.sms_settings.sms_settings import send_sms
-from frappe.desk.doctype.notification_log.notification_log import \
-    enqueue_create_notification
+from frappe.desk.doctype.notification_log.notification_log import enqueue_create_notification
 from frappe.model.document import Document
 from frappe.modules.utils import export_module_json, get_doc_module
-from frappe.utils import (add_to_date, is_html, nowdate, parse_val,
-                          validate_email_address)
+from frappe.utils import add_to_date, is_html, nowdate, parse_val, validate_email_address
 from frappe.utils.jinja import validate_template
 from frappe.utils.safe_exec import get_safe_globals
 
@@ -67,19 +65,14 @@ def get_context(context):
 
 	def validate_standard(self):
 		if (
-			self.is_standard
-			or (getattr(self, "_doc_before_save") and self._doc_before_save.is_standard)
+			self.is_standard or (getattr(self, "_doc_before_save") and self._doc_before_save.is_standard)
 		) and not frappe.conf.developer_mode:
-			if (
-				getattr(self, "_doc_before_save") and self._doc_before_save.enabled != self.enabled
-			):
+			if getattr(self, "_doc_before_save") and self._doc_before_save.enabled != self.enabled:
 				self.db_set("enabled", self.enabled)
 				self.reload()
 			else:
 				frappe.throw(
-					_(
-						"Cannot edit Standard Notification. To edit, please disable this and duplicate it"
-					)
+					_("Cannot edit Standard Notification. To edit, please disable this and duplicate it")
 				)
 
 	def validate_condition(self):
@@ -92,15 +85,10 @@ def get_context(context):
 
 	def validate_forbidden_types(self):
 		forbidden_document_types = ("Email Queue",)
-		if (
-			self.document_type in forbidden_document_types
-			or frappe.get_meta(self.document_type).istable
-		):
+		if self.document_type in forbidden_document_types or frappe.get_meta(self.document_type).istable:
 			# currently notifications don't work on child tables as events are not fired for each record of child table
 
-			frappe.throw(
-				_("Cannot set Notification on Document Type {0}").format(self.document_type)
-			)
+			frappe.throw(_("Cannot set Notification on Document Type {0}").format(self.document_type))
 
 	def get_documents_for_today(self):
 		"""get list of documents that will be triggered today"""
@@ -216,8 +204,7 @@ def get_context(context):
 	def send_an_email(self, doc, context):
 		from email.utils import formataddr
 
-		from frappe.core.doctype.communication.email import \
-		    _make as make_communication
+		from frappe.core.doctype.communication.email import _make as make_communication
 
 		subject = self.subject
 		if "{" in subject:
@@ -286,9 +273,7 @@ def get_context(context):
 
 			return comm.name
 		except Exception:
-			frappe.log_error(
-				frappe.get_traceback(), _("Notification communication creation error")
-			)
+			frappe.log_error(frappe.get_traceback(), _("Notification communication creation error"))
 			return
 
 	def send_an_external_collaboration_tool_msg(self, doc, context):
@@ -400,9 +385,7 @@ def get_context(context):
 					"name": doc.name,
 					"print_format": self.print_format,
 					"print_letterhead": print_settings.with_letterhead,
-					"lang": frappe.db.get_value(
-						"Print Format", self.print_format, "default_print_language"
-					)
+					"lang": frappe.db.get_value("Print Format", self.print_format, "default_print_language")
 					if self.print_format
 					else "en",
 				}
@@ -413,9 +396,7 @@ def get_context(context):
 
 		def load_template(extn):
 			template = ""
-			template_path = os.path.join(
-				os.path.dirname(module.__file__), frappe.scrub(self.name) + extn
-			)
+			template_path = os.path.join(os.path.dirname(module.__file__), frappe.scrub(self.name) + extn)
 			if os.path.exists(template_path):
 				with open(template_path, "r") as f:
 					template = f.read()
@@ -486,15 +467,11 @@ def evaluate_alert(doc, alert, event):
 		if event == "Value Change" and not doc.is_new():
 			if not frappe.db.has_column(doc.doctype, alert.value_changed):
 				alert.db_set("enabled", 0)
-				frappe.log_error(
-					"Notification {0} has been disabled due to missing field".format(alert.name)
-				)
+				frappe.log_error("Notification {0} has been disabled due to missing field".format(alert.name))
 				return
 
 			doc_before_save = doc.get_doc_before_save()
-			field_value_before_save = (
-				doc_before_save.get(alert.value_changed) if doc_before_save else None
-			)
+			field_value_before_save = doc_before_save.get(alert.value_changed) if doc_before_save else None
 
 			field_value_before_save = parse_val(field_value_before_save)
 			if doc.get(alert.value_changed) == field_value_before_save:

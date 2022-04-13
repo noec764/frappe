@@ -105,9 +105,7 @@ def as_json():
 
 	response.mimetype = "application/json"
 	response.charset = "utf-8"
-	response.data = json.dumps(
-		frappe.local.response, default=json_handler, separators=(",", ":")
-	)
+	response.data = json.dumps(frappe.local.response, default=json_handler, separators=(",", ":"))
 	return response
 
 
@@ -139,9 +137,7 @@ def make_logs(response=None):
 		response = frappe.local.response
 
 	if frappe.error_log:
-		response["exc"] = json.dumps(
-			[frappe.utils.cstr(d["exc"]) for d in frappe.local.error_log]
-		)
+		response["exc"] = json.dumps([frappe.utils.cstr(d["exc"]) for d in frappe.local.error_log])
 
 	if frappe.local.message_log:
 		response["_server_messages"] = json.dumps(
@@ -184,8 +180,7 @@ def json_handler(obj):
 
 	else:
 		raise TypeError(
-			"""Object of type %s with value of %s is not JSON serializable"""
-			% (type(obj), repr(obj))
+			"""Object of type %s with value of %s is not JSON serializable""" % (type(obj), repr(obj))
 		)
 
 
@@ -208,9 +203,7 @@ def download_backup(path):
 		make_access_log(report_name="Backup")
 	except frappe.PermissionError:
 		raise Forbidden(
-			_(
-				"You need to be logged in and have System Manager Role to be able to access backups."
-			)
+			_("You need to be logged in and have System Manager Role to be able to access backups.")
 		)
 
 	return send_private_file(path)
@@ -227,9 +220,7 @@ def download_private_file(path):
 		_file = frappe.get_doc("File", f)
 		can_access = _file.is_downloadable()
 		if can_access:
-			make_access_log(
-				doctype="File", document=_file.name, file_type=os.path.splitext(path)[-1][1:]
-			)
+			make_access_log(doctype="File", document=_file.name, file_type=os.path.splitext(path)[-1][1:])
 			break
 
 	if not can_access:
@@ -254,9 +245,7 @@ def send_private_file(path):
 		except IOError:
 			raise NotFound
 
-		response = Response(
-			wrap_file(frappe.local.request.environ, f), direct_passthrough=True
-		)
+		response = Response(wrap_file(frappe.local.request.environ, f), direct_passthrough=True)
 
 	# no need for content disposition and force download. let browser handle its opening.
 	# Except for those that can be injected with scripts.
@@ -265,9 +254,7 @@ def send_private_file(path):
 	blacklist = [".svg", ".html", ".htm", ".xml"]
 
 	if extension.lower() in blacklist:
-		response.headers.add(
-			"Content-Disposition", "attachment", filename=filename.encode("utf-8")
-		)
+		response.headers.add("Content-Disposition", "attachment", filename=filename.encode("utf-8"))
 
 	response.mimetype = mimetypes.guess_type(filename)[0] or "application/octet-stream"
 

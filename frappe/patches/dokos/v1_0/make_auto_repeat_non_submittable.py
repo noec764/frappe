@@ -28,9 +28,7 @@ def execute():
 				"property_type": "Check",
 			}
 		)
-		if not frappe.db.exists(
-			"Custom Field", {"fieldname": "auto_repeat", "dt": reference}
-		):
+		if not frappe.db.exists("Custom Field", {"fieldname": "auto_repeat", "dt": reference}):
 			doc = frappe.get_doc("DocType", reference)
 			insert_after = doc.fields[len(doc.fields) - 1].fieldname
 			df = dict(

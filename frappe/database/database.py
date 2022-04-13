@@ -62,9 +62,7 @@ class Database(object):
 	class InvalidColumnName(frappe.ValidationError):
 		pass
 
-	def __init__(
-		self, host=None, user=None, password=None, ac_name=None, use_default=0, port=None
-	):
+	def __init__(self, host=None, user=None, password=None, ac_name=None, use_default=0, port=None):
 		self.setup_type_map()
 		self.host = host or frappe.conf.db_host or "127.0.0.1"
 		self.port = port or frappe.conf.db_port or ""
@@ -215,9 +213,7 @@ class Database(object):
 				raise
 
 			if ignore_ddl and (
-				self.is_missing_column(e)
-				or self.is_table_missing(e)
-				or self.cant_drop_field_or_key(e)
+				self.is_missing_column(e) or self.is_table_missing(e) or self.cant_drop_field_or_key(e)
 			):
 				pass
 			else:
@@ -495,11 +491,7 @@ class Database(object):
 		        user = frappe.db.get_values("User", "test@example.com", "*")[0]
 		"""
 		out = None
-		if (
-			cache
-			and isinstance(filters, str)
-			and (doctype, filters, fieldname) in self.value_cache
-		):
+		if cache and isinstance(filters, str) and (doctype, filters, fieldname) in self.value_cache:
 			return self.value_cache[(doctype, filters, fieldname)]
 
 		if distinct:
@@ -754,11 +746,7 @@ class Database(object):
 			distinct=distinct,
 			limit=limit,
 		)
-		if (
-			fields == "*"
-			and not isinstance(fields, (list, tuple))
-			and not isinstance(fields, Criterion)
-		):
+		if fields == "*" and not isinstance(fields, (list, tuple)) and not isinstance(fields, Criterion):
 			as_dict = True
 
 		r = self.sql(query, as_dict=as_dict, debug=debug, update=update, run=run, pluck=pluck)
@@ -1191,9 +1179,7 @@ class Database(object):
 		query = sql_dict.get(current_dialect)
 		return self.sql(query, values, **kwargs)
 
-	def delete(
-		self, doctype: str, filters: Union[Dict, List] = None, debug=False, **kwargs
-	):
+	def delete(self, doctype: str, filters: Union[Dict, List] = None, debug=False, **kwargs):
 		"""Delete rows from a table in site which match the passed filters. This
 		does trigger DocType hooks. Simply runs a DELETE query in the database.
 

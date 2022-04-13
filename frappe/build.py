@@ -198,9 +198,7 @@ def symlink(target, link_name, overwrite=False):
 	try:
 		# Pre-empt os.replace on a directory with a nicer message
 		if os.path.isdir(link_name):
-			raise IsADirectoryError(
-				"Cannot symlink over existing directory: '{}'".format(link_name)
-			)
+			raise IsADirectoryError("Cannot symlink over existing directory: '{}'".format(link_name))
 		try:
 			os.replace(temp_link_name, link_name)
 		except AttributeError:
@@ -281,9 +279,7 @@ def check_node_executable():
 	if node_version.major < 14:
 		click.echo(f"{warn} Please update your node version to 14")
 	if not find_executable("yarn"):
-		click.echo(
-			f"{warn} Please install yarn using below command and try again.\nnpm install -g yarn"
-		)
+		click.echo(f"{warn} Please install yarn using below command and try again.\nnpm install -g yarn")
 	click.echo()
 
 
@@ -379,9 +375,7 @@ def make_asset_dirs(hard_link=False):
 		start_message = unstrip(
 			f"{'Copying assets from' if hard_link else 'Linking'} {source} to {target}"
 		)
-		fail_message = unstrip(
-			f"Cannot {'copy' if hard_link else 'link'} {source} to {target}"
-		)
+		fail_message = unstrip(f"Cannot {'copy' if hard_link else 'link'} {source} to {target}")
 
 		# Used '\r' instead of '\x1b[1K\r' to print entire lines in smaller terminal sizes
 		try:

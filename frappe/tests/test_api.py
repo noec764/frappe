@@ -87,19 +87,13 @@ class FrappeAPITestCase(unittest.TestCase):
 		return self._sid
 
 	def get(self, path: str, params: Optional[Dict] = None, **kwargs) -> TestResponse:
-		return make_request(
-			target=self.TEST_CLIENT.get, args=(path,), kwargs={"data": params, **kwargs}
-		)
+		return make_request(target=self.TEST_CLIENT.get, args=(path,), kwargs={"data": params, **kwargs})
 
 	def post(self, path, data, **kwargs) -> TestResponse:
-		return make_request(
-			target=self.TEST_CLIENT.post, args=(path,), kwargs={"data": data, **kwargs}
-		)
+		return make_request(target=self.TEST_CLIENT.post, args=(path,), kwargs={"data": data, **kwargs})
 
 	def put(self, path, data, **kwargs) -> TestResponse:
-		return make_request(
-			target=self.TEST_CLIENT.put, args=(path,), kwargs={"data": data, **kwargs}
-		)
+		return make_request(target=self.TEST_CLIENT.put, args=(path,), kwargs={"data": data, **kwargs})
 
 	def delete(self, path, **kwargs) -> TestResponse:
 		return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs)
@@ -112,9 +106,7 @@ class TestResourceAPI(FrappeAPITestCase):
 	@classmethod
 	def setUpClass(cls):
 		for _ in range(10):
-			doc = frappe.get_doc(
-				{"doctype": "ToDo", "description": frappe.mock("paragraph")}
-			).insert()
+			doc = frappe.get_doc({"doctype": "ToDo", "description": frappe.mock("paragraph")}).insert()
 			cls.GENERATED_DOCUMENTS.append(doc.name)
 		frappe.db.commit()
 
@@ -144,17 +136,13 @@ class TestResourceAPI(FrappeAPITestCase):
 
 	def test_get_list_dict(self):
 		# test 4: fetch response as (not) dict
-		response = self.get(
-			f"/api/resource/{self.DOCTYPE}", {"sid": self.sid, "as_dict": True}
-		)
+		response = self.get(f"/api/resource/{self.DOCTYPE}", {"sid": self.sid, "as_dict": True})
 		json = frappe._dict(response.json)
 		self.assertEqual(response.status_code, 200)
 		self.assertIsInstance(json.data, list)
 		self.assertIsInstance(json.data[0], dict)
 
-		response = self.get(
-			f"/api/resource/{self.DOCTYPE}", {"sid": self.sid, "as_dict": False}
-		)
+		response = self.get(f"/api/resource/{self.DOCTYPE}", {"sid": self.sid, "as_dict": False})
 		json = frappe._dict(response.json)
 		self.assertEqual(response.status_code, 200)
 		self.assertIsInstance(json.data, list)
@@ -216,9 +204,7 @@ class TestResourceAPI(FrappeAPITestCase):
 		# test 10: Run whitelisted method on doc via /api/resource
 		# status_code is 403 if no other tests are run before this - it's not logged in
 		self.post("/api/resource/Website Theme/Standard", {"run_method": "get_apps"})
-		response = self.get(
-			"/api/resource/Website Theme/Standard", {"run_method": "get_apps"}
-		)
+		response = self.get("/api/resource/Website Theme/Standard", {"run_method": "get_apps"})
 		self.assertIn(response.status_code, (403, 200))
 
 		if response.status_code == 403:

@@ -5,8 +5,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.social.doctype.energy_point_log.energy_point_log import \
-    create_review_points_log
+from frappe.social.doctype.energy_point_log.energy_point_log import create_review_points_log
 from frappe.utils import add_to_date, getdate, today
 
 

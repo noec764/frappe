@@ -25,9 +25,7 @@ def xmlrunner_wrapper(output):
 	try:
 		import xmlrunner
 	except ImportError:
-		print(
-			"Development dependencies are required to execute this command. To install run:"
-		)
+		print("Development dependencies are required to execute this command. To install run:")
 		print("$ bench setup requirements --dev")
 		raise
 
@@ -190,11 +188,7 @@ def run_all_tests(
 
 			# print path
 			for filename in files:
-				if (
-					filename.startswith("test_")
-					and filename.endswith(".py")
-					and filename != "test_runner.py"
-				):
+				if filename.startswith("test_") and filename.endswith(".py") and filename != "test_runner.py":
 					# print filename[:-3]
 					_add_test(app, path, filename, verbose, test_suite, ui_tests)
 
@@ -303,9 +297,7 @@ def _run_unittest(
 
 	for module in modules:
 		if case:
-			module_test_cases = unittest.TestLoader().loadTestsFromTestCase(
-				getattr(module, case)
-			)
+			module_test_cases = unittest.TestLoader().loadTestsFromTestCase(getattr(module, case))
 		else:
 			module_test_cases = unittest.TestLoader().loadTestsFromModule(module)
 		if tests:
@@ -463,9 +455,7 @@ def make_test_records_for_doctype(doctype, verbose=0, force=False):
 	else:
 		test_records = frappe.get_test_records(doctype)
 		if test_records:
-			frappe.local.test_objects[doctype] += make_test_objects(
-				doctype, test_records, verbose, force
-			)
+			frappe.local.test_objects[doctype] += make_test_objects(doctype, test_records, verbose, force)
 
 		elif verbose:
 			print_mandatory_fields(doctype)

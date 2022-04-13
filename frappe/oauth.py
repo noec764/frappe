@@ -57,9 +57,7 @@ class OAuthWebRequestValidator(RequestValidator):
 		request.scopes = scopes  # Apparently this is possible.
 		return scopes
 
-	def validate_response_type(
-		self, client_id, response_type, client, request, *args, **kwargs
-	):
+	def validate_response_type(self, client_id, response_type, client, request, *args, **kwargs):
 		allowed_response_types = [
 			# From OAuth Client response_type field
 			client.response_type.lower(),
@@ -130,9 +128,7 @@ class OAuthWebRequestValidator(RequestValidator):
 			return generate_json_error_response(e)
 
 		cookie_dict = get_cookie_dict_from_headers(request)
-		user_id = (
-			unquote(cookie_dict.get("user_id").value) if "user_id" in cookie_dict else "Guest"
-		)
+		user_id = unquote(cookie_dict.get("user_id").value) if "user_id" in cookie_dict else "Guest"
 		return frappe.session.user == user_id
 
 	def authenticate_client_id(self, client_id, request, *args, **kwargs):
@@ -158,16 +154,14 @@ class OAuthWebRequestValidator(RequestValidator):
 			checkcodes.append(vcode["name"])
 
 		if code in checkcodes:
-			request.scopes = frappe.db.get_value(
-				"OAuth Authorization Code", code, "scopes"
-			).split(get_url_delimiter())
+			request.scopes = frappe.db.get_value("OAuth Authorization Code", code, "scopes").split(
+				get_url_delimiter()
+			)
 			request.user = frappe.db.get_value("OAuth Authorization Code", code, "user")
 			code_challenge_method = frappe.db.get_value(
 				"OAuth Authorization Code", code, "code_challenge_method"
 			)
-			code_challenge = frappe.db.get_value(
-				"OAuth Authorization Code", code, "code_challenge"
-			)
+			code_challenge = frappe.db.get_value("OAuth Authorization Code", code, "code_challenge")
 
 			if code_challenge and not request.code_verifier:
 				if frappe.db.exists("OAuth Authorization Code", code):
@@ -192,9 +186,7 @@ class OAuthWebRequestValidator(RequestValidator):
 		return False
 
 	def confirm_redirect_uri(self, client_id, code, redirect_uri, client, *args, **kwargs):
-		saved_redirect_uri = frappe.db.get_value(
-			"OAuth Client", client_id, "default_redirect_uri"
-		)
+		saved_redirect_uri = frappe.db.get_value("OAuth Client", client_id, "default_redirect_uri")
 
 		redirect_uris = frappe.db.get_value("OAuth Client", client_id, "redirect_uris")
 
@@ -260,8 +252,7 @@ class OAuthWebRequestValidator(RequestValidator):
 		)
 		token_expiration_utc = token_expiration_local.astimezone(pytz.utc)
 		is_token_valid = (
-			frappe.utils.datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
-			< token_expiration_utc
+			frappe.utils.datetime.datetime.utcnow().replace(tzinfo=pytz.utc) < token_expiration_utc
 		) and otoken.status != "Revoked"
 		client_scopes = frappe.db.get_value("OAuth Client", otoken.client, "scopes").split(
 			get_url_delimiter()
@@ -295,9 +286,7 @@ class OAuthWebRequestValidator(RequestValidator):
 		if token_type_hint == "access_token":
 			frappe.db.set_value("OAuth Bearer Token", token, "status", "Revoked")
 		elif token_type_hint == "refresh_token":
-			frappe.db.set_value(
-				"OAuth Bearer Token", {"refresh_token": token}, "status", "Revoked"
-			)
+			frappe.db.set_value("OAuth Bearer Token", {"refresh_token": token}, "status", "Revoked")
 		else:
 			frappe.db.set_value("OAuth Bearer Token", token, "status", "Revoked")
 		frappe.db.commit()

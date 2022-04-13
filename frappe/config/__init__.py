@@ -1,8 +1,11 @@
 import frappe
 from frappe import _
-from frappe.desk.moduleview import (config_exists, get_data,
-                                    get_module_link_items_from_list,
-                                    get_onboard_items)
+from frappe.desk.moduleview import (
+	config_exists,
+	get_data,
+	get_module_link_items_from_list,
+	get_onboard_items,
+)
 
 
 def get_modules_from_all_apps_for_user(user=None):
@@ -13,9 +16,7 @@ def get_modules_from_all_apps_for_user(user=None):
 	global_blocked_modules = frappe.get_doc("User", "Administrator").get_blocked_modules()
 	user_blocked_modules = frappe.get_doc("User", user).get_blocked_modules()
 	blocked_modules = global_blocked_modules + user_blocked_modules
-	allowed_modules_list = [
-		m for m in all_modules if m.get("module_name") not in blocked_modules
-	]
+	allowed_modules_list = [m for m in all_modules if m.get("module_name") not in blocked_modules]
 
 	empty_tables_by_module = get_all_empty_tables_by_module()
 

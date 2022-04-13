@@ -36,9 +36,7 @@ DATA_IMPORT_DEPRECATION = (
 	default=False,
 	help="[DEPRECATED] Copy the files instead of symlinking with force",
 )
-@click.option(
-	"--production", is_flag=True, default=False, help="Build assets in production mode"
-)
+@click.option("--production", is_flag=True, default=False, help="Build assets in production mode")
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 def build(
 	app=None,
@@ -445,9 +443,7 @@ def import_csv(
 	is_flag=True,
 	help="Submit document after importing it",
 )
-@click.option(
-	"--mute-emails", default=True, is_flag=True, help="Mute emails during import"
-)
+@click.option("--mute-emails", default=True, is_flag=True, help="Mute emails during import")
 @pass_context
 def data_import(
 	context,
@@ -559,9 +555,7 @@ def _psql():
 def jupyter(context):
 	installed_packages = (
 		r.split("==")[0]
-		for r in subprocess.check_output(
-			[sys.executable, "-m", "pip", "freeze"], encoding="utf8"
-		)
+		for r in subprocess.check_output([sys.executable, "-m", "pip", "freeze"], encoding="utf8")
 	)
 
 	if "jupyter" not in installed_packages:
@@ -573,9 +567,7 @@ def jupyter(context):
 	try:
 		os.stat(jupyter_notebooks_path)
 	except OSError:
-		print(
-			"Creating folder to keep jupyter notebooks at {}".format(jupyter_notebooks_path)
-		)
+		print("Creating folder to keep jupyter notebooks at {}".format(jupyter_notebooks_path))
 		os.mkdir(jupyter_notebooks_path)
 	bin_path = os.path.abspath("../env/bin")
 	print(
@@ -671,9 +663,7 @@ def console(context, autoreload=False):
 	type=click.Choice(["DYNAMIC", "COMPACT", "REDUNDANT", "COMPRESSED"]),
 	help="Set ROW_FORMAT parameter for said table(s)",
 )
-@click.option(
-	"--failfast", is_flag=True, default=False, help="Exit on first failure occurred"
-)
+@click.option("--failfast", is_flag=True, default=False, help="Exit on first failure occurred")
 @pass_context
 def transform_database(context, table, engine, row_format, failfast):
 	"Transform site database through given parameters"
@@ -684,9 +674,7 @@ def transform_database(context, table, engine, row_format, failfast):
 	frappe.init(site=site)
 
 	if frappe.conf.db_type and frappe.conf.db_type != "mariadb":
-		click.secho(
-			"This command only has support for MariaDB databases at this point", fg="yellow"
-		)
+		click.secho("This command only has support for MariaDB databases at this point", fg="yellow")
 		sys.exit(1)
 
 	if not (engine or row_format):
@@ -755,9 +743,7 @@ def transform_database(context, table, engine, row_format, failfast):
 @click.option("--module", help="Run tests in a module")
 @click.option("--profile", is_flag=True, default=False)
 @click.option("--coverage", is_flag=True, default=False)
-@click.option(
-	"--skip-test-records", is_flag=True, default=False, help="Don't create test records"
-)
+@click.option("--skip-test-records", is_flag=True, default=False, help="Don't create test records")
 @click.option(
 	"--skip-before-tests", is_flag=True, default=False, help="Don't run before tests hook"
 )
@@ -833,9 +819,7 @@ def run_tests(
 @click.option("--build-number", help="Build number", default=1)
 @click.option("--total-builds", help="Total number of builds", default=1)
 @click.option("--with-coverage", is_flag=True, help="Build coverage file")
-@click.option(
-	"--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests"
-)
+@click.option("--use-orchestrator", is_flag=True, help="Use orchestrator to run parallel tests")
 @pass_context
 def run_parallel_tests(
 	context, app, build_number, total_builds, with_coverage=False, use_orchestrator=False
@@ -849,9 +833,7 @@ def run_parallel_tests(
 		else:
 			from frappe.parallel_test_runner import ParallelTestRunner
 
-			ParallelTestRunner(
-				app, site=site, build_number=build_number, total_builds=total_builds
-			)
+			ParallelTestRunner(app, site=site, build_number=build_number, total_builds=total_builds)
 
 
 @click.command("run-ui-tests")
@@ -899,9 +881,7 @@ def run_ui_tests(
 
 	# run for headless mode
 	run_or_open = "run --browser chrome --record" if headless else "open"
-	formatted_command = (
-		f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
-	)
+	formatted_command = f"{site_env} {password_env} {coverage_env} {cypress_path} {run_or_open}"
 
 	if parallel:
 		formatted_command += " --parallel"
@@ -954,9 +934,7 @@ def serve(
 
 
 @click.command("request")
-@click.option(
-	"--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`"
-)
+@click.option("--args", help="arguments like `?cmd=test&key=value` or `/api/request/method?..`")
 @click.option("--path", help="path to request JSON")
 @pass_context
 def request(context, args=None, path=None):
@@ -970,9 +948,7 @@ def request(context, args=None, path=None):
 			frappe.connect()
 			if args:
 				if "?" in args:
-					frappe.local.form_dict = frappe._dict(
-						[a.split("=") for a in args.split("?")[-1].split("&")]
-					)
+					frappe.local.form_dict = frappe._dict([a.split("=") for a in args.split("?")[-1].split("&")])
 				else:
 					frappe.local.form_dict = frappe._dict()
 
@@ -1020,12 +996,8 @@ def make_app(destination, app_name, no_git=False):
 	default=False,
 	help="Set value in bench config",
 )
-@click.option(
-	"-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object"
-)
-@click.option(
-	"--as-dict", is_flag=True, default=False, help="Legacy: Evaluate as Python Object"
-)
+@click.option("-p", "--parse", is_flag=True, default=False, help="Evaluate as Python Object")
+@click.option("--as-dict", is_flag=True, default=False, help="Legacy: Evaluate as Python Object")
 @pass_context
 def set_config(context, key, value, global_=False, parse=False, as_dict=False):
 	"Insert/Update a value in site_config.json"
@@ -1048,9 +1020,7 @@ def set_config(context, key, value, global_=False, parse=False, as_dict=False):
 	if global_:
 		sites_path = os.getcwd()
 		common_site_config_path = os.path.join(sites_path, "common_site_config.json")
-		update_site_config(
-			key, value, validate=False, site_config_path=common_site_config_path
-		)
+		update_site_config(key, value, validate=False, site_config_path=common_site_config_path)
 	else:
 		for site in context.sites:
 			frappe.init(site=site)
@@ -1086,28 +1056,19 @@ def get_version(output):
 		app_info.app = app
 		app_info.branch = get_app_branch(app)
 		app_info.commit = repo.head.object.hexsha[:7]
-		app_info.version = (
-			getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
-		)
+		app_info.version = getattr(app_hooks, f"{app_info.branch}_version", None) or module.__version__
 
 		data.append(app_info)
 
 	{
-		"legacy": lambda: [
-			click.echo(f"{app_info.app} {app_info.version}") for app_info in data
-		],
+		"legacy": lambda: [click.echo(f"{app_info.app} {app_info.version}") for app_info in data],
 		"plain": lambda: [
-			click.echo(
-				f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})"
-			)
+			click.echo(f"{app_info.app} {app_info.version} {app_info.branch} ({app_info.commit})")
 			for app_info in data
 		],
 		"table": lambda: render_table(
 			[["App", "Version", "Branch", "Commit"]]
-			+ [
-				[app_info.app, app_info.version, app_info.branch, app_info.commit]
-				for app_info in data
-			]
+			+ [[app_info.app, app_info.version, app_info.branch, app_info.commit] for app_info in data]
 		),
 		"json": lambda: click.echo(json.dumps(data, indent=4)),
 	}[output]()
@@ -1123,11 +1084,13 @@ def get_version(output):
 @pass_context
 def rebuild_global_search(context, static_pages=False):
 	"""Setup help table in the current site (called after migrate)"""
-	from frappe.utils.global_search import (add_route_to_global_search,
-	                                        get_doctypes_with_global_search,
-	                                        get_routes_to_index,
-	                                        rebuild_for_doctype,
-	                                        sync_global_search)
+	from frappe.utils.global_search import (
+		add_route_to_global_search,
+		get_doctypes_with_global_search,
+		get_routes_to_index,
+		rebuild_for_doctype,
+		sync_global_search,
+	)
 
 	for site in context.sites:
 		try:

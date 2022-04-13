@@ -55,9 +55,7 @@ class CodeCoverage:
 			if self.app == "frappe":
 				omit.extend(FRAPPE_EXCLUSIONS)
 
-			self.coverage = Coverage(
-				source=[source_path], omit=omit, include=STANDARD_INCLUSIONS
-			)
+			self.coverage = Coverage(source=[source_path], omit=omit, include=STANDARD_INCLUSIONS)
 			self.coverage.start()
 
 	def __exit__(self, exc_type, exc_value, traceback):

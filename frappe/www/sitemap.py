@@ -18,9 +18,7 @@ def get_context(context):
 
 	for route, page in get_pages().items():
 		if page.sitemap:
-			links.append(
-				{"loc": get_url(quote(page.name.encode("utf-8"))), "lastmod": nowdate()}
-			)
+			links.append({"loc": get_url(quote(page.name.encode("utf-8"))), "lastmod": nowdate()})
 
 	for route, data in get_public_pages_from_doctypes().items():
 		links.append(

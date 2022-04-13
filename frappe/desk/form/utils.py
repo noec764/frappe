@@ -53,9 +53,7 @@ def update_comment(name, content):
 
 
 @frappe.whitelist()
-def get_next(
-	doctype, value, prev, filters=None, sort_order="desc", sort_field="modified"
-):
+def get_next(doctype, value, prev, filters=None, sort_order="desc", sort_field="modified"):
 
 	prev = int(prev)
 	if not filters:
@@ -72,9 +70,7 @@ def get_next(
 		condition = "<" if condition == ">" else ">"
 
 	# # add condition for next or prev item
-	filters.append(
-		[doctype, sort_field, condition, frappe.get_value(doctype, value, sort_field)]
-	)
+	filters.append([doctype, sort_field, condition, frappe.get_value(doctype, value, sort_field)])
 
 	res = frappe.get_list(
 		doctype,

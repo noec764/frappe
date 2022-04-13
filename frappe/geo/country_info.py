@@ -23,9 +23,7 @@ def get_country_info(country=None):
 
 
 def get_all():
-	with open(
-		os.path.join(os.path.dirname(__file__), "country_info.json"), "r"
-	) as local_info:
+	with open(os.path.join(os.path.dirname(__file__), "country_info.json"), "r") as local_info:
 		all_data = json.loads(local_info.read())
 	return all_data
 
@@ -62,20 +60,16 @@ def get_translated_dict():
 
 
 def update():
-	with open(
-		os.path.join(os.path.dirname(__file__), "currency_info.json"), "r"
-	) as nformats:
+	with open(os.path.join(os.path.dirname(__file__), "currency_info.json"), "r") as nformats:
 		nformats = json.loads(nformats.read())
 
 	all_data = get_all()
 
 	for country in all_data:
 		data = all_data[country]
-		data["number_format"] = nformats.get(
-			data.get("currency", "default"), nformats.get("default")
-		)["display"]
+		data["number_format"] = nformats.get(data.get("currency", "default"), nformats.get("default"))[
+			"display"
+		]
 
-	with open(
-		os.path.join(os.path.dirname(__file__), "country_info.json"), "w"
-	) as local_info:
+	with open(os.path.join(os.path.dirname(__file__), "country_info.json"), "w") as local_info:
 		local_info.write(json.dumps(all_data, indent=1))

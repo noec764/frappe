@@ -62,9 +62,7 @@ def get_info(view=None, queue_timeout=None, job_status=None) -> List[Dict]:
 			if current_job and current_job.kwargs.get("site") == frappe.local.site:
 				add_job(current_job, job.origin)
 			else:
-				jobs.append(
-					{"queue": worker.name, "job_name": "idle", "status": "", "creation": ""}
-				)
+				jobs.append({"queue": worker.name, "job_name": "idle", "status": "", "creation": ""})
 
 	return jobs
 

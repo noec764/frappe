@@ -17,11 +17,20 @@ from email_reply_parser import EmailReplyParser
 
 import frappe
 from frappe import _, safe_decode, safe_encode
-from frappe.core.doctype.file.file import (MaxFileSizeReachedError,
-                                           get_random_filename)
-from frappe.utils import (add_days, cint, convert_utc_to_user_timezone, cstr,
-                          extract_email_id, get_datetime, markdown, now,
-                          parse_addr, sanitize_html, strip)
+from frappe.core.doctype.file.file import MaxFileSizeReachedError, get_random_filename
+from frappe.utils import (
+	add_days,
+	cint,
+	convert_utc_to_user_timezone,
+	cstr,
+	extract_email_id,
+	get_datetime,
+	markdown,
+	now,
+	parse_addr,
+	sanitize_html,
+	strip,
+)
 from frappe.utils.html_utils import clean_email_html
 from frappe.utils.user import is_system_user
 
@@ -133,9 +142,7 @@ class EmailServer:
 				return False
 
 			else:
-				frappe.msgprint(
-					_("Invalid User Name or Support Password. Please rectify and try again.")
-				)
+				frappe.msgprint(_("Invalid User Name or Support Password. Please rectify and try again."))
 				raise
 
 	def select_imap_folder(self, folder):
@@ -256,11 +263,9 @@ class EmailServer:
 				).run()
 			else:
 				EmailAccount = frappe.qb.DocType("Email Account")
-				frappe.qb.update(EmailAccount).set(
-					EmailAccount.uidvalidity, current_uid_validity
-				).set(EmailAccount.uidnext, uidnext).where(
-					EmailAccount.name == self.settings.email_account_name
-				).run()
+				frappe.qb.update(EmailAccount).set(EmailAccount.uidvalidity, current_uid_validity).set(
+					EmailAccount.uidnext, uidnext
+				).where(EmailAccount.name == self.settings.email_account_name).run()
 
 			# uid validity not found pulling emails for first time
 			if not uid_validity:
@@ -269,9 +274,7 @@ class EmailServer:
 
 			sync_count = 100 if uid_validity else int(self.settings.initial_sync_count)
 			from_uid = (
-				1
-				if uidnext < (sync_count + 1) or (uidnext - sync_count) < 1
-				else uidnext - sync_count
+				1 if uidnext < (sync_count + 1) or (uidnext - sync_count) < 1 else uidnext - sync_count
 			)
 			# sync last 100 email
 			self.settings.email_sync_rule = "UID {}:{}".format(from_uid, uidnext)
@@ -295,9 +298,7 @@ class EmailServer:
 			self.validate_message_limits(message_meta)
 
 			if cint(self.settings.use_imap):
-				status, message = self.imap.uid(
-					"fetch", message_meta, "(BODY.PEEK[] BODY.PEEK[HEADER] FLAGS)"
-				)
+				status, message = self.imap.uid("fetch", message_meta, "(BODY.PEEK[] BODY.PEEK[HEADER] FLAGS)")
 				raw = message[0]
 
 				self.get_email_seen_status(message_meta, raw[0])
@@ -317,9 +318,7 @@ class EmailServer:
 
 			else:
 				# log performs rollback and logs error in Error Log
-				frappe.log_error(
-					"receive.get_messages", self.make_error_msg(msg_num, incoming_mail)
-				)
+				frappe.log_error("receive.get_messages", self.make_error_msg(msg_num, incoming_mail))
 				self.errors = True
 				frappe.db.rollback()
 
@@ -483,9 +482,7 @@ class Email:
 		_from_email = self.decode_email(self.mail.get("X-Original-From") or self.mail["From"])
 		_reply_to = self.decode_email(self.mail.get("Reply-To"))
 
-		if _reply_to and not frappe.db.get_value(
-			"Email Account", {"email_id": _reply_to}, "email_id"
-		):
+		if _reply_to and not frappe.db.get_value("Email Account", {"email_id": _reply_to}, "email_id"):
 			self.from_email = extract_email_id(_reply_to)
 		else:
 			self.from_email = extract_email_id(_from_email)
@@ -493,9 +490,7 @@ class Email:
 		if self.from_email:
 			self.from_email = self.from_email.lower()
 
-		self.from_real_name = (
-			parse_addr(_from_email)[0] if "@" in _from_email else _from_email
-		)
+		self.from_real_name = parse_addr(_from_email)[0] if "@" in _from_email else _from_email
 
 	def decode_email(self, email):
 		if not email:
@@ -689,9 +684,7 @@ class InboundMail(Email):
 		if self.parent_communication():
 			data["in_reply_to"] = self.parent_communication().name
 
-		append_to = (
-			self.append_to if self.email_account.use_imap else self.email_account.append_to
-		)
+		append_to = self.append_to if self.email_account.use_imap else self.email_account.append_to
 
 		if self.reference_document():
 			data["reference_doctype"] = self.reference_document().doctype
@@ -717,9 +710,7 @@ class InboundMail(Email):
 
 		# save attachments
 		communication._attachments = self.save_attachments_in_doc(communication)
-		communication.content = sanitize_html(
-			self.replace_inline_images(communication._attachments)
-		)
+		communication.content = sanitize_html(self.replace_inline_images(communication._attachments))
 		communication.save()
 		return communication
 
@@ -742,9 +733,7 @@ class InboundMail(Email):
 		if not self.message_id:
 			return
 
-		return Communication.find_one_by_filters(
-			message_id=self.message_id, order_by="creation DESC"
-		)
+		return Communication.find_one_by_filters(message_id=self.message_id, order_by="creation DESC")
 
 	def is_sender_same_as_receiver(self):
 		return self.from_email == self.email_account.email_id
@@ -792,9 +781,7 @@ class InboundMail(Email):
 				message_id=self.in_reply_to, creation=[">=", self.get_relative_dt(-30)]
 			)
 		elif self.parent_email_queue() and self.parent_email_queue().communication:
-			communication = Communication.find(
-				self.parent_email_queue().communication, ignore_error=True
-			)
+			communication = Communication.find(self.parent_email_queue().communication, ignore_error=True)
 		else:
 			reference = self.in_reply_to
 			if "@" in self.in_reply_to:
@@ -817,14 +804,10 @@ class InboundMail(Email):
 
 		if parent and parent.reference_doctype:
 			reference_doctype, reference_name = parent.reference_doctype, parent.reference_name
-			reference_document = self.get_doc(
-				reference_doctype, reference_name, ignore_error=True
-			)
+			reference_document = self.get_doc(reference_doctype, reference_name, ignore_error=True)
 
 		if not reference_document and self.email_account.append_to:
-			reference_document = self.match_record_by_subject_and_sender(
-				self.email_account.append_to
-			)
+			reference_document = self.match_record_by_subject_and_sender(self.email_account.append_to)
 
 		self._reference_document = reference_document or ""
 		return self._reference_document

@@ -89,9 +89,7 @@ def enqueue_events(site):
 	if schedule_jobs_based_on_activity():
 		frappe.flags.enqueued_jobs = []
 		queued_jobs = get_jobs(site=site, key="job_type").get(site) or []
-		for job_type in frappe.get_all(
-			"Scheduled Job Type", ("name", "method"), dict(stopped=0)
-		):
+		for job_type in frappe.get_all("Scheduled Job Type", ("name", "method"), dict(stopped=0)):
 			if not job_type.method in queued_jobs:
 				# don't add it to queue if still pending
 				frappe.get_doc("Scheduled Job Type", job_type.name).enqueue()
@@ -114,9 +112,7 @@ def is_scheduler_disabled():
 	if frappe.conf.disable_scheduler:
 		return True
 
-	return not frappe.utils.cint(
-		frappe.db.get_single_value("System Settings", "enable_scheduler")
-	)
+	return not frappe.utils.cint(frappe.db.get_single_value("System Settings", "enable_scheduler"))
 
 
 def toggle_scheduler(enable):
@@ -156,9 +152,7 @@ def is_dormant(check_time=None):
 	since = (frappe.get_system_settings("dormant_days") or 4) * 86400
 	if not last_activity_log_timestamp:
 		return True
-	if (
-		(check_time or now_datetime()) - last_activity_log_timestamp
-	).total_seconds() >= since:
+	if ((check_time or now_datetime()) - last_activity_log_timestamp).total_seconds() >= since:
 		return True
 	return False
 

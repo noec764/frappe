@@ -1,10 +1,8 @@
 from pypika.functions import *
-from pypika.terms import (Arithmetic, ArithmeticExpression, CustomFunction,
-                          Function)
+from pypika.terms import Arithmetic, ArithmeticExpression, CustomFunction, Function
 
 from frappe.database.query import Query
-from frappe.query_builder.custom import (GROUP_CONCAT, MATCH, STRING_AGG,
-                                         TO_TSVECTOR)
+from frappe.query_builder.custom import GROUP_CONCAT, MATCH, STRING_AGG, TO_TSVECTOR
 from frappe.query_builder.utils import ImportMapper, db_type_is
 
 from .utils import Column
@@ -15,9 +13,7 @@ class Concat_ws(Function):
 		super(Concat_ws, self).__init__("CONCAT_WS", *terms, **kwargs)
 
 
-GroupConcat = ImportMapper(
-	{db_type_is.MARIADB: GROUP_CONCAT, db_type_is.POSTGRES: STRING_AGG}
-)
+GroupConcat = ImportMapper({db_type_is.MARIADB: GROUP_CONCAT, db_type_is.POSTGRES: STRING_AGG})
 
 Match = ImportMapper({db_type_is.MARIADB: MATCH, db_type_is.POSTGRES: TO_TSVECTOR})
 
@@ -76,10 +72,7 @@ class Cast_(Function):
 
 def _aggregate(function, dt, fieldname, filters, **kwargs):
 	return (
-		Query()
-		.build_conditions(dt, filters)
-		.select(function(Column(fieldname)))
-		.run(**kwargs)[0][0]
+		Query().build_conditions(dt, filters).select(function(Column(fieldname))).run(**kwargs)[0][0]
 		or 0
 	)
 

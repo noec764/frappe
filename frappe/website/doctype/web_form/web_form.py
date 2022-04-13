@@ -7,8 +7,7 @@ from urllib.parse import urlencode
 import frappe
 from frappe import _, scrub
 from frappe.core.doctype.file.file import get_max_file_size, remove_file_by_url
-from frappe.custom.doctype.customize_form.customize_form import \
-    docfield_properties
+from frappe.custom.doctype.customize_form.customize_form import docfield_properties
 from frappe.desk.form.meta import get_code_files_via_hooks
 from frappe.integrations.utils import get_payment_gateway_controller
 from frappe.modules.utils import export_module_json, get_doc_module
@@ -57,9 +56,7 @@ class WebForm(WebsiteGenerator):
 		missing = []
 		meta = frappe.get_meta(self.doc_type)
 		for df in self.web_form_fields:
-			if df.fieldname and (
-				df.fieldtype not in no_value_fields and not meta.has_field(df.fieldname)
-			):
+			if df.fieldname and (df.fieldtype not in no_value_fields and not meta.has_field(df.fieldname)):
 				missing.append(df.fieldname)
 
 		if missing:
@@ -192,9 +189,9 @@ def get_context(context):
 		)
 
 		if context.success_message:
-			context.success_message = frappe.db.escape(
-				context.success_message.replace("\n", "<br>")
-			).strip("'")
+			context.success_message = frappe.db.escape(context.success_message.replace("\n", "<br>")).strip(
+				"'"
+			)
 
 		self.add_custom_context_and_script(context)
 		if not context.max_attachment_size:
@@ -277,9 +274,7 @@ def get_context(context):
 			if new_context:
 				context.update(new_context)
 
-			js_path = os.path.join(
-				os.path.dirname(self.web_form_module.__file__), scrub(self.name) + ".js"
-			)
+			js_path = os.path.join(os.path.dirname(self.web_form_module.__file__), scrub(self.name) + ".js")
 			if os.path.exists(js_path):
 				script = frappe.render_template(open(js_path, "r").read(), context)
 
@@ -630,9 +625,7 @@ def get_in_list_view_fields(doctype):
 	if meta.has_field("status"):
 		fields.append("status")
 
-	fields += [
-		df.fieldname for df in meta.fields if df.in_list_view and df.fieldname not in fields
-	]
+	fields += [df.fieldname for df in meta.fields if df.in_list_view and df.fieldname not in fields]
 
 	def get_field_df(fieldname):
 		if fieldname == "name":

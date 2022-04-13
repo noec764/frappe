@@ -6,10 +6,8 @@ import os
 import textwrap
 
 import frappe
-from frappe.core.doctype.user_permission.test_user_permission import \
-    create_user
-from frappe.custom.doctype.customize_form.customize_form import \
-    reset_customization
+from frappe.core.doctype.user_permission.test_user_permission import create_user
+from frappe.custom.doctype.customize_form.customize_form import reset_customization
 from frappe.desk.query_report import add_total_row, run, save_report
 from frappe.desk.reportview import delete_report
 from frappe.desk.reportview import save_report as _save_report
@@ -24,9 +22,7 @@ class TestReport(FrappeTestCase):
 		if frappe.db.exists("Report", "User Activity Report"):
 			frappe.delete_doc("Report", "User Activity Report")
 
-		with open(
-			os.path.join(os.path.dirname(__file__), "user_activity_report.json"), "r"
-		) as f:
+		with open(os.path.join(os.path.dirname(__file__), "user_activity_report.json"), "r") as f:
 			frappe.get_doc(json.loads(f.read())).insert()
 
 		report = frappe.get_doc("Report", "User Activity Report")
@@ -37,9 +33,7 @@ class TestReport(FrappeTestCase):
 
 	def test_query_report(self):
 		report = frappe.get_doc("Report", "Permitted Documents For User")
-		columns, data = report.get_data(
-			filters={"user": "Administrator", "doctype": "DocType"}
-		)
+		columns, data = report.get_data(filters={"user": "Administrator", "doctype": "DocType"})
 		self.assertEqual(columns[0].get("label"), "Name")
 		self.assertEqual(columns[1].get("label"), "Module")
 		self.assertTrue("User" in [d.get("name") for d in data])

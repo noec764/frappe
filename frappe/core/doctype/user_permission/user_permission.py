@@ -64,9 +64,7 @@ class UserPermission(Document):
 			)
 		if overlap_exists:
 			ref_link = frappe.get_desk_link(self.doctype, overlap_exists[0].name)
-			frappe.throw(
-				_("{0} has already assigned default value for {1}.").format(ref_link, self.allow)
-			)
+			frappe.throw(_("{0} has already assigned default value for {1}.").format(ref_link, self.allow))
 
 
 @frappe.whitelist()
@@ -139,8 +137,7 @@ def user_permission_exists(user, allow, for_value, applicable_for=None):
 		return None
 	has_same_user_permission = find(
 		user_permissions,
-		lambda perm: perm["doc"] == for_value
-		and perm.get("applicable_for") == applicable_for,
+		lambda perm: perm["doc"] == for_value and perm.get("applicable_for") == applicable_for,
 	)
 
 	return has_same_user_permission
@@ -148,9 +145,7 @@ def user_permission_exists(user, allow, for_value, applicable_for=None):
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
-def get_applicable_for_doctype_list(
-	doctype, txt, searchfield, start, page_len, filters
-):
+def get_applicable_for_doctype_list(doctype, txt, searchfield, start, page_len, filters):
 	linked_doctypes_map = get_linked_doctypes(doctype, True)
 	linked_doctypes = list(linked_doctypes)
 	linked_doctypes = []

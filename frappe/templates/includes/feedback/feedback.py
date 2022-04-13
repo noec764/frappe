@@ -5,8 +5,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe import _
 from frappe.rate_limiter import rate_limit
-from frappe.website.doctype.blog_settings.blog_settings import \
-    get_feedback_limit
+from frappe.website.doctype.blog_settings.blog_settings import get_feedback_limit
 
 
 @frappe.whitelist(allow_guest=True)

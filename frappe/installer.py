@@ -50,10 +50,7 @@ def _new_site(
 	if not db_name:
 		import hashlib
 
-		db_name = (
-			"_"
-			+ hashlib.sha1(os.path.realpath(frappe.get_site_path()).encode()).hexdigest()[:16]
-		)
+		db_name = "_" + hashlib.sha1(os.path.realpath(frappe.get_site_path()).encode()).hexdigest()[:16]
 
 	try:
 		# enable scheduler post install?
@@ -92,9 +89,7 @@ def _new_site(
 	scheduler.toggle_scheduler(enable_scheduler)
 	frappe.db.commit()
 
-	scheduler_status = (
-		"disabled" if frappe.utils.scheduler.is_scheduler_disabled() else "enabled"
-	)
+	scheduler_status = "disabled" if frappe.utils.scheduler.is_scheduler_disabled() else "enabled"
 	print("*** Scheduler is", scheduler_status, "***")
 
 
@@ -223,8 +218,7 @@ def parse_app_name(name: str) -> str:
 
 
 def install_app(name, verbose=False, set_as_patched=True):
-	from frappe.core.doctype.scheduled_job_type.scheduled_job_type import \
-	    sync_jobs
+	from frappe.core.doctype.scheduled_job_type.scheduled_job_type import sync_jobs
 	from frappe.model.sync import sync_for
 	from frappe.modules.utils import sync_customizations
 	from frappe.utils.fixtures import sync_fixtures
@@ -420,9 +414,7 @@ def _get_module_linked_doctype_field_map() -> Dict[str, str]:
 		filters={"fieldtype": "Link", "options": "Module Def"},
 		fields=["parent", "fieldname"],
 	)
-	existing_linked_doctypes = [
-		d for d in linked_doctypes if frappe.db.exists("DocType", d.parent)
-	]
+	existing_linked_doctypes = [d for d in linked_doctypes if frappe.db.exists("DocType", d.parent)]
 
 	for d in existing_linked_doctypes:
 		# DocType deletion is handled separately in the end
@@ -456,16 +448,12 @@ def set_all_patches_as_completed(app):
 
 	patches = get_patches_from_app(app)
 	for patch in patches:
-		frappe.get_doc({"doctype": "Patch Log", "patch": patch}).insert(
-			ignore_permissions=True
-		)
+		frappe.get_doc({"doctype": "Patch Log", "patch": patch}).insert(ignore_permissions=True)
 	frappe.db.commit()
 
 
 def init_singles():
-	singles = [
-		single["name"] for single in frappe.get_all("DocType", filters={"issingle": True})
-	]
+	singles = [single["name"] for single in frappe.get_all("DocType", filters={"issingle": True})]
 	for single in singles:
 		if not frappe.db.get_singles_dict(single):
 			doc = frappe.new_doc(single)
@@ -732,18 +720,14 @@ def is_downgrade(sql_file_path, verbose=False):
 					if app_name == "frappe":
 						try:
 							current_version = Version(frappe.__version__)
-							backup_version = Version(
-								app_version[1:] if app_version[0] == "v" else app_version
-							)
+							backup_version = Version(app_version[1:] if app_version[0] == "v" else app_version)
 						except ValueError:
 							return False
 
 						downgrade = backup_version > current_version
 
 						if verbose and downgrade:
-							print(
-								f"Your site will be downgraded from Dodock {backup_version} to {current_version}"
-							)
+							print(f"Your site will be downgraded from Dodock {backup_version} to {current_version}")
 
 						return downgrade
 

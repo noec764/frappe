@@ -105,21 +105,15 @@ class TestAuth(unittest.TestCase):
 	def test_deny_multiple_login(self):
 		self.set_system_settings("deny_multiple_sessions", 1)
 
-		first_login = FrappeClient(
-			self.HOST_NAME, self.test_user_email, self.test_user_password
-		)
+		first_login = FrappeClient(self.HOST_NAME, self.test_user_email, self.test_user_password)
 		first_login.get_list("ToDo")
 
-		second_login = FrappeClient(
-			self.HOST_NAME, self.test_user_email, self.test_user_password
-		)
+		second_login = FrappeClient(self.HOST_NAME, self.test_user_email, self.test_user_password)
 		second_login.get_list("ToDo")
 		with self.assertRaises(Exception):
 			first_login.get_list("ToDo")
 
-		third_login = FrappeClient(
-			self.HOST_NAME, self.test_user_email, self.test_user_password
-		)
+		third_login = FrappeClient(self.HOST_NAME, self.test_user_email, self.test_user_password)
 		with self.assertRaises(Exception):
 			first_login.get_list("ToDo")
 		with self.assertRaises(Exception):

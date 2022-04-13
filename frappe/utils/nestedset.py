@@ -57,9 +57,7 @@ def update_nsm(doc):
 
 	# set old parent
 	doc.set(old_parent_field, parent)
-	frappe.db.set_value(
-		doc.doctype, doc.name, old_parent_field, parent or "", update_modified=False
-	)
+	frappe.db.set_value(doc.doctype, doc.name, old_parent_field, parent or "", update_modified=False)
 
 	doc.reload()
 
@@ -74,9 +72,7 @@ def update_add_node(doc, parent, parent_field):
 
 	# get the last sibling of the parent
 	if parent:
-		left, right = frappe.db.get_value(
-			doctype, {"name": parent}, ["lft", "rgt"], for_update=True
-		)
+		left, right = frappe.db.get_value(doctype, {"name": parent}, ["lft", "rgt"], for_update=True)
 		validate_loop(doc.doctype, doc.name, left, right)
 	else:  # root
 		right = (
@@ -93,10 +89,7 @@ def update_add_node(doc, parent, parent_field):
 	frappe.qb.update(Table).set(Table.lft, Table.lft + 2).where(Table.lft >= right).run()
 
 	if (
-		frappe.qb.from_(Table)
-		.select("*")
-		.where((Table.lft == right) | (Table.rgt == right + 1))
-		.run()
+		frappe.qb.from_(Table).select("*").where((Table.lft == right) | (Table.rgt == right + 1)).run()
 	):
 		frappe.throw(_("Nested set error. Please contact the Administrator."))
 
@@ -129,9 +122,9 @@ def update_move_node(doc: Document, parent_field: str):
 
 	# shift left
 	diff = doc.rgt - doc.lft + 1
-	frappe.qb.update(Table).set(Table.lft, Table.lft - diff).set(
-		Table.rgt, Table.rgt - diff
-	).where(Table.lft > doc.rgt).run()
+	frappe.qb.update(Table).set(Table.lft, Table.lft - diff).set(Table.rgt, Table.rgt - diff).where(
+		Table.lft > doc.rgt
+	).run()
 
 	# shift left rgts of ancestors whose only rgts must shift
 	frappe.qb.update(Table).set(Table.rgt, Table.rgt - diff).where(
@@ -149,14 +142,12 @@ def update_move_node(doc: Document, parent_field: str):
 		)
 
 		# set parent lft, rgt
-		frappe.qb.update(Table).set(Table.rgt, Table.rgt + diff).where(
-			Table.name == parent
-		).run()
+		frappe.qb.update(Table).set(Table.rgt, Table.rgt + diff).where(Table.name == parent).run()
 
 		# shift right at new parent
-		frappe.qb.update(Table).set(Table.lft, Table.lft + diff).set(
-			Table.rgt, Table.rgt + diff
-		).where(Table.lft > new_parent.rgt).run()
+		frappe.qb.update(Table).set(Table.lft, Table.lft + diff).set(Table.rgt, Table.rgt + diff).where(
+			Table.lft > new_parent.rgt
+		).run()
 
 		# shift right rgts of ancestors whose only rgts must shift
 		frappe.qb.update(Table).set(Table.rgt, Table.rgt + diff).where(
@@ -242,9 +233,7 @@ def validate_loop(doctype, name, lft, rgt):
 	if name in frappe.get_all(
 		doctype, filters={"lft": ["<=", lft], "rgt": [">=", rgt]}, pluck="name"
 	):
-		frappe.throw(
-			_("Item cannot be added to its own descendents"), NestedSetRecursionError
-		)
+		frappe.throw(_("Item cannot be added to its own descendents"), NestedSetRecursionError)
 
 
 class NestedSet(Document):
@@ -278,9 +267,7 @@ class NestedSet(Document):
 				raise
 
 	def validate_if_child_exists(self):
-		has_children = frappe.db.count(
-			self.doctype, filters={self.nsm_parent_field: self.name}
-		)
+		has_children = frappe.db.count(self.doctype, filters={self.nsm_parent_field: self.name})
 		if has_children:
 			frappe.throw(
 				_("Cannot delete {0} as it has child nodes").format(self.name),
@@ -324,13 +311,9 @@ class NestedSet(Document):
 
 	def validate_ledger(self, group_identifier="is_group"):
 		if hasattr(self, group_identifier) and not bool(self.get(group_identifier)):
-			if frappe.get_all(
-				self.doctype, {self.nsm_parent_field: self.name, "docstatus": ("!=", 2)}
-			):
+			if frappe.get_all(self.doctype, {self.nsm_parent_field: self.name, "docstatus": ("!=", 2)}):
 				frappe.throw(
-					_("{0} {1} cannot be a leaf node as it has children").format(
-						_(self.doctype), self.name
-					)
+					_("{0} {1} cannot be a leaf node as it has children").format(_(self.doctype), self.name)
 				)
 
 	def get_ancestors(self):
@@ -360,15 +343,8 @@ def get_root_of(doctype):
 	t1 = Table.as_("t1")
 	t2 = Table.as_("t2")
 
-	subq = (
-		frappe.qb.from_(t2).select(Count("*")).where((t2.lft < t1.lft) & (t2.rgt > t1.rgt))
-	)
-	result = (
-		frappe.qb.from_(t1)
-		.select(t1.name)
-		.where((subqry(subq) == 0) & (t1.rgt > t1.lft))
-		.run()
-	)
+	subq = frappe.qb.from_(t2).select(Count("*")).where((t2.lft < t1.lft) & (t2.rgt > t1.rgt))
+	result = frappe.qb.from_(t1).select(t1.name).where((subqry(subq) == 0) & (t1.rgt > t1.lft)).run()
 
 	return result[0][0] if result else None
 
@@ -387,9 +363,7 @@ def get_ancestors_of(doctype, name, order_by="lft desc", limit=None):
 	)
 
 
-def get_descendants_of(
-	doctype, name, order_by="lft desc", limit=None, ignore_permissions=False
-):
+def get_descendants_of(doctype, name, order_by="lft desc", limit=None, ignore_permissions=False):
 	"""Return descendants of the current record"""
 	lft, rgt = frappe.db.get_value(doctype, name, ["lft", "rgt"])
 

@@ -45,16 +45,12 @@ def get_data(filters=None):
 		}
 
 	data = []
-	documents_list = [
-		x.name for x in sorted(documents, key=lambda i: get_datetime(i["_submitted"]))
-	]
+	documents_list = [x.name for x in sorted(documents, key=lambda i: get_datetime(i["_submitted"]))]
 	documents_dict = get_documents_dict(documents)
 
 	for doc in doc_dict:
 		archive = doc_dict[doc].get("archive", {})
-		icon, comments = check_integrity(
-			doc, doc_dict[doc], documents_list, documents_dict, archives
-		)
+		icon, comments = check_integrity(doc, doc_dict[doc], documents_list, documents_dict, archives)
 		row = {
 			"document_name": doc,
 			"submission_date": doc_dict[doc].get("submission_date"),

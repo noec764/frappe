@@ -16,8 +16,7 @@ class RedirectPage(object):
 			"",
 			301,
 			{
-				"Location": frappe.flags.redirect_location
-				or (frappe.local.response or {}).get("location"),
+				"Location": frappe.flags.redirect_location or (frappe.local.response or {}).get("location"),
 				"Cache-Control": "no-store, no-cache, must-revalidate",
 			},
 		)

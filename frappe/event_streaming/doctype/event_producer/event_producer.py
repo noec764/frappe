@@ -43,15 +43,10 @@ class EventProducer(Document):
 		if not self.incoming_change:
 			if frappe.db.exists("Event Producer", self.name):
 				if not self.api_key or not self.api_secret:
-					frappe.throw(
-						_("Please set API Key and Secret on the producer and consumer sites first.")
-					)
+					frappe.throw(_("Please set API Key and Secret on the producer and consumer sites first."))
 				else:
 					doc_before_save = self.get_doc_before_save()
-					if (
-						doc_before_save.api_key != self.api_key
-						or doc_before_save.api_secret != self.api_secret
-					):
+					if doc_before_save.api_key != self.api_key or doc_before_save.api_secret != self.api_secret:
 						return
 
 					self.update_event_consumer()
@@ -62,17 +57,13 @@ class EventProducer(Document):
 			self.reload()
 
 	def on_trash(self):
-		last_update = frappe.db.get_value(
-			"Event Producer Last Update", dict(event_producer=self.name)
-		)
+		last_update = frappe.db.get_value("Event Producer Last Update", dict(event_producer=self.name))
 		if last_update:
 			frappe.delete_doc("Event Producer Last Update", last_update)
 
 	def check_url(self):
 		valid_url_schemes = ("http", "https")
-		frappe.utils.validate_url(
-			self.producer_url, throw=True, valid_schemes=valid_url_schemes
-		)
+		frappe.utils.validate_url(self.producer_url, throw=True, valid_schemes=valid_url_schemes)
 
 		# remove '/' from the end of the url like http://test_site.com/
 		# to prevent mismatch in get_url() results
@@ -182,9 +173,7 @@ class EventProducer(Document):
 				for entry in self.producer_doctypes:
 					if entry.has_mapping:
 						# if mapping, subscribe to remote doctype on consumer's site
-						ref_doctype = frappe.db.get_value(
-							"Document Type Mapping", entry.mapping, "remote_doctype"
-						)
+						ref_doctype = frappe.db.get_value("Document Type Mapping", entry.mapping, "remote_doctype")
 					else:
 						ref_doctype = entry.ref_doctype
 
@@ -209,9 +198,7 @@ class EventProducer(Document):
 				return True
 			retry -= 1
 			time.sleep(5)
-		frappe.throw(
-			_("Failed to connect to the Event Producer site. Retry after some time.")
-		)
+		frappe.throw(_("Failed to connect to the Event Producer site. Retry after some time."))
 
 
 def get_producer_site(producer_url):
@@ -251,9 +238,7 @@ def pull_from_node(event_producer):
 	producer_site = get_producer_site(event_producer.producer_url)
 	last_update = event_producer.get_last_update()
 
-	(doctypes, mapping_config, naming_config) = get_config(
-		event_producer.producer_doctypes
-	)
+	(doctypes, mapping_config, naming_config) = get_config(event_producer.producer_doctypes)
 
 	updates = get_updates(producer_site, last_update, doctypes)
 
@@ -463,9 +448,7 @@ def sync_dependencies(document, producer_site):
 				child_doc = producer_site.get_doc(entry.doctype, entry.name)
 				if child_doc:
 					child_doc = frappe._dict(child_doc)
-					set_dependencies(
-						child_doc, frappe.get_meta(entry.doctype).get_link_fields(), producer_site
-					)
+					set_dependencies(child_doc, frappe.get_meta(entry.doctype).get_link_fields(), producer_site)
 
 	def sync_link_dependencies(doc, link_fields, producer_site):
 		set_dependencies(doc, link_fields, producer_site)
@@ -544,9 +527,7 @@ def log_event_sync(update, event_producer, sync_status, error=None):
 	if update.use_same_name:
 		doc.docname = update.docname
 	else:
-		doc.docname = frappe.db.get_value(
-			update.ref_doctype, {"remote_docname": update.docname}, "name"
-		)
+		doc.docname = frappe.db.get_value(update.ref_doctype, {"remote_docname": update.docname}, "name")
 	if error:
 		doc.error = error
 	doc.insert()
@@ -572,9 +553,7 @@ def get_mapped_update(update, producer_site):
 @frappe.whitelist()
 def new_event_notification(producer_url):
 	"""Pull data from producer when notified"""
-	enqueued_method = (
-		"frappe.event_streaming.doctype.event_producer.event_producer.pull_from_node"
-	)
+	enqueued_method = "frappe.event_streaming.doctype.event_producer.event_producer.pull_from_node"
 	jobs = get_jobs()
 	if not jobs or enqueued_method not in jobs[frappe.local.site]:
 		frappe.enqueue(enqueued_method, queue="default", **{"event_producer": producer_url})
@@ -594,9 +573,5 @@ def resync(update):
 
 def set_custom_fields(local_doc, remote_docname, remote_site_name):
 	"""sets custom field in doc for storing remote docname"""
-	frappe.db.set_value(
-		local_doc.doctype, local_doc.name, "remote_docname", remote_docname
-	)
-	frappe.db.set_value(
-		local_doc.doctype, local_doc.name, "remote_site_name", remote_site_name
-	)
+	frappe.db.set_value(local_doc.doctype, local_doc.name, "remote_docname", remote_docname)
+	frappe.db.set_value(local_doc.doctype, local_doc.name, "remote_site_name", remote_site_name)

@@ -6,9 +6,11 @@
 import unittest
 
 import frappe
-from frappe.integrations.doctype.webhook.webhook import (enqueue_webhook,
-                                                         get_webhook_data,
-                                                         get_webhook_headers)
+from frappe.integrations.doctype.webhook.webhook import (
+	enqueue_webhook,
+	get_webhook_data,
+	get_webhook_headers,
+)
 
 
 class TestWebhook(unittest.TestCase):
@@ -122,9 +124,7 @@ class TestWebhook(unittest.TestCase):
 		self.assertEqual(headers, {})
 
 		# test complete headers
-		self.webhook.set(
-			"webhook_headers", [{"key": "Content-Type", "value": "application/json"}]
-		)
+		self.webhook.set("webhook_headers", [{"key": "Content-Type", "value": "application/json"}])
 		self.webhook.save()
 		headers = get_webhook_headers(doc=None, webhook=self.webhook)
 		self.assertEqual(headers, {"Content-Type": "application/json"})

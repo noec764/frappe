@@ -12,9 +12,7 @@ class CommunicationEmailMixin:
 	"""Mixin class to handle communication mails."""
 
 	def is_email_communication(self):
-		return (
-			self.communication_type == "Communication" and self.communication_medium == "Email"
-		)
+		return self.communication_type == "Communication" and self.communication_medium == "Email"
 
 	def get_owner(self):
 		"""Get owner of the communication docs parent."""
@@ -54,9 +52,7 @@ class CommunicationEmailMixin:
 
 	def get_mail_recipients_with_displayname(self, is_inbound_mail_communcation=False):
 		"""Build to(recipient) list to send an email including displayname in email."""
-		to_list = self.mail_recipients(
-			is_inbound_mail_communcation=is_inbound_mail_communcation
-		)
+		to_list = self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation)
 		return [self.get_email_with_displayname(email) for email in to_list]
 
 	def mail_cc(self, is_inbound_mail_communcation=False, include_sender=False):
@@ -82,9 +78,7 @@ class CommunicationEmailMixin:
 			cc.update(self.get_assignees())
 
 		cc = set(cc) - set(self.filter_thread_notification_disbled_users(cc))
-		cc = cc - set(
-			self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation)
-		)
+		cc = cc - set(self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation))
 		cc = cc - set(self.filter_disabled_users(cc))
 
 		# # Incase of inbound mail, to and cc already received the mail, no need to send again.
@@ -94,9 +88,7 @@ class CommunicationEmailMixin:
 		self._final_cc = list(filter(lambda id: id != "Administrator", cc))
 		return self._final_cc
 
-	def get_mail_cc_with_displayname(
-		self, is_inbound_mail_communcation=False, include_sender=False
-	):
+	def get_mail_cc_with_displayname(self, is_inbound_mail_communcation=False, include_sender=False):
 		cc_list = self.mail_cc(
 			is_inbound_mail_communcation=is_inbound_mail_communcation,
 			include_sender=include_sender,
@@ -117,9 +109,7 @@ class CommunicationEmailMixin:
 		if is_inbound_mail_communcation:
 			bcc = bcc - {self.sender_mailid}
 		bcc = bcc - set(self.filter_thread_notification_disbled_users(bcc))
-		bcc = bcc - set(
-			self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation)
-		)
+		bcc = bcc - set(self.mail_recipients(is_inbound_mail_communcation=is_inbound_mail_communcation))
 		bcc = bcc - set(self.filter_disabled_users(bcc))
 
 		# Incase of inbound mail, to and cc & bcc already received the mail, no need to send again.
@@ -210,9 +200,7 @@ class CommunicationEmailMixin:
 			return _("Leave this conversation")
 		return ""
 
-	def exclude_emails_list(
-		self, is_inbound_mail_communcation=False, include_sender=False
-	) -> List:
+	def exclude_emails_list(self, is_inbound_mail_communcation=False, include_sender=False) -> List:
 		"""List of mail id's excluded while sending mail."""
 		all_ids = self.get_all_email_addresses(exclude_displayname=True)
 
@@ -252,9 +240,7 @@ class CommunicationEmailMixin:
 		if not emails:
 			return []
 
-		return frappe.get_all(
-			"User", pluck="email", filters={"email": ["in", emails], "enabled": 0}
-		)
+		return frappe.get_all("User", pluck="email", filters={"email": ["in", emails], "enabled": 0})
 
 	def sendmail_input_dict(
 		self,
@@ -283,9 +269,7 @@ class CommunicationEmailMixin:
 		if not (recipients or cc):
 			return {}
 
-		final_attachments = self.mail_attachments(
-			print_format=print_format, print_html=print_html
-		)
+		final_attachments = self.mail_attachments(print_format=print_format, print_html=print_html)
 		incoming_email_account = self.get_incoming_email_account()
 		return {
 			"recipients": recipients,

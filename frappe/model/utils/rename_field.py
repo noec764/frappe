@@ -7,8 +7,7 @@ import json
 import frappe
 from frappe import _
 from frappe.model import no_value_fields, table_fields
-from frappe.model.utils.user_settings import (sync_user_settings,
-                                              update_user_settings_data)
+from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
 from frappe.utils.password import rename_password_field
 
 
@@ -22,11 +21,7 @@ def rename_field(doctype, old_fieldname, new_fieldname):
 		return
 
 	if not meta.issingle and not frappe.db.has_column(doctype, old_fieldname):
-		print(
-			_("Rename field '{0}' not found in table for '{1}'").format(
-				_(old_fieldname), _(doctype)
-			)
-		)
+		print(_("Rename field '{0}' not found in table for '{1}'").format(_(old_fieldname), _(doctype)))
 		# never had the field?
 		return
 
@@ -48,9 +43,7 @@ def rename_field(doctype, old_fieldname, new_fieldname):
 			)
 		else:
 			# copy field value
-			frappe.db.sql(
-				"""update `tab%s` set `%s`=`%s`""" % (doctype, new_fieldname, old_fieldname)
-			)
+			frappe.db.sql("""update `tab%s` set `%s`=`%s`""" % (doctype, new_fieldname, old_fieldname))
 
 		update_reports(doctype, old_fieldname, new_fieldname)
 		update_users_report_view_settings(doctype, old_fieldname, new_fieldname)
@@ -130,9 +123,7 @@ def update_reports(doctype, old_fieldname, new_fieldname):
 				}
 			)
 
-			frappe.db.sql(
-				"""update `tabReport` set `json`=%s where name=%s""", (new_val, r.name)
-			)
+			frappe.db.sql("""update `tabReport` set `json`=%s where name=%s""", (new_val, r.name))
 
 
 def update_users_report_view_settings(doctype, ref_fieldname, new_fieldname):

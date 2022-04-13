@@ -120,9 +120,7 @@ class TestServerScript(unittest.TestCase):
 		self.assertEqual("hello", response.json()["message"])
 
 	def test_api_return(self):
-		self.assertEqual(
-			frappe.get_doc("Server Script", "test_return_value").execute_method(), "hello"
-		)
+		self.assertEqual(frappe.get_doc("Server Script", "test_return_value").execute_method(), "hello")
 
 	def test_permission_query(self):
 		if frappe.conf.db_type == "mariadb":

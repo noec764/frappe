@@ -18,15 +18,10 @@ def make_request(method, url, auth=None, headers=None, data=None):
 
 	try:
 		s = get_request_session()
-		frappe.flags.integration_request = s.request(
-			method, url, data=data, auth=auth, headers=headers
-		)
+		frappe.flags.integration_request = s.request(method, url, data=data, auth=auth, headers=headers)
 		frappe.flags.integration_request.raise_for_status()
 
-		if (
-			frappe.flags.integration_request.headers.get("content-type")
-			== "text/plain; charset=utf-8"
-		):
+		if frappe.flags.integration_request.headers.get("content-type") == "text/plain; charset=utf-8":
 			return parse_qs(frappe.flags.integration_request.text)
 
 		return frappe.flags.integration_request.json()

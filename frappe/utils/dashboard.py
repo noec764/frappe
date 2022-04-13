@@ -80,13 +80,9 @@ def get_dashboards_with_link(docname, doctype):
 	links = []
 
 	if doctype == "Dashboard Chart":
-		links = frappe.get_all(
-			"Dashboard Chart Link", fields=["parent"], filters={"chart": docname}
-		)
+		links = frappe.get_all("Dashboard Chart Link", fields=["parent"], filters={"chart": docname})
 	elif doctype == "Number Card":
-		links = frappe.get_all(
-			"Number Card Link", fields=["parent"], filters={"card": docname}
-		)
+		links = frappe.get_all("Number Card Link", fields=["parent"], filters={"card": docname})
 
 	dashboards = [link.parent for link in links]
 	return dashboards
@@ -110,9 +106,7 @@ def sync_dashboards(app=None):
 
 
 def make_records_in_module(app, module):
-	dashboards_path = frappe.get_module_path(
-		module, "{module}_dashboard".format(module=module)
-	)
+	dashboards_path = frappe.get_module_path(module, "{module}_dashboard".format(module=module))
 	charts_path = frappe.get_module_path(module, "dashboard chart")
 	cards_path = frappe.get_module_path(module, "number card")
 

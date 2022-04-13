@@ -36,9 +36,7 @@ class LetterHead(Document):
 					<img src="{self.image}" alt="{self.name}" {dimension}="{dimension_value}" style="{dimension}: {dimension_value}px;">
 				</div>
 				"""
-				frappe.msgprint(
-					frappe._("Header HTML set from attachment {0}").format(self.image), alert=True
-				)
+				frappe.msgprint(frappe._("Header HTML set from attachment {0}").format(self.image), alert=True)
 			else:
 				frappe.msgprint(
 					frappe._("Please attach an image file to set HTML"), alert=True, indicator="orange"

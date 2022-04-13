@@ -28,9 +28,7 @@ def execute():
 		frappe.db.commit()
 
 		# alter column types for rating fieldtype
-		frappe.db.change_column_type(
-			doctype_name, column=field, type=RATING_FIELD_TYPE, nullable=True
-		)
+		frappe.db.change_column_type(doctype_name, column=field, type=RATING_FIELD_TYPE, nullable=True)
 
 		# update data: int => decimal
 		frappe.qb.update(doctype).set(doctype[field], doctype[field] / 5).run()

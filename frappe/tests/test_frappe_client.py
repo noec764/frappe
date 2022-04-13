@@ -95,9 +95,7 @@ class TestFrappeClient(unittest.TestCase):
 		name = server.get_value("Note", "name", {"title": "get_value"}).get("name")
 
 		# test by name
-		self.assertEqual(
-			server.get_value("Note", "content", name).get("content"), test_content
-		)
+		self.assertEqual(server.get_value("Note", "content", name).get("content"), test_content)
 
 		self.assertRaises(
 			FrappeException,
@@ -109,13 +107,9 @@ class TestFrappeClient(unittest.TestCase):
 
 	def test_get_single(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
-		server.set_value(
-			"Website Settings", "Website Settings", "title_prefix", "test-prefix"
-		)
+		server.set_value("Website Settings", "Website Settings", "title_prefix", "test-prefix")
 		self.assertEqual(
-			server.get_value("Website Settings", "title_prefix", "Website Settings").get(
-				"title_prefix"
-			),
+			server.get_value("Website Settings", "title_prefix", "Website Settings").get("title_prefix"),
 			"test-prefix",
 		)
 		self.assertEqual(
@@ -176,9 +170,7 @@ class TestFrappeClient(unittest.TestCase):
 
 		# the change should run the parent document's validations and
 		# create a Communication record with the new contact
-		self.assertTrue(
-			frappe.db.exists("Communication Link", {"link_name": "William Shakespeare"})
-		)
+		self.assertTrue(frappe.db.exists("Communication Link", {"link_name": "William Shakespeare"}))
 
 	def test_delete_doc(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
@@ -204,9 +196,7 @@ class TestFrappeClient(unittest.TestCase):
 
 		api_key = frappe.db.get_value("User", "Administrator", "api_key")
 		header = {"Authorization": "token {}:{}".format(api_key, generated_secret)}
-		res = requests.post(
-			get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
-		)
+		res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
 
 		self.assertEqual(res.status_code, 200)
 		self.assertEqual("Administrator", res.json()["message"])
@@ -214,30 +204,22 @@ class TestFrappeClient(unittest.TestCase):
 
 		header = {
 			"Authorization": "Basic {}".format(
-				base64.b64encode(
-					frappe.safe_encode("{}:{}".format(api_key, generated_secret))
-				).decode()
+				base64.b64encode(frappe.safe_encode("{}:{}".format(api_key, generated_secret))).decode()
 			)
 		}
-		res = requests.post(
-			get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
-		)
+		res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
 		self.assertEqual(res.status_code, 200)
 		self.assertEqual("Administrator", res.json()["message"])
 
 		# Valid api key, invalid api secret
 		api_secret = "ksk&93nxoe3os"
 		header = {"Authorization": "token {}:{}".format(api_key, api_secret)}
-		res = requests.post(
-			get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
-		)
+		res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
 		self.assertEqual(res.status_code, 403)
 
 		# random api key and api secret
 		api_key = "@3djdk3kld"
 		api_secret = "ksk&93nxoe3os"
 		header = {"Authorization": "token {}:{}".format(api_key, api_secret)}
-		res = requests.post(
-			get_url() + "/api/method/frappe.auth.get_logged_user", headers=header
-		)
+		res = requests.post(get_url() + "/api/method/frappe.auth.get_logged_user", headers=header)
 		self.assertEqual(res.status_code, 401)

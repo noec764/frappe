@@ -7,9 +7,7 @@ from frappe import format
 
 class TestFormatter(unittest.TestCase):
 	def test_currency_formatting(self):
-		df = frappe._dict(
-			{"fieldname": "amount", "fieldtype": "Currency", "options": "currency"}
-		)
+		df = frappe._dict({"fieldname": "amount", "fieldtype": "Currency", "options": "currency"})
 
 		doc = frappe._dict({"amount": 5})
 		frappe.db.set_default("currency", "INR")

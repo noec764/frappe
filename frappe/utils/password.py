@@ -27,9 +27,7 @@ class LegacyPassword(pbkdf2_sha256):
 		# it is possible that we will generate a false positive if the users password happens to be 40 hex chars proceeded
 		# by an * char, but this seems highly unlikely
 		if not (
-			secret[0] == "*"
-			and len(secret) == 41
-			and all(c in string.hexdigits for c in secret[1:])
+			secret[0] == "*" and len(secret) == 41 and all(c in string.hexdigits for c in secret[1:])
 		):
 			secret = mysql41.hash(secret + self.salt.decode("utf-8"))
 		return super(LegacyPassword, self)._calc_checksum(secret)
@@ -79,9 +77,7 @@ def set_encrypted_password(doctype, name, pwd, fieldname="password"):
 	if frappe.db.db_type == "mariadb":
 		query = query.on_duplicate_key_update(Auth.password, Values(Auth.password))
 	elif frappe.db.db_type == "postgres":
-		query = query.on_conflict(Auth.doctype, Auth.name, Auth.fieldname).do_update(
-			Auth.password
-		)
+		query = query.on_conflict(Auth.doctype, Auth.name, Auth.fieldname).do_update(Auth.password)
 
 	try:
 		query.run()
@@ -95,9 +91,7 @@ def remove_encrypted_password(doctype, name, fieldname="password"):
 	frappe.db.delete("__Auth", {"doctype": doctype, "name": name, "fieldname": fieldname})
 
 
-def check_password(
-	user, pwd, doctype="User", fieldname="password", delete_tracker_cache=True
-):
+def check_password(user, pwd, doctype="User", fieldname="password", delete_tracker_cache=True):
 	"""Checks if user and password are correct, else raises frappe.AuthenticationError"""
 
 	result = (
@@ -136,9 +130,7 @@ def delete_login_failed_cache(user):
 	frappe.cache().hdel("locked_account_time", user)
 
 
-def update_password(
-	user, pwd, doctype="User", fieldname="password", logout_all_sessions=False
-):
+def update_password(user, pwd, doctype="User", fieldname="password", logout_all_sessions=False):
 	"""
 	Update the password for the User
 

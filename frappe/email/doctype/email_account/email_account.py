@@ -13,13 +13,11 @@ from typing import List
 import frappe
 from frappe import _, are_emails_muted, safe_encode
 from frappe.desk.form import assign_to
-from frappe.email.receive import (EmailServer, InboundMail,
-                                  SentEmailInInboxError)
+from frappe.email.receive import EmailServer, InboundMail, SentEmailInInboxError
 from frappe.email.smtp import SMTPServer
 from frappe.email.utils import get_port
 from frappe.model.document import Document
-from frappe.utils import (cint, comma_or, cstr, parse_addr,
-                          validate_email_address)
+from frappe.utils import cint, comma_or, cstr, parse_addr, validate_email_address
 from frappe.utils.background_jobs import enqueue, get_jobs
 from frappe.utils.error import raise_error_on_no_output
 from frappe.utils.jinja import render_template
@@ -63,11 +61,7 @@ class EmailAccount(Document):
 		"""Set name as `email_account_name` or make title from Email Address."""
 		if not self.email_account_name:
 			self.email_account_name = (
-				self.email_id.split("@", 1)[0]
-				.replace("_", " ")
-				.replace(".", " ")
-				.replace("-", " ")
-				.title()
+				self.email_id.split("@", 1)[0].replace("_", " ").replace(".", " ").replace("-", " ").title()
 			)
 
 		self.name = self.email_account_name
@@ -85,9 +79,7 @@ class EmailAccount(Document):
 
 		# validate the imap settings
 		if self.enable_incoming and self.use_imap and len(self.imap_folder) <= 0:
-			frappe.throw(
-				_("You need to set one IMAP folder for {0}").format(frappe.bold(self.email_id))
-			)
+			frappe.throw(_("You need to set one IMAP folder for {0}").format(frappe.bold(self.email_id)))
 
 		duplicate_email_account = frappe.get_all(
 			"Email Account", filters={"email_id": self.email_id, "name": ("!=", self.name)}
@@ -115,16 +107,12 @@ class EmailAccount(Document):
 				if self.enable_outgoing:
 					self.validate_smtp_conn()
 			else:
-				if self.enable_incoming or (
-					self.enable_outgoing and not self.no_smtp_authentication
-				):
+				if self.enable_incoming or (self.enable_outgoing and not self.no_smtp_authentication):
 					frappe.throw(_("Password is required or select Awaiting Password"))
 
 		if self.notify_if_unreplied:
 			if not self.send_notification_to:
-				frappe.throw(
-					_("{0} is mandatory").format(self.meta.get_label("send_notification_to"))
-				)
+				frappe.throw(_("{0} is mandatory").format(self.meta.get_label("send_notification_to")))
 			for e in self.get_unreplied_notification_emails():
 				validate_email_address(e, True)
 
@@ -161,9 +149,7 @@ class EmailAccount(Document):
 		if messages:
 			if len(messages) == 1:
 				(as_list, messages) = (0, messages[0])
-			frappe.msgprint(
-				messages, as_list=as_list, indicator="orange", title=_("Defaults Updated")
-			)
+			frappe.msgprint(messages, as_list=as_list, indicator="orange", title=_("Defaults Updated"))
 
 	def on_update(self):
 		"""Check there is only one default of each type."""
@@ -351,9 +337,7 @@ class EmailAccount(Document):
 				return {match_by_email: doc}
 
 		if match_by_doctype:
-			doc = cls.find_one_by_filters(
-				enable_outgoing=1, enable_incoming=1, append_to=match_by_doctype
-			)
+			doc = cls.find_one_by_filters(enable_outgoing=1, enable_incoming=1, append_to=match_by_doctype)
 			if doc:
 				return {match_by_doctype: doc}
 
@@ -522,9 +506,7 @@ class EmailAccount(Document):
 
 		email_sync_rule = self.build_email_sync_rule()
 		try:
-			email_server = self.get_incoming_server(
-				in_receive=True, email_sync_rule=email_sync_rule
-			)
+			email_server = self.get_incoming_server(in_receive=True, email_sync_rule=email_sync_rule)
 			if self.use_imap:
 				# process all given imap folder
 				for folder in self.imap_folder:
@@ -539,9 +521,7 @@ class EmailAccount(Document):
 			# close connection to mailserver
 			email_server.logout()
 		except Exception:
-			frappe.log_error(
-				title=_("Error while connecting to email account {0}").format(self.name)
-			)
+			frappe.log_error(title=_("Error while connecting to email account {0}").format(self.name))
 			return []
 		return mails
 
@@ -574,15 +554,12 @@ class EmailAccount(Document):
 
 	def send_auto_reply(self, communication, email):
 		"""Send auto reply if set."""
-		from frappe.core.doctype.communication.email import \
-		    set_incoming_outgoing_accounts
+		from frappe.core.doctype.communication.email import set_incoming_outgoing_accounts
 
 		if self.enable_auto_reply:
 			set_incoming_outgoing_accounts(communication)
 
-			unsubscribe_message = (
-				self.send_unsubscribe_message and _("Leave this conversation")
-			) or ""
+			unsubscribe_message = (self.send_unsubscribe_message and _("Leave this conversation")) or ""
 
 			frappe.sendmail(
 				recipients=[email.from_email],
@@ -590,9 +567,7 @@ class EmailAccount(Document):
 				reply_to=communication.incoming_email_account,
 				subject=" ".join([_("Re:"), communication.subject]),
 				content=render_template(self.auto_reply_message or "", communication.as_dict())
-				or frappe.get_template("templates/emails/auto_reply.html").render(
-					communication.as_dict()
-				),
+				or frappe.get_template("templates/emails/auto_reply.html").render(communication.as_dict()),
 				reference_doctype=communication.reference_doctype,
 				reference_name=communication.reference_name,
 				in_reply_to=email.mail.get("Message-Id"),  # send back the Message-Id as In-Reply-To
@@ -658,11 +633,7 @@ class EmailAccount(Document):
 
 			# mark communication as unread
 			docnames = ",".join(
-				[
-					"'%s'" % flag.get("communication")
-					for flag in flags
-					if flag.get("action") == "Unread"
-				]
+				["'%s'" % flag.get("communication") for flag in flags if flag.get("action") == "Unread"]
 			)
 			self.set_communication_seen_status(docnames, seen=0)
 
@@ -698,9 +669,7 @@ class EmailAccount(Document):
 		try:
 			email_server = self.get_incoming_server(in_receive=True)
 		except Exception:
-			frappe.log_error(
-				title=_("Error while connecting to email account {0}").format(self.name)
-			)
+			frappe.log_error(title=_("Error while connecting to email account {0}").format(self.name))
 
 		if not email_server:
 			return
@@ -727,9 +696,7 @@ def get_append_to(
 
 	# Set Email Append To DocTypes via DocType
 	filters = {"istable": 0, "issingle": 0, "email_append_to": 1}
-	for dt in frappe.get_all(
-		"DocType", filters=filters, fields=["name", "email_append_to"]
-	):
+	for dt in frappe.get_all("DocType", filters=filters, fields=["name", "email_append_to"]):
 		email_append_to_list.append(dt.name)
 
 	# Set Email Append To DocTypes set via Customize Form
@@ -787,25 +754,20 @@ def notify_unreplied():
 					{
 						"creation": (
 							"<",
-							datetime.now()
-							- timedelta(seconds=(email_account.unreplied_for_mins or 30) * 60),
+							datetime.now() - timedelta(seconds=(email_account.unreplied_for_mins or 30) * 60),
 						)
 					},
 					{
 						"creation": (
 							">",
-							datetime.now()
-							- timedelta(seconds=(email_account.unreplied_for_mins or 30) * 60 * 3),
+							datetime.now() - timedelta(seconds=(email_account.unreplied_for_mins or 30) * 60 * 3),
 						)
 					},
 				],
 			):
 				comm = frappe.get_doc("Communication", comm.name)
 
-				if (
-					frappe.db.get_value(comm.reference_doctype, comm.reference_name, "status")
-					== "Open"
-				):
+				if frappe.db.get_value(comm.reference_doctype, comm.reference_name, "status") == "Open":
 					# if status is still open
 					frappe.sendmail(
 						recipients=email_account.get_unreplied_notification_emails(),
@@ -916,11 +878,9 @@ def setup_user_email_inbox(email_account, awaiting_password, email_id, enable_ou
 
 	if update_user_email_settings:
 		UserEmail = frappe.qb.DocType("User Email")
-		frappe.qb.update(UserEmail).set(
-			UserEmail.awaiting_password, (awaiting_password or 0)
-		).set(UserEmail.enable_outgoing, enable_outgoing).where(
-			UserEmail.email_account == email_account
-		).run()
+		frappe.qb.update(UserEmail).set(UserEmail.awaiting_password, (awaiting_password or 0)).set(
+			UserEmail.enable_outgoing, enable_outgoing
+		).where(UserEmail.email_account == email_account).run()
 	else:
 		users = " and ".join([frappe.bold(user.get("name")) for user in user_names])
 		frappe.msgprint(_("Enabled email inbox for user {0}").format(users))

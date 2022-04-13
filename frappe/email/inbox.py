@@ -63,9 +63,7 @@ def create_email_flag_queue(names, action):
 
 		seen = 1 if action == "Read" else 0
 		# check if states are correct
-		if (action == "Read" and seen_status == 0) or (
-			action == "Unread" and seen_status == 1
-		):
+		if (action == "Read" and seen_status == 0) or (action == "Unread" and seen_status == 1):
 			create_new = True
 			email_flag_queue = frappe.db.sql(
 				"""select name, action from `tabEmail Flag Queue`

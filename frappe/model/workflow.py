@@ -170,9 +170,9 @@ def validate_workflow(doc):
 	state_row = [d for d in workflow.states if d.state == current_state]
 	if not state_row:
 		frappe.throw(
-			_(
-				"{0} is not a valid Workflow State. Please update your Workflow and try again."
-			).format(frappe.bold(current_state))
+			_("{0} is not a valid Workflow State. Please update your Workflow and try again.").format(
+				frappe.bold(current_state)
+			)
 		)
 	state_row = state_row[0]
 
@@ -185,9 +185,7 @@ def validate_workflow(doc):
 			# transitioning directly to a state other than the first
 			# e.g from data import
 			frappe.throw(
-				_("Workflow State transition not allowed from {0} to {1}").format(
-					bold_current, bold_next
-				),
+				_("Workflow State transition not allowed from {0} to {1}").format(bold_current, bold_next),
 				WorkflowPermissionError,
 			)
 
@@ -195,9 +193,7 @@ def validate_workflow(doc):
 		transition = [d for d in transitions if d.next_state == next_state]
 		if not transition:
 			frappe.throw(
-				_("Workflow State transition not allowed from {0} to {1}").format(
-					bold_current, bold_next
-				),
+				_("Workflow State transition not allowed from {0} to {1}").format(bold_current, bold_next),
 				WorkflowPermissionError,
 			)
 
@@ -208,9 +204,7 @@ def get_workflow(doctype):
 
 def has_approval_access(user, doc, transition):
 	return (
-		user == "Administrator"
-		or transition.get("allow_self_approval")
-		or user != doc.get("owner")
+		user == "Administrator" or transition.get("allow_self_approval") or user != doc.get("owner")
 	)
 
 
@@ -286,9 +280,7 @@ def bulk_workflow_approval(docnames, doctype, action):
 		indicator = "green"
 
 	print_workflow_log(failed_transactions, _("Failed Transactions"), doctype, indicator)
-	print_workflow_log(
-		successful_transactions, _("Successful Transactions"), doctype, indicator
-	)
+	print_workflow_log(successful_transactions, _("Successful Transactions"), doctype, indicator)
 
 
 def print_workflow_log(messages, title, doctype, indicator):
@@ -297,9 +289,7 @@ def print_workflow_log(messages, title, doctype, indicator):
 
 		for doc in messages.keys():
 			if len(messages[doc]):
-				html = "<details><summary>{0}</summary>".format(
-					frappe.utils.get_link_to_form(doctype, doc)
-				)
+				html = "<details><summary>{0}</summary>".format(frappe.utils.get_link_to_form(doctype, doc))
 				for log in messages[doc]:
 					if log.get("message"):
 						html += "<div class='small text-muted' style='padding:2.5px'>{0}</div>".format(
@@ -310,9 +300,7 @@ def print_workflow_log(messages, title, doctype, indicator):
 				html = "<div>{0}</div>".format(doc)
 			msg += html
 
-		frappe.msgprint(
-			msg, title=_("Workflow Status"), indicator=indicator, is_minimizable=True
-		)
+		frappe.msgprint(msg, title=_("Workflow Status"), indicator=indicator, is_minimizable=True)
 
 
 @frappe.whitelist()
@@ -352,9 +340,7 @@ def set_workflow_state_on_action(doc, workflow_name, action):
 
 	# If workflow state of doc is already correct, don't set workflow state
 	for state in workflow.states:
-		if state.state == doc.get(workflow_state_field) and doc.docstatus == cint(
-			state.doc_status
-		):
+		if state.state == doc.get(workflow_state_field) and doc.docstatus == cint(state.doc_status):
 			return
 
 	action_map = {"update_after_submit": "1", "submit": "1", "cancel": "2"}

@@ -64,9 +64,7 @@ class DataImport(Document):
 		from frappe.utils.scheduler import is_scheduler_inactive
 
 		if is_scheduler_inactive() and not frappe.flags.in_test:
-			frappe.throw(
-				_("Scheduler is inactive. Cannot import data."), title=_("Scheduler Inactive")
-			)
+			frappe.throw(_("Scheduler is inactive. Cannot import data."), title=_("Scheduler Inactive"))
 
 		enqueued_jobs = [d.get("job_name") for d in get_info()]
 
@@ -173,9 +171,7 @@ def get_import_status(data_import_name):
 		group_by="success",
 	)
 
-	total_payload_count = frappe.db.get_value(
-		"Data Import", data_import_name, "payload_count"
-	)
+	total_payload_count = frappe.db.get_value("Data Import", data_import_name, "payload_count")
 
 	for log in logs:
 		if log.get("success"):
@@ -188,9 +184,7 @@ def get_import_status(data_import_name):
 	return import_status
 
 
-def import_file(
-	doctype, file_path, import_type, submit_after_import=False, console=False
-):
+def import_file(doctype, file_path, import_type, submit_after_import=False, console=False):
 	"""
 	Import documents in from CSV or XLSX using data import.
 
@@ -207,9 +201,7 @@ def import_file(
 		"Insert New Records" if import_type.lower() == "insert" else "Update Existing Records"
 	)
 
-	i = Importer(
-		doctype=doctype, file_path=file_path, data_import=data_import, console=console
-	)
+	i = Importer(doctype=doctype, file_path=file_path, data_import=data_import, console=console)
 	i.import_data()
 
 
@@ -231,9 +223,7 @@ def import_doc(path, pre_process=None):
 			raise NotImplementedError("Only .json files can be imported")
 
 
-def export_json(
-	doctype, path, filters=None, or_filters=None, name=None, order_by="creation asc"
-):
+def export_json(doctype, path, filters=None, or_filters=None, name=None, order_by="creation asc"):
 	def post_process(out):
 		# Note on Tree DocTypes:
 		# The tree structure is maintained in the database via the fields "lft"

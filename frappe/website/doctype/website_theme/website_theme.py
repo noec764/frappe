@@ -83,18 +83,14 @@ class WebsiteTheme(Document):
 		content = content.replace("\n", "\\n")
 		command = ["node", "generate_bootstrap_theme.js", output_path, content]
 
-		process = Popen(
-			command, cwd=frappe.get_app_path("frappe", ".."), stdout=PIPE, stderr=PIPE
-		)
+		process = Popen(command, cwd=frappe.get_app_path("frappe", ".."), stdout=PIPE, stderr=PIPE)
 
 		stderr = process.communicate()[1]
 
 		if stderr:
 			stderr = frappe.safe_decode(stderr)
 			stderr = stderr.replace("\n", "<br>")
-			frappe.throw(
-				'<div style="font-family: monospace;">{stderr}</div>'.format(stderr=stderr)
-			)
+			frappe.throw('<div style="font-family: monospace;">{stderr}</div>'.format(stderr=stderr))
 		else:
 			self.theme_url = "/files/website_theme/" + file_name
 

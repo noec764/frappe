@@ -7,16 +7,13 @@ from frappe import _
 from frappe.rate_limiter import rate_limit
 from frappe.utils import add_to_date, now
 from frappe.utils.html_utils import clean_html
-from frappe.website.doctype.blog_settings.blog_settings import \
-    get_comment_limit
+from frappe.website.doctype.blog_settings.blog_settings import get_comment_limit
 from frappe.website.utils import clear_cache
 
 
 @frappe.whitelist(allow_guest=True)
 @rate_limit(key="reference_name", limit=get_comment_limit, seconds=60 * 60)
-def add_comment(
-	comment, comment_email, comment_by, reference_doctype, reference_name, route
-):
+def add_comment(comment, comment_email, comment_by, reference_doctype, reference_name, route):
 	doc = frappe.get_doc(reference_doctype, reference_name)
 
 	if frappe.session.user == "Guest" and doc.doctype not in ["Blog Post", "Web Page"]:
@@ -30,9 +27,7 @@ def add_comment(
 		r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
 		re.IGNORECASE,
 	)
-	email_regex = re.compile(
-		r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE
-	)
+	email_regex = re.compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
 
 	if url_regex.search(comment) or email_regex.search(comment):
 		frappe.msgprint(_("Comments cannot have links or email addresses"))

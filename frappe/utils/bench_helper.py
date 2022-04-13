@@ -14,9 +14,7 @@ click.disable_unicode_literals_warning = True
 
 def main():
 	commands = get_app_groups()
-	commands.update(
-		{"get-frappe-commands": get_frappe_commands, "get-frappe-help": get_frappe_help}
-	)
+	commands.update({"get-frappe-commands": get_frappe_commands, "get-frappe-help": get_frappe_help})
 	click.Group(commands=commands)(prog_name="bench")
 
 
@@ -71,9 +69,7 @@ def get_sites(site_arg):
 
 
 def get_app_commands(app):
-	if os.path.exists(
-		os.path.join("..", "apps", app, app, "commands.py")
-	) or os.path.exists(
+	if os.path.exists(os.path.join("..", "apps", app, app, "commands.py")) or os.path.exists(
 		os.path.join("..", "apps", app, app, "commands", "__init__.py")
 	):
 		try:

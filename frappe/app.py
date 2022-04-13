@@ -19,8 +19,7 @@ import frappe.rate_limiter
 import frappe.recorder
 import frappe.utils.response
 from frappe import _
-from frappe.core.doctype.comment.comment import \
-    update_comments_in_parent_after_request
+from frappe.core.doctype.comment.comment import update_comments_in_parent_after_request
 from frappe.middlewares import StaticDataMiddleware
 from frappe.utils import get_site_name, sanitize_html
 from frappe.utils.error import make_error_snapshot
@@ -109,13 +108,9 @@ def application(request):
 
 def init_request(request):
 	frappe.local.request = request
-	frappe.local.is_ajax = (
-		frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
-	)
+	frappe.local.is_ajax = frappe.get_request_header("X-Requested-With") == "XMLHttpRequest"
 
-	site = (
-		_site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
-	)
+	site = _site or request.headers.get("X-Frappe-Site-Name") or get_site_name(request.host)
 	frappe.init(site=site, sites_path=_sites_path)
 
 	if not (frappe.local.conf and frappe.local.conf.db_name):
@@ -224,10 +219,7 @@ def handle_exception(e):
 	respond_as_json = (
 		frappe.get_request_header("Accept")
 		and (frappe.local.is_ajax or "application/json" in accept_header)
-		or (
-			frappe.local.request.path.startswith("/api/")
-			and not accept_header.startswith("text")
-		)
+		or (frappe.local.request.path.startswith("/api/") and not accept_header.startswith("text"))
 	)
 
 	if frappe.conf.get("developer_mode"):
@@ -305,9 +297,7 @@ def handle_exception(e):
 
 
 def after_request(rollback):
-	if (
-		frappe.local.request.method in ("POST", "PUT") or frappe.local.flags.commit
-	) and frappe.db:
+	if (frappe.local.request.method in ("POST", "PUT") or frappe.local.flags.commit) and frappe.db:
 		if frappe.db.transaction_writes:
 			frappe.db.commit()
 			rollback = False

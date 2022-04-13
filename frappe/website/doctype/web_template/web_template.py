@@ -9,8 +9,7 @@ from shutil import rmtree
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.modules.export_file import (get_module_path, scrub_dt_dn,
-                                        write_document_file)
+from frappe.modules.export_file import get_module_path, scrub_dt_dn, write_document_file
 from frappe.website.utils import clear_cache
 
 

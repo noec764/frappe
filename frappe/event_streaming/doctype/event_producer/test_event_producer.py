@@ -8,8 +8,7 @@ import unittest
 
 import frappe
 from frappe.core.doctype.user.user import generate_keys
-from frappe.event_streaming.doctype.event_producer.event_producer import \
-    pull_from_node
+from frappe.event_streaming.doctype.event_producer.event_producer import pull_from_node
 from frappe.frappeclient import FrappeClient
 
 producer_url = "http://test_site_producer:8000"
@@ -125,9 +124,7 @@ class TestEventProducer(unittest.TestCase):
 		# unsubscribe for Note to check whether dependency is fulfilled
 		event_producer = frappe.get_doc("Event Producer", producer_url, for_update=True)
 		event_producer.producer_doctypes = []
-		event_producer.append(
-			"producer_doctypes", {"ref_doctype": "ToDo", "use_same_name": 1}
-		)
+		event_producer.append("producer_doctypes", {"ref_doctype": "ToDo", "use_same_name": 1})
 		event_producer.save()
 
 		producer_link_doc = frappe._dict(doctype="Note", title="Test Dynamic Link 1")
@@ -160,9 +157,7 @@ class TestEventProducer(unittest.TestCase):
 		producer = get_remote_site()
 		event_producer = frappe.get_doc("Event Producer", producer_url, for_update=True)
 		event_producer.producer_doctypes = []
-		event_producer.append(
-			"producer_doctypes", {"ref_doctype": "ToDo", "use_same_name": 0}
-		)
+		event_producer.append("producer_doctypes", {"ref_doctype": "ToDo", "use_same_name": 0})
 		event_producer.save()
 
 		producer_doc = insert_into_producer(producer, "test different name sync")
@@ -180,9 +175,7 @@ class TestEventProducer(unittest.TestCase):
 
 		# Add Condition
 		event_producer = frappe.get_doc("Event Producer", producer_url)
-		note_producer_entry = [
-			x for x in event_producer.producer_doctypes if x.ref_doctype == "Note"
-		][0]
+		note_producer_entry = [x for x in event_producer.producer_doctypes if x.ref_doctype == "Note"][0]
 		note_producer_entry.condition = "doc.public == 1"
 		event_producer.save()
 
@@ -218,16 +211,14 @@ class TestEventProducer(unittest.TestCase):
 
 		# Add Condition
 		event_producer = frappe.get_doc("Event Producer", producer_url)
-		note_producer_entry = [
-			x for x in event_producer.producer_doctypes if x.ref_doctype == "Note"
-		][0]
-		note_producer_entry.condition = "cmd: frappe.event_streaming.doctype.event_producer.test_event_producer.can_sync_note"
+		note_producer_entry = [x for x in event_producer.producer_doctypes if x.ref_doctype == "Note"][0]
+		note_producer_entry.condition = (
+			"cmd: frappe.event_streaming.doctype.event_producer.test_event_producer.can_sync_note"
+		)
 		event_producer.save()
 
 		# Make test doc
-		producer_note1 = frappe._dict(
-			doctype="Note", public=0, title="test conditional sync cmd"
-		)
+		producer_note1 = frappe._dict(doctype="Note", public=0, title="test conditional sync cmd")
 		delete_on_remote_if_exists(producer, "Note", {"title": producer_note1["title"]})
 		producer_note1 = producer.insert(producer_note1)
 
@@ -286,9 +277,7 @@ class TestEventProducer(unittest.TestCase):
 		)
 		event_producer.save()
 
-		producer_note = frappe._dict(
-			doctype="Note", title="Test Mapping", content="Test Mapping"
-		)
+		producer_note = frappe._dict(doctype="Note", title="Test Mapping", content="Test Mapping")
 		delete_on_remote_if_exists(producer, "Note", {"title": producer_note.title})
 		producer_note = producer.insert(producer_note)
 		self.pull_producer_data()
@@ -337,9 +326,7 @@ def setup_event_producer_for_inner_mapping():
 	event_producer = frappe.get_doc("Event Producer", producer_url, for_update=True)
 	event_producer.producer_doctypes = []
 	inner_mapping = [{"local_fieldname": "role_name", "remote_fieldname": "title"}]
-	inner_map = get_mapping(
-		"Role to Note Dependency Creation", "Role", "Note", inner_mapping
-	)
+	inner_map = get_mapping("Role to Note Dependency Creation", "Role", "Note", inner_mapping)
 	mapping = [
 		{
 			"local_fieldname": "description",
@@ -457,9 +444,7 @@ def unsubscribe_doctypes(producer_url):
 
 def connect():
 	def _connect():
-		return FrappeClient(
-			url=producer_url, username="Administrator", password="admin", verify=False
-		)
+		return FrappeClient(url=producer_url, username="Administrator", password="admin", verify=False)
 
 	try:
 		return _connect()

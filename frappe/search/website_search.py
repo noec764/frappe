@@ -18,9 +18,7 @@ class WebsiteSearch(FullTextSearch):
 	"""Wrapper for WebsiteSearch"""
 
 	def get_schema(self):
-		return Schema(
-			title=TEXT(stored=True), path=ID(stored=True), content=TEXT(stored=True)
-		)
+		return Schema(title=TEXT(stored=True), path=ID(stored=True), content=TEXT(stored=True))
 
 	def get_fields_to_search(self):
 		return ["title", "content"]
@@ -105,9 +103,7 @@ def slugs_with_web_view(_items_to_index):
 					content = frappe.utils.md_to_html(getattr(doc, doctype.website_search_field))
 					soup = BeautifulSoup(content, "html.parser")
 					text_content = soup.text if soup else ""
-					_items_to_index += [
-						frappe._dict(title=doc.title, content=text_content, path=doc.route)
-					]
+					_items_to_index += [frappe._dict(title=doc.title, content=text_content, path=doc.route)]
 			else:
 				docs = frappe.get_all(doctype.name, filters=filters, fields=fields)
 				all_routes += [route.route for route in docs]

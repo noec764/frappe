@@ -8,8 +8,7 @@ from frappe.build import scrub_html_template
 from frappe.model.meta import Meta
 from frappe.model.utils import render_include
 from frappe.modules import get_module_path, load_doctype_module, scrub
-from frappe.translate import (extract_messages_from_code,
-                              make_dict_from_messages)
+from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import get_html_format
 
 ASSET_KEYS = (
@@ -110,9 +109,7 @@ class FormMeta(Meta):
 		self._add_code(_get_path(self.name + ".css"), "__css")
 		self._add_code(_get_path(self.name + "_list.js"), "__list_js")
 		if system_country:
-			self._add_code(
-				_get_path(os.path.join("regional", system_country + "_list.js")), "__list_js"
-			)
+			self._add_code(_get_path(os.path.join("regional", system_country + "_list.js")), "__list_js")
 
 		self._add_code(_get_path(self.name + "_calendar.js"), "__calendar_js")
 		self._add_code(_get_path(self.name + "_tree.js"), "__tree_js")

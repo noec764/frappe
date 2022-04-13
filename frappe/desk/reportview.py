@@ -166,18 +166,14 @@ def setup_group_by(data):
 
 
 def raise_invalid_field(fieldname):
-	frappe.throw(
-		_("Field not permitted in query") + ": {0}".format(fieldname), frappe.DataError
-	)
+	frappe.throw(_("Field not permitted in query") + ": {0}".format(fieldname), frappe.DataError)
 
 
 def is_standard(fieldname):
 	if "." in fieldname:
 		parenttype, fieldname = get_parenttype_and_fieldname(fieldname, None)
 	return (
-		fieldname in default_fields
-		or fieldname in optional_fields
-		or fieldname in child_table_fields
+		fieldname in default_fields or fieldname in optional_fields or fieldname in child_table_fields
 	)
 
 
@@ -192,11 +188,7 @@ def extract_fieldname(field):
 			fieldname = fieldname.split(sep)[0]
 
 	# certain functions allowed, extract the fieldname from the function
-	if (
-		fieldname.startswith("count(")
-		or fieldname.startswith("sum(")
-		or fieldname.startswith("avg(")
-	):
+	if fieldname.startswith("count(") or fieldname.startswith("sum(") or fieldname.startswith("avg("):
 		if not fieldname.strip().endswith(")"):
 			raise_invalid_field(field)
 		fieldname = fieldname.split("(", 1)[1][:-1]
@@ -213,9 +205,7 @@ def get_meta_and_docfield(fieldname, data):
 
 def update_wildcard_field_param(data):
 	if (isinstance(data.fields, str) and data.fields == "*") or (
-		isinstance(data.fields, (list, tuple))
-		and len(data.fields) == 1
-		and data.fields[0] == "*"
+		isinstance(data.fields, (list, tuple)) and len(data.fields) == 1 and data.fields[0] == "*"
 	):
 		data.fields = frappe.db.get_table_columns(data.doctype)
 		return True
@@ -303,12 +293,8 @@ def save_report(name, doctype, report_settings):
 		if report.report_type != "Report Builder":
 			frappe.throw(_("Only reports of type Report Builder can be edited"))
 
-		if report.owner != frappe.session.user and not frappe.has_permission(
-			"Report", "write"
-		):
-			frappe.throw(
-				_("Insufficient Permissions for editing Report"), frappe.PermissionError
-			)
+		if report.owner != frappe.session.user and not frappe.has_permission("Report", "write"):
+			frappe.throw(_("Insufficient Permissions for editing Report"), frappe.PermissionError)
 	else:
 		report = frappe.new_doc("Report")
 		report.report_name = name
@@ -336,12 +322,8 @@ def delete_report(name):
 	if report.report_type != "Report Builder":
 		frappe.throw(_("Only reports of type Report Builder can be deleted"))
 
-	if report.owner != frappe.session.user and not frappe.has_permission(
-		"Report", "delete"
-	):
-		frappe.throw(
-			_("Insufficient Permissions for deleting Report"), frappe.PermissionError
-		)
+	if report.owner != frappe.session.user and not frappe.has_permission("Report", "delete"):
+		frappe.throw(_("Insufficient Permissions for deleting Report"), frappe.PermissionError)
 
 	report.delete(ignore_permissions=True)
 	frappe.msgprint(
@@ -410,9 +392,7 @@ def export_query():
 		writer = csv.writer(f)
 		for r in data:
 			# encode only unicode type strings and not int, floats etc.
-			writer.writerow(
-				[handle_html(frappe.as_unicode(v)) if isinstance(v, str) else v for v in r]
-			)
+			writer.writerow([handle_html(frappe.as_unicode(v)) if isinstance(v, str) else v for v in r])
 
 		f.seek(0)
 		frappe.response["result"] = cstr(f.read())

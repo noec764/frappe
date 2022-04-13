@@ -4,10 +4,8 @@
 import unittest
 
 import frappe
-from frappe.custom.doctype.property_setter.property_setter import \
-    make_property_setter
-from frappe.desk.page.setup_wizard.install_fixtures import \
-    update_global_search_doctypes
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+from frappe.desk.page.setup_wizard.install_fixtures import update_global_search_doctypes
 from frappe.test_runner import make_test_objects
 from frappe.utils import global_search, now_datetime
 
@@ -125,9 +123,7 @@ class TestGlobalSearch(unittest.TestCase):
 		]
 
 		for text in phrases:
-			doc = frappe.get_doc(
-				{"doctype": "Event", "subject": text, "starts_on": now_datetime()}
-			)
+			doc = frappe.get_doc({"doctype": "Event", "subject": text, "starts_on": now_datetime()})
 			doc.insert()
 
 		global_search.sync_global_search()

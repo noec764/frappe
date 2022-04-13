@@ -39,9 +39,7 @@ def send(email, append_to=None, retry=1):
 			# validate is called in as_string
 			email_body = email.as_string()
 
-			smtpserver.sess.sendmail(
-				email.sender, email.recipients + (email.cc or []), email_body
-			)
+			smtpserver.sess.sendmail(email.sender, email.recipients + (email.cc or []), email_body)
 		except smtplib.SMTPSenderRefused:
 			frappe.throw(_("Invalid login or password"), title="Email Failed")
 			raise
@@ -59,9 +57,7 @@ def send(email, append_to=None, retry=1):
 
 
 class SMTPServer:
-	def __init__(
-		self, server, login=None, password=None, port=None, use_tls=None, use_ssl=None
-	):
+	def __init__(self, server, login=None, password=None, port=None, use_tls=None, use_ssl=None):
 		self.login = login
 		self.password = password
 		self._server = server

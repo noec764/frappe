@@ -6,6 +6,7 @@
 import json
 
 import frappe
+
 # import frappe
 from frappe.model.document import Document
 

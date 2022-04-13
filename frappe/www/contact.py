@@ -14,9 +14,7 @@ def get_context(context):
 
 	query_options = []
 	if doc.query_options:
-		query_options = [
-			opt.strip() for opt in doc.query_options.replace(",", "\n").split("\n") if opt
-		]
+		query_options = [opt.strip() for opt in doc.query_options.replace(",", "\n").split("\n") if opt]
 
 	out = {"query_options": query_options, "parents": [{"name": _("Home"), "route": "/"}]}
 	out.update(doc.as_dict())
@@ -55,9 +53,7 @@ def send_message(subject=_("Website Query"), message="", sender=""):
 	# send email
 	forward_to_email = frappe.db.get_value("Contact Us Settings", None, "forward_to_email")
 	if forward_to_email:
-		frappe.sendmail(
-			recipients=forward_to_email, sender=sender, content=message, subject=subject
-		)
+		frappe.sendmail(recipients=forward_to_email, sender=sender, content=message, subject=subject)
 
 	# add to to-do ?
 	frappe.get_doc(

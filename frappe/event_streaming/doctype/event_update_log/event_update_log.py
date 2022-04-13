@@ -261,8 +261,7 @@ def get_update_logs_for_consumer(event_consumer, doctypes, last_update):
 	if isinstance(doctypes, str):
 		doctypes = frappe.parse_json(doctypes)
 
-	from frappe.event_streaming.doctype.event_consumer.event_consumer import \
-	    has_consumer_access
+	from frappe.event_streaming.doctype.event_consumer.event_consumer import has_consumer_access
 
 	consumer = frappe.get_doc("Event Consumer", event_consumer)
 	docs = frappe.get_list(

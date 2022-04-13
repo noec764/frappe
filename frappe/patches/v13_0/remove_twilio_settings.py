@@ -16,6 +16,4 @@ def execute():
 
 def twilio_settings_doctype_in_integrations() -> bool:
 	"""Check Twilio Settings doctype exists in integrations module or not."""
-	return frappe.db.exists(
-		"DocType", {"name": "Twilio Settings", "module": "Integrations"}
-	)
+	return frappe.db.exists("DocType", {"name": "Twilio Settings", "module": "Integrations"})

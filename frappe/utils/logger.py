@@ -62,9 +62,7 @@ def get_logger(
 	logger.setLevel(frappe.log_level or default_log_level)
 	logger.propagate = False
 
-	formatter = logging.Formatter(
-		"%(asctime)s %(levelname)s {0} %(message)s".format(module)
-	)
+	formatter = logging.Formatter("%(asctime)s %(levelname)s {0} %(message)s".format(module))
 	if stream_only:
 		handler = logging.StreamHandler()
 	else:
@@ -74,9 +72,7 @@ def get_logger(
 
 	if site and not stream_only:
 		sitelog_filename = os.path.join(site, "logs", logfile)
-		site_handler = RotatingFileHandler(
-			sitelog_filename, maxBytes=max_size, backupCount=file_count
-		)
+		site_handler = RotatingFileHandler(sitelog_filename, maxBytes=max_size, backupCount=file_count)
 		site_handler.setFormatter(formatter)
 		logger.addHandler(site_handler)
 

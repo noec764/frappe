@@ -12,9 +12,7 @@ def create_if_not_exists(doc):
 	"""
 
 	if not frappe.local.dev_server:
-		frappe.throw(
-			_("This method can only be accessed in development"), frappe.PermissionError
-		)
+		frappe.throw(_("This method can only be accessed in development"), frappe.PermissionError)
 
 	doc = frappe.parse_json(doc)
 
@@ -89,8 +87,7 @@ def create_communication_record():
 
 @frappe.whitelist()
 def setup_workflow():
-	from frappe.workflow.doctype.workflow.test_workflow import \
-	    create_todo_workflow
+	from frappe.workflow.doctype.workflow.test_workflow import create_todo_workflow
 
 	create_todo_workflow()
 	create_todo_records()

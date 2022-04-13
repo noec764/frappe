@@ -29,16 +29,12 @@ class TestEvent(unittest.TestCase):
 
 	def test_allowed_public(self):
 		frappe.set_user(self.test_user)
-		doc = frappe.get_doc(
-			"Event", frappe.db.get_value("Event", {"subject": "_Test Event 1"})
-		)
+		doc = frappe.get_doc("Event", frappe.db.get_value("Event", {"subject": "_Test Event 1"}))
 		self.assertTrue(frappe.has_permission("Event", doc=doc))
 
 	def test_not_allowed_private(self):
 		frappe.set_user(self.test_user)
-		doc = frappe.get_doc(
-			"Event", frappe.db.get_value("Event", {"subject": "_Test Event 2"})
-		)
+		doc = frappe.get_doc("Event", frappe.db.get_value("Event", {"subject": "_Test Event 2"}))
 		self.assertFalse(frappe.has_permission("Event", doc=doc))
 
 	def test_allowed_private_if_in_event_user(self):
@@ -105,9 +101,7 @@ class TestEvent(unittest.TestCase):
 
 		ev = frappe.get_doc("Event", ev.name)
 
-		self.assertEqual(
-			set(json.loads(ev._assign)), set(["test@example.com", self.test_user])
-		)
+		self.assertEqual(set(json.loads(ev._assign)), set(["test@example.com", self.test_user]))
 
 		# Remove an assignment
 		todo = frappe.get_doc(
@@ -145,9 +139,7 @@ class TestEvent(unittest.TestCase):
 			bool(
 				list(
 					filter(
-						lambda e: (
-							e.get("name") == ev.name and e.get("starts_on") == get_datetime("2020-01-05")
-						),
+						lambda e: (e.get("name") == ev.name and e.get("starts_on") == get_datetime("2020-01-05")),
 						ev_list,
 					)
 				)
@@ -159,9 +151,7 @@ class TestEvent(unittest.TestCase):
 			bool(
 				list(
 					filter(
-						lambda e: (
-							e.get("name") == ev.name and e.get("starts_on") == get_datetime("2021-01-20")
-						),
+						lambda e: (e.get("name") == ev.name and e.get("starts_on") == get_datetime("2021-01-20")),
 						ev_list1,
 					)
 				)
@@ -173,9 +163,7 @@ class TestEvent(unittest.TestCase):
 			bool(
 				list(
 					filter(
-						lambda e: (
-							e.get("name") == ev.name and e.get("starts_on") == get_datetime("2020-01-20")
-						),
+						lambda e: (e.get("name") == ev.name and e.get("starts_on") == get_datetime("2020-01-20")),
 						ev_list2,
 					)
 				)
@@ -187,9 +175,7 @@ class TestEvent(unittest.TestCase):
 			bool(
 				list(
 					filter(
-						lambda e: (
-							e.get("name") == ev.name and e.get("starts_on") == get_datetime("2023-01-05")
-						),
+						lambda e: (e.get("name") == ev.name and e.get("starts_on") == get_datetime("2023-01-05")),
 						ev_list3,
 					)
 				)

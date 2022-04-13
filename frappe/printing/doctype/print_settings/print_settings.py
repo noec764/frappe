@@ -11,9 +11,7 @@ from frappe.utils import cint
 
 class PrintSettings(Document):
 	def validate(self):
-		if self.pdf_page_size == "Custom" and not (
-			self.pdf_page_height and self.pdf_page_width
-		):
+		if self.pdf_page_size == "Custom" and not (self.pdf_page_height and self.pdf_page_width):
 			frappe.throw(_("Page height and width cannot be zero"))
 
 	def on_update(self):

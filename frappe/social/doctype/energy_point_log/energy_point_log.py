@@ -8,9 +8,14 @@ import json
 import frappe
 from frappe import _
 from frappe.desk.doctype.notification_log.notification_log import (
-    enqueue_create_notification, get_title, get_title_html)
+	enqueue_create_notification,
+	get_title,
+	get_title_html,
+)
 from frappe.desk.doctype.notification_settings.notification_settings import (
-    is_email_notifications_enabled, is_email_notifications_enabled_for_type)
+	is_email_notifications_enabled,
+	is_email_notifications_enabled_for_type,
+)
 from frappe.model.document import Document
 from frappe.utils import cint, get_fullname, get_link_to_form, getdate
 
@@ -98,26 +103,20 @@ def get_notification_message(doc):
 			message = _("{0} gained {1} point for {2} {3}")
 		else:
 			message = _("{0} gained {1} points for {2} {3}")
-		message = message.format(
-			owner_name, frappe.bold(points), doc.rule, frappe.bold(title)
-		)
+		message = message.format(owner_name, frappe.bold(points), doc.rule, frappe.bold(title))
 	elif doc.type == "Appreciation":
 		if points == 1:
 			message = _("{0} appreciated your work on {1} with {2} point")
 		else:
 			message = _("{0} appreciated your work on {1} with {2} points")
-		message = message.format(
-			frappe.bold(owner_name), get_title_html(title), frappe.bold(points)
-		)
+		message = message.format(frappe.bold(owner_name), get_title_html(title), frappe.bold(points))
 	elif doc.type == "Criticism":
 		if points == 1:
 			message = _("{0} criticized your work on {1} with {2} point")
 		else:
 			message = _("{0} criticized your work on {1} with {2} points")
 
-		message = message.format(
-			frappe.bold(owner_name), get_title_html(title), frappe.bold(points)
-		)
+		message = message.format(frappe.bold(owner_name), get_title_html(title), frappe.bold(points))
 	elif doc.type == "Revert":
 		if points == 1:
 			message = _("{0} reverted your point on {1}")
@@ -334,8 +333,9 @@ def send_monthly_summary():
 
 
 def send_summary(timespan):
-	from frappe.social.doctype.energy_point_settings.energy_point_settings import \
-	    is_energy_point_enabled
+	from frappe.social.doctype.energy_point_settings.energy_point_settings import (
+		is_energy_point_enabled,
+	)
 	from frappe.utils.user import get_enabled_system_users
 
 	if not is_energy_point_enabled():

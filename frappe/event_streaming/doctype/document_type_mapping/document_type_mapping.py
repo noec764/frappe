@@ -61,11 +61,7 @@ class DocumentTypeMapping(Document):
 				if mapping.local_fieldname != mapping.remote_fieldname:
 					remote_fields.append(mapping.remote_fieldname)
 
-			if (
-				not doc.get(mapping.remote_fieldname)
-				and mapping.default_value
-				and update_type != "Update"
-			):
+			if not doc.get(mapping.remote_fieldname) and mapping.default_value and update_type != "Update":
 				doc[mapping.local_fieldname] = mapping.default_value
 
 		# remove the remote fieldnames

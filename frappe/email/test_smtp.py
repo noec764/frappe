@@ -46,9 +46,7 @@ def test_get_email_account(self):
 		enable_outgoing=1,
 		default_outgoing=1,
 	)
-	self.assertEqual(
-		EmailAccount.find_outgoing().email_id, "default_outgoing_enabled@gmail.com"
-	)
+	self.assertEqual(EmailAccount.find_outgoing().email_id, "default_outgoing_enabled@gmail.com")
 
 	frappe.local.outgoing_email_account = {}
 	# highest preference given to email account with append_to matching
@@ -75,9 +73,7 @@ def test_get_email_account(self):
 		frappe.db.set_value("Email Account", email_account["name"], set_details)
 
 
-def create_email_account(
-	email_id, password, enable_outgoing, default_outgoing=0, append_to=None
-):
+def create_email_account(email_id, password, enable_outgoing, default_outgoing=0, append_to=None):
 	email_dict = {
 		"email_id": email_id,
 		"passsword": password,

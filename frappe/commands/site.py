@@ -42,9 +42,7 @@ from frappe.limits import get_limits, update_limits
 	default=False,
 	help="Set MariaDB host to % and use TCP/IP Socket instead of using the UNIX Socket",
 )
-@click.option(
-	"--admin-password", help="Administrator password for new site", default=None
-)
+@click.option("--admin-password", help="Administrator password for new site", default=None)
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 @click.option(
 	"--force",
@@ -148,9 +146,14 @@ def restore(
 	with_private_files=None,
 ):
 	"Restore site database from an sql file"
-	from frappe.installer import (_new_site, extract_files,
-	                              extract_sql_from_archive, is_downgrade,
-	                              is_partial, validate_database_sql)
+	from frappe.installer import (
+		_new_site,
+		extract_files,
+		extract_sql_from_archive,
+		is_downgrade,
+		is_partial,
+		validate_database_sql,
+	)
 	from frappe.utils.backups import Backup
 
 	if not os.path.exists(sql_file_path):
@@ -180,15 +183,11 @@ def restore(
 	except UnicodeDecodeError:
 		_backup.decryption_rollback()
 		if encryption_key:
-			click.secho(
-				"Encrypted backup file detected. Decrypting using provided key.", fg="yellow"
-			)
+			click.secho("Encrypted backup file detected. Decrypting using provided key.", fg="yellow")
 			_backup.backup_decryption(encryption_key)
 
 		else:
-			click.secho(
-				"Encrypted backup file detected. Decrypting using site config.", fg="yellow"
-			)
+			click.secho("Encrypted backup file detected. Decrypting using site config.", fg="yellow")
 			encryption_key = frappe.get_site_config().encryption_key
 			_backup.backup_decryption(encryption_key)
 
@@ -318,15 +317,11 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 	except UnicodeDecodeError:
 		_backup.decryption_rollback()
 		if encryption_key:
-			click.secho(
-				"Encrypted backup file detected. Decrypting using provided key.", fg="yellow"
-			)
+			click.secho("Encrypted backup file detected. Decrypting using provided key.", fg="yellow")
 			key = encryption_key
 
 		else:
-			click.secho(
-				"Encrypted backup file detected. Decrypting using site config.", fg="yellow"
-			)
+			click.secho("Encrypted backup file detected. Decrypting using site config.", fg="yellow")
 			key = frappe.get_site_config().encryption_key
 
 		_backup.backup_decryption(key)
@@ -372,18 +367,14 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 	"--mariadb-root-password",
 	help="Root password for MariaDB or PostgreSQL",
 )
-@click.option(
-	"--yes", is_flag=True, default=False, help="Pass --yes to skip confirmation"
-)
+@click.option("--yes", is_flag=True, default=False, help="Pass --yes to skip confirmation")
 @pass_context
 def reinstall(
 	context, admin_password=None, db_root_username=None, db_root_password=None, yes=False
 ):
 	"Reinstall site ie. wipe all data and start over"
 	site = get_site(context)
-	_reinstall(
-		site, admin_password, db_root_username, db_root_password, yes, verbose=context.verbose
-	)
+	_reinstall(site, admin_password, db_root_username, db_root_password, yes, verbose=context.verbose)
 
 
 def _reinstall(
@@ -397,9 +388,7 @@ def _reinstall(
 	from frappe.installer import _new_site
 
 	if not yes:
-		click.confirm(
-			"This will wipe your database. Are you sure you want to reinstall?", abort=True
-		)
+		click.confirm("This will wipe your database. Are you sure you want to reinstall?", abort=True)
 	try:
 		frappe.init(site=site)
 		frappe.connect()
@@ -481,9 +470,7 @@ def list_apps(context, format):
 		apps = frappe.get_single("Installed Applications").installed_applications
 
 		if apps:
-			name_len, ver_len = [
-				max([len(x.get(y)) for x in apps]) for y in ["app_name", "app_version"]
-			]
+			name_len, ver_len = [max([len(x.get(y)) for x in apps]) for y in ["app_name", "app_version"]]
 			template = "{{0:{0}}} {{1:{1}}} {{2}}".format(name_len, ver_len)
 
 			installed_applications = [
@@ -517,18 +504,14 @@ def list_apps(context, format):
 @click.option("--password")
 @click.option("--send-welcome-email", default=False, is_flag=True)
 @pass_context
-def add_system_manager(
-	context, email, first_name, last_name, send_welcome_email, password
-):
+def add_system_manager(context, email, first_name, last_name, send_welcome_email, password):
 	"Add a new system manager to a site"
 	import frappe.utils.user
 
 	for site in context.sites:
 		frappe.connect(site=site)
 		try:
-			frappe.utils.user.add_system_manager(
-				email, first_name, last_name, send_welcome_email, password
-			)
+			frappe.utils.user.add_system_manager(email, first_name, last_name, send_welcome_email, password)
 			frappe.db.commit()
 		finally:
 			frappe.destroy()
@@ -551,9 +534,7 @@ def disable_user(context, email):
 
 @click.command("migrate")
 @click.option("--skip-failing", is_flag=True, help="Skip patches that fail to run")
-@click.option(
-	"--skip-search-index", is_flag=True, help="Skip search indexing for web documents"
-)
+@click.option("--skip-search-index", is_flag=True, help="Skip search indexing for web documents")
 @pass_context
 def migrate(context, skip_failing=False, skip_search_index=False):
 	"Run patches, sync schema and rebuild files/translations"
@@ -652,9 +633,7 @@ def use(site, sites_path="."):
 
 
 @click.command("backup")
-@click.option(
-	"--with-files", default=False, is_flag=True, help="Take backup with files"
-)
+@click.option("--with-files", default=False, is_flag=True, help="Take backup with files")
 @click.option(
 	"--include",
 	"--only",
@@ -675,18 +654,10 @@ def use(site, sites_path="."):
 	default=None,
 	help="Set path for saving all the files in this operation",
 )
-@click.option(
-	"--backup-path-db", default=None, help="Set path for saving database file"
-)
-@click.option(
-	"--backup-path-files", default=None, help="Set path for saving public file"
-)
-@click.option(
-	"--backup-path-private-files", default=None, help="Set path for saving private file"
-)
-@click.option(
-	"--backup-path-conf", default=None, help="Set path for saving config file"
-)
+@click.option("--backup-path-db", default=None, help="Set path for saving database file")
+@click.option("--backup-path-files", default=None, help="Set path for saving public file")
+@click.option("--backup-path-private-files", default=None, help="Set path for saving private file")
+@click.option("--backup-path-conf", default=None, help="Set path for saving config file")
 @click.option(
 	"--ignore-backup-conf",
 	default=False,
@@ -694,9 +665,7 @@ def use(site, sites_path="."):
 	help="Ignore excludes/includes set in config",
 )
 @click.option("--verbose", default=False, is_flag=True, help="Add verbosity")
-@click.option(
-	"--compress", default=False, is_flag=True, help="Compress private and public files"
-)
+@click.option("--compress", default=False, is_flag=True, help="Compress private and public files")
 @pass_context
 def backup(
 	context,
@@ -739,9 +708,7 @@ def backup(
 			)
 		except Exception:
 			click.secho(
-				"Backup failed for Site {0}. Database or site_config.json may be corrupted".format(
-					site
-				),
+				"Backup failed for Site {0}. Database or site_config.json may be corrupted".format(site),
 				fg="red",
 			)
 			if verbose:
@@ -749,10 +716,7 @@ def backup(
 			exit_code = 1
 			continue
 
-		if (
-			frappe.get_system_settings("encrypt_backup")
-			and frappe.get_site_config().encryption_key
-		):
+		if frappe.get_system_settings("encrypt_backup") and frappe.get_site_config().encryption_key:
 			click.secho(
 				"Backup encryption is turned on. Please note the backup encryption key.",
 				fg="yellow",
@@ -851,9 +815,7 @@ def drop_site(
 	force=False,
 	no_backup=False,
 ):
-	_drop_site(
-		site, db_root_username, db_root_password, archived_sites_path, force, no_backup
-	)
+	_drop_site(site, db_root_username, db_root_password, archived_sites_path, force, no_backup)
 
 
 def _drop_site(
@@ -882,9 +844,7 @@ def _drop_site(
 		else:
 			messages = [
 				"=" * 80,
-				"Error: The operation has stopped because backup of {0}'s database failed.".format(
-					site
-				),
+				"Error: The operation has stopped because backup of {0}'s database failed.".format(site),
 				"Reason: {0}\n".format(str(err)),
 				"Fix the issue and try again.",
 				"Hint: Use 'bench drop-site {0} --force' to force the removal of {0}".format(site),
@@ -1115,9 +1075,7 @@ def set_last_active_for_user(context, user=None):
 @click.option("--docname")
 @click.option("--after-commit")
 @pass_context
-def publish_realtime(
-	context, event, message, room, user, doctype, docname, after_commit
-):
+def publish_realtime(context, event, message, room, user, doctype, docname, after_commit):
 	"Publish realtime event from bench"
 	from frappe import publish_realtime
 
@@ -1256,9 +1214,7 @@ def build_search_index(context):
 
 
 @click.command("trim-database")
-@click.option(
-	"--dry-run", is_flag=True, default=False, help="Show what would be deleted"
-)
+@click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
 	"--format",
 	"-f",
@@ -1357,9 +1313,7 @@ def get_standard_tables():
 
 
 @click.command("trim-tables")
-@click.option(
-	"--dry-run", is_flag=True, default=False, help="Show what would be deleted"
-)
+@click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
 	"--format",
 	"-f",
@@ -1389,9 +1343,7 @@ def trim_tables(context, dry_run, format, no_backup):
 			trimmed_data = trim_tables(dry_run=dry_run, quiet=format == "json")
 
 			if format == "table" and not dry_run:
-				click.secho(
-					f"The following data have been removed from {frappe.local.site}", fg="green"
-				)
+				click.secho(f"The following data have been removed from {frappe.local.site}", fg="green")
 
 			handle_data(trimmed_data, format=format)
 		finally:
@@ -1406,9 +1358,7 @@ def handle_data(data: dict, format="json"):
 	else:
 		from frappe.utils.commands import render_table
 
-		data = [["DocType", "Fields"]] + [
-			[table, ", ".join(columns)] for table, columns in data.items()
-		]
+		data = [["DocType", "Fields"]] + [[table, ", ".join(columns)] for table, columns in data.items()]
 		render_table(data)
 
 

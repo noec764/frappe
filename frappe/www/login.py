@@ -8,15 +8,13 @@ import frappe
 import frappe.utils
 from frappe import _
 from frappe.auth import LoginManager
-from frappe.integrations.doctype.ldap_settings.ldap_settings import \
-    LDAPSettings
+from frappe.integrations.doctype.ldap_settings.ldap_settings import LDAPSettings
 from frappe.integrations.oauth2_logins import decoder_compat
 from frappe.utils.html_utils import get_icon_html
 from frappe.utils.jinja import guess_is_path
 from frappe.utils.oauth import get_oauth2_authorize_url, get_oauth_keys
 from frappe.utils.oauth import login_oauth_user as _login_oauth_user
-from frappe.utils.oauth import (login_via_oauth2, login_via_oauth2_id_token,
-                                redirect_post_login)
+from frappe.utils.oauth import login_via_oauth2, login_via_oauth2_id_token, redirect_post_login
 from frappe.utils.password import get_decrypted_password
 from frappe.website.utils import get_home_page
 
@@ -49,9 +47,7 @@ def get_context(context):
 		frappe.db.get_single_value("Website Settings", "app_logo")
 		or frappe.get_hooks("app_logo_url")[-1]
 	)
-	context["app_name"] = (
-		frappe.db.get_single_value("Website Settings", "app_name") or "Dodock"
-	)
+	context["app_name"] = frappe.db.get_single_value("Website Settings", "app_name") or "Dodock"
 
 	signup_form_template = frappe.get_hooks("signup_form_template")
 	if signup_form_template and len(signup_form_template) and signup_form_template[0]:
@@ -66,20 +62,14 @@ def get_context(context):
 	context["custom_signup"] = False
 	custom_signup_page = frappe.db.get_single_value("Website Settings", "custom_signup")
 	if custom_signup_page:
-		context["custom_signup"] = frappe.db.get_value(
-			"Web Form", custom_signup_page, "route"
-		)
+		context["custom_signup"] = frappe.db.get_value("Web Form", custom_signup_page, "route")
 	providers = [
 		i.name
-		for i in frappe.get_all(
-			"Social Login Key", filters={"enable_social_login": 1}, order_by="name"
-		)
+		for i in frappe.get_all("Social Login Key", filters={"enable_social_login": 1}, order_by="name")
 	]
 	for provider in providers:
 		try:
-			client_id, base_url = frappe.get_value(
-				"Social Login Key", provider, ["client_id", "base_url"]
-			)
+			client_id, base_url = frappe.get_value("Social Login Key", provider, ["client_id", "base_url"])
 			client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
 			provider_name = frappe.get_value("Social Login Key", provider, "provider_name")
 
@@ -149,15 +139,12 @@ def login_via_office365(code, state):
 def login_via_token(login_token):
 	sid = frappe.cache().get_value("login_token:{0}".format(login_token), expires=True)
 	if not sid:
-		frappe.respond_as_web_page(
-			_("Invalid Request"), _("Invalid Login Token"), http_status_code=417
-		)
+		frappe.respond_as_web_page(_("Invalid Request"), _("Invalid Login Token"), http_status_code=417)
 		return
 
 	frappe.local.form_dict.sid = sid
 	frappe.local.login_manager = LoginManager()
 
 	redirect_post_login(
-		desk_user=frappe.db.get_value("User", frappe.session.user, "user_type")
-		== "System User"
+		desk_user=frappe.db.get_value("User", frappe.session.user, "user_type") == "System User"
 	)

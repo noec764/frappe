@@ -63,11 +63,12 @@ def get_permission_query_conditions(user):
 		return None
 
 	allowed_modules = [
-		frappe.db.escape(module.get("module_name"))
-		for module in get_modules_from_all_apps_for_user()
+		frappe.db.escape(module.get("module_name")) for module in get_modules_from_all_apps_for_user()
 	]
-	module_condition = "`tabDashboard`.`module` in ({allowed_modules}) or `tabDashboard`.`module` is NULL".format(
-		allowed_modules=",".join(allowed_modules)
+	module_condition = (
+		"`tabDashboard`.`module` in ({allowed_modules}) or `tabDashboard`.`module` is NULL".format(
+			allowed_modules=",".join(allowed_modules)
+		)
 	)
 
 	return module_condition
@@ -100,31 +101,19 @@ def get_permitted_cards(dashboard_name):
 
 
 def get_non_standard_charts_in_dashboard(dashboard):
-	non_standard_charts = [
-		doc.name for doc in frappe.get_list("Dashboard Chart", {"is_standard": 0})
-	]
+	non_standard_charts = [doc.name for doc in frappe.get_list("Dashboard Chart", {"is_standard": 0})]
 	return [
-		chart_link.chart
-		for chart_link in dashboard.charts
-		if chart_link.chart in non_standard_charts
+		chart_link.chart for chart_link in dashboard.charts if chart_link.chart in non_standard_charts
 	]
 
 
 def get_non_standard_cards_in_dashboard(dashboard):
-	non_standard_cards = [
-		doc.name for doc in frappe.get_list("Number Card", {"is_standard": 0})
-	]
-	return [
-		card_link.card
-		for card_link in dashboard.cards
-		if card_link.card in non_standard_cards
-	]
+	non_standard_cards = [doc.name for doc in frappe.get_list("Number Card", {"is_standard": 0})]
+	return [card_link.card for card_link in dashboard.cards if card_link.card in non_standard_cards]
 
 
 def get_non_standard_warning_message(non_standard_docs_map):
-	message = _(
-		"""Please set the following documents in this Dashboard as standard first."""
-	)
+	message = _("""Please set the following documents in this Dashboard as standard first.""")
 
 	def get_html(docs, doctype):
 		html = "<p>{}</p>".format(frappe.bold(doctype))

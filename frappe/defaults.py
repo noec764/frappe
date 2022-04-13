@@ -77,8 +77,9 @@ def not_in_user_permission(key, value, user=None):
 
 
 def get_user_permissions(user=None):
-	from frappe.core.doctype.user_permission.user_permission import \
-	    get_user_permissions as _get_user_permissions
+	from frappe.core.doctype.user_permission.user_permission import (
+		get_user_permissions as _get_user_permissions,
+	)
 
 	"""Return frappe.core.doctype.user_permissions.user_permissions._get_user_permissions (kept for backward compatibility)"""
 	return _get_user_permissions(user)

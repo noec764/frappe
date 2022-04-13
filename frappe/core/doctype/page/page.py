@@ -5,8 +5,7 @@ import os
 import frappe
 from frappe import _, conf, safe_decode
 from frappe.build import html_to_js_template
-from frappe.core.doctype.custom_role.custom_role import \
-    get_custom_allowed_roles
+from frappe.core.doctype.custom_role.custom_role import get_custom_allowed_roles
 from frappe.desk.form.meta import get_code_files_via_hooks, get_js
 from frappe.desk.utils import validate_route_conflict
 from frappe.model.document import Document
@@ -23,9 +22,7 @@ class Page(Document):
 		from frappe.utils import cint
 
 		if (self.name and self.name.startswith("New Page")) or not self.name:
-			self.name = (
-				self.page_name.lower().replace('"', "").replace("'", "").replace(" ", "-")[:20]
-			)
+			self.name = self.page_name.lower().replace('"', "").replace("'", "").replace(" ", "-")[:20]
 			if frappe.db.exists("Page", self.name):
 				cnt = frappe.db.sql(
 					"""select name from tabPage
@@ -94,8 +91,7 @@ class Page(Document):
 		from frappe.utils import has_common
 
 		allowed = [
-			d.role
-			for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.name})
+			d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.name})
 		]
 
 		custom_roles = get_custom_allowed_roles("page", self.name)

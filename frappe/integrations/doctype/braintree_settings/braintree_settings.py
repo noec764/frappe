@@ -9,9 +9,11 @@ import braintree
 
 import frappe
 from frappe import _
-from frappe.integrations.utils import (PaymentGatewayController,
-                                       create_payment_gateway,
-                                       create_request_log)
+from frappe.integrations.utils import (
+	PaymentGatewayController,
+	create_payment_gateway,
+	create_request_log,
+)
 from frappe.utils import call_hook_method, get_url
 
 
@@ -189,9 +191,7 @@ class BraintreeSettings(PaymentGatewayController):
 
 		try:
 			self.get_merchant_account()
-			return self.gateway.client_token.generate(
-				{"merchant_account_id": self.merchant_account.id}
-			)
+			return self.gateway.client_token.generate({"merchant_account_id": self.merchant_account.id})
 		except Exception as e:
 			frappe.log_error(e, _("Client token generation issue"))
 
@@ -230,9 +230,7 @@ class BraintreeSettings(PaymentGatewayController):
 		matching_merchants = [
 			x for x in result.merchant_accounts if x.currency_iso_code == self.data.currency
 		]
-		default_merchant = (
-			[y for y in matching_merchants if y.default] if matching_merchants else []
-		)
+		default_merchant = [y for y in matching_merchants if y.default] if matching_merchants else []
 
 		if default_merchant:
 			self.merchant_account = default_merchant[0]
@@ -240,9 +238,7 @@ class BraintreeSettings(PaymentGatewayController):
 			self.merchant_account = matching_merchants[0]
 
 		if not hasattr(self, "merchant_account"):
-			frappe.log_error(
-				_("Merchant account for currency {} missing".format(self.data.currency))
-			)
+			frappe.log_error(_("Merchant account for currency {} missing".format(self.data.currency)))
 
 	def create_charge_on_braintree(self):
 		self.get_merchant_account()
@@ -265,9 +261,7 @@ class BraintreeSettings(PaymentGatewayController):
 		if result.is_success:
 			self.integration_request.db_set("status", "Completed", update_modified=False)
 			self.flags.status_changed_to = "Completed"
-			self.integration_request.db_set(
-				"output", result.transaction.status, update_modified=False
-			)
+			self.integration_request.db_set("output", result.transaction.status, update_modified=False)
 
 		elif result.transaction:
 			self.integration_request.db_set("status", "Failed", update_modified=False)

@@ -6,8 +6,7 @@ import unittest
 from cryptography.fernet import Fernet
 
 import frappe
-from frappe.utils.password import (check_password, decrypt, encrypt,
-                                   passlibctx, update_password)
+from frappe.utils.password import check_password, decrypt, encrypt, passlibctx, update_password
 
 
 class TestPassword(unittest.TestCase):

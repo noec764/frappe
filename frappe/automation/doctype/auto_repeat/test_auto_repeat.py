@@ -7,7 +7,9 @@ import unittest
 
 import frappe
 from frappe.automation.doctype.auto_repeat.auto_repeat import (
-    create_repeated_entries, get_auto_repeat_entries)
+	create_repeated_entries,
+	get_auto_repeat_entries,
+)
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.utils import add_days, add_months, getdate, today
 
@@ -183,9 +185,7 @@ class TestAutoRepeat(unittest.TestCase):
 		create_submittable_doctype(doctype)
 
 		current_date = getdate()
-		submittable_doc = frappe.get_doc(
-			dict(doctype=doctype, test="test submit on creation")
-		).insert()
+		submittable_doc = frappe.get_doc(dict(doctype=doctype, test="test submit on creation")).insert()
 		submittable_doc.submit()
 		doc = make_auto_repeat(
 			frequency="Daily",

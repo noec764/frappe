@@ -76,12 +76,16 @@ class TestImporter(unittest.TestCase):
 		)
 
 		self.assertEqual(frappe.parse_json(import_log[0]["row_indexes"]), [2, 3])
-		expected_error = "Error: <strong>Child 1 of DocType for Import</strong> Row #1: Value missing for: Child Title"
+		expected_error = (
+			"Error: <strong>Child 1 of DocType for Import</strong> Row #1: Value missing for: Child Title"
+		)
 		self.assertEqual(
 			frappe.parse_json(frappe.parse_json(import_log[0]["messages"])[0])["message"],
 			expected_error,
 		)
-		expected_error = "Error: <strong>Child 1 of DocType for Import</strong> Row #2: Value missing for: Child Title"
+		expected_error = (
+			"Error: <strong>Child 1 of DocType for Import</strong> Row #2: Value missing for: Child Title"
+		)
 		self.assertEqual(
 			frappe.parse_json(frappe.parse_json(import_log[0]["messages"])[1])["message"],
 			expected_error,
@@ -122,17 +126,13 @@ class TestImporter(unittest.TestCase):
 		self.assertEqual(existing_doc.title, updated_doc.title)
 		self.assertEqual(updated_doc.description, "test description")
 		self.assertEqual(updated_doc.table_field_1[0].child_title, "child title")
-		self.assertEqual(
-			updated_doc.table_field_1[0].name, existing_doc.table_field_1[0].name
-		)
+		self.assertEqual(updated_doc.table_field_1[0].name, existing_doc.table_field_1[0].name)
 		self.assertEqual(updated_doc.table_field_1[0].child_description, "child description")
 		self.assertEqual(updated_doc.table_field_1_again[0].child_title, "child title again")
 
 	def get_importer(self, doctype, import_file, update=False):
 		data_import = frappe.new_doc("Data Import")
-		data_import.import_type = (
-			"Insert New Records" if not update else "Update Existing Records"
-		)
+		data_import.import_type = "Insert New Records" if not update else "Update Existing Records"
 		data_import.reference_doctype = doctype
 		data_import.import_file = import_file.file_url
 		data_import.insert()
@@ -272,6 +272,4 @@ def get_import_file(csv_file_name, force=False):
 
 
 def get_csv_file_path(file_name):
-	return frappe.get_app_path(
-		"frappe", "core", "doctype", "data_import", "fixtures", file_name
-	)
+	return frappe.get_app_path("frappe", "core", "doctype", "data_import", "fixtures", file_name)

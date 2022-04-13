@@ -8,8 +8,7 @@ from unittest.mock import patch
 
 import frappe
 from frappe.desk.doctype.note.note import Note
-from frappe.model.naming import (make_autoname, parse_naming_series,
-                                 revert_series_if_last)
+from frappe.model.naming import make_autoname, parse_naming_series, revert_series_if_last
 from frappe.utils import cint, now_datetime
 
 
@@ -51,9 +50,7 @@ class TestDocument(unittest.TestCase):
 		d.insert()
 		frappe.db.commit()
 		self.assertTrue(d.name.startswith("EV"))
-		self.assertEqual(
-			frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 1"
-		)
+		self.assertEqual(frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 1")
 
 		# test if default values are added
 		d.load_from_db()
@@ -71,9 +68,7 @@ class TestDocument(unittest.TestCase):
 		)
 		d.insert()
 		self.assertTrue(d.name.startswith("EV"))
-		self.assertEqual(
-			frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 2"
-		)
+		self.assertEqual(frappe.db.get_value("Event", d.name, "subject"), "test-doc-test-event 2")
 
 	def test_update(self):
 		d = self.test_insert()
@@ -271,9 +266,7 @@ class TestDocument(unittest.TestCase):
 		).insert()
 
 		d = frappe.get_doc({"doctype": "Test Formatted", "currency": 100000})
-		self.assertEqual(
-			d.get_formatted("currency", currency="INR", format="#,###.##"), "100,000.00 ₹"
-		)
+		self.assertEqual(d.get_formatted("currency", currency="INR", format="#,###.##"), "100,000.00 ₹")
 
 		# should work even if options aren't set in df
 		# and currency param is not passed

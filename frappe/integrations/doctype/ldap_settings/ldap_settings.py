@@ -5,8 +5,7 @@
 import frappe
 from frappe import _, safe_encode
 from frappe.model.document import Document
-from frappe.twofactor import (authenticate_for_2factor, confirm_otp_token,
-                              should_run_2fa)
+from frappe.twofactor import authenticate_for_2factor, confirm_otp_token, should_run_2fa
 
 
 class LDAPSettings(Document):
@@ -86,13 +85,9 @@ class LDAPSettings(Document):
 			import ldap3
 
 			if self.require_trusted_certificate == "Yes":
-				tls_configuration = ldap3.Tls(
-					validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLS_CLIENT
-				)
+				tls_configuration = ldap3.Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLS_CLIENT)
 			else:
-				tls_configuration = ldap3.Tls(
-					validate=ssl.CERT_NONE, version=ssl.PROTOCOL_TLS_CLIENT
-				)
+				tls_configuration = ldap3.Tls(validate=ssl.CERT_NONE, version=ssl.PROTOCOL_TLS_CLIENT)
 
 			if self.local_private_key_file:
 				tls_configuration.private_key_file = self.local_private_key_file
@@ -102,9 +97,7 @@ class LDAPSettings(Document):
 				tls_configuration.ca_certs_file = self.local_ca_certs_file
 
 			server = ldap3.Server(host=self.ldap_server_url, tls=tls_configuration)
-			bind_type = (
-				ldap3.AUTO_BIND_TLS_BEFORE_BIND if self.ssl_tls_mode == "StartTLS" else True
-			)
+			bind_type = ldap3.AUTO_BIND_TLS_BEFORE_BIND if self.ssl_tls_mode == "StartTLS" else True
 
 			conn = ldap3.Connection(
 				server=server,
@@ -229,9 +222,7 @@ class LDAPSettings(Document):
 
 		if type(conn) is not ldap3.core.connection.Connection:
 			raise TypeError(
-				"Invalid type, attribute {0} must be of type '{1}'".format(
-					"conn", "ldap3.Connection"
-				)
+				"Invalid type, attribute {0} must be of type '{1}'".format("conn", "ldap3.Connection")
 			)
 
 		fetch_ldap_groups = None
@@ -256,9 +247,7 @@ class LDAPSettings(Document):
 			ldap_object_class = self.ldap_group_objectclass
 			ldap_group_members_attribute = self.ldap_group_member_attribute
 			ldap_custom_group_search = self.ldap_custom_group_search or "{0}"
-			user_search_str = ldap_custom_group_search.format(
-				getattr(user, self.ldap_username_field).value
-			)
+			user_search_str = ldap_custom_group_search.format(getattr(user, self.ldap_username_field).value)
 
 		else:
 			# NOTE: depreciate this else path
@@ -310,13 +299,9 @@ class LDAPSettings(Document):
 				groups = self.fetch_ldap_groups(user, conn)
 
 				# only try and connect as the user, once we have their fqdn entry.
-				if (
-					user.entry_dn and password and conn.rebind(user=user.entry_dn, password=password)
-				):
+				if user.entry_dn and password and conn.rebind(user=user.entry_dn, password=password):
 
-					return self.create_or_update_user(
-						self.convert_ldap_entry_to_dict(user), groups=groups
-					)
+					return self.create_or_update_user(self.convert_ldap_entry_to_dict(user), groups=groups)
 
 			raise ldap3.core.exceptions.LDAPInvalidCredentialsResult  # even though nothing foundor failed authentication raise invalid credentials
 

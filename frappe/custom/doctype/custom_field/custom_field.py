@@ -69,9 +69,7 @@ class CustomField(Document):
 			and not CustomizeForm.allow_fieldtype_change(old_fieldtype, self.fieldtype)
 		):
 			frappe.throw(
-				_("Fieldtype cannot be changed from {0} to {1}").format(
-					old_fieldtype, self.fieldtype
-				)
+				_("Fieldtype cannot be changed from {0} to {1}").format(old_fieldtype, self.fieldtype)
 			)
 
 		if not self.fieldname:
@@ -93,10 +91,7 @@ class CustomField(Document):
 			validate_fields_for_doctype(self.dt)
 
 		# update the schema
-		if (
-			not frappe.db.get_value("DocType", self.dt, "issingle")
-			and not frappe.flags.in_setup_wizard
-		):
+		if not frappe.db.get_value("DocType", self.dt, "issingle") and not frappe.flags.in_setup_wizard:
 			frappe.db.updatedb(self.dt)
 
 	def on_trash(self):
@@ -109,9 +104,7 @@ class CustomField(Document):
 			)
 
 		# delete property setter entries
-		frappe.db.delete(
-			"Property Setter", {"doc_type": self.dt, "field_name": self.fieldname}
-		)
+		frappe.db.delete("Property Setter", {"doc_type": self.dt, "field_name": self.fieldname})
 
 		frappe.clear_cache(doctype=self.dt)
 
@@ -125,9 +118,7 @@ class CustomField(Document):
 			)
 
 		if self.fieldname == self.insert_after:
-			frappe.throw(
-				_("Insert After cannot be set as {0}").format(meta.get_label(self.insert_after))
-			)
+			frappe.throw(_("Insert After cannot be set as {0}").format(meta.get_label(self.insert_after)))
 
 
 @frappe.whitelist()
@@ -193,9 +184,7 @@ def create_custom_fields(custom_fields, ignore_validate=False, update=True):
 
 		for doctype in doctypes:
 			for df in fields:
-				field = frappe.db.get_value(
-					"Custom Field", {"dt": doctype, "fieldname": df["fieldname"]}
-				)
+				field = frappe.db.get_value("Custom Field", {"dt": doctype, "fieldname": df["fieldname"]})
 				if not field:
 					try:
 						df["owner"] = "Administrator"

@@ -77,14 +77,7 @@ def get(doctype, txt=None, limit_start=0, limit=20, pathname=None, **kwargs):
 
 @frappe.whitelist(allow_guest=True)
 def get_list_data(
-	doctype,
-	txt=None,
-	limit_start=0,
-	fields=None,
-	cmd=None,
-	limit=20,
-	web_form_name=None,
-	**kwargs
+	doctype, txt=None, limit_start=0, fields=None, cmd=None, limit=20, web_form_name=None, **kwargs
 ):
 	"""Returns processed HTML page for a standard listing."""
 	limit_start = cint(limit_start)
@@ -120,9 +113,7 @@ def get_list_data(
 	)
 
 	# allow guest if flag is set
-	if not list_context.get_list and (
-		list_context.allow_guest or meta.allow_guest_to_view
-	):
+	if not list_context.get_list and (list_context.allow_guest or meta.allow_guest_to_view):
 		kwargs["ignore_permissions"] = True
 
 	raw_result = _get_list(**kwargs)
@@ -204,9 +195,7 @@ def get_list_context(context, doctype, web_form_name=None):
 	# get context from web form module
 	if web_form_name:
 		web_form = frappe.get_doc("Web Form", web_form_name)
-		list_context = update_context_from_module(
-			web_form.get_web_form_module(), list_context
-		)
+		list_context = update_context_from_module(web_form.get_web_form_module(), list_context)
 
 	# get path from '/templates/' folder of the doctype
 	if not meta.custom and not list_context.row_template:

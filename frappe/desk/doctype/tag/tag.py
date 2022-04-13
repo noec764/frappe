@@ -53,9 +53,7 @@ def get_tagged_docs(doctype, tag):
 	frappe.has_permission(doctype, throw=True)
 
 	doctype = DocType(doctype)
-	return (
-		frappe.qb.from_(doctype).where(doctype._user_tags.like(tag)).select(doctype.name)
-	).run()
+	return (frappe.qb.from_(doctype).where(doctype._user_tags.like(tag)).select(doctype.name)).run()
 
 
 @frappe.whitelist()
@@ -192,9 +190,7 @@ def get_documents_for_tag(tag):
 	)
 
 	for res in result:
-		results.append(
-			{"doctype": res.document_type, "name": res.document_name, "content": res.title}
-		)
+		results.append({"doctype": res.document_type, "name": res.document_name, "content": res.title})
 
 	return results
 

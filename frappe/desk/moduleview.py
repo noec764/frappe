@@ -7,11 +7,12 @@ import json
 import frappe
 from frappe import _
 from frappe.boot import get_allowed_pages, get_allowed_reports
-from frappe.cache_manager import (build_domain_restricted_doctype_cache,
-                                  build_domain_restricted_page_cache,
-                                  build_table_count_cache)
-from frappe.desk.doctype.desktop_icon.desktop_icon import (
-    clear_desktop_icons_cache, set_hidden)
+from frappe.cache_manager import (
+	build_domain_restricted_doctype_cache,
+	build_domain_restricted_page_cache,
+	build_table_count_cache,
+)
+from frappe.desk.doctype.desktop_icon.desktop_icon import clear_desktop_icons_cache, set_hidden
 
 
 @frappe.whitelist()
@@ -49,9 +50,7 @@ def get_data(module, build=True):
 	else:
 		add_custom_doctypes(data, doctype_info)
 
-	add_section(
-		data, _("Custom Reports"), "uil uil-chart-pie-alt", get_report_list(module)
-	)
+	add_section(data, _("Custom Reports"), "uil uil-chart-pie-alt", get_report_list(module))
 
 	data = combine_common_sections(data)
 	data = apply_permissions(data)
@@ -83,9 +82,7 @@ def get_data(module, build=True):
 
 				dependencies = item.get("dependencies")
 				if dependencies:
-					incomplete_dependencies = [
-						d for d in dependencies if not doctype_contains_a_record(d)
-					]
+					incomplete_dependencies = [d for d in dependencies if not doctype_contains_a_record(d)]
 					if len(incomplete_dependencies):
 						item["incomplete_dependencies"] = incomplete_dependencies
 
@@ -117,12 +114,10 @@ def build_config_from_file(module):
 def filter_by_restrict_to_domain(data):
 	"""filter Pages and DocType depending on the Active Module(s)"""
 	doctypes = (
-		frappe.cache().get_value("domain_restricted_doctypes")
-		or build_domain_restricted_doctype_cache()
+		frappe.cache().get_value("domain_restricted_doctypes") or build_domain_restricted_doctype_cache()
 	)
 	pages = (
-		frappe.cache().get_value("domain_restricted_pages")
-		or build_domain_restricted_page_cache()
+		frappe.cache().get_value("domain_restricted_pages") or build_domain_restricted_page_cache()
 	)
 
 	for d in data:
@@ -183,20 +178,14 @@ def add_custom_doctypes(data, doctype_info):
 		data,
 		_("Documents"),
 		"uil uil-favorite",
-		[
-			d
-			for d in doctype_info
-			if (d.custom and d.document_type in ("Document", "Transaction"))
-		],
+		[d for d in doctype_info if (d.custom and d.document_type in ("Document", "Transaction"))],
 	)
 
 	add_section(
 		data,
 		_("Setup"),
 		"uil uil-cog",
-		[
-			d for d in doctype_info if (d.custom and d.document_type in ("Setup", "Master", ""))
-		],
+		[d for d in doctype_info if (d.custom and d.document_type in ("Setup", "Master", ""))],
 	)
 
 
@@ -281,9 +270,7 @@ def apply_permissions(data):
 
 def get_disabled_reports():
 	if not hasattr(frappe.local, "disabled_reports"):
-		frappe.local.disabled_reports = set(
-			r.name for r in frappe.get_all("Report", {"disabled": 1})
-		)
+		frappe.local.disabled_reports = set(r.name for r in frappe.get_all("Report", {"disabled": 1}))
 	return frappe.local.disabled_reports
 
 
@@ -366,9 +353,7 @@ def get_onboard_items(app, module):
 
 @frappe.whitelist()
 def get_links_for_module(app, module):
-	return [
-		{"value": l.get("name"), "label": l.get("label")} for l in get_links(app, module)
-	]
+	return [{"value": l.get("name"), "label": l.get("label")} for l in get_links(app, module)]
 
 
 def get_links(app, module):
@@ -410,9 +395,7 @@ def get_desktop_settings():
 
 		if module.module_name in user_saved_links_by_module:
 			user_links = frappe.parse_json(user_saved_links_by_module[module.module_name])
-			module.links = [
-				module_links_by_name[l] for l in user_links if l in module_links_by_name
-			]
+			module.links = [module_links_by_name[l] for l in user_links if l in module_links_by_name]
 
 		return module
 
@@ -420,9 +403,7 @@ def get_desktop_settings():
 		if category in user_saved_modules_by_category:
 			user_modules = user_saved_modules_by_category[category]
 			user_modules_by_category[category] = [
-				apply_user_saved_links(modules_by_name[m])
-				for m in user_modules
-				if modules_by_name.get(m)
+				apply_user_saved_links(modules_by_name[m]) for m in user_modules if modules_by_name.get(m)
 			]
 		else:
 			user_modules_by_category[category] = [
@@ -451,17 +432,11 @@ def update_hidden_modules(category_map):
 	for category in category_map:
 		config = frappe._dict(category_map[category])
 		saved_hidden_modules += config.removed or []
-		saved_hidden_modules = [
-			d for d in saved_hidden_modules if d not in (config.added or [])
-		]
+		saved_hidden_modules = [d for d in saved_hidden_modules if d not in (config.added or [])]
 
-		if home_settings.get("modules_by_category") and home_settings.modules_by_category.get(
-			category
-		):
+		if home_settings.get("modules_by_category") and home_settings.modules_by_category.get(category):
 			module_placement = [
-				d
-				for d in (config.added or [])
-				if d not in home_settings.modules_by_category[category]
+				d for d in (config.added or []) if d not in home_settings.modules_by_category[category]
 			]
 			home_settings.modules_by_category[category] += module_placement
 
@@ -573,9 +548,7 @@ def get_options_for_user_blocked_modules():
 
 def set_home_settings(home_settings):
 	frappe.cache().hset("home_settings", frappe.session.user, home_settings)
-	frappe.db.set_value(
-		"User", frappe.session.user, "home_settings", json.dumps(home_settings)
-	)
+	frappe.db.set_value("User", frappe.session.user, "home_settings", json.dumps(home_settings))
 
 
 @frappe.whitelist()

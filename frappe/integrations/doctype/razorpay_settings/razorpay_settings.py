@@ -70,9 +70,12 @@ import razorpay
 
 import frappe
 from frappe import _
-from frappe.integrations.utils import (create_payment_gateway,
-                                       create_request_log, make_get_request,
-                                       make_post_request)
+from frappe.integrations.utils import (
+	create_payment_gateway,
+	create_request_log,
+	make_get_request,
+	make_post_request,
+)
 from frappe.model.document import Document
 from frappe.utils import call_hook_method, cint, get_timestamp, get_url
 
@@ -198,9 +201,7 @@ class RazorpaySettings(Document):
 
 	def get_payment_url(self, **kwargs):
 		integration_request = create_request_log(kwargs, "Request", "Razorpay")
-		return get_url(
-			"./integrations/razorpay_checkout?token={0}".format(integration_request.name)
-		)
+		return get_url("./integrations/razorpay_checkout?token={0}".format(integration_request.name))
 
 	def create_order(self, **kwargs):
 		# Creating Orders https://razorpay.com/docs/api/orders/
@@ -401,9 +402,7 @@ def capture_payment(is_sandbox=False, sanbox_response=None):
 
 				if resp.get("status") == "authorized":
 					resp = make_post_request(
-						"https://api.razorpay.com/v1/payments/{0}/capture".format(
-							data.get("razorpay_payment_id")
-						),
+						"https://api.razorpay.com/v1/payments/{0}/capture".format(data.get("razorpay_payment_id")),
 						auth=(settings.api_key, settings.api_secret),
 						data={"amount": data.get("amount")},
 					)
@@ -433,9 +432,7 @@ def get_order(doctype, docname):
 		# Do not use run_method here as it fails silently
 		return doc.get_razorpay_order()
 	except AttributeError:
-		frappe.log_error(
-			frappe.get_traceback(), _("Controller method get_razorpay_order missing")
-		)
+		frappe.log_error(frappe.get_traceback(), _("Controller method get_razorpay_order missing"))
 		frappe.throw(_("Could not create Razorpay order. Please contact Administrator"))
 
 

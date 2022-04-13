@@ -7,14 +7,24 @@ from googleapiclient.errors import HttpError
 import frappe
 from frappe import _
 from frappe.desk.calendar import process_recurring_events
-from frappe.desk.doctype.notification_settings.notification_settings import \
-    is_email_notifications_enabled_for_type
+from frappe.desk.doctype.notification_settings.notification_settings import (
+	is_email_notifications_enabled_for_type,
+)
 from frappe.desk.reportview import get_filters_cond
 from frappe.integrations.doctype.google_calendar.google_calendar import (
-    format_date_according_to_google_calendar, get_google_calendar_object,
-    get_timezone_naive_datetime)
-from frappe.utils import (add_days, cint, format_datetime, get_datetime,
-                          getdate, now_datetime, nowdate)
+	format_date_according_to_google_calendar,
+	get_google_calendar_object,
+	get_timezone_naive_datetime,
+)
+from frappe.utils import (
+	add_days,
+	cint,
+	format_datetime,
+	get_datetime,
+	getdate,
+	now_datetime,
+	nowdate,
+)
 from frappe.utils.user import get_enabled_system_users
 from frappe.website.website_generator import WebsiteGenerator
 from frappe.www.printview import get_html_and_style
@@ -146,9 +156,7 @@ class Event(WebsiteGenerator):
 				for link in contact.links:
 					if link.link_doctype and link.link_name:
 						meta = frappe.get_meta(link.link_doctype)
-						if (
-							hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1
-						):
+						if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
 							communication.add_link(link.link_doctype, link.link_name)
 
 		communication.save(ignore_permissions=True)
@@ -188,9 +196,7 @@ class Event(WebsiteGenerator):
 		if self.visible_for != "All":
 			if frappe.session.user == "Guest":
 				self.show_permission_error()
-			elif self.visible_for == "Role" and self.role not in frappe.get_roles(
-				frappe.session.user
-			):
+			elif self.visible_for == "Role" and self.role not in frappe.get_roles(frappe.session.user):
 				self.show_permission_error()
 
 		is_guest = frappe.session.user == "Guest"
@@ -367,9 +373,7 @@ def get_events(
 			[f"`tabEvent`.{f}" for f in frappe.parse_json(field_map).values()]
 		)
 
-	filter_condition = get_filters_cond(
-		"Event", filters, [], ignore_permissions=ignore_permissions
-	)
+	filter_condition = get_filters_cond("Event", filters, [], ignore_permissions=ignore_permissions)
 
 	tables = ["`tabEvent`"]
 	if "`tabEvent Participants`" in filter_condition:
@@ -427,9 +431,7 @@ def get_events(
 			additional_fields=additional_fields,
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
-			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1"
-			if for_reminder
-			else "",
+			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else "",
 			limit_condition="LIMIT %s OFFSET %s" % (limit_page_length, limit_start)
 			if limit_page_length
 			else "",
@@ -448,18 +450,10 @@ def get_events(
 		result.append(event)
 		if event.get("repeat_this_event"):
 			start = (
-				get_datetime(start).replace(hour=0, minute=0, second=0)
-				if event.get("all_day")
-				else start
+				get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
 			)
-			end = (
-				get_datetime(end).replace(hour=23, minute=59, second=0)
-				if event.get("all_day")
-				else end
-			)
-			recurring_events = process_recurring_events(
-				event, start, end, "starts_on", "ends_on", "rrule"
-			)
+			end = get_datetime(end).replace(hour=23, minute=59, second=0) if event.get("all_day") else end
+			recurring_events = process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule")
 			if recurring_events:
 				result = [x for x in result if x.get("name") != event.get("name")]
 				result.extend(recurring_events)
@@ -523,9 +517,7 @@ def update_event_in_calendar(account, event, recurrence=None):
 	calendar_event.description = event.get("description")
 	calendar_event.rrule = recurrence
 	calendar_event.starts_on = (
-		get_datetime(start.get("date"))
-		if start.get("date")
-		else get_timezone_naive_datetime(start)
+		get_datetime(start.get("date")) if start.get("date") else get_timezone_naive_datetime(start)
 	)
 	calendar_event.ends_on = (
 		get_datetime(end.get("date")) if end.get("date") else get_timezone_naive_datetime(end)
@@ -594,11 +586,7 @@ def insert_event_in_google_calendar(doc, method=None):
 	)
 
 	try:
-		event = (
-			google_calendar.events()
-			.insert(calendarId=doc.google_calendar_id, body=event)
-			.execute()
-		)
+		event = google_calendar.events().insert(calendarId=doc.google_calendar_id, body=event).execute()
 		doc.db_set("google_calendar_event_id", event.get("id"), update_modified=False)
 		frappe.publish_realtime(
 			"event_synced",
@@ -608,9 +596,9 @@ def insert_event_in_google_calendar(doc, method=None):
 	except HttpError as err:
 		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(
-			_(
-				"Google Calendar - Could not insert event in Google Calendar {0}, error code {1}."
-			).format(account.name, err.resp.status)
+			_("Google Calendar - Could not insert event in Google Calendar {0}, error code {1}.").format(
+				account.name, err.resp.status
+			)
 		)
 
 
@@ -648,9 +636,7 @@ def update_event_in_google_calendar(doc, method=None):
 		event["description"] = doc.description
 		event["recurrence"] = [doc.rrule] if doc.rrule else None
 		event["status"] = (
-			"cancelled"
-			if doc.event_type == "Cancelled" or doc.status == "Closed"
-			else event.get("status")
+			"cancelled" if doc.event_type == "Cancelled" or doc.status == "Closed" else event.get("status")
 		)
 		event.update(
 			format_date_according_to_google_calendar(
@@ -669,9 +655,9 @@ def update_event_in_google_calendar(doc, method=None):
 	except HttpError as err:
 		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.throw(
-			_(
-				"Google Calendar - Could not update Event {0} in Google Calendar, error code {1}."
-			).format(doc.name, err.resp.status)
+			_("Google Calendar - Could not update Event {0} in Google Calendar, error code {1}.").format(
+				doc.name, err.resp.status
+			)
 		)
 
 
@@ -707,9 +693,9 @@ def delete_event_in_google_calendar(doc, method=None):
 	except HttpError as err:
 		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(
-			_(
-				"Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}."
-			).format(doc.name, err.resp.status)
+			_("Google Calendar - Could not delete Event {0} from Google Calendar, error code {1}.").format(
+				doc.name, err.resp.status
+			)
 		)
 
 

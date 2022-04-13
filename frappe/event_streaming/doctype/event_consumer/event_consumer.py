@@ -27,10 +27,7 @@ class EventConsumer(Document):
 	def on_update(self):
 		if not self.incoming_change:
 			doc_before_save = self.get_doc_before_save()
-			if (
-				doc_before_save.api_key != self.api_key
-				or doc_before_save.api_secret != self.api_secret
-			):
+			if doc_before_save.api_key != self.api_key or doc_before_save.api_secret != self.api_secret:
 				return
 
 			self.update_consumer_status()
@@ -179,15 +176,9 @@ def notify(consumer):
 
 	# enqueue another job if the site was not notified
 	if not consumer.flags.notified:
-		enqueued_method = (
-			"frappe.event_streaming.doctype.event_consumer.event_consumer.notify"
-		)
+		enqueued_method = "frappe.event_streaming.doctype.event_consumer.event_consumer.notify"
 		jobs = get_jobs()
-		if (
-			not jobs
-			or enqueued_method not in jobs[frappe.local.site]
-			and not consumer.flags.notifed
-		):
+		if not jobs or enqueued_method not in jobs[frappe.local.site] and not consumer.flags.notifed:
 			frappe.enqueue(
 				enqueued_method, queue="long", enqueue_after_commit=True, **{"consumer": consumer}
 			)

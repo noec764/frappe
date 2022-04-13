@@ -74,23 +74,17 @@ class PackageRelease(Document):
 
 	def export_package_files(self, package):
 		# write readme
-		with open(
-			frappe.get_site_path("packages", package.package_name, "README.md"), "w"
-		) as readme:
+		with open(frappe.get_site_path("packages", package.package_name, "README.md"), "w") as readme:
 			readme.write(package.readme)
 
 		# write license
 		if package.license:
-			with open(
-				frappe.get_site_path("packages", package.package_name, "LICENSE.md"), "w"
-			) as license:
+			with open(frappe.get_site_path("packages", package.package_name, "LICENSE.md"), "w") as license:
 				license.write(package.license)
 
 		# write package.json as `frappe_package.json`
 		with open(
-			frappe.get_site_path(
-				"packages", package.package_name, package.package_name + ".json"
-			),
+			frappe.get_site_path("packages", package.package_name, package.package_name + ".json"),
 			"w",
 		) as packagefile:
 			packagefile.write(frappe.as_json(package.as_dict(no_nulls=True)))

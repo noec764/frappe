@@ -121,16 +121,12 @@ def build_csv_response(data, filename):
 
 
 class UnicodeWriter:
-	def __init__(
-		self, encoding="utf-8", quoting="QUOTE_NONNUMERIC", lineterminator="\r\n"
-	):
+	def __init__(self, encoding="utf-8", quoting="QUOTE_NONNUMERIC", lineterminator="\r\n"):
 		self.encoding = encoding
 		self.quoting = QUOTE_MAP.get(quoting)
 		self.lineterminator = lineterminator
 		self.queue = StringIO()
-		self.writer = csv.writer(
-			self.queue, quoting=self.quoting, lineterminator=self.lineterminator
-		)
+		self.writer = csv.writer(self.queue, quoting=self.quoting, lineterminator=self.lineterminator)
 
 	def writerow(self, row):
 		self.writer.writerow(row)

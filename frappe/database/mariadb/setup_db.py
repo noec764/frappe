@@ -64,9 +64,7 @@ def setup_database(force, source_sql, verbose, no_mariadb_socket=False):
 
 
 def setup_help_database(help_db_name):
-	dbman = DbManager(
-		get_root_connection(frappe.flags.root_login, frappe.flags.root_password)
-	)
+	dbman = DbManager(get_root_connection(frappe.flags.root_login, frappe.flags.root_password))
 	dbman.drop_database(help_db_name)
 
 	# make database
@@ -121,9 +119,7 @@ def import_db_from_sql(source_sql=None, verbose=False):
 	db_name = frappe.conf.db_name
 	if not source_sql:
 		source_sql = os.path.join(os.path.dirname(__file__), "framework_mariadb.sql")
-	DbManager(frappe.local.db).restore_database(
-		db_name, source_sql, db_name, frappe.conf.db_password
-	)
+	DbManager(frappe.local.db).restore_database(db_name, source_sql, db_name, frappe.conf.db_password)
 	if verbose:
 		print("Imported from database %s" % source_sql)
 

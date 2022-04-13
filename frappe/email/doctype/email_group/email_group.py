@@ -37,8 +37,7 @@ class EmailGroup(Document):
 		email_field = [
 			d.fieldname
 			for d in meta.fields
-			if d.fieldtype in ("Data", "Small Text", "Text", "Code", "Read Only")
-			and d.options == "Email"
+			if d.fieldtype in ("Data", "Small Text", "Text", "Code", "Read Only") and d.options == "Email"
 		][0]
 		unsubscribed_field = "unsubscribed" if meta.get_field("unsubscribed") else None
 		added = 0
@@ -107,9 +106,7 @@ def add_subscribers(name, email_list):
 		parsed_email = validate_email_address(email, False)
 
 		if parsed_email:
-			if not frappe.db.get_value(
-				"Email Group Member", {"email_group": name, "email": parsed_email}
-			):
+			if not frappe.db.get_value("Email Group Member", {"email_group": name, "email": parsed_email}):
 				frappe.get_doc(
 					{"doctype": "Email Group Member", "email_group": name, "email": parsed_email}
 				).insert(ignore_permissions=frappe.flags.ignore_permissions)

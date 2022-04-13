@@ -9,17 +9,23 @@ from parse import compile
 
 import frappe
 from frappe import _
-from frappe.automation.doctype.assignment_rule.assignment_rule import \
-    apply as apply_assignment_rule
+from frappe.automation.doctype.assignment_rule.assignment_rule import (
+	apply as apply_assignment_rule,
+)
 from frappe.contacts.doctype.contact.contact import get_contact_name
-from frappe.core.doctype.comment.comment import (delete_comment_from_doc,
-                                                 update_comment_in_doc)
+from frappe.core.doctype.comment.comment import delete_comment_from_doc, update_comment_in_doc
 from frappe.core.doctype.communication.email import validate_email
 from frappe.core.doctype.communication.mixin import CommunicationEmailMixin
 from frappe.core.utils import get_parent_doc
 from frappe.model.document import Document
-from frappe.utils import (cint, parse_addr, split_emails, strip_html,
-                          time_diff_in_seconds, validate_email_address)
+from frappe.utils import (
+	cint,
+	parse_addr,
+	split_emails,
+	strip_html,
+	time_diff_in_seconds,
+	validate_email_address,
+)
 from frappe.utils.user import is_system_user
 
 exclude_from_linked_with = True
@@ -203,9 +209,7 @@ class Communication(Document, CommunicationEmailMixin):
 		"""
 		emails = split_emails(emails) if isinstance(emails, str) else (emails or [])
 		if exclude_displayname:
-			return [
-				email.lower() for email in set([parse_addr(email)[1] for email in emails]) if email
-			]
+			return [email.lower() for email in set([parse_addr(email)[1] for email in emails]) if email]
 		return [email.lower() for email in set(emails) if email]
 
 	def to_list(self, exclude_displayname=True):
@@ -247,9 +251,7 @@ class Communication(Document, CommunicationEmailMixin):
 			self.status = "Closed"
 
 		# set email status to spam
-		email_rule = frappe.db.get_value(
-			"Email Rule", {"email_id": self.sender, "is_spam": 1}
-		)
+		email_rule = frappe.db.get_value("Email Rule", {"email_id": self.sender, "is_spam": 1})
 		if (
 			self.communication_type == "Communication"
 			and self.communication_medium == "Email"
@@ -372,9 +374,7 @@ class Communication(Document, CommunicationEmailMixin):
 					duplicate = True
 
 			if duplicate:
-				del self.timeline_links[
-					:
-				]  # make it python 2 compatible as list.clear() is python 3 only
+				del self.timeline_links[:]  # make it python 2 compatible as list.clear() is python 3 only
 				for l in links:
 					self.add_link(link_doctype=l[0], link_name=l[1])
 
@@ -387,9 +387,7 @@ class Communication(Document, CommunicationEmailMixin):
 	def get_links(self):
 		return self.timeline_links
 
-	def remove_link(
-		self, link_doctype, link_name, autosave=False, ignore_permissions=True
-	):
+	def remove_link(self, link_doctype, link_name, autosave=False, ignore_permissions=True):
 		for l in self.timeline_links:
 			if l.link_doctype == link_doctype and l.link_name == link_name:
 				self.timeline_links.remove(l)
@@ -410,9 +408,7 @@ def has_permission(doc, ptype, user):
 			return
 
 		if doc.reference_doctype and doc.reference_name:
-			if frappe.has_permission(
-				doc.reference_doctype, ptype="read", doc=doc.reference_name
-			):
+			if frappe.has_permission(doc.reference_doctype, ptype="read", doc=doc.reference_name):
 				return True
 
 
@@ -456,9 +452,7 @@ def get_contacts(email_strings: List[str], auto_create_contact=False) -> List[st
 
 			try:
 				contact_name = (
-					"{0}-{1}".format(first_name, email_parts[1])
-					if first_name == "Contact"
-					else first_name
+					"{0}-{1}".format(first_name, email_parts[1]) if first_name == "Contact" else first_name
 				)
 				contact = frappe.get_doc(
 					{"doctype": "Contact", "first_name": contact_name, "name": contact_name}
@@ -571,9 +565,9 @@ def update_parent_document_on_communication(doc):
 			parent.run_method("handle_hold_time", "Replied")
 			apply_assignment_rule(parent)
 
-	update_condition = cint(
-		frappe.db.get_default("update_document_timestamp_on_send")
-	) or (doc.sent_or_received == "Received")
+	update_condition = cint(frappe.db.get_default("update_document_timestamp_on_send")) or (
+		doc.sent_or_received == "Received"
+	)
 	if update_condition and not doc.flags.document_load:
 		# update the modified date for document
 		parent.update_modified()
@@ -586,25 +580,18 @@ def update_parent_document_on_communication(doc):
 
 
 def update_first_response_time(parent, communication):
-	if parent.meta.has_field("first_response_time") and not parent.get(
-		"first_response_time"
-	):
+	if parent.meta.has_field("first_response_time") and not parent.get("first_response_time"):
 		if is_system_user(communication.sender):
 			if communication.sent_or_received == "Sent":
 				first_responded_on = communication.creation
 				if parent.meta.has_field("first_responded_on"):
 					parent.db_set("first_responded_on", first_responded_on)
-				first_response_time = round(
-					time_diff_in_seconds(first_responded_on, parent.creation), 2
-				)
+				first_response_time = round(time_diff_in_seconds(first_responded_on, parent.creation), 2)
 				parent.db_set("first_response_time", first_response_time)
 
 
 def set_avg_response_time(parent, communication):
-	if (
-		parent.meta.has_field("avg_response_time")
-		and communication.sent_or_received == "Sent"
-	):
+	if parent.meta.has_field("avg_response_time") and communication.sent_or_received == "Sent":
 		# avg response time for all the responses
 		communications = frappe.get_list(
 			"Communication",

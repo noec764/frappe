@@ -17,9 +17,7 @@ def execute():
 def create_content(doc):
 	content = []
 	if doc.onboarding:
-		content.append(
-			{"type": "onboarding", "data": {"onboarding_name": doc.onboarding, "col": 12}}
-		)
+		content.append({"type": "onboarding", "data": {"onboarding_name": doc.onboarding, "col": 12}})
 	if doc.charts:
 		invalid_links = []
 		for c in doc.charts:

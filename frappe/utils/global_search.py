@@ -128,10 +128,7 @@ def rebuild_for_doctype(doctype):
 			published = 0
 			title, route = "", ""
 			try:
-				if (
-					hasattr(get_controller(doctype), "is_website_published")
-					and meta.allow_guest_to_view
-				):
+				if hasattr(get_controller(doctype), "is_website_published") and meta.allow_guest_to_view:
 					d = frappe.get_doc(doctype, doc.name)
 					published = 1 if d.is_website_published() else 0
 					title = d.get_title()
@@ -203,9 +200,9 @@ def get_children_data(doctype, meta):
 			)
 
 			for record in child_records:
-				all_children.setdefault(record.parent, frappe._dict()).setdefault(
-					child.options, []
-				).append(record)
+				all_children.setdefault(record.parent, frappe._dict()).setdefault(child.options, []).append(
+					record
+				)
 
 	return all_children, child_search_fields
 
@@ -213,9 +210,7 @@ def get_children_data(doctype, meta):
 def insert_values_for_multiple_docs(all_contents):
 	values = []
 	for content in all_contents:
-		values.append(
-			"({doctype}, {name}, {content}, {published}, {title}, {route})".format(**content)
-		)
+		values.append("({doctype}, {name}, {content}, {published}, {title}, {route})".format(**content))
 
 	batch_size = 50000
 	for i in range(0, len(values), batch_size):
@@ -440,8 +435,9 @@ def search(text, start=0, limit=20, doctype=""):
 	:param limit: number of results to return, default 20
 	:return: Array of result objects
 	"""
-	from frappe.desk.doctype.global_search_settings.global_search_settings import \
-	    get_doctypes_for_global_search
+	from frappe.desk.doctype.global_search_settings.global_search_settings import (
+		get_doctypes_for_global_search,
+	)
 	from frappe.query_builder.functions import Match
 
 	results = []
@@ -524,9 +520,7 @@ def web_search(text, scope=None, start=0, limit=20):
 
 		scope_condition = "`route` like %(scope)s AND " if scope else ""
 		published_condition = "`published` = 1 AND "
-		mariadb_conditions = postgres_conditions = " ".join(
-			[published_condition, scope_condition]
-		)
+		mariadb_conditions = postgres_conditions = " ".join([published_condition, scope_condition])
 
 		# https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
 		text = '"{}"'.format(text)

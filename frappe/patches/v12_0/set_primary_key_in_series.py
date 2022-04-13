@@ -20,9 +20,7 @@ def execute():
 	for row in duplicate_keys:
 		frappe.db.delete("Series", {"name": row.name})
 		if row.current:
-			frappe.db.sql(
-				"insert into `tabSeries`(`name`, `current`) values (%(name)s, %(current)s)", row
-			)
+			frappe.db.sql("insert into `tabSeries`(`name`, `current`) values (%(name)s, %(current)s)", row)
 	frappe.db.commit()
 
 	frappe.db.sql("ALTER table `tabSeries` ADD PRIMARY KEY IF NOT EXISTS (name)")

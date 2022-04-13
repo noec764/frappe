@@ -62,17 +62,13 @@ def handle():
 			if frappe.local.request.method == "GET":
 				if not doc.has_permission("read"):
 					frappe.throw(_("Not permitted"), frappe.PermissionError)
-				frappe.local.response.update(
-					{"data": doc.run_method(method, **frappe.local.form_dict)}
-				)
+				frappe.local.response.update({"data": doc.run_method(method, **frappe.local.form_dict)})
 
 			if frappe.local.request.method == "POST":
 				if not doc.has_permission("write"):
 					frappe.throw(_("Not permitted"), frappe.PermissionError)
 
-				frappe.local.response.update(
-					{"data": doc.run_method(method, **frappe.local.form_dict)}
-				)
+				frappe.local.response.update({"data": doc.run_method(method, **frappe.local.form_dict)})
 				frappe.db.commit()
 
 		else:
@@ -196,12 +192,7 @@ def validate_oauth(authorization_header):
 	parsed_url = urlparse(req.url)
 	access_token = {"access_token": token}
 	uri = (
-		parsed_url.scheme
-		+ "://"
-		+ parsed_url.netloc
-		+ parsed_url.path
-		+ "?"
-		+ urlencode(access_token)
+		parsed_url.scheme + "://" + parsed_url.netloc + parsed_url.path + "?" + urlencode(access_token)
 	)
 	http_method = req.method
 	headers = req.headers
@@ -252,18 +243,12 @@ def validate_auth_via_api_keys(authorization_header):
 def validate_api_key_secret(api_key, api_secret, frappe_authorization_source=None):
 	"""frappe_authorization_source to provide api key and secret for a doctype apart from User"""
 	doctype = frappe_authorization_source or "User"
-	doc = frappe.db.get_value(
-		doctype=doctype, filters={"api_key": api_key}, fieldname=["name"]
-	)
+	doc = frappe.db.get_value(doctype=doctype, filters={"api_key": api_key}, fieldname=["name"])
 	form_dict = frappe.local.form_dict
-	doc_secret = frappe.utils.password.get_decrypted_password(
-		doctype, doc, fieldname="api_secret"
-	)
+	doc_secret = frappe.utils.password.get_decrypted_password(doctype, doc, fieldname="api_secret")
 	if api_secret == doc_secret:
 		if doctype == "User":
-			user = frappe.db.get_value(
-				doctype="User", filters={"api_key": api_key}, fieldname=["name"]
-			)
+			user = frappe.db.get_value(doctype="User", filters={"api_key": api_key}, fieldname=["name"])
 		else:
 			user = frappe.db.get_value(doctype, doc, "user")
 		if frappe.local.login_manager.user in ("", "Guest"):

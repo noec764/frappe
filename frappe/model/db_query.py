@@ -13,15 +13,21 @@ import frappe.defaults
 import frappe.permissions
 import frappe.share
 from frappe import _
-from frappe.core.doctype.server_script.server_script_utils import \
-    get_server_script_map
+from frappe.core.doctype.server_script.server_script_utils import get_server_script_map
 from frappe.model import optional_fields
 from frappe.model.meta import get_table_columns
-from frappe.model.utils.user_settings import (get_user_settings,
-                                              update_user_settings)
+from frappe.model.utils.user_settings import get_user_settings, update_user_settings
 from frappe.query_builder.utils import Column
-from frappe.utils import (add_to_date, cint, cstr, flt, get_filter, get_time,
-                          get_timespan_date_range, make_filter_tuple)
+from frappe.utils import (
+	add_to_date,
+	cint,
+	cstr,
+	flt,
+	get_filter,
+	get_time,
+	get_timespan_date_range,
+	make_filter_tuple,
+)
 
 
 class DatabaseQuery(object):
@@ -73,12 +79,8 @@ class DatabaseQuery(object):
 
 		if (
 			not ignore_permissions
-			and not frappe.has_permission(
-				self.doctype, "select", user=user, parent_doctype=parent_doctype
-			)
-			and not frappe.has_permission(
-				self.doctype, "read", user=user, parent_doctype=parent_doctype
-			)
+			and not frappe.has_permission(self.doctype, "select", user=user, parent_doctype=parent_doctype)
+			and not frappe.has_permission(self.doctype, "read", user=user, parent_doctype=parent_doctype)
 		):
 			frappe.flags.error_message = _("Insufficient Permission for {0}").format(
 				frappe.bold(self.doctype)
@@ -93,12 +95,7 @@ class DatabaseQuery(object):
 			# if fields is given as dict/list of list, its probably filters
 			filters, fields = fields, filters
 
-		elif (
-			fields
-			and isinstance(filters, list)
-			and len(filters) > 1
-			and isinstance(filters[0], str)
-		):
+		elif fields and isinstance(filters, list) and len(filters) > 1 and isinstance(filters[0], str):
 			# if `filters` is a list of strings, its probably fields
 			filters, fields = fields, filters
 
@@ -225,9 +222,7 @@ class DatabaseQuery(object):
 		args.conditions = " and ".join(self.conditions)
 
 		if self.or_conditions:
-			args.conditions += (" or " if args.conditions else "") + " or ".join(
-				self.or_conditions
-			)
+			args.conditions += (" or " if args.conditions else "") + " or ".join(self.or_conditions)
 
 		self.set_field_tables()
 
@@ -350,9 +345,9 @@ class DatabaseQuery(object):
 			if re.compile(r"^(select|delete|update|drop|create)\s").match(field):
 				_raise_exception()
 
-			elif re.compile(
-				r"\s*[0-9a-zA-z]*\s*( from | group by | order by | where | join )"
-			).match(field):
+			elif re.compile(r"\s*[0-9a-zA-z]*\s*( from | group by | order by | where | join )").match(
+				field
+			):
 				_raise_exception()
 
 		for field in self.fields:
@@ -448,9 +443,7 @@ class DatabaseQuery(object):
 						)
 
 					elif sql_function == "ifnull(":
-						return re.sub(
-							r"ifnull\(([^,]+)", r"ifnull(cast(\1 as varchar)", column, flags=re.IGNORECASE
-						)
+						return re.sub(r"ifnull\(([^,]+)", r"ifnull(cast(\1 as varchar)", column, flags=re.IGNORECASE)
 
 		return column
 
@@ -462,9 +455,7 @@ class DatabaseQuery(object):
 		if not self.flags.ignore_permissions and not frappe.has_permission(
 			doctype, ptype=ptype, parent_doctype=self.doctype
 		):
-			frappe.flags.error_message = _("Insufficient Permission for {0}").format(
-				frappe.bold(doctype)
-			)
+			frappe.flags.error_message = _("Insufficient Permission for {0}").format(frappe.bold(doctype))
 			raise frappe.PermissionError(doctype)
 
 	def set_field_tables(self):
@@ -607,9 +598,7 @@ class DatabaseQuery(object):
 				)
 
 			fallback = "''"
-			value = [
-				frappe.db.escape((cstr(v.name) or "").strip(), percent=False) for v in result
-			]
+			value = [frappe.db.escape((cstr(v.name) or "").strip(), percent=False) for v in result]
 			if len(value):
 				value = f"({', '.join(value)})"
 			else:
@@ -618,9 +607,7 @@ class DatabaseQuery(object):
 			# changing operator to IN as the above code fetches all the parent / child values and convert into tuple
 			# which can be directly used with IN operator to query.
 			f.operator = (
-				"not in"
-				if f.operator.lower() in ("not ancestors of", "not descendants of")
-				else "in"
+				"not in" if f.operator.lower() in ("not ancestors of", "not descendants of") else "in"
 			)
 
 		elif f.operator.lower() in ("in", "not in"):
@@ -752,15 +739,11 @@ class DatabaseQuery(object):
 			not meta.istable
 			and not (role_permissions.get("select") or role_permissions.get("read"))
 			and not self.flags.ignore_permissions
-			and not has_any_user_permission_for_doctype(
-				self.doctype, self.user, self.reference_doctype
-			)
+			and not has_any_user_permission_for_doctype(self.doctype, self.user, self.reference_doctype)
 		):
 			only_if_shared = True
 			if not self.shared:
-				frappe.throw(
-					_("No permission to read {0}").format(_(self.doctype)), frappe.PermissionError
-				)
+				frappe.throw(_("No permission to read {0}").format(_(self.doctype)), frappe.PermissionError)
 			else:
 				self.conditions.append(self.get_share_condition())
 
@@ -825,9 +808,7 @@ class DatabaseQuery(object):
 				if frappe.get_system_settings("apply_strict_user_permissions"):
 					condition = ""
 				else:
-					empty_value_condition = (
-						f"ifnull(`tab{self.doctype}`.`{df.get('fieldname')}`, '')=''"
-					)
+					empty_value_condition = f"ifnull(`tab{self.doctype}`.`{df.get('fieldname')}`, '')=''"
 					condition = empty_value_condition + " or "
 
 				for permission in user_permission_values:
@@ -860,18 +841,14 @@ class DatabaseQuery(object):
 
 	def get_permission_query_conditions(self):
 		conditions = []
-		condition_methods = frappe.get_hooks("permission_query_conditions", {}).get(
-			self.doctype, []
-		)
+		condition_methods = frappe.get_hooks("permission_query_conditions", {}).get(self.doctype, [])
 		if condition_methods:
 			for method in condition_methods:
 				c = frappe.call(frappe.get_attr(method), self.user)
 				if c:
 					conditions.append(c)
 
-		permision_script_name = (
-			get_server_script_map().get("permission_query", {}).get(self.doctype)
-		)
+		permision_script_name = get_server_script_map().get("permission_query", {}).get(self.doctype)
 		if permision_script_name:
 			script = frappe.get_doc("Server Script", permision_script_name)
 			condition = script.get_permission_query_conditions(self.user)
@@ -915,9 +892,7 @@ class DatabaseQuery(object):
 					sort_field = meta.sort_field or "modified"
 					sort_order = (meta.sort_field and meta.sort_order) or "desc"
 					if self.order_by:
-						args.order_by = (
-							f"`tab{self.doctype}`.`{sort_field or 'modified'}` {sort_order or 'desc'}"
-						)
+						args.order_by = f"`tab{self.doctype}`.`{sort_field or 'modified'}` {sort_order or 'desc'}"
 
 				# draft docs always on top
 				if hasattr(meta, "is_submittable") and meta.is_submittable:
@@ -942,9 +917,7 @@ class DatabaseQuery(object):
 				if tbl not in self.tables:
 					if tbl.startswith("`"):
 						tbl = tbl[4:-1]
-					frappe.throw(
-						_("Please select atleast 1 column from {0} to sort/group").format(tbl)
-					)
+					frappe.throw(_("Please select atleast 1 column from {0} to sort/group").format(tbl))
 
 	def add_limit(self):
 		if self.limit_page_length:
@@ -1097,9 +1070,7 @@ def get_date_range(operator, value):
 		"next": "next",
 	}
 
-	timespan = (
-		period_map[operator] + " " + timespan_map[value] if operator != "timespan" else value
-	)
+	timespan = period_map[operator] + " " + timespan_map[value] if operator != "timespan" else value
 
 	return get_timespan_date_range(timespan)
 

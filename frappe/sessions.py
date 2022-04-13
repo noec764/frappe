@@ -67,9 +67,7 @@ def get_sessions_to_clear(user=None, keep_current=False, device=None):
 
 	offset = 0
 	if user == frappe.session.user:
-		simultaneous_sessions = (
-			frappe.db.get_value("User", user, "simultaneous_sessions") or 1
-		)
+		simultaneous_sessions = frappe.db.get_value("User", user, "simultaneous_sessions") or 1
 		offset = simultaneous_sessions - 1
 
 	session = DocType("Sessions")
@@ -157,9 +155,7 @@ def get():
 		bootinfo = frappe.cache().hget("bootinfo", frappe.session.user)
 		if bootinfo:
 			bootinfo["from_cache"] = 1
-			bootinfo["user"]["recent"] = json.dumps(
-				frappe.cache().hget("user_recent", frappe.session.user)
-			)
+			bootinfo["user"]["recent"] = json.dumps(frappe.cache().hget("user_recent", frappe.session.user))
 
 	if not bootinfo:
 		# if not create it
@@ -168,9 +164,7 @@ def get():
 		try:
 			frappe.cache().ping()
 		except redis.exceptions.ConnectionError:
-			message = _(
-				"Redis cache server not running. Please contact Administrator / Tech support"
-			)
+			message = _("Redis cache server not running. Please contact Administrator / Tech support")
 			if "messages" in bootinfo:
 				bootinfo["messages"].append(message)
 			else:
@@ -194,16 +188,12 @@ def get():
 	bootinfo["translated_search_doctypes"] = frappe.get_hooks("translated_search_doctypes")
 	bootinfo["disable_async"] = frappe.conf.disable_async
 
-	bootinfo["setup_complete"] = cint(
-		frappe.db.get_single_value("System Settings", "setup_complete")
-	)
+	bootinfo["setup_complete"] = cint(frappe.db.get_single_value("System Settings", "setup_complete"))
 	bootinfo["is_first_startup"] = cint(
 		frappe.db.get_single_value("System Settings", "is_first_startup")
 	)
 
-	bootinfo["desk_theme"] = (
-		frappe.db.get_value("User", frappe.session.user, "desk_theme") or "Light"
-	)
+	bootinfo["desk_theme"] = frappe.db.get_value("User", frappe.session.user, "desk_theme") or "Light"
 
 	# limits
 	bootinfo.limits = get_limits()
@@ -420,9 +410,7 @@ class Session:
 
 		# update session in db
 		last_updated = frappe.cache().hget("last_db_session_update", self.sid)
-		time_diff = (
-			frappe.utils.time_diff_in_seconds(now, last_updated) if last_updated else None
-		)
+		time_diff = frappe.utils.time_diff_in_seconds(now, last_updated) if last_updated else None
 
 		# database persistence is secondary, don't update it too often
 		updated_in_db = False

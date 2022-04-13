@@ -101,9 +101,7 @@ def get_match_feedback(match, is_sole_match):
 
 	def fun_repeat():
 		feedback = {
-			"warning": _(
-				'Repeats like "abcabcabc" are only slightly harder to guess than "abc"'
-			),
+			"warning": _('Repeats like "abcabcabc" are only slightly harder to guess than "abc"'),
 			"suggestions": [_("Try to avoid repeated words and characters")],
 		}
 		if match.get("repeated_char") and len(match.get("repeated_char")) == 1:
@@ -190,8 +188,6 @@ def get_dictionary_match_feedback(match, is_sole_match):
 
 	# Match contains l33t speak substitutions
 	if match.get("l33t_entropy"):
-		suggestions.append(
-			_("Predictable substitutions like '@' instead of 'a' don't help very much.")
-		)
+		suggestions.append(_("Predictable substitutions like '@' instead of 'a' don't help very much."))
 
 	return {"warning": warning, "suggestions": suggestions}

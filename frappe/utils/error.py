@@ -190,9 +190,7 @@ def clear_old_snapshots():
 	from frappe.query_builder.functions import Now
 
 	ErrorSnapshot = DocType("Error Snapshot")
-	frappe.db.delete(
-		ErrorSnapshot, filters=(ErrorSnapshot.creation < (Now() - Interval(months=1)))
-	)
+	frappe.db.delete(ErrorSnapshot, filters=(ErrorSnapshot.creation < (Now() - Interval(months=1))))
 
 	path = get_error_snapshot_path()
 	today = datetime.datetime.now()
@@ -212,9 +210,7 @@ def get_default_args(func):
 	"""Get default arguments of a function from its signature."""
 	signature = inspect.signature(func)
 	return {
-		k: v.default
-		for k, v in signature.parameters.items()
-		if v.default is not inspect.Parameter.empty
+		k: v.default for k, v in signature.parameters.items() if v.default is not inspect.Parameter.empty
 	}
 
 
@@ -243,9 +239,7 @@ def raise_error_on_no_output(error_message, error_type=None, keep_quiet=None):
 
 			default_kwargs = get_default_args(func)
 			default_raise_error = default_kwargs.get("_raise_error")
-			raise_error = (
-				kwargs.get("_raise_error") if "_raise_error" in kwargs else default_raise_error
-			)
+			raise_error = kwargs.get("_raise_error") if "_raise_error" in kwargs else default_raise_error
 
 			if (not response) and raise_error:
 				frappe.throw(error_message, error_type or Exception)

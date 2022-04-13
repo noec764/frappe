@@ -42,15 +42,11 @@ def sync_for(app_name, force=0, reset_permissions=False):
 			"has_role",
 			"doctype",
 		]:
-			files.append(
-				os.path.join(FRAPPE_PATH, "core", "doctype", core_module, f"{core_module}.json")
-			)
+			files.append(os.path.join(FRAPPE_PATH, "core", "doctype", core_module, f"{core_module}.json"))
 
 		for custom_module in ["custom_field", "property_setter"]:
 			files.append(
-				os.path.join(
-					FRAPPE_PATH, "custom", "doctype", custom_module, f"{custom_module}.json"
-				)
+				os.path.join(FRAPPE_PATH, "custom", "doctype", custom_module, f"{custom_module}.json")
 			)
 
 		for website_module in [
@@ -60,9 +56,7 @@ def sync_for(app_name, force=0, reset_permissions=False):
 			"portal_menu_item",
 		]:
 			files.append(
-				os.path.join(
-					FRAPPE_PATH, "website", "doctype", website_module, f"{website_module}.json"
-				)
+				os.path.join(FRAPPE_PATH, "website", "doctype", website_module, f"{website_module}.json")
 			)
 
 		for data_migration_module in [
@@ -94,9 +88,7 @@ def sync_for(app_name, force=0, reset_permissions=False):
 			"workspace_shortcut",
 			"workspace",
 		]:
-			files.append(
-				os.path.join(FRAPPE_PATH, "desk", "doctype", desk_module, f"{desk_module}.json")
-			)
+			files.append(os.path.join(FRAPPE_PATH, "desk", "doctype", desk_module, f"{desk_module}.json"))
 
 	for module_name in frappe.local.app_modules.get(app_name) or []:
 		folder = os.path.dirname(frappe.get_module(app_name + "." + module_name).__file__)

@@ -215,9 +215,7 @@ def update_user_name(args):
 		update_password(args.get("email"), args.get("password"))
 
 	elif first_name:
-		args.update(
-			{"name": frappe.session.user, "first_name": first_name, "last_name": last_name}
-		)
+		args.update({"name": frappe.session.user, "first_name": first_name, "last_name": last_name})
 
 		frappe.db.sql(
 			"""update `tabUser` SET first_name=%(first_name)s,
@@ -312,9 +310,7 @@ def load_messages(language):
 
 	for path in frappe.get_hooks("setup_wizard_requires"):
 		# common folder `assets` served from `sites/`
-		js_file_path = os.path.abspath(
-			frappe.get_site_path("..", *path.strip("/").split("/"))
-		)
+		js_file_path = os.path.abspath(frappe.get_site_path("..", *path.strip("/").split("/")))
 		m.update(get_dict("jsfile", js_file_path))
 
 	m.update(get_dict("boot"))
@@ -331,13 +327,9 @@ def load_languages():
 	for d in language_codes:
 		codes_to_names[d.language_code] = d.language_name
 	return {
-		"default_language": frappe.db.get_value(
-			"Language", frappe.local.lang, "language_name"
-		)
+		"default_language": frappe.db.get_value("Language", frappe.local.lang, "language_name")
 		or frappe.local.lang,
-		"languages": sorted(
-			frappe.db.sql_list("select language_name from tabLanguage order by name")
-		),
+		"languages": sorted(frappe.db.sql_list("select language_name from tabLanguage order by name")),
 		"codes_to_names": codes_to_names,
 	}
 

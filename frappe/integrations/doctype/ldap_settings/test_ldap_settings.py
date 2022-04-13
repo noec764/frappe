@@ -8,12 +8,10 @@ import unittest
 from unittest import mock
 
 import ldap3
-from ldap3 import (MOCK_SYNC, OFFLINE_AD_2012_R2, OFFLINE_SLAPD_2_4,
-                   Connection, Server)
+from ldap3 import MOCK_SYNC, OFFLINE_AD_2012_R2, OFFLINE_SLAPD_2_4, Connection, Server
 
 import frappe
-from frappe.integrations.doctype.ldap_settings.ldap_settings import \
-    LDAPSettings
+from frappe.integrations.doctype.ldap_settings.ldap_settings import LDAPSettings
 
 
 class LDAP_TestCase:
@@ -206,9 +204,7 @@ class LDAP_TestCase:
 
 				frappe.get_doc(localdoc).save()
 
-				self.fail(
-					"Document LDAP Settings field [{0}] is not mandatory".format(mandatory_field)
-				)
+				self.fail("Document LDAP Settings field [{0}] is not mandatory".format(mandatory_field))
 
 			except frappe.exceptions.MandatoryError:
 				pass
@@ -218,9 +214,7 @@ class LDAP_TestCase:
 					# additional validation is done on this field, pass in this instance
 					pass
 
-		for (
-			non_mandatory_field
-		) in self.doc:  # Ensure remaining fields have not been made mandatory
+		for non_mandatory_field in self.doc:  # Ensure remaining fields have not been made mandatory
 
 			if non_mandatory_field == "doctype" or non_mandatory_field in mandatory_fields:
 				continue
@@ -234,9 +228,7 @@ class LDAP_TestCase:
 
 			except frappe.exceptions.MandatoryError:
 				self.fail(
-					"Document LDAP Settings field [{0}] should not be mandatory".format(
-						non_mandatory_field
-					)
+					"Document LDAP Settings field [{0}] should not be mandatory".format(non_mandatory_field)
 				)
 
 	@mock_ldap_connection
@@ -260,9 +252,7 @@ class LDAP_TestCase:
 			try:
 				frappe.get_doc(localdoc).save()
 
-				self.fail(
-					"LDAP search string [{0}] should not validate".format(invalid_search_string)
-				)
+				self.fail("LDAP search string [{0}] should not validate".format(invalid_search_string))
 
 			except frappe.exceptions.ValidationError:
 				pass
@@ -480,9 +470,7 @@ class LDAP_TestCase:
 				len(test_user_roles) == 2, "User should only be a part of the All and Guest roles"
 			)  # check default frappe roles
 
-			self.test_class.sync_roles(
-				test_user_doc, test_user_data[test_user]
-			)  # update user roles
+			self.test_class.sync_roles(test_user_doc, test_user_data[test_user])  # update user roles
 
 			frappe.get_doc("User", test_user + "@unit.testing")
 			updated_user_roles = frappe.get_roles(test_user + "@unit.testing")
@@ -540,9 +528,7 @@ class LDAP_TestCase:
 				# New user
 				self.test_class.create_or_update_user(self.user1doc, test_user_data[test_user])
 
-				self.assertTrue(
-					sync_roles_method.called, "User roles need to be updated for a new user"
-				)
+				self.assertTrue(sync_roles_method.called, "User roles need to be updated for a new user")
 				self.assertFalse(
 					update_user_fields_method.called,
 					"User roles are not required to be updated for a new user, this will occur during logon",
@@ -551,9 +537,7 @@ class LDAP_TestCase:
 				# Existing user
 				self.test_class.create_or_update_user(self.user1doc, test_user_data[test_user])
 
-				self.assertTrue(
-					sync_roles_method.called, "User roles need to be updated for an existing user"
-				)
+				self.assertTrue(sync_roles_method.called, "User roles need to be updated for an existing user")
 				self.assertTrue(
 					update_user_fields_method.called,
 					"User fields need to be updated for an existing user",
@@ -588,9 +572,7 @@ class LDAP_TestCase:
 				attributes=self.test_class.get_ldap_attributes(),
 			)
 
-			method_return = self.test_class.fetch_ldap_groups(
-				self.connection.entries[0], self.connection
-			)
+			method_return = self.test_class.fetch_ldap_groups(self.connection.entries[0], self.connection)
 
 			self.assertIsInstance(method_return, list)
 			self.assertTrue(len(method_return) == len(test_users[test_user]))
@@ -655,9 +637,7 @@ class LDAP_TestCase:
 
 					self.test_class.authenticate("posix.user", "posix_user_password")
 
-				self.assertTrue(
-					str(display_massage.exception).lower() == "invalid username or password"
-				)
+				self.assertTrue(str(display_massage.exception).lower() == "invalid username or password")
 
 			else:
 				self.assertTrue(self.test_class.authenticate("posix.user", "posix_user_password"))
@@ -682,9 +662,7 @@ class LDAP_TestCase:
 			) as validation:  # Fail if username string used
 				self.test_class.reset_password("posix.user", "posix_user_password")
 
-			self.assertTrue(
-				str(validation.exception) == "No LDAP User found for email: posix.user"
-			)
+			self.assertTrue(str(validation.exception) == "No LDAP User found for email: posix.user")
 
 			try:
 				self.test_class.reset_password(

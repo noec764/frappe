@@ -7,7 +7,9 @@ import unittest
 
 import frappe
 from frappe.core.doctype.session_default_settings.session_default_settings import (
-    clear_session_defaults, set_session_default_values)
+	clear_session_defaults,
+	set_session_default_values,
+)
 
 
 class TestSessionDefaultSettings(unittest.TestCase):
@@ -21,9 +23,7 @@ class TestSessionDefaultSettings(unittest.TestCase):
 		set_session_default_values({"role": "Website Manager"})
 
 		todo = frappe.get_doc(
-			dict(
-				doctype="ToDo", description="test session defaults set", assigned_by="Administrator"
-			)
+			dict(doctype="ToDo", description="test session defaults set", assigned_by="Administrator")
 		).insert()
 		self.assertEqual(todo.role, "Website Manager")
 

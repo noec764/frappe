@@ -165,9 +165,7 @@ class Exporter:
 		else:
 			order_by = "`tab{0}`.`creation` DESC".format(self.doctype)
 
-		parent_fields = [
-			format_column_name(df) for df in self.fields if df.parent == self.doctype
-		]
+		parent_fields = [format_column_name(df) for df in self.fields if df.parent == self.doctype]
 		parent_data = frappe.db.get_list(
 			self.doctype,
 			filters=filters,
@@ -185,9 +183,7 @@ class Exporter:
 			child_table_df = self.meta.get_field(key)
 			child_table_doctype = child_table_df.options
 			child_fields = ["name", "idx", "parent", "parentfield"] + list(
-				set(
-					[format_column_name(df) for df in self.fields if df.parent == child_table_doctype]
-				)
+				set([format_column_name(df) for df in self.fields if df.parent == child_table_doctype])
 			)
 			data = frappe.db.get_all(
 				child_table_doctype,

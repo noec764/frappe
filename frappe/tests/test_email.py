@@ -5,8 +5,7 @@ import re
 import unittest
 
 import frappe
-from frappe.email.doctype.email_account.test_email_account import \
-    TestEmailAccount
+from frappe.email.doctype.email_account.test_email_account import TestEmailAccount
 
 test_dependencies = ["Email Account"]
 
@@ -254,9 +253,9 @@ class TestEmail(unittest.TestCase):
 			)
 		)
 
-		before = frappe.db.sql(
-			"""select count(name) from `tabEmail Queue` where status='Not Sent'"""
-		)[0][0]
+		before = frappe.db.sql("""select count(name) from `tabEmail Queue` where status='Not Sent'""")[
+			0
+		][0]
 
 		builder = QueueBuilder(
 			recipients=["test@example.com", "test1@example.com"],
@@ -295,9 +294,7 @@ class TestEmail(unittest.TestCase):
 
 		frappe.db.delete("Communication", {"sender": "sukh@yyy.com"})
 
-		with open(
-			frappe.get_app_path("frappe", "tests", "data", "email_with_image.txt"), "r"
-		) as raw:
+		with open(frappe.get_app_path("frappe", "tests", "data", "email_with_image.txt"), "r") as raw:
 			messages = {
 				'"INBOX"': {
 					"latest_messages": [raw.read()],
@@ -315,9 +312,7 @@ class TestEmail(unittest.TestCase):
 
 			# TODO: fix this flaky test! - 'IndexError: list index out of range' for `.process()` line
 			if not mails:
-				raise self.skipTest(
-					"No inbound mails found / Email Account wasn't patched properly"
-				)
+				raise self.skipTest("No inbound mails found / Email Account wasn't patched properly")
 
 			communication = mails[0].process()
 

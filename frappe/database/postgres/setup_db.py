@@ -12,9 +12,7 @@ def setup_database(force, source_sql=None, verbose=False):
 	root_conn.sql(
 		"CREATE user {0} password '{1}'".format(frappe.conf.db_name, frappe.conf.db_password)
 	)
-	root_conn.sql(
-		"GRANT ALL PRIVILEGES ON DATABASE `{0}` TO {0}".format(frappe.conf.db_name)
-	)
+	root_conn.sql("GRANT ALL PRIVILEGES ON DATABASE `{0}` TO {0}".format(frappe.conf.db_name))
 	root_conn.close()
 
 	bootstrap_database(frappe.conf.db_name, verbose, source_sql=source_sql)

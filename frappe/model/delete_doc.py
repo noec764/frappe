@@ -101,10 +101,7 @@ def delete_doc(
 				frappe.conf.developer_mode
 				and not doc.custom
 				and not (
-					for_reload
-					or frappe.flags.in_migrate
-					or frappe.flags.in_install
-					or frappe.flags.in_uninstall
+					for_reload or frappe.flags.in_migrate or frappe.flags.in_install or frappe.flags.in_uninstall
 				)
 			):
 				try:
@@ -196,9 +193,7 @@ def add_to_deleted_document(doc):
 
 def update_naming_series(doc):
 	if doc.meta.autoname:
-		if doc.meta.autoname.startswith("naming_series:") and getattr(
-			doc, "naming_series", None
-		):
+		if doc.meta.autoname.startswith("naming_series:") and getattr(doc, "naming_series", None):
 			revert_series_if_last(doc.naming_series, doc.name, doc)
 
 		elif doc.meta.autoname.split(":")[0] not in (
@@ -261,9 +256,7 @@ def check_permission_and_not_submitted(doc):
 	if (
 		not doc.flags.ignore_permissions
 		and frappe.session.user != "Administrator"
-		and (
-			not doc.has_permission("delete") or (doc.doctype == "DocType" and not doc.custom)
-		)
+		and (not doc.has_permission("delete") or (doc.doctype == "DocType" and not doc.custom))
 	):
 		frappe.msgprint(
 			_("User not allowed to delete {0}: {1}").format(doc.doctype, doc.name),
@@ -297,9 +290,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 			if frappe.get_meta(link_dt).istable:
 				fields.extend(["parent", "parenttype"])
 
-			for item in frappe.db.get_values(
-				link_dt, {link_field: doc.name}, fields, as_dict=True
-			):
+			for item in frappe.db.get_values(link_dt, {link_field: doc.name}, fields, as_dict=True):
 				# available only in child table cases
 				item_parent = getattr(item, "parent", None)
 				linked_doctype = item.parenttype if item_parent else link_dt
@@ -331,9 +322,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 	"""Raise `frappe.LinkExistsError` if the document is dynamically linked"""
 	for df in get_dynamic_link_map().get(doc.doctype, []):
 		ignore_linked_doctypes = doc.get("ignore_linked_doctypes") or []
-		if df.parent in DOCTYPES_TO_SKIP or (
-			df.parent in ignore_linked_doctypes and method == "Cancel"
-		):
+		if df.parent in DOCTYPES_TO_SKIP or (df.parent in ignore_linked_doctypes and method == "Cancel"):
 			# don't check for communication and todo!
 			continue
 
@@ -449,9 +438,7 @@ def clear_references(
 
 
 def clear_timeline_references(link_doctype, link_name):
-	frappe.db.delete(
-		"Communication Link", {"link_doctype": link_doctype, "link_name": link_name}
-	)
+	frappe.db.delete("Communication Link", {"link_doctype": link_doctype, "link_name": link_name})
 
 
 def insert_feed(doc):

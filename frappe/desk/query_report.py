@@ -12,8 +12,15 @@ from frappe.model.utils import render_include
 from frappe.modules import get_module_path, scrub
 from frappe.permissions import get_role_permissions
 from frappe.translate import send_translations
-from frappe.utils import (cint, cstr, flt, format_duration, get_html_format,
-                          get_url_to_form, gzip_decompress)
+from frappe.utils import (
+	cint,
+	cstr,
+	flt,
+	format_duration,
+	get_html_format,
+	get_url_to_form,
+	gzip_decompress,
+)
 
 
 def get_report_doc(report_name):
@@ -172,9 +179,7 @@ def get_script(report_name):
 	module_path = "" if is_custom_module else get_module_path(module)
 	report_folder = module_path and os.path.join(module_path, "report", scrub(report.name))
 	script_path = report_folder and os.path.join(report_folder, scrub(report.name) + ".js")
-	print_path = report_folder and os.path.join(
-		report_folder, scrub(report.name) + ".html"
-	)
+	print_path = report_folder and os.path.join(report_folder, scrub(report.name) + ".html")
 
 	script = None
 	if os.path.exists(script_path):
@@ -240,13 +245,9 @@ def run(
 			dn = ""
 		result = get_prepared_report_result(report, filters, dn, user)
 	else:
-		result = generate_report_result(
-			report, filters, user, custom_columns, is_tree, parent_field
-		)
+		result = generate_report_result(report, filters, user, custom_columns, is_tree, parent_field)
 
-	result["add_total_row"] = report.add_total_row and not result.get(
-		"skip_total_row", False
-	)
+	result["add_total_row"] = report.add_total_row and not result.get("skip_total_row", False)
 
 	return result
 
@@ -458,9 +459,7 @@ def add_total_row(result, columns, meta=None, is_tree=False, parent_field=None):
 				total_row[i] = total_row[i] + cell
 
 		if fieldtype == "Link" and options == "Currency":
-			total_row[i] = (
-				result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
-			)
+			total_row[i] = result[0].get(fieldname) if isinstance(result[0], dict) else result[0][i]
 
 	for i in has_percent:
 		total_row[i] = flt(total_row[i]) / len(result)
@@ -498,9 +497,7 @@ def get_data_for_custom_report(columns):
 		if column.get("link_field"):
 			fieldname = column.get("fieldname")
 			doctype = column.get("doctype")
-			doc_field_value_map[(doctype, fieldname)] = get_data_for_custom_field(
-				doctype, fieldname
-			)
+			doc_field_value_map[(doctype, fieldname)] = get_data_for_custom_field(doctype, fieldname)
 
 	return doc_field_value_map
 
@@ -556,11 +553,7 @@ def get_filtered_data(ref_doctype, columns, data, user):
 	if match_filters_per_doctype:
 		for row in data:
 			# Why linked_doctypes.get(ref_doctype)? because if column is empty, linked_doctypes[ref_doctype] is removed
-			if (
-				linked_doctypes.get(ref_doctype)
-				and shared
-				and row[linked_doctypes[ref_doctype]] in shared
-			):
+			if linked_doctypes.get(ref_doctype) and shared and row[linked_doctypes[ref_doctype]] in shared:
 				result.append(row)
 
 			elif has_match(
@@ -610,11 +603,7 @@ def has_match(
 
 		if doctype == ref_doctype and if_owner:
 			idx = linked_doctypes.get("User")
-			if (
-				idx is not None
-				and row[idx] == user
-				and columns_dict[idx] == columns_dict.get("owner")
-			):
+			if idx is not None and row[idx] == user and columns_dict[idx] == columns_dict.get("owner"):
 				# owner match is true
 				matched_for_doctype = True
 

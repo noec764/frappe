@@ -78,9 +78,7 @@ def render_include(content):
 					if path.endswith(".html"):
 						include = html_to_js_template(path, include)
 
-					content = re.sub(
-						r"""{{% include\s['"]{0}['"]\s%}}""".format(path), include, content
-					)
+					content = re.sub(r"""{{% include\s['"]{0}['"]\s%}}""".format(path), include, content)
 
 		else:
 			break

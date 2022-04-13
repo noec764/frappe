@@ -145,9 +145,7 @@ class AssignmentRule(Document):
 		except Exception as e:
 			# when assignment fails, don't block the document as it may be
 			# a part of the email pulling
-			frappe.msgprint(
-				frappe._("Auto assignment failed: {0}").format(str(e)), indicator="orange"
-			)
+			frappe.msgprint(frappe._("Auto assignment failed: {0}").format(str(e)), indicator="orange")
 
 		return False
 
@@ -364,9 +362,7 @@ def update_due_date(doc, state=None):
 
 
 def get_assignment_rules() -> List[str]:
-	return frappe.get_all(
-		"Assignment Rule", filters={"disabled": 0}, pluck="document_type"
-	)
+	return frappe.get_all("Assignment Rule", filters={"disabled": 0}, pluck="document_type")
 
 
 def get_repeated(values: Iterable) -> List:

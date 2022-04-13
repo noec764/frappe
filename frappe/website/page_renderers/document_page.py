@@ -2,8 +2,9 @@ import frappe
 from frappe.model.document import get_controller
 from frappe.website.page_renderers.base_template_page import BaseTemplatePage
 from frappe.website.router import (
-    get_doctypes_with_web_view,
-    get_page_info_from_web_page_with_dynamic_routes)
+	get_doctypes_with_web_view,
+	get_page_info_from_web_page_with_dynamic_routes,
+)
 from frappe.website.utils import cache_html
 
 

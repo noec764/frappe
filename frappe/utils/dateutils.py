@@ -5,10 +5,16 @@ import datetime
 import frappe
 import frappe.defaults
 from frappe.utils import add_to_date, get_datetime, getdate
-from frappe.utils.data import (get_first_day, get_first_day_of_week,
-                               get_last_day, get_last_day_of_week,
-                               get_quarter_ending, get_quarter_start,
-                               get_year_ending, get_year_start)
+from frappe.utils.data import (
+	get_first_day,
+	get_first_day_of_week,
+	get_last_day,
+	get_last_day_of_week,
+	get_quarter_ending,
+	get_quarter_start,
+	get_year_ending,
+	get_year_start,
+)
 
 # global values -- used for caching
 dateformats = {
@@ -71,9 +77,7 @@ def parse_date(date):
 
 def get_user_date_format():
 	if getattr(frappe.local, "user_date_format", None) is None:
-		frappe.local.user_date_format = (
-			frappe.defaults.get_global_default("date_format") or "yyyy-mm-dd"
-		)
+		frappe.local.user_date_format = frappe.defaults.get_global_default("date_format") or "yyyy-mm-dd"
 
 	return frappe.local.user_date_format
 
@@ -111,9 +115,7 @@ def get_dates_from_timegrain(from_date, to_date, timegrain="Daily"):
 
 	while getdate(dates[-1]) < to_date:
 		if "Weekly" == timegrain:
-			date = get_last_day_of_week(
-				add_to_date(dates[-1], years=years, months=months, days=days)
-			)
+			date = get_last_day_of_week(add_to_date(dates[-1], years=years, months=months, days=days))
 		else:
 			date = get_period_ending(
 				add_to_date(dates[-1], years=years, months=months, days=days), timegrain

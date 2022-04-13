@@ -35,9 +35,7 @@ def import_custom_scripts(app):
 	if os.path.exists(frappe.get_app_path(app, "fixtures", "custom_scripts")):
 		for fname in os.listdir(frappe.get_app_path(app, "fixtures", "custom_scripts")):
 			if fname.endswith(".js"):
-				with open(
-					frappe.get_app_path(app, "fixtures", "custom_scripts") + os.path.sep + fname
-				) as f:
+				with open(frappe.get_app_path(app, "fixtures", "custom_scripts") + os.path.sep + fname) as f:
 					doctype = fname.rsplit(".", 1)[0]
 					script = f.read()
 					if frappe.db.exists("Client Script", {"dt": doctype}):
@@ -45,9 +43,7 @@ def import_custom_scripts(app):
 						custom_script.script = script
 						custom_script.save()
 					else:
-						frappe.get_doc(
-							{"doctype": "Client Script", "dt": doctype, "script": script}
-						).insert()
+						frappe.get_doc({"doctype": "Client Script", "dt": doctype, "script": script}).insert()
 
 
 def export_fixtures(app=None):
@@ -65,9 +61,7 @@ def export_fixtures(app=None):
 				or_filters = fixture.get("or_filters")
 				fixture = fixture.get("doctype") or fixture.get("dt")
 			print(
-				"Exporting {0} app {1} filters {2}".format(
-					fixture, app, (filters if filters else or_filters)
-				)
+				"Exporting {0} app {1} filters {2}".format(fixture, app, (filters if filters else or_filters))
 			)
 			if not os.path.exists(frappe.get_app_path(app, "fixtures")):
 				os.mkdir(frappe.get_app_path(app, "fixtures"))

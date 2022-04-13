@@ -27,13 +27,10 @@ def toggle_two_factor_auth(state, roles=None):
 
 def two_factor_is_enabled(user=None):
 	"""Returns True if 2FA is enabled."""
-	enabled = int(
-		frappe.db.get_value("System Settings", None, "enable_two_factor_auth") or 0
-	)
+	enabled = int(frappe.db.get_value("System Settings", None, "enable_two_factor_auth") or 0)
 	if enabled:
 		bypass_two_factor_auth = int(
-			frappe.db.get_value("System Settings", None, "bypass_2fa_for_retricted_ip_users")
-			or 0
+			frappe.db.get_value("System Settings", None, "bypass_2fa_for_retricted_ip_users") or 0
 		)
 		if bypass_two_factor_auth and user:
 			user_doc = frappe.get_doc("User", user)
@@ -176,9 +173,7 @@ def confirm_otp_token(login_manager, otp=None, tmp_id=None):
 
 
 def get_verification_obj(user, token, otp_secret):
-	otp_issuer = frappe.db.get_value(
-		"System Settings", "System Settings", "otp_issuer_name"
-	)
+	otp_issuer = frappe.db.get_value("System Settings", "System Settings", "otp_issuer_name")
 	verification_method = get_verification_method()
 	verification_obj = None
 	if verification_method == "SMS":
@@ -186,9 +181,7 @@ def get_verification_obj(user, token, otp_secret):
 	elif verification_method == "OTP App":
 		# check if this if the first time that the user is trying to login. If so, send an email
 		if not frappe.db.get_default(user + "_otplogin"):
-			verification_obj = process_2fa_for_email(
-				user, token, otp_secret, otp_issuer, method="OTP App"
-			)
+			verification_obj = process_2fa_for_email(user, token, otp_secret, otp_issuer, method="OTP App")
 		else:
 			verification_obj = process_2fa_for_otp_app(user, otp_secret, otp_issuer)
 	elif verification_method == "Email":
@@ -295,10 +288,7 @@ def get_link_for_qrcode(user, totp_uri):
 	key_user = "{}_user".format(key)
 	key_uri = "{}_uri".format(key)
 	lifespan = (
-		int(
-			frappe.db.get_value("System Settings", "System Settings", "lifespan_qrcode_image")
-		)
-		or 240
+		int(frappe.db.get_value("System Settings", "System Settings", "lifespan_qrcode_image")) or 240
 	)
 	frappe.cache().set_value(key_uri, totp_uri, expires_in_sec=lifespan)
 	frappe.cache().set_value(key_user, user, expires_in_sec=lifespan)
@@ -320,9 +310,7 @@ def send_token_via_sms(otpsecret, token=None, phone_no=None):
 		return False
 
 	hotp = pyotp.HOTP(otpsecret)
-	args = {
-		ss.message_parameter: "Your verification code is {}".format(hotp.at(int(token)))
-	}
+	args = {ss.message_parameter: "Your verification code is {}".format(hotp.at(int(token)))}
 
 	for d in ss.get("parameters"):
 		args[d.parameter] = d.value
@@ -343,9 +331,7 @@ def send_token_via_sms(otpsecret, token=None, phone_no=None):
 	return True
 
 
-def send_token_via_email(
-	user, token, otp_secret, otp_issuer, subject=None, message=None
-):
+def send_token_via_email(user, token, otp_secret, otp_issuer, subject=None, message=None):
 	"""Send token to user as email."""
 	user_email = frappe.db.get_value("User", user, "email")
 	if not user_email:
@@ -460,8 +446,7 @@ def should_remove_barcode_image(barcode):
 	if isinstance(barcode, str):
 		barcode = frappe.get_doc("File", barcode)
 	lifespan = (
-		frappe.db.get_value("System Settings", "System Settings", "lifespan_qrcode_image")
-		or 240
+		frappe.db.get_value("System Settings", "System Settings", "lifespan_qrcode_image") or 240
 	)
 	if time_diff_in_seconds(get_datetime(), barcode.creation) > int(lifespan):
 		return True
@@ -474,9 +459,7 @@ def disable():
 
 @frappe.whitelist()
 def reset_otp_secret(user):
-	otp_issuer = frappe.db.get_value(
-		"System Settings", "System Settings", "otp_issuer_name"
-	)
+	otp_issuer = frappe.db.get_value("System Settings", "System Settings", "otp_issuer_name")
 	user_email = frappe.db.get_value("User", user, "email")
 	if frappe.session.user in ["Administrator", user]:
 		frappe.defaults.clear_default(user + "_otplogin")

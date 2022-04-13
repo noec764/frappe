@@ -2,8 +2,7 @@ import unittest
 
 import frappe
 import frappe.defaults
-from frappe.contacts.report.addresses_and_contacts.addresses_and_contacts import \
-    get_data
+from frappe.contacts.report.addresses_and_contacts.addresses_and_contacts import get_data
 
 
 def get_custom_linked_doctype():

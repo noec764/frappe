@@ -18,9 +18,7 @@ class TestDashboardChart(unittest.TestCase):
 		self.assertEqual(get_period_ending("2019-04-10", "Daily"), getdate("2019-04-10"))
 
 		# week starts on monday
-		with patch.object(
-			frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"
-		):
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
 			self.assertEqual(get_period_ending("2019-04-10", "Weekly"), getdate("2019-04-14"))
 
 		self.assertEqual(get_period_ending("2019-04-10", "Monthly"), getdate("2019-04-30"))
@@ -180,9 +178,7 @@ class TestDashboardChart(unittest.TestCase):
 
 		result = get(chart_name="Test Daily Dashboard Chart", refresh=1)
 
-		self.assertEqual(
-			result.get("datasets")[0].get("values"), [200.0, 400.0, 300.0, 0.0, 100.0, 0.0]
-		)
+		self.assertEqual(result.get("datasets")[0].get("values"), [200.0, 400.0, 300.0, 0.0, 100.0, 0.0])
 		self.assertEqual(
 			result.get("labels"),
 			["06-01-19", "07-01-19", "08-01-19", "09-01-19", "10-01-19", "11-01-19"],
@@ -213,15 +209,11 @@ class TestDashboardChart(unittest.TestCase):
 			)
 		).insert()
 
-		with patch.object(
-			frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"
-		):
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
 			result = get(chart_name="Test Weekly Dashboard Chart", refresh=1)
 
 			self.assertEqual(result.get("datasets")[0].get("values"), [50.0, 300.0, 800.0, 0.0])
-			self.assertEqual(
-				result.get("labels"), ["30-12-18", "06-01-19", "13-01-19", "20-01-19"]
-			)
+			self.assertEqual(result.get("labels"), ["30-12-18", "06-01-19", "13-01-19", "20-01-19"])
 
 		frappe.db.rollback()
 
@@ -248,16 +240,10 @@ class TestDashboardChart(unittest.TestCase):
 			)
 		).insert()
 
-		with patch.object(
-			frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"
-		):
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
 			result = get(chart_name="Test Average Dashboard Chart", refresh=1)
-			self.assertEqual(
-				result.get("labels"), ["30-12-18", "06-01-19", "13-01-19", "20-01-19"]
-			)
-			self.assertEqual(
-				result.get("datasets")[0].get("values"), [50.0, 150.0, 266.6666666666667, 0.0]
-			)
+			self.assertEqual(result.get("labels"), ["30-12-18", "06-01-19", "13-01-19", "20-01-19"])
+			self.assertEqual(result.get("datasets")[0].get("values"), [50.0, 150.0, 266.6666666666667, 0.0])
 
 		frappe.db.rollback()
 

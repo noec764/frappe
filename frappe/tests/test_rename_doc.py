@@ -12,9 +12,12 @@ from unittest.mock import patch
 import frappe
 from frappe.exceptions import DoesNotExistError, ValidationError
 from frappe.model.base_document import get_controller
-from frappe.model.rename_doc import (bulk_rename, get_fetch_fields,
-                                     update_document_title,
-                                     update_linked_doctypes)
+from frappe.model.rename_doc import (
+	bulk_rename,
+	get_fetch_fields,
+	update_document_title,
+	update_linked_doctypes,
+)
 from frappe.modules.utils import get_doc_path
 from frappe.utils import add_to_date, now
 
@@ -75,9 +78,7 @@ class TestRenameDoc(unittest.TestCase):
 				"module": "Custom",
 				"name": self.doctype.old,
 				"custom": 0,
-				"fields": [
-					{"label": "Some Field", "fieldname": "some_fieldname", "fieldtype": "Data"}
-				],
+				"fields": [{"label": "Some Field", "fieldname": "some_fieldname", "fieldtype": "Data"}],
 				"permissions": [{"role": "System Manager", "read": 1}],
 			}
 		).insert()
@@ -112,9 +113,7 @@ class TestRenameDoc(unittest.TestCase):
 		"""Rename an existing document via frappe.rename_doc"""
 		old_name = choice(self.available_documents)
 		new_name = old_name + ".new"
-		self.assertEqual(
-			new_name, frappe.rename_doc(self.test_doctype, old_name, new_name, force=True)
-		)
+		self.assertEqual(new_name, frappe.rename_doc(self.test_doctype, old_name, new_name, force=True))
 		self.available_documents.remove(old_name)
 		self.available_documents.append(new_name)
 
@@ -191,9 +190,7 @@ class TestRenameDoc(unittest.TestCase):
 		# having the same name
 		old_name = to_rename_record.name
 		new_name = "ToDo"
-		self.assertEqual(
-			new_name, frappe.rename_doc("Renamed Doc", old_name, new_name, force=True)
-		)
+		self.assertEqual(new_name, frappe.rename_doc("Renamed Doc", old_name, new_name, force=True))
 
 	def test_update_document_title_api(self):
 		test_doctype = "Module Def"
@@ -246,11 +243,7 @@ class TestRenameDoc(unittest.TestCase):
 
 		with redirect_stdout(stdout), patch_db(["set_value"]):
 			get_fetch_fields("User", "ToDo", ["Activity Log"])
-			self.assertTrue(
-				"Function frappe.model.rename_doc.get_fetch_fields" in stdout.getvalue()
-			)
+			self.assertTrue("Function frappe.model.rename_doc.get_fetch_fields" in stdout.getvalue())
 
 			update_linked_doctypes("User", "ToDo", "str", "str")
-			self.assertTrue(
-				"Function frappe.model.rename_doc.update_linked_doctypes" in stdout.getvalue()
-			)
+			self.assertTrue("Function frappe.model.rename_doc.update_linked_doctypes" in stdout.getvalue())

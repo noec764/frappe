@@ -6,8 +6,10 @@
 import frappe
 from frappe import _
 from frappe.desk.doctype.notification_settings.notification_settings import (
-    is_email_notifications_enabled_for_type, is_notifications_enabled,
-    set_seen_value)
+	is_email_notifications_enabled_for_type,
+	is_notifications_enabled,
+	set_seen_value,
+)
 from frappe.model.document import Document
 
 
@@ -19,9 +21,7 @@ class NotificationLog(Document):
 			try:
 				send_notification_email(self)
 			except frappe.OutgoingEmailError:
-				frappe.log_error(
-					message=frappe.get_traceback(), title=_("Failed to send notification email")
-				)
+				frappe.log_error(message=frappe.get_traceback(), title=_("Failed to send notification email"))
 
 
 def get_permission_query_conditions(for_user):
@@ -37,11 +37,7 @@ def get_permission_query_conditions(for_user):
 def get_title(doctype, docname, title_field=None):
 	if not title_field:
 		title_field = frappe.get_meta(doctype).get_title_field()
-	title = (
-		docname
-		if title_field == "name"
-		else frappe.db.get_value(doctype, docname, title_field)
-	)
+	title = docname if title_field == "name" else frappe.db.get_value(doctype, docname, title_field)
 	return title
 
 
@@ -73,8 +69,9 @@ def enqueue_create_notification(users, doc):
 
 
 def make_notification_logs(doc, users):
-	from frappe.social.doctype.energy_point_settings.energy_point_settings import \
-	    is_energy_point_enabled
+	from frappe.social.doctype.energy_point_settings.energy_point_settings import (
+		is_energy_point_enabled,
+	)
 
 	for user in users:
 		if frappe.db.exists("User", {"email": user, "enabled": 1}):
@@ -85,11 +82,7 @@ def make_notification_logs(doc, users):
 				_doc = frappe.new_doc("Notification Log")
 				_doc.update(doc)
 				_doc.for_user = user
-				if (
-					_doc.for_user != _doc.from_user
-					or doc.type == "Energy Point"
-					or doc.type == "Alert"
-				):
+				if _doc.for_user != _doc.from_user or doc.type == "Energy Point" or doc.type == "Alert":
 					_doc.insert(ignore_permissions=True)
 
 

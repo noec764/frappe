@@ -11,8 +11,7 @@ from frappe import _
 
 def load_address_and_contact(doc, key=None):
 	"""Loads address list and contact list in `__onload`"""
-	from frappe.contacts.doctype.address.address import (get_address_display,
-	                                                     get_condensed_address)
+	from frappe.contacts.doctype.address.address import get_address_display, get_condensed_address
 
 	filters = [
 		["Dynamic Link", "link_doctype", "=", doc.doctype],
@@ -119,9 +118,7 @@ def get_permission_query_conditions(doctype):
 		for df in links.get("not_permitted_links"):
 			# like ifnull(customer, '')='' and ifnull(supplier, '')=''
 			conditions.append(
-				"ifnull(`tab{doctype}`.`{fieldname}`, '')=''".format(
-					doctype=doctype, fieldname=df.fieldname
-				)
+				"ifnull(`tab{doctype}`.`{fieldname}`, '')=''".format(doctype=doctype, fieldname=df.fieldname)
 			)
 
 		return "( " + " and ".join(conditions) + " )"
@@ -132,9 +129,7 @@ def get_permission_query_conditions(doctype):
 		for df in links.get("permitted_links"):
 			# like ifnull(customer, '')!='' or ifnull(supplier, '')!=''
 			conditions.append(
-				"ifnull(`tab{doctype}`.`{fieldname}`, '')!=''".format(
-					doctype=doctype, fieldname=df.fieldname
-				)
+				"ifnull(`tab{doctype}`.`{fieldname}`, '')!=''".format(doctype=doctype, fieldname=df.fieldname)
 			)
 
 		return "( " + " or ".join(conditions) + " )"
@@ -187,13 +182,9 @@ def filter_dynamic_link_doctypes(doctype, txt, searchfield, start, page_len, fil
 
 	filters.update({"dt": ("not in", [d[0] for d in doctypes])})
 
-	_doctypes = frappe.db.get_all(
-		"Custom Field", filters=filters, fields=["dt"], as_list=True
-	)
+	_doctypes = frappe.db.get_all("Custom Field", filters=filters, fields=["dt"], as_list=True)
 
-	_doctypes = tuple(
-		[d for d in _doctypes if re.search(txt + ".*", _(d[0]), re.IGNORECASE)]
-	)
+	_doctypes = tuple([d for d in _doctypes if re.search(txt + ".*", _(d[0]), re.IGNORECASE)])
 
 	all_doctypes = [d[0] for d in doctypes + _doctypes]
 	allowed_doctypes = frappe.permissions.get_doctypes_with_read()

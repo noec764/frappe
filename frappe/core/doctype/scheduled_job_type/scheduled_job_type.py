@@ -90,9 +90,7 @@ class ScheduledJobType(Document):
 
 	def log_status(self, status):
 		# log file
-		frappe.logger("scheduler").info(
-			f"Scheduled Job {status}: {self.method} for {frappe.local.site}"
-		)
+		frappe.logger("scheduler").info(f"Scheduled Job {status}: {self.method} for {frappe.local.site}")
 		self.update_scheduler_log(status)
 
 	def update_scheduler_log(self, status):

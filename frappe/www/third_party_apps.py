@@ -7,9 +7,7 @@ no_cache = 1
 
 def get_context(context):
 	if frappe.session.user == "Guest":
-		frappe.throw(
-			_("You need to be logged in to access this page"), frappe.PermissionError
-		)
+		frappe.throw(_("You need to be logged in to access this page"), frappe.PermissionError)
 
 	active_tokens = frappe.get_all(
 		"OAuth Bearer Token",
@@ -52,9 +50,7 @@ def get_first_login(client):
 		limit=1,
 	)
 
-	login_date = (
-		login_date[0].get("creation") if login_date and len(login_date) > 0 else None
-	)
+	login_date = login_date[0].get("creation") if login_date and len(login_date) > 0 else None
 
 	return login_date
 

@@ -5,7 +5,10 @@
 import frappe
 from frappe import _
 from frappe.desk.doctype.notification_log.notification_log import (
-    enqueue_create_notification, get_title, get_title_html)
+	enqueue_create_notification,
+	get_title,
+	get_title_html,
+)
 from frappe.desk.form.document_follow import follow_document
 from frappe.utils import cint
 
@@ -187,9 +190,7 @@ def check_share_permission(doctype, name):
 	"""Check if the user can share with other users"""
 	if not frappe.has_permission(doctype, ptype="share", doc=name):
 		frappe.throw(
-			_("No permission to {0} {1} {2}").format(
-				_("share", context="Document"), _(doctype), name
-			),
+			_("No permission to {0} {1} {2}").format(_("share", context="Document"), _(doctype), name),
 			frappe.PermissionError,
 		)
 

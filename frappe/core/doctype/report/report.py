@@ -6,8 +6,7 @@ import json
 import frappe
 import frappe.desk.query_report
 from frappe import _, scrub
-from frappe.core.doctype.custom_role.custom_role import \
-    get_custom_allowed_roles
+from frappe.core.doctype.custom_role.custom_role import get_custom_allowed_roles
 from frappe.core.doctype.page.page import delete_custom_role
 from frappe.desk.reportview import append_totals_row
 from frappe.model.document import Document
@@ -26,8 +25,7 @@ class Report(Document):
 		if not self.is_standard:
 			self.is_standard = "No"
 			if (
-				frappe.session.user == "Administrator"
-				and getattr(frappe.local.conf, "developer_mode", 0) == 1
+				frappe.session.user == "Administrator" and getattr(frappe.local.conf, "developer_mode", 0) == 1
 			):
 				self.is_standard = "Yes"
 
@@ -37,14 +35,10 @@ class Report(Document):
 				frappe.only_for("Script Manager", True)
 
 			if frappe.db.get_value("Report", self.name, "is_standard") == "Yes":
-				frappe.throw(
-					_("Cannot edit a standard report. Please duplicate and create a new report")
-				)
+				frappe.throw(_("Cannot edit a standard report. Please duplicate and create a new report"))
 
 		if self.is_standard == "Yes" and frappe.session.user != "Administrator":
-			frappe.throw(
-				_("Only Administrator can save a standard report. Please rename and save.")
-			)
+			frappe.throw(_("Only Administrator can save a standard report. Please rename and save."))
 
 		if self.report_type == "Report Builder":
 			self.update_report_json()
@@ -76,9 +70,7 @@ class Report(Document):
 			)
 
 	def get_columns(self):
-		return [
-			d.as_dict(no_default_fields=True, no_child_table_fields=True) for d in self.columns
-		]
+		return [d.as_dict(no_default_fields=True, no_child_table_fields=True) for d in self.columns]
 
 	@frappe.whitelist()
 	def set_doctype_roles(self):
@@ -93,8 +85,7 @@ class Report(Document):
 		from frappe.utils import has_common
 
 		allowed = [
-			d.role
-			for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.name})
+			d.role for d in frappe.get_all("Has Role", fields=["role"], filters={"parent": self.name})
 		]
 
 		custom_roles = get_custom_allowed_roles("report", self.name)
@@ -209,9 +200,7 @@ class Report(Document):
 							fieldtype, options = fieldtype.split("/")
 
 				columns.append(
-					frappe._dict(
-						label=parts[0], fieldtype=fieldtype, fieldname=parts[0], options=options
-					)
+					frappe._dict(label=parts[0], fieldtype=fieldtype, fieldname=parts[0], options=options)
 				)
 
 		result += data.get("result")
@@ -284,9 +273,7 @@ class Report(Document):
 	def get_standard_report_order_by(self, params):
 		group_by_args = None
 		if params.get("sort_by"):
-			order_by = (
-				Report._format(params.get("sort_by").split(".")) + " " + params.get("sort_order")
-			)
+			order_by = Report._format(params.get("sort_by").split(".")) + " " + params.get("sort_order")
 
 		elif params.get("order_by"):
 			order_by = params.get("order_by")

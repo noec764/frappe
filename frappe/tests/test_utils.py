@@ -16,26 +16,36 @@ from PIL import Image
 
 import frappe
 from frappe.installer import parse_app_name
-from frappe.utils import (ceil, evaluate_filters, floor, format_timedelta,
-                          get_bench_path, get_url, money_in_words,
-                          parse_timedelta, scrub_urls, validate_email_address,
-                          validate_url)
-from frappe.utils.data import (cast, get_time, get_timedelta, now_datetime,
-                               nowtime, validate_python_code)
-from frappe.utils.diff import (_get_value_from_version, get_version_diff,
-                               version_query)
+from frappe.utils import (
+	ceil,
+	evaluate_filters,
+	floor,
+	format_timedelta,
+	get_bench_path,
+	get_url,
+	money_in_words,
+	parse_timedelta,
+	scrub_urls,
+	validate_email_address,
+	validate_url,
+)
+from frappe.utils.data import (
+	cast,
+	get_time,
+	get_timedelta,
+	now_datetime,
+	nowtime,
+	validate_python_code,
+)
+from frappe.utils.diff import _get_value_from_version, get_version_diff, version_query
 from frappe.utils.image import optimize_image, strip_exif_data
 from frappe.utils.response import json_handler
 
 
 class TestFilters(unittest.TestCase):
 	def test_simple_dict(self):
-		self.assertTrue(
-			evaluate_filters({"doctype": "User", "status": "Open"}, {"status": "Open"})
-		)
-		self.assertFalse(
-			evaluate_filters({"doctype": "User", "status": "Open"}, {"status": "Closed"})
-		)
+		self.assertTrue(evaluate_filters({"doctype": "User", "status": "Open"}, {"status": "Open"}))
+		self.assertFalse(evaluate_filters({"doctype": "User", "status": "Open"}, {"status": "Closed"}))
 
 	def test_multiple_dict(self):
 		self.assertTrue(
@@ -151,8 +161,7 @@ class TestDataManipulation(unittest.TestCase):
 		self.assertTrue('<a href="{0}/login">Test link 3</a>'.format(url) in html)
 		self.assertTrue('<img src="{0}/assets/frappe/test.jpg">'.format(url) in html)
 		self.assertTrue(
-			"style=\"background-image: url('{0}/assets/frappe/bg.jpg') !important\"".format(url)
-			in html
+			"style=\"background-image: url('{0}/assets/frappe/bg.jpg') !important\"".format(url) in html
 		)
 		self.assertTrue('<a href="mailto:test@example.com">email</a>' in html)
 
@@ -314,9 +323,7 @@ class TestImage(unittest.TestCase):
 		content_type = guess_type(image_file_path)[0]
 		original_content = io.open(image_file_path, mode="rb").read()
 
-		optimized_content = optimize_image(
-			original_content, content_type, max_width=500, max_height=500
-		)
+		optimized_content = optimize_image(original_content, content_type, max_width=500, max_height=500)
 		optimized_image = Image.open(io.BytesIO(optimized_content))
 		width, height = optimized_image.size
 
@@ -380,9 +387,7 @@ class TestDiffUtils(unittest.TestCase):
 
 	def test_get_field_value_from_version(self):
 		latest_version = self.versions[0][0]
-		self.assertEqual(
-			"42;", _get_value_from_version(latest_version, fieldname="script")[0]
-		)
+		self.assertEqual("42;", _get_value_from_version(latest_version, fieldname="script")[0])
 		old_version = self.versions[1][0]
 		self.assertEqual("2;", _get_value_from_version(old_version, fieldname="script")[0])
 
@@ -398,9 +403,7 @@ class TestDiffUtils(unittest.TestCase):
 class TestDateUtils(unittest.TestCase):
 	def test_first_day_of_week(self):
 		# Monday as start of the week
-		with patch.object(
-			frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"
-		):
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
 			self.assertEqual(
 				frappe.utils.get_first_day_of_week("2020-12-25"), frappe.utils.getdate("2020-12-21")
 			)
@@ -504,9 +507,7 @@ class TestTimeDeltaUtils(unittest.TestCase):
 		self.assertEqual(format_timedelta(timedelta(seconds=0)), "0:00:00")
 		self.assertEqual(format_timedelta(timedelta(hours=10)), "10:00:00")
 		self.assertEqual(format_timedelta(timedelta(hours=100)), "100:00:00")
-		self.assertEqual(
-			format_timedelta(timedelta(seconds=100, microseconds=129)), "0:01:40.000129"
-		)
+		self.assertEqual(format_timedelta(timedelta(seconds=100, microseconds=129)), "0:01:40.000129")
 		self.assertEqual(
 			format_timedelta(timedelta(seconds=100, microseconds=12212199129)), "3:25:12.199129"
 		)
@@ -627,8 +628,6 @@ class TestAppParser(unittest.TestCase):
 		frappe_app = os.path.join(bench_path, "apps", "frappe")
 		self.assertEqual("frappe", parse_app_name(frappe_app))
 		self.assertEqual("healthcare", parse_app_name("healthcare"))
-		self.assertEqual(
-			"healthcare", parse_app_name("https://github.com/frappe/healthcare.git")
-		)
+		self.assertEqual("healthcare", parse_app_name("https://github.com/frappe/healthcare.git"))
 		self.assertEqual("healthcare", parse_app_name("git@github.com:frappe/healthcare.git"))
 		self.assertEqual("healthcare", parse_app_name("frappe/healthcare@develop"))

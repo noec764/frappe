@@ -23,6 +23,4 @@ def execute():
 	for notification in frappe.get_all(
 		"Notification", filters={"channel": "Slack"}, fields=["name", "slack_webhook_url"]
 	):
-		frappe.db.set_value(
-			"Notification", notification.name, "channel", "External Collaboration Tool"
-		)
+		frappe.db.set_value("Notification", notification.name, "channel", "External Collaboration Tool")

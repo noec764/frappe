@@ -49,9 +49,9 @@ class DocShare(Document):
 			frappe.db.get_value("DocType", self.share_doctype, "is_submittable")
 		):
 			frappe.throw(
-				_(
-					"Cannot share {0} with submit permission as the doctype {1} is not submittable"
-				).format(frappe.bold(self.share_name), frappe.bold(self.share_doctype))
+				_("Cannot share {0} with submit permission as the doctype {1} is not submittable").format(
+					frappe.bold(self.share_name), frappe.bold(self.share_doctype)
+				)
 			)
 
 	def after_insert(self):

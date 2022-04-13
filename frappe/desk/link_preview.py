@@ -21,9 +21,7 @@ def get_preview_data(doctype, docname, force=False):
 	# no preview fields defined, build list from mandatory fields
 	if not preview_fields:
 		preview_fields = [
-			field.fieldname
-			for field in meta.fields
-			if field.reqd and field.fieldtype not in table_fields
+			field.fieldname for field in meta.fields if field.reqd and field.fieldtype not in table_fields
 		]
 
 	title_field = meta.get_title_field()
@@ -33,9 +31,7 @@ def get_preview_data(doctype, docname, force=False):
 	preview_fields.append(image_field)
 	preview_fields.append("name")
 
-	preview_data = frappe.get_list(
-		doctype, filters={"name": docname}, fields=preview_fields, limit=1
-	)
+	preview_data = frappe.get_list(doctype, filters={"name": docname}, fields=preview_fields, limit=1)
 
 	if not preview_data:
 		return

@@ -178,9 +178,7 @@ def add_to_date(
 		try:
 			date = parser.parse(date)
 		except ParserError:
-			frappe.throw(
-				frappe._("Please select a valid date filter"), title=frappe._("Invalid Date")
-			)
+			frappe.throw(frappe._("Please select a valid date filter"), title=frappe._("Invalid Date"))
 
 	date = date + relativedelta(
 		years=years,
@@ -236,9 +234,7 @@ def time_diff_in_minutes(string_ed_date, string_st_date):
 
 
 def time_diff_in_hours(string_ed_date, string_st_date):
-	return round(
-		float(time_diff(string_ed_date, string_st_date).total_seconds()) / 3600, 6
-	)
+	return round(float(time_diff(string_ed_date, string_st_date).total_seconds()) / 3600, 6)
 
 
 def now_datetime():
@@ -252,9 +248,7 @@ def get_timestamp(date):
 
 def get_eta(from_time, percent_complete):
 	diff = time_diff(now_datetime(), from_time).total_seconds()
-	return str(
-		datetime.timedelta(seconds=(100 - percent_complete) / percent_complete * diff)
-	)
+	return str(datetime.timedelta(seconds=(100 - percent_complete) / percent_complete * diff))
 
 
 def _get_time_zone():
@@ -501,9 +495,7 @@ def format_date(string_date=None, format_string=None, lang=None):
 			date, format_string, locale=(lang or "").replace("-", "_")
 		)
 	except UnknownLocaleError:
-		format_string = (
-			format_string.replace("MM", "%m").replace("dd", "%d").replace("yyyy", "%Y")
-		)
+		format_string = format_string.replace("MM", "%m").replace("dd", "%d").replace("yyyy", "%Y")
 		formatted_date = date.strftime(format_string)
 	return formatted_date
 
@@ -561,9 +553,7 @@ def format_datetime(datetime_string, format_string=None, lang=None):
 
 	datetime = get_datetime(datetime_string)
 	if not format_string:
-		format_string = (
-			get_user_date_format().replace("mm", "MM") + " " + get_user_time_format()
-		)
+		format_string = get_user_date_format().replace("mm", "MM") + " " + get_user_time_format()
 
 	try:
 		formatted_datetime = babel.dates.format_datetime(
@@ -641,9 +631,7 @@ def duration_to_seconds(duration):
 def validate_duration_format(duration):
 	import re
 
-	is_valid_duration = re.match(
-		r"^(?:(\d+d)?((^|\s)\d+h)?((^|\s)\d+m)?((^|\s)\d+s)?)$", duration
-	)
+	is_valid_duration = re.match(r"^(?:(\d+d)?((^|\s)\d+h)?((^|\s)\d+m)?((^|\s)\d+s)?)$", duration)
 	if not is_valid_duration:
 		frappe.throw(
 			frappe._("Value {0} must be in the valid duration format: d h m s").format(
@@ -993,9 +981,7 @@ def safe_div(numerator, denominator, precision=2):
 
 def round_based_on_smallest_currency_fraction(value, currency, precision=2):
 	smallest_currency_fraction_value = flt(
-		frappe.db.get_value(
-			"Currency", currency, "smallest_currency_fraction_value", cache=True
-		)
+		frappe.db.get_value("Currency", currency, "smallest_currency_fraction_value", cache=True)
 	)
 
 	if smallest_currency_fraction_value:
@@ -1068,9 +1054,7 @@ def fmt_money(amount, precision=None, currency=None, format=None):
 		if precision > 2:
 			if len(decimals) < 3:
 				if currency:
-					fraction = (
-						frappe.db.get_value("Currency", currency, "fraction_units", cache=True) or 100
-					)
+					fraction = frappe.db.get_value("Currency", currency, "fraction_units", cache=True) or 100
 					precision = len(cstr(fraction)) - 1
 				else:
 					precision = number_format_precision
@@ -1105,9 +1089,7 @@ def fmt_money(amount, precision=None, currency=None, format=None):
 
 	parts.reverse()
 
-	amount = comma_str.join(parts) + (
-		(precision and decimal_str) and (decimal_str + decimals) or ""
-	)
+	amount = comma_str.join(parts) + ((precision and decimal_str) and (decimal_str + decimals) or "")
 	if amount != "0":
 		amount = minus + amount
 
@@ -1170,9 +1152,9 @@ def money_in_words(
 	if not main_currency:
 		main_currency = d.get("currency", "EUR")
 	if not fraction_currency:
-		fraction_currency = frappe.db.get_value(
-			"Currency", main_currency, "fraction", cache=True
-		) or _("Cent")
+		fraction_currency = frappe.db.get_value("Currency", main_currency, "fraction", cache=True) or _(
+			"Cent"
+		)
 
 	number_format = (
 		frappe.db.get_value("Currency", main_currency, "number_format", cache=True)
@@ -1423,9 +1405,7 @@ def comma_sep(some_list, pattern, add_quotes=True):
 		elif len(some_list) == 1:
 			return some_list[0]
 		else:
-			some_list = (
-				["'%s'" % s for s in some_list] if add_quotes else ["%s" % s for s in some_list]
-			)
+			some_list = ["'%s'" % s for s in some_list] if add_quotes else ["%s" % s for s in some_list]
 			return pattern.format(", ".join(frappe._(s) for s in some_list[:-1]), some_list[-1])
 	else:
 		return some_list
@@ -1487,9 +1467,7 @@ def get_url(uri=None, full_address=False):
 			if not host_name:
 				host_name = "http://localhost"
 
-	if host_name and not (
-		host_name.startswith("http://") or host_name.startswith("https://")
-	):
+	if host_name and not (host_name.startswith("http://") or host_name.startswith("https://")):
 		host_name = "http://" + host_name
 
 	if not uri and full_address:
@@ -1498,9 +1476,7 @@ def get_url(uri=None, full_address=False):
 	port = frappe.conf.http_port or frappe.conf.webserver_port
 
 	if (
-		not (
-			frappe.conf.restart_supervisor_on_update or frappe.conf.restart_systemd_on_update
-		)
+		not (frappe.conf.restart_supervisor_on_update or frappe.conf.restart_systemd_on_update)
 		and host_name
 		and not url_contains_port(host_name)
 		and port
@@ -1513,15 +1489,9 @@ def get_url(uri=None, full_address=False):
 
 
 def get_host_name_from_request():
-	if (
-		hasattr(frappe.local, "request")
-		and frappe.local.request
-		and frappe.local.request.host
-	):
+	if hasattr(frappe.local, "request") and frappe.local.request and frappe.local.request.host:
 		protocol = (
-			"https://"
-			if "https" == frappe.get_request_header("X-Forwarded-Proto", "")
-			else "http://"
+			"https://" if "https" == frappe.get_request_header("X-Forwarded-Proto", "") else "http://"
 		)
 		return protocol + frappe.local.request.host
 
@@ -1565,9 +1535,7 @@ def get_link_to_report(name, label=None, report_type=None, doctype=None, filters
 			get_url_to_report_with_filters(name, filters, report_type, doctype), label
 		)
 	else:
-		return """<a href='{0}'>{1}</a>""".format(
-			get_url_to_report(name, report_type, doctype), label
-		)
+		return """<a href='{0}'>{1}</a>""".format(get_url_to_report(name, report_type, doctype), label)
 
 
 def get_absolute_url(doctype, name):
@@ -1584,9 +1552,7 @@ def get_url_to_list(doctype):
 
 def get_url_to_report(name, report_type=None, doctype=None):
 	if report_type == "Report Builder":
-		return get_url(
-			uri="/app/{0}/view/report/{1}".format(quoted(slug(doctype)), quoted(name))
-		)
+		return get_url(uri="/app/{0}/view/report/{1}".format(quoted(slug(doctype)), quoted(name)))
 	else:
 		return get_url(uri="/app/query-report/{0}".format(quoted(name)))
 
@@ -1643,9 +1609,7 @@ def compare(val1: Any, condition: str, val2: Any, fieldtype: Optional[str] = Non
 	return ret
 
 
-def get_filter(
-	doctype: str, f: Union[Dict, List, Tuple], filters_config=None
-) -> "frappe._dict":
+def get_filter(doctype: str, f: Union[Dict, List, Tuple], filters_config=None) -> "frappe._dict":
 	"""Returns a _dict like
 
 	{
@@ -1671,9 +1635,7 @@ def get_filter(
 		f = f[0:4]
 	elif len(f) != 4:
 		frappe.throw(
-			frappe._(
-				"Filter must have 4 values (doctype, fieldname, operator, value): {0}"
-			).format(str(f))
+			frappe._("Filter must have 4 values (doctype, fieldname, operator, value): {0}").format(str(f))
 		)
 
 	f = frappe._dict(doctype=f[0], fieldname=f[1], operator=f[2], value=f[3])
@@ -1715,13 +1677,9 @@ def get_filter(
 		valid_operators = tuple(set(valid_operators + tuple(additional_operators)))
 
 	if f.operator.lower() not in valid_operators + standard_filters_operator:
-		frappe.throw(
-			frappe._("Operator must be one of {0}").format(", ".join(valid_operators))
-		)
+		frappe.throw(frappe._("Operator must be one of {0}").format(", ".join(valid_operators)))
 
-	if f.doctype and (
-		f.fieldname not in default_fields + optional_fields + child_table_fields
-	):
+	if f.doctype and (f.fieldname not in default_fields + optional_fields + child_table_fields):
 		# verify fieldname belongs to the doctype
 		meta = frappe.get_meta(f.doctype)
 		if not meta.has_field(f.fieldname):
@@ -1786,9 +1744,7 @@ def sanitize_column(column_name):
 	if "ifnull" in column_name:
 		if regex.match(column_name):
 			# to avoid and, or
-			if any(
-				" {0} ".format(keyword) in column_name.split() for keyword in blacklisted_keywords
-			):
+			if any(" {0} ".format(keyword) in column_name.split() for keyword in blacklisted_keywords):
 				_raise_exception()
 
 			# to avoid select, delete, drop, update and case
@@ -1820,11 +1776,7 @@ def expand_relative_urls(html):
 				to_expand[2] = "/" + to_expand[2]
 			to_expand.insert(2, url)
 
-		if (
-			"url" in to_expand[0]
-			and to_expand[1].startswith("(")
-			and to_expand[-1].endswith(")")
-		):
+		if "url" in to_expand[0] and to_expand[1].startswith("(") and to_expand[-1].endswith(")"):
 			# background-image: url('/assets/...') - workaround for wkhtmltopdf print-media-type
 			to_expand.append(" !important")
 
@@ -1837,9 +1789,7 @@ def expand_relative_urls(html):
 	)
 
 	# background-image: url('/assets/...')
-	html = re.sub(
-		r'(:[\s]?url)(\([\'"]?)((?!http)[^\'" >]+)([\'"]?\))', _expand_relative_urls, html
-	)
+	html = re.sub(r'(:[\s]?url)(\([\'"]?)((?!http)[^\'" >]+)([\'"]?\))', _expand_relative_urls, html)
 
 	return html
 
@@ -1854,9 +1804,7 @@ def quote_urls(html):
 		groups[2] = quoted(groups[2])
 		return "".join(groups)
 
-	return re.sub(
-		r'(href|src){1}([\s]*=[\s]*[\'"]?)((?:http)[^\'">]+)([\'"]?)', _quote_url, html
-	)
+	return re.sub(r'(href|src){1}([\s]*=[\s]*[\'"]?)((?:http)[^\'">]+)([\'"]?)', _quote_url, html)
 
 
 def unique(seq):
@@ -2015,9 +1963,7 @@ def get_user_info_for_avatar(user_id: str) -> Dict:
 		return {"email": user_id, "image": "", "name": user_id}
 
 
-def validate_python_code(
-	string: str, fieldname=None, is_expression: bool = True
-) -> None:
+def validate_python_code(string: str, fieldname=None, is_expression: bool = True) -> None:
 	"""Validate python code fields by using compile_command to ensure that expression is valid python.
 	args:
 	        fieldname: name of field being validated.
@@ -2042,9 +1988,7 @@ def validate_python_code(
 		frappe.throw(msg, title=frappe._("Syntax Error"))
 	except Exception as e:
 		frappe.msgprint(
-			frappe._("{} Possibly invalid python code. <br>{}").format(
-				fieldname + ": " or "", str(e)
-			),
+			frappe._("{} Possibly invalid python code. <br>{}").format(fieldname + ": " or "", str(e)),
 			indicator="orange",
 		)
 

@@ -9,10 +9,10 @@ from frappe import _
 from frappe.core.doctype.user.user import get_enabled_users
 from frappe.model import log_types
 from frappe.model.document import Document
-from frappe.social.doctype.energy_point_log.energy_point_log import \
-    create_energy_points_log
-from frappe.social.doctype.energy_point_settings.energy_point_settings import \
-    is_energy_point_enabled
+from frappe.social.doctype.energy_point_log.energy_point_log import create_energy_points_log
+from frappe.social.doctype.energy_point_settings.energy_point_settings import (
+	is_energy_point_enabled,
+)
 
 
 class EnergyPointRule(Document):
@@ -86,9 +86,7 @@ class EnergyPointRule(Document):
 		return False
 
 	def eval_condition(self, doc):
-		return self.condition and frappe.safe_eval(
-			self.condition, None, {"doc": doc.as_dict()}
-		)
+		return self.condition and frappe.safe_eval(self.condition, None, {"doc": doc.as_dict()})
 
 
 def process_energy_points(doc, state):
@@ -124,9 +122,7 @@ def revert_points_for_cancelled_doc(doc):
 	)
 	for log in energy_point_logs:
 		reference_log = frappe.get_doc("Energy Point Log", log.name)
-		reference_log.revert(
-			_("Reference document has been cancelled"), ignore_permissions=True
-		)
+		reference_log.revert(_("Reference document has been cancelled"), ignore_permissions=True)
 
 
 def get_energy_point_doctypes():

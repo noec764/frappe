@@ -10,8 +10,7 @@ import frappe
 import frappe.sessions
 import frappe.utils
 from frappe import _, is_whitelisted
-from frappe.core.doctype.server_script.server_script_utils import \
-    get_server_script_map
+from frappe.core.doctype.server_script.server_script_utils import get_server_script_map
 from frappe.utils import cint
 from frappe.utils.csvutils import build_csv_response
 from frappe.utils.image import optimize_image
@@ -200,9 +199,7 @@ def upload_file():
 	frappe.local.uploaded_file = content
 	frappe.local.uploaded_filename = filename
 
-	if not file_url and (
-		frappe.session.user == "Guest" or (user and not user.has_desk_access())
-	):
+	if not file_url and (frappe.session.user == "Guest" or (user and not user.has_desk_access())):
 		filetype = guess_type(filename)[0]
 		if filetype not in ALLOWED_MIMETYPES:
 			frappe.throw(_("You can only upload JPG, PNG, PDF, or Microsoft documents."))

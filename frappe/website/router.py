@@ -92,9 +92,7 @@ def get_pages_from_path(start, app, app_path):
 				if not "." in fname:
 					continue
 				page_name, extn = fname.rsplit(".", 1)
-				if extn in ("js", "css") and os.path.exists(
-					os.path.join(basepath, page_name + ".html")
-				):
+				if extn in ("js", "css") and os.path.exists(os.path.join(basepath, page_name + ".html")):
 					# js, css is linked to html, skip
 					continue
 
@@ -148,9 +146,7 @@ def get_page_info(path, app, start, basepath=None, app_path=None, fname=None):
 
 	if os.path.exists(page_info.controller_path):
 		controller = (
-			app
-			+ "."
-			+ os.path.relpath(page_info.controller_path, app_path).replace(os.path.sep, ".")[:-3]
+			app + "." + os.path.relpath(page_info.controller_path, app_path).replace(os.path.sep, ".")[:-3]
 		)
 
 		page_info.controller = controller
@@ -175,9 +171,7 @@ def get_frontmatter(string):
 
 	fmatter = ""
 	body = ""
-	result = re.compile(
-		r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M
-	).search(string)
+	result = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M).search(string)
 
 	if result:
 		fmatter = result.group(1)

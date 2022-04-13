@@ -22,8 +22,14 @@ import click
 
 import frappe
 from frappe import _
-from frappe.model import (child_table_fields, data_fieldtypes, default_fields,
-                          no_value_fields, optional_fields, table_fields)
+from frappe.model import (
+	child_table_fields,
+	data_fieldtypes,
+	default_fields,
+	no_value_fields,
+	optional_fields,
+	table_fields,
+)
 from frappe.model.base_document import BaseDocument
 from frappe.model.document import Document
 from frappe.model.workflow import get_workflow_name
@@ -57,9 +63,7 @@ def get_table_columns(doctype):
 
 def load_doctype_from_file(doctype):
 	fname = frappe.scrub(doctype)
-	with open(
-		frappe.get_app_path("frappe", "core", "doctype", fname, fname + ".json"), "r"
-	) as f:
+	with open(frappe.get_app_path("frappe", "core", "doctype", fname, fname + ".json"), "r") as f:
 		txt = json.loads(f.read())
 
 	for d in txt.get("fields", []):
@@ -199,9 +203,7 @@ class Meta(Document):
 
 	def get_global_search_fields(self):
 		"""Returns list of fields with `in_global_search` set and `name` if set"""
-		fields = self.get(
-			"fields", {"in_global_search": 1, "fieldtype": ["not in", no_value_fields]}
-		)
+		fields = self.get("fields", {"in_global_search": 1, "fieldtype": ["not in", no_value_fields]})
 		if getattr(self, "show_name_in_global_search", None):
 			fields.append(frappe._dict(fieldtype="Data", fieldname="name", label="Name"))
 
@@ -308,9 +310,7 @@ class Meta(Document):
 
 	def get_list_fields(self):
 		list_fields = ["name"] + [
-			d.fieldname
-			for d in self.fields
-			if (d.in_list_view and d.fieldtype in data_fieldtypes)
+			d.fieldname for d in self.fields if (d.in_list_view and d.fieldtype in data_fieldtypes)
 		]
 		if self.title_field and self.title_field not in list_fields:
 			list_fields.append(self.title_field)
@@ -516,9 +516,7 @@ class Meta(Document):
 		)
 
 		if self.name in user_permission_doctypes:
-			fields.append(
-				frappe._dict({"label": "Name", "fieldname": "name", "options": self.name})
-			)
+			fields.append(frappe._dict({"label": "Name", "fieldname": "name", "options": self.name}))
 
 		return fields
 
@@ -642,10 +640,8 @@ class Meta(Document):
 			module_name, "doctype", doctype, "templates", doctype + suffix + ".html"
 		)
 		if os.path.exists(template_path):
-			return (
-				"{module_name}/doctype/{doctype_name}/templates/{doctype_name}{suffix}.html".format(
-					module_name=module_name, doctype_name=doctype, suffix=suffix
-				)
+			return "{module_name}/doctype/{doctype_name}/templates/{doctype_name}{suffix}.html".format(
+				module_name=module_name, doctype_name=doctype, suffix=suffix
 			)
 		return None
 
@@ -711,9 +707,7 @@ def get_field_currency(df, doc=None):
 		if ":" in cstr(df.get("options")):
 			split_opts = df.get("options").split(":")
 			if len(split_opts) == 3 and doc.get(split_opts[1]):
-				currency = frappe.get_cached_value(
-					split_opts[0], doc.get(split_opts[1]), split_opts[2]
-				)
+				currency = frappe.get_cached_value(split_opts[0], doc.get(split_opts[1]), split_opts[2])
 		else:
 			currency = doc.get(df.get("options"))
 			if doc.get("parenttype"):
@@ -725,13 +719,11 @@ def get_field_currency(df, doc=None):
 						currency = frappe.db.get_value(doc.parenttype, doc.parent, df.get("options"))
 
 		if currency:
-			frappe.local.field_currency.setdefault(
-				(doc.doctype, ref_docname), frappe._dict()
-			).setdefault(df.fieldname, currency)
+			frappe.local.field_currency.setdefault((doc.doctype, ref_docname), frappe._dict()).setdefault(
+				df.fieldname, currency
+			)
 
-	return frappe.local.field_currency.get((doc.doctype, doc.name), {}).get(
-		df.fieldname
-	) or (
+	return frappe.local.field_currency.get((doc.doctype, doc.name), {}).get(df.fieldname) or (
 		doc.get("parent")
 		and frappe.local.field_currency.get((doc.doctype, doc.parent), {}).get(df.fieldname)
 	)

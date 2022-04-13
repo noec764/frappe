@@ -10,8 +10,7 @@ import requests
 
 import frappe
 
-from .test_runner import (SLOW_TEST_THRESHOLD, make_test_records,
-                          set_test_email_config)
+from .test_runner import SLOW_TEST_THRESHOLD, make_test_records, set_test_email_config
 
 click_ctx = click.get_current_context(True)
 if click_ctx:
@@ -54,9 +53,7 @@ class ParallelTestRunner:
 		click.echo(f"Before Test {elapsed}")
 
 	def run_tests(self):
-		self.test_result = ParallelTestResult(
-			stream=sys.stderr, descriptions=True, verbosity=2
-		)
+		self.test_result = ParallelTestResult(stream=sys.stderr, descriptions=True, verbosity=2)
 
 		for test_file_info in self.get_test_file_list():
 			self.run_tests_for_file(test_file_info)
@@ -114,9 +111,7 @@ class ParallelTestRunner:
 		test_list = get_all_tests(self.app)
 		split_size = frappe.utils.ceil(len(test_list) / self.total_builds)
 		# [1,2,3,4,5,6] to [[1,2], [3,4], [4,6]] if split_size is 2
-		test_chunks = [
-			test_list[x : x + split_size] for x in range(0, len(test_list), split_size)
-		]
+		test_chunks = [test_list[x : x + split_size] for x in range(0, len(test_list), split_size)]
 		return test_chunks[self.build_number - 1]
 
 
@@ -137,9 +132,7 @@ class ParallelTestResult(unittest.TextTestResult):
 		elapsed = time.time() - self._started_at
 		threshold_passed = elapsed >= SLOW_TEST_THRESHOLD
 		elapsed = click.style(f" ({elapsed:.03}s)", fg="red") if threshold_passed else ""
-		click.echo(
-			f"  {click.style(' ✔ ', fg='green')} {self.getTestMethodName(test)}{elapsed}"
-		)
+		click.echo(f"  {click.style(' ✔ ', fg='green')} {self.getTestMethodName(test)}{elapsed}")
 
 	def addError(self, test, err):
 		super(unittest.TextTestResult, self).addError(test, err)
@@ -174,9 +167,7 @@ class ParallelTestResult(unittest.TextTestResult):
 			click.echo(err)
 
 	def __str__(self):
-		return (
-			f"Tests: {self.testsRun}, Failing: {len(self.failures)}, Errors: {len(self.errors)}"
-		)
+		return f"Tests: {self.testsRun}, Failing: {len(self.failures)}, Errors: {len(self.errors)}"
 
 
 def get_all_tests(app):
@@ -195,11 +186,7 @@ def get_all_tests(app):
 			continue
 
 		for filename in files:
-			if (
-				filename.startswith("test_")
-				and filename.endswith(".py")
-				and filename != "test_runner.py"
-			):
+			if filename.startswith("test_") and filename.endswith(".py") and filename != "test_runner.py":
 				test_file_list.append([path, filename])
 
 	return test_file_list
@@ -219,15 +206,11 @@ class ParallelTestWithOrchestrator(ParallelTestRunner):
 		self.orchestrator_url = os.environ.get("ORCHESTRATOR_URL")
 		if not self.orchestrator_url:
 			click.echo("ORCHESTRATOR_URL environment variable not found!")
-			click.echo(
-				"Pass public URL after hosting https://github.com/frappe/test-orchestrator"
-			)
+			click.echo("Pass public URL after hosting https://github.com/frappe/test-orchestrator")
 			sys.exit(1)
 
 		self.ci_build_id = os.environ.get("CI_BUILD_ID")
-		self.ci_instance_id = os.environ.get("CI_INSTANCE_ID") or frappe.generate_hash(
-			length=10
-		)
+		self.ci_instance_id = os.environ.get("CI_INSTANCE_ID") or frappe.generate_hash(length=10)
 		if not self.ci_build_id:
 			click.echo("CI_BUILD_ID environment variable not found!")
 			sys.exit(1)

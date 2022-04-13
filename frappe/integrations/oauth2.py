@@ -2,15 +2,18 @@ import json
 from urllib.parse import quote, urlencode
 
 from oauthlib.oauth2 import FatalClientError, OAuth2Error
-from oauthlib.openid.connect.core.endpoints.pre_configured import \
-    Server as WebApplicationServer
+from oauthlib.openid.connect.core.endpoints.pre_configured import Server as WebApplicationServer
 
 import frappe
-from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import \
-    get_oauth_settings
-from frappe.oauth import (OAuthWebRequestValidator,
-                          generate_json_error_response, get_server_url,
-                          get_userinfo)
+from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import (
+	get_oauth_settings,
+)
+from frappe.oauth import (
+	OAuthWebRequestValidator,
+	generate_json_error_response,
+	get_server_url,
+	get_userinfo,
+)
 
 
 def get_oauth_server():
@@ -46,10 +49,7 @@ def approve(*args, **kwargs):
 	r = frappe.request
 
 	try:
-		(
-			scopes,
-			frappe.flags.oauth_credentials,
-		) = get_oauth_server().validate_authorization_request(
+		(scopes, frappe.flags.oauth_credentials,) = get_oauth_server().validate_authorization_request(
 			r.url, r.method, r.get_data(), r.headers
 		)
 
@@ -86,10 +86,7 @@ def authorize(**kwargs):
 	else:
 		try:
 			r = frappe.request
-			(
-				scopes,
-				frappe.flags.oauth_credentials,
-			) = get_oauth_server().validate_authorization_request(
+			(scopes, frappe.flags.oauth_credentials,) = get_oauth_server().validate_authorization_request(
 				r.url, r.method, r.get_data(), r.headers
 			)
 
@@ -100,9 +97,7 @@ def authorize(**kwargs):
 			)
 			unrevoked_tokens = frappe.get_all("OAuth Bearer Token", filters={"status": "Active"})
 
-			if skip_auth or (
-				get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens
-			):
+			if skip_auth or (get_oauth_settings().skip_authorization == "Auto" and unrevoked_tokens):
 				frappe.local.response["type"] = "redirect"
 				frappe.local.response["location"] = success_url
 			else:

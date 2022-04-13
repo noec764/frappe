@@ -22,9 +22,9 @@ def execute():
 	for key, doctype_to_skip in doctype_to_skip_map.items():
 		if not doctype_to_skip:
 			continue
-		if not frappe.db.has_column(
-			"User Permission", "applicable_for"
-		) and frappe.db.has_column("User Permission", "skip_for_doctype"):
+		if not frappe.db.has_column("User Permission", "applicable_for") and frappe.db.has_column(
+			"User Permission", "skip_for_doctype"
+		):
 			doctype_to_skip = "\n".join(doctype_to_skip)
 			frappe.db.sql(
 				"""

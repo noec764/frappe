@@ -62,12 +62,8 @@ class TestPatches(unittest.TestCase):
 		frappe.flags.in_install = False
 
 	def test_get_patch_list(self):
-		pre = patch_handler.get_patches_from_app(
-			"frappe", patch_handler.PatchType.pre_model_sync
-		)
-		post = patch_handler.get_patches_from_app(
-			"frappe", patch_handler.PatchType.post_model_sync
-		)
+		pre = patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.pre_model_sync)
+		post = patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.post_model_sync)
 		all_patches = patch_handler.get_patches_from_app("frappe")
 		self.assertGreater(len(pre), 0)
 		self.assertGreater(len(post), 0)
@@ -86,9 +82,7 @@ class TestPatchReader(unittest.TestCase):
 		return (
 			patch_handler.get_patches_from_app("frappe"),
 			patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.pre_model_sync),
-			patch_handler.get_patches_from_app(
-				"frappe", patch_handler.PatchType.post_model_sync
-			),
+			patch_handler.get_patches_from_app("frappe", patch_handler.PatchType.post_model_sync),
 		)
 
 	@patch("builtins.open", new_callable=mock_open, read_data=EMTPY_FILE)

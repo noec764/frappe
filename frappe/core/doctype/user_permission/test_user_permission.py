@@ -6,7 +6,9 @@ import unittest
 import frappe
 from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.core.doctype.user_permission.user_permission import (
-    add_user_permissions, remove_applicable)
+	add_user_permissions,
+	remove_applicable,
+)
 from frappe.permissions import has_user_permission
 from frappe.website.doctype.blog_post.test_blog_post import make_test_blog
 
@@ -40,9 +42,7 @@ class TestUserPermission(unittest.TestCase):
 		# create a duplicate entry with default
 		perm_user = create_user("test_default_corectness2@example.com")
 		test_blog = make_test_blog()
-		param = get_params(
-			perm_user, "Blog Post", test_blog.name, is_default=1, hide_descendants=1
-		)
+		param = get_params(perm_user, "Blog Post", test_blog.name, is_default=1, hide_descendants=1)
 		add_user_permissions(param)
 		frappe.db.delete("User Permission", filters={"for_value": test_blog.name})
 		frappe.delete_doc("Blog Post", test_blog.name)
@@ -174,12 +174,8 @@ class TestUserPermission(unittest.TestCase):
 		add_user_permissions(get_params(user, "Person", parent_record.name))
 
 		# check if adding perm on a group record, makes child record visible
-		self.assertTrue(
-			has_user_permission(frappe.get_doc("Person", parent_record.name), user.name)
-		)
-		self.assertTrue(
-			has_user_permission(frappe.get_doc("Person", child_record.name), user.name)
-		)
+		self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.name), user.name))
+		self.assertTrue(has_user_permission(frappe.get_doc("Person", child_record.name), user.name))
 
 		frappe.db.set_value(
 			"User Permission",
@@ -191,12 +187,8 @@ class TestUserPermission(unittest.TestCase):
 
 		# check if adding perm on a group record with hide_descendants enabled,
 		# hides child records
-		self.assertTrue(
-			has_user_permission(frappe.get_doc("Person", parent_record.name), user.name)
-		)
-		self.assertFalse(
-			has_user_permission(frappe.get_doc("Person", child_record.name), user.name)
-		)
+		self.assertTrue(has_user_permission(frappe.get_doc("Person", parent_record.name), user.name))
+		self.assertFalse(has_user_permission(frappe.get_doc("Person", child_record.name), user.name))
 
 	def test_user_perm_on_new_doc_with_field_default(self):
 		"""Test User Perm impact on frappe.new_doc. with *field* default value"""
@@ -221,9 +213,7 @@ class TestUserPermission(unittest.TestCase):
 			doc.insert()
 
 		# make User Perm on DocType 'ToDo' in Assignment Rule (unrelated doctype)
-		add_user_permissions(
-			get_params(user, "DocType", "ToDo", applicable=["Assignment Rule"])
-		)
+		add_user_permissions(get_params(user, "DocType", "ToDo", applicable=["Assignment Rule"]))
 		frappe.set_user("new_doc_test@example.com")
 
 		new_doc = frappe.new_doc("Doc A")
@@ -238,7 +228,9 @@ class TestUserPermission(unittest.TestCase):
 	def test_user_perm_on_new_doc_with_user_default(self):
 		"""Test User Perm impact on frappe.new_doc. with *user* default value"""
 		from frappe.core.doctype.session_default_settings.session_default_settings import (
-		    clear_session_defaults, set_session_default_values)
+			clear_session_defaults,
+			set_session_default_values,
+		)
 
 		frappe.set_user("Administrator")
 		user = create_user("user_default_test@example.com", "Blogger")
@@ -266,9 +258,7 @@ class TestUserPermission(unittest.TestCase):
 			settings.save()
 
 		# make User Perm on DocType 'ToDo' in Assignment Rule (unrelated doctype)
-		add_user_permissions(
-			get_params(user, "DocType", "ToDo", applicable=["Assignment Rule"])
-		)
+		add_user_permissions(get_params(user, "DocType", "ToDo", applicable=["Assignment Rule"]))
 
 		# User default Doctype value is ToDo via Session Defaults
 		frappe.set_user("user_default_test@example.com")
@@ -282,9 +272,7 @@ class TestUserPermission(unittest.TestCase):
 
 		frappe.set_user("Administrator")
 		clear_session_defaults()
-		remove_applicable(
-			["Assignment Rule"], "user_default_test@example.com", "DocType", "ToDo"
-		)
+		remove_applicable(["Assignment Rule"], "user_default_test@example.com", "DocType", "ToDo")
 
 
 def create_user(email, *roles):
@@ -303,9 +291,7 @@ def create_user(email, *roles):
 	return user
 
 
-def get_params(
-	user, doctype, docname, is_default=0, hide_descendants=0, applicable=None
-):
+def get_params(user, doctype, docname, is_default=0, hide_descendants=0, applicable=None):
 	"""Return param to insert"""
 	param = {
 		"user": user.name,

@@ -134,9 +134,7 @@ def prepare_options(html, options):
 
 	# page size
 	pdf_page_size = (
-		options.get("page-size")
-		or frappe.db.get_single_value("Print Settings", "pdf_page_size")
-		or "A4"
+		options.get("page-size") or frappe.db.get_single_value("Print Settings", "pdf_page_size") or "A4"
 	)
 
 	if pdf_page_size == "Custom":
@@ -192,9 +190,7 @@ def read_options_from_html(html):
 		"page-height",
 	):
 		try:
-			pattern = re.compile(
-				r"(\.print-format)([\S|\s][^}]*?)(" + str(attr) + r":)(.+)(mm;)"
-			)
+			pattern = re.compile(r"(\.print-format)([\S|\s][^}]*?)(" + str(attr) + r":)(.+)(mm;)")
 			match = pattern.findall(html)
 			if match:
 				options[attr] = str(match[-1][3]).strip()

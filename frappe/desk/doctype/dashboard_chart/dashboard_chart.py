@@ -16,9 +16,12 @@ from frappe.model.naming import append_number_if_name_exists
 from frappe.modules.export_file import export_to_files
 from frappe.utils import cint, get_datetime, getdate, now_datetime, nowdate
 from frappe.utils.dashboard import cache_source
-from frappe.utils.dateutils import (get_dates_from_timegrain,
-                                    get_from_date_from_timespan, get_period,
-                                    get_period_beginning)
+from frappe.utils.dateutils import (
+	get_dates_from_timegrain,
+	get_from_date_from_timespan,
+	get_period,
+	get_period_beginning,
+)
 
 
 def get_permission_query_conditions(user):
@@ -44,15 +47,12 @@ def get_permission_query_conditions(user):
 		for key in get_allowed_reports()
 	]
 	allowed_modules = [
-		frappe.db.escape(module.get("module_name"))
-		for module in get_modules_from_all_apps_for_user()
+		frappe.db.escape(module.get("module_name")) for module in get_modules_from_all_apps_for_user()
 	]
 
 	if allowed_doctypes:
-		doctype_condition = (
-			"`tabDashboard Chart`.`document_type` in ({allowed_doctypes})".format(
-				allowed_doctypes=",".join(allowed_doctypes)
-			)
+		doctype_condition = "`tabDashboard Chart`.`document_type` in ({allowed_doctypes})".format(
+			allowed_doctypes=",".join(allowed_doctypes)
 		)
 	if allowed_reports:
 		report_condition = "`tabDashboard Chart`.`report_name` in ({allowed_reports})".format(
@@ -145,9 +145,7 @@ def get(
 		if chart.type == "Heatmap":
 			chart_config = get_heatmap_chart_config(chart, filters, heatmap_year)
 		else:
-			chart_config = get_chart_config(
-				chart, filters, timespan, timegrain, from_date, to_date
-			)
+			chart_config = get_chart_config(chart, filters, timespan, timegrain, from_date, to_date)
 
 	return chart_config
 
@@ -244,16 +242,12 @@ def get_heatmap_chart_config(chart, filters, heatmap_year):
 	next_year_start_date = datetime.date(year + 1, 1, 1).strftime("%Y-%m-%d")
 
 	filters.append([doctype, datefield, ">", "{date}".format(date=year_start_date), False])
-	filters.append(
-		[doctype, datefield, "<", "{date}".format(date=next_year_start_date), False]
-	)
+	filters.append([doctype, datefield, "<", "{date}".format(date=next_year_start_date), False])
 
 	if frappe.db.db_type == "mariadb":
 		timestamp_field = "unix_timestamp({datefield})".format(datefield=datefield)
 	else:
-		timestamp_field = "extract(epoch from timestamp {datefield})".format(
-			datefield=datefield
-		)
+		timestamp_field = "extract(epoch from timestamp {datefield})".format(datefield=datefield)
 
 	data = dict(
 		frappe.db.get_all(
@@ -356,9 +350,7 @@ def get_charts_for_user(doctype, txt, searchfield, start, page_len, filters):
 	)
 
 	return tuple(
-		[
-			v for v in list(charts) if re.search(re.escape(txt) + ".*", (_(v[0])), re.IGNORECASE)
-		]
+		[v for v in list(charts) if re.search(re.escape(txt) + ".*", (_(v[0])), re.IGNORECASE)]
 	)
 
 
@@ -366,9 +358,7 @@ class DashboardChart(Document):
 	def on_update(self):
 		frappe.cache().delete_key("chart-data:{}".format(self.name))
 		if frappe.conf.developer_mode and self.is_standard:
-			export_to_files(
-				record_list=[["Dashboard Chart", self.name]], record_module=self.module
-			)
+			export_to_files(record_list=[["Dashboard Chart", self.name]], record_module=self.module)
 
 	def validate(self):
 		if not frappe.conf.developer_mode and self.is_standard:

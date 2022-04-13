@@ -63,9 +63,7 @@ def get_language(lang_list: List = None) -> str:
 
 	# fetch language from form_dict
 	if frappe.form_dict._lang:
-		language = get_lang_code(
-			frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang)
-		)
+		language = get_lang_code(frappe.form_dict._lang or get_parent_language(frappe.form_dict._lang))
 		if language:
 			return language
 
@@ -163,9 +161,7 @@ def get_all_language_with_name():
 def get_lang_dict():
 	"""Returns all languages in dict format, full name is the key e.g. `{"english":"en"}`"""
 	result = dict(
-		frappe.get_all(
-			"Language", fields=["language_name", "name"], order_by="modified", as_list=True
-		)
+		frappe.get_all("Language", fields=["language_name", "name"], order_by="modified", as_list=True)
 	)
 	return result
 
@@ -179,9 +175,7 @@ def get_dict(fortype, name=None):
 	fortype = fortype.lower()
 	cache = frappe.cache()
 	asset_key = fortype + ":" + (name or "-")
-	translation_assets = (
-		cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
-	)
+	translation_assets = cache.hget("translation_assets", frappe.local.lang, shared=True) or {}
 
 	if asset_key not in translation_assets:
 		if fortype == "doctype":
@@ -206,21 +200,13 @@ def get_dict(fortype, name=None):
 			messages += (
 				frappe.qb.from_("Print Format").select(PseudoColumn("'Print Format:'"), "name")
 			).run()
-			messages += (
-				frappe.qb.from_("DocType").select(PseudoColumn("'DocType:'"), "name")
-			).run()
+			messages += (frappe.qb.from_("DocType").select(PseudoColumn("'DocType:'"), "name")).run()
 			messages += frappe.qb.from_("Role").select(PseudoColumn("'Role:'"), "name").run()
+			messages += (frappe.qb.from_("Module Def").select(PseudoColumn("'Module:'"), "name")).run()
 			messages += (
-				frappe.qb.from_("Module Def").select(PseudoColumn("'Module:'"), "name")
+				frappe.qb.from_("Page").where(Field("title").isnotnull()).select(PseudoColumn("''"), "title")
 			).run()
-			messages += (
-				frappe.qb.from_("Page")
-				.where(Field("title").isnotnull())
-				.select(PseudoColumn("''"), "title")
-			).run()
-			messages += (
-				frappe.qb.from_("Report").select(PseudoColumn("'Report:'"), "name")
-			).run()
+			messages += (frappe.qb.from_("Report").select(PseudoColumn("'Report:'"), "name")).run()
 			messages += (
 				frappe.qb.from_("Module Onboarding")
 				.where(Field("title").isnotnull())
@@ -231,9 +217,7 @@ def get_dict(fortype, name=None):
 				.where(Field("format").isnotnull())
 				.select(PseudoColumn("''"), "format")
 			).run()
-			messages += (
-				frappe.qb.from_("Workspace").select(PseudoColumn("'Workspace:'"), "label")
-			).run()
+			messages += (frappe.qb.from_("Workspace").select(PseudoColumn("'Workspace:'"), "label")).run()
 			messages += (
 				frappe.qb.from_("Web Template").select(PseudoColumn("'Web Template:'"), "name")
 			).run()
@@ -242,16 +226,12 @@ def get_dict(fortype, name=None):
 				.where(Field("label").isnotnull())
 				.select(PseudoColumn("'Web Template Field:'"), "label")
 			).run()
-			messages += (
-				frappe.qb.from_("Onboarding Step").select(PseudoColumn("''"), "title")
-			).run()
+			messages += (frappe.qb.from_("Onboarding Step").select(PseudoColumn("''"), "title")).run()
 			messages += (
 				frappe.qb.from_("Number Card").select(PseudoColumn("'Number Card:'"), "label")
 			).run()
 			messages += (
-				frappe.qb.from_("Dashboard Chart").select(
-					PseudoColumn("'Dashboard Chart:'"), "chart_name"
-				)
+				frappe.qb.from_("Dashboard Chart").select(PseudoColumn("'Dashboard Chart:'"), "chart_name")
 			).run()
 
 		messages = deduplicate_messages(messages)
@@ -328,9 +308,7 @@ def get_full_dict(lang):
 		return {}
 
 	# found in local, return!
-	if getattr(frappe.local, "lang_full_dict", None) and frappe.local.lang_full_dict.get(
-		lang, None
-	):
+	if getattr(frappe.local, "lang_full_dict", None) and frappe.local.lang_full_dict.get(lang, None):
 		return frappe.local.lang_full_dict
 
 	frappe.local.lang_full_dict = load_lang(lang)
@@ -441,20 +419,14 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			modules = [modules]
 
 		filtered_doctypes = (
-			frappe.qb.from_("DocType")
-			.where(Field("module").isin(modules))
-			.select("name")
-			.run(pluck=True)
+			frappe.qb.from_("DocType").where(Field("module").isin(modules)).select("name").run(pluck=True)
 		)
 		for name in filtered_doctypes:
 			messages.extend(get_messages_from_doctype(name, context))
 
 		# pages
 		filtered_pages = (
-			frappe.qb.from_("Page")
-			.where(Field("module").isin(modules))
-			.select("name", "title")
-			.run()
+			frappe.qb.from_("Page").where(Field("module").isin(modules)).select("name", "title").run()
 		)
 		for name, title in filtered_pages:
 			messages.append(("Page: " + (title or name), title or name))
@@ -490,9 +462,7 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 				if not isinstance(i, tuple):
 					raise Exception
 
-			steps = frappe.get_all(
-				"Onboarding Step Map", filters={"parent": name}, fields=["step"]
-			)
+			steps = frappe.get_all("Onboarding Step Map", filters={"parent": name}, fields=["step"])
 			for step in steps:
 				messages.extend(get_messages_from_onboarding_step(step.step))
 				for i in messages:
@@ -584,20 +554,14 @@ def get_messages_from_doctype(name, context=True):
 	messages = [message for message in messages if message]
 	if context:
 		messages = [
-			("DocType: " + name, message, name)
-			for message in messages
-			if is_translatable(message)
+			("DocType: " + name, message, name) for message in messages if is_translatable(message)
 		]
 	else:
-		messages = [
-			("DocType: " + name, message) for message in messages if is_translatable(message)
-		]
+		messages = [("DocType: " + name, message) for message in messages if is_translatable(message)]
 
 	# extract from js, py files
 	if not meta.custom:
-		doctype_file_path = frappe.get_module_path(
-			meta.module, "doctype", meta.name, meta.name
-		)
+		doctype_file_path = frappe.get_module_path(meta.module, "doctype", meta.name, meta.name)
 		messages.extend(get_messages_from_file(doctype_file_path + ".js"))
 		messages.extend(get_messages_from_file(doctype_file_path + "_list.js"))
 		messages.extend(get_messages_from_file(doctype_file_path + "_list.html"))
@@ -641,10 +605,7 @@ def get_messages_from_workflow(doctype=None, app_name=None):
 			if isinstance(fixture, str) and fixture == "Worflow":
 				workflows = frappe.get_all("Workflow")
 				break
-			elif (
-				isinstance(fixture, dict)
-				and fixture.get("dt", fixture.get("doctype")) == "Workflow"
-			):
+			elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Workflow":
 				workflows.extend(frappe.get_all("Workflow", filters=fixture.get("filters")))
 
 	messages = []
@@ -711,10 +672,7 @@ def get_messages_from_custom_fields(app_name):
 				"Custom Field", fields=["name", "label", "description", "fieldtype", "options"]
 			)
 			break
-		elif (
-			isinstance(fixture, dict)
-			and fixture.get("dt", fixture.get("doctype")) == "Custom Field"
-		):
+		elif isinstance(fixture, dict) and fixture.get("dt", fixture.get("doctype")) == "Custom Field":
 			custom_fields.extend(
 				frappe.get_all(
 					"Custom Field",
@@ -753,9 +711,7 @@ def get_messages_from_report(name):
 		context = (
 			"Column of report '%s'" % report.name
 		)  # context has to match context in `prepare_columns` in query_report.js
-		messages.extend(
-			[(None, report_column.label, context) for report_column in report.columns]
-		)
+		messages.extend([(None, report_column.label, context) for report_column in report.columns])
 
 	if report.filters:
 		messages.extend([(None, report_filter.label) for report_filter in report.filters])
@@ -847,9 +803,7 @@ def get_server_messages(app):
 
 def get_messages_from_navbar():
 	"""Return all labels from Navbar Items, as specified in Navbar Settings."""
-	labels = frappe.get_all(
-		"Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label"
-	)
+	labels = frappe.get_all("Navbar Item", filters={"item_label": ("is", "set")}, pluck="item_label")
 	return [("Navbar:", label, "Label of a Navbar Item") for label in labels]
 
 
@@ -1007,9 +961,7 @@ def write_csv_file(path, lang_dict):
 	:param app_messages: Translatable strings for this app.
 	:param lang_dict: Full translated dict.
 	"""
-	lang_input = {
-		k: v for k, v in sorted(lang_dict.items(), key=lambda item: item[0] + item[1])
-	}
+	lang_input = {k: v for k, v in sorted(lang_dict.items(), key=lambda item: item[0] + item[1])}
 	output = []
 	for key, value in lang_input.items():
 		if not value:

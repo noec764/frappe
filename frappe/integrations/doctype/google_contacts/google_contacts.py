@@ -9,8 +9,7 @@ from googleapiclient.errors import HttpError
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import \
-    get_auth_url
+from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
 from frappe.model.document import Document
 from frappe.utils import get_request_site_address
 
@@ -30,15 +29,11 @@ class GoogleContacts(Document):
 
 		if not self.refresh_token:
 			button_label = frappe.bold(_("Allow Google Contacts Access"))
-			raise frappe.ValidationError(
-				_("Click on {0} to generate Refresh Token.").format(button_label)
-			)
+			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
 			"client_id": google_settings.client_id or frappe.conf.google_client_id,
-			"client_secret": google_settings.get_password(
-				fieldname="client_secret", raise_exception=False
-			)
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 			or frappe.conf.google_client_secret,
 			"refresh_token": self.get_password(fieldname="refresh_token", raise_exception=False),
 			"grant_type": "refresh_token",
@@ -84,9 +79,7 @@ def authorize_access(g_contact, reauthorize=None):
 			data = {
 				"code": google_contact.authorization_code,
 				"client_id": google_settings.client_id or frappe.conf.google_client_id,
-				"client_secret": google_settings.get_password(
-					fieldname="client_secret", raise_exception=False
-				)
+				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 				or frappe.conf.google_client_secret,
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code",
@@ -100,9 +93,7 @@ def authorize_access(g_contact, reauthorize=None):
 				frappe.db.commit()
 
 			frappe.local.response["type"] = "redirect"
-			frappe.local.response["location"] = "/app/Form/Google%20Contacts/{}".format(
-				google_contact.name
-			)
+			frappe.local.response["location"] = "/app/Form/Google%20Contacts/{}".format(google_contact.name)
 
 			frappe.msgprint(_("Google Contacts has been configured."))
 		except Exception as e:
@@ -138,14 +129,10 @@ def get_google_contacts_object(g_contact):
 
 	credentials_dict = {
 		"token": account.get_access_token(),
-		"refresh_token": account.get_password(
-			fieldname="refresh_token", raise_exception=False
-		),
+		"refresh_token": account.get_password(fieldname="refresh_token", raise_exception=False),
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id or frappe.conf.google_client_id,
-		"client_secret": google_settings.get_password(
-			fieldname="client_secret", raise_exception=False
-		)
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 		or frappe.conf.google_client_secret,
 		"scopes": "https://www.googleapis.com/auth/contacts",
 	}
@@ -184,9 +171,7 @@ def sync_contacts_from_google_contacts(g_contact):
 	results = []
 	contacts_updated = 0
 
-	sync_token = (
-		account.get_password(fieldname="next_sync_token", raise_exception=False) or None
-	)
+	sync_token = account.get_password(fieldname="next_sync_token", raise_exception=False) or None
 	contacts = frappe._dict()
 
 	while True:
@@ -206,9 +191,7 @@ def sync_contacts_from_google_contacts(g_contact):
 			)
 
 		except HttpError as err:
-			frappe.msgprint(
-				f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}'
-			)
+			frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 			frappe.throw(
 				_(
 					"Google Contacts - Could not sync contacts from Google Contacts {0}, error code {1}."
@@ -226,9 +209,7 @@ def sync_contacts_from_google_contacts(g_contact):
 				frappe.db.commit()
 			break
 
-	frappe.db.set_value(
-		"Google Contacts", account.name, "last_sync_on", frappe.utils.now_datetime()
-	)
+	frappe.db.set_value("Google Contacts", account.name, "last_sync_on", frappe.utils.now_datetime())
 
 	for idx, connection in enumerate(results):
 		frappe.publish_realtime(
@@ -312,15 +293,13 @@ def insert_contacts_to_google_contacts(doc, method=None):
 			)
 			.execute()
 		)
-		frappe.db.set_value(
-			"Contact", doc.name, "google_contacts_id", contact.get("resourceName")
-		)
+		frappe.db.set_value("Contact", doc.name, "google_contacts_id", contact.get("resourceName"))
 	except HttpError as err:
 		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(
-			_(
-				"Google Contacts - Could not insert contact in Google Contacts {0}, error code {1}."
-			).format(account.name, err.resp.status)
+			_("Google Contacts - Could not insert contact in Google Contacts {0}, error code {1}.").format(
+				account.name, err.resp.status
+			)
 		)
 
 
@@ -385,9 +364,9 @@ def update_contacts_to_google_contacts(doc, method=None):
 	except HttpError as err:
 		frappe.msgprint(f'{_("Google Error")}: {json.loads(err.content)["error"]["message"]}')
 		frappe.msgprint(
-			_(
-				"Google Contacts - Could not update contact in Google Contacts {0}, error code {1}."
-			).format(account.name, err.resp.status)
+			_("Google Contacts - Could not update contact in Google Contacts {0}, error code {1}.").format(
+				account.name, err.resp.status
+			)
 		)
 
 

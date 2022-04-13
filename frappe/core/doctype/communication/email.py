@@ -8,8 +8,14 @@ import frappe
 import frappe.email.smtp
 from frappe import _
 from frappe.email.email_body import get_message_id
-from frappe.utils import (cint, get_datetime, get_formatted_email, list_to_str,
-                          split_emails, validate_email_address)
+from frappe.utils import (
+	cint,
+	get_datetime,
+	get_formatted_email,
+	list_to_str,
+	split_emails,
+	validate_email_address,
+)
 
 if TYPE_CHECKING:
 	from frappe.core.doctype.communication.communication import Communication
@@ -72,14 +78,8 @@ def make(
 			category=DeprecationWarning,
 		)
 
-	if (
-		doctype
-		and name
-		and not frappe.has_permission(doctype=doctype, ptype="email", doc=name)
-	):
-		raise frappe.PermissionError(
-			f"You are not allowed to send emails related to: {doctype} {name}"
-		)
+	if doctype and name and not frappe.has_permission(doctype=doctype, ptype="email", doc=name):
+		raise frappe.PermissionError(f"You are not allowed to send emails related to: {doctype} {name}")
 
 	return _make(
 		doctype=doctype,
@@ -190,9 +190,7 @@ def _make(
 def validate_email(doc: "Communication") -> None:
 	"""Validate Email Addresses of Recipients and CC"""
 	if (
-		not (
-			doc.communication_type == "Communication" and doc.communication_medium == "Email"
-		)
+		not (doc.communication_type == "Communication" and doc.communication_medium == "Email")
 		or doc.flags.in_receive
 	):
 		return
@@ -215,9 +213,7 @@ def set_incoming_outgoing_accounts(doc):
 	incoming_email_account = EmailAccount.find_incoming(
 		match_by_email=doc.sender, match_by_doctype=doc.reference_doctype
 	)
-	doc.incoming_email_account = (
-		incoming_email_account.email_id if incoming_email_account else None
-	)
+	doc.incoming_email_account = incoming_email_account.email_id if incoming_email_account else None
 
 	doc.outgoing_email_account = EmailAccount.find_outgoing(
 		match_by_email=doc.sender, match_by_doctype=doc.reference_doctype
@@ -276,9 +272,7 @@ def update_communication_as_read(name):
 	if not name or not isinstance(name, str):
 		return
 
-	communication = frappe.db.get_value(
-		"Communication", name, "read_by_recipient", as_dict=True
-	)
+	communication = frappe.db.get_value("Communication", name, "read_by_recipient", as_dict=True)
 
 	if not communication or communication.read_by_recipient:
 		return

@@ -88,9 +88,7 @@ def emit_via_redis(event, message, room):
 	r = get_redis_server()
 
 	try:
-		r.publish(
-			"events", frappe.as_json({"event": event, "message": message, "room": room})
-		)
+		r.publish("events", frappe.as_json({"event": event, "message": message, "room": room}))
 	except redis.exceptions.ConnectionError:
 		# print(frappe.get_traceback())
 		pass
@@ -115,9 +113,7 @@ def can_subscribe_doc(doctype, docname):
 	from frappe.sessions import Session
 
 	session = Session(None, resume=True).get_session_data()
-	if not frappe.has_permission(
-		user=session.user, doctype=doctype, doc=docname, ptype="read"
-	):
+	if not frappe.has_permission(user=session.user, doctype=doctype, doc=docname, ptype="read"):
 		raise PermissionError()
 
 	return True

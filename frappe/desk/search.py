@@ -43,9 +43,7 @@ def sanitize_searchfield(searchfield):
 			_raise_exception(searchfield)
 
 		# to avoid and, or and like
-		elif any(
-			" {0} ".format(keyword) in searchfield.split() for keyword in blacklisted_keywords
-		):
+		elif any(" {0} ".format(keyword) in searchfield.split() for keyword in blacklisted_keywords):
 			_raise_exception(searchfield)
 
 		# to avoid select, delete, drop, update and case
@@ -81,9 +79,7 @@ def search_link(
 		ignore_user_permissions=ignore_user_permissions,
 	)
 
-	frappe.response["results"] = build_for_autosuggest(
-		frappe.response["values"], doctype=doctype
-	)
+	frappe.response["results"] = build_for_autosuggest(frappe.response["values"], doctype=doctype)
 	del frappe.response["values"]
 
 
@@ -223,9 +219,7 @@ def search_widget(
 
 			order_by_based_on_meta = get_order_by(doctype, meta)
 			# 2 is the index of _relevance column
-			order_by = "_relevance, {0}, `tab{1}`.idx desc".format(
-				order_by_based_on_meta, doctype
-			)
+			order_by = "_relevance, {0}, `tab{1}`.idx desc".format(order_by_based_on_meta, doctype)
 
 			ptype = "select" if frappe.only_has_select_perm(doctype) else "read"
 			ignore_permissions = (
@@ -256,9 +250,7 @@ def search_widget(
 					[
 						v
 						for v in list(values)
-						if re.search(
-							re.escape(txt) + ".*", (_(v.name) if as_dict else _(v[0])), re.IGNORECASE
-						)
+						if re.search(re.escape(txt) + ".*", (_(v.name) if as_dict else _(v[0])), re.IGNORECASE)
 					]
 				)
 
@@ -307,15 +299,11 @@ def build_for_autosuggest(res, doctype):
 	if not (meta.title_field and meta.show_title_field_in_link):
 		for r in res:
 			r = list(r)
-			results.append(
-				{"value": r[0], "description": ", ".join(unique(cstr(d) for d in r[1:] if d))}
-			)
+			results.append({"value": r[0], "description": ", ".join(unique(cstr(d) for d in r[1:] if d))})
 
 	else:
 		title_field_exists = meta.title_field and meta.show_title_field_in_link
-		_from = (
-			2 if title_field_exists else 1
-		)  # to exclude title from description if title_field_exists
+		_from = 2 if title_field_exists else 1  # to exclude title from description if title_field_exists
 		for r in res:
 			r = list(r)
 			results.append(
@@ -357,9 +345,7 @@ def validate_and_sanitize_search_inputs(fn, instance, args, kwargs):
 
 @frappe.whitelist()
 def get_names_for_mentions(search_term):
-	users_for_mentions = frappe.cache().get_value(
-		"users_for_mentions", get_users_for_mentions
-	)
+	users_for_mentions = frappe.cache().get_value("users_for_mentions", get_users_for_mentions)
 	user_groups = frappe.cache().get_value("user_groups", get_user_groups)
 
 	filtered_mentions = []

@@ -1,8 +1,7 @@
 import json
 
 import frappe
-from frappe.model.utils.user_settings import (sync_user_settings,
-                                              update_user_settings)
+from frappe.model.utils.user_settings import sync_user_settings, update_user_settings
 
 
 def execute():

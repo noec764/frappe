@@ -32,9 +32,7 @@ def get_change_log(user=None):
 		to_version = opts["version"]
 
 		if from_version != to_version:
-			app_change_log = get_change_log_for_app(
-				app, from_version=from_version, to_version=to_version
-			)
+			app_change_log = get_change_log_for_app(app, from_version=from_version, to_version=to_version)
 
 			if app_change_log:
 				change_log.append(
@@ -180,9 +178,7 @@ def check_for_update():
 		# Get local instance's current version or the app
 
 		branch_version = (
-			apps[app]["branch_version"].split(" ")[0]
-			if apps[app].get("branch_version", "")
-			else ""
+			apps[app]["branch_version"].split(" ")[0] if apps[app].get("branch_version", "") else ""
 		)
 		instance_version = Version(branch_version or apps[app].get("version"))
 		# Compare and popup update message
@@ -215,9 +211,7 @@ def parse_latest_non_beta_release(response):
 	json   : json object pertaining to the latest non-beta release
 	"""
 	version_list = [
-		release.get("tag_name").strip("v")
-		for release in response
-		if not release.get("prerelease")
+		release.get("tag_name").strip("v") for release in response if not release.get("prerelease")
 	]
 
 	if version_list:
@@ -276,9 +270,7 @@ def add_message_to_redis(update_json):
 	cache = frappe.cache()
 	cache.set_value("update-info", json.dumps(update_json))
 	user_list = [x.name for x in frappe.get_all("User", filters={"enabled": True})]
-	system_managers = [
-		user for user in user_list if "System Manager" in frappe.get_roles(user)
-	]
+	system_managers = [user for user in user_list if "System Manager" in frappe.get_roles(user)]
 	cache.sadd("update-user-set", *system_managers)
 
 
@@ -307,15 +299,13 @@ def show_update_popup():
 					title=app.title,
 				)
 			if release_links:
-				message = _("New {} releases for the following apps are available").format(
-					_(update_type)
-				)
-				update_message += "<div class='new-version-log'>{0}<div class='new-version-links'>{1}</div></div>".format(
-					message, release_links
+				message = _("New {} releases for the following apps are available").format(_(update_type))
+				update_message += (
+					"<div class='new-version-log'>{0}<div class='new-version-links'>{1}</div></div>".format(
+						message, release_links
+					)
 				)
 
 	if update_message:
-		frappe.msgprint(
-			update_message, title=_("New updates are available"), indicator="green"
-		)
+		frappe.msgprint(update_message, title=_("New updates are available"), indicator="green")
 		cache.srem("update-user-set", user)

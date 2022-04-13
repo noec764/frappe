@@ -15,9 +15,7 @@ def execute():
 		frappe.reload_doc("contacts", "doctype", "contact_phone")
 		frappe.reload_doc("contacts", "doctype", "contact_email")
 
-	users = frappe.get_all(
-		"User", filters={"name": ("not in", "Administrator, Guest")}, fields=["*"]
-	)
+	users = frappe.get_all("User", filters={"name": ("not in", "Administrator, Guest")}, fields=["*"])
 	for user in users:
 		if frappe.db.exists("Contact", {"email_id": user.email}) or frappe.db.exists(
 			"Contact Email", {"email_id": user.email}

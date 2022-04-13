@@ -13,14 +13,14 @@ from googleapiclient.errors import HttpError
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import \
-    get_auth_url
-from frappe.integrations.offsite_backup_utils import (get_latest_backup_file,
-                                                      send_email,
-                                                      validate_file_size)
+from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
+from frappe.integrations.offsite_backup_utils import (
+	get_latest_backup_file,
+	send_email,
+	validate_file_size,
+)
 from frappe.model.document import Document
-from frappe.utils import (get_backups_path, get_bench_path,
-                          get_request_site_address)
+from frappe.utils import get_backups_path, get_bench_path, get_request_site_address
 from frappe.utils.background_jobs import enqueue
 from frappe.utils.backups import new_backup
 
@@ -41,15 +41,11 @@ class GoogleDrive(Document):
 
 		if not self.refresh_token:
 			button_label = frappe.bold(_("Allow Google Drive Access"))
-			raise frappe.ValidationError(
-				_("Click on {0} to generate Refresh Token.").format(button_label)
-			)
+			raise frappe.ValidationError(_("Click on {0} to generate Refresh Token.").format(button_label))
 
 		data = {
 			"client_id": google_settings.client_id or frappe.conf.google_client_id,
-			"client_secret": google_settings.get_password(
-				fieldname="client_secret", raise_exception=False
-			)
+			"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 			or frappe.conf.google_client_secret,
 			"refresh_token": self.get_password(fieldname="refresh_token", raise_exception=False),
 			"grant_type": "refresh_token",
@@ -96,9 +92,7 @@ def authorize_access(reauthorize=None):
 			data = {
 				"code": google_drive.authorization_code,
 				"client_id": google_settings.client_id or frappe.conf.google_client_id,
-				"client_secret": google_settings.get_password(
-					fieldname="client_secret", raise_exception=False
-				)
+				"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 				or frappe.conf.google_client_secret,
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code",
@@ -106,9 +100,7 @@ def authorize_access(reauthorize=None):
 			r = requests.post(get_auth_url(), data=data).json()
 
 			if "refresh_token" in r:
-				frappe.db.set_value(
-					"Google Drive", google_drive.name, "refresh_token", r.get("refresh_token")
-				)
+				frappe.db.set_value("Google Drive", google_drive.name, "refresh_token", r.get("refresh_token"))
 				frappe.db.commit()
 
 			frappe.local.response["type"] = "redirect"
@@ -147,14 +139,10 @@ def get_google_drive_object():
 
 	credentials_dict = {
 		"token": account.get_access_token(),
-		"refresh_token": account.get_password(
-			fieldname="refresh_token", raise_exception=False
-		),
+		"refresh_token": account.get_password(fieldname="refresh_token", raise_exception=False),
 		"token_uri": get_auth_url(),
 		"client_id": google_settings.client_id or frappe.conf.google_client_id,
-		"client_secret": google_settings.get_password(
-			fieldname="client_secret", raise_exception=False
-		)
+		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 		or frappe.conf.google_client_secret,
 		"scopes": "https://www.googleapis.com/auth/drive/v3",
 	}
@@ -182,9 +170,7 @@ def check_for_folder_in_google_drive():
 			frappe.db.commit()
 		except HttpError as e:
 			frappe.throw(
-				_("Google Drive - Could not create folder in Google Drive - Error Code {0}").format(
-					e
-				)
+				_("Google Drive - Could not create folder in Google Drive - Error Code {0}").format(e)
 			)
 
 	google_drive, account = get_google_drive_object()
@@ -196,9 +182,7 @@ def check_for_folder_in_google_drive():
 
 	try:
 		google_drive_folders = (
-			google_drive.files()
-			.list(q="mimeType='application/vnd.google-apps.folder'")
-			.execute()
+			google_drive.files().list(q="mimeType='application/vnd.google-apps.folder'").execute()
 		)
 	except HttpError as e:
 		frappe.throw(
@@ -269,16 +253,12 @@ def upload_system_backup_to_google_drive():
 
 		try:
 			set_progress(2, "Uploading backup to Google Drive.")
-			google_drive.files().create(
-				body=file_metadata, media_body=media, fields="id"
-			).execute()
+			google_drive.files().create(body=file_metadata, media_body=media, fields="id").execute()
 		except HttpError as e:
 			send_email(False, "Google Drive", "Google Drive", "email", error_status=e)
 
 	set_progress(3, "Uploading successful.")
-	frappe.db.set_value(
-		"Google Drive", None, "last_backup_on", frappe.utils.now_datetime()
-	)
+	frappe.db.set_value("Google Drive", None, "last_backup_on", frappe.utils.now_datetime())
 	send_email(True, "Google Drive", "Google Drive", "email")
 	return _("Google Drive Backup Successful.")
 

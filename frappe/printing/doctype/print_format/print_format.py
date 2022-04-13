@@ -61,9 +61,7 @@ class PrintFormat(Document):
 			)
 
 		if self.custom_format and not self.html and not self.raw_printing:
-			frappe.throw(
-				_("{0} is required").format(frappe.bold(_("HTML"))), frappe.MandatoryError
-			)
+			frappe.throw(_("{0} is required").format(frappe.bold(_("HTML"))), frappe.MandatoryError)
 
 	def extract_images(self):
 		from frappe.core.doctype.file.file import extract_images_from_html
@@ -74,11 +72,7 @@ class PrintFormat(Document):
 		if self.format_data:
 			data = json.loads(self.format_data)
 			for df in data:
-				if (
-					df.get("fieldtype")
-					and df["fieldtype"] in ("HTML", "Custom HTML")
-					and df.get("options")
-				):
+				if df.get("fieldtype") and df["fieldtype"] in ("HTML", "Custom HTML") and df.get("options"):
 					df["options"] = extract_images_from_html(self, df["options"])
 			self.format_data = json.dumps(data)
 

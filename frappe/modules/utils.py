@@ -17,11 +17,7 @@ from frappe.utils import cint
 def export_module_json(doc, is_standard, module):
 	"""Make a folder for the given doc and add its json file (make it a standard
 	object that will be synced)"""
-	if (
-		not frappe.flags.in_import
-		and getattr(frappe.get_conf(), "developer_mode", 0)
-		and is_standard
-	):
+	if not frappe.flags.in_import and getattr(frappe.get_conf(), "developer_mode", 0) and is_standard:
 		from frappe.modules.export_file import export_to_files
 
 		# json
@@ -64,15 +60,11 @@ def export_customizations(module, doctype, sync_on_migrate=0, with_permissions=0
 	}
 
 	def add(_doctype):
-		custom["custom_fields"] += frappe.get_all(
-			"Custom Field", fields="*", filters={"dt": _doctype}
-		)
+		custom["custom_fields"] += frappe.get_all("Custom Field", fields="*", filters={"dt": _doctype})
 		custom["property_setters"] += frappe.get_all(
 			"Property Setter", fields="*", filters={"doc_type": _doctype}
 		)
-		custom["links"] += frappe.get_all(
-			"DocType Link", fields="*", filters={"parent": _doctype}
-		)
+		custom["links"] += frappe.get_all("DocType Link", fields="*", filters={"parent": _doctype})
 
 	add(doctype)
 
@@ -94,9 +86,7 @@ def export_customizations(module, doctype, sync_on_migrate=0, with_permissions=0
 		with open(path, "w") as f:
 			f.write(frappe.as_json(custom))
 
-		frappe.msgprint(
-			_("Customizations for <b>{0}</b> exported to:<br>{1}").format(doctype, path)
-		)
+		frappe.msgprint(_("Customizations for <b>{0}</b> exported to:<br>{1}").format(doctype, path))
 
 
 def sync_customizations(app=None):
@@ -145,9 +135,7 @@ def sync_customizations_for_doctype(data, folder):
 
 			else:
 				for d in data[key]:
-					field = frappe.db.get_value(
-						"Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]}
-					)
+					field = frappe.db.get_value("Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]})
 					if not field:
 						d["owner"] = "Administrator"
 						_insert(d)
@@ -248,9 +236,7 @@ def load_doctype_module(doctype, module=None, prefix="", suffix=""):
 			doctype_python_modules[key] = frappe.get_module(module_name)
 	except ImportError as e:
 		raise ImportError(
-			"Module import failed for {0} ({1})".format(
-				doctype, module_name + " Error: " + str(e)
-			)
+			"Module import failed for {0} ({1})".format(doctype, module_name + " Error: " + str(e))
 		)
 
 	return doctype_python_modules[key]
@@ -318,9 +304,7 @@ def make_boilerplate(template, doc, opts=None):
 
 		with open(target_file_path, "w") as target:
 			with open(
-				os.path.join(
-					get_module_path("core"), "doctype", scrub(doc.doctype), "boilerplate", template
-				),
+				os.path.join(get_module_path("core"), "doctype", scrub(doc.doctype), "boilerplate", template),
 				"r",
 			) as source:
 				target.write(

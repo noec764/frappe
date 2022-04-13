@@ -4,8 +4,7 @@
 import unittest
 
 import frappe
-from frappe.desk.search import (get_names_for_mentions, search_link,
-                                search_widget)
+from frappe.desk.search import get_names_for_mentions, search_link, search_widget
 
 
 class TestSearch(unittest.TestCase):
@@ -19,9 +18,7 @@ class TestSearch(unittest.TestCase):
 
 	def test_search_field_sanitizer(self):
 		# pass
-		search_link(
-			"DocType", "User", query=None, filters=None, page_length=20, searchfield="name"
-		)
+		search_link("DocType", "User", query=None, filters=None, page_length=20, searchfield="name")
 		result = frappe.response["results"][0]
 		self.assertTrue("User" in result["value"])
 
@@ -154,9 +151,7 @@ class TestSearch(unittest.TestCase):
 
 		# page_len and start should be converted to int
 		self.assertListEqual(
-			get_data(
-				"User", "Random", "email", "name or (select * from tabSessions)", "10", dict()
-			),
+			get_data("User", "Random", "email", "name or (select * from tabSessions)", "10", dict()),
 			["User", "Random", "email", 0, 10, {}],
 		)
 		self.assertListEqual(
@@ -171,16 +166,12 @@ class TestSearch(unittest.TestCase):
 		)
 
 		# return empty string if passed doctype is invalid
-		self.assertListEqual(
-			get_data("Random DocType", "Random", "email", "2", "10", dict()), []
-		)
+		self.assertListEqual(get_data("Random DocType", "Random", "email", "2", "10", dict()), [])
 
 		# should not fail if function is called via frappe.call with extra arguments
 		args = ("Random DocType", "Random", "email", "2", "10", dict())
 		kwargs = {"as_dict": False}
-		self.assertListEqual(
-			frappe.call("frappe.tests.test_search.get_data", *args, **kwargs), []
-		)
+		self.assertListEqual(frappe.call("frappe.tests.test_search.get_data", *args, **kwargs), [])
 
 		# should not fail if query has @ symbol in it
 		search_link("User", "user@random", searchfield="name")

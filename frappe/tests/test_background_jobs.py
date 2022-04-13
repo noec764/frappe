@@ -11,9 +11,7 @@ from frappe.utils.background_jobs import generate_qname, get_redis_conn
 @unittest.skip("Skipped in CI")
 class TestBackgroundJobs(unittest.TestCase):
 	def test_remove_failed_jobs(self):
-		frappe.enqueue(
-			method="frappe.tests.test_background_jobs.fail_function", queue="short"
-		)
+		frappe.enqueue(method="frappe.tests.test_background_jobs.fail_function", queue="short")
 		# wait for enqueued job to execute
 		time.sleep(2)
 		conn = get_redis_conn()

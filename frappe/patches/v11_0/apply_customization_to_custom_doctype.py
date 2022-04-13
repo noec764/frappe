@@ -19,9 +19,7 @@ def execute():
 			fields=["name", "property", "value", "property_type", "field_name"],
 		)
 
-		custom_fields = frappe.get_all(
-			"Custom Field", filters={"dt": doctype.name}, fields=["*"]
-		)
+		custom_fields = frappe.get_all("Custom Field", filters={"dt": doctype.name}, fields=["*"])
 
 		property_setter_map = {}
 

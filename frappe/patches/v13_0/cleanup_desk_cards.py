@@ -1,8 +1,7 @@
 from json import loads
 
 import frappe
-from frappe.desk.doctype.workspace.workspace import (get_link_type,
-                                                     get_report_type)
+from frappe.desk.doctype.workspace.workspace import get_link_type, get_report_type
 
 
 def execute():
@@ -72,14 +71,10 @@ def rebuild_links(page):
 
 
 def get_doc_from_db(page):
-	result = frappe.db.sql(
-		"SELECT * FROM `tabDesk Page` WHERE name=%s", [page], as_dict=True
-	)
+	result = frappe.db.sql("SELECT * FROM `tabDesk Page` WHERE name=%s", [page], as_dict=True)
 	if result:
 		return result[0].update({"doctype": "Workspace"})
 
 
 def get_all_cards(page):
-	return frappe.db.get_all(
-		"Desk Card", filters={"parent": page}, fields=["*"], order_by="idx"
-	)
+	return frappe.db.get_all("Desk Card", filters={"parent": page}, fields=["*"], order_by="idx")

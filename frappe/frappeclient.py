@@ -109,9 +109,7 @@ class FrappeClient(object):
 			headers=self.headers,
 		)
 
-	def get_list(
-		self, doctype, fields='["name"]', filters=None, limit_start=0, limit_page_length=0
-	):
+	def get_list(self, doctype, fields='["name"]', filters=None, limit_start=0, limit_page_length=0):
 		"""Returns list of records of a particular type"""
 		if not isinstance(fields, str):
 			fields = json.dumps(fields)
@@ -147,9 +145,7 @@ class FrappeClient(object):
 		"""Insert multiple documents to the remote server
 
 		:param docs: List of dict or Document objects to be inserted in one request"""
-		return self.post_request(
-			{"cmd": "frappe.client.insert_many", "docs": frappe.as_json(docs)}
-		)
+		return self.post_request({"cmd": "frappe.client.insert_many", "docs": frappe.as_json(docs)})
 
 	def update(self, doc):
 		"""Update a remote document
@@ -165,18 +161,14 @@ class FrappeClient(object):
 		"""Bulk update documents remotely
 
 		:param docs: List of dict or Document objects to be updated remotely (by `name`)"""
-		return self.post_request(
-			{"cmd": "frappe.client.bulk_update", "docs": frappe.as_json(docs)}
-		)
+		return self.post_request({"cmd": "frappe.client.bulk_update", "docs": frappe.as_json(docs)})
 
 	def delete(self, doctype, name):
 		"""Delete remote document by name
 
 		:param doctype: `doctype` to be deleted
 		:param name: `name` of document to be deleted"""
-		return self.post_request(
-			{"cmd": "frappe.client.delete", "doctype": doctype, "name": name}
-		)
+		return self.post_request({"cmd": "frappe.client.delete", "doctype": doctype, "name": name})
 
 	def submit(self, doc):
 		"""Submit remote document
@@ -221,9 +213,7 @@ class FrappeClient(object):
 
 		:param doctype: DocType of the document to be cancelled
 		:param name: name of the document to be cancelled"""
-		return self.post_request(
-			{"cmd": "frappe.client.cancel", "doctype": doctype, "name": name}
-		)
+		return self.post_request({"cmd": "frappe.client.cancel", "doctype": doctype, "name": name})
 
 	def get_doc(self, doctype, name="", filters=None, fields=None):
 		"""Returns a single remote document

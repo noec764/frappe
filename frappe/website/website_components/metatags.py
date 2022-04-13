@@ -61,9 +61,7 @@ class MetaTags:
 			route = frappe.db.get_single_value("Website Settings", "home_page")
 
 		route_exists = (
-			route
-			and not route.endswith((".js", ".css"))
-			and frappe.db.exists("Website Route Meta", route)
+			route and not route.endswith((".js", ".css")) and frappe.db.exists("Website Route Meta", route)
 		)
 
 		if route_exists:

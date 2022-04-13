@@ -10,9 +10,7 @@ from frappe.utils import cint
 @frappe.whitelist()
 def get_feed(start, page_length):
 	"""get feed"""
-	match_conditions_communication = get_feed_match_conditions(
-		frappe.session.user, "Communication"
-	)
+	match_conditions_communication = get_feed_match_conditions(frappe.session.user, "Communication")
 	match_conditions_comment = get_feed_match_conditions(frappe.session.user, "Comment")
 
 	result = frappe.db.sql(

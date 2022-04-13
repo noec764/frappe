@@ -6,9 +6,7 @@ import frappe
 
 
 def execute():
-	if frappe.db.table_exists("List View Setting") and frappe.db.exists(
-		"List View Setting"
-	):
+	if frappe.db.table_exists("List View Setting") and frappe.db.exists("List View Setting"):
 		if not frappe.db.table_exists("List View Settings"):
 			frappe.reload_doc("desk", "doctype", "List View Settings")
 

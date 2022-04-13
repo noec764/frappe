@@ -5,9 +5,7 @@ from . import __version__ as app_version
 app_name = "frappe"
 app_title = "Dodock"
 app_publisher = "Dokos SAS"
-app_description = (
-	"Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
-)
+app_description = "Full stack web framework with Python, Javascript, MariaDB, Redis, Node"
 app_icon = "octicon octicon-circuit-board"
 app_color = "orange"
 source_link = "https://gitlab.com/dokos/dodock"
@@ -94,7 +92,9 @@ on_session_creation = [
 	"frappe.limits.check_if_expired",
 ]
 
-on_logout = "frappe.core.doctype.session_default_settings.session_default_settings.clear_session_defaults"
+on_logout = (
+	"frappe.core.doctype.session_default_settings.session_default_settings.clear_session_defaults"
+)
 
 # permissions
 
@@ -305,9 +305,7 @@ setup_wizard_exception = [
 ]
 before_write_file = "frappe.limits.validate_space_limit"
 
-before_migrate = [
-	"frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute"
-]
+before_migrate = ["frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute"]
 after_migrate = ["frappe.website.doctype.website_theme.website_theme.after_migrate"]
 
 otp_methods = ["OTP App", "Email", "SMS"]

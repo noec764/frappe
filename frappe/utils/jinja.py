@@ -95,9 +95,7 @@ def render_template(template, context, is_path=None, safe_render=True):
 		except TemplateError:
 			throw(
 				title="Jinja Template Error",
-				msg="<pre>{template}</pre><pre>{tb}</pre>".format(
-					template=template, tb=get_traceback()
-				),
+				msg="<pre>{template}</pre><pre>{tb}</pre>".format(template=template, tb=get_traceback()),
 			)
 
 
@@ -155,9 +153,7 @@ def transform_template_blot(template, context):
 	import frappe
 
 	soup = BeautifulSoup(template, "html.parser")
-	soup.insert(
-		0, '{%- from "templates/letters/standard_macros.html" import render_table -%}'
-	)
+	soup.insert(0, '{%- from "templates/letters/standard_macros.html" import render_table -%}')
 	soup.insert(
 		0,
 		"{% "

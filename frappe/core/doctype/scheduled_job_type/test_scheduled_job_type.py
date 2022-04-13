@@ -18,9 +18,7 @@ class TestScheduledJobType(unittest.TestCase):
 		frappe.db.commit()
 
 	def test_sync_jobs(self):
-		all_job = frappe.get_doc(
-			"Scheduled Job Type", dict(method="frappe.email.queue.flush")
-		)
+		all_job = frappe.get_doc("Scheduled Job Type", dict(method="frappe.email.queue.flush"))
 		self.assertEqual(all_job.frequency, "All")
 
 		daily_job = frappe.get_doc(
@@ -29,9 +27,7 @@ class TestScheduledJobType(unittest.TestCase):
 		self.assertEqual(daily_job.frequency, "Daily")
 
 		# check if cron jobs are synced
-		cron_job = frappe.get_doc(
-			"Scheduled Job Type", dict(method="frappe.oauth.delete_oauth2_data")
-		)
+		cron_job = frappe.get_doc("Scheduled Job Type", dict(method="frappe.oauth.delete_oauth2_data"))
 		self.assertEqual(cron_job.frequency, "Cron")
 		self.assertEqual(cron_job.cron_format, "0/15 * * * *")
 
@@ -55,9 +51,7 @@ class TestScheduledJobType(unittest.TestCase):
 	def test_weekly_job(self):
 		job = frappe.get_doc(
 			"Scheduled Job Type",
-			dict(
-				method="frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary"
-			),
+			dict(method="frappe.social.doctype.energy_point_log.energy_point_log.send_weekly_summary"),
 		)
 		job.db_set("last_execution", "2019-01-01 00:00:00")
 		self.assertTrue(job.is_event_due(get_datetime("2019-01-06 00:00:01")))
@@ -76,9 +70,7 @@ class TestScheduledJobType(unittest.TestCase):
 
 	def test_cron_job(self):
 		# runs every 15 mins
-		job = frappe.get_doc(
-			"Scheduled Job Type", dict(method="frappe.oauth.delete_oauth2_data")
-		)
+		job = frappe.get_doc("Scheduled Job Type", dict(method="frappe.oauth.delete_oauth2_data"))
 		job.db_set("last_execution", "2019-01-01 00:00:00")
 		self.assertTrue(job.is_event_due(get_datetime("2019-01-01 00:15:01")))
 		self.assertFalse(job.is_event_due(get_datetime("2019-01-01 00:05:06")))

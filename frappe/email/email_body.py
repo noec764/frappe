@@ -9,9 +9,18 @@ from email.mime.multipart import MIMEMultipart
 
 import frappe
 from frappe.email.doctype.email_account.email_account import EmailAccount
-from frappe.utils import (cint, expand_relative_urls, get_url, markdown,
-                          parse_addr, random_string, scrub_urls, split_emails,
-                          strip, to_markdown)
+from frappe.utils import (
+	cint,
+	expand_relative_urls,
+	get_url,
+	markdown,
+	parse_addr,
+	random_string,
+	scrub_urls,
+	split_emails,
+	strip,
+	to_markdown,
+)
 from frappe.utils.pdf import get_pdf
 
 
@@ -203,9 +212,7 @@ class EMail:
 
 			self.msg_alternative.attach(msg_related)
 		else:
-			self.msg_alternative.attach(
-				MIMEText(message, "html", "utf-8", policy=policy.SMTPUTF8)
-			)
+			self.msg_alternative.attach(MIMEText(message, "html", "utf-8", policy=policy.SMTPUTF8))
 
 	def set_html_as_text(self, html):
 		"""Set plain text from HTML"""
@@ -307,9 +314,7 @@ class EMail:
 		headers = {
 			"Subject": strip(self.subject),
 			"From": self.sender,
-			"To": ", ".join(self.recipients)
-			if self.expose_recipients == "header"
-			else "<!--recipient-->",
+			"To": ", ".join(self.recipients) if self.expose_recipients == "header" else "<!--recipient-->",
 			"Date": email.utils.formatdate(),
 			"Reply-To": self.reply_to if self.reply_to else None,
 			"CC": ", ".join(self.cc) if self.cc and self.expose_recipients == "header" else None,
@@ -386,9 +391,7 @@ def get_email_html(template, args, subject, header=None, with_container=False):
 	if header and header.startswith("["):
 		header = json.loads(header)
 	email = frappe.utils.jinja.get_email_from_template(template, args)
-	return get_formatted_html(
-		subject, email[0], header=header, with_container=with_container
-	)
+	return get_formatted_html(subject, email[0], header=header, with_container=with_container)
 
 
 def inline_style_in_html(html):
@@ -402,18 +405,14 @@ def inline_style_in_html(html):
 	css_files = [bundled_asset(path) for path in css_files]
 	css_files = [path.lstrip("/") for path in css_files]
 
-	css_files = [
-		css_file for css_file in css_files if os.path.exists(os.path.abspath(css_file))
-	]
+	css_files = [css_file for css_file in css_files if os.path.exists(os.path.abspath(css_file))]
 
 	p = Premailer(html=html, external_styles=css_files, strip_important=False)
 
 	return p.transform()
 
 
-def add_attachment(
-	fname, fcontent, content_type=None, parent=None, content_id=None, inline=False
-):
+def add_attachment(fname, fcontent, content_type=None, parent=None, content_id=None, inline=False):
 	"""Add attachment to parent which must an email object"""
 	import mimetypes
 	from email.mime.audio import MIMEAudio
