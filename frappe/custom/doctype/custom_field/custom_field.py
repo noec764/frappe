@@ -52,7 +52,7 @@ class CustomField(Document):
 			if self.is_new() and self.fieldname in fieldnames:
 				frappe.throw(
 					_("A field with the name {0} already exists in {1}").format(
-						frappe.bold(self.fieldname), self.dt
+						frappe.bold(self.fieldname), _(self.dt)
 					)
 				)
 

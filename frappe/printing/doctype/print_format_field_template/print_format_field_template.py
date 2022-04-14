@@ -31,7 +31,7 @@ class PrintFormatFieldTemplate(Document):
 		if result:
 			frappe.throw(
 				_("A template already exists for field {0} of {1}").format(
-					frappe.bold(self.field), frappe.bold(self.document_type)
+					frappe.bold(self.field), frappe.bold(_(self.document_type))
 				),
 				frappe.DuplicateEntryError,
 				title=_("Duplicate Entry"),

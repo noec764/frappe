@@ -6659,20 +6659,7 @@ zoom-out,Réduire,
 {} has been disabled. It can only be enabled if {} is checked.,{} est désactivé. Il ne peut être activé que si {} est coché.,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,
-<<<<<<< HEAD
-=======
-Copy Link,Copier le lien,
-All Events,Tous les événements,
-Additional dates,Dates supplémentaires,
-Read,Lu,Email Flag Queue
-Unread,Non Lu,Email Flag Queue
-unseen communication,communication non lue,
-unseen communications,communications non lues,
-Organization Chart,Trombinoscope,
-Biography,Biographie,
-Built on Dodock,Créé avec Dodock,
 Document has been submitted, Document validé,
 Document has been cancelled, Document annulé,
 Document is in draft state, Document au statut brouillon,
 Update document timestamp when sending emails,Mettre à jour la date/heure de modification du document lors de l'envoi d'un email,
->>>>>>> d450aaa118ac776d370f8d044e38191f2b8ac3bd
