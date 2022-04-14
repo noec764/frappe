@@ -49,29 +49,22 @@ controllers = {}
 class _dict(dict):
 	"""dict like object that exposes keys as attributes"""
 
-	def __getattr__(self, key):
-		ret = self.get(key)
-		# "__deepcopy__" exception added to fix frappe#14833 via DFP
-		if not ret and key.startswith("__") and key != "__deepcopy__":
-			raise AttributeError()
-		return ret
-
-	def __setattr__(self, key, value):
-		self[key] = value
+	__slots__ = ()
+	__getattr__ = dict.get
+	__setattr__ = dict.__setitem__
+	__delattr__ = dict.__delitem__
+	__setstate__ = dict.update
 
 	def __getstate__(self):
 		return self
 
-	def __setstate__(self, d):
-		self.update(d)
-
-	def update(self, d):
+	def update(self, *args, **kwargs):
 		"""update and return self -- the missing dict feature in python"""
-		super(_dict, self).update(d)
+		super().update(*args, **kwargs)
 		return self
 
 	def copy(self):
-		return _dict(dict(self).copy())
+		return _dict(self)
 
 
 def _(msg, lang=None, context=None):
@@ -707,7 +700,7 @@ def whitelist(allow_guest=False, xss_safe=False, methods=None):
 
 	        @frappe.whitelist()
 	        def myfunc(param1, param2):
-	                pass
+	                        pass
 	"""
 
 	if not methods:
@@ -2185,9 +2178,9 @@ def get_version(doctype, name, limit=None, head=False, raise_err=True):
 	>>>
 	[
 	        {
-	                "version": [version.data],			# Refer Version DocType get_diff method and data attribute
-	                "user": "admin@gmail.com",			# User that created this version
-	                "creation": <datetime.datetime>		# Creation timestamp of that object.
+	                        "version": [version.data],			# Refer Version DocType get_diff method and data attribute
+	                        "user": "admin@gmail.com",			# User that created this version
+	                        "creation": <datetime.datetime>		# Creation timestamp of that object.
 	        }
 	]
 	"""
@@ -2231,7 +2224,9 @@ def ping():
 
 @whitelist(allow_guest=True)
 def get_user_lang():
-	return translate.get_user_lang()
+	from frappe.translate import get_user_lang as _get_user_lang
+
+	return _get_user_lang()
 
 
 def safe_encode(param, encoding="utf-8"):
