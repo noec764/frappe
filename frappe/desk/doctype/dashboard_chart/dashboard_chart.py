@@ -272,10 +272,10 @@ def get_group_by_chart_config(chart, filters):
 			for i in range(chart.number_of_groups - 1, len(data)):
 				other_count += data[i]['count']
 			data = data[0: chart.number_of_groups - 1]
-			data.append({'name': 'Other', 'count': other_count})
+			data.append({'name': _('Other'), 'count': other_count})
 
 		chart_config = {
-			"labels": [item['name'] if item['name'] else 'Not Specified' for item in data],
+			"labels": [item['name'] if item['name'] else _('Not Specified') for item in data],
 			"datasets": [{
 				"name": chart.name,
 				"values": [item['count'] for item in data]
@@ -297,7 +297,7 @@ def get_assigned_by_data(data):
 		if d["name"] and frappe.parse_json(d.name):
 			d["name"] = users.get(frappe.parse_json(d.name)[0])
 		elif not d["name"] or not frappe.parse_json(d.name):
-			d["name"] = 'Not Specified'
+			d["name"] = _('Not Specified')
 
 		count[d['name']] += d['count']
 
