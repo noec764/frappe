@@ -66,7 +66,7 @@ frappe.ui.form.Attachments = class Attachments {
 	}
 
 	get_attachments() {
-		return this.frm.get_docinfo().attachments;
+		return this.frm.get_docinfo().attachments || [];
 	}
 
 	add_attachment(attachment) {
