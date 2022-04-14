@@ -5,11 +5,11 @@
 import unittest
 
 import frappe
+from frappe.core.doctype.doctype.test_doctype import new_doctype
 from frappe.model.naming import (
 	append_number_if_name_exists,
 	determine_consecutive_week_number,
 	getseries,
-	parse_naming_series,
 	revert_series_if_last,
 )
 from frappe.utils import now_datetime
@@ -51,6 +51,40 @@ class TestNaming(unittest.TestCase):
 
 		self.assertEqual(country.name, original_name)
 		self.assertEqual(country.name, country.country_name)
+
+	def test_child_table_naming(self):
+		child_dt_with_naming = new_doctype(
+			"childtable_with_autonaming", istable=1, autoname="field:some_fieldname"
+		).insert()
+		dt_with_child_autoname = new_doctype(
+			"dt_with_childtable_naming",
+			fields=[
+				{
+					"label": "table with naming",
+					"fieldname": "table_with_naming",
+					"options": "childtable_with_autonaming",
+					"fieldtype": "Table",
+				}
+			],
+		).insert()
+
+		name = frappe.generate_hash(length=10)
+
+		doc = frappe.new_doc("dt_with_childtable_naming")
+		doc.append("table_with_naming", {"some_fieldname": name})
+		doc.save()
+		self.assertEqual(doc.table_with_naming[0].name, name)
+
+		# change autoname field
+		doc.table_with_naming[0].some_fieldname = "Something else"
+		doc.save()
+
+		self.assertEqual(doc.table_with_naming[0].name, name)
+		self.assertEqual(doc.table_with_naming[0].some_fieldname, name)
+
+		doc.delete()
+		dt_with_child_autoname.delete()
+		child_dt_with_naming.delete()
 
 	def test_format_autoname(self):
 		"""
@@ -176,12 +210,6 @@ class TestNaming(unittest.TestCase):
 
 		self.assertEqual(current_index.get("current"), 2)
 		frappe.db.delete("Series", {"name": series})
-
-	def test_parse_naming_series_for_consecutive_week_number(self):
-		week = determine_consecutive_week_number(now_datetime())
-		name = parse_naming_series("PREFIX-.WW.-SUFFIX")
-		expected_name = "PREFIX-{}-SUFFIX".format(week)
-		self.assertEqual(name, expected_name)
 
 	def test_determine_consecutive_week_number(self):
 		from datetime import datetime
