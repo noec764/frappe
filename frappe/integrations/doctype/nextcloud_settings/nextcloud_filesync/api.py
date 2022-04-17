@@ -1,28 +1,36 @@
 import frappe
+from frappe import _
+
 from frappe.integrations.doctype.nextcloud_settings import get_nextcloud_settings
+from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudExceptionInvalidCredentials, NextcloudExceptionInvalidUrl, NextcloudExceptionServerIsDown
 
 from .sync import sync_log, sync_module, optional_sync_module
 from .diff_engine.utils import check_flag, get_home_folder, doc_has_nextcloud_id
 
 
 @frappe.whitelist()
-def check_id_of_home():
-	with optional_sync_module() as syncer:
-		if not syncer: return 'skip'
-		return syncer.check_id_of_home()
-
-
-@frappe.whitelist()
 def check_server():
+	err_title = _('Nextcloud Integration', context='Nextcloud')
+
 	try:
 		settings = get_nextcloud_settings()
 		settings.nc_connect()
 		# no exception raised
 		return {'status': 'ok'}
-	except Exception as e:
-		frappe.clear_last_message()
-		msg = '\n'.join(map(str, e.args))
-		return {'status': 'error', 'error': msg}
+	except NextcloudExceptionInvalidUrl:
+		# frappe.clear_messages()
+		a = _('Nextcloud URL', context='Nextcloud')
+		b = _('Invalid URL', context='Nextcloud')
+		frappe.msgprint('{}: {}'.format(a, b), title=err_title)
+		return {'status': 'error'}
+	except NextcloudExceptionServerIsDown:
+		# frappe.clear_messages()
+		frappe.msgprint(_('Nextcloud server is down', context='Nextcloud'), title=err_title)
+		return {'status': 'error'}
+	except NextcloudExceptionInvalidCredentials:
+		# frappe.clear_messages()
+		frappe.msgprint(_('Invalid Credentials', context='Nextcloud'), title=err_title)
+		return {'status': 'error'}
 
 
 @frappe.whitelist()

@@ -3,6 +3,8 @@
 
 import os
 from datetime import datetime
+import socket
+from typing import Optional
 
 import frappe
 from frappe.model.document import Document
@@ -11,7 +13,7 @@ from frappe.utils.data import cint
 from owncloud import HTTPResponseError
 
 from .client import NextcloudIntegrationClient
-from .exceptions import NextcloudExceptionInvalidCredentials, NextcloudExceptionServerIsDown
+from .exceptions import NextcloudExceptionInvalidCredentials, NextcloudExceptionInvalidUrl, NextcloudExceptionServerIsDown
 
 if any((os.getenv('CI'), frappe.conf.developer_mode, frappe.conf.allow_tests)):
 	# Do not check certificates when in developer mode or while testing
@@ -31,12 +33,14 @@ class NextcloudSettings(Document):
 	# enable_backups: bool = False
 	# enable_calendar: bool = False
 
+	debug_disable_filesync_cron: bool = False
+
 	path_to_files_folder: str = ''
 	filesync_rename_folder_on_save: bool = False
 	filesync_exclude_private: bool = True
 
 	# TODO: store sync_datetime for each of the 3 modules + configurable interval
-	last_filesync_dt: str = None
+	last_filesync_dt: Optional[str] = None
 
 	# TODO: remove these properties (conflict override)
 	next_filesync_ignore_id_conflicts: bool = False
@@ -72,8 +76,6 @@ class NextcloudSettings(Document):
 				raise NextcloudExceptionInvalidCredentials
 			else:
 				raise
-		except Exception as e:
-			raise
 
 		return client
 
@@ -86,16 +88,20 @@ class NextcloudSettings(Document):
 		host = o.hostname
 
 		if not host:
-			raise ValueError(frappe._('Invalid URL'))
+			raise NextcloudExceptionInvalidUrl
 
-		import socket
 		sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		sock.settimeout(t_timeout)
 
 		for _ in range(n_tries):
-			res = sock.connect_ex((host, port))
+			try:
+				res = sock.connect_ex((host, port))
+			except socket.gaierror as e:
+				raise NextcloudExceptionInvalidUrl from e
+
 			if res == 0:
 				return True
+
 		return False
 
 	def get_path_to_files_folder(self):

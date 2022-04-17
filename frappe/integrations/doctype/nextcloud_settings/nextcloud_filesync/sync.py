@@ -1,9 +1,10 @@
 from contextlib import contextmanager
 import json
-import os
 from datetime import datetime
 from operator import attrgetter
 from typing import Optional, Generator
+from typing_extensions import Literal
+from dataclasses import dataclass
 
 import frappe
 from frappe.core.doctype.file.file import File
@@ -23,6 +24,14 @@ from frappe.utils.data import cstr
 
 from .diff_engine import Common, DiffEngine, ActionRunner, RemoteFetcher
 
+
+@dataclass
+class BeforeSyncStatus:
+	status: Literal['ok', 'error']
+	sync_type: Literal['none', 'normal', 'all', 'initial', 'overwrite'] = 'none'
+	message: str = ''
+
+
 @contextmanager
 def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True):
 	# frappe.db.begin()  # begin transaction
@@ -35,7 +44,7 @@ def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exceptio
 
 		if commit_after:
 			frappe.db.commit()
-	except:
+	except Exception:
 		if rollback_on_exception:
 			frappe.db.rollback()  # rollback on error
 		if raise_exception:
@@ -164,8 +173,8 @@ class NextcloudFileSync:
 	def complete_sync(
 		self,
 		conflict_strategy: str = None,
-		sync_all: bool = False,
-		force_migrate: bool = False,
+		down_sync_all: bool = False,
+		force_upload: bool = False,
 		interactive: bool = False,
 		log_conflicts: bool = True,
 		commit: bool = True,
@@ -176,9 +185,9 @@ class NextcloudFileSync:
 
 		Args:
 			conflict_strategy (str): The strategy to use for conflict resolution. Defaults to None (aka 'ignore').
-			sync_all (bool): Detect files even if their modification date is prior to the last sync. Defaults to False.
+			down_sync_all (bool): Detect files even if their modification date is prior to the last sync. Defaults to False.
 
-			force_migrate (bool): Clear all the nextcloud_id's of the local Files before migrating-again. Defaults to False.
+			force_upload (bool): Clear all the nextcloud_id's of the local Files before uploading them again. Defaults to False.
 
 			interactive (bool): Display real time messages to the user. Defaults to False.
 			log_conflicts (bool): Log conflicts to the Error Log. Defaults to False.
@@ -186,11 +195,7 @@ class NextcloudFileSync:
 			rollback_on_error (bool): Defaults to True.
 		"""
 
-		def b(x: bool):
-			return '\x1b[32mF\x1b[m' if x else '\x1b[31mF\x1b[m'
-		def h(x: str):
-			return f'\x1b[34m{x}\x1b[m'
-		self.log(f"complete_sync(conflict_strategy={h(conflict_strategy)}, sync_all={b(sync_all)}, force_migrate={b(force_migrate)})")
+		self.log(f"complete_sync(conflict_strategy={conflict_strategy}, down_sync_all={down_sync_all}, force_upload={force_upload})")
 
 		if not self.can_run_filesync():
 			self.log("↳ complete_sync cancelled")
@@ -201,10 +206,10 @@ class NextcloudFileSync:
 
 		try:
 			# Perform a pre-sync migration to the cloud
-			self.migrate_to_remote(force=force_migrate)
+			self.migrate_to_remote(force=force_upload)
 
 			# Perform the sync, mirroring the cloud
-			if sync_all:
+			if down_sync_all:
 				self.sync_from_remote_all()
 			else:
 				self.sync_from_remote_since_last_update()
@@ -220,6 +225,26 @@ class NextcloudFileSync:
 			if rollback_on_error: frappe.db.rollback()
 			raise e
 
+	def preserve_remote_root_bak(self):
+		self.log('* Creating backup of remote root dir...')
+		bak = self.common.root.rstrip('/') + '.bak'
+
+		try:
+			self.client.delete(bak)
+			self.log('↳ deleted previous backup')
+		except HTTPResponseError as e:
+			if e.status_code != 404:
+				raise
+
+		try:
+			self.client.move(self.common.root, bak)
+			self.log('↳ created backup by renaming')
+		except HTTPResponseError as e:
+			if e.status_code != 404:
+				raise
+
+		self.log('↳ done: ' + bak)
+		return True
 
 	def _log(self, *args):
 		sync_log(*args)
@@ -264,6 +289,7 @@ class NextcloudFileSync:
 		if self.conflict_strategy == 'stop':
 			conflict_stopper = ConflictStopper()
 			actions_iterator = list(conflict_stopper.chain(actions_iterator))
+			self.conflicts.extend(conflict_stopper._local_conflicts)
 		elif self.conflict_strategy == 'resolver-only':
 			conflict_resolver = ConflictResolverNCF(self.common)
 			actions_iterator = list(conflict_resolver.chain(actions_iterator))
@@ -496,49 +522,75 @@ class NextcloudFileSync:
 			Action(type='remote.createOrForceUpdate', local=local, remote=remote)
 		])
 
-	def check_id_of_home(self):
+	def get_before_sync_status(self):
+		if not self.can_run_filesync():
+			return BeforeSyncStatus('ok', 'none', message='disabled')
+
+		# Fetch local and remote root directories
 		try:
 			local_home = get_home_folder()
-		except:
+		except frappe.DoesNotExistError:
 			raise  # TODO: this is bad
+
+		local_id = cstr(local_home.nextcloud_id)
 
 		try:
 			remote_home = self.fetcher.fetch_root(create_if_missing=False)
 		except NextcloudSyncMissingRoot:
 			remote_home = None
-		except:
-			raise
 
-		local_id = cstr(local_home.nextcloud_id) \
-			if local_home else None
-		remote_id = cstr(remote_home.attributes[self.common._FILE_ID]) \
-			if remote_home else None
+		# If the remote dir does not exist
+		if not remote_home:
+			if local_id:
+				potential_remote_home = self.client.file_info_by_fileid(local_id)
+				if potential_remote_home:
+					print('RENAMED', self.settings.path_to_files_folder, '->', potential_remote_home.path)
+					self.settings.db_set('path_to_files_folder', potential_remote_home.path)
+					# The remote root directory was moved/renamed.
+					# We have to make a choice here:
 
-		# local_etag = cstr(local_home.content_hash)
-		# remote_etag = cstr(remote_home.get_etag()).strip('"')
+					# 1. We can ignore the fact that a remote directory
+					# already exists and pursue with a force-upload,
+					# creating a new remote directory. In this case,
+					# data loss can NOT happen, data duplication might.
 
-		if (not local_id) and (not remote_id):  # never synced
-			return { 'type': 'warn', 'message': 'never-synced', 'remoteId': local_id }
-		elif local_id and (not remote_id):  # root was removed
-			return { 'type': 'warn', 'message': 'no-remote', 'remoteId': local_id }
-		elif (not local_id) and remote_id:  # root exists but is not synced
-			return { 'type': 'warn', 'message': 'to-migrate', 'remoteId': None }
-		elif local_id == remote_id:
-			return { 'type': 'ok', 'message': 'same-ids', 'localId': local_id }
-		elif local_id != remote_id:
-			# if local_etag == remote_etag:
-			# 	return {
-			# 		'type':'ok',
-			# 		'message': 'different-ids-but-same-etag',
-			# 		'localId': local_id,
-			# 		'remoteId': remote_id,
-			# 	}
-			return {
-				'type': 'error',
-				'localId': local_id,
-				'remoteId': remote_id,
-				'reason': 'different-ids',
-			}
+					# 2. Or we can adjust the `path_to_files_folder` value
+					# by assuming that the users wanted to rename the folder
+					# but keep it synchronized. In this case, data loss CAN
+					# happen on the local files, because most local files
+					# are expected to not be uploaded before syncing, which
+					# means that, in the case of a wrong rename detection,
+					# a possibly empty remote dir might get synced to the
+					# local files.
+					# return BeforeSyncStatus('ok', ['adjust-root', 'force-upload', 'down-sync'])
+					return BeforeSyncStatus('ok', 'initial')
+
+			# Knowing that the Home directory is not synced is not enough
+			# to be sure that all its local children are also not synced.
+			# Simply soft-uploading the files, some of which could have a
+			# nextcloud_id, possibly a remote mirror, would not be enough
+			# to correctly copy all the local files to the remote server.
+			# So, the files have to be force-uploaded.
+			# return BeforeSyncStatus('ok', ['force-upload', 'down-sync'])
+			return BeforeSyncStatus('ok', 'initial')
+
+		# Both local and remote dirs exist
+		# Detect if they are correctly linked
+		if not local_id:
+			# Local and remote roots are not linked.
+			# But the remote root dir exists, which means that an up-sync
+			# COULD lead to data loss (by overwrite) on the remote files.
+			# remote_is_empty = len(self.client.list(remote_home.path))
+			# return BeforeSyncStatus('ok', ['up-sync', 'down-sync'])
+			return BeforeSyncStatus('ok', 'normal')
+
+		remote_id = cstr(remote_home.attributes[self.common._FILE_ID])
+		if local_id != remote_id:
+			# return BeforeSyncStatus('error', message='home-different-ids')
+			return BeforeSyncStatus('ok', 'overwrite')
+
+		# return BeforeSyncStatus('ok', ['up-sync', 'down-sync'])
+		return BeforeSyncStatus('ok', 'normal')
 
 	def post_sync_success(self, last_update_dt2):
 		self.settings.set_last_filesync_dt(dt_local=last_update_dt2)

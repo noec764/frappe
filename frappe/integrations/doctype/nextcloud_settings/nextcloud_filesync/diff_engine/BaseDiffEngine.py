@@ -183,7 +183,7 @@ class BaseDiffEngineNC():
 				renames,
 				map(self._fetch_pair_by_id, add_or_updates),
 				map(self._fetch_pair_by_id, deletions)
-				))
+			))
 			self._examine(it)
 
 			yield Action(type='meta.updateEtag', local=local, remote=remote)
@@ -276,7 +276,7 @@ class BaseDiffEngineNC():
 			yield from self.diff_pair_from_local(local, remote)
 
 	def diff_from_remote(self, remote_entries: List[EntryRemote]):
-		out = []
+		out: List[Action] = []
 
 		remote_entries.sort(key=self.sort_key)
 

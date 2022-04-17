@@ -20,7 +20,8 @@
   "filesync_override_conflict_strategy",
   "not_implemented",
   "path_to_backups_folder",
-  "backup_frequency"
+  "backup_frequency",
+  "debug_disable_filesync_cron"
  ],
  "fields": [
   {
@@ -117,13 +118,19 @@
    "fieldname": "_toggles_section",
    "fieldtype": "Section Break",
    "label": "Enabled Features"
+  },
+  {
+   "default": "0",
+   "fieldname": "debug_disable_filesync_cron",
+   "fieldtype": "Check",
+   "label": "[DEBUG] Disable Sync Cron"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2022-03-29 21:51:35.203804",
+ "modified": "2022-04-14 17:39:35.060177",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Nextcloud Settings",

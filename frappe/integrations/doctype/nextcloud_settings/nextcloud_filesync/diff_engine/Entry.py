@@ -121,4 +121,4 @@ def convert_entry_local_to_remote(local: EntryLocal):
 EntryPair = Tuple[EntryLocal, EntryRemote]
 EntryPairOptLoc = Tuple[Optional[EntryLocal], EntryRemote]
 EntryPairOptRem = Tuple[EntryLocal, Optional[EntryRemote]]
-EntryPairOptional = Union[EntryPair, Tuple[EntryLocal, None], Tuple[None, EntryRemote]]
+EntryPairOptional = Union[EntryPair, Tuple[EntryLocal, None], Tuple[None, EntryRemote], Tuple[Optional[EntryLocal], Optional[EntryRemote]]]

@@ -8,6 +8,7 @@ from ..ActionRunner import ActionRunner_NexcloudFrappe
 from ..Common import Common
 from ..RemoteFetcher import RemoteFetcher
 from ..utils import get_home_folder_name, set_flag, FLAG_NEXTCLOUD_IGNORE
+from .... import NextcloudSettings
 
 def using_local_files(local_files: List[dict]):
 	def decorate(func):
@@ -29,7 +30,7 @@ def using_local_files(local_files: List[dict]):
 					if doc.is_folder:
 						doc.folder_delete_children(flags={FLAG_NEXTCLOUD_IGNORE: True})
 					doc.delete()
-				except:
+				except Exception:
 					pass
 
 				d["doctype"] = "File"
@@ -89,17 +90,27 @@ def _slugify(s: str) -> str:
 	return re.sub('[^a-zA-Z0-9_-]', '', s)
 
 class NextcloudTester(unittest.TestCase):
+	home: str
+	_prev: dict
+	settings: NextcloudSettings
+
 	@classmethod
 	def setUpClass(cls) -> None:
-			cls.home = get_home_folder_name()
-			cls._prev_flag_value = frappe.flags.nextcloud_disable_filesync_hooks
-			frappe.flags.nextcloud_disable_filesync_hooks = 1
-			return super().setUpClass()
+		cls.settings = frappe.get_single('Nextcloud Settings')
+		cls.home = get_home_folder_name()
+		cls._prev = {
+			'disable_filesync_hooks': frappe.flags.nextcloud_disable_filesync_hooks,
+			# 'disable_filesync_cron': cls.settings.debug_disable_filesync_cron,
+		}
+		frappe.flags.nextcloud_disable_filesync_hooks = 1
+		cls.settings.db_set('debug_disable_filesync_cron', True, commit=True)
+		return super().setUpClass()
 
 	@classmethod
 	def tearDownClass(cls) -> None:
-			frappe.flags.nextcloud_disable_filesync_hooks = cls._prev_flag_value
-			return super().tearDownClass()
+		frappe.flags.nextcloud_disable_filesync_hooks = cls._prev.get('disable_filesync_hooks', None)
+		cls.settings.db_set('debug_disable_filesync_cron', False, commit=True)
+		return super().tearDownClass()
 
 	def logger(self, *args,  **kwargs):
 		print(*args, **kwargs)
@@ -116,7 +127,7 @@ class NextcloudTester(unittest.TestCase):
 			else:
 				self.fail(msg)
 
-		if not frappe.get_single('Nextcloud Settings').enabled:
+		if not self.settings.enabled:
 			raise unittest.SkipTest("Nextcloud Integration is disabled")
 
 		frappe.db.rollback()
@@ -166,7 +177,7 @@ class NextcloudTester(unittest.TestCase):
 		p = self.common.root.rstrip('/') + '/' + p.lstrip('/')
 		try:
 			self.common.cloud_client.delete(p)
-		except Exception as e:
+		except Exception:
 			return
 
 	def remote_mv(self, a: str, b: str):
@@ -180,7 +191,7 @@ class NextcloudTester(unittest.TestCase):
 			if x == a or x.startswith(a + '/'):
 				self._remote_files[i] = x.replace(a, b, 1)
 
-		assert res == True
+		assert res is True
 
 	def local_dir_was_renamed(self, old_name, new_name):
 		for i, x in enumerate(self._local_files):

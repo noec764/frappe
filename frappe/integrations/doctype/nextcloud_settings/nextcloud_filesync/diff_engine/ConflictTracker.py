@@ -14,6 +14,7 @@ class ConflictTracker:
 	def __init__(self):
 		self._conflict_prefixes = set()
 		self._confict_paths = set()
+		self._local_conflicts = []
 
 	def chain(self, it: Iterable[Action]):
 		"""
@@ -40,6 +41,7 @@ class ConflictTracker:
 			prefix = path.rstrip('/') + '/'
 			self._conflict_prefixes.add(prefix)
 		self._confict_paths.add(path)
+		self._local_conflicts.append(action)
 
 	def on_before_action_run(self, action: Action) -> bool:
 		"""
