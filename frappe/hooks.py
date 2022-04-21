@@ -401,4 +401,4 @@ global_search_doctypes = {
 	]
 }
 
-translated_search_doctypes = ["DocType", "Role", "Module Def", "Report", "Dashboard", "Page", "Dashboard Chart", "Number Card", "Country"]
+translated_search_doctypes = ["DocType", "Role", "Module Def", "Report", "Dashboard", "Page", "Dashboard Chart", "Number Card", "Country", "Web Template"]
