@@ -6,7 +6,6 @@ import json
 
 import frappe
 from frappe.desk.notifications import clear_notifications, delete_notification_count_for
-from frappe.model.document import Document
 
 common_default_keys = ["__default", "__global"]
 

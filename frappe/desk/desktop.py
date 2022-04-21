@@ -494,7 +494,7 @@ def save_new_widget(doc, page, blocks, new_widgets):
 		""".format(
 			page, json_config, e
 		)
-		frappe.log_error(log, _("Could not save customization"))
+		doc.log_error(_("Could not save customization"), log)
 		return False
 
 	return True

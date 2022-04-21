@@ -106,7 +106,7 @@ def enqueue_webhook(doc, webhook):
 			if i != 2:
 				continue
 			else:
-				raise e
+				webhook.log_error(_("Webhook failed"))
 
 
 def log_request(url, headers, data, res):

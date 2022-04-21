@@ -243,8 +243,10 @@ def send_daily():
 
 		try:
 			auto_email_report.send()
-		except Exception as e:
-			frappe.log_error(e, _("Failed to send {0} Auto Email Report").format(auto_email_report.name))
+		except Exception:
+			auto_email_report.log_error(
+				_("Failed to send {0} Auto Email Report").format(auto_email_report.name)
+			)
 
 
 def send_monthly():

@@ -8,7 +8,6 @@ from frappe import _
 from frappe.desk.doctype.notification_settings.notification_settings import (
 	is_email_notifications_enabled_for_type,
 	is_notifications_enabled,
-	set_seen_value,
 )
 from frappe.model.document import Document
 
@@ -21,7 +20,7 @@ class NotificationLog(Document):
 			try:
 				send_notification_email(self)
 			except frappe.OutgoingEmailError:
-				frappe.log_error(message=frappe.get_traceback(), title=_("Failed to send notification email"))
+				self.log_error(_("Failed to send notification email"))
 
 
 def get_permission_query_conditions(for_user):

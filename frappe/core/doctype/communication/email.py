@@ -251,7 +251,7 @@ def mark_email_as_seen(name: str = None):
 		update_communication_as_read(name)
 		frappe.db.commit()  # nosemgrep: this will be called in a GET request
 	except Exception:
-		frappe.log_error(frappe.get_traceback())
+		frappe.log_error(_("Unable to mark as seen"), None, "Communication", name)
 
 	finally:
 		frappe.response.update(

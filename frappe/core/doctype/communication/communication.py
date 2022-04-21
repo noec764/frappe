@@ -461,8 +461,7 @@ def get_contacts(email_strings: List[str], auto_create_contact=False) -> List[st
 				contact.insert(ignore_permissions=True)
 				contact_name = contact.name
 			except Exception:
-				traceback = frappe.get_traceback()
-				frappe.log_error(traceback)
+				contact.log_error(_("Unable to add contact"))
 
 		if contact_name:
 			contacts.append(contact_name)

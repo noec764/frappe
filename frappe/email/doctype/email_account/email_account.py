@@ -199,7 +199,7 @@ class EmailAccount(Document):
 
 	def get_incoming_server(self, in_receive=False, email_sync_rule="UNSEEN"):
 		"""Returns logged in POP3/IMAP connection object."""
-		if frappe.cache().get_value("workers:no-internet") == True:
+		if frappe.cache().get_value("workers:no-internet") is True:
 			return None
 
 		args = frappe._dict(
@@ -473,7 +473,7 @@ class EmailAccount(Document):
 				frappe.db.rollback()
 			except Exception:
 				frappe.db.rollback()
-				frappe.log_error(title="EmailAccount.receive")
+				self.log_error(title="EmailAccount.receive")
 				if self.use_imap:
 					self.handle_bad_emails(mail.uid, mail.raw_message, frappe.get_traceback())
 				exceptions.append(frappe.get_traceback())
@@ -521,7 +521,7 @@ class EmailAccount(Document):
 			# close connection to mailserver
 			email_server.logout()
 		except Exception:
-			frappe.log_error(title=_("Error while connecting to email account {0}").format(self.name))
+			self.log_error(title=_("Error while connecting to email account {0}").format(self.name))
 			return []
 		return mails
 
@@ -669,7 +669,7 @@ class EmailAccount(Document):
 		try:
 			email_server = self.get_incoming_server(in_receive=True)
 		except Exception:
-			frappe.log_error(title=_("Error while connecting to email account {0}").format(self.name))
+			self.log_error(frappe._("Email Connection Error"))
 
 		if not email_server:
 			return
@@ -783,7 +783,7 @@ def notify_unreplied():
 
 def pull(now=False):
 	"""Will be called via scheduler, pull emails from all enabled Email accounts."""
-	if frappe.cache().get_value("workers:no-internet") == True:
+	if frappe.cache().get_value("workers:no-internet") is True:
 		if test_internet():
 			frappe.cache().set_value("workers:no-internet", False)
 		else:
