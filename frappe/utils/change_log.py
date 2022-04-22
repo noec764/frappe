@@ -292,7 +292,7 @@ def show_update_popup():
 			release_links = ""
 			for app in updates[update_type]:
 				app = frappe._dict(app)
-				release_links += "<b>{title}</b>: <a href='https://gitlab.com/{org_name}/{app_name}/releases/tag/v{available_version}'>v{available_version}</a><br>".format(
+				release_links += "<b>{title}</b>: <a href='https://gitlab.com/{org_name}/{app_name}/-/releases/v{available_version}'>v{available_version}</a><br>".format(
 					available_version=app.available_version,
 					org_name=app.org_name,
 					app_name=app.app_name,

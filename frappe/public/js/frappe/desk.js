@@ -547,6 +547,14 @@ frappe.Application = class Application {
 		};
 	}
 
+	show_update_available() {
+		if (frappe.boot.sysdefaults.disable_system_update_notification) return;
+
+		frappe.call({
+			"method": "frappe.utils.change_log.show_update_popup"
+		});
+	}
+
 	setup_analytics() {
 		if(window.mixpanel) {
 			window.mixpanel.identify(frappe.session.user);
