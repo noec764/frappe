@@ -112,7 +112,8 @@ class Contact(Document):
 				break
 
 		if not primary_email_exists:
-			self.email_id = ""
+			self.email_ids[0].is_primary = 1
+			self.email_id = self.email_ids[0].email_id
 
 	def set_primary(self, fieldname):
 		# Used to set primary mobile and phone no.
