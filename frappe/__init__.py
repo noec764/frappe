@@ -346,11 +346,11 @@ def cache() -> "RedisWrapper":
 	return redis_server
 
 
-def get_traceback():
+def get_traceback(with_context=False):
 	"""Returns error traceback."""
 	from frappe.utils import get_traceback
 
-	return get_traceback()
+	return get_traceback(with_context=with_context)
 
 
 def errprint(msg):
@@ -358,7 +358,7 @@ def errprint(msg):
 
 	:param msg: Message."""
 	msg = as_unicode(msg)
-	if not request or (not "cmd" in local.form_dict) or conf.developer_mode:
+	if not request or ("cmd" not in local.form_dict) or conf.developer_mode:
 		print(msg)
 
 	error_log.append({"exc": msg})
@@ -2103,7 +2103,6 @@ def logger(
 
 def log_error(title=None, message=None, reference_doctype=None, reference_name=None):
 	"""Log error to Error Log"""
-
 	# Parameter ALERT:
 	# the title and message may be swapped
 	# the better API for this is log_error(title, message), and used in many cases this way
@@ -2116,20 +2115,15 @@ def log_error(title=None, message=None, reference_doctype=None, reference_name=N
 		else:
 			traceback = message
 
-	if not traceback:
-		traceback = get_traceback()
-
-	if not title:
-		title = "Error"
+	title = title or "Error"
+	traceback = as_unicode(traceback or get_traceback(with_context=True))
 
 	return get_doc(
-		dict(
-			doctype="Error Log",
-			error=as_unicode(traceback),
-			method=title,
-			reference_doctype=reference_doctype,
-			reference_name=reference_name,
-		)
+		doctype="Error Log",
+		error=traceback,
+		method=title,
+		reference_doctype=reference_doctype,
+		reference_name=reference_name,
 	).insert(ignore_permissions=True)
 
 

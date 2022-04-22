@@ -1077,7 +1077,7 @@ class Database(object):
 			now_datetime() - relativedelta(minutes=minutes),
 		)[0][0]
 
-	def get_db_table_columns(self, table):
+	def get_db_table_columns(self, table) -> List[str]:
 		"""Returns list of column names from given table."""
 		columns = frappe.cache().hget("table_columns", table)
 		if columns is None:
