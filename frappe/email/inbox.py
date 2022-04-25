@@ -39,6 +39,7 @@ def get_email_accounts(user=None):
 @frappe.whitelist()
 def create_email_flag_queue(names, action):
 	"""create email flag queue to mark email either as read or unread"""
+	from frappe.core.doctype.comment.comment import update_comment_in_doc
 
 	def mark_as_seen_unseen(name, action):
 		doc = frappe.get_doc("Communication", name)
@@ -48,6 +49,8 @@ def create_email_flag_queue(names, action):
 			_seen = json.loads(doc._seen or "[]")
 			_seen = [user for user in _seen if frappe.session.user != user]
 			doc.db_set("_seen", json.dumps(_seen), update_modified=False)
+
+		update_comment_in_doc(doc)
 
 	if not all([names, action]):
 		return

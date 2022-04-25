@@ -6,6 +6,7 @@
 import datetime
 import json
 import re
+from collections import Counter
 
 import frappe
 from frappe import _
@@ -294,22 +295,51 @@ def get_group_by_chart_config(chart, filters):
 		ignore_ifnull=True,
 	)
 
+	if group_by_field == "_assign":
+		data = get_assigned_by_data(data)
+
 	if data:
 		if chart.number_of_groups and chart.number_of_groups < len(data):
 			other_count = 0
 			for i in range(chart.number_of_groups - 1, len(data)):
 				other_count += data[i]["count"]
 			data = data[0 : chart.number_of_groups - 1]
-			data.append({"name": "Other", "count": other_count})
+			data.append({"name": _("Other"), "count": other_count})
 
 		chart_config = {
-			"labels": [item["name"] if item["name"] else "Not Specified" for item in data],
+			"labels": [item["name"] if item["name"] else _("Not Specified") for item in data],
 			"datasets": [{"name": chart.name, "values": [item["count"] for item in data]}],
 		}
 
 		return chart_config
 	else:
 		return None
+
+
+def get_assigned_by_data(data):
+	user_names = list(
+		set([frappe.parse_json(d.name)[0] for d in data if (d.name and frappe.parse_json(d.name))])
+	)
+	users = {
+		u.name: u.full_name
+		for u in frappe.get_all(
+			"User", filters={"name": ("in", user_names)}, fields=["name", "full_name"]
+		)
+	}
+	count = Counter()
+	for d in data:
+		if d["name"] and frappe.parse_json(d.name):
+			d["name"] = users.get(frappe.parse_json(d.name)[0])
+		elif not d["name"] or not frappe.parse_json(d.name):
+			d["name"] = _("Not Specified")
+
+		count[d["name"]] += d["count"]
+
+	output = []
+	for c in count:
+		output.append({"name": c, "count": count[c]})
+
+	return output
 
 
 def get_aggregate_function(chart_type):

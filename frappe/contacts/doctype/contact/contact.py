@@ -112,7 +112,8 @@ class Contact(Document):
 				break
 
 		if not primary_email_exists:
-			self.email_id = ""
+			self.email_ids[0].is_primary = 1
+			self.email_id = self.email_ids[0].email_id
 
 	def set_primary(self, fieldname):
 		# Used to set primary mobile and phone no.
@@ -149,6 +150,10 @@ class Contact(Document):
 				data = frappe.get_all(table, filters={"parenttype": "Contact", "parent": old_name})
 				for d in data:
 					frappe.db.set_value(table, d.name, "parent", new_name)
+
+	def has_website_permission(self, ptype, user, verbose=False):
+		"""Returns true if the user is linked to the contact"""
+		return self.user == frappe.session.user
 
 
 def get_default_contact(doctype, name):

@@ -486,6 +486,7 @@ class Document(BaseDocument):
 				"frappe.core.doctype.archived_document.archived_document.create_archive",
 				doc=self,
 				queue="long",
+				enqueue_after_commit=True,
 			)
 
 	def get_title(self):

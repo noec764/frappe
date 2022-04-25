@@ -16,16 +16,21 @@ def add_random_children(doc, fieldname, rows, randomize, unique=None):
 
 	for i in range(nrows):
 		d = {}
+		valid_child = True
 		for key, val in randomize.items():
 			if isinstance(val[0], str):
 				d[key] = get_random(*val)
 			else:
 				d[key] = random.randrange(*val)
 
-		if unique:
+			if d[key] is None:
+				valid_child = False
+				break
+
+		if valid_child and unique:
 			if not doc.get(fieldname, {unique: d[unique]}):
 				doc.append(fieldname, d)
-		else:
+		elif valid_child:
 			doc.append(fieldname, d)
 
 

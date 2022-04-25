@@ -404,4 +404,5 @@ translated_search_doctypes = [
 	"Dashboard Chart",
 	"Number Card",
 	"Country",
+	"Web Template",
 ]
