@@ -72,14 +72,14 @@ context('Kanban Board', () => {
 
 	});
 
-	it('Drag todo', () => {
-		cy.intercept({
-			method: 'POST',
-			url: 'api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order_for_single_card'
-		}).as('drag-completed');
+	// it('Drag todo', () => {
+	// 	cy.intercept({
+	// 		method: 'POST',
+	// 		url: 'api/method/frappe.desk.doctype.kanban_board.kanban_board.update_order_for_single_card'
+	// 	}).as('drag-completed');
 
-		cy.get('.kanban-card-body:first').drag('[data-column-value="Closed"] .kanban-cards', {force: true});
+	// 	cy.get('.kanban-card-body:first').drag('[data-column-value="Closed"] .kanban-cards', {force: true});
 
-		cy.wait('@drag-completed');
-	});
+	// 	cy.wait('@drag-completed');
+	// });
 });
