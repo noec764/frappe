@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 import json
+from frappe.utils.data import add_months, getdate
 from six import string_types
 from frappe.integrations.utils import json_handler
 
@@ -49,7 +50,8 @@ class IntegrationRequest(Document):
 def retry_failed_webhooks(service=None):
 	filters = {
 		"status": ["in", ["Failed", "Queued"]],
-		"integration_type": "Webhook"
+		"integration_type": "Webhook",
+		"creation": ("<", add_months(getdate(), -1))
 	}
 
 	if service:
