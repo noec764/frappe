@@ -1,7 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
-
 """Use blog post test to test user permissions logic"""
 
 import frappe
@@ -25,27 +23,26 @@ from frappe.utils.data import now_datetime
 test_dependencies = ["Blogger", "Blog Post", "User", "Contact", "Salutation"]
 
 
-class TestPermissions(unittest.TestCase):
+class TestPermissions(FrappeTestCase):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		frappe.clear_cache(doctype="Blog Post")
+		user = frappe.get_doc("User", "test1@example.com")
+		user.add_roles("Website Manager")
+		user.add_roles("System Manager")
+
+		user = frappe.get_doc("User", "test2@example.com")
+		user.add_roles("Blogger")
+
+		user = frappe.get_doc("User", "test3@example.com")
+		user.add_roles("Sales User")
+
+		user = frappe.get_doc("User", "testperm@example.com")
+		user.add_roles("Website Manager")
+
 	def setUp(self):
 		frappe.clear_cache(doctype="Blog Post")
-
-		if not frappe.flags.permission_user_setup_done:
-			user = frappe.get_doc("User", "test1@example.com")
-			user.add_roles("Website Manager")
-			user.add_roles("System Manager")
-
-			user = frappe.get_doc("User", "test2@example.com")
-			user_roles = frappe.get_roles()
-			user.remove_roles(*user_roles)
-			user.add_roles("Blogger")
-
-			user = frappe.get_doc("User", "test3@example.com")
-			user.add_roles("Sales User")
-
-			user = frappe.get_doc("User", "testperm@example.com")
-			user.add_roles("Website Manager")
-
-			frappe.flags.permission_user_setup_done = True
 
 		reset("Blogger")
 		reset("Blog Post")
@@ -177,11 +174,7 @@ class TestPermissions(unittest.TestCase):
 
 		# this user can't add user permissions
 		self.assertRaises(
-			frappe.PermissionError,
-			add_user_permission,
-			"Blog Post",
-			"-test-blog-post",
-			"test2@example.com",
+			frappe.PermissionError, add_user_permission, "Blog Post", "-test-blog-post", "test2@example.com"
 		)
 
 	def test_read_if_explicit_user_permissions_are_set(self):

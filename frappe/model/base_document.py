@@ -358,7 +358,7 @@ class BaseDocument(object):
 
 	@property
 	def docstatus(self):
-		return DocStatus(self.get("docstatus"))
+		return DocStatus(cint(self.get("docstatus")))
 
 	@docstatus.setter
 	def docstatus(self, value):
