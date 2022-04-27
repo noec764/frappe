@@ -893,6 +893,7 @@
   "currency_symbol": "\u20ac",
   "number_format": "# ###,##",
   "date_format": "dd/mm/yyyy",
+  "time_format": "HH:mm",
   "timezones": [
    "Europe/Paris"
   ]
@@ -960,6 +961,8 @@
   "currency_name": "Euro",
   "currency_symbol": "\u20ac",
   "number_format": "#.###,##",
+  "date_format": "dd.mm.yyyy",
+  "time_format": "HH:mm",
   "timezones": [
    "Europe/Berlin"
   ]
