@@ -1,9 +1,8 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+import functools
 import json
 import re
-
-import wrapt
 
 import frappe
 from frappe import _, is_whitelisted
@@ -330,17 +329,20 @@ def relevance_sorter(key, query, as_dict):
 	return (cstr(value).lower().startswith(query.lower()) is not True, value)
 
 
-@wrapt.decorator
-def validate_and_sanitize_search_inputs(fn, instance, args, kwargs):
-	kwargs.update(dict(zip(fn.__code__.co_varnames, args)))
-	sanitize_searchfield(kwargs["searchfield"])
-	kwargs["start"] = cint(kwargs["start"])
-	kwargs["page_len"] = cint(kwargs["page_len"])
+def validate_and_sanitize_search_inputs(fn):
+	@functools.wraps(fn)
+	def wrapper(*args, **kwargs):
+		kwargs.update(dict(zip(fn.__code__.co_varnames, args)))
+		sanitize_searchfield(kwargs["searchfield"])
+		kwargs["start"] = cint(kwargs["start"])
+		kwargs["page_len"] = cint(kwargs["page_len"])
 
-	if kwargs["doctype"] and not frappe.db.exists("DocType", kwargs["doctype"]):
-		return []
+		if kwargs["doctype"] and not frappe.db.exists("DocType", kwargs["doctype"]):
+			return []
 
-	return fn(**kwargs)
+		return fn(**kwargs)
+
+	return wrapper
 
 
 @frappe.whitelist()
