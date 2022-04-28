@@ -420,7 +420,7 @@ class DatabaseQuery(object):
 			f.update(get_additional_filter_field(additional_filters_config, f, f.value))
 
 		# prepare in condition
-		if f.operator.lower() in ('ancestors of', 'descendants of', 'not ancestors of', 'not descendants of', 'value or descendants of'):
+		if f.operator.lower() in ('ancestors of', 'descendants of', 'not ancestors of', 'not descendants of', 'equals or descendants of'):
 			values = f.value or ''
 
 			# TODO: handle list and tuple
@@ -443,7 +443,7 @@ class DatabaseQuery(object):
 					'lft': ['>', lft],
 					'rgt': ['<', rgt]
 				}, order_by='`lft` ASC')
-			elif f.operator.lower() == 'value or descendants of' :
+			elif f.operator.lower() == 'equals or descendants of' :
 				result = frappe.get_all(ref_doctype, filters={
 					'lft': ['>=', lft],
 					'rgt': ['<=', rgt]

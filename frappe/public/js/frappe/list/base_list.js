@@ -49,7 +49,7 @@ frappe.views.BaseList = class BaseList {
 
 		this.fields = [];
 		this.filters = [];
-		this.nested_set_conditions = ['descendants of', 'not descendants of', 'ancestors of', 'not ancestors of']
+		this.nested_set_conditions = ['descendants of', 'not descendants of', 'ancestors of', 'not ancestors of', 'equals or descendants of']
 		this.sort_by = "modified";
 		this.sort_order = "desc";
 
@@ -709,11 +709,6 @@ class FilterArea {
 
 		fields = fields.concat(
 				standard_filter_fields.map(df => {
-					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
-						return Object.assign(df, {condition: "value or descendants of"})
-					}
-					return df
-				}).map((df) => {
 					let options = df.options;
 					let condition = df.condition || "=";
 					let fieldtype = df.fieldtype;
@@ -730,6 +725,9 @@ class FilterArea {
 					) {
 						fieldtype = "Data";
 						condition = "like";
+					}
+					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
+						condition = "equals or descendants of"
 					}
 					if (df.fieldtype == "Select" && df.options) {
 						options = df.options.split("\n");
