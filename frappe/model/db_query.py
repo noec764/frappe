@@ -567,7 +567,7 @@ class DatabaseQuery(object):
 			"descendants of",
 			"not ancestors of",
 			"not descendants of",
-			"value or descendants of",
+			"equals or descendants of",
 		):
 			values = f.value or ""
 
@@ -587,7 +587,7 @@ class DatabaseQuery(object):
 				result = frappe.get_all(
 					ref_doctype, filters={"lft": [">", lft], "rgt": ["<", rgt]}, order_by="`lft` ASC"
 				)
-			elif f.operator.lower() == "value or descendants of":
+			elif f.operator.lower() == "equals or descendants of":
 				result = frappe.get_all(
 					ref_doctype, filters={"lft": [">=", lft], "rgt": ["<=", rgt]}, order_by="`lft` ASC"
 				)

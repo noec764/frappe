@@ -57,13 +57,11 @@ frappe.ui.FieldSelect = class FieldSelect {
 			this.set_value(value);
 		}
 	}
-
 	clear() {
 		this.selected_doctype = null;
 		this.selected_fieldname = null;
 		this.$input.val("");
 	}
-
 	set_value(doctype, fieldname) {
 		var me = this;
 		this.clear();
@@ -85,7 +83,6 @@ frappe.ui.FieldSelect = class FieldSelect {
 			}
 		});
 	}
-
 	build_options() {
 		var me = this;
 		me.table_fields = [];
@@ -101,7 +98,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 			std_filters = std_filters.concat([{
 				fieldname: 'parent',
 				fieldtype: 'Data',
-				label: __('Parent'),
+				label: _('Parent'),
 				parent: me.doctype,
 			}]);
 		}
@@ -121,8 +118,18 @@ frappe.ui.FieldSelect = class FieldSelect {
 				me.parent_doctype : me.doctype;
 
 			// show fields where user has read access and if report hide flag is not set
-			if (frappe.perm.has_perm(doctype, df.permlevel, "read"))
+			if (frappe.perm.has_perm(doctype, df.permlevel, "read")) {
+				if (df.fieldtype == "Select" && typeof(df.options) == "string") {
+					const options = df.options.split("\n").map(o => {
+						return {
+							label: __(o),
+							value: o
+						}
+					})
+					df.options = options
+				}
 				me.add_field_option(df);
+			}
 		});
 
 		// child tables
@@ -135,13 +142,15 @@ frappe.ui.FieldSelect = class FieldSelect {
 						.find(df => df.fieldtype === 'Link');
 					child_table_fields = link_field ? [link_field] : [];
 				}
+
 				$.each(frappe.utils.sort(child_table_fields, "label", "string"), function(i, df) {
 					let doctype = frappe.get_meta(me.doctype).istable && me.parent_doctype ?
 						me.parent_doctype : me.doctype;
 
 					// show fields where user has read access and if report hide flag is not set
-					if (frappe.perm.has_perm(doctype, df.permlevel, "read"))
+					if (frappe.perm.has_perm(doctype, df.permlevel, "read")) {
 						me.add_field_option(df);
+					}
 				});
 			}
 		});

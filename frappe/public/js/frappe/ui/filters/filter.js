@@ -33,6 +33,7 @@ frappe.ui.Filter = class {
 			['not descendants of', __('Not Descendants Of')],
 			['ancestors of', __('Ancestors Of')],
 			['not ancestors of', __('Not Ancestors Of')],
+			['equals or descendants of', __("Equals or descendant of")]
 		];
 
 		this.conditions.push(...this.nested_set_conditions);
@@ -464,6 +465,8 @@ frappe.ui.filter_utils = {
 			return 'like';
 		} else if (df.fieldtype == 'Date' || df.fieldtype == 'Datetime') {
 			return 'Between';
+		} else if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
+			return 'equals or descendants of'
 		} else {
 			return '=';
 		}
@@ -521,6 +524,7 @@ frappe.ui.filter_utils = {
 				'ancestors of',
 				'not descendants of',
 				'not ancestors of',
+				'equals or descendants of'
 			].indexOf(condition) == -1
 		) {
 			df.fieldtype = 'Data';

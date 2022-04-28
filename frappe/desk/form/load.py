@@ -272,6 +272,7 @@ def _get_communications(doctype, name, start=0, limit=20):
 		c.get("name"): c.get("seen")
 		for c in get_comments_from_parent(frappe._dict(reference_doctype=doctype, reference_name=name))
 	}
+
 	for c in communications:
 		if c.communication_type == "Communication":
 			c.attachments = json.dumps(
@@ -282,7 +283,7 @@ def _get_communications(doctype, name, start=0, limit=20):
 				)
 			)
 
-		if not c.seen or not parent_comments.get(c.name):
+		if not c.seen or (c.name in parent_comments and not parent_comments.get(c.name)):
 			comm = frappe.get_doc("Communication", c.name)
 			comm.seen = True
 			comm.flags.document_load = True
