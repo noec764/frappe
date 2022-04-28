@@ -40,6 +40,7 @@ import './multiselect_list';
 import './rating';
 import './duration';
 import './icon';
+import './phone';
 import './json';
 
 frappe.ui.form.make_control = function (opts) {
