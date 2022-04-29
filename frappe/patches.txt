@@ -1,5 +1,5 @@
 [pre_model_sync]
-frappe.patches.v12_0.remove_deprecated_fields_from_doctype
+frappe.patches.v12_0.remove_deprecated_fields_from_doctype #2022-04-29
 execute:frappe.utils.global_search.setup_global_search_table()
 execute:frappe.reload_doc('core', 'doctype', 'doctype_action', force=True)
 execute:frappe.reload_doc('core', 'doctype', 'doctype_link', force=True) #2020-10-17

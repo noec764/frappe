@@ -26,7 +26,6 @@
   "custom",
   "beta",
   "is_virtual",
-  "image_view",
   "app",
   "fields_section_break",
   "fields",
@@ -44,8 +43,6 @@
   "nsm_parent_field",
   "max_attachments",
   "column_break_29",
-  "read_only_onload",
-  "hide_heading",
   "hide_toolbar",
   "allow_copy",
   "allow_import",
@@ -215,13 +212,6 @@
    "label": "Beta"
   },
   {
-   "default": "0",
-   "depends_on": "eval: doc.image_field",
-   "fieldname": "image_view",
-   "fieldtype": "Check",
-   "label": "Image View"
-  },
-  {
    "fieldname": "app",
    "fieldtype": "Data",
    "hidden": 1,
@@ -303,22 +293,6 @@
   {
    "fieldname": "column_break_29",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "fieldname": "read_only_onload",
-   "fieldtype": "Check",
-   "label": "Show Print First",
-   "oldfieldname": "read_only_onload",
-   "oldfieldtype": "Check"
-  },
-  {
-   "default": "0",
-   "fieldname": "hide_heading",
-   "fieldtype": "Check",
-   "label": "Hide Heading",
-   "oldfieldname": "hide_heading",
-   "oldfieldtype": "Check"
   },
   {
    "default": "0",
@@ -729,7 +703,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2022-02-15 21:47:16.467217",
+ "modified": "2022-04-15 21:47:16.467217",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
