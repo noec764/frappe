@@ -144,8 +144,8 @@ class RazorpaySettings(Document):
 					headers={"content-type": "application/json"},
 				)
 				if not resp.get("id"):
-					frappe.log_error(str(resp), "Razorpay Failed while creating subscription")
-		except:
+					frappe.log_error(message=str(resp), title="Razorpay Failed while creating subscription")
+		except Exception:
 			frappe.log_error(frappe.get_traceback())
 			# failed
 			pass
@@ -183,9 +183,9 @@ class RazorpaySettings(Document):
 				frappe.flags.status = "created"
 				return kwargs
 			else:
-				frappe.log_error(str(resp), "Razorpay Failed while creating subscription")
+				frappe.log_error(message=str(resp), title="Razorpay Failed while creating subscription")
 
-		except:
+		except Exception:
 			frappe.log_error(frappe.get_traceback())
 			# failed
 			pass
@@ -288,9 +288,9 @@ class RazorpaySettings(Document):
 					self.flags.status_changed_to = "Verified"
 
 			else:
-				frappe.log_error(str(resp), "Razorpay Payment not authorized")
+				frappe.log_error(message=str(resp), title="Razorpay Payment not authorized")
 
-		except:
+		except Exception:
 			frappe.log_error(frappe.get_traceback())
 			# failed
 			pass
