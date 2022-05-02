@@ -458,6 +458,7 @@ def evaluate_alert(doc, alert, event):
 			doc.reload()
 
 		alert.send(doc)
+		doc.flags.notifications_executed.append(alert.name)
 	except TemplateError:
 		frappe.throw(_("Error while evaluating Notification {0}. Please fix your template.").format(alert))
 	except Exception as e:
