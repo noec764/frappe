@@ -210,7 +210,7 @@ class BraintreeSettings(PaymentGatewayController):
 		self.data = frappe._dict(data)
 
 		try:
-			self.integration_request = create_request_log(self.data, "Request", "Braintree")
+			self.integration_request = create_request_log(self.data, service_name="Braintree")
 			return self.create_charge_on_braintree()
 
 		except Exception:

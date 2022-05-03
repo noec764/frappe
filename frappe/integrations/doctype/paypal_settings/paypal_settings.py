@@ -186,9 +186,7 @@ class PayPalSettings(Document):
 				"correlation_id": response.get("CORRELATIONID")[0],
 			}
 		)
-		self.integration_request = create_request_log(
-			kwargs, "Request", "PayPal", response.get("TOKEN")[0]
-		)
+		create_request_log(kwargs, service_name="PayPal", name=kwargs["token"])
 
 		return return_url.format(kwargs["token"])
 
@@ -472,6 +470,7 @@ def ipn_handler():
 				"data": json.dumps(frappe.local.form_dict, indent=4),
 				"doctype": "Integration Request",
 				"integration_type": "Webhook",
+				"is_remote_request": 1,
 				"status": "Queued",
 			}
 		).insert(ignore_permissions=True)
