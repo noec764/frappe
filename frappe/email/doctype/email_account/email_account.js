@@ -134,10 +134,11 @@ frappe.ui.form.on("Email Account", {
 
 	show_gmail_message_for_less_secure_apps: function(frm) {
 		frm.dashboard.clear_headline();
+		let msg = __("GMail will only work if you enable 2-step authentication and use app-specific password.");
+		let cta = __("Read the step by step guide here.");
+		msg += __(`<a target="_blank" href="https://support.google.com/mail/answer/185833?hl=en">${cta}</a>`);
 		if(frm.doc.service==="GMail") {
-			frm.dashboard.set_headline_alert(
-				__('Gmail will only work if you use an App Password. <a target="_blank" href="https://support.google.com/mail/answer/185833?hl=en">Read this for details</a>')
-			);
+			frm.dashboard.set_headline_alert(msg);
 		}
 	},
 
