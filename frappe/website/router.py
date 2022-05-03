@@ -300,7 +300,7 @@ def setup_source(page_info):
 	jenv = frappe.get_jenv()
 	source = jenv.loader.get_source(jenv, page_info.template)[0]
 	html = ''
-	print(page_info.template)
+
 	if page_info.template.endswith(('.md', '.html')):
 		# extract frontmatter block if exists
 		try:
@@ -334,7 +334,6 @@ def setup_source(page_info):
 			page_info.colocated_js = js
 
 	css_path = os.path.join(page_info.basepath, (page_info.basename or 'index') + '.css')
-
 	if os.path.exists(css_path) and '{% block style %}' not in html:
 		with io.open(css_path, 'r', encoding='utf-8') as f:
 			css = f.read()
