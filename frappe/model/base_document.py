@@ -1,6 +1,5 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
 import datetime
 import json
 from typing import Dict, List
@@ -39,6 +38,7 @@ DOCTYPES_FOR_DOCTYPE = {"DocType", *TABLE_DOCTYPES_FOR_DOCTYPE.values()}
 def get_controller(doctype):
 	"""Returns the **class** object of the given DocType.
 	For `custom` type, returns `frappe.model.document.Document`.
+
 	:param doctype: DocType name as string."""
 
 	def _get_controller():
@@ -128,6 +128,7 @@ class BaseDocument(object):
 
 	def update(self, d):
 		"""Update multiple fields of a doctype using a dictionary of key-value pairs.
+
 		Example:
 		        doc.update({
 		                "user": "admin",
@@ -204,6 +205,7 @@ class BaseDocument(object):
 
 	def append(self, key, value=None):
 		"""Append an item to a child table.
+
 		Example:
 		        doc.append("childtable", {
 		                "child_table_field": "value",
@@ -282,14 +284,9 @@ class BaseDocument(object):
 		return self.meta.get_table_fields()
 
 	def get_valid_dict(
-		self,
-		sanitize=True,
-		convert_dates_to_str=False,
-		ignore_nulls=False,
-		ignore_virtual=False,
+		self, sanitize=True, convert_dates_to_str=False, ignore_nulls=False, ignore_virtual=False
 	) -> Dict:
 		d = _dict()
-
 		for fieldname in self.meta.get_valid_columns():
 			# column is valid, we can use getattr
 			d[fieldname] = getattr(self, fieldname, None)
@@ -299,6 +296,7 @@ class BaseDocument(object):
 				continue
 
 			df = self.meta.get_field(fieldname)
+
 			if df:
 				if getattr(df, "is_virtual", False):
 					if ignore_virtual:
@@ -456,6 +454,7 @@ class BaseDocument(object):
 
 	def db_insert(self, ignore_if_duplicate=False):
 		"""INSERT the document (with valid columns) in the database.
+
 		args:
 		        ignore_if_duplicate: ignore primary key collision
 		                                        at database level (postgres)
@@ -475,7 +474,7 @@ class BaseDocument(object):
 			self.creation = self.modified = now()
 			self.created_by = self.modified_by = frappe.session.user
 
-		# if doctype is "DocType", don't insert null values as we don't know if it is valid yet
+		# if doctype is "DocType", don't insert null values as we don't know who is valid yet
 		d = self.get_valid_dict(
 			convert_dates_to_str=True,
 			ignore_nulls=self.doctype in DOCTYPES_FOR_DOCTYPE,
@@ -580,10 +579,13 @@ class BaseDocument(object):
 	def get_field_name_by_key_name(self, key_name):
 		"""MariaDB stores a mapping between `key_name` and `column_name`.
 		This function returns the `column_name` associated with the `key_name` passed
+
 		Args:
 		        key_name (str): The name of the database index.
+
 		Raises:
 		        IndexError: If the key is not found in the table.
+
 		Returns:
 		        str: The column name associated with the key.
 		"""
@@ -604,8 +606,10 @@ class BaseDocument(object):
 
 	def get_label_from_fieldname(self, fieldname):
 		"""Returns the associated label for fieldname
+
 		Args:
 		        fieldname (str): The fieldname in the DocType to use to pull the label.
+
 		Returns:
 		        str: The label associated with the fieldname, if found, otherwise `None`.
 		"""
@@ -690,7 +694,6 @@ class BaseDocument(object):
 					doctype = df.options
 					if not doctype:
 						frappe.throw(_("Options not set for link field {0}").format(df.fieldname))
-
 				else:
 					doctype = self.get(df.options)
 					if not doctype:
@@ -698,7 +701,7 @@ class BaseDocument(object):
 
 				# MySQL is case insensitive. Preserve case of the original docname in the Link Field.
 
-				# get a map of values to fetch along with this link query
+				# get a map of values ot fetch along with this link query
 				# that are mapped as link_fieldname.source_fieldname in Options of
 				# Readonly or Data or Text type fields
 
@@ -708,7 +711,6 @@ class BaseDocument(object):
 					if not _df.get("fetch_if_empty")
 					or (_df.get("fetch_if_empty") and not self.get(_df.fieldname))
 				]
-
 				if not frappe.get_meta(doctype).get("is_virtual"):
 					if not fields_to_fetch:
 						# cache a single value type
@@ -1059,13 +1061,7 @@ class BaseDocument(object):
 		return self._precision[cache_key][fieldname]
 
 	def get_formatted(
-		self,
-		fieldname,
-		doc=None,
-		currency=None,
-		absolute_value=False,
-		translated=False,
-		format=None,
+		self, fieldname, doc=None, currency=None, absolute_value=False, translated=False, format=None
 	):
 		from frappe.utils.formatters import format_value
 

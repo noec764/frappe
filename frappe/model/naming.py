@@ -32,11 +32,11 @@ def set_new_name(doc, draft_name=False):
 
 	doc.run_method("before_naming")
 
+	meta = frappe.get_meta(doc.doctype)
 	if draft_name:
 		doc.name = "({0})".format(make_autoname("hash", doc.doctype))
 
 	else:
-		meta = frappe.get_meta(doc.doctype)
 		autoname = meta.autoname or ""
 
 		if autoname.lower() != "prompt" and not frappe.flags.in_import:

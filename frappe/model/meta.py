@@ -139,13 +139,12 @@ class Meta(Document):
 		def serialize(doc):
 			out = {}
 			for key, value in doc.__dict__.items():
-
 				if isinstance(value, (list, tuple)):
 					if not value or not isinstance(value[0], BaseDocument):
 						# non standard list object, skip
 						continue
 
-				value = [serialize(d) for d in value]
+					value = [serialize(d) for d in value]
 
 				if (not no_nulls and value is None) or isinstance(
 					value, (str, int, float, datetime, list, tuple)
@@ -480,12 +479,7 @@ class Meta(Document):
 		if frappe.flags.in_patch or frappe.flags.in_install:
 			return
 
-		if not self.istable and self.name not in (
-			"DocType",
-			"DocField",
-			"DocPerm",
-			"Custom DocPerm",
-		):
+		if not self.istable and self.name not in ("DocType", "DocField", "DocPerm", "Custom DocPerm"):
 			custom_perms = frappe.get_all(
 				"Custom DocPerm",
 				fields="*",
@@ -609,7 +603,7 @@ class Meta(Document):
 			if not link.added:
 				# group not found, make a new group
 				data.transactions.append(
-					dict(label=_(link.group), items=[link.parent_doctype or link.link_doctype])
+					dict(label=link.group, items=[link.parent_doctype or link.link_doctype])
 				)
 
 			if not link.is_child_table:
@@ -621,10 +615,7 @@ class Meta(Document):
 			elif link.is_child_table:
 				if not data.fieldname:
 					data.fieldname = link.link_fieldname
-				data.internal_links[link.parent_doctype] = [
-					link.table_fieldname,
-					link.link_fieldname,
-				]
+				data.internal_links[link.parent_doctype] = [link.table_fieldname, link.link_fieldname]
 
 	def get_row_template(self):
 		return self.get_web_template(suffix="_row")
@@ -661,10 +652,7 @@ def is_single(doctype):
 
 def get_parent_dt(dt):
 	parent_dt = frappe.db.get_all(
-		"DocField",
-		"parent",
-		dict(fieldtype=["in", frappe.model.table_fields], options=dt),
-		limit=1,
+		"DocField", "parent", dict(fieldtype=["in", frappe.model.table_fields], options=dt), limit=1
 	)
 	return parent_dt and parent_dt[0].parent or ""
 
@@ -773,9 +761,7 @@ def trim_tables(doctype=None, dry_run=False, quiet=False):
 				continue
 			click.secho(f"Ignoring missing table for DocType: {doctype}", fg="yellow", err=True)
 			click.secho(
-				f"Consider removing record in the DocType table for {doctype}",
-				fg="yellow",
-				err=True,
+				f"Consider removing record in the DocType table for {doctype}", fg="yellow", err=True
 			)
 		except Exception as e:
 			if quiet:
