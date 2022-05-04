@@ -55,11 +55,12 @@
 		"space-before-blocks": "warn",
 		"keyword-spacing": "warn",
 		"comma-spacing": "warn",
-		"key-spacing": "warn"
+		"key-spacing": "warn",
 	},
 	"root": true,
 	"globals": {
 		"frappe": true,
+		"Vue": true,
 		"__": true,
 		"repl": true,
 		"Class": true,
@@ -119,11 +120,9 @@
 		"getCookie": true,
 		"getCookies": true,
 		"get_url_arg": true,
-
 		"md5": true,
 		"$": true,
 		"jQuery": true,
-		"Vue": true,
 		"moment": true,
 		"hljs": true,
 		"Awesomplete": true,

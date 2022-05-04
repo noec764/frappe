@@ -417,7 +417,7 @@ async function write_assets_json(metafile) {
 		assets_json_path,
 		JSON.stringify(new_assets_json, null, 4)
 	);
-	await update_assets_json_in_cache(assets_json);
+	await update_assets_json_in_cache();
 	return {
 		new_assets_json,
 		prev_assets_json

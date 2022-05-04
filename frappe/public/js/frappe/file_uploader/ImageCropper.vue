@@ -3,7 +3,6 @@
 		<div>
 			<img ref="image" :src="src" :alt="file.name" />
 		</div>
-		<br/>
 		<div class="image-cropper-actions">
 			<div>
 				<div class="btn-group" v-if="fixed_aspect_ratio == null">
@@ -100,6 +99,7 @@ export default {
 					value: NaN
 				}
 			];
+		}
 	},
 	methods: {
 		crop_image() {
