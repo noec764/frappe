@@ -116,7 +116,7 @@ def rename_doc(
 	ignore_if_exists: bool = False,
 	show_alert: bool = True,
 	rebuild_search: bool = True,
-	doc: Optional[Document] = None,
+	doc: Optional["Document"] = None,
 	validate: bool = True,
 ) -> str:
 	"""Rename a doc(dt, old) to doc(dt, new) and update all linked fields of type "Link".
