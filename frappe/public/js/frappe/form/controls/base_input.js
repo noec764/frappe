@@ -121,7 +121,7 @@ frappe.ui.form.ControlInput = frappe.ui.form.Control.extend({
 			value = this.value || value;
 		}
 		if (this.df.fieldtype === 'Data') {
-			value = frappe.utils.escape_html(value);
+			value = frappe.utils.escape_html(value || "");
 		}
 		let doc = this.doc || (this.frm && this.frm.doc);
 		let display_value = frappe.format(value, this.df, { no_icon: true, inline: true }, doc);
