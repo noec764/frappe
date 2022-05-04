@@ -16,7 +16,6 @@ from frappe.model import optional_fields, table_fields
 from frappe.model.base_document import BaseDocument, get_controller
 from frappe.model.docstatus import DocStatus
 from frappe.model.naming import set_new_name, validate_name
-from frappe.model.rename_doc import rename_doc
 from frappe.model.workflow import set_workflow_state_on_action, validate_workflow
 from frappe.utils import cstr, date_diff, file_lock, flt, get_datetime_str, now
 from frappe.utils.data import get_absolute_url
@@ -346,6 +345,8 @@ class Document(BaseDocument):
 		if self._action == "submit" and getattr(self.meta, "name_after_submit"):
 			self._draft_name = self.name
 			self.set_new_name()
+			from frappe.model.rename_doc import rename_doc
+
 			rename_doc(
 				self.doctype,
 				self._draft_name,

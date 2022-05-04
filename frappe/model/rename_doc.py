@@ -4,7 +4,6 @@ from typing import TYPE_CHECKING, Dict, List, Optional
 
 import frappe
 from frappe import _, bold
-from frappe.model.document import Document
 from frappe.model.dynamic_links import get_dynamic_link_map
 from frappe.model.naming import validate_name
 from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
@@ -15,6 +14,7 @@ from frappe.utils.password import rename_password
 from frappe.utils.scheduler import is_scheduler_inactive
 
 if TYPE_CHECKING:
+	from frappe.model.document import Document
 	from frappe.model.meta import Meta
 
 
