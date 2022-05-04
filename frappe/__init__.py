@@ -39,7 +39,7 @@ from .utils.jinja import (
 )
 from .utils.lazy_loader import lazy_import
 
-__version__ = "2.9.0"
+__version__ = "3.x.x"
 __title__ = "Dodock Framework"
 
 local = Local()
