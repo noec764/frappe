@@ -30,7 +30,11 @@ from frappe.model import (
 	optional_fields,
 	table_fields,
 )
-from frappe.model.base_document import BaseDocument
+from frappe.model.base_document import (
+	DOCTYPE_TABLE_FIELDS,
+	TABLE_DOCTYPES_FOR_DOCTYPE,
+	BaseDocument,
+)
 from frappe.model.document import Document
 from frappe.model.workflow import get_workflow_name
 from frappe.modules import load_doctype_module
@@ -149,9 +153,9 @@ class Meta(Document):
 					out[key] = value
 
 			# set empty lists for unset table fields
-			for table_field in DOCTYPE_TABLE_FIELDS:
-				if out.get(table_field.fieldname) is None:
-					out[table_field.fieldname] = []
+			for fieldname in TABLE_DOCTYPES_FOR_DOCTYPE.keys():
+				if out.get(fieldname) is None:
+					out[fieldname] = []
 
 			return out
 
@@ -226,13 +230,7 @@ class Meta(Document):
 		return self._valid_columns
 
 	def get_table_field_doctype(self, fieldname):
-		return {
-			"fields": "DocField",
-			"permissions": "DocPerm",
-			"actions": "DocType Action",
-			"links": "DocType Link",
-			"states": "DocType State",
-		}.get(fieldname)
+		return TABLE_DOCTYPES_FOR_DOCTYPE.get(fieldname)
 
 	def get_field(self, fieldname):
 		"""Return docfield from meta"""
@@ -650,14 +648,6 @@ class Meta(Document):
 	def is_nested_set(self):
 		return self.has_field("lft") and self.has_field("rgt")
 
-
-DOCTYPE_TABLE_FIELDS = [
-	frappe._dict({"fieldname": "fields", "options": "DocField"}),
-	frappe._dict({"fieldname": "permissions", "options": "DocPerm"}),
-	frappe._dict({"fieldname": "actions", "options": "DocType Action"}),
-	frappe._dict({"fieldname": "links", "options": "DocType Link"}),
-	frappe._dict({"fieldname": "states", "options": "DocType State"}),
-]
 
 #######
 
