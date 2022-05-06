@@ -1,9 +1,8 @@
 import os
-from typing import Callable, Dict, List, Optional, Set
+from typing import Callable, Dict, List, Optional, Set, TypeVar
 
 import frappe  # type: ignore
-import owncloud  # type: ignore
-from owncloud import HTTPResponseError, FileInfo  # type: ignore
+from owncloud import HTTPResponseError, FileInfo
 
 from frappe.core.doctype.file.file import File
 from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings
@@ -13,6 +12,9 @@ from .Entry import Entry, EntryLocal, EntryRemote
 from .utils_time import convert_utc_to_local_time, strip_datetime_milliseconds, set_timezone_to_local
 from .utils_normalize_paths import util_denormalize_to_local_path, util_denormalize_to_remote_path, util_normalize_local_path, util_normalize_remote_path
 from .utils import maybe_int
+
+
+Pathable = TypeVar('Pathable', Entry, FileInfo)
 
 
 class Common:
@@ -110,6 +112,7 @@ class Common:
 		)
 
 	def convert_local_doc_to_entry(self, doc: File) -> EntryLocal:
+		assert isinstance(doc, File)
 		path = util_normalize_local_path(doc.folder, doc.file_name, doc.is_folder)
 
 		last_updated = frappe.utils.get_datetime(doc.modified)
@@ -272,8 +275,8 @@ class Common:
 
 		return children_ids
 
-	def _filter(self, files: List[FileInfo]) -> List[FileInfo]:
-		def f(file: FileInfo) -> bool:
+	def _filter(self, files: List[Pathable]) -> List[Pathable]:
+		def f(file: Pathable) -> bool:
 			path = file.path
 			return all((
 				path.startswith(self.root),

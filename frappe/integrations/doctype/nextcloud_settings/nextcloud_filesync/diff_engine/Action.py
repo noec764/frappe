@@ -113,7 +113,13 @@ class Action():
 			filter(lambda s: s.startswith('local'), valid_types))
 
 		if self.type not in valid_types:
-			raise ValueError(f'invalid type: {self.type}')
+			raise ValueError(f'NextcloudIntegration.Action: invalid type `{self.type}`', self)
+
+		if self.local is not None and not isinstance(self.local, EntryLocal):
+			raise ValueError('NextcloudIntegration.Action: `local` constructor parameter is not an EntryLocal', self)
+
+		if self.remote is not None and not isinstance(self.remote, EntryRemote):
+			raise ValueError('NextcloudIntegration.Action: `remote` constructor parameter is not an EntryRemote', self)
 
 	def _invert(self):
 		"""

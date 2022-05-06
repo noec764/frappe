@@ -4,6 +4,7 @@ import unittest
 import frappe  # type: ignore
 
 from ..DiffEngine import DiffEngine
+from ..Entry import EntryRemote, EntryLocal, Entry
 from ..ActionRunner import ActionRunner_NexcloudFrappe
 from ..Common import Common
 from ..RemoteFetcher import RemoteFetcher
@@ -133,8 +134,8 @@ class NextcloudTester(unittest.TestCase):
 		frappe.db.rollback()
 		frappe.db.begin()
 
-		root_dir = '@test-' + _slugify(f'{self.__class__.__name__}-{self._testMethodName}')
-		self.common = Common.Test(logger=self.logger, test_root_dir_name=root_dir)
+		self.root_dir = '@test-' + _slugify(f'{self.__class__.__name__}-{self._testMethodName}')
+		self.common = Common.Test(logger=self.logger, test_root_dir_name=self.root_dir)
 		self.differ = DiffEngine(self.common)
 		self.runner = ActionRunner_NexcloudFrappe(self.common)
 		self.fetcher = RemoteFetcher(self.common)
@@ -220,3 +221,49 @@ class NextcloudTester(unittest.TestCase):
 				f.reload()
 
 		return r.nextcloud_id
+
+	def get_remote_and_local_files_as_lists(self, root: str):
+		# Find roots
+		remote_root = self.common.get_remote_entry_by_path(root)
+		local_root = self.common.get_local_entry_by_path(root)
+
+		self.assertIsNotNone(remote_root)
+		self.assertIsNotNone(local_root)
+
+		# List files
+		remote_files = self.common._filter(
+			self.common.cloud_client.list(
+				remote_root._file_info.path,
+				depth='infinity',
+				properties=self.common._QUERY_PROPS
+			)
+		)
+		local_files = frappe.get_all('File', or_filters=[
+			('name', '=', local_root._frappe_name), # root
+			('folder', '=', local_root._frappe_name), # direct children
+			('folder', 'like', local_root._frappe_name + '/%'), # descendants
+		])
+		local_files = [frappe.get_doc('File', f['name']) for f in local_files]
+		# Convert files to entries
+		remote: List[EntryRemote] = list(map(
+			self.common.convert_remote_file_to_entry,
+			remote_files,
+		))
+		remote.insert(0, remote_root)
+		local: List[EntryLocal] = list(map(
+			self.common.convert_local_doc_to_entry,
+			local_files,
+		))
+
+		# Sort files
+		remote.sort(key=self.common.sort_key)
+		local.sort(key=self.common.sort_key)
+
+		# Stringify hierarchy
+		def ent2str(e: Entry):
+			return f'{e.path}  [{e.nextcloud_id}, {e.etag}, {e.last_updated}]'
+
+		remote_hierarchy = '\n'.join(map(ent2str, remote))
+		local_hierarchy = '\n'.join(map(ent2str, local))
+
+		return remote_hierarchy, local_hierarchy

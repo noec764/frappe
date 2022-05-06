@@ -261,8 +261,7 @@ class TestNCDiffing(NextcloudTester):
 			if f.is_folder:
 				self.assertEqual(f.name, f'{f.folder}/{f.file_name}'.strip('/'))
 
-			self.assertIn(
-				(f.folder, f.file_name), (
+			self.assertIn((f.folder, f.file_name), (
 				('Home', 'multi_renames'),
 				('Home/multi_renames', 'x'),
 				('Home/multi_renames/x', 'b'),
@@ -393,3 +392,62 @@ class TestNCDiffing(NextcloudTester):
 				('Home/XR3/a', 'x', int(idAX), int(idB)),
 				('Home/XR3/b', 'y', int(idBY), int(idA)),
 			))
+
+	@using_remote_files([
+		'/join_by_path/',
+		'/join_by_path/abc/',
+		'/join_by_path/xyz',
+	])
+	@using_local_files([
+		dict(file_name='join_by_path', folder='Home', is_folder=1),
+		dict(file_name='abc', folder='Home/join_by_path', is_folder=1),
+		dict(file_name='xyz', folder='Home/join_by_path', content='xyz'),
+	])
+	def test_join_by_path(self):
+		for doc in self._local_files:
+			# force an update by spoofing the `modified` timestamp
+			doc.db_set({
+				'modified': frappe.utils.get_datetime('1900-01-01'),
+				'nextcloud_id': None,
+			})
+
+		paths = [
+			'/join_by_path',
+			'/join_by_path/abc',
+			'/join_by_path/xyz',
+		]
+
+		actions = self.differ.diff_from_remote([
+			self.differ.get_remote_entry_by_path(p)
+			for p in paths
+		])
+		self.runner.run_actions(actions)
+
+		local_entries = [self.differ.get_local_entry_by_path(p) for p in paths]
+		remote_entries = [self.differ.get_remote_entry_by_path(p) for p in paths]
+
+		for (l, r) in zip(local_entries, remote_entries):
+			if not l.eq_ignore_type(r):
+				self.assertEqual(l, r)
+
+	@using_remote_files(['/incomp_types1/'])  # is a folder
+	@using_local_files([dict(file_name='incomp_types1', folder='Home', content='is a file')])
+	def test_has_conflict_if_incompatible_types1(self):
+		self.differ.use_conflict_detection = True
+		actions = self.differ.diff_from_remote([
+			self.differ.get_remote_entry_by_path('/incomp_types1'),
+		])
+		actions = list(filter(lambda a: a.type != 'conflict.localIsNewer', actions))
+		self.assertEqual(len(actions), 1)
+		self.assertEqual(actions[0].type, 'conflict.incompatibleTypesDirVsFile')
+
+	@using_remote_files(['/incomp_types2'])  # is a file
+	@using_local_files([dict(file_name='incomp_types2', folder='Home', is_folder=1)])
+	def test_has_conflict_if_incompatible_types2(self):
+		self.differ.use_conflict_detection = True
+		actions = self.differ.diff_from_remote([
+			self.differ.get_remote_entry_by_path('/incomp_types2'),
+		])
+		actions = list(filter(lambda a: a.type != 'conflict.localIsNewer', actions))
+		self.assertEqual(len(actions), 1)
+		self.assertEqual(actions[0].type, 'conflict.incompatibleTypesDirVsFile')

@@ -39,6 +39,18 @@ class Entry():
 			self.last_updated == o.last_updated,
 		))
 
+	def eq_ignore_type(self, o: object) -> bool:
+		if not isinstance(o, Entry):
+			return NotImplemented
+
+		return all((
+			self.path == o.path,
+			self.etag == o.etag,
+			self.nextcloud_id == o.nextcloud_id,
+			self.parent_id == o.parent_id,
+			self.last_updated == o.last_updated,
+		))
+
 	def __repr__(self):
 		c = {"local": 33, "remote": 36, None: 35}[self._type]
 		l = (self._type or '?')[0].upper()
