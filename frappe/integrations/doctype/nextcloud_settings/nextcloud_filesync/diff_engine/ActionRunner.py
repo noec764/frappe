@@ -1,3 +1,4 @@
+import errno
 import os
 from dataclasses import dataclass
 from typing import Iterable, Optional, Set, Union
@@ -5,7 +6,6 @@ from typing import Iterable, Optional, Set, Union
 import frappe  # type: ignore
 from frappe.model.rename_doc import rename_doc  # type: ignore
 from frappe.core.doctype.file.file import File
-from frappe.utils.data import cint, cstr  # type: ignore
 
 from .Action import Action
 from .BaseActionRunner import _BaseActionRunner
@@ -14,6 +14,7 @@ from .DeferredTasks import DeferredTasks
 from .Entry import EntryRemote, EntryLocal
 from .utils import FLAG_NEXTCLOUD_IGNORE, set_flag
 from .utils_normalize_paths import util_denormalize_to_local_path
+from ...exceptions import NextcloudException
 
 def is_iterable(obj):
 	try:
@@ -350,6 +351,9 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		is_dir = remote.is_dir()
 		folder, file_name = util_denormalize_to_local_path(remote.path)
 
+		if not file_name:
+			raise NextcloudException('Unexpected empty file_name')
+
 		content = None
 		if fetch_content and not is_dir:
 			remote_path = self.common.denormalize_remote(remote.path)
@@ -477,7 +481,16 @@ class TheData:
 		self.apply_to_existing_document(file_doc, force_full_update=True)
 		return file_doc
 
-	def apply_to_existing_document(self, file_doc: 'File', force_full_update=False):
+	def apply_to_existing_document(self, file_doc: File, force_full_update=False):
+		try:
+			self._apply_to_existing_document(file_doc, force_full_update)
+		except OSError as e:
+			if e.errno == errno.ENOSPC:
+				# no space left on drive
+				raise
+			raise
+
+	def _apply_to_existing_document(self, file_doc: File, force_full_update=False):
 		# Document should already exist in the database
 		if (self.content is not None) or force_full_update:
 			set_flag(file_doc)
