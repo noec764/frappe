@@ -1,8 +1,9 @@
 from contextlib import contextmanager
+import os
 import json
 from datetime import datetime
 from operator import attrgetter
-from typing import Optional, Generator
+from typing import List, Optional, Generator
 from typing_extensions import Literal
 from dataclasses import dataclass
 
@@ -10,11 +11,11 @@ import frappe
 from frappe.core.doctype.file.file import File
 
 from frappe.integrations.doctype.nextcloud_settings import NextcloudSettings, get_nextcloud_settings
-from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudSyncMissingRoot
+from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudException, NextcloudSyncMissingRoot
 
 from .diff_engine.Action import Action
 from .diff_engine.utils import check_flag, doc_has_nextcloud_id, get_home_folder, set_flag
-from .diff_engine.Entry import Entry
+from .diff_engine.Entry import Entry, EntryRemote
 from .diff_engine.ConflictTracker import ConflictResolverNCF, ConflictStopper
 from .diff_engine.utils_time import convert_local_time_to_utc
 
@@ -38,7 +39,7 @@ class BeforeSyncStatus:
 
 
 @contextmanager
-def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True):
+def sync_module(*, commit_after=True, raise_exception=True, rollback_on_exception=True) -> Generator['NextcloudFileSync', None, None]:
 	# frappe.db.begin()  # begin transaction
 	# frappe.db.commit()  # begin transaction
 	try:
@@ -138,7 +139,7 @@ class NextcloudFileSync:
 
 		self.fetcher = RemoteFetcher(self.common)
 
-		self.conflicts = []
+		self.conflicts: List[Action] = []
 
 		if self.settings.filesync_override_conflict_strategy:
 			self.set_conflict_strategy(
@@ -181,7 +182,6 @@ class NextcloudFileSync:
 		down_sync_all: bool = False,
 		force_upload: bool = False,
 		interactive: bool = False,
-		log_conflicts: bool = True,
 		commit: bool = True,
 		rollback_on_error: bool = True,
 	):
@@ -195,7 +195,6 @@ class NextcloudFileSync:
 			force_upload (bool): Clear all the nextcloud_id's of the local Files before uploading them again. Defaults to False.
 
 			interactive (bool): Display real time messages to the user. Defaults to False.
-			log_conflicts (bool): Log conflicts to the Error Log. Defaults to False.
 			commit (bool): Defaults to True.
 			rollback_on_error (bool): Defaults to True.
 		"""
@@ -220,15 +219,16 @@ class NextcloudFileSync:
 				self.sync_from_remote_since_last_update()
 
 			# Log conflicts to the user
-			self.log(self.conflicts)
-			if interactive:
-				frappe.msgprint(frappe._('Some conflicts were found during the Nextcloud sync, check the Error Log to find them.'))
+			if interactive and self.conflicts:
+				frappe.msgprint(frappe._('Some conflicts were found during the Nextcloud sync, check the Error Log for more information.'))
 
 			# success
-			if commit: frappe.db.commit()
-		except Exception as e:
-			if rollback_on_error: frappe.db.rollback()
-			raise e
+			if commit:
+				frappe.db.commit()
+		except:
+			if rollback_on_error:
+				frappe.db.rollback()
+			raise
 
 	def preserve_remote_root_bak(self):
 		self.log('* Creating backup of remote root dir...')
@@ -271,20 +271,16 @@ class NextcloudFileSync:
 	def _sync(self, last_update_dt: datetime = None):
 		sync_start_dt = frappe.utils.now_datetime()
 
-		self.log(frappe.now().center(40, '-'))
 		self.log(f'Sync all {last_update_dt.strftime("updated since %F %X (local time)") if last_update_dt else "from scratch"}')
-		# self.log()
 
 		# fetch all remote entries
 		remote_entries = self._fetch(last_update_dt)
-		self.log(f'fetched {len(remote_entries)} remote entries')
-		# self.log(J(remote_entries))
-		# self.log()
+		self.log(f'fetched {len(remote_entries)} remote entries:', J(remote_entries))
+
 		if len(remote_entries) == 0:
 			# this case will never be run,
 			# since the root dir is always returned
 			self.log('nothing to do, stopping')
-			self.log()
 			return
 
 		# initialize diffing
@@ -299,9 +295,9 @@ class NextcloudFileSync:
 			conflict_resolver = ConflictResolverNCF(self.common)
 			actions_iterator = list(conflict_resolver.chain(actions_iterator))
 
-		self.log(f'got {len(actions_iterator)} actions to run, conflict strategy is: {self.conflict_strategy}')
-		self.log(J(actions_iterator))
-		# self.log()
+		self.log(f'got {len(actions_iterator)} actions to run:', J(actions_iterator))
+
+		self.log(f'running actions... (conflict strategy is "{self.conflict_strategy}")')
 
 		# perform diffing + execute actions
 		self.runner.run_actions(actions_iterator)
@@ -309,9 +305,8 @@ class NextcloudFileSync:
 		# return the new value of the last_filesync_dt field of Nextcloud Settings
 		newest_remote_entry = max(remote_entries, key=attrgetter('last_updated'))
 
-		# self.log('* DONE at:', frappe.now())
 		sync_duration = frappe.utils.now_datetime() - sync_start_dt
-		self.log('duration:', sync_duration.total_seconds(), 'seconds')
+		self.log('all done in:', round(sync_duration.total_seconds(), 3), 'seconds')
 		self.log()
 
 		last_update_dt2 = min(sync_start_dt, newest_remote_entry.last_updated)
@@ -373,12 +368,12 @@ class NextcloudFileSync:
 		self.log(f'* upload to remote: {doc} (event={event})')
 
 		if check_flag(doc):
-			self.log(f'↳ skipping, flag nextcloud_triggered_update is set')
+			self.log('↳ skipping, flag nextcloud_triggered_update is set')
 			return  # avoid recursive updates
 
 		if self.settings.filesync_exclude_private:
 			if doc.is_private:
-				self.log(f'↳ skipping, file is private')
+				self.log('↳ skipping, file is private')
 				return  # skipping private files
 
 		self._create_or_force_update_doc_in_remote(doc, check_remote=True)
@@ -404,7 +399,7 @@ class NextcloudFileSync:
 
 	def _delete_remote_file_of_doc(
 		self,
-		doc,
+		doc: File,
 		*,
 		update_doc=False,
 		update_parent_etag=False,
@@ -425,8 +420,11 @@ class NextcloudFileSync:
 				self._update_etag_for_id(doc.nextcloud_parent_id)
 
 		if update_doc:
-			doc.nextcloud_id = None
-			doc.nextcloud_parent_id = None
+			doc.db_set({
+				'nextcloud_id': None,
+				'nextcloud_parent_id': None,
+			})
+			self.log(f'↳ updated {doc} to remove nextcloud_id')
 			set_flag(doc)
 
 
