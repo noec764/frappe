@@ -545,6 +545,10 @@ class NextcloudFileSync:
 				Action(type='remote.createOrForceUpdate', local=local, remote=remote)
 			])
 		except HTTPResponseError as e:
+			if e.status_code == 507:
+				self.log('Insufficient Storage', local, remote)
+				raise
+
 			if e.status_code == 409 or e.status_code == 404 or e.status_code == 405:
 				# The remote parent dir is missing,
 				# so we try to create the parent hierarchy.
