@@ -125,6 +125,7 @@ class Common:
 			parent_id=doc.nextcloud_parent_id or None,
 			last_updated=last_updated,
 			_frappe_name=doc.name,
+			_frappe_doc=doc,
 		)
 
 	def _get_remote_entry_by_norm_path(self, path: str):

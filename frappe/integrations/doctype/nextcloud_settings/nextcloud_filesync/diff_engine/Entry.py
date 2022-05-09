@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Dict, Optional, Tuple, Union
 from typing_extensions import Literal
 
-# from frappe.core.doctype.file.file import File
+from frappe.core.doctype.file.file import File
 from owncloud import FileInfo  # type: ignore
 
 
@@ -81,6 +81,7 @@ class Entry():
 class EntryLocal(Entry):
 	_type: Literal['local'] = 'local'
 	_frappe_name: Optional[str] = None
+	_frappe_doc: Optional[File] = None
 
 	__hash__ = Entry.__hash__
 	__eq__ = Entry.__eq__
@@ -95,6 +96,7 @@ class EntryLocal(Entry):
 			last_updated=self.last_updated,
 
 			_frappe_name=self._frappe_name,
+			_frappe_doc=self._frappe_doc,
 		)
 
 

@@ -536,6 +536,11 @@ class NextcloudFileSync:
 						dupl_doc.save()
 
 		try:
+			if doc.is_folder or not doc.has_content():
+				return self.runner.run_actions([
+					Action(type='remote.createOrUpdate', local=local, remote=remote)
+				])
+
 			self.runner.run_actions([
 				Action(type='remote.createOrForceUpdate', local=local, remote=remote)
 			])

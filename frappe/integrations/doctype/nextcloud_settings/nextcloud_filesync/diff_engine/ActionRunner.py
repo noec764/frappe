@@ -90,17 +90,12 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 			self.action_local_join(action)
 		elif t == 'remote.createOrForceUpdate':
 			self.action_remote_create_or_update(action)
+		elif t == 'remote.createOrUpdate':
+			self.action_remote_create_or_update_if_needed(action)
 		elif t == 'conflict.differentIds':
 			self.resolve_conflict(action)
 		else:
-			# self.common.logger(
-			# 	'skipping action:', action.type,
-			# 	'local:', action.local.toJSON() if action.local else None,
-			# 	'remote:', action.remote.toJSON() if action.remote else None,
-			# )
-			# TODO: do not throw to avoid breaking the whole sync
-			# but… how to recover and report the error?
-			# frappe.throw('Unknown action type: {}'.format(t))
+			frappe.throw('Unknown action type: {}'.format(t))
 			return False
 
 		# self._all_runned_actions.append(action)
@@ -138,6 +133,14 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 
 		# TODO: else, find by path?
 		return None
+
+	def _get_frappe_doc(self, local: EntryLocal) -> Optional[File]:
+		if local._frappe_doc:
+			return local._frappe_doc
+
+		name = self._get_frappe_name(local)
+		assert name
+		return frappe.get_doc('File', name)
 
 	def action_local_file_mv(self, action: Action):
 		l, r = action.local, action.remote
@@ -217,14 +220,66 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 			'nextcloud_etag': action.remote.etag,
 		})
 
+	def action_remote_create_or_update_if_needed(self, action: Action):
+		assert action.local
+
+		doc = self._get_frappe_doc(action.local)
+		assert doc
+
+		is_folder = action.local.is_dir()
+		new_remote_path = self.common.denormalize_remote(action.local.path)
+
+		def _create():
+			if is_folder:
+				self.cloud_client.mkdir(new_remote_path)
+			else:
+				data_path = os.path.abspath(doc.get_full_path())
+				self.cloud_client.put_file(new_remote_path, data_path, keep_mtime=False)
+
+		if action.remote:  # smart update
+			old_remote_path = self.common.denormalize_remote(action.remote.path)
+			was_folder = action.remote.is_dir()
+			if is_folder != was_folder:
+				self.cloud_client.delete(old_remote_path)  # delete
+				_create()
+			else:
+				if old_remote_path != new_remote_path:
+					# move
+					self.cloud_client.move(old_remote_path, new_remote_path)
+
+				if not is_folder:
+					if doc.has_content():
+						# The `content` field exists on the document
+						data_path = os.path.abspath(doc.get_full_path())
+						self.cloud_client.put_file(new_remote_path, data_path, keep_mtime=False)
+						# To change the content as a user:
+						# doc.save_file(content='<new content>', ignore_existing_file_check=True)
+					else:
+						self.log('skipping, the file did not change')
+		else:  # create
+			_create()
+
+		new_remote = self.common.get_remote_entry_by_real_path(new_remote_path)
+		if new_remote is None:
+			raise NextcloudException('Failed to create file/dir')
+
+		parent_id = new_remote.parent_id
+		if parent_id is None and new_remote.path != '/':
+			parent_id = self._fetch_parent_id(new_remote_path)
+		doc.db_set({
+			'nextcloud_id': new_remote.nextcloud_id,
+			'nextcloud_parent_id': parent_id,
+			'nextcloud_etag': new_remote.etag,
+			'modified': new_remote.last_updated,
+		}, update_modified=False)
+
 	def action_remote_create_or_update(self, action: Action):
 		assert action.local
-		frappe_name = self._get_frappe_name(action.local)
-		assert frappe_name
 
 		new_remote_path = self.common.denormalize_remote(action.local.path)
 		is_folder = action.local.is_dir()
-		doc: File = frappe.get_doc('File', frappe_name)
+		doc = self._get_frappe_doc(action.local)
+		assert doc
 
 		data_path: Optional[str] = None
 		if not is_folder:  # find file path for upload
@@ -279,20 +334,12 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		parent_id = new_remote.parent_id
 		if parent_id is None and new_remote.path != '/':
 			parent_id = self._fetch_parent_id(new_remote_path)
-		self.log({
-			'nextcloud_id': new_remote.nextcloud_id,
-			'nextcloud_parent_id': parent_id,
-			'nextcloud_etag': new_remote.etag,
-			'modified': new_remote.last_updated,
-		})
 		doc.db_set({
 			'nextcloud_id': new_remote.nextcloud_id,
 			'nextcloud_parent_id': parent_id,
 			'nextcloud_etag': new_remote.etag,
 			'modified': new_remote.last_updated,
 		}, update_modified=False)
-
-		self.log()
 
 
 	def action_local_create(self, action: Action):

@@ -53,6 +53,7 @@ class Action():
 
 		# triggered by a local update (hook) ???
 		'remote.createOrForceUpdate',
+		'remote.createOrUpdate',
 
 		# conflict
 		'conflict',
@@ -103,6 +104,7 @@ class Action():
 			'remote.join',
 			'meta.updateEtag',
 			'remote.createOrForceUpdate',
+			'remote.createOrUpdate',
 			'conflict',
 			'conflict.localIsNewer',
 			'conflict.incompatibleTypesDirVsFile',
