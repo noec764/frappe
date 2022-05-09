@@ -25,6 +25,11 @@ from frappe.utils.data import cstr
 from .diff_engine import Common, DiffEngine, ActionRunner, RemoteFetcher
 
 
+
+logger = frappe.logger("nextcloud", allow_site=True, file_count=50)
+logger.setLevel("DEBUG")
+
+
 @dataclass
 class BeforeSyncStatus:
 	status: Literal['ok', 'error']
@@ -68,9 +73,9 @@ def optional_sync_module(**kwargs) -> Generator[Optional['NextcloudFileSync'], N
 
 
 def sync_log(*args):
-	print(*args)
-	with open('/tmp/nc_sync.txt', 'a') as f:
-		f.write(' '.join(map(str, args)) + '\n')
+	s = ' '.join(map(str, args))
+	print(s)
+	logger.info(s)
 
 class MyEncoder(json.JSONEncoder):
 	def default(self, obj):
