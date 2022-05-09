@@ -391,7 +391,6 @@ class NextcloudFileSync:
 			self._delete_remote_file_of_doc(
 				doc,
 				update_doc=False,  # don't need to update document, because it will be deleted
-				update_parent_etag=True  # do update the parent's etag (its content changed)
 			)
 		except:
 			return
@@ -402,7 +401,6 @@ class NextcloudFileSync:
 		doc: File,
 		*,
 		update_doc=False,
-		update_parent_etag=False,
 	):
 		nextcloud_id = doc.nextcloud_id
 		try:  # remove remote file
@@ -414,10 +412,6 @@ class NextcloudFileSync:
 			self.log(f'↳ fail {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file')
 			self.log(e)
 			raise
-
-		if update_parent_etag:
-			if doc.nextcloud_parent_id:
-				self._update_etag_for_id(doc.nextcloud_parent_id)
 
 		if update_doc:
 			doc.db_set({
@@ -470,7 +464,7 @@ class NextcloudFileSync:
 			# so, it must be deleted from the remote
 			# because it might have been uploaded before.
 			self.log('↳ file is becoming private: delete from remote')
-			self._delete_remote_file_of_doc(doc, update_doc=True, update_parent_etag=True)
+			self._delete_remote_file_of_doc(doc, update_doc=True)
 			return
 
 		if not self.can_run_filesync(doc): return  # maybe not needed
