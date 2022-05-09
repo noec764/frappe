@@ -214,7 +214,7 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 
 		frappe.db.set_value('File', frappe_name, {
 			'modified': action.remote.last_updated,
-			'content_hash': action.remote.etag,
+			'nextcloud_etag': action.remote.etag,
 		})
 
 	def action_remote_create_or_update(self, action: Action):
@@ -282,13 +282,13 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		self.log({
 			'nextcloud_id': new_remote.nextcloud_id,
 			'nextcloud_parent_id': parent_id,
-			'content_hash': new_remote.etag,
+			'nextcloud_etag': new_remote.etag,
 			'modified': new_remote.last_updated,
 		})
 		doc.db_set({
 			'nextcloud_id': new_remote.nextcloud_id,
 			'nextcloud_parent_id': parent_id,
-			'content_hash': new_remote.etag,
+			'nextcloud_etag': new_remote.etag,
 			'modified': new_remote.last_updated,
 		}, update_modified=False)
 
@@ -375,7 +375,7 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 			# data
 			# "content": content,
 			"is_folder": is_dir,
-			"content_hash": remote.etag,
+			"nextcloud_etag": remote.etag,
 			# nextcloud
 			"nextcloud_id": remote.nextcloud_id,
 		}
@@ -388,7 +388,7 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 			# force "file name" because it is changed by frappe
 			"file_name": file_name,
 			"modified": remote.last_updated,
-			"content_hash": remote.etag,
+			"nextcloud_etag": remote.etag,
 		}
 
 		return TheData(folder, file_name, content, data, post_insert_data)

@@ -211,7 +211,7 @@ class NextcloudTester(unittest.TestCase):
 		# print('r.last_updated', r.last_updated)
 		frappe.db.set_value('File', l._frappe_name, {
 			# NOTE: l._frappe_name might not be synced with the actual name
-			'content_hash': r.etag,
+			'nextcloud_etag': r.etag,
 			'nextcloud_id': r.nextcloud_id,
 			'nextcloud_parent_id': r.parent_id,
 		}, modified=r.last_updated)

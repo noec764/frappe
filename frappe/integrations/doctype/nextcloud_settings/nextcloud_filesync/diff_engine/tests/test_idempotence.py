@@ -25,7 +25,7 @@ class TestNCIdempotence(NextcloudTester):
 		doc = frappe.get_doc(*args)
 		self.assertEqual(doc.file_name, args[1]['file_name'])
 		self.assertEqual(doc.folder, args[1]['folder'])
-		self.assertEqual(str(doc.content_hash), str(r.etag))
+		self.assertEqual(str(doc.nextcloud_etag), str(r.etag))
 		self.assertAlmostEqual(
 			doc.modified, r.last_updated,
 			delta=timedelta(seconds=1))  # allow 1 second difference

@@ -23,7 +23,7 @@ class TestNCActions(NextcloudTester):
 		etagFinal = frappe.utils.random_string(16)
 
 		doc = get_doc('meta.updateEtag')
-		doc.content_hash = etagInitial
+		doc.nextcloud_etag = etagInitial
 		doc.save()
 
 		local = get_entry('meta.updateEtag')
@@ -34,7 +34,7 @@ class TestNCActions(NextcloudTester):
 		])
 
 		doc.reload()
-		self.assertEqual(doc.content_hash, etagFinal)
+		self.assertEqual(doc.nextcloud_etag, etagFinal)
 
 	@using_remote_files([
 		'/create',
@@ -54,7 +54,7 @@ class TestNCActions(NextcloudTester):
 		doc = frappe.get_doc(*args)
 		self.assertEqual(doc.file_name, args[1]['file_name'])
 		self.assertEqual(doc.folder, args[1]['folder'])
-		self.assertEqual(str(doc.content_hash), str(r.etag))
+		self.assertEqual(str(doc.nextcloud_etag), str(r.etag))
 		self.assertEqual(str(doc.modified), str(r.last_updated))
 		self.assertEqual(str(doc.nextcloud_id), str(r.nextcloud_id))
 		self.assertEqual(str(doc.nextcloud_parent_id), str(r.parent_id))
@@ -75,7 +75,7 @@ class TestNCActions(NextcloudTester):
 		doc = frappe.get_doc('File', l._frappe_name)
 		self.assertEqual(doc.file_name, 'join.remote')
 		self.assertEqual(doc.folder, 'Home')
-		self.assertEqual(str(doc.content_hash), str(r.etag))
+		self.assertEqual(str(doc.nextcloud_etag), str(r.etag))
 		self.assertEqual(str(doc.modified), str(r.last_updated))
 		self.assertEqual(str(doc.nextcloud_id), str(r.nextcloud_id))
 		self.assertEqual(str(doc.nextcloud_parent_id), str(r.parent_id))
@@ -108,7 +108,7 @@ class TestNCActions(NextcloudTester):
 		self.assertEqual(doc.file_name, 'new_name')
 		self.assertEqual(doc.folder, 'Home/mv_file')
 		self.assertEqual(str(doc.modified), str(r.last_updated))
-		# self.assertEqual(str(doc.content_hash), str(r.etag))
+		# self.assertEqual(str(doc.nextcloud_etag), str(r.etag))
 		# self.assertEqual(str(doc.nextcloud_id), str(r.nextcloud_id))
 		# self.assertEqual(str(doc.nextcloud_parent_id), str(r.parent_id))
 
@@ -233,7 +233,7 @@ class TestNCActions(NextcloudTester):
 			assert l  # for mypy
 			assert r  # for mypy
 			frappe.db.set_value('File', l._frappe_name, {
-				'content_hash': r.etag,
+				'nextcloud_etag': r.etag,
 				'nextcloud_id': r.nextcloud_id,
 				'nextcloud_parent_id': r.parent_id,
 			}, modified=r.last_updated)

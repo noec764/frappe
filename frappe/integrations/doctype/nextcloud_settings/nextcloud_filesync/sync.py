@@ -423,6 +423,7 @@ class NextcloudFileSync:
 			doc.db_set({
 				'nextcloud_id': None,
 				'nextcloud_parent_id': None,
+				'nextcloud_etag': None,
 			})
 			self.log(f'↳ updated {doc} to remove nextcloud_id')
 			set_flag(doc)

@@ -68,7 +68,7 @@ class Entry():
 	def toJSON(self):
 		l = (self._type or '?')[0].upper()
 		p = self.path
-		e = (self.etag or '')[:8] or '?'
+		e = (self.etag or '').strip('"')[:8] or '?'
 		i = self.nextcloud_id
 		if type(self.last_updated).__name__ == 'datetime':
 			u = self.last_updated.strftime('%m-%d %H:%M')

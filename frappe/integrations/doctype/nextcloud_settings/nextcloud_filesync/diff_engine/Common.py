@@ -88,7 +88,7 @@ class Common:
 
 		self._map_remote_path_to_id['/' + path.strip('/')] = nextcloud_id
 
-		etag = file.get_etag().strip('"')
+		etag = file.get_etag()
 
 		parent_path = '/' + os.path.dirname(path.strip('/'))
 		parent_id = None
@@ -120,7 +120,7 @@ class Common:
 
 		return EntryLocal(
 			path=path,
-			etag=doc.content_hash or '?',
+			etag=doc.nextcloud_etag or '?',
 			nextcloud_id=doc.nextcloud_id or None,
 			parent_id=doc.nextcloud_parent_id or None,
 			last_updated=last_updated,
@@ -133,19 +133,12 @@ class Common:
 		return self.convert_remote_file_to_entry(f)
 
 	def _get_local_entry_from_frappe_db(self, filters, **kwargs):
-		"""
-			path := folder & file_name & is_folder
-			etag := content_hash
-			nextcloud_id := nextcloud_id
-			parent_id := nextcloud_parent_id
-		"""
-
 		fields = [
 			'name',  # frappe unique id
 			'folder',  # parent dir
 			'file_name',  # name of the file
 			'is_folder',  # is dir
-			'content_hash',  # etag equivalent
+			'nextcloud_etag',  # etag
 			'nextcloud_id',  # nextcloud id
 			'nextcloud_parent_id',  # parent id
 			'modified',  # last modified
