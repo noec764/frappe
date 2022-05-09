@@ -507,6 +507,14 @@ class NextcloudFileSync:
 		return True
 
 
+	def _check_weird_duplicate(self, doc: File, remote: EntryRemote):
+		if not doc_has_nextcloud_id(doc):
+			exists = frappe.db.exists('File', {'nextcloud_id': remote.nextcloud_id})
+			if exists and doc.name != exists:
+				return exists
+
+		return False
+
 	def _create_or_force_update_doc_in_remote(self, doc: File, check_remote: bool = False):
 		"""
 			Upload the local file to the remote.
@@ -514,16 +522,68 @@ class NextcloudFileSync:
 		"""
 		local = self.common.convert_local_doc_to_entry(doc)
 
+		self.log('*** _create_or_force_update_doc_in_remote', doc, check_remote)
+
 		remote = None
 		if check_remote:
 			if doc_has_nextcloud_id(doc):
 				remote = self.common.get_remote_entry_by_id(doc.nextcloud_id)
 			if remote is None:
 				remote = self.common.get_remote_entry_by_path(local.path)
+				if remote:
+					dupl: str = self._check_weird_duplicate(doc, remote)
+					if dupl:
+						dupl_doc: File = frappe.get_doc('File', dupl)
+						self.log(f'a duplicate of file {doc} has been found: {dupl_doc}')
+						name, ext = os.path.splitext(dupl_doc.file_name)
+						dupl_doc.file_name = name + ' (2)' + ext
+						dupl_doc.add_comment(text='Nextcloud: This file is a duplicate.')
+						dupl_doc.save()
 
-		self.runner.run_actions([
-			Action(type='remote.createOrForceUpdate', local=local, remote=remote)
-		])
+		try:
+			self.runner.run_actions([
+				Action(type='remote.createOrForceUpdate', local=local, remote=remote)
+			])
+		except HTTPResponseError as e:
+			if e.status_code == 409 or e.status_code == 404 or e.status_code == 405:
+				# The remote parent dir is missing,
+				# so we try to create the parent hierarchy.
+				# The system could also just wait for the next sync to upload the missing files.
+				self.log(e)
+				self.log('Failed to do remote.createOrForceUpdate', local, remote)
+				self.log('Trying by first creating parent hierarchy')
+
+				actions = []
+				cur_doc = doc
+				loop_guard = 10
+
+				while cur_doc and cur_doc.folder not in ('', None):
+					l = self.common.convert_local_doc_to_entry(cur_doc)
+					r = None
+
+					if l.nextcloud_id:
+						r = self.common.get_remote_entry_by_id(l.nextcloud_id)
+
+					if not r:
+						r = self.common.get_remote_entry_by_path(l.path)
+
+					if r:
+						break
+
+					a = Action(type='remote.createOrForceUpdate', local=l, remote=None)
+					actions.append(a)
+
+					loop_guard -= 1
+					if loop_guard < 0:
+						raise NextcloudException('Failed to create hierarchy after failed remote.createOrForceUpdate: hierarchy is deeper than 10 directories') from e
+
+					cur_doc = frappe.get_doc('File', cur_doc.folder)
+
+				actions.reverse()
+				self.log(' * ' + '\n * '.join(map(repr, actions)))
+				self.runner.run_actions(actions)
+			else:
+				raise
 
 	def get_before_sync_status(self):
 		if not self.can_run_filesync():

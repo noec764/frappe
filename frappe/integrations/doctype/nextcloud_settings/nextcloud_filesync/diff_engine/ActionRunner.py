@@ -195,20 +195,19 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		delete_filedoc_and_children_by_name(frappe_name)
 
 	def action_local_file_update_content(self, action: Action):
-		l, r = action.local, action.remote
-		assert l is not None
-		assert r is not None
-		assert l.path != '/'
+		assert action.local
+		assert action.remote
+		assert action.local.path != '/'
 		frappe_name = self._get_frappe_name(action.local)
 		assert frappe_name
 
-		d = self._remote_to_data(r, fetch_content=True)
+		d = self._remote_to_data(action.remote, fetch_content=True)
 		file_doc = frappe.get_doc('File', frappe_name)
 		d.apply_to_existing_document(file_doc)
 
 	def action_meta_update_etag(self, action: Action):
-		assert action.local is not None
-		assert action.remote is not None
+		assert action.local
+		assert action.remote
 		frappe_name = self._get_frappe_name(action.local)
 		assert frappe_name
 
@@ -218,6 +217,7 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		})
 
 	def action_remote_create_or_update(self, action: Action):
+		assert action.local
 		frappe_name = self._get_frappe_name(action.local)
 		assert frappe_name
 
@@ -225,29 +225,50 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		is_folder = action.local.is_dir()
 		doc: File = frappe.get_doc('File', frappe_name)
 
-		data_path: str = None
+		data_path: Optional[str] = None
 		if not is_folder:  # find file path for upload
 			data_path = os.path.abspath(doc.get_full_path())
-			if not os.path.exists(data_path):
-				self.log('Missing data file')
+
+			if not doc.exists_on_disk():
+				self.log('↳ Missing data file:', data_path)
+				if action.remote:
+					try:
+						remote_path = self.common.denormalize_remote(action.remote.path)
+						self.log('↳ Can be restored from remote:', remote_path)
+
+						content = self.get_remote_content(remote_path)
+
+						set_flag(doc)
+						doc.save_file(content=content)
+						doc.add_comment(text='This file was unexpectedly missing. It has been restored from your Nextcloud server.')
+						self.log('↳ Restored from remote:', remote_path)
+
+						frappe.log_error(title=f'Restored missing file for {doc}', message=f'Nextcloud Integration Error\n\nNo file was found at {doc.get_full_path()}.\n\n✅ The file has been restored from the Nextcloud server.')
+						return
+					except Exception as e:
+						frappe.log_error(title=f'Missing file for {doc}', message=f'Nextcloud Integration Error\n\nNo file was found at {doc.get_full_path()}.\n\n{e}')
+						raise
+
+				frappe.log_error(title=f'Missing file for {doc}', message=f'Nextcloud Integration Error\n\nNo file was found at {doc.get_full_path()}.')
 				raise Exception('Missing data file')
 
 		if action.remote:  # just update the remote file/dir
 			old_remote_path = self.common.denormalize_remote(action.remote.path)
 			if old_remote_path != new_remote_path:
-				self.log(f'C.move({old_remote_path}, {new_remote_path})')
 				self.cloud_client.move(old_remote_path, new_remote_path)
-
 			if not is_folder:
-				self.log(f'C.put_file({new_remote_path}, {data_path})')
-				self.cloud_client.put_file(new_remote_path, data_path)
+				self.cloud_client.put_file(new_remote_path, data_path, keep_mtime=False)
 		else:  # create the remote file/dir
 			if is_folder:
-				self.log(f'C.mkdir({new_remote_path})')
 				self.cloud_client.mkdir(new_remote_path)
 			else:
-				self.log(f'C.put_file({new_remote_path}, {data_path})')
-				self.cloud_client.put_file(new_remote_path, data_path)
+				self.cloud_client.put_file(new_remote_path, data_path, keep_mtime=False)
+
+		# Now that the file is updated on the server, we have to fetch the attributes of the
+		# remote file, because we can not predict the values of the etag and modification time
+		# Maybe by tweaking the `put_file` method (with the `keep_mtime` parameter we could
+		# directly force the remote server to have the correct modification time, which would
+		# mean not having to change it afterwards on the Frappe File doc.
 
 		new_remote = self.common.get_remote_entry_by_real_path(new_remote_path)
 		if new_remote is None:
@@ -257,40 +278,18 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 		parent_id = new_remote.parent_id
 		if parent_id is None and new_remote.path != '/':
 			parent_id = self._fetch_parent_id(new_remote_path)
-
-		doc.db_set({
+		self.log({
 			'nextcloud_id': new_remote.nextcloud_id,
 			'nextcloud_parent_id': parent_id,
 			'content_hash': new_remote.etag,
 			'modified': new_remote.last_updated,
 		})
-
-		nextcloud_id = new_remote.nextcloud_id
-
-		if is_folder or (action.remote is None):
-			def f():
-				new_remote2 = self.common.get_remote_entry_by_id(nextcloud_id)
-				if new_remote2 is None:
-					raise Exception('Failed to fetch file/dir')
-
-				parent_id2 = new_remote2.parent_id
-				if parent_id2 is None and new_remote2.path != '/':
-					parent_id2 = self._fetch_parent_id(new_remote_path)
-
-				if new_remote.nextcloud_id != new_remote2.nextcloud_id:
-					self.log('NCID:', new_remote, new_remote2)
-					doc.db_set('nextcloud_id', new_remote2.nextcloud_id, update_modified=False)
-				if parent_id != parent_id2:
-					self.log('P_ID:', new_remote, new_remote2)
-					doc.db_set('nextcloud_parent_id', parent_id2, update_modified=False)
-				if new_remote.etag != new_remote2.etag:
-					self.log('ETAG:', new_remote, new_remote2)
-					doc.db_set('content_hash', new_remote2.etag, update_modified=False)
-				if new_remote.last_updated != new_remote2.last_updated:
-					self.log('UPDT:', new_remote, new_remote2)
-					doc.db_set('modified', new_remote2.last_updated, update_modified=False)
-
-			self.deferred_tasks.push(f)
+		doc.db_set({
+			'nextcloud_id': new_remote.nextcloud_id,
+			'nextcloud_parent_id': parent_id,
+			'content_hash': new_remote.etag,
+			'modified': new_remote.last_updated,
+		}, update_modified=False)
 
 		self.log()
 
@@ -452,7 +451,8 @@ class ActionRunner_NexcloudFrappe(_BaseActionRunner):
 	def _fetch_parent_id(self, real_path: str):
 		parent_path = real_path.rstrip('/').rsplit('/', 1)[0]
 		remote_parent = self.common.get_remote_entry_by_real_path(parent_path)
-		return remote_parent.nextcloud_id
+		if remote_parent:
+			return remote_parent.nextcloud_id
 
 	# def _add_rollback_observer(self):
 	# 	frappe.local.rollback_observers.append(self)
