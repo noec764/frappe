@@ -29,7 +29,7 @@
    "reqd": 0
   },
   {
-   "fieldname": "primary_action_url",
+   "fieldname": "primary_action",
    "fieldtype": "Data",
    "label": "Primary Action URL",
    "reqd": 0
@@ -41,14 +41,14 @@
    "reqd": 0
   },
   {
-   "fieldname": "secondary_action_url",
+   "fieldname": "secondary_action",
    "fieldtype": "Data",
    "label": "Secondary Action URL",
    "reqd": 0
   }
  ],
  "idx": 0,
- "modified": "2022-05-04 15:42:18.668783",
+ "modified": "2022-05-10 14:27:39.182320",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Hero with background image",
