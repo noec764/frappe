@@ -143,6 +143,53 @@
 	}
 }
 
+.hero-with-background-image {
+	position: relative;
+	display: flex;
+	flex-wrap: nowrap;
+	background-color: rgba(12, 11, 10, 0.5);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    justify-content: center;
+    // height is not 100vh to account for the navbar height
+    height: 90vh;
+	.hero-content {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		flex: 0 0 100%;
+
+		@include media-breakpoint-up(md) {
+			flex: 0 0 60%;
+		}
+	}
+
+	.hero-image {
+		width: auto;
+		display: none;
+		flex: 1;
+		object-fit: contain;
+		max-height: 36rem;
+
+		&.contain-image {
+			right: 0;
+		}
+
+		@include media-breakpoint-up(md) {
+			display: block;
+			max-width: 28rem;
+		}
+		@include media-breakpoint-up(lg) {
+			max-width: 32rem;
+		}
+		@include media-breakpoint-up(xl) {
+			max-width: 42rem;
+		}
+	}
+}
 .section-with-cards .card {
 	@include transition();
 
