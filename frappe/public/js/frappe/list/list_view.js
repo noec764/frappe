@@ -2006,17 +2006,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		return filters;
 	}
 
-	static trigger_list_update(data) {
-		const doctype = data.doctype;
-		if (!doctype) return;
-		frappe.provide("frappe.views.trees");
-
-		// refresh list view
-		const page_name = frappe.get_route_str();
-		const list_view = frappe.views.list_view[page_name];
-		list_view && list_view.on_update(data);
-	}
-
 	/**
 	 * @template T
 	 * @param {Array<{ label: string, value: T, type?: string }>} templates
@@ -2110,10 +2099,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 	}
 };
-
-$(document).on("save", (event, doc) => {
-	frappe.views.ListView.trigger_list_update(doc);
-});
 
 frappe.get_list_view = (doctype) => {
 	let route = `List/${doctype}/List`;
