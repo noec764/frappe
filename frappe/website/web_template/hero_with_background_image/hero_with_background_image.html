@@ -1,24 +1,24 @@
 <div class="hero-with-background-image" style="background-image: linear-gradient(rgba(12, 11, 10, 0.5),
-rgba(12, 11, 10, 0.5)), url('files/background.jpg');">
+rgba(12, 11, 10, 0.5)), url('{{ image }}');">
 	<div class="hero-content col-12 col-md-6">
 		<div>
 			<h1 class="hero-title">
-				{{ title }}
+				{{ title or "" }}
 			</h1>
 			{%- if subtitle -%}
 			<p class="hero-subtitle">
-				{{ subtitle }}
+				{{ subtitle or "" }}
 			</p>
 			{%- endif -%}
 			<div>
 				{%- if primary_action -%}
 				<a class="btn btn-lg btn-primary" href="{{ primary_action }}">
-					{{ primary_action_label }}
+					{{ primary_action_label or "" }}
 				</a>
 				{%- endif -%}
 				{%- if secondary_action -%}
 				<a class="btn btn-lg btn-primary-light" href="{{ secondary_action }}">
-					{{ secondary_action_label }}
+					{{ secondary_action_label or "" }}
 				</a>
 				{%- endif -%}
 			</div>
