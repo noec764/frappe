@@ -1337,7 +1337,7 @@ def trim_tables(context, dry_run, format, no_backup):
 
 		if not (no_backup or dry_run):
 			click.secho(f"Taking backup for {frappe.local.site}", fg="green")
-			odb = scheduled_backup(ignore_files=False, force=True)
+			odb = scheduled_backup(ignore_files=False, ignore_conf=True, force=True, verbose=True)
 			odb.print_summary()
 
 		try:
