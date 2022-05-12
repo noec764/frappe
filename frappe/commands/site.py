@@ -418,8 +418,9 @@ def _reinstall(
 
 @click.command("install-app")
 @click.argument("apps", nargs=-1)
+@click.option("--force", is_flag=True, default=False)
 @pass_context
-def install_app(context, apps):
+def install_app(context, apps, force=False):
 	"Install a new app to site, supports multiple apps"
 	from frappe.installer import install_app as _install_app
 
@@ -433,7 +434,7 @@ def install_app(context, apps):
 		frappe.connect()
 		for app in apps:
 			try:
-				_install_app(app, verbose=context.verbose)
+				_install_app(app, verbose=context.verbose, force=force)
 			except frappe.IncompatibleApp as err:
 				err_msg = ":\n{}".format(err) if str(err) else ""
 				print("App {} is Incompatible with Site {}{}".format(app, site, err_msg))

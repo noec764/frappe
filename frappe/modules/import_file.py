@@ -147,7 +147,6 @@ def import_file_by_path(
 
 			import_doc(
 				docdict=doc,
-				force=force,
 				data_import=data_import,
 				pre_process=pre_process,
 				ignore_version=ignore_version,
@@ -206,7 +205,6 @@ def update_modified(original_modified, doc):
 
 def import_doc(
 	docdict,
-	force=False,
 	data_import=False,
 	pre_process=None,
 	ignore_version=None,
