@@ -153,8 +153,6 @@ class Communication(Document, CommunicationEmailMixin):
 		if not email_body:
 			return
 
-		email_body = email_body[0]
-
 		user_email_signature = (
 			frappe.db.get_value(
 				"User",
