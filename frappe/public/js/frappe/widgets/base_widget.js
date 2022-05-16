@@ -11,6 +11,7 @@ export default class Widget {
 		this.set_actions();
 		this.set_body();
 		this.setup_events();
+		this.set_footer();
 	}
 
 	get_config() {
@@ -191,6 +192,10 @@ export default class Widget {
 	}
 
 	set_body() {
+		//
+	}
+
+	set_footer() {
 		//
 	}
 }
