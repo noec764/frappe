@@ -2,7 +2,6 @@
 # License: MIT. See LICENSE
 import json
 import os
-from urllib.parse import urlencode
 
 import frappe
 from frappe import _, scrub

@@ -93,4 +93,8 @@
 	--text-light: #{$text-light};
 	--text-color: #{$text-color};
 	--control-bg: #{$control-bg};
+
+	// Error colors
+	--error-bg: var(--orange-100);
+	--error-border: var(--orange-400);
 }

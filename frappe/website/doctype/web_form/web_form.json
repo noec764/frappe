@@ -18,6 +18,7 @@
   "allow_edit",
   "allow_multiple",
   "apply_document_permissions",
+  "show_in_grid",
   "allow_delete",
   "allow_print",
   "print_format",
@@ -122,6 +123,13 @@
    "fieldname": "allow_multiple",
    "fieldtype": "Check",
    "label": "Allow Multiple"
+  },
+  {
+    "default": "0",
+    "depends_on": "allow_multiple",
+    "fieldname": "show_in_grid",
+    "fieldtype": "Check",
+    "label": "Show as Grid"
   },
   {
    "default": "0",
@@ -346,7 +354,7 @@
  "icon": "icon-edit",
  "is_published_field": "published",
  "links": [],
- "modified": "2022-03-23 15:44:41.385001",
+ "modified": "2022-04-23 15:44:41.385001",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Web Form",

@@ -1,8 +1,13 @@
 import TemplateFieldSelectorDialog from './TemplateFieldSelector.vue';
+import EventEmitterMixin from '../../../event_emitter';
+
+frappe.provide('frappe.field_selector_updates')
 
 export default class TemplateFieldSelector {
 	constructor(opts) {
 		Object.assign(this, opts);
+		frappe.field_selector_updates.events = {};
+		Object.assign(frappe.field_selector_updates.events, EventEmitterMixin);
 		this.make_dialog();
 
 		frappe.field_selector_updates.on('done', () => {
@@ -52,6 +57,3 @@ export default class TemplateFieldSelector {
 		this.dialog.show();
 	}
 }
-
-frappe.provide('frappe.field_selector_updates')
-frappe.utils.make_event_emitter(frappe.field_selector_updates);

@@ -92,7 +92,9 @@ select.form-control {
 .frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype='Table MultiSelect']) {
 	&.has-error {
 		input {
-			border: 1px solid var(--error-border);
+			border-width: 1px;
+			border-color: var(--error-border);
+			border-style: none none solid;
 
 			&:focus {
 				box-shadow: 0 0 0 $input-btn-focus-width var(--error-bg);
@@ -105,7 +107,9 @@ select.form-control {
 .frappe-control[data-fieldtype='Table MultiSelect'] {
 	&.has-error {
 		.control-input {
-			border: 1px solid var(--error-border);
+			border-width: 1px;
+			border-color: var(--error-border);
+			border-style: none none solid;
 			border-radius: var(--border-radius);
 		}
 	}

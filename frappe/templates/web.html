@@ -6,14 +6,14 @@
 {% macro main_content() %}
 <div class="page-content-wrapper">
 	<!-- breadcrumbs -->
-	<div class="page-breadcrumbs container">
+	<div class="page-breadcrumbs">
 		{% block breadcrumbs %}
 			{% include 'templates/includes/breadcrumbs.html' %}
 		{% endblock %}
 	</div>
 
 	{% block page_container %}
-	<main class="{% if not full_width %}container{% endif %}">
+	<main class="{% if not full_width %}container my-4{% endif %}">
 		<div class="page-header-wrapper">
 			<div class="page-header">
 				{% block header %}{% endblock %}
@@ -45,7 +45,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {%- endmacro %}
 
 {% macro sidebar() %}
-<div class="sidebar-column col-md-{{ columns }}">
+<div class="sidebar-column col-sm-{{ columns }}">
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
@@ -53,13 +53,13 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {% endmacro %}
 
 {% if show_sidebar %}
-<div class="container-fluid">
-	<div class="row" {{ container_attributes() }} style="min-height: 65vh;">
+<div class="container">
+	<div class="row" {{ container_attributes() }}>
 		{%- set columns = sidebar_columns or 2 -%}
 		{%- if not sidebar_right -%}
 		{{ sidebar() }}
 		{%- endif -%}
-		<div class="main-column col-12 col-md-{{ 12 - columns }}">
+		<div class="main-column col-sm-{{ 12 - columns }}">
 			{{ main_content() }}
 		</div>
 		{%- if sidebar_right -%}
