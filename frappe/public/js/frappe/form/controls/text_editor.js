@@ -9,6 +9,12 @@ const CodeBlockContainer = Quill.import('formats/code-block-container');
 CodeBlockContainer.tagName = 'PRE';
 Quill.register(CodeBlockContainer, true);
 
+// font size
+let font_sizes = ['---', '8px', '9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '18px', '20px', '22px', '24px', '32px', '36px', '40px', '48px', '54px', '64px', '96px', '128px'];
+const Size = Quill.import('attributors/style/size');
+Size.whitelist = font_sizes;
+Quill.register(Size, true);
+
 // table
 const Table = Quill.import('formats/table-container');
 const superCreate = Table.create.bind(Table);
@@ -135,7 +141,11 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	make_quill_editor() {
 		if (this.quill) return;
 		const show_template = this.df.options == "Template" ? true : false;
-		this.quill_container = $(frappe.render_template("text_editor", {...this.get_tooltips(), showtemplate: show_template})).appendTo(this.input_area);
+		this.quill_container = $(frappe.render_template("text_editor", {
+			...this.get_tooltips(),
+			showtemplate: show_template,
+			font_sizes: font_sizes
+		})).appendTo(this.input_area);
 		if (this.df.max_height) {
 			$(this.quill_container).css({'max-height': this.df.max_height, 'overflow': 'auto'});
 		}
@@ -210,6 +220,15 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 
 			e.preventDefault();
 		});
+
+		// font size dropdown
+		let $font_size_label = this.$wrapper.find('.ql-size .ql-picker-label:first');
+		let $default_font_size = this.$wrapper.find('.ql-size .ql-picker-item:first');
+
+		if ($font_size_label.length) {
+			$font_size_label.attr('data-value', '---');
+			$default_font_size.attr('data-value', '---');
+		}
 	}
 
 	is_quill_dirty(source) {
@@ -233,6 +252,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	get_tooltips() {
 		return {
 			"header": __("Text Size"),
+			"size": __("Font Size"),
 			"bold": __("Bold"),
 			"italic": __("Add italic text <cmd+i>"),
 			"underline": __("Underline"),

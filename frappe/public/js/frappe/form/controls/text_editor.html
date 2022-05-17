@@ -8,6 +8,13 @@
 		</select>
 	</span>
 	<span class="ql-formats">
+		<select class="ql-size" data-toggle="tooltip" title="{{ size }}">
+			{% for ft in font_sizes %}
+			<option value="{{ ft }}">{{ __(ft) }}</option>
+			{% endfor %}
+		</select>
+	</span>
+	<span class="ql-formats">
 			<button class="ql-bold" data-toggle="tooltip" data-placement="bottom" title="{{ bold }}"></button>
 			<button class="ql-italic" data-toggle="tooltip" data-placement="bottom" title="{{ italic }}"></button>
 			<button class="ql-underline" data-toggle="tooltip" title="{{ underline }}"></button>
