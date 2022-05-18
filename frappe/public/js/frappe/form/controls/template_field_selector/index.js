@@ -6,8 +6,8 @@ frappe.provide('frappe.field_selector_updates')
 export default class TemplateFieldSelector {
 	constructor(opts) {
 		Object.assign(this, opts);
-		frappe.field_selector_updates.events = {};
-		Object.assign(frappe.field_selector_updates.events, EventEmitterMixin);
+		frappe.field_selector_updates = {};
+		Object.assign(frappe.field_selector_updates, EventEmitterMixin);
 		this.make_dialog();
 
 		frappe.field_selector_updates.on('done', () => {
