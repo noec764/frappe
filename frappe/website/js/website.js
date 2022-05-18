@@ -434,7 +434,7 @@ $.extend(frappe, {
 		}
 	},
 	get_user_lang: function() {
-		frappe.call({
+		return frappe.call({
 			method: "frappe.get_user_lang",
 		}).then(r => {
 			if (r && r.message) {

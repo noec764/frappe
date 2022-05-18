@@ -63,7 +63,7 @@
 .btn.btn-secondary {
 	background-color: var(--control-bg);
 	color: var(--text-color);
-	&:hover, &:active {
+	&:hover:not([disabled]), &:active {
 		background-color: var(--gray-400);
 		color: var(--text-color);
 	}
