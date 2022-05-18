@@ -54,8 +54,9 @@ def get_count():
 		controller = get_controller(args.doctype)
 		data = controller(args.doctype).get_count(args)
 	else:
-		distinct = args["distinct"] == "true"
-		data = frappe.db.count(args["doctype"], args["filters"], distinct=distinct)
+		distinct = "distinct " if args.distinct == "true" else ""
+		args.fields = [f"count({distinct}`tab{args.doctype}`.name) as total_count"]
+		data = execute(**args)[0].get("total_count")
 
 	return data
 
