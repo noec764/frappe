@@ -63,13 +63,13 @@ frappe.search.utils = {
 					out.value = __(match[1][1]);
 				}
 			} else if (['List', 'Tree', 'Workspaces', 'query-report'].includes(match[1][0]) && (match[1].length > 1)) {
-				var type = match[1][0], label = type;
-				if (type==='Workspaces') label = 'Workspace';
-				else if (type==='query-report' || match[1][2] ==='Report') label = 'Report';
+				var type = match[1][0], label = __(type);
+				if (type==='Workspaces') label = __('Workspace');
+				else if (type==='query-report' || match[1][2] ==='Report') label = __('Report View');
 				out.label = __(`{0} : ${label}`, [__(match[1][1]).bold()]);
 				out.value = __(`{0} : ${label}`, [__(match[1][1])]);
 			} else if (match[0]) {
-				out.label = match[0].bold();
+				out.label = __(match[0].bold());
 				out.value = match[0];
 			} else {
 				// eslint-disable-next-line
@@ -160,7 +160,7 @@ frappe.search.utils = {
 			if (skip_list) {
 				var label = label_without_type;
 			} else {
-				label = __(`{0} : ${skip_list ? '' : type}`, [label_without_type]);
+				label = __(`{0} : ${skip_list ? '' : __(type)}`, [label_without_type]);
 			}
 
 			return {
