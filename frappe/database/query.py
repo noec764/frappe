@@ -5,7 +5,6 @@ from typing import Any, Dict, List, Tuple, Union
 
 import frappe
 from frappe import _
-from frappe.boot import get_additional_filters_from_hooks
 from frappe.model.db_query import get_timespan_date_range
 from frappe.query_builder import Criterion, Field, Order, Table
 
@@ -172,6 +171,8 @@ class Query:
 		all_operators = OPERATOR_MAP.copy()
 
 		# update with site-specific custom operators
+		from frappe.boot import get_additional_filters_from_hooks
+
 		additional_filters_config = get_additional_filters_from_hooks()
 
 		if additional_filters_config:
