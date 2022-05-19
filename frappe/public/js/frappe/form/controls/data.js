@@ -121,6 +121,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			</span>`
 		);
 
+		this.$scan_btn = this.$wrapper.find('.link-btn');
 		this.$scan_btn.toggle(true);
 
 		const me = this;
