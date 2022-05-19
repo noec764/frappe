@@ -194,3 +194,6 @@ cypress/videos
 
 # JetBrains IDEs
 .idea/
+
+# Allow-list
+!frappe/public/js/lib
