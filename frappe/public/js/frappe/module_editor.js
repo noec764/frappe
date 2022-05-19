@@ -13,9 +13,9 @@ frappe.ModuleEditor = class ModuleEditor {
 				get_data: () => {
 					return this.frm.doc.__onload.all_modules.map(module => {
 						return {
-							label: m.label,
-							value: m.module,
-							checked: !block_modules.includes(m.module),
+							label: module.label,
+							value: module.name,
+							checked: !block_modules.includes(module.name),
 						};
 					});
 				},
@@ -31,14 +31,13 @@ frappe.ModuleEditor = class ModuleEditor {
 	show() {
 		const block_modules = this.frm.doc.block_modules.map(row => row.module);
 		const all_modules = this.frm.doc.__onload.all_modules;
-		this.multicheck.selected_options = all_modules.filter(m => !block_modules.includes(m.module));
+		this.multicheck.selected_options = all_modules.filter(m => !block_modules.includes(m.name)).map(m => m.name);
 		this.multicheck.refresh_input();
 	}
 
 	set_modules_in_table() {
 		let block_modules = this.frm.doc.block_modules || [];
 		let unchecked_options = this.multicheck.get_unchecked_options();
-
 		block_modules.map(module_doc => {
 			if (!unchecked_options.includes(module_doc.module)) {
 				frappe.model.clear_doc(module_doc.doctype, module_doc.name);
