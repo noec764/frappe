@@ -790,7 +790,7 @@ def get_server_messages(app):
 	messages = []
 	file_extensions = (".py", ".html", ".js", ".vue")
 	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
-		for dontwalk in (".git", "public", "locale"):
+		for dontwalk in (".git", "public", "locale", "query_builder"):
 			if dontwalk in folders:
 				folders.remove(dontwalk)
 
