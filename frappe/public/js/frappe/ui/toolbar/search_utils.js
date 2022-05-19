@@ -160,7 +160,7 @@ frappe.search.utils = {
 			if (skip_list) {
 				var label = label_without_type;
 			} else {
-				label = __(`{0} : ${skip_list ? '' : __(type)}`, [label_without_type]);
+				label = !type ? label_without_type : __(`{0} : ${__(type)}`, [label_without_type]);
 			}
 
 			return {
