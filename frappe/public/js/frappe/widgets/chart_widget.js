@@ -272,6 +272,9 @@ export default class ChartWidget extends Widget {
 
 	get_report_chart_data(result) {
 		if (result.chart && this.chart_doc.use_report_chart) {
+			if (result.chart.colors) {
+				this.colors = result.chart.colors
+			}
 			return result.chart.data;
 		} else {
 			let y_fields = [];
@@ -606,8 +609,8 @@ export default class ChartWidget extends Widget {
 		if (this.chart_doc.document_type) {
 			let doctype_meta = frappe.get_meta(this.chart_doc.document_type);
 			let field = doctype_meta.fields.find(x => x.fieldname == this.chart_doc.value_based_on);
-			fieldtype = field?.fieldtype;
-			options = field?.options;
+			fieldtype = field.fieldtype;
+			options = field.options;
 		}
 
 		if (this.chart_doc.chart_type == "Report" && this.report_result?.chart?.fieldtype) {
@@ -654,9 +657,13 @@ export default class ChartWidget extends Widget {
 				colors.push(field.color);
 			});
 		} else if (["Line", "Bar"].includes(this.chart_doc.type)) {
-			colors = [this.chart_doc.color || []];
+			colors = this.chart_doc.color ? [this.chart_doc.color] : [];
 		}  else if (this.chart_doc.type == "Heatmap") {
 			colors = [];
+		}
+
+		if (!colors.length && this.colors) {
+			colors = this.colors;
 		}
 
 		return colors;
