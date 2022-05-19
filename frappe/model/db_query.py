@@ -451,7 +451,7 @@ class DatabaseQuery(object):
 		to_remove = []
 		for fld in self.fields:
 			for f in optional_fields:
-				if f in fld and not f in self.columns:
+				if f in fld and f not in self.columns:
 					to_remove.append(fld)
 
 		for fld in to_remove:
