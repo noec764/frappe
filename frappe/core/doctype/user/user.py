@@ -1,6 +1,7 @@
 # Copyright (c) 2021, Dokos SAS and Contributors
 # License: MIT. See LICENSE
 
+from datetime import timedelta
 
 from bs4 import BeautifulSoup
 
@@ -304,6 +305,7 @@ class User(Document):
 
 		key = random_string(32)
 		self.db_set("reset_password_key", key)
+		self.db_set("last_reset_password_key_generated_on", now_datetime())
 
 		url = "/update-password?key=" + key
 		if password_expired:
@@ -628,7 +630,7 @@ class User(Document):
 			for p in self.social_logins:
 				if p.provider == provider:
 					return p.userid
-		except:
+		except Exception:
 			return None
 
 	def set_social_login_userid(self, provider, userid, username=None):
@@ -862,9 +864,22 @@ def _get_user_for_update_password(key, old_password):
 	# verify old password
 	result = frappe._dict()
 	if key:
-		result.user = frappe.db.get_value("User", {"reset_password_key": key})
-		if not result.user:
-			result.message = _("The Link specified has either been used before or Invalid")
+		user = frappe.db.get_value(
+			"User", {"reset_password_key": key}, ["name", "last_reset_password_key_generated_on"]
+		)
+		result.user, last_reset_password_key_generated_on = user or (None, None)
+		if result.user:
+			reset_password_link_expiry = cint(
+				frappe.db.get_single_value("System Settings", "reset_password_link_expiry_duration")
+			)
+			if (
+				reset_password_link_expiry
+				and now_datetime()
+				> last_reset_password_key_generated_on + timedelta(seconds=reset_password_link_expiry)
+			):
+				result.message = _("The reset password link has expired")
+		else:
+			result.message = _("The reset password link has either been used before or is invalid")
 
 	elif old_password:
 		# verify old password
