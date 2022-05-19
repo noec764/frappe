@@ -1,12 +1,6 @@
-@font-face {
-	font-family: 'Varela Round';
-	src: url('/assets/frappe/css/fonts/varela-round/VarelaRound-Regular.ttf');
-}
-
 html,
 body {
 	background-color: var(--bg-color);
-	font-family: 'Varela Round', 'Roboto', sans-serif;
 }
 
 .desk-sidebar {
@@ -903,6 +897,7 @@ body {
 			height: calc(100vh - var(--navbar-height) - var(--page-head-height) - 5px);
 			.layout-side-section, .layout-main-section-wrapper {
 				height: 100%;
+				overflow-y: auto;
 				scrollbar-color: var(--gray-200) transparent;
 				[data-theme="dark"] & {
 					scrollbar-color: var(--gray-800) transparent;
@@ -922,19 +917,11 @@ body {
 
 			.layout-side-section {
 				padding-right: 15px;
-				overflow-y: auto;
-			}
-
-			.layout-main-section-wrapper {
-				margin-top: -5px;
-				padding-top: 5px;
 			}
 
 			.layout-main-section {
-				background-color: var(--fg-color);
-				box-shadow: var(--card-shadow);
-				border-radius: var(--border-radius-lg);
-				padding: var(--padding-sm);
+				padding: var(--padding-md);
+				margin-bottom: var(--margin-sm);
 			}
 
 			.desk-sidebar {
@@ -943,10 +930,16 @@ body {
 		}
 	}
 
+	.layout-main-section-wrapper {
+		margin-top: -5px;
+		padding-top: 5px;
+	}
+
 	.layout-main-section {
 		background-color: var(--fg-color);
-		padding: var(--padding-sm);
+		box-shadow: var(--card-shadow);
 		border-radius: var(--border-radius-lg);
+		padding: var(--padding-sm);
 	}
 
 	.block-menu-item-icon svg{
