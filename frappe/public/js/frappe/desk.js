@@ -2,7 +2,7 @@
 // MIT License. See license.txt
 /* eslint-disable no-console */
 
-frappe.start_app = function() {
+frappe.start_app = function () {
 	if (!frappe.Application)
 		return;
 	frappe.assets.check();
@@ -11,7 +11,7 @@ frappe.start_app = function() {
 	frappe.app = new frappe.Application();
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
 	if (!frappe.utils.supportsES6) {
 		frappe.msgprint({
 			indicator: 'red',
@@ -31,7 +31,7 @@ frappe.Application = class Application {
 		frappe.socketio.init();
 		frappe.model.init();
 
-		if(frappe.boot.status==='failed') {
+		if (frappe.boot.status === 'failed') {
 			frappe.msgprint({
 				message: frappe.boot.error,
 				title: __('Session Start Failed'),
@@ -113,13 +113,13 @@ frappe.Application = class Application {
 			frappe.ui.startup_setup_dialog.show();
 		}
 
-		frappe.realtime.on("version-update", function() {
+		frappe.realtime.on("version-update", function () {
 			var dialog = frappe.msgprint({
-				message:__("The application has been updated to a new version, please refresh this page"),
+				message: __("The application has been updated to a new version, please refresh this page"),
 				indicator: 'green',
 				title: __('Version Updated'),
 				primary_action: {
-					action: () => {location.reload(true)},
+					action: () => { location.reload(true) },
 					label: __("Refresh")
 				}
 			});
@@ -130,9 +130,9 @@ frappe.Application = class Application {
 		this.setup_build_events();
 
 		if (frappe.sys_defaults.email_user_password) {
-			var email_list =  frappe.sys_defaults.email_user_password.split(',');
+			var email_list = frappe.sys_defaults.email_user_password.split(',');
 			for (var u in email_list) {
-				if (email_list[u]===frappe.user.name) {
+				if (email_list[u] === frappe.user.name) {
 					this.set_password(email_list[u]);
 				}
 			}
@@ -144,10 +144,10 @@ frappe.Application = class Application {
 		}
 
 		if (!frappe.boot.developer_mode) {
-			setInterval(function() {
+			setInterval(function () {
 				frappe.call({
 					method: 'frappe.core.page.background_jobs.background_jobs.get_scheduler_status',
-					callback: function(r) {
+					callback: function (r) {
 						if (r.message[0] == __("Inactive")) {
 							frappe.call('frappe.utils.scheduler.activate_scheduler');
 						}
@@ -156,13 +156,13 @@ frappe.Application = class Application {
 			}, 300000); // check every 5 minutes
 
 			if (frappe.user.has_role("System Manager")) {
-				setInterval(function() {
+				setInterval(function () {
 					frappe.call({
 						method: 'frappe.core.doctype.log_settings.log_settings.has_unseen_error_log',
 						args: {
 							user: frappe.session.user
 						},
-						callback: function(r) {
+						callback: function (r) {
 							if (r.message && r.message.show_alert) {
 								frappe.show_alert({
 									indicator: 'red',
@@ -197,25 +197,25 @@ frappe.Application = class Application {
 	}
 
 	set_password(user) {
-		var me=this;
+		var me = this;
 		frappe.call({
 			method: 'frappe.core.doctype.user.user.get_email_awaiting',
 			args: {
 				"user": user
 			},
-			callback: function(email_account) {
+			callback: function (email_account) {
 				email_account = email_account["message"];
 				if (email_account) {
 					var i = 0;
 					if (i < email_account.length) {
-						me.email_password_prompt( email_account, user, i);
+						me.email_password_prompt(email_account, user, i);
 					}
 				}
 			}
 		});
 	}
 
-	email_password_prompt(email_account,user,i) {
+	email_password_prompt(email_account, user, i) {
 		var me = this;
 		const email_id = email_account[i]["email_id"];
 		let d = new frappe.ui.Dialog({
@@ -234,7 +234,7 @@ frappe.Application = class Application {
 				}
 			]
 		});
-		d.get_input("submit").on("click", function() {
+		d.get_input("submit").on("click", function () {
 			//setup spinner
 			d.hide();
 			var s = new frappe.ui.Dialog({
@@ -253,11 +253,11 @@ frappe.Application = class Application {
 					"user": user,
 					"password": d.get_value("password")
 				},
-				callback: function(passed) {
+				callback: function (passed) {
 					s.hide();
 					d.hide();//hide waiting indication
 					if (!passed["message"]) {
-						frappe.show_alert({message: __("Login Failed please try again"), indicator: 'error'}, 5);
+						frappe.show_alert({ message: __("Login Failed please try again"), indicator: 'error' }, 5);
 						me.email_password_prompt(email_account, user, i);
 					} else {
 						if (i + 1 < email_account.length) {
@@ -273,7 +273,7 @@ frappe.Application = class Application {
 	}
 
 	load_bootinfo() {
-		if(frappe.boot) {
+		if (frappe.boot) {
 			this.setup_workspaces();
 			frappe.model.sync(frappe.boot.docs);
 			this.check_metadata_cache_status();
@@ -281,7 +281,7 @@ frappe.Application = class Application {
 			this.sync_pages();
 			frappe.router.setup();
 			this.setup_moment();
-			if(frappe.boot.print_css) {
+			if (frappe.boot.print_css) {
 				frappe.dom.set_style(frappe.boot.print_css, "print-style");
 			}
 			frappe.user.name = frappe.boot.user.name;
@@ -295,7 +295,7 @@ frappe.Application = class Application {
 		frappe.modules = {};
 		frappe.workspaces = {};
 		for (let page of frappe.boot.allowed_workspaces || []) {
-			frappe.modules[page.module]=page;
+			frappe.modules[page.module] = page;
 			frappe.workspaces[frappe.router.slug(page.name)] = page;
 		}
 	}
@@ -309,7 +309,7 @@ frappe.Application = class Application {
 	}
 
 	check_metadata_cache_status() {
-		if(frappe.boot.metadata_version != localStorage.metadata_version) {
+		if (frappe.boot.metadata_version != localStorage.metadata_version) {
 			frappe.assets.clear_local_storage();
 			frappe.assets.init_local_storage();
 		}
@@ -331,37 +331,37 @@ frappe.Application = class Application {
 		// Proxy for user globals
 		Object.defineProperties(window, {
 			'user': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.session.user` instead of `user`. It will be deprecated soon.');
 					return frappe.session.user;
 				}
 			},
 			'user_fullname': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.session.user_fullname` instead of `user_fullname`. It will be deprecated soon.');
 					return frappe.session.user;
 				}
 			},
 			'user_email': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.session.user_email` instead of `user_email`. It will be deprecated soon.');
 					return frappe.session.user_email;
 				}
 			},
 			'user_defaults': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.user_defaults` instead of `user_defaults`. It will be deprecated soon.');
 					return frappe.user_defaults;
 				}
 			},
 			'roles': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.user_roles` instead of `roles`. It will be deprecated soon.');
 					return frappe.user_roles;
 				}
 			},
 			'sys_defaults': {
-				get: function() {
+				get: function () {
 					console.warn('Please use `frappe.sys_defaults` instead of `sys_defaults`. It will be deprecated soon.');
 					return frappe.user_roles;
 				}
@@ -371,11 +371,11 @@ frappe.Application = class Application {
 
 	sync_pages() {
 		// clear cached pages if timestamp is not found
-		if(localStorage["page_info"]) {
+		if (localStorage["page_info"]) {
 			frappe.boot.allowed_pages = [];
 			var page_info = JSON.parse(localStorage["page_info"]);
-			$.each(frappe.boot.page_info, function(name, p) {
-				if(!page_info[name] || (page_info[name].modified != p.modified)) {
+			$.each(frappe.boot.page_info, function (name, p) {
+				if (!page_info[name] || (page_info[name].modified != p.modified)) {
 					delete localStorage["_page:" + name];
 				}
 				frappe.boot.allowed_pages.push(name);
@@ -397,7 +397,7 @@ frappe.Application = class Application {
 	}
 
 	make_page_container() {
-		if($("#body").length) {
+		if ($("#body").length) {
 			$(".splash").remove();
 			frappe.temp_container = $("<div id='temp-container' style='display: none;'>")
 				.appendTo("body");
@@ -407,7 +407,7 @@ frappe.Application = class Application {
 
 	make_nav_bar() {
 		// toolbar
-		if(frappe.boot && frappe.boot.home_page!=='setup-wizard') {
+		if (frappe.boot && frappe.boot.home_page !== 'setup-wizard') {
 			frappe.frappe_toolbar = new frappe.ui.toolbar.Toolbar();
 		}
 
@@ -417,9 +417,9 @@ frappe.Application = class Application {
 		var me = this;
 		me.logged_out = true;
 		return frappe.call({
-			method:'logout',
-			callback: function(r) {
-				if(r.exc) {
+			method: 'logout',
+			callback: function (r) {
+				if (r.exc) {
 					return;
 				}
 				me.redirect_to_login();
@@ -428,13 +428,15 @@ frappe.Application = class Application {
 	}
 
 	handle_session_expired() {
-		if(!frappe.app.session_expired_dialog) {
+		if (!frappe.app.session_expired_dialog) {
 			var dialog = new frappe.ui.Dialog({
 				title: __('Session Expired'),
 				keep_open: true,
 				fields: [
-					{ fieldtype:'Password', fieldname:'password',
-						label: __('Please Enter Your Password to Continue') },
+					{
+						fieldtype: 'Password', fieldname: 'password',
+						label: __('Please Enter Your Password to Continue')
+					},
 				],
 				onhide: () => {
 					if (!dialog.logged_in) {
@@ -451,7 +453,7 @@ frappe.Application = class Application {
 						pwd: dialog.get_values().password
 					},
 					callback: (r) => {
-						if (r.message==='Logged In') {
+						if (r.message === 'Logged In') {
 							dialog.logged_in = true;
 
 							// revert backdrop
@@ -469,7 +471,7 @@ frappe.Application = class Application {
 			});
 			frappe.app.session_expired_dialog = dialog;
 		}
-		if(!frappe.app.session_expired_dialog.display) {
+		if (!frappe.app.session_expired_dialog.display) {
 			frappe.app.session_expired_dialog.show();
 			// add backdrop
 			$('.modal-backdrop').css({
@@ -535,12 +537,12 @@ frappe.Application = class Application {
 
 		// Iterate over changelog
 		var change_log_dialog = frappe.msgprint({
-			message: frappe.render_template("change_log", {"change_log": change_log}),
+			message: frappe.render_template("change_log", { "change_log": change_log }),
 			title: __("Updated To A New Version 🎉"),
 			wide: true
 		});
 		change_log_dialog.keep_open = true;
-		change_log_dialog.custom_onhide = function() {
+		change_log_dialog.custom_onhide = function () {
 			frappe.call({
 				"method": "frappe.utils.change_log.update_last_known_versions"
 			});
@@ -557,7 +559,7 @@ frappe.Application = class Application {
 	}
 
 	setup_analytics() {
-		if(window.mixpanel) {
+		if (window.mixpanel) {
 			window.mixpanel.identify(frappe.session.user);
 			window.mixpanel.people.set({
 				"$first_name": frappe.boot.user.first_name,
@@ -574,12 +576,12 @@ frappe.Application = class Application {
 
 	show_notes() {
 		var me = this;
-		if(frappe.boot.notes.length) {
-			frappe.boot.notes.forEach(function(note) {
-				if(!note.seen || note.notify_on_every_login) {
-					var d = frappe.msgprint({message:note.content, title:note.title});
+		if (frappe.boot.notes.length) {
+			frappe.boot.notes.forEach(function (note) {
+				if (!note.seen || note.notify_on_every_login) {
+					var d = frappe.msgprint({ message: note.content, title: note.title });
 					d.keep_open = true;
-					d.custom_onhide = function() {
+					d.custom_onhide = function () {
 						note.seen = true;
 
 						// Mark note as read if the Notify On Every Login flag is not set
@@ -658,21 +660,21 @@ frappe.Application = class Application {
 	}
 };
 
-frappe.get_module = function(m, default_module) {
+frappe.get_module = function (m, default_module) {
 	var module = frappe.modules[m] || default_module;
 	if (!module) {
 		return;
 	}
 
-	if(module._setup) {
+	if (module._setup) {
 		return module;
 	}
 
-	if(!module.label) {
+	if (!module.label) {
 		module.label = m;
 	}
 
-	if(!module._label) {
+	if (!module._label) {
 		module._label = __(module.label);
 	}
 

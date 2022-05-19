@@ -642,20 +642,20 @@ frappe.views.Workspace = class Workspace {
 	add_settings_button(item, sidebar_control) {
 		this.dropdown_list = [
 			{
-				label: 'Edit',
-				title: 'Edit Workspace',
+				label: __('Edit'),
+				title: __('Edit Workspace'),
 				icon: frappe.utils.icon('edit', 'sm'),
 				action: () => this.edit_page(item)
 			},
 			{
-				label: 'Duplicate',
-				title: 'Duplicate Workspace',
+				label: __('Duplicate'),
+				title: __('Duplicate Workspace'),
 				icon: frappe.utils.icon('duplicate', 'sm'),
 				action: () => this.duplicate_page(item)
 			},
 			{
-				label: 'Delete',
-				title: 'Delete Workspace',
+				label: __('Delete'),
+				title: __('Delete Workspace'),
 				icon: frappe.utils.icon('delete-active', 'sm'),
 				action: () => this.delete_page(item)
 			}
