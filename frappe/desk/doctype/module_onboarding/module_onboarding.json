@@ -11,6 +11,8 @@
   "module",
   "allow_roles",
   "column_break_4",
+  "language",
+  "reference_module_onboarding",
   "success_message",
   "documentation_url",
   "is_complete",
@@ -62,8 +64,7 @@
    "default": "0",
    "fieldname": "is_complete",
    "fieldtype": "Check",
-   "label": "Is Complete",
-   "read_only": 1
+   "label": "Is Complete"
   },
   {
    "fieldname": "steps",
@@ -79,10 +80,26 @@
    "label": "Allow Roles",
    "options": "Onboarding Permission",
    "reqd": 1
+  },
+  {
+   "default": "en",
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "label": "Language",
+   "options": "Language",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.language!=\"en\"",
+   "fieldname": "reference_module_onboarding",
+   "fieldtype": "Link",
+   "label": "Reference Module Onboarding",
+   "mandatory_depends_on": "eval:doc.language!=\"en\"",
+   "options": "Module Onboarding"
   }
  ],
  "links": [],
- "modified": "2022-05-19 18:20:27.038127",
+ "modified": "2022-05-19 19:40:41.304228",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Module Onboarding",

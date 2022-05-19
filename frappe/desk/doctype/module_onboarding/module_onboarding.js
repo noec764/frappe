@@ -11,6 +11,14 @@ frappe.ui.form.on("Module Onboarding", {
 		if (!frappe.boot.developer_mode) {
 			frm.trigger("disable_form");
 		}
+
+		frm.set_query("step", "steps", () => {
+			return {
+				filters: {
+					"language": frm.doc.language
+				}
+			}
+		})
 	},
 
 	disable_form: function(frm) {

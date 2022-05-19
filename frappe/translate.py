@@ -208,11 +208,6 @@ def get_dict(fortype, name=None):
 			).run()
 			messages += (frappe.qb.from_("Report").select(PseudoColumn("'Report:'"), "name")).run()
 			messages += (
-				frappe.qb.from_("Module Onboarding")
-				.where(Field("title").isnotnull())
-				.select(PseudoColumn("''"), "title")
-			).run()
-			messages += (
 				frappe.qb.from_("Workspace Shortcut")
 				.where(Field("format").isnotnull())
 				.select(PseudoColumn("''"), "format")
@@ -449,26 +444,6 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			for i in messages:
 				if not isinstance(i, tuple):
 					raise Exception
-
-		# module_onboarding
-		module_onboarding = DocType("Module Onboarding")
-		for name in (
-			frappe.qb.from_(module_onboarding)
-			.where(Field("module").isin(modules))
-			.select(module_onboarding.name)
-			.run(pluck=True)
-		):
-			messages.extend(get_messages_from_module_onboarding(name))
-			for i in messages:
-				if not isinstance(i, tuple):
-					raise Exception
-
-			steps = frappe.get_all("Onboarding Step Map", filters={"parent": name}, fields=["step"])
-			for step in steps:
-				messages.extend(get_messages_from_onboarding_step(step.step))
-				for i in messages:
-					if not isinstance(i, tuple):
-						raise Exception
 
 		# workspaces
 		workspace = DocType("Workspace")
@@ -726,24 +701,6 @@ def get_messages_from_report(name):
 			]
 		)
 	messages.append((None, report.report_name))
-	return messages
-
-
-def get_messages_from_module_onboarding(name):
-	module_onboarding = frappe.get_doc("Module Onboarding", name)
-	messages = []
-	for field in ["title", "subtitle", "success_message"]:
-		if module_onboarding.get(field):
-			messages.append(("Module Onboarding: " + name, module_onboarding.get(field)))
-	return messages
-
-
-def get_messages_from_onboarding_step(name):
-	onboarding_step = frappe.get_doc("Onboarding Step", name)
-	messages = []
-	for field in ["title", "callback_title", "callback_message", "action_label", "action"]:
-		if onboarding_step.get(field):
-			messages.append(("Onboarding Step: " + name, onboarding_step.get(field)))
 	return messages
 
 

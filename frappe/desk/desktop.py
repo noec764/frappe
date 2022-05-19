@@ -128,6 +128,12 @@ class Workspace:
 		if frappe.db.get_value("Module Onboarding", onboarding, "is_complete"):
 			return None
 
+		locale_onboarding = frappe.db.get_value(
+			"Module Onboarding", dict(reference_module_onboarding=onboarding, language=frappe.local.lang)
+		)
+		if locale_onboarding:
+			onboarding = locale_onboarding
+
 		doc = frappe.get_doc("Module Onboarding", onboarding)
 
 		# Check if user is allowed

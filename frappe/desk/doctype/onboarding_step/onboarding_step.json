@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "title",
+  "language",
   "column_break_2",
   "is_complete",
   "is_skipped",
@@ -214,10 +215,19 @@
    "fieldtype": "Link",
    "label": "Form Tour",
    "options": "Form Tour"
+  },
+  {
+   "default": "en",
+   "fieldname": "language",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Language",
+   "options": "Language",
+   "reqd": 1
   }
  ],
  "links": [],
- "modified": "2022-05-19 18:31:21.562603",
+ "modified": "2022-05-19 18:37:40.494485",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Onboarding Step",
