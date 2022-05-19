@@ -244,15 +244,6 @@ def get_workflow_action_by_role(doc, allowed_roles):
 	).run(as_dict=True)
 
 
-def update_completed_workflow_actions(doc, user=None):
-	user = user if user else frappe.session.user
-	frappe.db.sql(
-		"""UPDATE `tabWorkflow Action` SET `status`='Completed', `completed_by`=%s
-		WHERE `reference_doctype`=%s AND `reference_name`=%s AND `user`=%s AND `status`='Open'""",
-		(user, doc.get("doctype"), doc.get("name"), user),
-	)
-
-
 def update_completed_workflow_actions_using_role(
 	doc, user=None, allowed_roles=set(), workflow_action=None
 ):
