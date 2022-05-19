@@ -86,7 +86,7 @@ frappe.views.Workspace = class Workspace {
 						href="/app/${item.public ? frappe.router.slug(item.title) : 'private/'+frappe.router.slug(item.title) }"
 						class="item-anchor ${item.is_editable ? "" : "block-click" }" title="${__(item.title)}"
 					>
-						<span class="sidebar-item-icon" item-icon=${item.icon || "folder-normal"}>${frappe.utils.icon(item.icon || "folder-normal", "md")}</span>
+						<span class="sidebar-item-icon" item-icon=${item.icon || "folder-normal"} ${item.color ? 'style=--icon-fill:' + item.color : ''}>${frappe.utils.icon(item.icon || "folder-normal", "md")}</span>
 						<span class="sidebar-item-label">${__(item.title)}<span>
 					</a>
 					<div class="sidebar-item-control"></div>

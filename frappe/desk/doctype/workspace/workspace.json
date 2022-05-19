@@ -16,6 +16,7 @@
   "module",
   "column_break_3",
   "icon",
+  "color",
   "restrict_to_domain",
   "hide_custom",
   "public",
@@ -157,22 +158,27 @@
    "fieldname": "roles_tab",
    "fieldtype": "Tab Break",
    "label": "Roles"
-},
-{
- "fieldname": "quick_lists_tab",
- "fieldtype": "Tab Break",
- "label": "Quick Lists"
-},
-{
- "fieldname": "quick_lists",
- "fieldtype": "Table",
- "label": "Quick Lists",
- "options": "Workspace Quick List"
+  },
+  {
+   "fieldname": "quick_lists_tab",
+   "fieldtype": "Tab Break",
+   "label": "Quick Lists"
+  },
+  {
+   "fieldname": "quick_lists",
+   "fieldtype": "Table",
+   "label": "Quick Lists",
+   "options": "Workspace Quick List"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color"
   }
  ],
  "in_create": 1,
  "links": [],
- "modified": "2022-05-12 13:00:03.925605",
+ "modified": "2022-05-19 09:47:23.542527",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
