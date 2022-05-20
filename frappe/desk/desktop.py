@@ -41,6 +41,11 @@ class Workspace:
 		self.allowed_modules = self.get_cached("user_allowed_modules", self.get_allowed_modules)
 
 		self.doc = frappe.get_cached_doc("Workspace", self.page_name)
+		self.doc.extensions = (
+			[]
+			if frappe.conf.developer_mode
+			else frappe.db.get_all("Workspace", dict(extends_page=self.page_name), pluck="name")
+		)
 
 		if (
 			self.doc
@@ -252,6 +257,10 @@ class Workspace:
 				new_card["links"] = new_items
 				new_card["original_label"] = new_card["label"]
 				new_card["label"] = _(new_card["label"])
+
+				if new_card.get("parent") in self.doc.extensions:
+					new_card["extension"] = True
+
 				new_data.append(new_card)
 
 		return new_data
@@ -261,6 +270,9 @@ class Workspace:
 		all_charts = []
 		if frappe.has_permission("Dashboard Chart", throw=False):
 			charts = self.doc.charts
+
+			for extension in self.doc.extensions:
+				charts.extend(frappe.get_cached_doc("Workspace", extension).charts)
 
 			for chart in charts:
 				if frappe.has_permission("Dashboard Chart", doc=chart.chart_name):
@@ -283,6 +295,9 @@ class Workspace:
 		items = []
 		shortcuts = self.doc.shortcuts
 
+		for extension in self.doc.extensions:
+			shortcuts.extend(frappe.get_cached_doc("Workspace", extension).shortcuts)
+
 		for item in shortcuts:
 			new_item = item.as_dict().copy()
 			if self.is_item_allowed(item.link_to, item.type) and _in_active_domains(item):
@@ -297,6 +312,9 @@ class Workspace:
 				new_item["original_label"] = item.label if item.label else item.link_to
 				new_item["label"] = _(item.label) if item.label else _(item.link_to)
 
+				if new_item.get("parent") in self.doc.extensions:
+					new_item["extension"] = True
+
 				items.append(new_item)
 
 		return items
@@ -306,8 +324,14 @@ class Workspace:
 		items = []
 		quick_lists = self.doc.quick_lists
 
+		for extension in self.doc.extensions:
+			quick_lists.extend(frappe.get_cached_doc("Workspace", extension).quick_lists)
+
 		for item in quick_lists:
 			new_item = item.as_dict().copy()
+
+			if new_item.get("parent") in self.doc.extensions:
+				new_item["extension"] = True
 
 			# Translate label
 			new_item["label"] = _(item.label) if item.label else _(item.document_type)
@@ -390,6 +414,9 @@ def get_workspace_sidebar_items():
 		"module": ["not in", blocked_modules],
 		"hidden": 0,
 	}
+
+	if not frappe.conf.developer_mode:
+		filters["extends_page"] = ("is", "not set")
 
 	# pages sorted based on sequence id
 	order_by = "sequence_id asc"

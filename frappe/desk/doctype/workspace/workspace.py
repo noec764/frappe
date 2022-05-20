@@ -2,7 +2,7 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
-
+from collections import defaultdict
 from json import loads
 
 import frappe
@@ -50,34 +50,26 @@ class Workspace(Document):
 
 	def get_link_groups(self):
 		cards = []
-		current_card = frappe._dict(
-			{
-				"label": "Link",
-				"type": "Card Break",
-				"icon": None,
-				"hidden": False,
-			}
-		)
 
-		card_links = []
+		extended_links = []
+		for extension in self.extensions:
+			extended_links.extend(frappe.get_doc("Workspace", extension).links)
 
-		for link in self.links:
-			link = link.as_dict()
+		card_labels = defaultdict(dict)
+		links = defaultdict(list)
+		current_card = None
+		for link in self.links + extended_links:
 			if link.type == "Card Break":
-				if card_links and (
-					not current_card.get("only_for")
-					or current_card.get("only_for") == frappe.get_system_settings("country")
-				):
-					current_card["links"] = card_links
-					cards.append(current_card)
-
-				current_card = link
-				card_links = []
+				if not link.get("hidden"):
+					card_labels[link.label] = link.as_dict()
+					current_card = link.label
 			else:
-				card_links.append(link)
+				links[current_card].append(link.as_dict())
 
-		current_card["links"] = card_links
-		cards.append(current_card)
+		for card_label in card_labels:
+			card = card_labels[card_label]
+			card["links"] = links.get(card_label)
+			cards.append(card)
 
 		return cards
 
@@ -170,7 +162,7 @@ def new_page(new_page):
 	doc.for_user = page.get("for_user")
 	doc.public = page.get("public")
 	doc.sequence_id = last_sequence_id(doc) + 1
-	doc.save(ignore_permissions=True)
+	doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
 
 	return doc
 

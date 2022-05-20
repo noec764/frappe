@@ -8,6 +8,7 @@
   "type",
   "label",
   "icon",
+  "columns",
   "hidden",
   "link_details_section",
   "link_type",
@@ -100,19 +101,26 @@
    "fieldname": "dependencies",
    "fieldtype": "Data",
    "label": "Dependencies"
-},
-{
- "depends_on": "eval:doc.type == \"Card Break\"",
- "fieldname": "link_count",
- "fieldtype": "Int",
- "hidden": 1,
- "label": "Link Count"
+  },
+  {
+   "depends_on": "eval:doc.type == \"Card Break\"",
+   "fieldname": "link_count",
+   "fieldtype": "Int",
+   "hidden": 1,
+   "label": "Link Count"
+  },
+  {
+   "default": "4",
+   "depends_on": "eval:parent.extends_page&&doc.type==\"Card Break\"",
+   "fieldname": "columns",
+   "fieldtype": "Int",
+   "label": "Columns"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2021-06-01 11:23:28.990593",
+ "modified": "2022-05-20 12:23:22.350925",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace Link",
@@ -121,5 +129,6 @@
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }

@@ -12,6 +12,7 @@
   "title",
   "sequence_id",
   "for_user",
+  "extends_page",
   "parent_page",
   "module",
   "column_break_3",
@@ -188,11 +189,18 @@
    "fieldname": "is_standard",
    "fieldtype": "Check",
    "label": "Is Standard"
+  },
+  {
+   "depends_on": "eval:doc.is_standard",
+   "fieldname": "extends_page",
+   "fieldtype": "Link",
+   "label": "Extends Page",
+   "options": "Workspace"
   }
  ],
  "in_create": 1,
  "links": [],
- "modified": "2022-05-20 10:40:39.746395",
+ "modified": "2022-05-20 11:11:52.739236",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
