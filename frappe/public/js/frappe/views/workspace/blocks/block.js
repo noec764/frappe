@@ -152,31 +152,31 @@ export default class Block {
 		this.dropdown_list = [
 			{
 				label: __('Delete'),
-				title: 'Delete Block',
+				title: __('Delete Block'),
 				icon: frappe.utils.icon('delete-active', 'sm'),
 				action: () => this.api.blocks.delete()
 			},
 			{
 				label: __('Expand'),
-				title: 'Expand Block',
+				title: __('Expand Block'),
 				icon: frappe.utils.icon('expand-alt', 'sm'),
 				action: () => this.increase_width()
 			},
 			{
 				label: __('Shrink'),
-				title: 'Shrink Block',
+				title: __('Shrink Block'),
 				icon: frappe.utils.icon('shrink', 'sm'),
 				action: () => this.decrease_width()
 			},
 			{
 				label: __('Move Up'),
-				title: 'Move Up',
+				title: __('Move Up'),
 				icon: frappe.utils.icon('up-arrow', 'sm'),
 				action: () => this.move_block('up')
 			},
 			{
 				label: __('Move Down'),
-				title: 'Move Down',
+				title: __('Move Down'),
 				icon: frappe.utils.icon('down-arrow', 'sm'),
 				action: () => this.move_block('down')
 			}
@@ -222,7 +222,7 @@ export default class Block {
 		$widget_control.prepend($button);
 
 		this.dropdown_list.forEach((item) => {
-			if ((item.label == 'Expand' || item.label == 'Shrink') &&
+			if ((item.label == __('Expand') || item.label == __('Shrink')) &&
 				me.options && !me.options.allow_resize) {
 				return;
 			}

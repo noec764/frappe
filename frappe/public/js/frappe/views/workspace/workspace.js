@@ -16,6 +16,9 @@ frappe.standard_pages['Workspaces'] = function () {
 	});
 };
 
+// For translations
+// __("My Workspaces"), __("Public")
+
 frappe.views.Workspace = class Workspace {
 	constructor(wrapper) {
 		this.wrapper = $(wrapper);
@@ -200,7 +203,8 @@ frappe.views.Workspace = class Workspace {
 		}
 
 		let page = this.get_page_to_show();
-		this.page.set_title(`${__(page.name)}`);
+		const page_details = this.all_pages.filter(p => p.name == page.name)
+		this.page.set_title(`${__(page_details.length ? page_details[0].title : page.name)}`);
 
 		this.update_selected_sidebar(this.current_page, false); //remove selected from old page
 		this.update_selected_sidebar(page, true); //add selected on new page
@@ -261,16 +265,17 @@ frappe.views.Workspace = class Workspace {
 	get_page_to_show() {
 		let default_page;
 
-		if (localStorage.current_page && this.all_pages.filter(page => page.title == localStorage.current_page).length != 0) {
+		if (localStorage.current_page && this.all_pages.filter(page => page.name == localStorage.current_page).length != 0) {
 			default_page = { name: localStorage.current_page, public: localStorage.is_current_page_public == 'true' };
 		} else if (Object.keys(this.all_pages).length !== 0) {
-			default_page = { name: this.all_pages[0].title, public: true };
+			default_page = { name: this.all_pages[0].name, public: true };
 		} else {
 			default_page = { name: "Build", public: true };
 		}
 
 		let page = (frappe.get_route()[1] == 'private' ? frappe.get_route()[2] : frappe.get_route()[1]) || default_page.name;
 		let is_public = frappe.get_route()[1] ? frappe.get_route()[1] != 'private' : default_page.public;
+
 		return { name: page, public: is_public };
 	}
 
@@ -335,7 +340,7 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	merge_extended_item(item_type, default_columns=4) {
-		const extended_shortcuts = this.page_data[`${item_type}s`].items.filter(f => f.extension)
+		const extended_shortcuts = this.page_data[`${item_type}s`] ? this.page_data[`${item_type}s`].items.filter(f => f.extension) : []
 		if (extended_shortcuts.length) {
 			const last_index = (this.content || []).map(f => f.type).lastIndexOf(item_type) || content.length
 			extended_shortcuts.map((s, i) => {
@@ -632,14 +637,14 @@ frappe.views.Workspace = class Workspace {
 		let [from_pages, to_pages] = old_item.public ?
 			[this.public_pages, this.private_pages] : [this.private_pages, this.public_pages];
 
-		let old_item_index = from_pages.findIndex(page => page.title == old_item.title);
+		let old_item_index = from_pages.findIndex(page => page.name == old_item.name);
 		duplicate && old_item_index++;
 
 		// update frappe.workspaces
 		if (frappe.workspaces[frappe.router.slug(old_item.name)] || new_page) {
 			!duplicate && delete frappe.workspaces[frappe.router.slug(old_item.name)];
 			if (new_item) {
-				frappe.workspaces[frappe.router.slug(new_item.name)] = { 'title': new_item.title };
+				frappe.workspaces[frappe.router.slug(new_item.name)] = { 'title': new_item.name };
 			}
 		}
 
@@ -836,7 +841,7 @@ frappe.views.Workspace = class Workspace {
 				this.update_cached_values(page, new_page, true);
 
 				let pre_url = values.is_public ? '' : 'private/';
-				let route = pre_url + frappe.router.slug(values.title);
+				let route = pre_url + frappe.router.slug(new_page.name);
 				frappe.set_route(route);
 
 				me.make_sidebar();
@@ -1030,7 +1035,7 @@ frappe.views.Workspace = class Workspace {
 					this.update_cached_values(new_page, new_page, true, true);
 
 					let pre_url = new_page.public ? '' : 'private/';
-					let route = pre_url + frappe.router.slug(new_page.title);
+					let route = pre_url + frappe.router.slug(new_page.name);
 					frappe.set_route(route);
 
 					this.make_sidebar();
