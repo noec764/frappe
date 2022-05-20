@@ -58,7 +58,7 @@ frappe.views.Workspace = class Workspace {
 		this.has_access = this.sidebar_pages.has_access;
 
 		this.all_pages.forEach(page => {
-			page.is_editable = !page.public || this.has_access;
+			page.is_editable = (!page.is_standard && !page.public) || (!page.is_standard && this.has_access) || (frappe.session.user == "Administrator" && frappe.boot.developer_mode);
 		});
 
 		this.public_pages = this.all_pages.filter(page => page.public);

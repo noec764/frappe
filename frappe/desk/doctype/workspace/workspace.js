@@ -8,6 +8,7 @@ frappe.ui.form.on('Workspace', {
 
 	refresh: function(frm) {
 		frm.enable_save();
+		frm.set_df_property('is_standard', 'read_only', !frappe.boot.developer_mode);
 		if (frm.doc.for_user || (frm.doc.public && !frm.has_perm('write') &&
 			!frappe.user.has_role('Workspace Manager'))) {
 			frm.trigger('disable_form');

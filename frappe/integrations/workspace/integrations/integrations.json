@@ -6,9 +6,11 @@
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
+ "hidden": 0,
  "hide_custom": 0,
  "icon": "integration",
  "idx": 0,
+ "is_standard": 1,
  "label": "Integrations",
  "links": [
   {
@@ -261,7 +263,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-19 09:55:41.788511",
+ "modified": "2022-05-20 10:42:10.089489",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integrations",

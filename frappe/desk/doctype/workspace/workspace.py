@@ -30,7 +30,7 @@ class Workspace(Document):
 		if disable_saving_as_public():
 			return
 
-		if frappe.conf.developer_mode and self.module and self.public:
+		if frappe.conf.developer_mode and self.module and self.public and self.is_standard:
 			export_to_files(record_list=[["Workspace", self.name]], record_module=self.module)
 
 	@staticmethod

@@ -388,6 +388,7 @@ def get_workspace_sidebar_items():
 		"restrict_to_domain": ["in", frappe.get_active_domains()],
 		"for_user": "",
 		"module": ["not in", blocked_modules],
+		"hidden": 0,
 	}
 
 	# pages sorted based on sequence id
@@ -402,6 +403,7 @@ def get_workspace_sidebar_items():
 		"module",
 		"icon",
 		"color",
+		"is_standard",
 	]
 	all_pages = frappe.get_all(
 		"Workspace",

@@ -6,9 +6,11 @@
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
+ "hidden": 0,
  "hide_custom": 0,
  "icon": "setting",
  "idx": 0,
+ "is_standard": 1,
  "label": "Settings",
  "links": [
   {
@@ -368,7 +370,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-19 09:55:24.378969",
+ "modified": "2022-05-20 10:42:10.252293",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",

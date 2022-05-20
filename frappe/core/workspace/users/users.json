@@ -6,9 +6,11 @@
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
+ "hidden": 0,
  "hide_custom": 0,
  "icon": "users",
  "idx": 0,
+ "is_standard": 1,
  "label": "Users",
  "links": [
   {
@@ -146,7 +148,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-19 09:55:50.281919",
+ "modified": "2022-05-20 10:42:10.019278",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Users",

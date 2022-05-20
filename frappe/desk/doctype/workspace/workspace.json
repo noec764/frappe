@@ -19,7 +19,9 @@
   "color",
   "restrict_to_domain",
   "hide_custom",
+  "is_standard",
   "public",
+  "hidden",
   "content",
   "tab_break_2",
   "charts",
@@ -174,11 +176,23 @@
    "fieldname": "color",
    "fieldtype": "Color",
    "label": "Color"
+  },
+  {
+   "default": "0",
+   "fieldname": "hidden",
+   "fieldtype": "Check",
+   "label": "Hidden"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_standard",
+   "fieldtype": "Check",
+   "label": "Is Standard"
   }
  ],
  "in_create": 1,
  "links": [],
- "modified": "2022-05-19 09:47:23.542527",
+ "modified": "2022-05-20 10:40:39.746395",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
