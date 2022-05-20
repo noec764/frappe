@@ -212,7 +212,7 @@ def get_dict(fortype, name=None):
 				.where(Field("format").isnotnull())
 				.select(PseudoColumn("''"), "format")
 			).run()
-			messages += (frappe.qb.from_("Workspace").select(PseudoColumn("'Workspace:'"), "label")).run()
+			messages += get_messages_from_workspaces()
 			messages += (
 				frappe.qb.from_("Web Template").select(PseudoColumn("'Web Template:'"), "name")
 			).run()
@@ -453,7 +453,7 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			.select(workspace.name)
 			.run(pluck=True)
 		):
-			messages.extend(get_messages_from_workspaces(name))
+			messages.extend(get_messages_from_workspace(name))
 
 		dashboard_chart = DocType("Dashboard Chart")
 		for name in (
@@ -704,13 +704,35 @@ def get_messages_from_report(name):
 	return messages
 
 
-def get_messages_from_workspaces(name):
+def get_messages_from_workspaces():
+	workspaces = frappe.qb.from_("Workspace").select("label", "content").run(as_dict=True)
+	output = []
+
+	for workspace in workspaces:
+		if workspace.get("label"):
+			output.append(("Workspace label: ", workspace.get("label")))
+		if workspace.get("content"):
+			content = frappe.parse_json(workspace.get("content"))
+			for c in content:
+				if c.get("type") == "header" and c.get("data", {}).get("text"):
+					output.append(("Workspace header: ", frappe.utils.strip_html(c.get("data", {}).get("text"))))
+
+	return tuple(output)
+
+
+def get_messages_from_workspace(name):
 	desk_page = frappe.get_doc("Workspace", name)
 	messages = []
 
-	for field in ("label", "charts_label", "shortcuts_label", "cards_label"):
+	for field in "label":
 		if desk_page.get(field):
-			messages.append(("Workspace: " + name, desk_page.get(field)))
+			messages.append(("Workspace label: " + name, desk_page.get(field)))
+
+	if desk_page.get("content"):
+		content = frappe.parse_json(desk_page.get("content"))
+		for c in content:
+			if c.get("type") == "header" and c.get("data", {}).get("text"):
+				messages.append(("Workspace header: ", frappe.utils.strip_html(c.get("data", {}).get("text"))))
 
 	for shortcut in desk_page.shortcuts:
 		if shortcut.get("format"):
