@@ -18,8 +18,8 @@ frappe.pages['slide-viewer'].on_page_show = async function(/** @type {HTMLElemen
 		const sv = svr.slideView
 
 		if (sv) {
-			// const fakeform = svr.slidesInstance && svr.slidesInstance.parent_form
-			// const doc = fakeform ? fakeform.doc : svr.doc
+			// const slide_viewer_form = svr.slidesInstance && svr.slidesInstance.parent_form
+			// const doc = slide_viewer_form ? slide_viewer_form.doc : svr.doc
 			const r = frappe.ui.SlideViewer.getParamsFromRouter()
 
 			const slide_view_in_locals = frappe.get_doc('Slide View', sv.name)

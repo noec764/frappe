@@ -2,20 +2,20 @@ frappe.provide('frappe.ui.form');
 
 /**
  * Because Frappe/Dodock is not built to have multiple instances
- * of the same type of Form (doctype, docname), the FakeForm class
+ * of the same type of Form (doctype, docname), the SlideViewerForm class
  * tries to prevent bugs related to `frappe.ui.form.handlers`,
  * `frappe.model.events`, `frappe.meta.docfield_copy`.
  */
-frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
+frappe.ui.form.SlideViewerForm = class SlideViewerForm extends frappe.ui.form.Form {
 	constructor(wrapper, doc, opts = {}) {
 		if (!(typeof doc === 'object' && doc.doctype)) {
-			frappe.throw('[FakeForm] `doc` parameter should be an object with a `doctype` property.')
+			frappe.throw('[SlideViewerForm] `doc` parameter should be an object with a `doctype` property.')
 		}
 
 		const doctype = doc.doctype
 
-		const fakeparent = $('<div>')
-		super(doctype, fakeparent, true, undefined)
+		const slide_viewer_form_parent = $('<div>')
+		super(doctype, slide_viewer_form_parent, true, undefined)
 
 
 		// values to store and restore
@@ -33,7 +33,7 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 				set: (prev) => { frappe.ui.form.handlers = prev },
 			},
 		};
-		this.fakeform_store_environment();
+		this.slide_viewer_form_store_environment();
 
 
 		this.ready = false
@@ -62,8 +62,8 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 
 		Object.assign(this, opts)
 	}
-	fakeform_set_fields({ df, list, dict }) {
-		this.fakeform_fields_df = df
+	slide_viewer_form_set_fields({ df, list, dict }) {
+		this.slide_viewer_form_fields_df = df
 		this.fields = list
 		this.fields_dict = dict
 		this.layout.fields = df
@@ -84,9 +84,11 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		})
 		this.layout.wrapper = $('<div>')
 		this.layout.message = $('<div>')
-		this.layout.fields = this.fakeform_fields_df
+		this.layout.fields = this.slide_viewer_form_fields_df
 		this.layout.fields_list = this.fields
 		this.layout.fields_dict = this.fields_dict
+
+		console.log(this.layout)
 
 		this.dashboard = new Proxy({}, {
 			get(o, k, r) {
@@ -139,12 +141,12 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		/**
 		 * Note: watch_model_updates() attaches listeners
 		 * with frappe.model.on but there is no way to detach them.
-		 * When a (normal) Form is created after a FakeForm is created,
+		 * When a (normal) Form is created after a SlideViewerForm is created,
 		 * it also attaches its listeners with frappe.model.on,
 		 * which causes all sorts of problems when navigating back and forth.
-		 * The reverse is also true (FakeForm then Form).
+		 * The reverse is also true (SlideViewerForm then Form).
 		 * The problems seem related to the layout.refresh_dependency call
-		 * inside the watchers. That's why FakeForm.fakeform_destroy() should
+		 * inside the watchers. That's why SlideViewerForm.slide_viewer_form_destroy() should
 		 * always be called when hiding dialog or leaving page.
 		 */
 		this.watch_model_updates();
@@ -153,7 +155,7 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		this.__defer_execute();
 	}
 
-	fakeform_store_environment () {
+	slide_viewer_form_store_environment () {
 		for (const k in this.__stored_values) {
 			const s = this.__stored_values[k]
 			s.value = s.get() // preserve old value
@@ -161,7 +163,7 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 			delete s.my_value
 		}
 	}
-	fakeform_restore_environment() {
+	slide_viewer_form_restore_environment() {
 		for (const k in this.__stored_values) {
 			const s = this.__stored_values[k]
 			s.my_value = s.get() // store current value (set by this form)
@@ -170,20 +172,20 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 		}
 	}
 
-	/** Always call fakeform_destroy when changing page/hiding dialog */
-	fakeform_destroy() {
-		if (this.fakeform_was_destroyed) return;
-		this.fakeform_was_destroyed = true;
+	/** Always call slide_viewer_form_destroy when changing page/hiding dialog */
+	slide_viewer_form_destroy() {
+		if (this.slide_viewer_form_was_destroyed) return;
+		this.slide_viewer_form_was_destroyed = true;
 
-		this.fakeform_restore_environment();
+		this.slide_viewer_form_restore_environment();
 	}
 
-	/** Revert fakeform_destroy */
-	fakeform_rebuild() {
-		if (!this.fakeform_was_destroyed) return;
-		delete this.fakeform_was_destroyed;
+	/** Revert slide_viewer_form_destroy */
+	slide_viewer_form_rebuild() {
+		if (!this.slide_viewer_form_was_destroyed) return;
+		delete this.slide_viewer_form_was_destroyed;
 
-		this.fakeform_store_environment();
+		this.slide_viewer_form_store_environment();
 		this.refresh();
 	}
 
@@ -213,39 +215,39 @@ frappe.ui.form.FakeForm = class FakeForm extends frappe.ui.form.Form {
 	}
 
 	async save(...args) {
-		this.fakeform_saving = true
+		this.slide_viewer_form_saving = true
 		await super.save.apply(this, args)
-		this.fakeform_saving = false
+		this.slide_viewer_form_saving = false
 	}
 	async savesubmit(...args) {
-		this.fakeform_saving = true
+		this.slide_viewer_form_saving = true
 		await super.savesubmit.apply(this, args)
-		this.fakeform_saving = false
+		this.slide_viewer_form_saving = false
 	}
 	savecancel(btn, callback, on_error) {
-		this.fakeform_saving = true
+		this.slide_viewer_form_saving = true
 		super.savecancel(btn, (...args) => {
 			callback&&callback(...args)
-			this.fakeform_saving = false
+			this.slide_viewer_form_saving = false
 		}, (...args) => {
 			on_error&&on_error(...args)
-			this.fakeform_saving = false
+			this.slide_viewer_form_saving = false
 		})
 	}
 	async amend_doc() {
-		this.fakeform_saving = true
+		this.slide_viewer_form_saving = true
 		super.amend_doc()
-		this.fakeform_saving = false
+		this.slide_viewer_form_saving = false
 	}
 	refresh(switched_docname) {
-		if (!this.fakeform_saving) {
-			// Skip the refresh during/after save to prevent the FakeForm from being reused on the real form page.
+		if (!this.slide_viewer_form_saving) {
+			// Skip the refresh during/after save to prevent the SlideViewerForm from being reused on the real form page.
 			super.refresh(switched_docname)
 		}
 	}
 	refresh_header() { /* Prevent frappe.utils.set_title */ }
 
-	fakeform_get_missing_fields(frm = this) {
+	slide_viewer_form_get_missing_fields(frm = this) {
 		if (frm.doc.docstatus == 2) return []; // don't check for cancel
 
 		const error_docs = [];

@@ -13,7 +13,7 @@ import "./frappe/form/templates/users_in_sidebar.html";
 import "./frappe/form/controls/control.js";
 import "./frappe/views/formview.js";
 import "./frappe/form/form.js";
-import "./frappe/form/fakeform.js";
+import "./frappe/form/slide_viewer_form.js";
 import "./frappe/meta_tag.js";
 import "./frappe/calendar_recurrence.js";
 import "./frappe/doctype/"

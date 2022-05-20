@@ -104,14 +104,14 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 	hide() {
 		window.cur_slides = undefined
-		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.fakeform_destroy)
-			this.slidesInstance.parent_form.fakeform_destroy()
+		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.slide_viewer_form_destroy)
+			this.slidesInstance.parent_form.slide_viewer_form_destroy()
 	}
 
 	show() {
 		window.cur_slides = this.slidesInstance
-		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.fakeform_rebuild)
-			this.slidesInstance.parent_form.fakeform_rebuild()
+		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.slide_viewer_form_rebuild)
+			this.slidesInstance.parent_form.slide_viewer_form_rebuild()
 	}
 
 	/**
@@ -467,7 +467,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 	}
 }
 
-// Slide classes with additional features to support FakeForm
+// Slide classes with additional features to support SlideViewerForm
 
 class SlidesWithForm extends frappe.ui.Slides {
 	render_progress_dots(...args) {
@@ -481,11 +481,11 @@ class SlidesWithForm extends frappe.ui.Slides {
 	}
 
 	setup() {
-		const fakeform = new frappe.ui.form.FakeForm(this.$container, this.doc, { parentSlides: this })
-		this.parent_form = fakeform
-		cur_frm = fakeform
+		const slide_viewer_form = new frappe.ui.form.SlideViewerForm(this.$container, this.doc, { parentSlides: this })
+		this.parent_form = slide_viewer_form
+		cur_frm = slide_viewer_form
 
-		fakeform.setup()
+		slide_viewer_form.setup()
 
 		super.setup()
 
@@ -497,17 +497,17 @@ class SlidesWithForm extends frappe.ui.Slides {
 		const fields_list = this.slide_instances.flatMap(s => s.form.fields_list)
 		const fields_dict = Object.fromEntries(this.slide_instances.flatMap(s => Object.entries(s.form.fields_dict)))
 
-		fakeform.fakeform_set_fields({
+		slide_viewer_form.slide_viewer_form_set_fields({
 			df: all_fields,
 			list: fields_list,
 			dict: fields_dict,
 		})
 
-		fakeform.make()
-		fakeform.refresh()
+		slide_viewer_form.make()
+		slide_viewer_form.refresh()
 
-		frappe.model.on(fakeform.doctype, "*", (fieldname, value, doc) => {
-			if (doc.name === fakeform.docname) {
+		frappe.model.on(slide_viewer_form.doctype, "*", (fieldname, value, doc) => {
+			if (doc.name === slide_viewer_form.docname) {
 				this.render_progress_dots();
 				this.show_hide_prev_next(this.current_id);
 			}
@@ -515,8 +515,8 @@ class SlidesWithForm extends frappe.ui.Slides {
 	}
 
 	updateSlidesWithErrorFields() {
-		if (!this.parent_form.fakeform_get_missing_fields) return;
-		const error_docs = this.parent_form.fakeform_get_missing_fields();
+		if (!this.parent_form.slide_viewer_form_get_missing_fields) return;
+		const error_docs = this.parent_form.slide_viewer_form_get_missing_fields();
 		// Names of the invalid fields in the main document.
 		const error_root_fieldnames = []
 
