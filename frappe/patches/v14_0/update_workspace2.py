@@ -6,6 +6,7 @@ from frappe import _
 
 def execute():
 	frappe.reload_doc("desk", "doctype", "workspace", force=True)
+	frappe.reload_doc("desk", "doctype", "workspace quick list", force=True)
 
 	for seq, workspace in enumerate(frappe.get_all("Workspace", order_by="name asc")):
 		doc = frappe.get_doc("Workspace", workspace.name)

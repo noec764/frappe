@@ -177,13 +177,6 @@ def execute_patch(patchmodule, method=None, methodargs=None):
 	start_time = time.time()
 	frappe.db.begin()
 	try:
-		print(
-			"Executing {patch} in {site} ({db})".format(
-				patch=patchmodule or str(methodargs),
-				site=frappe.local.site,
-				db=frappe.db.cur_db_name,
-			)
-		)
 		if patchmodule:
 			if patchmodule.startswith("finally:"):
 				# run run patch at the end

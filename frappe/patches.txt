@@ -6,6 +6,8 @@ execute:frappe.reload_doc('core', 'doctype', 'doctype_link', force=True) #2020-1
 execute:frappe.reload_doc('core', 'doctype', 'doctype_state', force=True) #2021-12-15
 execute:frappe.reload_doc('core', 'doctype', 'doctype', force=True) #2017-09-22
 execute:frappe.reload_doc('core', 'doctype', 'docfield', force=True) #2018-02-20
+execute:frappe.reload_doc('desk', 'doctype', 'form_tour', force=True)
+execute:frappe.reload_doc('desk', 'doctype', 'form_tour_step', force=True)
 frappe.patches.v11_0.drop_column_apply_user_permissions
 execute:frappe.reload_doc('core', 'doctype', 'custom_docperm')
 execute:frappe.reload_doc('core', 'doctype', 'docperm') #2018-05-29
