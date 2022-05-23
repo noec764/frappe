@@ -186,13 +186,13 @@ execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Tool")
 execute:frappe.delete_doc_if_exists('DocType', 'Twilio Settings') #2021-08-05
 execute:frappe.delete_doc_if_exists('DocType', 'Twilio Number Group') #2021-08-05
-frappe.patches.v13_0.v13_set_default_desk_properties
+frappe.core.doctype.role.patches.v13_set_default_desk_properties
 frappe.patches.v13_0.add_switch_theme_to_navbar_settings
 frappe.patches.v13_0.update_icons_in_customized_desk_pages
 execute:frappe.db.set_default('desktop:home_page', 'space')
 execute:frappe.delete_doc_if_exists('Page', 'workspace')
 execute:frappe.delete_doc_if_exists('Page', 'dashboard', force=1)
-frappe.patches.v13_0.drop_unused_pages
+frappe.core.doctype.page.patches.drop_unused_pages
 execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.patches.v13_0.remove_chat
 frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02

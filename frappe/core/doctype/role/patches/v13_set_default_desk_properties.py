@@ -1,5 +1,6 @@
 import frappe
-from frappe.core.doctype.role.role import desk_properties
+
+from ..role import desk_properties
 
 
 def execute():
