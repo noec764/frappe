@@ -1664,7 +1664,6 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
 				m.app_name = frappe.local.module_app[frappe.scrub(doc.module)]
 			else:
 				m.app_name = "frappe"
-			m.app_name = frappe.local.module_app[frappe.scrub(doc.module)]
 			m.flags.ignore_mandatory = m.flags.ignore_permissions = True
 			if frappe.flags.package:
 				m.package = frappe.flags.package.name

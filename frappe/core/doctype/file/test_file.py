@@ -16,8 +16,6 @@ from frappe.core.doctype.file.file import (
 )
 from frappe.utils import get_files_path
 
-# test_records = frappe.get_test_records('File')
-
 test_content1 = "Hello"
 test_content2 = "Hello World"
 
@@ -73,43 +71,6 @@ class TestBase64File(unittest.TestCase):
 		_file = frappe.get_doc("File", {"file_url": self.saved_file_url})
 		content = _file.get_content()
 		self.assertEqual(content, test_content1)
-
-	def test_attachment_limit(self):
-		doctype, docname = make_test_doc()
-		from frappe.custom.doctype.property_setter.property_setter import make_property_setter
-
-		limit_property = make_property_setter(
-			"ToDo", None, "max_attachments", 1, "int", for_doctype=True
-		)
-		file1 = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test-attachment",
-				"attached_to_doctype": doctype,
-				"attached_to_name": docname,
-				"content": "test",
-			}
-		)
-
-		file1.insert()
-
-		file2 = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test-attachment",
-				"attached_to_doctype": doctype,
-				"attached_to_name": docname,
-				"content": "test2",
-			}
-		)
-
-		self.assertRaises(frappe.exceptions.AttachmentLimitReached, file2.insert)
-		limit_property.delete()
-		frappe.clear_cache(doctype="ToDo")
-
-	def tearDown(self):
-		# File gets deleted on rollback, so blank
-		pass
 
 
 class TestSameFileName(unittest.TestCase):
@@ -206,6 +167,39 @@ class TestSameContent(unittest.TestCase):
 	def test_saved_content(self):
 		self.assertFalse(os.path.exists(get_files_path(self.dup_filename)))
 
+	def test_attachment_limit(self):
+		doctype, docname = make_test_doc()
+		from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
+		limit_property = make_property_setter(
+			"ToDo", None, "max_attachments", 1, "int", for_doctype=True
+		)
+		file1 = frappe.get_doc(
+			{
+				"doctype": "File",
+				"file_name": "test-attachment",
+				"attached_to_doctype": doctype,
+				"attached_to_name": docname,
+				"content": "test",
+			}
+		)
+
+		file1.insert()
+
+		file2 = frappe.get_doc(
+			{
+				"doctype": "File",
+				"file_name": "test-attachment",
+				"attached_to_doctype": doctype,
+				"attached_to_name": docname,
+				"content": "test2",
+			}
+		)
+
+		self.assertRaises(frappe.exceptions.AttachmentLimitReached, file2.insert)
+		limit_property.delete()
+		frappe.clear_cache(doctype="ToDo")
+
 
 class TestFile(unittest.TestCase):
 	def setUp(self):
@@ -247,14 +241,7 @@ class TestFile(unittest.TestCase):
 
 	def get_folder(self, folder_name, parent_folder="Home"):
 		return frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": _(folder_name),
-				"is_folder": 1,
-				"folder": frappe.db.get_value("File", {"is_home_folder": 1})
-				if parent_folder == "Home"
-				else parent_folder,
-			}
+			{"doctype": "File", "file_name": _(folder_name), "is_folder": 1, "folder": _(parent_folder)}
 		).insert()
 
 	def tests_after_upload(self):
@@ -402,12 +389,8 @@ class TestFile(unittest.TestCase):
 		file1.save()
 
 	def test_file_url_validation(self):
-		test_file: File = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "logo",
-				"file_url": "https://frappe.io/files/frappe.png",
-			}
+		test_file = frappe.get_doc(
+			{"doctype": "File", "file_name": "logo", "file_url": "https://frappe.io/files/frappe.png"}
 		)
 
 		self.assertIsNone(test_file.validate())
@@ -415,17 +398,13 @@ class TestFile(unittest.TestCase):
 		# bad path
 		test_file.file_url = "/usr/bin/man"
 		self.assertRaisesRegex(
-			frappe.exceptions.ValidationError,
-			"URL must start with http:// or https://",
-			test_file.validate,
+			frappe.exceptions.ValidationError, "URL must start with http:// or https://", test_file.validate
 		)
 
 		test_file.file_url = None
 		test_file.file_name = "/usr/bin/man"
 		self.assertRaisesRegex(
-			frappe.exceptions.ValidationError,
-			"There is some problem with the file url",
-			test_file.validate,
+			frappe.exceptions.ValidationError, "There is some problem with the file url", test_file.validate
 		)
 
 		test_file.file_url = None
@@ -438,7 +417,7 @@ class TestFile(unittest.TestCase):
 
 	def test_make_thumbnail(self):
 		# test web image
-		test_file = frappe.get_doc(
+		test_file: File = frappe.get_doc(
 			{
 				"doctype": "File",
 				"file_name": "logo",
@@ -661,11 +640,7 @@ class TestFileOptimization(unittest.TestCase):
 		with open(file_path, "rb") as f:
 			file_content = f.read()
 		test_file = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "sample_image_for_optimization.jpg",
-				"content": file_content,
-			}
+			{"doctype": "File", "file_name": "sample_image_for_optimization.jpg", "content": file_content}
 		).insert()
 		original_size = test_file.file_size
 		original_content_hash = test_file.content_hash
@@ -690,11 +665,7 @@ class TestFileOptimization(unittest.TestCase):
 
 	def test_optimize_textfile(self):
 		test_file = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "sample_text.txt",
-				"content": "Text files cannot be optimized",
-			}
+			{"doctype": "File", "file_name": "sample_text.txt", "content": "Text files cannot be optimized"}
 		).insert()
 		self.assertRaises(NotImplementedError, test_file.optimize_file)
 		test_file.delete()
@@ -708,11 +679,7 @@ class TestFileOptimization(unittest.TestCase):
 		with open(file_path, "rb") as f:
 			file_content = f.read()
 		test_file = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "sample_image_for_optimization.jpg",
-				"content": file_content,
-			}
+			{"doctype": "File", "file_name": "sample_image_for_optimization.jpg", "content": file_content}
 		).insert()
 		image_path = test_file.get_full_path()
 		size_before_optimization = os.stat(image_path).st_size

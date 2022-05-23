@@ -55,6 +55,9 @@ class SystemSettings(Document):
 		frappe.cache().delete_value("system_settings")
 		frappe.cache().delete_value("time_zone")
 
+		if frappe.flags.update_last_reset_password_date:
+			update_last_reset_password_date()
+
 
 def update_last_reset_password_date():
 	frappe.db.sql(

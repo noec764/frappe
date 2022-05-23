@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2021, Frappe Technologies and Contributors
+# Copyright (c) 2019, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
-
-
 import unittest
 
 import requests
 
 import frappe
-from frappe.utils import get_url
+from frappe.utils import get_site_url
 
 scripts = [
 	dict(
@@ -119,13 +117,11 @@ class TestServerScript(unittest.TestCase):
 		self.assertEqual(todo.status, "Closed")
 
 		self.assertRaises(
-			frappe.ValidationError,
-			frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert,
+			frappe.ValidationError, frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert
 		)
 
-	@unittest.skip("Skipped in CI")
 	def test_api(self):
-		response = requests.post(get_url() + "/api/method/test_server_script")
+		response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
 		self.assertEqual(response.status_code, 200)
 		self.assertEqual("hello", response.json()["message"])
 
@@ -152,8 +148,7 @@ class TestServerScript(unittest.TestCase):
 			frappe.get_doc(doctype="Server Script", **server_script).insert()
 
 		self.assertTrue(
-			"invalid python code" in str(se.exception).lower(),
-			msg="Python code validation not working",
+			"invalid python code" in str(se.exception).lower(), msg="Python code validation not working"
 		)
 
 	def test_commit_in_doctype_event(self):

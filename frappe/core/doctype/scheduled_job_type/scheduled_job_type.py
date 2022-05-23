@@ -95,7 +95,7 @@ class ScheduledJobType(Document):
 
 	def update_scheduler_log(self, status):
 		if not self.create_log:
-			# self.get_next_execution will work properly if self.last_execution is properly set
+			# self.get_next_execution will work properly iff self.last_execution is properly set
 			if self.frequency == "All" and status == "Start":
 				self.db_set("last_execution", now_datetime(), update_modified=False)
 				frappe.db.commit()
@@ -193,7 +193,7 @@ def insert_single_event(frequency: str, event: str, cron_format: str = None):
 
 
 def clear_events(all_events: List):
-	for event in frappe.get_all("Scheduled Job Type", ("name", "method")):
+	for event in frappe.get_all("Scheduled Job Type", fields=["name", "method", "server_script"]):
 		is_server_script = event.server_script
 		is_defined_in_hooks = event.method in all_events
 

@@ -16,6 +16,7 @@ frappe.ui.form.on("Communication", {
 		if(frm.is_new()) return;
 
 		frm.convert_to_click && frm.set_convert_button();
+		frm.subject_field = "subject";
 
 		// content field contains weird table html that does not render well in Quill
 		// this field is not to be edited directly anyway, so setting it as read only
