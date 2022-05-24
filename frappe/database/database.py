@@ -394,6 +394,7 @@ class Database(object):
 		order_by="KEEP_DEFAULT_ORDERING",
 		cache=False,
 		for_update=False,
+		*,
 		run=True,
 		pluck=False,
 		distinct=False,
@@ -1296,6 +1297,7 @@ def savepoint(catch: Union[type, Tuple[type, ...]] = Exception):
 	        with savepoint(catch=DuplicateError):
 	                doc.insert()
 
+	as decorator (wraps FULL function call):
 
 	@savepoint(catch=DuplicateError)
 	def process_doc(doc):

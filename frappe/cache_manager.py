@@ -114,11 +114,6 @@ def clear_defaults_cache(user=None):
 		frappe.cache().delete_key("defaults")
 
 
-def clear_document_cache():
-	frappe.local.document_cache = {}
-	frappe.cache().delete_key("document_cache")
-
-
 def clear_doctype_cache(doctype=None):
 	clear_controller_cache(doctype)
 	cache = frappe.cache()
