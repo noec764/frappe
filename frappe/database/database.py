@@ -563,7 +563,7 @@ class Database(object):
 					distinct=distinct,
 				)
 
-		if cache and isinstance(filters, str):
+		if out and cache and isinstance(filters, str):
 			self.value_cache[(doctype, filters, fieldname)] = out
 
 		return out
