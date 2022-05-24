@@ -15,8 +15,7 @@ context('Folder Navigation', () => {
 		cy.get('.filter-action-buttons > div > .btn-primary').findByText('Apply Filters').click();
 
 		//Adding folder (Test Folder)
-		cy.get('.menu-btn-group > .btn').click();
-		cy.get('.menu-btn-group [data-label="New Folder"]').click();
+		cy.click_menu_button("New Folder");
 		cy.fill_field('value', 'Test Folder');
 		cy.click_modal_primary_button('Create');
 	});
@@ -30,8 +29,7 @@ context('Folder Navigation', () => {
 		cy.visit('/app/file/view/home/Attachments');
 
 		//Adding folder inside the attachments folder
-		cy.get('.menu-btn-group > .btn').click();
-		cy.get('.menu-btn-group [data-label="New Folder"]').click();
+		cy.click_menu_button("New Folder");
 		cy.fill_field('value', 'Test Folder');
 		cy.click_modal_primary_button('Create');
 
@@ -59,16 +57,14 @@ context('Folder Navigation', () => {
 		}).as('file_deleted');
 
 		//Deleting the added file from the Test folder
-		cy.findByRole('button', {name: 'Actions'}).click();
-		cy.get('.actions-btn-group [data-label="Delete"]').click();
+		cy.click_action_button("Delete");
 		cy.click_modal_primary_button('Yes');
 		cy.wait('@file_deleted');
 
 		//Deleting the Test Folder
 		cy.visit('/app/file/view/home/Attachments');
 		cy.get('.list-row-checkbox').eq(0).click();
-		cy.findByRole('button', {name: 'Actions'}).click();
-		cy.get('.actions-btn-group [data-label="Delete"]').click();
+		cy.click_action_button("Delete");
 		cy.click_modal_primary_button('Yes');
 		cy.wait('@file_deleted');
 	});
@@ -77,8 +73,7 @@ context('Folder Navigation', () => {
 	//Deleting the Test Folder added in the home directory
 		cy.visit('/app/file/view/home');
 		cy.get('.level-left > .list-subject > .file-select >.list-row-checkbox').eq(0).click({force: true, delay: 500});
-		cy.findByRole('button', {name: 'Actions'}).click();
-		cy.get('.actions-btn-group [data-label="Delete"]').click();
+		cy.click_action_button("Delete");
 		cy.click_modal_primary_button('Yes');
 	});
 });

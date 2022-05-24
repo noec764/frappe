@@ -19,7 +19,7 @@
  */
 
 
-frappe.ui.make_app_page = function(opts) {
+ frappe.ui.make_app_page = function(opts) {
 	opts.parent.page = new frappe.ui.Page(opts);
 	return opts.parent.page;
 }
@@ -135,7 +135,7 @@ frappe.ui.Page = class Page {
 		this.actions_btn_group = this.page_actions.find(".actions-btn-group");
 
 		this.standard_actions = this.page_actions.find(".standard-actions");
-		this.custom_actions = this.wrapper.find(".custom-actions");
+		this.custom_actions = this.page_actions.find(".custom-actions");
 
 		this.page_form = $('<div class="page-form row hide"></div>').prependTo(this.main);
 		this.inner_toolbar = this.custom_actions;
@@ -166,7 +166,7 @@ frappe.ui.Page = class Page {
 		if (this.disable_sidebar_toggle || !sidebar_wrapper.length) {
 			sidebar_toggle.remove();
 		} else {
-			!frappe.is_mobile()&&sidebar_toggle.attr("title", __("Toggle Sidebar")).tooltip({
+			sidebar_toggle.attr("title", __("Toggle Sidebar")).tooltip({
 				delay: { "show": 600, "hide": 100 },
 				trigger: "hover",
 			});
@@ -207,7 +207,6 @@ frappe.ui.Page = class Page {
 		let sidebar_toggle_icon = sidebar_toggle.find('.sidebar-toggle-icon');
 		let sidebar_wrapper = this.wrapper.find('.layout-side-section');
 		let is_sidebar_visible = $(sidebar_wrapper).is(":visible");
-		sidebar_toggle.html(frappe.utils.icon(is_sidebar_visible ? 'sidebar-collapse' : 'sidebar-expand', 'md'));
 		sidebar_toggle_icon.html(frappe.utils.icon(is_sidebar_visible ? 'sidebar-collapse' : 'sidebar-expand', 'md'));
 	}
 
@@ -415,7 +414,7 @@ frappe.ui.Page = class Page {
 			parent.parent().removeClass("hide");
 		}
 
-		let $link = this.is_in_group_button_dropdown(parent, 'li > a.grey-link', label);
+		let $link = this.is_in_group_button_dropdown(parent, 'li > a.grey-link > span', label);
 		if ($link) return $link;
 
 		let $li;
@@ -511,12 +510,10 @@ frappe.ui.Page = class Page {
 
 		if (!label || !parent) return false;
 
-		const result = $(parent).find(`${selector}:contains('${label}')`)
-			.filter(function() {
-				let item = $(this);
-				return item.attr('data-label') === label;
-			});
-		return result.length > 0 && result;
+		const item_selector = `${selector}[data-label='${encodeURIComponent(label)}']`;
+
+		const existing_items = $(parent).find(item_selector);
+		return existing_items?.length > 0 && existing_items;
 	}
 
 	clear_btn_group(parent) {
@@ -537,7 +534,7 @@ frappe.ui.Page = class Page {
 						${label}
 						${frappe.utils.icon('select', 'xs')}
 					</button>
-					<div role="menu" class="dropdown-menu dropdown-menu-right"></div>
+					<div role="menu" class="dropdown-menu"></div>
 				</div>`
 			).appendTo(this.inner_toolbar);
 		}
@@ -684,12 +681,10 @@ frappe.ui.Page = class Page {
 
 	set_title(title, icon=null, strip=true, tab_title="") {
 		if (!title) title = "";
-
 		if (strip) {
 			title = strip_html(title);
 		}
 		this.title = title;
-
 		frappe.utils.set_title(tab_title || title);
 		if (icon) {
 			title = `${frappe.utils.icon(icon)} ${title}`;
@@ -697,8 +692,6 @@ frappe.ui.Page = class Page {
 		let title_wrapper = this.$title_area.find(".title-text");
 		title_wrapper.html(title);
 		title_wrapper.attr('title', this.title);
-		// this.$title_area.tooltip('dispose');
-		// this.$title_area.tooltip({title: txt, placement: 'auto'});
 	}
 
 	set_title_sub(txt) {
@@ -734,7 +727,7 @@ frappe.ui.Page = class Page {
 		return button;
 	}
 
-	add_custom_button_group(label, icon) {
+	add_custom_button_group(label, icon, parent) {
 		let dropdown_label = `<span class="hidden-xs">
 			<span class="custom-btn-group-label">${__(label)}</span>
 			${frappe.utils.icon('select', 'xs')}
@@ -756,11 +749,12 @@ frappe.ui.Page = class Page {
 				<button type="button" class="btn btn-default btn-sm ellipsis" data-toggle="dropdown" aria-expanded="false">
 					${dropdown_label}
 				</button>
-				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
+				<ul class="dropdown-menu" role="menu"></ul>
 			</div>
 		`);
 
-		this.standard_actions.prepend(custom_btn_group);
+		if (!parent) parent = this.custom_actions;
+		parent.removeClass('hide').append(custom_btn_group);
 
 		return custom_btn_group.find('.dropdown-menu');
 	}
@@ -775,33 +769,27 @@ frappe.ui.Page = class Page {
 		return $("<label class='col-md-1 page-only-label'>"+label+" </label>")
 			.appendTo(this.page_form);
 	}
-
 	add_select(label, options) {
 		var field = this.add_field({label:label, fieldtype:"Select"});
 		return field.$wrapper.find("select").empty().add_options(options);
 	}
-
 	add_data(label) {
 		var field = this.add_field({label: label, fieldtype: "Data"});
 		return field.$wrapper.find("input").attr("placeholder", label);
 	}
-
 	add_date(label, date) {
 		var field = this.add_field({label: label, fieldtype: "Date", "default": date});
 		return field.$wrapper.find("input").attr("placeholder", label);
 	}
-
 	add_check(label) {
 		return $("<div class='checkbox'><label><input type='checkbox'>" + label + "</label></div>")
 			.appendTo(this.page_form)
 			.find("input");
 	}
-
 	add_break() {
 		// add further fields in the next line
 		this.page_form.append('<div class="clearfix invisible-xs"></div>');
 	}
-
 	add_field(df, parent) {
 		this.show_form();
 
@@ -849,19 +837,15 @@ frappe.ui.Page = class Page {
 		this.fields_dict[df.fieldname || df.label] = f;
 		return f;
 	}
-
 	clear_fields() {
 		this.page_form.empty();
 	}
-
 	show_form() {
 		this.page_form.removeClass("hide");
 	}
-
 	hide_form() {
 		this.page_form.addClass("hide");
 	}
-
 	get_form_values() {
 		var values = {};
 		for (let fieldname in this.fields_dict) {
@@ -870,7 +854,6 @@ frappe.ui.Page = class Page {
 		}
 		return values;
 	}
-
 	add_view(name, html) {
 		let element = html;
 		if(typeof (html) === "string") {
@@ -884,7 +867,6 @@ frappe.ui.Page = class Page {
 		}
 		return this.views[name];
 	}
-
 	set_view(name) {
 		if(this.current_view_name===name)
 			return;
