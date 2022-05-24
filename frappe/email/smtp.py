@@ -1,15 +1,13 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import email.utils
 import smtplib
-import sys
 
 import _socket
 
 import frappe
 from frappe import _
-from frappe.utils import cint, cstr, parse_addr
+from frappe.utils import cint, cstr
 
 CONNECTION_FAILED = _("Could not connect to outgoing email server")
 AUTH_ERROR_TITLE = _("Invalid Credentials")
@@ -108,10 +106,10 @@ class SMTPServer:
 			self._session = _session
 			return self._session
 
-		except smtplib.SMTPAuthenticationError as e:
+		except smtplib.SMTPAuthenticationError:
 			self.throw_invalid_credentials_exception()
 
-		except _socket.error as e:
+		except _socket.error:
 			# Invalid mail server -- due to refusing connection
 			frappe.throw(SOCKET_ERROR, title=SOCKET_ERROR_TITLE)
 

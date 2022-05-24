@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.core.doctype.access_log.access_log import make_access_log
 from frappe.utils import scrub_urls
-from frappe.utils.pdf import cleanup, get_pdf
+from frappe.utils.pdf import get_pdf
 
 no_cache = 1
 
@@ -237,5 +237,3 @@ def print_by_server(
 			frappe.throw(_("PDF generation failed"))
 	except cups.IPPError:
 		frappe.throw(_("Printing failed"))
-	finally:
-		return

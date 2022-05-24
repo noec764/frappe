@@ -106,7 +106,7 @@ def delete_doc(
 			):
 				try:
 					delete_controllers(name, doc.module)
-				except (FileNotFoundError, OSError, KeyError):
+				except (OSError, KeyError):
 					# in case a doctype doesnt have any controller code  nor any app and module
 					pass
 
@@ -295,7 +295,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 				item_parent = getattr(item, "parent", None)
 				linked_doctype = item.parenttype if item_parent else link_dt
 
-				if linked_doctype in doctypes_to_skip or (
+				if linked_doctype in DOCTYPES_TO_SKIP or (
 					linked_doctype in ignore_linked_doctypes and method == "Cancel"
 				):
 					# don't check for communication and todo!

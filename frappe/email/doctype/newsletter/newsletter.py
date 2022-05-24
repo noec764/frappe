@@ -66,7 +66,7 @@ class Newsletter(WebsiteGenerator):
 				response = requests.head(url, verify=False, timeout=5)
 				if response.status_code >= 400:
 					broken_links.append(url)
-			except:
+			except Exception:
 				broken_links.append(url)
 		return broken_links
 
@@ -237,7 +237,7 @@ def confirmed_unsubscribe(email, group):
 
 
 @frappe.whitelist(allow_guest=True)
-def subscribe(email, email_group=_("Website")):
+def subscribe(email, email_group=_("Website")):  # noqa
 	"""API endpoint to subscribe an email to a particular email group. Triggers a confirmation email."""
 
 	# build subscription confirmation URL
@@ -286,7 +286,7 @@ def subscribe(email, email_group=_("Website")):
 
 
 @frappe.whitelist(allow_guest=True)
-def confirm_subscription(email, email_group=_("Website")):
+def confirm_subscription(email, email_group=_("Website")):  # noqa
 	"""API endpoint to confirm email subscription.
 	This endpoint is called when user clicks on the link sent to their mail.
 	"""

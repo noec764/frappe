@@ -1,5 +1,4 @@
 import frappe
-from frappe import _
 from frappe.model import no_value_fields, table_fields
 
 

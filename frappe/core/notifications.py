@@ -1,10 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
 import frappe
-from frappe.query_builder import DocType, Interval
-from frappe.query_builder.functions import Now
 
 
 def get_notification_config():

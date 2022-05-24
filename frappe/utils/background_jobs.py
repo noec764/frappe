@@ -164,7 +164,7 @@ def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True,
 			frappe.log_error(title=method_name)
 			raise
 
-	except:
+	except Exception:
 		frappe.db.rollback()
 		frappe.log_error(title=method_name)
 		frappe.db.commit()
@@ -224,8 +224,8 @@ def get_jobs(site=None, queue=None, key="method"):
 			# optional keyword arguments are stored in 'kwargs' of 'kwargs'
 			jobs_per_site[job.kwargs["site"]].append(job.kwargs["kwargs"][key])
 
-	for queue in get_queue_list(queue):
-		q = get_queue(queue)
+	for _queue in get_queue_list(queue):
+		q = get_queue(_queue)
 		jobs = q.jobs + get_running_jobs_in_queue(q)
 		for job in jobs:
 			if job.kwargs.get("site"):

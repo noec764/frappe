@@ -11,7 +11,6 @@ import frappe
 from frappe import _
 from frappe.core.doctype.version.version import get_diff
 from frappe.model import no_value_fields
-from frappe.model import table_fields as table_fieldtypes
 from frappe.utils import cint, cstr, duration_to_seconds, flt, update_progress_bar
 from frappe.utils.csvutils import get_csv_content_from_google_sheets, read_csv_content
 from frappe.utils.xlsxutils import (
@@ -525,7 +524,7 @@ class ImportFile:
 			# subsequent rows that have blank values in parent columns
 			# are considered as child rows
 			parent_column_indexes = self.header.get_column_indexes(self.doctype)
-			parent_row_values = first_row.get_values(parent_column_indexes)
+			first_row.get_values(parent_column_indexes)
 
 			data_without_first_row = data[1:]
 			for row in data_without_first_row:
@@ -1131,7 +1130,7 @@ def build_fields_dict_for_column_matching(parent_doctype):
 
 			label = (df.label or "").strip()
 			translated_label = _(label)
-			parent = df.parent or parent_doctype
+			df.parent or parent_doctype
 
 			if parent_doctype == doctype:
 				# for parent doctypes keys will be

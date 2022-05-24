@@ -32,7 +32,7 @@ from frappe.model.meta import Meta
 from frappe.modules import get_doc_path, make_boilerplate
 from frappe.modules.import_file import get_file_path
 from frappe.query_builder.functions import Concat
-from frappe.utils import cint, now
+from frappe.utils import cint
 from frappe.website.utils import clear_cache
 
 
@@ -290,7 +290,7 @@ class DocType(Document):
 
 		if self.has_web_view:
 			# route field must be present
-			if not "route" in [d.fieldname for d in self.fields]:
+			if "route" not in [d.fieldname for d in self.fields]:
 				frappe.throw(_('Field "route" is mandatory for Web Views'), title="Missing Field")
 
 			# clear website cache
@@ -1678,7 +1678,7 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
 				r = frappe.get_doc(dict(doctype="Role", role_name=role, desk_access=1))
 				r.flags.ignore_mandatory = r.flags.ignore_permissions = True
 				r.insert()
-	except frappe.DoesNotExistError as e:
+	except frappe.DoesNotExistError:
 		pass
 	except frappe.db.ProgrammingError as e:
 		if frappe.db.is_table_missing(e):

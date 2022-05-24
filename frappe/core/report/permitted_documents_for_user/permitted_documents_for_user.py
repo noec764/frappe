@@ -1,10 +1,9 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
 import frappe
 import frappe.utils.user
-from frappe import _, throw
+from frappe import _
 from frappe.model import data_fieldtypes
 from frappe.permissions import check_admin_or_system_manager, rights
 
