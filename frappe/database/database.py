@@ -210,6 +210,8 @@ class Database(object):
 				raise frappe.QueryTimeoutError(e)
 
 			elif frappe.conf.db_type == "postgres":
+				# TODO: Added temporarily
+				print(e)
 				raise
 
 			if ignore_ddl and (
