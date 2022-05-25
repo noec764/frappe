@@ -458,7 +458,8 @@ def evaluate_alert(doc, alert, event):
 			doc.reload()
 
 		alert.send(doc)
-		doc.flags.notifications_executed.append(alert.name)
+		if doc.flags.notifications_executed:
+			doc.flags.notifications_executed.append(alert.name)
 	except TemplateError:
 		frappe.throw(_("Error while evaluating Notification {0}. Please fix your template.").format(alert))
 	except Exception as e:
@@ -467,7 +468,14 @@ def evaluate_alert(doc, alert, event):
 			frappe.utils.get_link_to_form('Error Log', error_log.name)))
 
 def get_context(doc):
-	return {"doc": doc, "nowdate": nowdate, "frappe": frappe._dict(utils=get_safe_globals().get("frappe").get("utils"))}
+	return {"doc": doc, "nowdate": nowdate, "frappe": frappe._dict(
+		utils=get_safe_globals().get("frappe").get("utils"),
+		db=frappe._dict(
+			get_list=get_safe_globals().get("frappe").get("db").get("get_list"),
+			get_value=get_safe_globals().get("frappe").get("db").get("get_value"),
+		)
+		)
+	}
 
 @frappe.whitelist()
 def send_test_notification(notification, document):
