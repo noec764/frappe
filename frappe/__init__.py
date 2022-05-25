@@ -73,7 +73,7 @@ def _(msg, lang=None, context=None):
 	from frappe.utils import is_html, strip_html_tags
 
 	if not hasattr(local, "lang"):
-		local.lang = lang or db.get_default("lang")
+		local.lang = lang or get_user_lang() or db.get_default("lang")
 
 	if not lang:
 		lang = local.lang
@@ -201,7 +201,7 @@ def init(site, sites_path=None, new_site=False):
 	local.task_id = None
 
 	local.conf = _dict(get_site_config())
-	local.lang = None
+	local.lang = local.conf.lang
 	local.lang_full_dict = None
 
 	local.module_app = None
@@ -245,7 +245,6 @@ def connect(site=None, db_name=None, set_admin_as_user=True):
 		init(site)
 
 	local.db = get_db(user=db_name or local.conf.db_name)
-	local.lang = local.conf.lang or db.get_default("lang")
 	if set_admin_as_user:
 		set_user("Administrator")
 
