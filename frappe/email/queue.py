@@ -4,7 +4,7 @@
 
 import frappe
 from frappe import _, msgprint
-from frappe.query_builder import DocType, Interval
+from frappe.query_builder import Interval
 from frappe.query_builder.functions import Now
 from frappe.utils import cint, get_url, now_datetime
 from frappe.utils.verified_command import get_signed_params, verify_request
@@ -196,18 +196,24 @@ def clear_outbox(days: int = None) -> None:
 	Note: Used separate query to avoid deadlock
 	"""
 	days = days or 31
-	email_queue = DocType("Email Queue")
+	email_queue = frappe.qb.DocType("Email Queue")
+	email_recipient = frappe.qb.DocType("Email Queue Recipient")
 
-	email_queues = (
+	# Delete queue table
+	(
 		frappe.qb.from_(email_queue)
-		.select(email_queue.name)
-		.where(email_queue.modified < (Now() - Interval(days=days)))
-		.run(pluck=True)
-	)
+		.delete()
+		.where((email_queue.modified < (Now() - Interval(days=days))))
+	).run()
 
-	if email_queues:
-		frappe.db.delete("Email Queue", {"name": ("in", email_queues)})
-		frappe.db.delete("Email Queue Recipient", {"parent": ("in", email_queues)})
+	# delete child tables, note that this has potential to leave some orphan
+	# child table behind if modified time was later than parent doc (rare).
+	# But it's safe since child table doesn't contain links.
+	(
+		frappe.qb.from_(email_recipient)
+		.delete()
+		.where((email_recipient.modified < (Now() - Interval(days=days))))
+	).run()
 
 
 def set_expiry_for_email_queue():
