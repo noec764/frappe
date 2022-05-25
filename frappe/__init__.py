@@ -21,14 +21,12 @@ from frappe.utils.data import cstr, sbool
 # Local application imports
 from .exceptions import *
 from .utils.data import now
-from .utils.jinja import (
-	get_email_from_template,
-	get_jenv,
-	get_jloader,
-	get_template,
-	render_template,
-)
-from .utils.lazy_loader import lazy_import
+from .utils.jinja import get_jenv  # noqa
+from .utils.jinja import get_jloader  # noqa
+from .utils.jinja import get_template  # noqa
+from .utils.jinja import render_template  # noqa
+from .utils.jinja import get_email_from_template
+from .utils.lazy_loader import lazy_import  # noqa
 
 __version__ = "3.0.0-dev"
 __title__ = "Dodock Framework"
@@ -75,7 +73,7 @@ def _(msg, lang=None, context=None):
 	from frappe.utils import is_html, strip_html_tags
 
 	if not hasattr(local, "lang"):
-		local.lang = lang or (db.get_default("lang") if db else "en") or "en"
+		local.lang = lang or db.get_default("lang")
 
 	if not lang:
 		lang = local.lang
@@ -203,7 +201,7 @@ def init(site, sites_path=None, new_site=False):
 	local.task_id = None
 
 	local.conf = _dict(get_site_config())
-	local.lang = local.conf.lang or "en"
+	local.lang = None
 	local.lang_full_dict = None
 
 	local.module_app = None
@@ -247,6 +245,7 @@ def connect(site=None, db_name=None, set_admin_as_user=True):
 		init(site)
 
 	local.db = get_db(user=db_name or local.conf.db_name)
+	local.lang = local.conf.lang or db.get_default("lang")
 	if set_admin_as_user:
 		set_user("Administrator")
 
@@ -295,7 +294,7 @@ def get_site_config(sites_path=None, site_path=None):
 				click.secho("{0}/site_config.json is invalid".format(local.site), fg="red")
 				print(error)
 		elif local.site and not local.flags.new_site:
-			raise IncorrectSitePath("{0} does not exist".format(local.site))
+			raise IncorrectSitePath("{0} does not exist".format(local.site))  # noqa
 
 	return _dict(config)
 
@@ -416,7 +415,7 @@ def msgprint(
 			if inspect.isclass(raise_exception) and issubclass(raise_exception, Exception):
 				raise raise_exception(msg)
 			else:
-				raise ValidationError(msg)
+				raise ValidationError(msg)  # noqa
 
 	if flags.mute_messages:
 		_raise_exception()
@@ -479,7 +478,9 @@ def clear_last_message():
 		local.message_log = local.message_log[:-1]
 
 
-def throw(msg, exc=ValidationError, title=None, is_minimizable=None, wide=None, as_list=False):
+def throw(
+	msg, exc=ValidationError, title=None, is_minimizable=None, wide=None, as_list=False  # noqa
+):
 	"""Throw execption and show message (`msgprint`).
 
 	:param msg: Message.
@@ -904,7 +905,7 @@ def has_permission(
 		document_label = f"{doc.doctype} {doc.name}" if doc else doctype
 		msgprint(
 			_("No permission for {0}").format(document_label),
-			raise_exception=ValidationError,
+			raise_exception=ValidationError,  # noqa
 			title=None,
 			indicator="red",
 			is_minimizable=None,
@@ -1070,7 +1071,7 @@ def clear_document_cache(doctype, name):
 def get_cached_value(doctype, name, fieldname="name", as_dict=False):
 	try:
 		doc = get_cached_doc(doctype, name, _allow_dict=True)
-	except DoesNotExistError:
+	except DoesNotExistError:  # noqa
 		clear_last_message()
 		return
 
@@ -1119,7 +1120,7 @@ def get_last_doc(doctype, filters=None, order_by="creation desc"):
 	if d:
 		return get_doc(doctype, d[0])
 	else:
-		raise DoesNotExistError
+		raise DoesNotExistError  # noqa
 
 
 def get_single(doctype):
@@ -1225,7 +1226,7 @@ def rename_doc(
 	"""
 	from frappe.model.rename_doc import rename_doc as _rename_doc
 
-	return rename_doc(
+	return _rename_doc(
 		doctype=doctype,
 		old=old,
 		new=new,
@@ -1281,7 +1282,7 @@ def get_pymodule_path(modulename, *joins):
 
 	:param modulename: Python module name.
 	:param *joins: Join additional path elements using `os.path.join`."""
-	if joins and not "public" in joins and not "www" in joins[0]:
+	if joins and "public" not in joins and "www" not in joins[0]:
 		joins = [scrub(part) for part in joins]
 
 	return os.path.join(os.path.dirname(get_module(scrub(modulename)).__file__ or ""), *joins)
@@ -1490,7 +1491,7 @@ def get_attr(method_string):
 		and not local.flags.in_install
 		and app_name not in get_installed_apps()
 	):
-		throw(_("App {0} is not installed").format(app_name), AppNotInstalledError)
+		throw(_("App {0} is not installed").format(app_name), AppNotInstalledError)  # noqa
 
 	modulename = ".".join(method_string.split(".")[:-1])
 	methodname = method_string.split(".")[-1]
@@ -1793,7 +1794,7 @@ def get_all(doctype, *args, **kwargs):
 	        frappe.get_all("ToDo", fields=["*"], filters = {"description": ("like", "test%")})
 	"""
 	kwargs["ignore_permissions"] = True
-	if not "limit_page_length" in kwargs:
+	if "limit_page_length" not in kwargs:
 		kwargs["limit_page_length"] = 0
 	return get_list(doctype, *args, **kwargs)
 
