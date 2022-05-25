@@ -431,7 +431,11 @@ def evaluate_alert(doc, alert, event):
 			return
 
 		if isinstance(alert, string_types):
-			alert = frappe.get_doc("Notification", alert)
+			try:
+				alert = frappe.get_doc("Notification", alert)
+			except frappe.exceptions.DoesNotExistError:
+				# This error can happen when a notification is deleted but doctype cache is not cleared
+				return
 
 		context = get_context(doc)
 		if alert.condition:
