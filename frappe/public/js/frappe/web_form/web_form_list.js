@@ -220,7 +220,7 @@ export default class WebFormList {
 		const actions = document.querySelector(".list-view-actions");
 
 		frappe.has_permission(this.doctype, "", "delete", () => {
-			this.addButton(actions, "delete-rows", "danger", true, "Delete", () =>
+			this.addButton(actions, "delete-rows", "danger", true, __("Delete"), () =>
 				this.delete_rows()
 			);
 		});
