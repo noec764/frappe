@@ -619,6 +619,53 @@
    "fieldname": "website",
    "fieldtype": "Data",
    "label": "Website"
+  },
+  {
+    "description": "Stores the datetime when the last reset password key was generated.",
+    "fieldname": "last_reset_password_key_generated_on",
+    "fieldtype": "Datetime",
+    "hidden": 1,
+    "label": "Last Reset Password Key Generated On",
+    "read_only": 1
+   },
+  {
+   "fieldname": "column_break_75",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:(doc.document_follow_notify== 1)",
+   "fieldname": "follow_created_documents",
+   "fieldtype": "Check",
+   "label": "Auto follow documents that you create"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:(doc.document_follow_notify== 1)",
+   "fieldname": "follow_commented_documents",
+   "fieldtype": "Check",
+   "label": "Auto follow documents that you comment on"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:(doc.document_follow_notify== 1)",
+   "fieldname": "follow_liked_documents",
+   "fieldtype": "Check",
+   "label": "Auto follow documents that you Like"
+  },
+  {
+    "default": "0",
+    "depends_on": "eval:(doc.document_follow_notify== 1)",
+    "fieldname": "follow_shared_documents",
+    "fieldtype": "Check",
+    "label": "Auto follow documents that are shared with you"
+   },
+  {
+   "default": "0",
+   "depends_on": "eval:(doc.document_follow_notify== 1)",
+   "fieldname": "follow_assigned_documents",
+   "fieldtype": "Check",
+   "label": "Auto follow documents that are assigned to you"
   }
  ],
  "icon": "fa fa-user",
@@ -679,56 +726,9 @@
    "group": "Integrations",
    "link_doctype": "Token Cache",
    "link_fieldname": "user"
-   },
-   {
-    "description": "Stores the datetime when the last reset password key was generated.",
-    "fieldname": "last_reset_password_key_generated_on",
-    "fieldtype": "Datetime",
-    "hidden": 1,
-    "label": "Last Reset Password Key Generated On",
-    "read_only": 1
-   },
-  {
-   "fieldname": "column_break_75",
-   "fieldtype": "Column Break"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:(doc.document_follow_notify== 1)",
-   "fieldname": "follow_created_documents",
-   "fieldtype": "Check",
-   "label": "Auto follow documents that you create"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:(doc.document_follow_notify== 1)",
-   "fieldname": "follow_commented_documents",
-   "fieldtype": "Check",
-   "label": "Auto follow documents that you comment on"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:(doc.document_follow_notify== 1)",
-   "fieldname": "follow_liked_documents",
-   "fieldtype": "Check",
-   "label": "Auto follow documents that you Like"
-  },
-  {
-    "default": "0",
-    "depends_on": "eval:(doc.document_follow_notify== 1)",
-    "fieldname": "follow_shared_documents",
-    "fieldtype": "Check",
-    "label": "Auto follow documents that are shared with you"
-   },
-  {
-   "default": "0",
-   "depends_on": "eval:(doc.document_follow_notify== 1)",
-   "fieldname": "follow_assigned_documents",
-   "fieldtype": "Check",
-   "label": "Auto follow documents that are assigned to you"
-  }
+   }
  ],
- "modified": "2022-03-09 01:47:56.745069",
+ "modified": "2022-05-26 03:47:56.745069",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
