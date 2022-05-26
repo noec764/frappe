@@ -2,6 +2,7 @@
  "db_name": "test_dodock",
  "db_password": "test_dodock",
  "db_host": "mariadb",
+ "dbtype": "mariadb",
  "auto_email_id": "test@example.com",
  "mail_server": "smtp.example.com",
  "mail_login": "test@example.com",

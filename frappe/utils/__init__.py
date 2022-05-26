@@ -72,7 +72,7 @@ def get_formatted_email(user, mail=None):
 	if not mail:
 		return ""
 	else:
-		return cstr(make_header(decode_header(formataddr((fullname, mail)))))
+		return cstr(make_header(decode_header(formataddr((fullname, mail)))))  # noqa
 
 
 def extract_email_id(email):
@@ -202,9 +202,9 @@ def split_emails(txt):
 	email_list = []
 
 	# emails can be separated by comma or newline
-	s = re.sub(r"[\t\n\r]", " ", cstr(txt))
+	s = re.sub(r"[\t\n\r]", " ", cstr(txt))  # noqa
 	for email in re.split(r'[,\n](?=(?:[^"]|"[^"]*")*$)', s):
-		email = strip(cstr(email))
+		email = strip(cstr(email))  # noqa
 		if email:
 			email_list.append(email)
 
@@ -296,7 +296,7 @@ def get_traceback(with_context=False) -> str:
 		tb = "\n".join(trace_list)
 	else:
 		trace_list = traceback.format_exception(exc_type, exc_value, exc_tb)
-		tb = "".join(cstr(t) for t in trace_list)
+		tb = "".join(cstr(t) for t in trace_list)  # noqa
 
 	bench_path = get_bench_path() + "/"
 	return tb.replace(bench_path, "")
@@ -473,7 +473,7 @@ def get_backups_path():
 
 
 def get_request_site_address(full_address=False):
-	return get_url(full_address=full_address)
+	return get_url(full_address=full_address)  # noqa
 
 
 def get_site_url(site):
@@ -507,7 +507,7 @@ def get_disk_usage():
 	if not os.path.exists(files_path):
 		return 0
 	err, out = execute_in_shell("du -hsm {files_path}".format(files_path=files_path))
-	return cint(out.split("\n")[-2].split("\t")[0])
+	return cint(out.split("\n")[-2].split("\t")[0])  # noqa
 
 
 def touch_file(path):
@@ -638,7 +638,7 @@ def get_request_session(max_retries=5):
 
 
 def markdown(text, sanitize=True, linkify=True):
-	html = text if is_html(text) else frappe.utils.md_to_html(text)
+	html = text if is_html(text) else frappe.utils.md_to_html(text)  # noqa
 
 	if sanitize:
 		html = html.replace("<!-- markdown -->", "")
@@ -752,11 +752,11 @@ def get_site_info():
 		"country": system_settings.country,
 		"language": system_settings.language or "english",
 		"time_zone": system_settings.time_zone,
-		"setup_complete": cint(system_settings.setup_complete),
+		"setup_complete": cint(system_settings.setup_complete),  # noqa
 		"scheduler_enabled": system_settings.enable_scheduler,
 		# usage
 		"emails_sent": get_emails_sent_this_month(),
-		"space_used": flt((space_usage.total or 0) / 1024.0, 2),
+		"space_used": flt((space_usage.total or 0) / 1024.0, 2),  # noqa
 		"database_size": space_usage.database_size,
 		"backup_size": space_usage.backup_size,
 		"files_size": space_usage.files_size,
@@ -910,9 +910,10 @@ def get_build_version():
 def get_assets_json():
 	def _get_assets():
 		# get merged assets.json and assets-rtl.json
-		assets = frappe.parse_json(frappe.read_file("assets/assets.json"))
+		assets_path = "sites/assets" if frappe.flags.in_ci else "assets"
+		assets = frappe.parse_json(frappe.read_file(assets_path))
 
-		if assets_rtl := frappe.read_file("assets/assets-rtl.json"):
+		if assets_rtl := frappe.read_file(assets_path):
 			assets.update(frappe.parse_json(assets_rtl))
 
 		return assets
