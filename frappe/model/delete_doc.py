@@ -297,6 +297,10 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					reference_docname = refdoc.parent if meta.istable else refdoc.name
 					at_position = "at Row: {0}".format(refdoc.idx) if meta.istable else ""
 
+					if reference_doctype in DOCTYPES_TO_SKIP or (reference_doctype in ignore_linked_doctypes and method == 'Cancel'):
+						# Avoid errors when unlinking dynamic links
+						continue
+
 					raise_link_exists_exception(doc, reference_doctype, reference_docname, at_position)
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=''):

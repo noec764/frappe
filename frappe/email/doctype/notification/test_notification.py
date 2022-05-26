@@ -13,6 +13,7 @@ class TestNotification(unittest.TestCase):
 	def setUp(self):
 		frappe.db.sql("""delete from `tabEmail Queue`""")
 		frappe.set_user("test@example.com")
+		frappe.conf.mute_notifications = 0
 
 		if not frappe.db.exists('Notification', {'name': 'ToDo Status Update'}, 'name'):
 			notification = frappe.new_doc('Notification')
@@ -22,7 +23,7 @@ class TestNotification(unittest.TestCase):
 			notification.event = 'Value Change'
 			notification.value_changed = 'status'
 			notification.send_to_all_assignees = 1
-			notification.save()
+			notification.insert()
 
 		if not frappe.db.exists('Notification', {'name': 'Contact Status Update'}, 'name'):
 			notification = frappe.new_doc('Notification')
@@ -34,7 +35,8 @@ class TestNotification(unittest.TestCase):
 			notification.append('recipients', {
 				'receiver_by_document_field': 'email_id,email_ids'
 			})
-			notification.save()
+			notification.insert()
+
 
 	def tearDown(self):
 		frappe.set_user("Administrator")
@@ -70,6 +72,7 @@ class TestNotification(unittest.TestCase):
 		event.event_type = "Private"
 		event.starts_on  = "2014-06-06 12:00:00"
 		event.insert()
+
 
 		self.assertFalse(frappe.db.get_value("Email Queue", {"reference_doctype": "Event",
 			"reference_name": event.name, "status":"Not Sent"}))
@@ -263,3 +266,9 @@ class TestNotification(unittest.TestCase):
 		recipients = [d.recipient for d in email_queue.recipients]
 		self.assertTrue('test2@example.com' in recipients)
 		self.assertTrue('test1@example.com' in recipients)
+
+	@classmethod
+	def tearDownClass(cls):
+		frappe.delete_doc_if_exists("Notification", "ToDo Status Update")
+		frappe.delete_doc_if_exists("Notification", "Contact Status Update")
+		frappe.delete_doc_if_exists("Notification", "_Test Notification for wrong field")
