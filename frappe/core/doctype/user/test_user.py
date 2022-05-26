@@ -431,7 +431,7 @@ class TestUser(unittest.TestCase):
 		getdoc("User", "Administrator")
 		doc = frappe.response.docs[0]
 		self.assertListEqual(
-			doc.get("__onload").get("all_modules", []),
+			[x.get("label") for x in doc.get("__onload").get("all_modules", [])],
 			[m.get("module_name") for m in get_modules_from_all_apps()],
 		)
 
@@ -447,7 +447,7 @@ class TestUser(unittest.TestCase):
 		time.sleep(1)  # sleep for 1 sec to expire the reset link
 		self.assertEqual(
 			update_password(new_password, key=test_user.reset_password_key),
-			"The reset password link has been expired",
+			"The reset password link has expired",
 		)
 
 

@@ -1,9 +1,26 @@
+def render_table(data):
+	from terminaltables import AsciiTable
+
+	print(AsciiTable(data).table)
+
+
 def add_line_after(function):
 	"""Adds an extra line to STDOUT after the execution of a function this decorates"""
 
 	def empty_line(*args, **kwargs):
 		result = function(*args, **kwargs)
 		print()
+		return result
+
+	return empty_line
+
+
+def add_line_before(function):
+	"""Adds an extra line to STDOUT before the execution of a function this decorates"""
+
+	def empty_line(*args, **kwargs):
+		print()
+		result = function(*args, **kwargs)
 		return result
 
 	return empty_line
