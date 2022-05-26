@@ -17,6 +17,7 @@ class TestNotification(unittest.TestCase):
 	def setUp(self):
 		frappe.db.delete("Email Queue")
 		frappe.set_user("test@example.com")
+		frappe.conf.mute_notifications = 0
 
 		if not frappe.db.exists("Notification", {"name": "ToDo Status Update"}, "name"):
 			notification = frappe.new_doc("Notification")
@@ -350,3 +351,4 @@ class TestNotification(unittest.TestCase):
 	def tearDownClass(cls):
 		frappe.delete_doc_if_exists("Notification", "ToDo Status Update")
 		frappe.delete_doc_if_exists("Notification", "Contact Status Update")
+		frappe.delete_doc_if_exists("Notification", "_Test Notification for wrong field")

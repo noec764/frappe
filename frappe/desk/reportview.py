@@ -587,7 +587,7 @@ def get_stats(stats, doctype, filters=None):
 
 		except frappe.db.SQLError:
 			pass
-		except frappe.db.InternalError as e:
+		except frappe.db.InternalError:
 			# raised when _user_tags column is added on the fly
 			pass
 

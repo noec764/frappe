@@ -457,7 +457,11 @@ def evaluate_alert(doc, alert, event):
 			return
 
 		if isinstance(alert, str):
-			alert = frappe.get_doc("Notification", alert)
+			try:
+				alert = frappe.get_doc("Notification", alert)
+			except frappe.exceptions.DoesNotExistError:
+				# This error can happen when a notification is deleted but doctype cache is not cleared
+				return
 
 		context = get_context(doc)
 		if alert.condition:
@@ -486,7 +490,8 @@ def evaluate_alert(doc, alert, event):
 			doc.reload()
 
 		alert.send(doc)
-		doc.flags.notifications_executed.append(alert.name)
+		if doc.flags.notifications_executed:
+			doc.flags.notifications_executed.append(alert.name)
 	except TemplateError:
 		frappe.throw(
 			_("Error while evaluating Notification {0}. Please fix your template.").format(alert)
@@ -504,7 +509,13 @@ def get_context(doc):
 	return {
 		"doc": doc,
 		"nowdate": nowdate,
-		"frappe": frappe._dict(utils=get_safe_globals().get("frappe").get("utils")),
+		"frappe": frappe._dict(
+			utils=get_safe_globals().get("frappe").get("utils"),
+			db=frappe._dict(
+				get_list=get_safe_globals().get("frappe").get("db").get("get_list"),
+				get_value=get_safe_globals().get("frappe").get("db").get("get_value"),
+			),
+		),
 	}
 
 
