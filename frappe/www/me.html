@@ -47,6 +47,7 @@
 			</a>
 		</span>
 	</div>
+	{% if third_party_apps %}
 	<div class="col d-flex justify-content-between align-items-center">
 		<span>
 			<div class="my-account-item">{{_("Manage third party apps") }}</div>
@@ -62,6 +63,7 @@
 			</a>
 		</span>
 	</div>
+	{% endif %}
 	{% if frappe.db.get_single_value("Website Settings", "show_account_deletion_link") %}
 	<div class="col d-flex justify-content-between align-items-center">
 		<span>
