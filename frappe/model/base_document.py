@@ -853,7 +853,7 @@ class BaseDocument(object):
 
 			if self.get(fieldname) != value:
 				frappe.throw(
-					_("Value cannot be changed for {0}").format(self.meta.get_label(fieldname)),
+					_("Value cannot be changed for {0}").format(_(self.meta.get_label(fieldname))),
 					frappe.CannotChangeConstantError,
 				)
 

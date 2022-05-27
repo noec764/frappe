@@ -632,13 +632,13 @@ class Document(BaseDocument):
 					fail = not self.is_child_table_same(field.fieldname)
 				elif field.fieldtype in ("Date", "Datetime", "Time"):
 					fail = str(value) != str(original_value)
-				else:
+				elif original_value:
 					fail = value != original_value
 
 				if fail:
 					frappe.throw(
 						_("Value cannot be changed for {0}").format(
-							frappe.bold(self.meta.get_label(field.fieldname))
+							frappe.bold(_(self.meta.get_label(field.fieldname)))
 						),
 						exc=frappe.CannotChangeConstantError,
 					)
@@ -693,12 +693,12 @@ class Document(BaseDocument):
 		has_access_to = self.get_permlevel_access("read")
 
 		for df in self.meta.fields:
-			if df.permlevel and not df.permlevel in has_access_to:
+			if df.permlevel and df.permlevel not in has_access_to:
 				self.set(df.fieldname, None)
 
 		for table_field in self.meta.get_table_fields():
 			for df in frappe.get_meta(table_field.options).fields or []:
-				if df.permlevel and not df.permlevel in has_access_to:
+				if df.permlevel and df.permlevel not in has_access_to:
 					for child in self.get(table_field.fieldname) or []:
 						child.set(df.fieldname, None)
 
@@ -1000,7 +1000,7 @@ class Document(BaseDocument):
 			return
 
 		def _evaluate_alert(alert):
-			if not alert.name in self.flags.notifications_executed:
+			if alert.name not in self.flags.notifications_executed:
 				evaluate_alert(self, alert.name, alert.event)
 
 		event_map = {
