@@ -148,8 +148,8 @@ export default class WebFormList {
 						${__("Create a new {0}", [__(this.doctype)])}
 					</a>
 				`;
-
-				empty_state.innerHTML = `
+			});
+			empty_state.innerHTML = `
 					<div class="text-center">
 						<div>
 							<img
@@ -162,8 +162,7 @@ export default class WebFormList {
 					</div>
 				`;
 
-				this.wrapper.appendChild(empty_state);
-			});
+			this.wrapper.appendChild(empty_state);
 		}
 	}
 
