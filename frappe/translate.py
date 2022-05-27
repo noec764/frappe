@@ -707,7 +707,7 @@ def get_messages_from_workspaces():
 			content = frappe.parse_json(workspace.get("content"))
 			for c in content:
 				if c.get("type") == "header" and c.get("data", {}).get("text"):
-					output.append(("Workspace header: ", frappe.utils.strip_html(c.get("data", {}).get("text"))))
+					output.append(("Workspace header: ", c.get("data", {}).get("text")))
 
 	return tuple(output)
 

@@ -202,7 +202,7 @@ export default class Block {
 				</div>
 			`);
 
-			html.click(event => {
+			html.on('click', event => {
 				event.stopPropagation();
 				action && action();
 			});
@@ -210,12 +210,12 @@ export default class Block {
 			return html;
 		};
 
-		$button.click(event => {
+		$button.on('click', event => {
 			event.stopPropagation();
 			$button.find('.dropdown-list').toggleClass('hidden');
 		});
 
-		$(document).click(() => {
+		$(document).on('click', () => {
 			$button.find('.dropdown-list').addClass('hidden');
 		});
 

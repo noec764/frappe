@@ -69,7 +69,7 @@ export default class Header extends Block {
 	save() {
 		this.wrapper = this._element;
 		return {
-			text: this.wrapper.innerHTML.replace(/&nbsp;/gi, ''),
+			text: this.wrapper.innerHTML.replace(/&nbsp;/gi, '').replace('<br>', ''),
 			col: this.get_col()
 		};
 	}
@@ -105,10 +105,11 @@ export default class Header extends Block {
 		this._data = this.normalizeData(data);
 
 		if (data.text !== undefined) {
-			let text = this._data.text || '';
+			let text = __(this._data.text) || '';
+
 			const contains_html_tag = /<[a-z][\s\S]*>/i.test(text);
 			this._element.innerHTML = contains_html_tag ?
-				text : `<span class="h${this._settings.default_size}">${__(text)}</span>`;
+				text : `<span class="h${this._settings.default_size}">${text}</span>`;
 		}
 
 		if (!this.readOnly && this.wrapper) {
@@ -119,8 +120,8 @@ export default class Header extends Block {
 	getTag() {
 		const tag = document.createElement('DIV');
 
-		let text = this._data.text || '&nbsp';
-		tag.innerHTML = `<span class="h${this._settings.default_size}"><b>${__(text)}</b></span>`;
+		let text = __(this._data.text) || '&nbsp';
+		tag.innerHTML = __(`<span class="h${this._settings.default_size}"><b>${text}</b></span>`);
 
 		tag.classList.add('ce-header');
 
