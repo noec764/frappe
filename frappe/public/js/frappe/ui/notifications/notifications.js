@@ -14,12 +14,11 @@ frappe.ui.Notifications = class Notifications {
 		this.header_actions = this.dropdown_list.find('.header-actions');
 		this.body = this.dropdown_list.find('.notification-list-body');
 		this.panel_events = this.dropdown_list.find('.panel-events');
-		this.panel_notifications = this.dropdown_list.find('.panel-notifications')
+		this.panel_notifications = this.dropdown_list.find('.panel-notifications');
 
 		this.user = frappe.session.user;
 
 		this.setup_headers();
-
 		this.setup_dropdown_events();
 	}
 
@@ -34,7 +33,7 @@ frappe.ui.Notifications = class Notifications {
 				frappe.set_route('Form', 'Notification Settings', frappe.session.user);
 			}).appendTo(this.header_actions)
 			.attr('title', __("Notification Settings"))
-			.tooltip({ delay: { "show": 600, "hide": 100}, trigger: "hover" });
+			.tooltip({ delay: { "show": 600, "hide": 100}, trigger: "hover"  });
 
 		$(`<span class="mark-all-read pull-right" data-action="mark_all_as_read">
 			${frappe.utils.icon('mark-as-read')}
@@ -49,13 +48,13 @@ frappe.ui.Notifications = class Notifications {
 				label: __("Notifications"),
 				id: "notifications",
 				view: NotificationsView,
-				el: this.panel_notifications
+				el: this.panel_notifications,
 			},
 			{
 				label: __("Today's Events"),
 				id: "todays_events",
 				view: EventsView,
-				el: this.panel_events
+				el: this.panel_events,
 			}
 		];
 
@@ -89,14 +88,15 @@ frappe.ui.Notifications = class Notifications {
 	}
 
 	switch_tab(item) {
+		// Set active tab
 		this.categories.forEach((item) => {
 			item.$tab.removeClass("active");
 		});
 
 		item.$tab.addClass("active");
 
+		// Hide other tabs
 		Object.keys(this.tabs).forEach(tab_name => this.tabs[tab_name].hide());
-		this.tabs[item.id].make();
 		this.tabs[item.id].show();
 	}
 
@@ -129,7 +129,6 @@ frappe.ui.Notifications = class Notifications {
 		});
 	}
 };
-
 
 frappe.ui.notifications = {
 	get_notification_config() {
