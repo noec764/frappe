@@ -60,10 +60,22 @@
 	.my-account-item-desc {
 		color: var(--gray-700);
 		font-size: var(--text-md);
+
+		button {
+			background: none;
+			padding: 0;
+			stroke: var(--gray-700);
+		}
 	}
 
 	.my-account-item-link {
 		font-size: var(--text-md);
+
+		button {
+			background: none;
+			padding: 0;
+			color: var(--primary-color);
+		}
 
 		a {
 			text-decoration: none;

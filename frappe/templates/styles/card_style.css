@@ -10,7 +10,7 @@
 	margin: 70px auto;
 	border-radius: 4px;
 	background-color: var(--fg-color);
-	/* box-shadow: var(--shadow-base); */
+	box-shadow: var(--shadow-base);
 }
 
 .for-reset-password {

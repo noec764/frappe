@@ -143,17 +143,6 @@ def set_default_language(lang):
 	frappe.local.lang = lang
 
 
-def get_all_languages():
-	"""Returns all language codes ar, ch etc"""
-
-	def _get():
-		if not frappe.db:
-			frappe.connect()
-		return frappe.db.sql_list("select name from tabLanguage")
-
-	return frappe.cache().get_value("languages", _get)
-
-
 def get_all_language_with_name():
 	return frappe.db.get_all("Language", ["language_code", "language_name"])
 
@@ -172,6 +161,9 @@ def get_dict(fortype, name=None):
 	:param fortype: must be one of `doctype`, `page`, `report`, `include`, `jsfile`, `boot`
 	:param name: name of the document for which assets are to be returned.
 	"""
+	if not frappe.local.lang:
+		frappe.local.lang = get_user_lang()
+
 	fortype = fortype.lower()
 	cache = frappe.cache()
 	asset_key = fortype + ":" + (name or "-")
