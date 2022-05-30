@@ -95,7 +95,7 @@ class ParameterizedFunction(Function):
 		return function_sql
 
 
-class subqry(Criterion):
+class SubQuery(Criterion):
 	def __init__(
 		self,
 		subq: QueryBuilder,
@@ -107,3 +107,6 @@ class subqry(Criterion):
 	def get_sql(self, **kwg: Any) -> str:
 		kwg["subquery"] = True
 		return self.subq.get_sql(**kwg)
+
+
+subqry = SubQuery
