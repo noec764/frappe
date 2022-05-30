@@ -138,7 +138,7 @@ def get_website_settings(context=None):
 		}
 	)
 
-	settings = frappe.get_single("Website Settings")
+	settings: "WebsiteSettings" = frappe.get_single("Website Settings")
 	for k in [
 		"banner_html",
 		"banner_image",
@@ -217,6 +217,9 @@ def get_website_settings(context=None):
 
 	context["hide_login"] = settings.hide_login
 
+	if splash_image := settings.splash_image or context.get("splash_image"):
+		context["splash_image"] = splash_image
+
 	return context
 
 
@@ -237,7 +240,7 @@ def get_items(parentfield):
 		if d["parent_label"]:
 			for t in top_items:
 				if t["label"] == d["parent_label"]:
-					if not "child_items" in t:
+					if "child_items" not in t:
 						t["child_items"] = []
 					t["child_items"].append(d)
 					break
