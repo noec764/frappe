@@ -60,7 +60,7 @@ class User(Document):
 			filters={"for_user": ("in", ("", self.name))},
 			distinct=1,
 		)
-		all_modules = [{"name": m, "label": _(m)} for m in workspaces]
+		all_modules = [{"name": m, "label": _(m)} for m in workspaces if m is not None]
 		all_modules.sort(key=lambda x: x["label"])
 		self.set_onload("all_modules", all_modules)
 

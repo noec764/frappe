@@ -284,7 +284,7 @@ class TestEmailAccount(unittest.TestCase):
 			messages = {
 				# append_to = ToDo
 				'"INBOX"': {
-					"latest_messages": [f.read().replace("{{ message_id }}", last_mail.message_id)],
+					"latest_messages": [f.read().replace("{{ message_id }}", "<" + last_mail.message_id + ">")],
 					"seen_status": {2: "UNSEEN"},
 					"uid_list": [2],
 				}
@@ -351,7 +351,7 @@ class TestEmailAccount(unittest.TestCase):
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
 		email_account.imap_folder = []
 
-		with self.assertRaises(Exception):
+		with self.assertRaises(Exception):  # noqa
 			email_account.validate()
 
 	def test_append_to(self):
@@ -411,9 +411,12 @@ class TestEmailAccount(unittest.TestCase):
 	@patch("frappe.email.receive.EmailServer.select_imap_folder", return_value=True)
 	@patch("frappe.email.receive.EmailServer.logout", side_effect=lambda: None)
 	def mocked_get_inbound_mails(
-		email_account, messages={}, mocked_logout=None, mocked_select_imap_folder=None
+		email_account, messages=None, mocked_logout=None, mocked_select_imap_folder=None
 	):
 		from frappe.email.receive import EmailServer
+
+		if not messages:
+			messages = {}
 
 		def get_mocked_messages(**kwargs):
 			return messages.get(kwargs["folder"], {})
@@ -426,8 +429,11 @@ class TestEmailAccount(unittest.TestCase):
 	@patch("frappe.email.receive.EmailServer.select_imap_folder", return_value=True)
 	@patch("frappe.email.receive.EmailServer.logout", side_effect=lambda: None)
 	def mocked_email_receive(
-		email_account, messages={}, mocked_logout=None, mocked_select_imap_folder=None
+		email_account, messages=None, mocked_logout=None, mocked_select_imap_folder=None
 	):
+		if not messages:
+			messages = {}
+
 		def get_mocked_messages(**kwargs):
 			return messages.get(kwargs["folder"], {})
 

@@ -974,7 +974,7 @@ def floor(s):
 	"""
 	try:
 		num = cint(math.floor(flt(s)))
-	except:
+	except Exception:
 		num = 0
 	return num
 
@@ -996,7 +996,7 @@ def ceil(s):
 	"""
 	try:
 		num = cint(math.ceil(flt(s)))
-	except:
+	except Exception:
 		num = 0
 	return num
 
@@ -1016,8 +1016,6 @@ def sbool(x: str) -> Union[bool, Any]:
 	Returns:
 	        object: Returns Boolean or x
 	"""
-	from distutils.util import strtobool
-
 	try:
 		val = x.lower()
 		if val in ("true", "1"):
@@ -1930,6 +1928,16 @@ def unique(seq: typing.Sequence["T"]) -> List["T"]:
 def strip(val: str, chars: Optional[str] = None) -> str:
 	# \ufeff is no-width-break, \u200b is no-width-space
 	return (val or "").replace("\ufeff", "").replace("\u200b", "").strip(chars)
+
+
+def get_string_between(start: str, string: str, end: str) -> str:
+	if not string:
+		return ""
+
+	regex = "{0}(.*){1}".format(start, end)
+	out = re.search(regex, string)
+
+	return out.group(1) if out else string
 
 
 def to_markdown(html: str) -> str:

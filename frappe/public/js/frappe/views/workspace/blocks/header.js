@@ -19,7 +19,7 @@ export default class Header extends Block {
 			data = {};
 		}
 
-		newData.text = data.text.trim() || '';
+		newData.text = data.text && data.text.trim() || '';
 		newData.col = parseInt(data.col) || 12;
 
 		return newData;

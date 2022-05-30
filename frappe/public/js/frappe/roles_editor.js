@@ -3,7 +3,7 @@ frappe.RoleEditor = class {
 		this.frm = frm;
 		this.wrapper = wrapper;
 		this.disable = disable;
-		let user_roles = this.frm.doc.roles.map(a => a.role);
+		let user_roles = (this.frm.doc.roles || []).map(a => a.role);
 		this.multicheck = frappe.ui.form.make_control({
 			parent: wrapper,
 			df: {
@@ -93,7 +93,7 @@ frappe.RoleEditor = class {
 			.css("max-width", "120vw");
 	}
 	show() {
-		let user_roles = this.frm.doc.roles.map(a => a.role);
+		let user_roles = (this.frm.doc.roles || []).map(a => a.role);
 		this.multicheck.selected_options = user_roles;
 		this.multicheck.refresh_input();
 		this.set_enable_disable();

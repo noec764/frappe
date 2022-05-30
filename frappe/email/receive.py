@@ -25,6 +25,7 @@ from frappe.utils import (
 	cstr,
 	extract_email_id,
 	get_datetime,
+	get_string_between,
 	markdown,
 	now,
 	parse_addr,
@@ -386,7 +387,7 @@ class EmailServer:
 			try:
 				# retrieve headers
 				incoming_mail = Email(b"\n".join(self.pop.top(msg_num, 5)[1]))
-			except:
+			except Exception:
 				pass
 
 		if incoming_mail:
@@ -440,14 +441,16 @@ class Email:
 		self.set_content_and_type()
 		self.set_subject()
 		self.set_from()
-		self.message_id = (self.mail.get("Message-ID") or "").strip(" <>")
+
+		message_id = self.mail.get("Message-ID") or ""
+		self.message_id = get_string_between("<", message_id, ">")
 
 		if self.mail["Date"]:
 			try:
 				utc = email.utils.mktime_tz(email.utils.parsedate_tz(self.mail["Date"]))
 				utc_dt = datetime.datetime.utcfromtimestamp(utc)
 				self.date = convert_utc_to_user_timezone(utc_dt).strftime("%Y-%m-%d %H:%M:%S")
-			except:
+			except Exception:
 				self.date = now()
 		else:
 			self.date = now()
@@ -456,7 +459,8 @@ class Email:
 
 	@property
 	def in_reply_to(self):
-		return (self.mail.get("In-Reply-To") or "").strip(" <>")
+		in_reply_to = self.mail.get("In-Reply-To") or ""
+		return get_string_between("<", in_reply_to, ">")
 
 	def parse(self):
 		"""Walk and process multi-part email."""
@@ -581,7 +585,7 @@ class Email:
 				try:
 					fname = fname.replace("\n", " ").replace("\r", "")
 					fname = cstr(decode_header(fname)[0][0])
-				except:
+				except Exception:
 					fname = get_random_filename(content_type=content_type)
 			else:
 				fname = get_random_filename(content_type=content_type)
