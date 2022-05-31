@@ -219,7 +219,7 @@ def delete_from_table(doctype: str, name: str, ignore_doctypes: List[str], doc):
 			pluck="options",
 		)
 
-		child_doctypes_to_delete = set(child_doctypes) - set(ignore_doctypes)
+	child_doctypes_to_delete = set(child_doctypes) - set(ignore_doctypes)
 	for child_doctype in child_doctypes_to_delete:
 		frappe.db.delete(child_doctype, {"parenttype": doctype, "parent": name})
 
