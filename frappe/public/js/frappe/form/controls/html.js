@@ -32,5 +32,6 @@ frappe.ui.form.ControlHTML = class ControlHTML extends frappe.ui.form.Control {
 			this.df.options = html;
 			this.html(html);
 		}
+		return Promise.resolve();
 	}
 };
