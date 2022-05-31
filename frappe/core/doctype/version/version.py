@@ -15,7 +15,7 @@ class Version(Document):
 		if diff:
 			self.ref_doctype = new.doctype
 			self.docname = new.name
-			self.data = frappe.as_json(diff)
+			self.data = frappe.as_json(diff, indent=None, separators=(",", ":"))
 			return True
 		else:
 			return False
@@ -92,7 +92,7 @@ def get_diff(old, new, for_child=False):
 
 			# check for deletions
 			for d in old_value:
-				if not d.name in new_row_by_name:
+				if d.name not in new_row_by_name:
 					out.removed.append([df.fieldname, d.as_dict()])
 
 		elif old_value != new_value:
