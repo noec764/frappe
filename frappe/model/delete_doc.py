@@ -30,6 +30,7 @@ DOCTYPES_TO_SKIP = (
 	"Notification Log",
 	"Email Queue",
 	"Archived Document",
+	"Document Share Key",
 )
 
 
