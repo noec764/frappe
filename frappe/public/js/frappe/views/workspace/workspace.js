@@ -553,8 +553,8 @@ frappe.views.Workspace = class Workspace {
 					},
 					callback: function (res) {
 						if (res.message) {
-							let message = `Workspace <b>${old_item.title}</b> Edited Successfully`;
-							frappe.show_alert({ message: __(message), indicator: "green" });
+							let message = __(`Workspace <b>${old_item.title}</b> Edited Successfully`);
+							frappe.show_alert({ message: message, indicator: "green" });
 						}
 					}
 				});
