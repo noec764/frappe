@@ -24,11 +24,11 @@
 	border-radius: 10px;
 }
 
-@media (min-width: 567px) {
+@media (max-width: 425px) {
 	.for-reset-password .page-card {
-		box-shadow: var(--shadow-base);
-		padding: 40px 60px;
-
+		box-shadow: none;
+		background: none;
+		padding: 0px;
 	}
 }
 
