@@ -206,7 +206,7 @@ def process_2fa_for_sms(user, token, otp_secret):
 
 def process_2fa_for_otp_app(user, otp_secret, otp_issuer):
 	"""Process OTP App method for 2fa."""
-	totp_uri = pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
+	pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
 	if frappe.db.get_default(user + "_otplogin"):
 		otp_setup_completed = True
 	else:
@@ -277,7 +277,9 @@ def get_email_subject_for_qr_code(kwargs_dict):
 
 def get_email_body_for_qr_code(kwargs_dict):
 	"""Get QRCode email body."""
-	body_template = "Please click on the following link and follow the instructions on the page.<br><br> {{qrcode_link}}"
+	body_template = _(
+		"Please click on the following link and follow the instructions on the page. {0}"
+	).format("<br><br> {{qrcode_link}}")
 	body = frappe.render_template(body_template, kwargs_dict)
 	return body
 
@@ -299,7 +301,7 @@ def send_token_via_sms(otpsecret, token=None, phone_no=None):
 	"""Send token as sms to user."""
 	try:
 		from frappe.core.doctype.sms_settings.sms_settings import send_request
-	except:
+	except Exception:
 		return False
 
 	if not phone_no:
