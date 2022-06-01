@@ -168,7 +168,7 @@ class TestReport(FrappeTestCase):
 		frappe.db.commit()
 
 		if not frappe.db.exists("Role", "Test Has Role"):
-			role = frappe.get_doc({"doctype": "Role", "role_name": "Test Has Role"}).insert(
+			frappe.get_doc({"doctype": "Role", "role_name": "Test Has Role"}).insert(
 				ignore_permissions=True
 			)
 
@@ -185,6 +185,38 @@ class TestReport(FrappeTestCase):
 			).insert(ignore_permissions=True)
 		else:
 			report = frappe.get_doc("Report", "Test Report")
+
+		self.assertNotEqual(report.is_permitted(), True)
+		frappe.set_user("Administrator")
+
+	def test_report_custom_permissions(self):
+		frappe.set_user("test@example.com")
+		frappe.db.delete("Custom Role", {"report": "Test Custom Role Report"})
+		frappe.db.commit()  # nosemgrep
+		if not frappe.db.exists("Report", "Test Custom Role Report"):
+			report = frappe.get_doc(
+				{
+					"doctype": "Report",
+					"ref_doctype": "User",
+					"report_name": "Test Custom Role Report",
+					"report_type": "Query Report",
+					"is_standard": "No",
+					"roles": [{"role": "_Test Role"}, {"role": "System Manager"}],
+				}
+			).insert(ignore_permissions=True)
+		else:
+			report = frappe.get_doc("Report", "Test Custom Role Report")
+
+		self.assertEqual(report.is_permitted(), True)
+
+		frappe.get_doc(
+			{
+				"doctype": "Custom Role",
+				"report": "Test Custom Role Report",
+				"roles": [{"role": "_Test Role 2"}],
+				"ref_doctype": "User",
+			}
+		).insert(ignore_permissions=True)
 
 		self.assertNotEqual(report.is_permitted(), True)
 		frappe.set_user("Administrator")
