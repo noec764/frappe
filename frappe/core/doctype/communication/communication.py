@@ -15,7 +15,7 @@ from frappe.automation.doctype.assignment_rule.assignment_rule import (
 from frappe.contacts.doctype.contact.contact import get_contact_name
 from frappe.core.doctype.comment.comment import delete_comment_from_doc, update_comment_in_doc
 from frappe.core.doctype.communication.email import validate_email
-from frappe.core.doctype.communication.mixin import CommunicationEmailMixin
+from frappe.core.doctype.communication.mixins import CommunicationEmailMixin
 from frappe.core.utils import get_parent_doc
 from frappe.model.document import Document
 from frappe.utils import (
@@ -366,7 +366,7 @@ class Communication(Document, CommunicationEmailMixin):
 
 			for l in self.timeline_links:
 				t = (l.link_doctype, l.link_name)
-				if not t in links:
+				if t not in links:
 					links.append(t)
 				else:
 					duplicate = True
