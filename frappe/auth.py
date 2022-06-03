@@ -169,7 +169,7 @@ class LoginManager:
 			"User", self.user, ["user_type", "first_name", "last_name", "user_image"], as_dict=1
 		)
 
-		self.user_type = self.info.user_type
+		self.user_type = self.info and self.info.user_type
 
 	def setup_boot_cache(self):
 		frappe.cache_manager.build_table_count_cache()
@@ -421,6 +421,9 @@ def validate_ip_address(user):
 		if not frappe.flags.in_test
 		else frappe.db.get_value("User", user, user_fields, as_dict=True)
 	)
+	if not user_info:
+		return
+
 	ip_list = get_restricted_ip_list(user_info)
 	if not ip_list:
 		return
