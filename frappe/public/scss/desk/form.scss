@@ -54,7 +54,9 @@
 
 		.collapse-indicator {
 			color: var(--text-muted);
-			float: right;
+			margin-left: 10px;
+			position: relative;
+			padding: 0px;
 		}
 
 	}
