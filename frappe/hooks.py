@@ -1,6 +1,6 @@
 from frappe import _
 
-from . import __version__ as app_version
+from . import __version__ as app_version  # noqa
 
 app_name = "frappe"
 app_title = "Dodock"
@@ -87,7 +87,6 @@ leaderboards = "frappe.desk.leaderboard.get_leaderboards"
 on_session_creation = [
 	"frappe.core.doctype.activity_log.feed.login_feed",
 	"frappe.core.doctype.user.user.notify_admin_access_to_system_manager",
-	"frappe.limits.check_if_expired",
 ]
 
 on_logout = (
@@ -231,8 +230,6 @@ scheduler_events = {
 		"frappe.model.utils.user_settings.sync_user_settings",
 		"frappe.utils.error.collect_error_snapshots",
 		"frappe.desk.page.backups.backups.delete_downloadable_backups",
-		"frappe.limits.update_space_usage",
-		"frappe.limits.update_site_usage",
 		"frappe.deferred_insert.save_to_db",
 		"frappe.desk.form.document_follow.send_hourly_updates",
 		"frappe.email.doctype.newsletter.newsletter.send_scheduled_email",
@@ -301,7 +298,6 @@ setup_wizard_exception = [
 	"frappe.desk.page.setup_wizard.setup_wizard.email_setup_wizard_exception",
 	"frappe.desk.page.setup_wizard.setup_wizard.log_setup_wizard_exception",
 ]
-before_write_file = "frappe.limits.validate_space_limit"
 
 before_migrate = ["frappe.patches.v11_0.sync_user_permission_doctype_before_migrate.execute"]
 after_migrate = ["frappe.website.doctype.website_theme.website_theme.after_migrate"]

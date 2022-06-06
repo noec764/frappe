@@ -146,7 +146,6 @@ def clear_expired_sessions():
 def get():
 	"""get session boot info"""
 	from frappe.boot import get_bootinfo, get_unseen_notes
-	from frappe.limits import get_expiry_message, get_limits
 	from frappe.utils.change_log import get_change_log
 
 	bootinfo = None
@@ -191,10 +190,6 @@ def get():
 	bootinfo["setup_complete"] = cint(frappe.db.get_single_value("System Settings", "setup_complete"))
 
 	bootinfo["desk_theme"] = frappe.db.get_value("User", frappe.session.user, "desk_theme") or "Light"
-
-	# limits
-	bootinfo.limits = get_limits()
-	bootinfo.expiry_message = get_expiry_message()
 
 	return bootinfo
 
