@@ -183,7 +183,7 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 					map._onResize();
 				},
 				title: 'Refresh map',
-				icon: 'uil uil-sync'
+				icon: frappe.utils.icon('refresh')
 			}]
 		}).addTo(this.map);
 	}
