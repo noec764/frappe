@@ -80,7 +80,7 @@ class WidgetDialog {
 		this.filter_group = new frappe.ui.FilterGroup({
 			parent: this.dialog.get_field("filter_area").$wrapper,
 			doctype: doctype,
-			on_change: () => {},
+			on_change: () => { },
 		});
 
 		frappe.model.with_doctype(doctype, () => {
@@ -297,7 +297,7 @@ class CardDialog extends WidgetDialog {
 			message = "You must add atleast one link.";
 		} else {
 			data.links.map((item, idx) => {
-				let row = idx+1;
+				let row = idx + 1;
 
 				if (!item.link_type) {
 					message = "Following fields have missing values: <br><br><ul>";
@@ -327,15 +327,15 @@ class CardDialog extends WidgetDialog {
 }
 
 const indicator_colors = [
-	{label: __("Gray"), value: "Gray"},
-	{label: __("Green"), value: "Green"},
-	{label: __("Red"), value: "Red"},
-	{label: __("Orange"), value: "Orange"},
-	{label: __("Pink"), value: "Pink"},
-	{label: __("Yellow"), value: "Yellow"},
-	{label: __("Blue"), value: "Blue"},
-	{label: __("Cyan"), value: "Cyan"},
-	{label: __("Teal"), value: "Teal"}
+	{ label: __("Gray"), value: "Gray" },
+	{ label: __("Green"), value: "Green" },
+	{ label: __("Red"), value: "Red" },
+	{ label: __("Orange"), value: "Orange" },
+	{ label: __("Pink"), value: "Pink" },
+	{ label: __("Yellow"), value: "Yellow" },
+	{ label: __("Blue"), value: "Blue" },
+	{ label: __("Cyan"), value: "Cyan" },
+	{ label: __("Teal"), value: "Teal" }
 ]
 
 class ShortcutDialog extends WidgetDialog {
@@ -405,6 +405,14 @@ class ShortcutDialog extends WidgetDialog {
 						const views = ["List", "Report Builder", "Dashboard", "New"];
 						if (frappe.boot.treeviews.includes(doctype)) views.push("Tree");
 						if (frappe.boot.calendars.includes(doctype)) views.push("Calendar");
+						if (doctype) {
+							frappe.model.with_doctype(doctype, () => {
+								const meta = frappe.get_meta(doctype)
+								if (meta.fields.filter(f => f.fieldtype === "Geolocation").length) {
+									views.push("Map");
+								}
+							})
+						}
 
 						this.dialog.set_df_property("doc_view", "options", views.join("\n"));
 
@@ -417,7 +425,7 @@ class ShortcutDialog extends WidgetDialog {
 				fieldtype: "Select",
 				fieldname: "doc_view",
 				label: "DocType View",
-				options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar",
+				options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar\nMap",
 				description: __("Which view of the associated DocType should this shortcut take you to?"),
 				default: "List",
 				depends_on: (state) => {
@@ -627,7 +635,7 @@ class NumberCardDialog extends WidgetDialog {
 							return;
 						}
 					}
-					aggregate_function_fields.push({label: __(df.label), value: df.fieldname});
+					aggregate_function_fields.push({ label: __(df.label), value: df.fieldname });
 				}
 			});
 		}

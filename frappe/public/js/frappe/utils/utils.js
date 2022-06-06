@@ -1180,6 +1180,9 @@ Object.assign(frappe.utils, {
 						case "Calendar":
 							route = `${doctype_slug}/view/calendar`;
 							break;
+						case "Map":
+							route = `${doctype_slug}/view/map`;
+							break;
 						default:
 							frappe.throw({ message: __("Not a valid view:") + item.doc_view, title: __("Unknown View") });
 							route = "";
