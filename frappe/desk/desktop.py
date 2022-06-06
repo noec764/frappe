@@ -334,6 +334,7 @@ class Workspace:
 				new_item["extension"] = True
 
 			# Translate label
+			new_item["original_label"] = item.label if item.label else item.document_type
 			new_item["label"] = _(item.label) if item.label else _(item.document_type)
 
 			items.append(new_item)
