@@ -2,7 +2,7 @@ import Block from "./block.js";
 export default class QuickList extends Block {
 	static get toolbox() {
 		return {
-			title: 'Quick List',
+			title: __('Quick List'),
 			icon: frappe.utils.icon('list', 'sm')
 		};
 	}
@@ -30,7 +30,6 @@ export default class QuickList extends Block {
 	render() {
 		this.wrapper = document.createElement('div');
 		this.new('quick_list');
-
 		if (this.data && this.data.quick_list_name) {
 			let has_data = this.make('quick_list', this.data.quick_list_name);
 			if (!has_data) return;

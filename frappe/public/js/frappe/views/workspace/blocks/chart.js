@@ -2,7 +2,7 @@ import Block from "./block.js";
 export default class Chart extends Block {
 	static get toolbox() {
 		return {
-			title: 'Chart',
+			title: __('Chart'),
 			icon: frappe.utils.icon('chart', 'sm')
 		};
 	}

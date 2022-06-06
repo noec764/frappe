@@ -13,7 +13,7 @@ export default class HeaderSize {
 	}
 
 	get title() {
-		return 'Header Size';
+		return __('Header Size');
 	}
 
 	constructor({api}) {
