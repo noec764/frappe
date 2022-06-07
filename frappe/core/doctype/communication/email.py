@@ -21,13 +21,6 @@ from frappe.utils import (
 if TYPE_CHECKING:
 	from frappe.core.doctype.communication.communication import Communication
 
-OUTGOING_EMAIL_ACCOUNT_MISSING = _(
-	"""
-	Unable to send mail because of a missing email account.
-	Please setup default Email Account from Setup > Email > Email Account
-"""
-)
-
 
 @frappe.whitelist()
 def make(
@@ -173,7 +166,12 @@ def _make(
 
 	if cint(send_email):
 		if not comm.get_outgoing_email_account():
-			frappe.throw(msg=OUTGOING_EMAIL_ACCOUNT_MISSING, exc=frappe.OutgoingEmailError)
+			frappe.throw(
+				_(
+					"Unable to send mail because of a missing email account. Please setup default Email Account from Setup > Email > Email Account"
+				),
+				exc=frappe.OutgoingEmailError,
+			)
 
 		comm.send_email(
 			print_html=print_html,
