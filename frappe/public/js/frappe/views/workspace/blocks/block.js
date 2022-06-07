@@ -215,10 +215,6 @@ export default class Block {
 			$button.find('.dropdown-list').toggleClass('hidden');
 		});
 
-		$(document).on('click', () => {
-			$button.find('.dropdown-list').addClass('hidden');
-		});
-
 		$widget_control.prepend($button);
 
 		this.dropdown_list.forEach((item) => {
