@@ -46,9 +46,9 @@ def get_info(view=None, queue_timeout=None, job_status=None) -> List[Dict]:
 		for queue in queues:
 			for job in queue.jobs:
 				if job_status != "all" and job.get_status() != job_status:
-					return
+					continue
 				if queue_timeout != "all" and not queue.name.endswith(f":{queue_timeout}"):
-					return
+					continue
 				add_job(job, queue.name)
 
 	elif view == "Workers":
