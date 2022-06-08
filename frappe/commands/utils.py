@@ -733,6 +733,7 @@ def transform_database(context, table, engine, row_format, failfast):
 @click.command("run-tests")
 @click.option("--app", help="For App")
 @click.option("--doctype", help="For DocType")
+@click.option("--module-def", help="For all Doctypes in Module Def")
 @click.option("--case", help="Select particular TestCase")
 @click.option(
 	"--doctype-list-path",
@@ -760,6 +761,7 @@ def run_tests(
 	app=None,
 	module=None,
 	doctype=None,
+	module_def=None,
 	test=(),
 	profile=False,
 	coverage=False,
@@ -796,6 +798,7 @@ def run_tests(
 			app,
 			module,
 			doctype,
+			module_def,
 			context.verbose,
 			tests=tests,
 			force=context.force,

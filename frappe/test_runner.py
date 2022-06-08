@@ -41,6 +41,7 @@ def main(
 	app=None,
 	module=None,
 	doctype=None,
+	module_def=None,
 	verbose=False,
 	tests=(),
 	force=False,
@@ -102,6 +103,13 @@ def main(
 				profile,
 				failfast=failfast,
 				junit_xml_output=junit_xml_output,
+			)
+		elif module_def:
+			doctypes = frappe.db.get_list(
+				"DocType", filters={"module": module_def, "istable": 0}, pluck="name"
+			)
+			ret = run_tests_for_doctype(
+				doctypes, verbose, tests, force, profile, failfast=failfast, junit_xml_output=junit_xml_output
 			)
 		elif module:
 			ret = run_tests_for_module(
