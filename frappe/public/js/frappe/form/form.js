@@ -41,6 +41,12 @@ frappe.ui.form.Form = class FrappeForm {
 		this.doctype_layout = frappe.get_doc('DocType Layout', doctype_layout_name);
 		this.setup_meta(doctype);
 
+		this.beforeUnloadListener = (event) => {
+			event.preventDefault();
+			// A String is returned for compatability with older Browsers. Return Value has to be truthy to trigger "Leave Site" Dialog
+			return event.returnValue = 'There are unsaved changes, are you sure you want to exit?';
+		};
+
 	}
 
 	setup_meta() {
@@ -341,6 +347,8 @@ frappe.ui.form.Form = class FrappeForm {
 
 	refresh(docname) {
 		var switched = docname ? true : false;
+
+		removeEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
 
 		if(docname) {
 			this.switch_doc(docname);
@@ -1234,6 +1242,9 @@ frappe.ui.form.Form = class FrappeForm {
 	dirty() {
 		this.doc.__unsaved = 1;
 		this.$wrapper.trigger('dirty');
+		if (!frappe.boot.developer_mode) {
+			addEventListener("beforeunload", this.beforeUnloadListener, {capture: true});
+		}
 	}
 
 	get_docinfo() {
