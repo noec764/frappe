@@ -120,7 +120,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 							};
 							frappe.call({
 								method:
-									"frappe.core.doctype.file.file.create_new_folder",
+									"frappe.core.api.file.create_new_folder",
 								args: data
 							});
 						},
@@ -141,7 +141,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 							frappe.show_alert(__("Unzipping files..."));
 							frappe
 								.call(
-									"frappe.core.doctype.file.file.unzip_file",
+									"frappe.core.api.file.unzip_file",
 									{
 										name: file.name
 									}
@@ -184,7 +184,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		this.page.add_actions_menu_item(__('Export as zip'), () => {
 			let docnames = this.get_checked_items(true);
 			if (docnames.length) {
-				open_url_post('/api/method/frappe.core.doctype.file.file.zip_files', {
+				open_url_post('/api/method/frappe.core.api.file.zip_files', {
 					files: JSON.stringify(docnames)
 				});
 			}
