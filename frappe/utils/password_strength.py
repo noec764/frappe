@@ -23,9 +23,6 @@ def test_password_strength(password, user_inputs=None):
 # feedback functionality code from https://github.com/sans-serif/python-zxcvbn/blob/master/zxcvbn/feedback.py
 # see license for feedback code at https://github.com/sans-serif/python-zxcvbn/blob/master/LICENSE.txt
 
-# Used for regex matching capitalization
-import re
-
 # Used to get the regex patterns for capitalization
 # (Used the same way in the original zxcvbn)
 from zxcvbn import scoring
@@ -181,9 +178,9 @@ def get_dictionary_match_feedback(match, is_sole_match):
 
 	word = match.get("token")
 	# Variations of the match like UPPERCASES
-	if re.match(scoring.START_UPPER, word):
+	if scoring.START_UPPER.match(word):
 		suggestions.append(_("Capitalization doesn't help very much."))
-	elif re.match(scoring.ALL_UPPER, word):
+	elif scoring.ALL_UPPER.match(word):
 		suggestions.append(_("All-uppercase is almost as easy to guess as all-lowercase."))
 
 	# Match contains l33t speak substitutions

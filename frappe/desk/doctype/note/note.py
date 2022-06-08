@@ -1,17 +1,18 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: See license.txt
 
+import re
 
 import frappe
 from frappe.model.document import Document
+
+NAME_PATTERN = re.compile("[%'\"#*?`]")
 
 
 class Note(Document):
 	def autoname(self):
 		# replace forbidden characters
-		import re
-
-		self.name = re.sub("[%'\"#*?`]", "", self.title.strip())
+		self.name = NAME_PATTERN.sub("", self.title.strip())
 
 	def validate(self):
 		if self.notify_on_login and not self.expire_notification_on:

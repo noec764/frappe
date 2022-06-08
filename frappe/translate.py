@@ -49,6 +49,8 @@ TRANSLATE_PATTERN = re.compile(
 	r"[\s\n]*\)"  # Closing function call ignore leading whitespace/newlines
 )
 
+REPORT_TRANSLATE_PATTERN = re.compile('"([^:,^"]*):')
+
 
 def get_language(lang_list: List = None) -> str:
 	"""Set `frappe.local.lang` from HTTP headers at beginning of request
@@ -688,7 +690,7 @@ def get_messages_from_report(name):
 		messages.extend(
 			[
 				(None, message)
-				for message in re.findall('"([^:,^"]*):', report.query)
+				for message in REPORT_TRANSLATE_PATTERN.findall(report.query)
 				if is_translatable(message)
 			]
 		)

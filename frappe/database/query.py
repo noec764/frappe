@@ -8,6 +8,9 @@ from frappe import _
 from frappe.model.db_query import get_timespan_date_range
 from frappe.query_builder import Criterion, Field, Order, Table
 
+TAB_PATTERN = re.compile("^tab")
+WORDS_PATTERN = re.compile(r"\w+")
+
 
 def like(key: Field, value: str) -> frappe.qb:
 	"""Wrapper method for `LIKE`
@@ -392,7 +395,7 @@ class Permission:
 			doctype = [doctype]
 
 		for dt in doctype:
-			dt = re.sub("^tab", "", dt)
+			dt = TAB_PATTERN.sub("", dt)
 			if not frappe.has_permission(
 				dt,
 				"select",
@@ -408,4 +411,4 @@ class Permission:
 
 	@staticmethod
 	def get_tables_from_query(query: str):
-		return [table for table in re.findall(r"\w+", query) if table.startswith("tab")]
+		return [table for table in WORDS_PATTERN.findall(query) if table.startswith("tab")]
