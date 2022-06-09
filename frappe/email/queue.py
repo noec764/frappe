@@ -587,7 +587,7 @@ def prepare_message(email, recipient, recipients_list):
 		message = Parser().parsestr(message)
 
 	if unsubscribe_url:
-		message.add_header('List-Unsubscribe', unsubscribe_url)
+		message.add_header('List-Unsubscribe', f"<{unsubscribe_url}>")
 
 	if email.attachments:
 		# On-demand attachments
