@@ -360,7 +360,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			this.columns.push({
 				type: "Subject",
 				df: {
-					label: __("Name"),
+					label: __("ID"),
 					fieldname: "name",
 				},
 			});
@@ -427,7 +427,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			this.columns.push({
 				type: "Field",
 				df: {
-					label: __("Name"),
+					label: __("ID"),
 					fieldname: "name",
 				},
 			});
