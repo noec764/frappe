@@ -245,6 +245,7 @@ class SendMailContext:
 			self.message_placeholder("unsubscribe_url"),
 			self.get_unsubscribe_str(recipient_email),
 		)
+
 		message = message.replace(self.message_placeholder("cc"), self.get_receivers_str())
 		message = message.replace(
 			self.message_placeholder("recipient"), self.get_receipient_str(recipient_email)
@@ -591,6 +592,9 @@ class QueueBuilder:
 			mail.msg_root["Disposition-Notification-To"] = self.sender
 		if self.in_reply_to:
 			mail.set_in_reply_to(self.in_reply_to)
+		if self._add_unsubscribe_link:
+			mail.msg_root["List-Unsubscribe"] = "<!--unsubscribe_url-->"
+
 		return mail
 
 	def process(self, send_now=False):
