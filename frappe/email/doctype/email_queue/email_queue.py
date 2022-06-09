@@ -593,7 +593,7 @@ class QueueBuilder:
 		if self.in_reply_to:
 			mail.set_in_reply_to(self.in_reply_to)
 		if self._add_unsubscribe_link:
-			mail.msg_root["List-Unsubscribe"] = "<!--unsubscribe_url-->"
+			mail.msg_root["List-Unsubscribe"] = "<<!--unsubscribe_url-->>"
 
 		return mail
 
