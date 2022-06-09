@@ -218,7 +218,7 @@ export default class OnboardingWidget extends Widget {
 			const on_finish = () => {
 				let msg_dialog = frappe.msgprint({
 					message: __("Let's take you back to onboarding"),
-					title: __("Great Job"),
+					title: __("Onboarding complete"),
 					primary_action: {
 						action: () => {
 							frappe.set_route(current_route).then(() => {
@@ -261,7 +261,7 @@ export default class OnboardingWidget extends Widget {
 
 			if (success) {
 				args.message = __("Let's take you back to onboarding");
-				args.title = __("Looks Great");
+				args.title = __("Action Complete");
 				args.primary_action = {
 					action: () => {
 						frappe.set_route(current_route).then(() => {
@@ -274,7 +274,7 @@ export default class OnboardingWidget extends Widget {
 				custom_onhide = () => args.primary_action.action();
 			} else {
 				args.message = __("Looks like you didn't change the value");
-				args.title = __("Oops");
+				args.title = __("Try Again");
 				args.secondary_action = {
 					action: () => frappe.set_route(current_route),
 					label: __("Go Back"),
@@ -310,7 +310,7 @@ export default class OnboardingWidget extends Widget {
 			const on_finish = () => {
 				frappe.msgprint({
 					message: __("Awesome, now try making an entry yourself"),
-					title: __("Great"),
+					title: __("Document Saved"),
 					primary_action: {
 						action: () => {
 							frappe.set_route(current_route).then(() => {
@@ -333,8 +333,8 @@ export default class OnboardingWidget extends Widget {
 
 		let callback = () => {
 			frappe.msgprint({
-				message: __("You're doing great, let's take you back to the onboarding page."),
-				title: __("Good Work 🎉"),
+				message: __("Let's take you back to onboarding"),
+				title: __("Action Complete"),
 				primary_action: {
 					action: () => {
 						frappe.set_route(current_route).then(() => {
@@ -354,7 +354,7 @@ export default class OnboardingWidget extends Widget {
 			frappe.route_hooks.after_save = () => {
 				frappe.msgprint({
 					message: __("Submit this document to complete this step."),
-					title: __("Great")
+					title: __("Document Saved")
 				});
 			};
 			frappe.route_hooks.after_submit = callback;
@@ -373,7 +373,7 @@ export default class OnboardingWidget extends Widget {
 				if (frappe.get_route_str() != current_route) {
 					let success_dialog = frappe.msgprint({
 						message: __("Let's take you back to onboarding"),
-						title: __("Looks Great"),
+						title: __("Document Saved"),
 						primary_action: {
 							action: () => {
 								success_dialog.hide();
@@ -393,7 +393,7 @@ export default class OnboardingWidget extends Widget {
 				} else {
 					frappe.msgprint({
 						message: __("Let us continue with the onboarding"),
-						title: __("Looks Great")
+						title: __("Document Saved")
 					});
 					this.mark_complete(step);
 				}
