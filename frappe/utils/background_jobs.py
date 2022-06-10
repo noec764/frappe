@@ -125,7 +125,6 @@ def run_doc_method(doctype, name, doc_method, **kwargs):
 
 def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True, retry=0):
 	"""Executes job in a worker, performs commit/rollback and logs if there is any error"""
-
 	if is_async:
 		frappe.connect(site)
 		if os.environ.get("CI"):
@@ -175,6 +174,11 @@ def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True,
 		frappe.db.commit()
 
 	finally:
+		# background job hygiene: release file locks if unreleased
+		# if this breaks something, move it to failed jobs alone - gavin@frappe.io
+		for doc in frappe.local.locked_documents:
+			doc.unlock()
+
 		frappe.monitor.stop()
 		if is_async:
 			frappe.destroy()
@@ -192,7 +196,6 @@ def start_worker(queue=None, quiet=False, rq_username=None, rq_password=None):
 		setup_loghandlers("ERROR")
 
 	with Connection(redis_connection):
-		queues = get_queue_list(queue)
 		logging_level = "INFO"
 		if quiet:
 			logging_level = "WARNING"
@@ -231,9 +234,7 @@ def get_jobs(site=None, queue=None, key="method"):
 			if job.kwargs.get("site"):
 				# if job belongs to current site, or if all jobs are requested
 				if (job.kwargs["site"] == site) or site is None:
-					# get jobs for all sites
 					add_to_dict(job)
-
 			else:
 				print("No site found in job", job.__dict__)
 
@@ -251,7 +252,6 @@ def get_queue_list(queue_list=None, build_queue_name=False):
 			validate_queue(queue, default_queue_list)
 	else:
 		queue_list = default_queue_list
-
 	return [generate_qname(qtype) for qtype in queue_list] if build_queue_name else queue_list
 
 
@@ -324,10 +324,7 @@ def get_redis_conn(username=None, password=None):
 		)
 		raise
 	except Exception:
-		log(
-			f"Please make sure that Redis Queue runs @ {frappe.get_conf().redis_queue}",
-			colour="red",
-		)
+		log(f"Please make sure that Redis Queue runs @ {frappe.get_conf().redis_queue}", colour="red")
 		raise
 
 	return redis_connection
@@ -341,6 +338,7 @@ def get_queues() -> List[Queue]:
 
 def generate_qname(qtype: str) -> str:
 	"""Generate qname by combining bench ID and queue type.
+
 	qnames are useful to define namespaces of customers.
 	"""
 	return f"{get_bench_id()}:{qtype}"
