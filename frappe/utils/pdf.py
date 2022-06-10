@@ -5,10 +5,11 @@ import os
 import re
 import subprocess
 from distutils.version import LooseVersion
+from typing import Optional
 
 import pdfkit
 from bs4 import BeautifulSoup
-from PyPDF2 import PdfFileReader, PdfFileWriter
+from PyPDF2 import PdfReader, PdfWriter
 
 import frappe
 from frappe import _
@@ -23,7 +24,7 @@ PDF_CONTENT_ERRORS = [
 ]
 
 
-def get_pdf(html, options=None, output=None, cover=None):
+def get_pdf(html, options=None, output: Optional[PdfWriter] = None, cover=None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
 
@@ -37,11 +38,10 @@ def get_pdf(html, options=None, output=None, cover=None):
 	try:
 		# Set filename property to false, so no file is actually created
 
-		filedata = pdfkit.from_string(html, False, options=options or {})
+		filedata = pdfkit.from_string(html, options=options or {}, verbose=True)
 
-		# https://pythonhosted.org/PyPDF2/PdfFileReader.html
-		# create in-memory binary streams from filedata and create a PdfFileReader object
-		reader = PdfFileReader(io.BytesIO(filedata))
+		# create in-memory binary streams from filedata and create a PdfReader object
+		reader = PdfReader(io.BytesIO(filedata))
 
 		cover_reader = ""
 		if cover:
@@ -49,7 +49,7 @@ def get_pdf(html, options=None, output=None, cover=None):
 			if frappe.db.exists("File", dict(file_url=cover_page)):
 				file_doc = frappe.get_doc("File", dict(file_url=cover_page))
 				with open(file_doc.get_full_path(), "rb") as f:
-					cover_reader = PdfFileReader(io.BytesIO(f.read()))
+					cover_reader = PdfReader(io.BytesIO(f.read()))
 
 	except OSError as e:
 		if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
@@ -57,10 +57,10 @@ def get_pdf(html, options=None, output=None, cover=None):
 				frappe.throw(_("PDF generation failed because of broken image links"))
 
 			# allow pdfs with missing images if file got created
-			if output:  # output is a PdfFileWriter object
+			if output:
 				if cover_reader:
-					output.appendPagesFromReader(cover_reader)
-				output.appendPagesFromReader(reader)
+					output.append_pages_from_reader(cover_reader)
+				output.append_pages_from_reader(reader)
 
 			else:
 				frappe.throw(_("PDF generation failed because of broken image links"))
@@ -74,14 +74,14 @@ def get_pdf(html, options=None, output=None, cover=None):
 
 	if output:
 		if cover_reader:
-			output.appendPagesFromReader(cover_reader)
-		output.appendPagesFromReader(reader)
+			output.append_pages_from_reader(cover_reader)
+		output.append_pages_from_reader(reader)
 		return output
 
-	writer = PdfFileWriter()
+	writer = PdfWriter()
 	if cover_reader:
-		writer.appendPagesFromReader(cover_reader)
-	writer.appendPagesFromReader(reader)
+		writer.append_pages_from_reader(cover_reader)
+	writer.append_pages_from_reader(reader)
 
 	if "password" in options:
 		writer.encrypt(password)
@@ -194,7 +194,7 @@ def read_options_from_html(html):
 			match = pattern.findall(html)
 			if match:
 				options[attr] = str(match[-1][3]).strip()
-		except:
+		except Exception:
 			pass
 
 	return str(soup), options

@@ -1,6 +1,6 @@
 import os
 
-from PyPDF2 import PdfFileWriter
+from PyPDF2 import PdfWriter
 
 import frappe
 from frappe import _
@@ -59,7 +59,7 @@ def download_multi_pdf(doctype, name, format=None, no_letterhead=False, options=
 
 	import json
 
-	output = PdfFileWriter()
+	output = PdfWriter()
 
 	if isinstance(options, str):
 		options = json.loads(options)
@@ -218,7 +218,7 @@ def print_by_server(
 		cups.setServer(print_settings.server_ip)
 		cups.setPort(print_settings.port)
 		conn = cups.Connection()
-		output = PdfFileWriter()
+		output = PdfWriter()
 		output = frappe.get_print(
 			doctype,
 			name,
