@@ -14,7 +14,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 				'Column Break': '🟡',
 			};
 			if (prefix[value]) {
-				value = prefix[value] + ' ' + value;
+				value = prefix[value] + ' ' + __(value);
 			}
 			return value;
 		};
