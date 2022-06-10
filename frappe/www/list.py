@@ -19,12 +19,13 @@ def get_context(context, **dict_params):
 	frappe.local.form_dict.update(dict_params)
 	doctype = frappe.local.form_dict.doctype
 	context.parents = [{"route": "me", "title": _("My Account")}]
-	context.meta = frappe.get_meta(doctype)
-	context.update(get_list_context(context, doctype) or {})
-	context.doctype = doctype
-	context.title = context.title or _(context.doctype)
-	context.txt = frappe.local.form_dict.txt
-	context.update(get(**frappe.local.form_dict))
+	if doctype:
+		context.meta = frappe.get_meta(doctype)
+		context.update(get_list_context(context, doctype) or {})
+		context.doctype = doctype
+		context.title = context.title or _(context.doctype)
+		context.txt = frappe.local.form_dict.txt
+		context.update(get(**frappe.local.form_dict))
 
 
 @frappe.whitelist(allow_guest=True)
@@ -216,7 +217,7 @@ def get_list(
 	ignore_permissions=False,
 	fields=None,
 	order_by=None,
-	or_filters=[],
+	or_filters=None,
 ):
 	meta = frappe.get_meta(doctype)
 	if not filters:
@@ -224,6 +225,9 @@ def get_list(
 
 	if not fields:
 		fields = "distinct *"
+
+	if not or_filters:
+		or_filters = []
 
 	if txt:
 		if meta.search_fields:

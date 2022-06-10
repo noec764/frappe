@@ -85,18 +85,14 @@ class WebsiteSearch(FullTextSearch):
 
 def slugs_with_web_view(_items_to_index):
 	all_routes = []
-	filters = {
-		"has_web_view": 1,
-		"allow_guest_to_view": 1,
-		"index_web_pages_for_search": 1,
-	}
+	filters = {"has_web_view": 1, "allow_guest_to_view": 1, "index_web_pages_for_search": 1}
 	fields = ["name", "is_published_field", "website_search_field"]
 	doctype_with_web_views = frappe.get_all("DocType", filters=filters, fields=fields)
 
 	for doctype in doctype_with_web_views:
 		if doctype.is_published_field:
 			fields = ["route", doctype.website_search_field]
-			filters = {doctype.is_published_field: 1}
+			filters = ({doctype.is_published_field: 1},)
 			if doctype.website_search_field:
 				docs = frappe.get_all(doctype.name, filters=filters, fields=fields + ["title"])
 				for doc in docs:
@@ -124,9 +120,10 @@ def get_static_pages_from_all_apps():
 		files_to_index.extend(glob(path_to_index + "/**/*.md", recursive=True))
 		for file in files_to_index:
 			route = os.path.relpath(file, path_to_index).split(".")[0]
-			if route.endswith("index"):
-				route = route.rsplit("index", 1)[0]
-			routes_to_index.append(route)
+			if not route.startswith("_test"):
+				if route.endswith("index"):
+					route = route.rsplit("index", 1)[0]
+				routes_to_index.append(route)
 	return routes_to_index
 
 
