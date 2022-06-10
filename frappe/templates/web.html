@@ -53,7 +53,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {% endmacro %}
 
 {% if show_sidebar %}
-<div class="container" style="min-height: 70vh;">
+<div class="container">
 	<div class="row" {{ container_attributes() }}>
 		{%- set columns = sidebar_columns or 2 -%}
 		{%- if not sidebar_right -%}
