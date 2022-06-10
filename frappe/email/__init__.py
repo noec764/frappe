@@ -35,9 +35,9 @@ def get_contact_list(txt, page_length=20):
 			{"txt": "%" + txt + "%", "condition": match_conditions, "page_length": page_length},
 			as_dict=True,
 		)
-		out = filter(None, out)
+		out = list(filter(lambda x: x.get("value"), out))
 
-	except:
+	except Exception:
 		raise
 
 	update_contact_cache(out)
