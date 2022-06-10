@@ -586,9 +586,6 @@ def prepare_message(email, recipient, recipients_list):
 	else:
 		message = Parser().parsestr(message)
 
-	if unsubscribe_url:
-		message.add_header('List-Unsubscribe', f"<{quopri.encodestring(unsubscribe_url.encode()).decode()}>")
-
 	if email.attachments:
 		# On-demand attachments
 
