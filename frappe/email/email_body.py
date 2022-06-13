@@ -68,8 +68,8 @@ class EMail:
 		self.subject = subject
 		self.expose_recipients = expose_recipients
 
-		self.msg_root = MIMEMultipart('mixed', policy=policy.SMTPUTF8)
-		self.msg_alternative = MIMEMultipart('alternative', policy=policy.SMTPUTF8)
+		self.msg_root = MIMEMultipart('mixed', policy=policy.SMTP)
+		self.msg_alternative = MIMEMultipart('alternative', policy=policy.SMTP)
 		self.msg_root.attach(self.msg_alternative)
 		self.cc = cc or []
 		self.bcc = bcc or []
@@ -100,7 +100,7 @@ class EMail:
 			Attach message in the text portion of multipart/alternative
 		"""
 		from email.mime.text import MIMEText
-		part = MIMEText(message, 'plain', 'utf-8', policy=policy.SMTPUTF8)
+		part = MIMEText(message, 'plain', 'utf-8', policy=policy.SMTP)
 		self.msg_alternative.attach(part)
 
 	def set_part_html(self, message, inline_images):
@@ -113,9 +113,9 @@ class EMail:
 			message, _inline_images = replace_filename_with_cid(message)
 
 			# prepare parts
-			msg_related = MIMEMultipart('related', policy=policy.SMTPUTF8)
+			msg_related = MIMEMultipart('related', policy=policy.SMTP)
 
-			html_part = MIMEText(message, 'html', 'utf-8', policy=policy.SMTPUTF8)
+			html_part = MIMEText(message, 'html', 'utf-8', policy=policy.SMTP)
 			msg_related.attach(html_part)
 
 			for image in _inline_images:
@@ -124,7 +124,7 @@ class EMail:
 
 			self.msg_alternative.attach(msg_related)
 		else:
-			self.msg_alternative.attach(MIMEText(message, 'html', 'utf-8', policy=policy.SMTPUTF8))
+			self.msg_alternative.attach(MIMEText(message, 'html', 'utf-8', policy=policy.SMTP))
 
 	def set_html_as_text(self, html):
 		"""Set plain text from HTML"""
@@ -135,7 +135,7 @@ class EMail:
 		from email.mime.text import MIMEText
 
 		maintype, subtype = mime_type.split('/')
-		part = MIMEText(message, _subtype = subtype, policy=policy.SMTPUTF8)
+		part = MIMEText(message, _subtype = subtype, policy=policy.SMTP)
 
 		if as_attachment:
 			part.add_header('Content-Disposition', 'attachment', filename=filename)
@@ -214,7 +214,7 @@ class EMail:
 	def make(self):
 		"""build into msg_root"""
 		headers = {
-			"Subject":        Header(sanitize_email_header(strip(self.subject)), 'utf-8').encode(),
+			"Subject":        str(Header(sanitize_email_header(strip(self.subject)), 'utf-8')),
 			"From":           self.sender,
 			"To":             ', '.join(self.recipients) if self.expose_recipients=="header" else "<!--recipient-->",
 			"Date":           email.utils.formatdate(),
@@ -245,7 +245,7 @@ class EMail:
 		"""validate, build message and convert to string"""
 		self.validate()
 		self.make()
-		return self.msg_root.as_string(policy=policy.SMTPUTF8)
+		return self.msg_root.as_string(policy=policy.SMTP)
 
 def get_formatted_html(subject, message, footer=None, print_html=None,
 		email_account=None, header=None, unsubscribe_link=None, sender=None, with_container=False):
