@@ -1209,7 +1209,7 @@ frappe.views.Workspace = class Workspace {
 			frappe.call({
 				method: "frappe.desk.doctype.workspace.workspace.save_page",
 				args: {
-					title: page.title,
+					name: page.name,
 					public: page.public || 0,
 					new_widgets: new_widgets,
 					blocks: JSON.stringify(blocks)
