@@ -314,7 +314,7 @@ class EMail:
 	def make(self):
 		"""build into msg_root"""
 		headers = {
-			"Subject": strip(self.subject),
+			"Subject": Header(strip(self.subject), "utf-8"),
 			"From": self.sender,
 			"To": ", ".join(self.recipients) if self.expose_recipients == "header" else "<!--recipient-->",
 			"Date": email.utils.formatdate(),

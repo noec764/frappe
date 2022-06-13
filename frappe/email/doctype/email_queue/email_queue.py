@@ -592,8 +592,8 @@ class QueueBuilder:
 			mail.msg_root["Disposition-Notification-To"] = self.sender
 		if self.in_reply_to:
 			mail.set_in_reply_to(self.in_reply_to)
-		if self._add_unsubscribe_link:
-			mail.msg_root["List-Unsubscribe"] = "<<!--unsubscribe_url-->>"
+		if self.reply_to and self._add_unsubscribe_link:
+			mail.msg_root["List-Unsubscribe"] = self.reply_to
 
 		return mail
 
