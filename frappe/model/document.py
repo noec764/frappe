@@ -1265,11 +1265,9 @@ class Document(BaseDocument):
 			return
 
 		version = frappe.new_doc("Version")
-		if not self._doc_before_save:
-			version.for_insert(self)
+		if version.update_version_info(self._doc_before_save, self):
 			version.insert(ignore_permissions=True)
-		elif version.set_diff(self._doc_before_save, self):
-			version.insert(ignore_permissions=True)
+
 			if not frappe.flags.in_migrate:
 				# follow since you made a change?
 				if frappe.get_cached_value("User", frappe.session.user, "follow_created_documents"):
