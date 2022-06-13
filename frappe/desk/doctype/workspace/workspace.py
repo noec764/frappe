@@ -77,7 +77,6 @@ class Workspace(Document):
 
 		for idx, card in enumerate(config):
 			links = loads(card.get("links"))
-
 			# remove duplicate before adding
 			for idx, link in enumerate(self.links):
 				if link.get("label") == card.get("label") and link.get("type") == "Card Break":
@@ -87,6 +86,8 @@ class Workspace(Document):
 							if card_link.get("type") == "Card Break":
 								break
 							link.link_count = count + 1
+
+					del self.links[idx : idx + link.link_count + 1]
 
 			self.append(
 				"links",
