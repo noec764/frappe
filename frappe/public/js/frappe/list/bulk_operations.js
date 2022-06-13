@@ -202,30 +202,17 @@ export default class BulkOperations {
 	}
 
 	edit (docnames, field_mappings, done) {
-		const field_options = Object.keys(field_mappings).map(v => {
-			return {label: __(v), value: v}
-		})
-
+		let field_options = Object.keys(field_mappings).sort();
 		const status_regex = /status/i;
 
-		const default_field = Object.keys(field_mappings).find(value => status_regex.test(value));
+		const default_field = field_options.find(value => status_regex.test(value));
 
 		const dialog = new frappe.ui.Dialog({
-			title: __('Edit'),
+			title: __('Bulk Edit'),
 			fields: [
 				{
 					'fieldtype': 'Select',
-					'options': field_options.sort(function(a, b) {
-						const nameA = a.label.toUpperCase();
-						const nameB = b.label.toUpperCase();
-						if (nameA < nameB) {
-							return -1;
-						}
-						if (nameA > nameB) {
-							return 1;
-						}
-						return 0;
-					}),
+					'options': field_options,
 					'default': default_field,
 					'label': __('Field'),
 					'fieldname': 'field',
@@ -238,7 +225,9 @@ export default class BulkOperations {
 					'fieldtype': 'Data',
 					'label': __('Value'),
 					'fieldname': 'value',
-					'reqd': 1
+					onchange() {
+						show_help_text();
+					}
 				}
 			],
 			primary_action: ({ value }) => {
@@ -252,7 +241,7 @@ export default class BulkOperations {
 						docnames: docnames,
 						action: 'update',
 						data: {
-							[fieldname]: value
+							[fieldname]: value || null
 						}
 					}
 				}).then(r => {
@@ -264,15 +253,16 @@ export default class BulkOperations {
 					}
 					done();
 					dialog.hide();
-					frappe.msgprint(__('Updated successfully'));
+					frappe.show_alert(__('Updated successfully'));
 				});
 			},
-			primary_action_label: __('Update')
+			primary_action_label: __('Update {0} records', [docnames.length]),
 		});
 
 		if (default_field) set_value_field(dialog); // to set `Value` df based on default `Field`
+		show_help_text();
 
-		function set_value_field(dialogObj) {
+		function set_value_field (dialogObj) {
 			const new_df = Object.assign({},
 				field_mappings[dialogObj.get_value('field')]);
 			/* if the field label has status in it and
@@ -288,9 +278,20 @@ export default class BulkOperations {
 				new_df.default = options[0] || options[1];
 			}
 			new_df.label = __('Value');
-			new_df.reqd = 1;
+			new_df.onchange = show_help_text;
+
 			delete new_df.depends_on;
 			dialogObj.replace_field('value', new_df);
+			show_help_text();
+		}
+
+		function show_help_text() {
+			let value = dialog.get_value('value');
+			if (value == null || value === '') {
+				dialog.set_df_property('value', 'description', __('You have not entered a value. The field will be set to empty.'));
+			} else {
+				dialog.set_df_property('value', 'description', '');
+			}
 		}
 
 		dialog.refresh();
