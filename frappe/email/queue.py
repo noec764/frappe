@@ -554,6 +554,7 @@ def prepare_message(email, recipient, recipients_list):
 		# No SSL => No Email Read Reciept
 		message = message.replace("<!--email open check-->", quopri.encodestring("".encode()).decode())
 
+	unsubscribe_url = None
 	if email.add_unsubscribe_link and email.reference_doctype: # is missing the check for unsubscribe message but will not add as there will be no unsubscribe url
 		unsubscribe_url = get_unsubcribed_url(email.reference_doctype, email.reference_name, recipient,
 		email.unsubscribe_method, email.unsubscribe_params)
