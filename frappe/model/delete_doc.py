@@ -360,7 +360,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=""):
-	doc_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(doc.doctype, doc.name, _(doc.name))
+	doc_link = '<a href="/app/{0}/{1}">{2}</a>'.format(doc.doctype, doc.name, _(doc.name))
 	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(
 		reference_doctype, reference_docname, _(reference_docname)
 	)
