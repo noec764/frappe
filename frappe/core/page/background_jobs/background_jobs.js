@@ -45,7 +45,10 @@ class BackgroundJobs {
 			label: __("View"),
 			fieldname: "view",
 			fieldtype: "Select",
-			options: ["Jobs", "Workers"],
+			options: [
+				{ label: __("Jobs"), value: "Job"},
+				{ label: __("Workers"), value: "Workers"}
+			],
 			default: "Jobs",
 			change: () => {
 				this.queue_timeout.toggle(this.view.get_value() === "Jobs");
@@ -57,10 +60,10 @@ class BackgroundJobs {
 			fieldname: "queue_timeout",
 			fieldtype: "Select",
 			options: [
-				{ label: "All Queues", value: "all" },
-				{ label: "Default", value: "default" },
-				{ label: "Short", value: "short" },
-				{ label: "Long", value: "long" }
+				{ label: _("All Queues"), value: "all" },
+				{ label: __("Default"), value: "default" },
+				{ label: __("Short"), value: "short" },
+				{ label: __("Long"), value: "long" }
 			],
 			default: "all"
 		});
@@ -69,12 +72,12 @@ class BackgroundJobs {
 			fieldname: "job_status",
 			fieldtype: "Select",
 			options: [
-				{ label: "All Jobs", value: "all" },
-				{ label: "Queued", value: "queued" },
-				{ label: "Deferred", value: "deferred" },
-				{ label: "Started", value: "started" },
-				{ label: "Finished", value: "finished" },
-				{ label: "Failed", value: "failed" }
+				{ label: __("All Jobs"), value: "all" },
+				{ label: __("Queued"), value: "queued" },
+				{ label: __("Deferred"), value: "deferred" },
+				{ label: __("Started"), value: "started" },
+				{ label: __("Finished"), value: "finished" },
+				{ label: __("Failed"), value: "failed" }
 			],
 			default: "all"
 		});
