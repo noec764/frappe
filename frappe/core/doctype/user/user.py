@@ -180,6 +180,9 @@ class User(Document):
 		toggle_notifications(self.name, enable=cint(self.enabled))
 
 	def add_system_manager_role(self):
+		if self.is_system_manager_disabled():
+			return
+
 		# if adding system manager, do nothing
 		if not cint(self.enabled) or (
 			"System Manager" in [user_role.role for user_role in self.get("roles")]
@@ -205,6 +208,9 @@ class User(Document):
 					{"doctype": "Has Role", "role": "Administrator"},
 				],
 			)
+
+	def is_system_manager_disabled(self):
+		return frappe.db.get_value("Role", {"name": "System Manager"}, ["disabled"])
 
 	def email_new_password(self, new_password=None):
 		if new_password and not self.flags.in_insert:
@@ -417,6 +423,9 @@ class User(Document):
 		)
 
 	def a_system_manager_should_exist(self):
+		if self.is_system_manager_disabled():
+			return
+
 		if not self.get_other_system_managers():
 			throw(_("There should remain at least one System Manager"))
 
