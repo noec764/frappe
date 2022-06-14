@@ -246,6 +246,11 @@ frappe.ui.form.Form = class FrappeForm {
 		});
 	}
 
+	show_tour(on_finish) {
+		this.tour.init({on_finish})
+		.then(() => this.tour.start());
+	}
+
 	watch_model_updates() {
 		// watch model updates
 		var me = this;

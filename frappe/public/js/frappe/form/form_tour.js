@@ -75,7 +75,7 @@ frappe.ui.form.FormTour = class FormTour {
 				}
 
 				if (!this.driver.hasNextStep()) {
-					on_finish && on_finish();
+					this.on_finish && this.on_finish();
 				} else if (this.driver.steps[this.driver.currentStep + 1].node.classList.contains("hide-control")) {
 					this.driver.moveNext();
 				}
