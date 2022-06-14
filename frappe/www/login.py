@@ -41,14 +41,9 @@ def get_context(context):
 	context.for_test = "login.html"
 	context["title"] = "Login"
 	context["provider_logins"] = []
-	context["disable_signup"] = frappe.utils.cint(
-		frappe.db.get_single_value("Website Settings", "disable_signup")
-	)
-	context["logo"] = (
-		frappe.db.get_single_value("Website Settings", "app_logo")
-		or frappe.get_hooks("app_logo_url")[-1]
-	)
-	context["app_name"] = frappe.db.get_single_value("Website Settings", "app_name") or "Dodock"
+	context["disable_signup"] = frappe.utils.cint(frappe.get_website_settings("disable_signup"))
+	context["logo"] = frappe.get_website_settings("app_logo") or frappe.get_hooks("app_logo_url")[-1]
+	context["app_name"] = frappe.get_website_settings("app_name") or _("Dodock")
 
 	signup_form_template = frappe.get_hooks("signup_form_template")
 	if signup_form_template and len(signup_form_template):
@@ -57,6 +52,7 @@ def get_context(context):
 			path = frappe.get_attr(signup_form_template[-1])()
 	else:
 		path = "frappe/templates/signup.html"
+
 	if path:
 		context["signup_form_template"] = frappe.get_template(path).render()
 
@@ -64,30 +60,32 @@ def get_context(context):
 	custom_signup_page = frappe.db.get_single_value("Website Settings", "custom_signup")
 	if custom_signup_page:
 		context["custom_signup"] = frappe.db.get_value("Web Form", custom_signup_page, "route")
-	providers = [
-		i.name
-		for i in frappe.get_all("Social Login Key", filters={"enable_social_login": 1}, order_by="name")
-	]
+
+	providers = frappe.get_all(
+		"Social Login Key",
+		filters={"enable_social_login": 1},
+		fields=["name", "client_id", "base_url", "provider_name", "icon"],
+		order_by="name",
+	)
 	for provider in providers:
 		try:
-			client_id, base_url = frappe.get_value("Social Login Key", provider, ["client_id", "base_url"])
-			client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
-			provider_name = frappe.get_value("Social Login Key", provider, "provider_name")
+			client_secret = get_decrypted_password("Social Login Key", provider.name, "client_secret")
+			if not client_secret:
+				continue
 
 			icon = None
-			icon_url = frappe.get_value("Social Login Key", provider, "icon")
-			if icon_url:
-				if provider_name != "Custom":
-					icon = "<img src='{0}' alt={1}>".format(icon_url, provider_name)
+			if provider.icon:
+				if provider.provider_name == "Custom":
+					icon = get_icon_html(provider.icon, small=True)
 				else:
-					icon = get_icon_html(icon_url, small=True)
+					icon = f"<img src='{provider.icon}' alt={provider.provider_name}>"
 
-			if get_oauth_keys(provider) and client_secret and client_id and base_url:
+			if provider.client_id and provider.base_url and get_oauth_keys(provider.name):
 				context.provider_logins.append(
 					{
-						"name": provider,
-						"provider_name": provider_name,
-						"auth_url": get_oauth2_authorize_url(provider, redirect_to),
+						"name": provider.name,
+						"provider_name": provider.provider_name,
+						"auth_url": get_oauth2_authorize_url(provider.name, redirect_to),
 						"icon": icon,
 					}
 				)
@@ -95,8 +93,7 @@ def get_context(context):
 		except frappe.ValidationError:
 			frappe.log_error(frappe.get_traceback(), _("Social login setup error"))
 
-	ldap_settings = LDAPSettings.get_ldap_client_settings()
-	context["ldap_settings"] = ldap_settings
+	context["ldap_settings"] = LDAPSettings.get_ldap_client_settings()
 
 	login_label = [_("Email")]
 
@@ -106,7 +103,7 @@ def get_context(context):
 	if frappe.utils.cint(frappe.get_system_settings("allow_login_using_user_name")):
 		login_label.append(_("Username"))
 
-	context["login_label"] = " {0} ".format(_("or")).join(login_label)
+	context["login_label"] = f" {_('or')} ".join(login_label)
 
 	return context
 
