@@ -52,6 +52,10 @@ frappe.ui.form.ControlTableMultiSelect = class ControlTableMultiSelect extends f
 	}
 
 	parse(value, label) {
+		if (typeof value == "object" || !this.rows) {
+			return value;
+		}
+
 		const link_field = this.get_link_field();
 
 		if (value) {
