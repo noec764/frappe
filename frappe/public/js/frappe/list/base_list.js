@@ -788,7 +788,7 @@ class FilterArea {
 					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
 						condition = "equals or descendants of"
 					}
-					if (df.fieldtype == "Select" && df.options && typeof(df.options) == String) {
+					if (df.fieldtype == "Select" && df.options) {
 						options = df.options.split("\n");
 						if (options.length > 0 && options[0] != "") {
 							options.unshift("");
