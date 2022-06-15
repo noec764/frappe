@@ -5,7 +5,7 @@ frappe.ui.form.Control = class BaseControl {
 
 		// if developer_mode=1, show fieldname as tooltip
 		if(frappe.boot.user && frappe.boot.developer_mode===1 && this.$wrapper) {
-			this.$wrapper.attr("title", __(this.df.fieldname));
+			this.$wrapper.attr("title", this.df.fieldname);
 		}
 
 		if(this.render_input) {
