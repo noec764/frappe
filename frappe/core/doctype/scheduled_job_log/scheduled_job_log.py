@@ -2,21 +2,14 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
-
 import frappe
 from frappe.model.document import Document
-from frappe.utils import cint
+from frappe.query_builder import Interval
+from frappe.query_builder.functions import Now
 
 
 class ScheduledJobLog(Document):
-	pass
-
-
-def flush():
-	if cint(frappe.get_system_settings("restricted_jobs_logs")):
-		frappe.db.sql(
-			"""
-			DELETE FROM `tabScheduled Job Log`
-			WHERE datediff(curdate(), creation) > 30
-		"""
-		)
+	@staticmethod
+	def clear_old_logs(days=90):
+		table = frappe.qb.DocType("Scheduled Job Log")
+		frappe.db.delete(table, filters=(table.modified < (Now() - Interval(days=days))))
