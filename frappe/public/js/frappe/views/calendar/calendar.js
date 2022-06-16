@@ -137,7 +137,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 	}
 };
 
-frappe.views.Calendar = class Calendar {
+frappe.views.Calendar = class frappeCalendar {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
@@ -234,11 +234,16 @@ frappe.views.Calendar = class Calendar {
 	}
 
 	field_map() {
-		return this.field_map || {
-			"id": "name",
-			"start": "start",
-			"end": "end",
-			"allDay": "all_day",
+		if (Object.keys(this.field_map).length) {
+			console.log(this.field_map)
+			return this.field_map
+		} else {
+			return {
+				"id": "name",
+				"start": "start",
+				"end": "end",
+				"allDay": "all_day",
+			}
 		}
 	}
 
