@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#6195ff",
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DocType\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workspace\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Report\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Elements</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Scripting\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"Your Shortcuts\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DocType\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workspace\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Report\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Elements</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Scripting\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}}]",
  "creation": "2021-01-02 10:51:16.579957",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -225,7 +225,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-20 10:42:09.289399",
+ "modified": "2022-05-22 10:42:09.289399",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Build",
