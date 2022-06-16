@@ -21,7 +21,7 @@ data-web-form="{{ name }}" data-web-form-doctype="{{ doc_type }}"
 {% endif %}
 
 <!-- main card -->
-<div class="frappe-card {{ frappe.utils.cint(is_list) and 'list-card' or '' }}">
+<div class="{{ frappe.utils.cint(is_list) and 'list-card' or '' }}">
 	{% if is_list %}
 	<!-- list -->
 	<div class="d-flex justify-content-between">
