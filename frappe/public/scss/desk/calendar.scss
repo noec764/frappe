@@ -1,6 +1,10 @@
 @import "../calendar-base";
 
 .fc {
+	.fc-timegrid-axis-cushion {
+		font-size: 0.8em;
+	}
+
 	.fc-toolbar.fc-header-toolbar {
 		margin-top: 1.5em;
 		padding: 0 1.5em;
