@@ -317,8 +317,9 @@ def set_insert(update, producer_site, event_producer):
 	else:
 		# if event consumer is not saving documents with the same name as the producer
 		# store the remote docname in a custom field for future updates
-		local_doc = doc.insert(set_child_names=False)
-		set_custom_fields(local_doc, update.docname, event_producer)
+		doc.remote_docname = update.docname
+		doc.remote_site_name = event_producer
+		doc.insert(set_child_names=False)
 
 
 def set_update(update, producer_site):
@@ -351,7 +352,7 @@ def set_update(update, producer_site):
 def update_row_removed(local_doc, removed):
 	"""Sync child table row deletion type update"""
 	for tablename, rownames in removed.items():
-		table = local_doc.get_table_field_doctype(tablename)
+		# table = local_doc.get_table_field_doctype(tablename)
 		for row in rownames:
 			table_rows = local_doc.get(tablename)
 			child_table_row = get_child_table_row(table_rows, row)
@@ -569,9 +570,3 @@ def resync(update):
 		update = get_mapped_update(update, producer_site)
 		update.data = json.loads(update.data)
 	return sync(update, producer_site, event_producer, in_retry=True)
-
-
-def set_custom_fields(local_doc, remote_docname, remote_site_name):
-	"""sets custom field in doc for storing remote docname"""
-	frappe.db.set_value(local_doc.doctype, local_doc.name, "remote_docname", remote_docname)
-	frappe.db.set_value(local_doc.doctype, local_doc.name, "remote_site_name", remote_site_name)
