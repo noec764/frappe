@@ -32,6 +32,15 @@
 
 {% endblock %}
 
+{% if base_scripts %}
+{% block base_scripts %}
+	<script type="text/javascript" src="/assets/frappe/js/lib/jquery/jquery.min.js"></script>
+	{% for script in base_scripts %}
+		{{ include_script(script) }}
+	{% endfor %}
+{% endblock %}
+{% endif %}
+
 {% block script %}
 <script>{% include "templates/includes/list/list.js" %}</script>
 {% endblock %}
