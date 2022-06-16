@@ -789,10 +789,16 @@ class FilterArea {
 						condition = "equals or descendants of"
 					}
 					if (df.fieldtype == "Select" && df.options) {
-						options = df.options.split("\n");
-						if (options.length > 0 && options[0] != "") {
-							options.unshift("");
-							options = options.join("\n");
+						if (typeof df.options == 'string') {
+							options = df.options.split("\n");
+							if (options.length > 0 && options[0] != "") {
+								options.unshift("");
+								options = options.join("\n");
+							}
+						} else if (typeof options == 'object') {
+							if (options.length > 0 && options[0].value) {
+								options.unshift("");
+							}
 						}
 					}
 					let default_value;
