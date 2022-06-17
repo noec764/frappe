@@ -974,7 +974,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 		contextual_messages.append(m[1] + ":::" + m[2] if len(m) > 2 and m[2] else m[1])
 
 	def escape_newlines(s):
-		return s.replace("\\\n", "|||||").replace("\\n", "||||").replace("\n", "|µ||")
+		return s.replace("\\\n", "|µµµ|").replace("\\n", "|µµ|").replace("\n", "|µ|")
 
 	if get_all:
 		print(str(len(contextual_messages)) + " messages")
@@ -1021,7 +1021,7 @@ def update_translations(lang, translated_file, app):
 	if full_dict:
 
 		def restore_newlines(s):
-			return s.replace("||||||", "\\\n").replace("||||", "\\n").replace("|µ||", "\n")
+			return s.replace("|µµµ|", "\\\n").replace("|µµ|", "\\n").replace("|µ|", "\n")
 
 		translation_dict = get_translation_dict_from_file(translated_file, lang, app)
 		newdict = {}
