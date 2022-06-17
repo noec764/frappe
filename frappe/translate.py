@@ -1071,7 +1071,9 @@ def deduplicate_messages(messages):
 	ret = []
 
 	def sort_key(x):
-		return (x[0], x[1] or 1)
+		if len(x) > 2:
+			return (x[1], x[2] or "")
+		return (x[1], "")
 
 	messages = sorted(messages, key=sort_key)
 	for k, g in itertools.groupby(messages, key=sort_key):
