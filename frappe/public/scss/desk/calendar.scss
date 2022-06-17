@@ -45,9 +45,14 @@
 		}
 	}
 
-	// .fc-view-harness {
-	// 	min-height: 100vh;
-	// }
+	th[role="presentation"] {
+		border: none;
+	}
+
+	.fc-daygrid-event.wrapped-title .fc-event-title {
+		white-space: normal !important;
+		align-items: normal !important;
+	}
 }
 
 @mixin status-color($color) {

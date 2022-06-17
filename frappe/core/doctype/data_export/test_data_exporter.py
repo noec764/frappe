@@ -4,6 +4,7 @@
 import unittest
 
 import frappe
+from frappe import _
 from frappe.core.doctype.data_export.exporter import DataExporter
 
 
@@ -112,7 +113,7 @@ class TestDataExporter(unittest.TestCase):
 				elif type == "Excel":
 					self.assertEqual(frappe.response["type"], "binary")
 					self.assertEqual(
-						frappe.response["filename"], self.doctype_name + ".xlsx"
+						frappe.response["filename"], _(self.doctype_name) + ".xlsx"
 					)  # 'Test DocType for Export Tool.xlsx')
 					self.assertTrue(frappe.response["filecontent"])
 

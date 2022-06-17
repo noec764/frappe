@@ -146,6 +146,13 @@ frappe.views.Calendar = class frappeCalendar {
 			display_event_end: true
 		};
 		this.sidebar_menu = this.list_view.list_sidebar.sidebar.find(".sidebar-menu")
+
+		this.field_map = this.field_map || {
+			"id": "name",
+			"start": "start",
+			"end": "end",
+			"allDay": "all_day",
+		}
 		this.get_default_options();
 	}
 
@@ -231,20 +238,6 @@ frappe.views.Calendar = class frappeCalendar {
 			me.set_localStorage_option("cal_weekends", me.cal_options.weekends);
 			me.setup_view_mode_button(me.cal_options);
 		});
-	}
-
-	field_map() {
-		if (Object.keys(this.field_map).length) {
-			console.log(this.field_map)
-			return this.field_map
-		} else {
-			return {
-				"id": "name",
-				"start": "start",
-				"end": "end",
-				"allDay": "all_day",
-			}
-		}
 	}
 
 	show_secondary_status_legend() {
@@ -395,7 +388,7 @@ frappe.views.Calendar = class frappeCalendar {
 		return (events || []).map(d => {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
-			d.classNames = []
+			d.classNames = d.classNames || []
 
 			// do not allow submitted/cancelled events to be moved / extended
 			if (d.docstatus && d.docstatus > 0) {
@@ -441,7 +434,7 @@ frappe.views.Calendar = class frappeCalendar {
 
 		color = d.color;
 		if (!frappe.ui.color.validate_hex(color) || !color) {
-			color = frappe.ui.color.get('blue', 'default');
+			color = color ? frappe.ui.color.get_color_shade(color, 'default') : undefined || frappe.ui.color.get('blue', 'default');
 		}
 		d.backgroundColor = color;
 		d.borderColor = color;
