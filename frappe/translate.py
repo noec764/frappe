@@ -25,6 +25,7 @@ from frappe.utils import cstr, get_bench_path, is_html, strip, strip_html_tags
 from frappe.utils.csvutils import to_csv
 
 TRANSLATE_PATTERN = re.compile(
+	r"(?<!as)"  # Exclude Pypika patterns
 	r"_\([\s\n]*"  # starts with literal `_(`, ignore following whitespace/newlines
 	# BEGIN: message search
 	r"([\"']{,3})"  # start of message string identifier - allows: ', ", """, '''; 1st capture group
