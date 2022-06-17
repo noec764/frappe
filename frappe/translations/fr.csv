@@ -52,6 +52,121 @@ E.g. 1 USD = 100 centimes",
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Thank you ! You have been successfully registered"") }</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Merci ! Vous êtes inscrit·e à cet événement"") }</span></div>",
 "<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Thank you ! You have been successfully registered</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Merci ! Votre inscription est prise en compte</span></div>",
 "<div class=""alert"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>","<div class=""alert"">Veuillez ne pas mettre à jour les types de document directement. Utilisez la vue de personnalisation de formulaire et les champs personnalisés pour modifier des propriétés!</div>",
+"<div class=""well"">
+    Edit list of Series in the box. Rules:
+    <ul>
+        <li>Each Series Prefix on a new line.</li>
+        <li>Allowed special characters are ""/"" and ""-""</li>
+        <li>
+            Optionally, set the number of digits in the series using dot (.)
+            followed by hashes (#). For example, "".####"" means that the series
+            will have four digits. Default is five digits.
+        </li>
+        <li>
+            You can also use variables in the series name by putting them
+            between (.) dots
+            <br>
+            Supported Variables:
+            <ul>
+                <li><code>.YYYY.</code> - Year in 4 digits</li>
+                <li><code>.YY.</code> - Year in 2 digits</li>
+                <li><code>.MM.</code> - Month</li>
+                <li><code>.DD.</code> - Day of month</li>
+                <li><code>.WW.</code> - Week of the year</li>
+                <li><code>.FY.</code> - Fiscal Year</li>
+                <li>
+                    <code>.{fieldname}.</code> - fieldname on the document e.g.
+                    <code>branch</code>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    Examples:
+    <ul>
+        <li>INV-</li>
+        <li>INV-10-</li>
+        <li>INVK-</li>
+        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
+    </ul>
+</div>
+<br>
+","<div class=""well"">
+    Modifiez la liste de séries dans le champ. Règles:
+    <ul>
+        <li>Chaque série doit être sur une ligne différente.</li>
+        <li>Les caractères spéciaux autorisés sont ""/"" et ""-""</li>
+        <li>
+            De manière optionnelle, vous pouvez définir le nombre de chiffres dans la série en utilisant un point (.)
+            suivi par des mots-dièse (#). Par exemple, "".####"" indique que la série
+            aura quatre chiffres. La valeur par défaut est cinq.
+        </li>
+        <li>
+            Vous pouvez aussi utiliser des variables dans nom de série en les encadrant par
+            des points (.)
+            <br>
+            Variables autorisées:
+            <ul>
+                <li><code>.YYYY.</code> - Années en 4 chiffres</li>
+                <li><code>.YY.</code> - Année en 2 chiffres</li>
+                <li><code>.MM.</code> - Mois</li>
+                <li><code>.DD.</code> - Jour du mois</li>
+                <li><code>.WW.</code> - Semaine de l'année</li>
+                <li><code>.FY.</code> - Année fiscale</li>
+                <li>
+                    <code>.{fieldname}.</code> - nom d'un champ du document ex.
+                    <code>branch</code>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    Exemples:
+    <ul>
+        <li>INV-</li>
+        <li>INV-10-</li>
+        <li>INVK-</li>
+        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
+    </ul>
+</div>
+<br>
+""<div class=""well"">
+    Modifiez la liste de séries dans le champ. Règles:
+    <ul>
+        <li>Chaque série doit être sur une ligne différente.</li>
+        <li>Les caractères spéciaux autorisés sont ""/"" et ""-""</li>
+        <li>
+            De manière optionnelle, vous pouvez définir le nombre de chiffres dans la série en utilisant un point (.)
+            suivi par des mots-dièse (#). Par exemple, "".####"" indique que la série
+            aura quatre chiffres. La valeur par défaut est cinq.
+        </li>
+        <li>
+            Vous pouvez aussi utiliser des variables dans nom de série en les encadrant par
+            des points (.)
+            <br>
+            Variables autorisées:
+            <ul>
+                <li><code>.YYYY.</code> - Années en 4 chiffres</li>
+                <li><code>.YY.</code> - Année en 2 chiffres</li>
+                <li><code>.MM.</code> - Mois</li>
+                <li><code>.DD.</code> - Jour du mois</li>
+                <li><code>.WW.</code> - Semaine de l'année</li>
+                <li><code>.FY.</code> - Année fiscale</li>
+                <li>
+                    <code>.{fieldname}.</code> - nom d'un champ du document ex.
+                    <code>branch</code>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    Exemples:
+    <ul>
+        <li>INV-</li>
+        <li>INV-10-</li>
+        <li>INVK-</li>
+        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
+    </ul>
+</div>
+<br>
+",
 "<h3>Client Script Help</h3>
 <p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>
 <pre><code>
@@ -455,33 +570,6 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 </ul>
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
-<p>Les conditions doivent être écrites en simple Python. Veuillez utiliser les propriétés disponibles dans le formulaire uniquement.</p>
-<p>Fonctions disponibles:
-</p><ul>
-<li>frappe.db.get_value</li>
-<li>frappe.db.get_list</li>
-<li>frappe.session</li>
-<li>frappe.utils.now_datetime</li>
-<li>frappe.utils.get_datetime</li>
-<li>frappe.utils.add_to_date</li>
-<li>frappe.utils.now</li>
-</ul>
-<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
-"<pre><code>doc.grand_total &gt; 0</code></pre>
-
-<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions:
-</p><ul>
-<li>frappe.db.get_value</li>
-<li>frappe.db.get_list</li>
-<li>frappe.session</li>
-<li>frappe.utils.now_datetime</li>
-<li>frappe.utils.get_datetime</li>
-<li>frappe.utils.add_to_date</li>
-<li>frappe.utils.now</li>
-</ul>
-<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
-
 <p>Les conditions doivent être écrites en Python simple. Veuillez utiliser uniquement les propriétés disponibles dans le formulaire.</p>
 <p>Fonctions autorisées :
 </p><ul>
@@ -494,12 +582,44 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 <li>frappe.utils.now</li>
 </ul>
 <p>Exemple : </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
+"<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
+<p>Allowed functions: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Les conditions doivent être écrites en Python simple. Veuillez seulement utiliser les propriétés disponibles dans le formulaire.</p>
+<p>Fonctions autorisées: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
+"<span class=""h4""><b>Reports &amp; Masters</b></span>","<span class=""h4""><b>Données de base &amp Rapports</b></span>",
+"<span class=""h4""><b>Your Shortcuts</b></span>","<span class=""h4""><b>Vos Raccourcis</b></span>",
+"<span class=""h4"">Reports &amp; Masters</span>","<span class=""h4"">Données de base &amp Rapports</span>",
+"<span class=""h4"">Your Shortcuts</span>","<span class=""h4"">Vos Raccourcis</span>",
 > {0} year(s) ago,> {0} ans,
 A Lead with this Email Address should exist,Un Prospect avec cette Adresse email devrait exister,
 A chained seal will be calculated for all documents,Une chaîne scellée sera calculée pour tous les documents,
 A featured post must have a cover image,Une publication mise en avant doit avoir une image de couverture,
 A field with the name '{}' already exists in doctype {}.,Un champ avec le nom '{}' existe déjà dans le type de document {},
 A field with the name {0} already exists in {1},Un champ portant le nom {0} existe déjà dans {1},
+A file with same name {} already exists,Un fichier avec un nom identique ({}) existe déjà,
 A list of resources which the Client App will have access to after the user allows it.<br> e.g. project,Liste des ressources auxquelles l'application client aura accès.<br>Par exemple: projet,
 A log of request errors,Un journal des erreurs de requête,
 A new account has been created for you at {0},Un nouveau compte a été créé pour vous à {0},
@@ -555,6 +675,7 @@ Accounts Manager,Responsable des Comptes,
 Accounts User,Comptable,
 Accounts,Comptes,
 Action / Route,Action / Chemin,
+Action Complete,Action terminée,
 Action Failed,Échec de l'Action,
 Action Label,Libellé de l'action,
 Action Settings,Paramètres d'action,
@@ -663,6 +784,7 @@ Add {0},Ajouter un·e {0},
 Add/Update Filter,Ajouter/Mettre à jour le filtre,
 Add,Ajouter,
 "Added HTML in the &lt;head&gt; section of the web page, primarily used for website verification and SEO","HTML ajouté dans la section   de la page web, utilisé principalement pour la vérification de site et le référencement",
+Added default log doctypes: {},Les journaux de log suivants ont été ajoutés: {},
 Added {0} ({1}),Ajouté {0} ({1}),
 Added {0},Ajouté {0},
 Adding System Manager to this User as there must be atleast one System Manager,Ajout du rôle Responsable Système pour cet Utilisateur car il doit y avoir au moins un Responsable Système,
@@ -698,6 +820,7 @@ After Delete,Après la suppression,
 After Save (Submitted Document),Après enregistrement (Document validé),
 After Save,Après l'enregistrement,
 After Submit,Après la validation,
+Aggregate Field is required to create a number card,Un champ agrégé est obligatoire pour créer une carte statistique,
 Aggregate Function Based On,Fonction agrégée sur la base de,
 Aggregate Function field is required to create a dashboard chart,Le champ 'Fonction agrégée' est obligatoire pour créer un graphique du tableau de bord,
 Alert,Alerte,
@@ -709,6 +832,7 @@ All Day Field,Champ pour toute la journée,
 All Day,Journée,
 All Events,Tous les événements,
 All Images attached to Website Slideshow should be public,Toutes les images jointes au diaporama du site Web doivent être publiques,
+All Queues,Toutes les files d'attente,
 All Records,Toutes les données,
 All Results,Tous les résultats,
 All Time,Depuis toujours,
@@ -745,6 +869,7 @@ Allow Login using Mobile Number,Autoriser la Connexion en utilisant un Numéro d
 Allow Login using User Name,Autoriser la connexion en utilisant le Nom d'Utilisateur,
 Allow Modules,Modules activés,
 Allow Multiple,Autoriser plusieurs documents,
+Allow Older Web View Links (Insecure),Autoriser les liens de vue web anciens (non sécurisé),
 Allow Print for Cancelled,Autoriser les impressions des documents annulés,
 Allow Print for Draft,Autoriser les impression des documents en brouillon,
 Allow Print,Autoriser les impressions,
@@ -1135,6 +1260,7 @@ Built on Dodock,Créé avec Dodock,
 Bulk Actions,Actions en masse,
 Bulk Delete,Supprimer en masse,
 Bulk Edit {0},Modifier en Masse {0},
+Bulk Edit,Modifier en masse,
 Bulk Rename,Renommer en Masse,
 Bulk Update,Mise à jour en Masse,
 Bullet list,Liste à puce,
@@ -1208,6 +1334,7 @@ Cancelling,Annulation,
 Cannot Fetch Values,Impossible de récupérer les valeurs,
 Cannot Remove,Ne peut être retiré,
 Cannot Update: Incorrect / Expired Link.,Impossible d'effectuer la Mise à Jour : Lien Incorrect/Expiré,
+Cannot access file path {0},Impossible d'accéder au lien de fichier {0},
 Cannot cancel before submitting. See Transition {0},Impossible d'annuler avant de valider. Voir Transition {0},
 Cannot change docstatus from 0 (Draft) to 2 (Cancelled),Impossible de changer le statut du document de 0 (brouillon) à 2 (annulé).,
 Cannot change docstatus from 0 to 2,Impossible de changer le statut du document de 0 à 2,
@@ -1238,6 +1365,7 @@ Cannot edit cancelled document,Impossible de modifier un document annulé,
 Cannot edit filters for standard charts,Vous ne pouvez pas modifier les filtres des graphiques standards,
 Cannot edit standard fields,Impossible de modifier les champs standards,
 Cannot enable {0} for a non-submittable doctype,{0} ne peut pas être activé pour un type de document non validable,
+Cannot find file {} on disk,Impossible de trouver le fichier {} sur le disque,
 Cannot get file contents of a Folder,Impossible d'obtenir le contenu des fichiers d'un dossier,
 Cannot have multiple printers mapped to a single print format.,Vous ne pouvez pas avoir plusieurs imprimantes liées à un seul format d'impression,
 Cannot link cancelled document: {0},Impossible de lier le document annulé : {0},
@@ -1298,6 +1426,11 @@ Change Password,Modification de mot de passe,
 Change Print Format,Modifier le format d'impression,
 Change User,Changer d'utilisateur,
 "Change field properties (hide, readonly, permission etc.)","Modification des propriétés de champ (masquer , en lecture seule , permission etc )",
+"Change the starting / current sequence number of an existing series. <br>
+
+Warning: Incorrectly updating counters can prevent documents from getting created.","Modifiez la séquence de début / actuelle d'une série existante. <br>
+
+Attention: Une mise à jour erronée du décompte peut générer des erreurs lors de la création des documents.",
 "Change type of field. (Currently, Type change is \
 						allowed among 'Currency and Float')","Modifier le type de champ. (Actuellement, le changement de type est permis seulement pour ""Devise et Décimale"")",
 Change,Modifier,
@@ -1369,6 +1502,7 @@ Clear Email Queue After,Effacer le journal des emails après,
 Clear Error Logs,Effacer les Journaux d'Erreurs,
 Clear Error log After,Effacer le journal des erreurs après,
 Clear Filters,Enlever les filtres,
+Clear Logs After (days),Supprimer les logs après (jours),
 Clear User Permissions,Réinitialiser les autorisations utilisateur,
 Clear all roles,Effacer tous les rôles,
 Clear,Réinitialiser,
@@ -1481,6 +1615,7 @@ Configure Theme,Configurer le thème,
 Configure accounts for google calendar,Configurer des comptes pour Google Agenda,
 Configure columns for {0},Configurer les colonnes pour {0},
 "Configure notifications for mentions, assignments, energy points and more.","Configurer les notifications pour les mentions, attributions, points d'énergie et plus.",
+"Configure various aspects of how document naming works like naming series, current counter.","Configurez différents aspects de la manière dont est nommé un document, comme les noms de série ou le décompte actuel.",
 Configure your google calendar integration,Configurez votre intégration avec Google Agenda,
 Confirm Access,Confirmer l'accès,
 Confirm Deletion of Account,Confirmer la suppression du compte,
@@ -1796,6 +1931,7 @@ Default,Par défaut,
 DefaultValue,Valeur par Défaut,
 Defaults Updated,Valeurs par défaut mises à jour,
 Defaults,Valeurs Par Défaut,
+Deferred,Différé,
 Define if your event is private or public. If your event is cancelled you can indicate it here.,Définissez si votre événement est privé ou public. Vous pouvez également indiquer si l'événement est annulé.,
 "Define the type of event: a meeting, an event (e.g. trade show), a call, an email sent.","Définissez le type d'événement: un rendez-vous, un événement (ex. un salon), un appel, un email envoyé.",
 Define workflows for forms.,Définir des flux de travail pour les formulaires.,
@@ -1929,9 +2065,11 @@ DocType can only be renamed by Administrator,DocType ne peut être renommé que 
 DocType is a Table / Form in the application.,Le type de document est un tableau / Formulaire dans l'application.,
 DocType must be Submittable for the selected Doc Event,Le DocType doit être soumissible pour l'événement Doc sélectionné,
 DocType must be a string,Le type de document doit être une chaîne de caractères,
+DocType not supported by Log Settings.,Type de document non supporté par les  paramètres des journaux,
 DocType on which this Workflow is applicable.,DocType pour lequel ce Flux de Travail est applicable.,
 DocType or Field,DocType ou Champ,
 DocType required,Le type de document est obligatoire,
+DocType {} not found,Type de document {} non trouvé,
 DocType's name should not start or end with whitespace,Le nom du type de document ne doit pas commencer ou terminer par un espace,
 "DocType's name should start with a letter and it can only consist of letters, numbers, spaces and underscores","Le nom du DocType doit commencer par une lettre et il peut uniquement se composer de lettres, des chiffres, d'espaces et du tiret bas (underscore)",
 DocType,Type de document,
@@ -1955,9 +2093,13 @@ Document Name must be a string,Le nom du document doit être une chaîne de cara
 Document Name,Nom du document,
 Document Naming Rule Condition,Condition de règle de nommage des documents,
 Document Naming Rule,Règle de nommage des documents,
+Document Naming Settings,Paramètres de nommage des documents,
 Document Queued,Document en Attente,
 Document Restoration Summary,Récapitulatif de la restauration des documents,
 Document Restored,Document Restauré,
+Document Saved,Document enregistré,
+Document Share Key Expiry (in Days),Expiration de la clé de partage de document (en jours),
+Document Share Key,Clé de partage de document,
 Document Share Report,Rapport de partage des documents,
 Document Share,Partage de document,
 Document States,États du Document,
@@ -2082,6 +2224,7 @@ Edit Filter,Modifier le filtre,
 Edit Filters,Modifier les filtres,
 Edit Footer,Modifier le pied de page,
 Edit Format,Modifier le format,
+Edit Full Form,Formulaire complet,
 Edit HTML,Modifier le code HTML,
 Edit Header,Modifier l'en-tête,
 Edit Heading,Modifier l'en-tête,
@@ -2212,6 +2355,7 @@ Enabled,Activé,
 Enabling auto reply on an incoming email account will send automated replies to all the synchronized emails. Do you wish to continue?,L'activation de la réponse automatique sur un compte e-mail entrant enverra des réponses automatiques à tous les e-mails synchronisés. Voulez-vous continuer ?,
 Encrypt Backups,Crypter les sauvegardes,
 Encryption key format is invalid!,Le format de la clé de cryptage n'est pas valide !,
+Encryption key is invalid! Please check site_config.json,La clé de cryptage est invalide! Veuillez vérifier site_config.json,
 "Encryption key is invalid, Please check site_config.json","La clé de cryptage n'est pas valide, veuillez vérifier site_config.json",
 Encryption key is invalid,La clé de chiffrement n'est pas valide,
 End Date Field,Champ pour la Date de Fin,
@@ -2386,6 +2530,8 @@ Failed to connect to server,échec de connexion au serveur,
 Failed to connect to the Event Producer site. Retry after some time.,Erreur de connexion au site producteur d'événement. Veuillez réessayer.,
 Failed to create an Event Consumer or an Event Consumer for the current site is already registered.,Erreur de création d'un consommateur d'événement ou un consommateur d'événement est déjà enregistré pour ce site.,
 "Failed to decode token, please provide a valid base64-encoded token.","Erreur lors du décodage du jeton, veuillez fournir un jeton valide encodé en base64",
+Failed to generate names from the series,Erreur lors de la génération des nom avec ce préfixe,
+Failed to generate preview of series,Erreur lors de la génération de la prévisualisation de la série,
 Failed to get method for command {0} with {1},Échec de l'obtention de la méthode pour la commande {0} avec {1},
 Failed to import dashboard fixtures for module {module},Echec de l'import des tableaux de bord pré-configurés pour le module {module},
 Failed to send Notification,Échec de l'envoi de la notification,
@@ -2466,6 +2612,8 @@ Fieldtype {0} for {1} cannot be indexed,FieldType {0} pour {1} ne peut pas être
 Fieldtype {0} for {1} cannot be unique,FieldType {0} pour {1} ne peut pas être unique,
 Fieldtype,Type de champ,
 "File ""{0}"" was skipped because of invalid file type","Le fichier ""{0}"" a été ignoré en raison d'un type de fichier non valide.",
+"File ""{0}"" was skipped because only {1} uploads are allowed for DocType ""{2}""","Le fichier ""{0}"" a été ignoré car seuls {1} téléchargements sont autorisés pour le type de document ""{2}""",
+"File ""{0}"" was skipped because only {1} uploads are allowed","Le fichier ""{0}"" a été ignoré car seuls {1} téléchargements sont autorisés",
 "File ""{0}"" was skipped because size exceeds {1} MB","Le fichier ""{0}"" a été ignoré car sa taille dépasse {1}. MB",
 File '{0}' not found,Fichier '{0}' introuvable,
 File Backup,Sauvegarde de fichier,
@@ -2549,9 +2697,12 @@ Font Styles,Style de la police,
 Font,Police de caractère,
 Fonts,Polices,
 "Footer ""Powered By""","Pied de page ""Propulsé par""",
+Footer Based On,Pied de page basé sur,
 Footer Color,Couleur de Pied de Page,
 Footer Content,Contenu du pied de page,
+Footer HTML set from attachment {0},HTML du pied de page basé sur la pièce jointe {0},
 Footer HTML,HTML de pied de page,
+Footer Image,Image du pied de page,
 Footer Items,Éléments du Pied de Page,
 Footer Item,Élément du Pied de page,
 Footer Logo,Logo du pied de page,
@@ -2654,6 +2805,7 @@ Gateway Controller,Contrôleur de la passerelle de paiement,
 Gateway Settings,Paramètres de passerelle,
 Gateway,Passerelle,
 Gender,Genre,
+Generate 3 preview of names generate by any valid series.,Génère 3 prévisualisation de noms pour toute série valide.,
 Generate Custom Reports,Générer des rapports personnalisés,
 Generate Keys,Générer des clés,
 Generate New Report,Générer un nouveau rapport,
@@ -2671,6 +2823,7 @@ Get Contacts,Obtenir les contacts,
 Get Fields,Obtenir des champs,
 Get Items,Obtenir les Articles,
 Get OpenID Configuration,Obtenir la configuration OpenID,
+Get PDF,Obtenir un PDF,
 Get your globally recognized avatar from Gravatar.com,Obtenir votre avatar mondialement reconnu depuis Gravatar.com,
 Git Branch,Branche Git,
 GitHub Sync Deletion,Suppression de synchronisation Github,
@@ -2806,6 +2959,7 @@ Have an account? Login,Vous avez déjà un compte? Connectez-vous,
 Header HTML set from attachment {0},En-tête HTML défini pour la pièce jointe {0},
 Header HTML,HTML d'en-tête,
 Header Image,Image d'en-tête,
+Header Size,Taille du titre,
 Header and Breadcrumbs,En-tête et fil d'Ariane,
 "Header, Breadcrumbs and Meta Tags","En-tête, aides à la navigation et meta tags",
 Header,En-Tête,
@@ -2977,6 +3131,7 @@ Image on Right,Image à droite,
 Image optimized,Image optimisée,
 Image,Image,
 Images,Images,
+Implement `clear_old_logs` method to enable auto error clearing.,Ajoutez une méthode `clear_old_logs` pour autoriser la suppression automatique des journaux.,
 Implicit,Implicite,
 Import Data from CSV / Excel files.,Importer des données à partir de fichiers CSV / Excel,
 Import Data,Importer des données,
@@ -3131,6 +3286,7 @@ Invalid Login Token,Jeton de Connexion invalide,
 Invalid Login. Try again.,Identifiants invalides. Réessayez.,
 Invalid Mail Server. Please rectify and try again.,Serveur Mail Invalide. Veuillez corriger et réesayer,
 Invalid Method,Méthode invalide,
+Invalid Naming Series,Nom de série invalide,
 Invalid Option,Option invalide,
 Invalid Outgoing Mail Server or Port,Serveur d'Envoi de Mail ou Port Invalide,
 Invalid Output Format,Format de Sortie Invalide,
@@ -3169,6 +3325,7 @@ Invalid module path,Chemin de module invalide,
 Invalid name type (integer) for varchar name column,Type de nom non valide (entier) pour la colonne de nom varchar,
 Invalid naming series (. missing) for {0},Nom de série invalide (. manquant) pour {0},
 Invalid naming series (. missing),Nom de série invalide (. manquant),
+Invalid naming series {}: dot (.) missing,Nom de série invalide {}: point (.) manquant,
 Invalid or corrupted content for import,Contenu invalide ou corrompu pour l'import,
 Invalid payment gateway credentials,Identifiant de la Passerelle de Paiement Invalides,
 Invalid recipient address,Adresse de destinataire invalide,
@@ -3469,6 +3626,7 @@ Location,Lieu,
 Log Cleanup,Nettoyage des journaux,
 Log Data,Données d'accès,
 Log Details,Détails du journal,
+Log DocType,Type de document de journal,
 Log Index,Index des journaux,
 Log Setting User,Utilisateur de paramètres de journaux,
 Log Settings,Paramètres des journaux,
@@ -3508,8 +3666,11 @@ Logout All Sessions,Déconnecter toutes les sessions,
 Logout from all devices after changing password,Déconnecter de tous les appareils après changement du mot de passe,
 Logout from all devices while changing Password,Déconnecter de tous les appareils lors de la modification du mot de passe,
 Logout,Déconnexion,
+Logs To Clear,Journaux à effacer,
+Logs to Clear,Journaux à effacer,
 Logs,Journaux,
 Long Text,Texte long,
+Long,Longue,
 Looks Great,Félicitations,
 Looks like someone sent you to an incomplete URL. Please ask them to look into it.,Cette URL est incomplète ou erronée. Veuillez contacter la personne qui vous a envoyé ce lien.,
 Looks like something is wrong with this site's Paypal configuration.,Il semble qu'il y ait une erreur avec la configuration Paypal de ce site.,
@@ -3679,6 +3840,7 @@ Module Profile Name,Nom du profil de modules,
 Module Profile,Profil de modules,
 Module to Export,Module dans lequel exporter les personnalisations,
 Module {0} Not Found,Module {0} introuvable,
+Module {} not found,Module {} introuvable,
 Module,Module,
 Modules HTML,Modules HTML,
 Modules,Modules,
@@ -4052,6 +4214,7 @@ Number of Queries,Nombre de requêtes,
 Number of columns does not match with data,Le nombe de colonnes ne correspond pas avec les données,
 Number of columns for a field in a Grid (Total Columns in a grid should be less than 11),Nombre de colonnes pour un champ dans une grille (Le total des colonnes dans une grille doit être inférieur à 11),
 Number of columns for a field in a List View or a Grid (Total Columns should be less than 11),Nombre de colonnes pour un champ dans une vue en liste ou en grille (Le total des colonnes doit être inférieur à 11),
+Number of days after which the document Web View link shared on email will be expired,Nombre de jours après lesquels lesquels le lien de vue web partagé par email expirera,
 Number {0} cannot be set as primary for Phone as well as Mobile No.,Le numéro de téléphone {0} ne peut pas être défini comme téléphone et mobile principal,
 Number,Numéro de téléphone,
 Numbers,Numéros de téléphone,
@@ -4088,6 +4251,7 @@ Onboarding Slide Help Link,Lien d'aide de diapositive d'accueil,
 Onboarding Slide,Diapositive d'accueil,
 Onboarding Step Map,Carte des étapes d'onboarding,
 Onboarding Step,Etape d'onboarding,
+Onboarding complete,Onboarding terminé,
 Onboarding,Onboarding,
 "Once submitted, submittable documents cannot be changed. They can only be Cancelled and Amended","Une fois validé, les documents soumissibles ne peuvent être modifiés en l'état. Il peuvent seulement être annulés avant d'être modifiés.",
 "Once you have set this, the users will only be able access documents (eg. Blog Post) where the link exists (eg. Blogger).","Une fois que vous avez défini ceci, les utilisateurs ne pourront accèder qu'aux documents (e.g. Article de Blog) où le lien existe (e.g. Blogger) .",
@@ -4373,6 +4537,8 @@ Please add a valid comment.,Veuillez ajouter un commentaire valide.,
 Please ask your administrator to verify your sign-up,Veuillez demander à votre administrateur de vérifier votre inscription,
 Please attach a file first.,Veuillez d'abord joindre un fichier.,
 Please attach a file or set a URL,Veuillez joindre un fichier ou définir une URL,
+Please attach an image file to set HTML for Footer.,Veuillez joindre une image pour définir du HTML pour le pied de page,
+Please attach an image file to set HTML for Letter Head.,Veuillez joindre une image pour définir du HTML pour l'en-tête,
 Please attach an image file to set HTML,Veuillez attacher un fichier image pour définir le HTML,
 Please attach the package,Veuillez joindre le paquet,
 Please check OpenID Configuration URL,Veuillez vérifier l'URL de configuration OpenID,
@@ -4380,6 +4546,7 @@ Please check the filter values set for Dashboard Chart: {},Veuillez vérifier le
 "Please check the value of ""Fetch From"" set for field {0}","Veuillez vérifier la valeur de ""Récupérer depuis le champ"" définie pour le champ {0}",
 Please check your email for verification,Veuillez vérifier votre email pour validation,
 Please check your registered email address for instructions on how to proceed. Do not close this window as you will have to return to it.,Vérifiez votre adresse e-mail enregistrée pour obtenir des instructions sur la procédure à suivre. Ne fermez pas cette fenêtre car vous devrez y retourner.,
+Please click on the following link and follow the instructions on the page. {0},Veuillez cliquer sur le lien suivant et suivre les instructions sur la page,
 Please click on the following link to set your new password,Veuillez cliquer sur le lien suivant pour définir votre nouveau mot de passe,
 Please close this window,Veuillez fermer cette fenêtre,
 Please confirm your action to {0} this document.,Veuillez confirmer votre action sur {0} ce document.,
@@ -4524,6 +4691,7 @@ Press Esc to close,Appuyez sur Echap pour fermer,
 Preview Chart,Prévisualiser le graphique,
 Preview HTML,Aperçu HTML,
 Preview Message,Message d'aperçu,
+Preview of generated names,Prévisualisation des noms générés,
 Preview type,Type d'aperçu,
 Preview,Aperçu,
 Previous Document,Document précédent,
@@ -4654,6 +4822,7 @@ Queued,En file d'attente,
 Quick Entry,Écriture rapide,
 Quick Help for Setting Permissions,Aide Rapide pour Définir les Autorisations,
 Quick List Filter,Filtre de liste rapide,
+Quick List,Liste rapide,
 Quick Lists,Listes rapides,
 Quote,Citer,
 RAW Information Log,Journal d'informations brutes,
@@ -5296,6 +5465,8 @@ Sent,Envoyé,
 Sep,Sept,
 Separator,Séparateur,
 September,Septembre,
+Series Updated for {},Série mise à jour pour {},
+Series counter for {} updated to {} successfully,Décompte de série pour {} mis à jour à {} avec succès,
 Series {0} already used in {1},Séries {0} déjà utilisé dans {1},
 Series,Séries,
 Server Action,Action du serveur,
@@ -5330,6 +5501,7 @@ Set Filters for {0},Définir des filtres pour {0},
 Set Filters,Définir des filtres,
 Set Limit,Définir une limite,
 Set Meta Tags,Définir les meta tags,
+Set Naming Series options on your transactions.,Définissez les options de nom de série pour vos transactions,
 Set New Password,Définir un nouveau mot de passe,
 Set Number of Backups,Définir le nombre de sauvegardes,
 Set Only Once,Ne définir qu'une seule fois,
@@ -5383,6 +5555,7 @@ Setup Limited Access for a User,Configuration de l'accès limité pour un utilis
 Setup Naming Series,Configuration des séries de noms,
 Setup Notifications based on various criteria.,Configurer les notifications en fonction de divers critères.,
 Setup Reports to be emailed at regular intervals,Configurer les Rapports pour être envoyer par email à intervalles réguliers,
+Setup Series for transactions,Configuration des séries pour les transactions,
 Setup Wizard Help Link,Lien d'aide de l'assistant d'installation,
 Setup Wizard Slide Field,Champ de l'assistant d'installation,
 Setup Wizard Slide,Diapositive de l'assistant d'installation,
@@ -5409,6 +5582,7 @@ Shipping,Livraison,
 Shop,Magasin,
 Short Name,Nom Court,
 Short keyboard patterns are easy to guess,Modèles de clavier courts sont faciles à deviner,
+Short,Courte,
 Shortcuts,Raccourcis,
 Show Account Deletion Link in My Account Page,Afficher le lien de suppression de compte sur la page Mon compte,
 Show Attachments,Afficher les pièces jointes,
@@ -5443,6 +5617,7 @@ Show Preview,Afficher l'aperçu,
 Show Print First,Afficher l'impression en premier,
 Show Processlist,Afficher la liste des processus,
 Show Relapses,Afficher les Rechutes,
+Show Related Errors,Voir les erreurs associées,
 Show Report,Afficher le rapport,
 Show Saved,Afficher les valeurs enregistrées,
 Show Seconds,Afficher les secondes,
@@ -5476,6 +5651,7 @@ Show percentage difference according to this time interval,Afficher l'évolution
 Show tags,Voir les balises,
 "Show title in browser window as ""Prefix - title""",Afficher le titre dans la fenêtre du navigateur comme &quot;Prefix - titre&quot;,
 Show tour,Découvrir le document,
+Show {0} List,Voir la liste de {0},
 Show,Afficher,
 Showing only Numeric fields from Report,Afficher uniquement les champs numériques du rapport,
 Showing only first {0} rows in preview,La prévisualisation n'affiche que les {0} premières colonnes,
@@ -5587,6 +5763,7 @@ SparkPost,SparkPost,
 Special Characters are not allowed,Les Caractères Spéciaux ne sont pas autorisés,
 Specify a default value,Spécifier une valeur par défaut,
 Specify the value of the field,Spécifier la valeur du champ,
+Splash Image,Image splash,
 Split Columns,Séparation de colonnes,
 Split Section with Image,Section séparée avec image,
 Sr No.,Numéro de série,
@@ -5967,13 +6144,15 @@ This feature is brand new and still experimental,Cette fonctionnalité est toute
 "This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
-eval:doc.age&gt;18","Ce champ apparaît uniquement si le nom de champ défini ici a une valeur ou si les règles sont vrai. Ex. eval:doc.myfield=='My Value'
-eval:doc.age&gt;18",
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
-myfield
-eval:doc.myfield=='My Value'
 eval:doc.age&gt;18","Ce champ n'apparaîtra que si le nom du champ défini ici a une valeur OU si les règles sont vraies (exemples) :
 myfield|µ|eval:doc.myfield=='My Value'
+eval:doc.age&gt;18",
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+myfield
+eval:doc.myfield=='My Value'
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici à une valeur ou si les règles sont vrai (exemple): 
+myfield
+eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
 This form does not have any input,Ce formulaire n'a aucune entrée,
 This form has been modified after you have loaded it,Ce formulaire a été modifié après que vous l'ayez chargé,
@@ -6171,6 +6350,7 @@ Trigger Primary Action,Lancer l'action principale,
 "Trigger on valid methods like ""before_insert"", ""after_update"", etc (will depend on the DocType selected)","Délencher sur des méthodes valides comme ""before_insert"", ""after_update"", etc (dépendra du DocType choisi)",
 Trigger this repetition,Lancer cette répétition automatique,
 Try Again,Réessayer,
+Try a naming Series,Essayez une série,
 Try the new Data Import,Essayer le nouvel outil d'import de données,
 Try the new Print Format Builder,Essayez le nouveau générateur de formats d'impression,
 Try to avoid repeated words and characters,Essayez d'éviter les mots et les caractères répétés,
@@ -6218,6 +6398,7 @@ Unable to mark as seen,Impossible de marquer comme vu,
 Unable to open attached file. Did you export it as CSV?,Impossible d'ouvrir le fichier joint. L'avez-vous exporté au format CSV ?,
 Unable to read file format for {0},Impossible de lire le format de fichier pour {0},
 Unable to send emails at this time,Impossible d'envoyer des emails en ce moment,
+Unable to send mail because of a missing email account. Please setup default Email Account from Setup > Email > Email Account,Impossible d'envoyer un email car il n'y a pas de compte email permmettant l'envoi. Veuillez configurer un compte d'envoi par défaut via Paramètres > Email > Compte email,
 Unable to send new password notification,Impossible d'envoyer une notification de nouveau mot de passe,
 Unable to update event,Impossible de mettre à jour l'événement,
 Unable to write file format for {0},Impossible d'écrire le format de fichier pour {0},
@@ -6258,6 +6439,7 @@ Update Counter,Mettre à jour le décompte,
 Update Details,Détails de la mise à jour,
 Update Existing Records,Mettre à jour des données existantes,
 Update Field,Mettre à jour le Champ,
+Update Series Counter,Mettre à jour le décompte pour une série,
 Update Settings,Mettre à jour les paramètres,
 Update Translations,Mettre à jour les traductions,
 Update Type,Type de mise à jour,
@@ -6265,6 +6447,7 @@ Update Value,Mettre à Jour la valeur,
 Update document timestamp when sending emails,Mettre à jour la date/heure de modification du document lors de l'envoi d'un email,
 Update many values at one time.,Mettre à jour plusieurs valeurs en même temps.,
 Update records,Mettre à jour,
+Update {0} records,Mettre à jour {0} documents,
 Update,Mettre à jour,
 Updated Successfully,Mise à jour réussie,
 Updated To A New Version \u{1F389},Mise à jour vers une nouvelle version \u{1F389},
@@ -6275,6 +6458,7 @@ Updated successfully,Mis à jour avec succès,
 Updated {0}: {1},Mis à jour {0} : {1},
 Updated,Mis à jour,
 Updating global settings,Mise à jour des paramètres globaux,
+Updating naming series options,Mise à jour des options de nom de série,
 Updating related fields...,Mise à jour des champs associés...,
 "Updating {0} of {1}, {2}","Mise à jour de {0} sur {1}, {2}",
 Updating {0},Mise à jour de {0},
@@ -6557,6 +6741,7 @@ With Letter head,Avec en-tête de Lettre,
 With Letterhead,Avec en-tête de Lettre,
 Worflow States Don't Exist,Les états de flux de travail n'existent pas,
 Worker,Travailleur,
+Workers,Gestionnaires de tâches,
 Workflow Action Master,Actions de Base du Flux de Travail,
 Workflow Action Name,Nom de l'Action du Flux de Travail,
 Workflow Action Permitted Role,Action du flux de travail Rôle autorisé,
@@ -6628,6 +6813,7 @@ You can also copy-paste this ,Vous pouvez ausso copier/coller ce,
 You can also copy-paste this link in your browser,Vous pouvez également copier-coller ce lien dans votre navigateur,
 You can also copy-paste this {0} to your browser,Vous pouvez aussi copier-coller ce {0} dans votre navigateur.,
 "You can change Submitted documents by cancelling them and then, amending them.","Vous pouvez modifier les documents Soumis en les annulant et ensuite, en les modifiant.",
+You can change the retention policy from {0}.,Vous pouvez modifier la politique de rétention de {0},
 "You can change the visibility of the note with this field, setting it to public will allow other users to view it.","Vous pouvez changer la visibilité de la note avec ce champ. En la rendant publique, vous autorisez les autres utilisateurs à la voir.",
 You can continue with the onboarding after exploring this page,Vous pourrez continuer l'onboarding après avoir exploré cette page,
 You can find things by asking 'find orange in customers',Vous pouvez trouver des choses en demandant 'trouver orange dans clients',
@@ -6654,6 +6840,7 @@ You do not have enough permissions to access this resource. Please contact your 
 You do not have enough permissions to complete the action,Vous ne disposez pas de suffisamment d'autorisations pour compléter l'action,
 You do not have enough points,Vous n'avez pas suffisamment de points,
 You do not have enough review points,Vous n'avez pas suffisamment de points de revue,
+You do not have permission to view this document,Vous n'avez pas les autorisations pour voir ce document,
 You do not have permissions to cancel all linked documents.,Vous n'avez pas les autorisations pour annuler tous les documents liés,
 You don't have access to Report: {0},Vous n'avez pas accès au Rapport : {0},
 You don't have any messages yet.,Vous n'avez encore aucun message.,
@@ -6666,6 +6853,7 @@ You gained {0} points,Vous avez gagné {0} points,
 You have a new message from: ,Vous avez un nouveau message de:,
 You have been successfully logged out,Vous avez été déconnecté avec succès,
 You have exceeded the max space of {0} for your plan. {1}.,Vous avez dépassé l'espace maximum de {0} pour votre plan. {1}.,
+You have not entered a value. The field will be set to empty.,Vous n'avez pas entré de valeur. Ce champ sera défini comme vide.,
 You have reached the hourly limit for generating password reset links. Please try again later.,Vous avez atteint la limite horaire de génération de liens de réinitialisation de mot passe. Veuillez réessayer plus tard.,
 You have subscribed for one user free plan,Vous vous êtes abonné à un plan gratuit pour un utilisateur,
 You have unsaved changes in this form. Please save before you continue.,Vous avez des modifications non enregistrées dans ce formulaire. Veuillez enregistrer avant de continuer.,
@@ -6721,6 +6909,7 @@ Your email address,Votre adresse email,
 Your file could not be processed. It should be a standard CSV file.,Votre fichier n'a pas pu être traité. Il doit être dansun format CSV standard,
 Your information has been submitted,Vos informations ont été enregistrées,
 Your login id is,Votre id de connexion est,
+Your message,Votre message,
 Your new password has been set successfully.,Votre nouveau mot de passe a été défini avec succès.,
 Your organization name and address for the email footer.,Le nom de votre société et l'adresse pour le pied de l'email.,
 Your password has been updated. Here is your new password,Votre mot de passe a été mis à jour. Voici votre nouveau mot de passe,
@@ -7240,6 +7429,8 @@ zoom-out,Réduire,
 {0} of {1},{0} sur {1},
 {0} or {1},{0} ou {1},
 {0} record deleted,{0} entrée(s) à supprimer,
+{0} records are not automatically deleted.,{0} entrées n'ont pas été supprimées automatiquement.,
+{0} records are retained for {1} days.,{0} entrées sont conservées pour {1} jours,
 {0} records deleted,{0} entré(es) supprimé(es),
 {0} records will be exported,{0} entrées seront exportées,
 {0} removed their assignment.,{0} a retiré son affectation.,
@@ -7324,11 +7515,9 @@ zoom-out,Réduire,
 {} Possibly invalid python code. <br>{},{} Code python potentiellement invalide. <br>{},
 {} Published,{} publiés,
 {} Reports,{} rapports,
+{} appears more than once in configured log doctypes.,{} apparaît plusieurs fois dans les types de documents de journaux configurés,
+{} does not support automated log clearing.,{} ne supporte pas la suppression des logs automatique.,
 {} energy points summary,Récapitulatif de points d'énergie {},
 {} has been disabled. It can only be enabled if {} is checked.,{} est désactivé. Il ne peut être activé que si {} est coché.,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,
-<span class="h4">Your Shortcuts</span>,<span class="h4">Vos Raccourcis</span>,
-<span class="h4"><b>Your Shortcuts</b></span>,<span class="h4"><b>Vos Raccourcis</b></span>,
-<span class="h4">Reports &amp; Masters</span>,<span class="h4">Données de base &amp Rapports</span>,
-<span class="h4"><b>Reports &amp; Masters</b></span>,<span class="h4"><b>Données de base &amp Rapports</b></span>,

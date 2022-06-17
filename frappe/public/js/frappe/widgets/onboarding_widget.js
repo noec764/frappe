@@ -122,7 +122,7 @@ export default class OnboardingWidget extends Widget {
 				// add a secondary action to view list
 				content += `<p>
 					<a href='/app/${frappe.router.slug(step.reference_document)}'>
-						${ __('Show {0} List', [step.reference_document])}</a>
+						${ __('Show {0} List', [__(step.reference_document)])}</a>
 				</p>`;
 			}
 
