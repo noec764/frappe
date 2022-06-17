@@ -26,11 +26,10 @@ class NumberCard(Document):
 			if not (self.document_type and self.function):
 				frappe.throw(_("Document Type and Function are required to create a number card"))
 
-			if (
-				self.document_type
-				and frappe.get_meta(self.document_type).istable
-				and not self.parent_document_type
-			):
+			if self.function != "Count" and not self.aggregate_function_based_on:
+				frappe.throw(_("Aggregate Field is required to create a number card"))
+
+			if frappe.get_meta(self.document_type).istable and not self.parent_document_type:
 				frappe.throw(_("Parent Document Type is required to create a number card"))
 
 		elif self.type == "Report":
@@ -153,8 +152,6 @@ def get_percentage_difference(doc, filters, result):
 			return 0
 		else:
 			return ((result / previous_result) - 1) * 100.0
-
-	return difference
 
 
 def calculate_previous_result(doc, filters):
