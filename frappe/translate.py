@@ -11,7 +11,6 @@ import functools
 import io
 import itertools
 import json
-import operator
 import os
 import re
 from typing import List, Tuple, Union
@@ -1070,10 +1069,14 @@ def send_translations(translation_dict):
 
 def deduplicate_messages(messages):
 	ret = []
-	op = operator.itemgetter(1)
-	messages = sorted(messages, key=op)
-	for k, g in itertools.groupby(messages, op):
+
+	def sort_key(x):
+		return (x[0], x[1] or 1)
+
+	messages = sorted(messages, key=sort_key)
+	for k, g in itertools.groupby(messages, key=sort_key):
 		ret.append(next(g))
+
 	return ret
 
 
