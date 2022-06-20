@@ -751,6 +751,17 @@ def get_weekday(datetime: Optional[datetime.datetime] = None) -> str:
 	return weekdays[datetime.weekday()]
 
 
+def get_business_days(string_ed_date, string_st_date):
+	return list(
+		date
+		for date in (
+			getdate(string_st_date) + datetime.timedelta(idx)
+			for idx in range(date_diff(string_ed_date, string_st_date) + 1)
+		)
+		if date.weekday() < 5
+	)
+
+
 def get_timespan_date_range(timespan: str) -> Tuple[datetime.datetime, datetime.datetime]:
 	today = nowdate()
 	date_range_map = {
