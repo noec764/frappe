@@ -34,6 +34,7 @@
 
 {% if base_scripts %}
 {% block base_scripts %}
+	{{ super() }}
 	{% for script in base_scripts %}
 		{{ include_script(script) }}
 	{% endfor %}
