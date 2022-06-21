@@ -165,8 +165,7 @@ E.g. 1 USD = 100 centimes",
         <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
     </ul>
 </div>
-<br>
-",
+<br>",
 "<h3>Client Script Help</h3>
 <p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>
 <pre><code>
@@ -782,6 +781,7 @@ Add your own translations,Ajoutez vos propres traductions,
 Add {0},Ajouter {0},Primary action in list view
 Add {0},Ajouter un·e {0},
 Add/Update Filter,Ajouter/Mettre à jour le filtre,
+Add,Ajouter,Primary action in list view
 Add,Ajouter,
 "Added HTML in the &lt;head&gt; section of the web page, primarily used for website verification and SEO","HTML ajouté dans la section   de la page web, utilisé principalement pour la vérification de site et le référencement",
 Added default log doctypes: {},Les journaux de log suivants ont été ajoutés: {},
@@ -1324,6 +1324,9 @@ Cancel Scheduling,Annuler la plannification,
 Cancel your registration,Annuler votre inscription,
 Cancel {0} documents?,Annuler {0} documents ?,Title of confirmation dialog
 Cancel {0} documents?,Annuler les documents {0}?,
+Cancel,Annuler,Button in list view actions menu
+Cancel,Annuler,Button in web form
+Cancel,Annuler,Secondary button in warning dialog
 Cancel,Annuler,
 Cancelled Document restored as Draft,Le document annulé a été restauré en tant que brouillon,
 Cancelled,Annulé,
@@ -1433,6 +1436,7 @@ Warning: Incorrectly updating counters can prevent documents from getting create
 Attention: Une mise à jour erronée du décompte peut générer des erreurs lors de la création des documents.",
 "Change type of field. (Currently, Type change is \
 						allowed among 'Currency and Float')","Modifier le type de champ. (Actuellement, le changement de type est permis seulement pour ""Devise et Décimale"")",
+Change,Monnaie,Coins
 Change,Modifier,
 Channel,Canal,
 Chart Color,Couleur du graphique,
@@ -1547,6 +1551,7 @@ Code challenge method,Méthode de vérification du code,
 Code,Code,
 Collaboration Tool Incoming Webhook URL,URL de webhook entrant de l'outil de collaboration,
 Collapse All,Tout réduire,
+Collapse,Réduire,Shrink code field.
 Collapse,Réduire,
 Collapsible Depends On (JS),Le réductible dépend de (JS),
 Collapsible Depends On,Le réductible dépend de,
@@ -1624,6 +1629,7 @@ Confirm New Password,Confirmer le nouveau mot de passe,
 Confirm Password,Confirmer le mot de passe,
 Confirm Request,Valider la demande,
 Confirm Your Email,Confirmez Votre Email,
+Confirm,Confirmation,Title of confirmation dialog
 Confirm,Confirmer,
 Confirmation Email Template,Email de confirmation,
 Confirmed,Confirmé,
@@ -1713,6 +1719,7 @@ Create Letter Head,Créer un en-tête de lettre,
 Create Log,Créer un journal,
 Create New Board,Créer un nouveau tableau,
 Create New Kanban Board,Créer un nouveau tableau Kanban,
+Create New,Créer un·e nouveau·elle,Create a new document from list view
 Create New,Créer Nouveau·elle,
 Create Post,Créer une publication,
 Create User Email,Créer un compte email pour l'utilisateur,
@@ -1820,6 +1827,7 @@ Customize Form,Personnaliser un formulaire,
 Customize Print Formats,Personnaliser les formats d'impression,
 Customize Workspace,Personnaliser le bureau,
 Customize...,Personnaliser...,
+Customize,Personnaliser,Button in list view menu
 Customize,Personnaliser,
 "Customized Formats for Printing, Email","Formats Personnalisés pour l'Impression, l'Email",
 Customized HTML Templates for printing transactions.,Modèles HTML Personnalisés pour les opérations d'impression.,
@@ -1949,6 +1957,7 @@ Delete this record to allow sending to this email address,Supprimer cet enregist
 Delete {0} item permanently?,Supprimer {0} article de manière permanente ?,Title of confirmation dialog
 Delete {0} items permanently?,Supprimer {0} articles de manière permanente ?,Title of confirmation dialog
 Delete {0} items permanently?,Supprimer {0} éléments de façon permanente?,
+Delete,Supprimer,Button in list view actions menu
 Delete,Supprimer,
 Deleted DocType,Type de document supprimé,
 Deleted Document,Document supprimé,
@@ -2246,6 +2255,7 @@ Edit via Upload,Modifier via Chargement,
 Edit your user profile,Modifiez votre profil utilisateur,
 Edit {0},Modifier {0},
 Edit...,Modification...,
+Edit,Modifier,Button in list view actions menu
 Edit,Modifier,
 Editable Grid,Grille éditable,
 Editing Row,Modifier Ligne,
@@ -2424,6 +2434,7 @@ Error while installing package to site {0}. Please check Error Logs.,Erreur lors
 Error while sending the notification,Erreur lors de l'envoi de la notification,
 Error: Document has been modified after you have opened it,Erreur : le document a été modifié après que vous l'ayez ouvert,
 Error: Value missing for {0}: {1},Erreur: Valeur absente pour {0}: {1},
+Error,Erreur,Title of error message in web form
 Error,Erreur,
 Errored Transactions,Transactions en erreur,
 Errors in Background Events,Erreurs dans les Événements en Tâche de Fond,
@@ -2486,6 +2497,7 @@ Executive,Exécutif,
 Existing Chart,Graphique existant,
 Expand All,Tout développer,
 Expand Block,Agrandir le bloc,
+Expand,Agrandir,Enlarge code field.
 Expand,Etendre,
 Experimental,Expérimental,
 Expert,Expert,
@@ -2510,6 +2522,7 @@ Export Type,Type d'export,
 Export as zip,Exporter en zip,
 Export not allowed. You need {0} role to export.,Pas autorisé à exporter. Vous devez avoir le rôle {0} pour exporter.,
 Export {0} records,Exporter {0} entrées,
+Export,Exporter,Button in list view actions menu
 Export,Exporter,
 Exporting For,Export pour,
 Exporting,Export,
@@ -3047,6 +3060,7 @@ I found these: ,J'ai trouvé ceci :,
 ID (name) of the entity whose property is to be set,ID (nom) de l'entité dont la propriété doit être définie,
 ID (name),ID (nom),
 ID field is required to edit values using Report. Please select the ID field using the Column Picker,Champ ID est nécessaire pour modifier les valeurs à l'aide de Rapport. Veuillez sélectionner le champ ID à l'aide du Sélecteur de Colonne,
+ID,ID,Label of name column in report
 ID,ID,
 IMAP Details,Détails IMAP,
 IMAP Folder,Dossier IMAP,
@@ -3154,6 +3168,7 @@ Import and Export Packages.,Importer et exporter des paquets,
 Import from Google Sheets,Importer depuis Google Sheets,
 "Import template should be of type .csv, .xlsx or .xls","Le modèle d'import doit être de type .csv, .xlsx ou .xls",
 Import template should contain a Header and atleast one row.,Le modèle d'import doit contenir un en-tête et au moins une ligne.,
+Import,Importer,Button in list view menu
 Import,Importer,
 "Importing {0} of {1}, {2}","Import de {0} sur {1}, {2}",
 Importing {0} of {1},Import de {0} sur {1},
@@ -3524,6 +3539,7 @@ Leave this conversation,Se désinscrire,
 Left Bottom,Bas gauche,
 Left Center,Centre gauche,
 Left this conversation,A quitté cette conversation,
+Left,Gauche,alignment
 Left,Gauche,
 Length of passed data array is greater than value of maximum allowed label points!,La longueur du tableau de données transmis est supérieure à la valeur du nombre maximum de points d'étiquette autorisés !,
 Length of {0} should be between 1 and 1000,Longueur de {0} doit être comprise entre 1 et 1000,
@@ -3596,6 +3612,7 @@ Links Section,Section de liens,
 Links,Liens,
 List / Search Settings,Paramètres de liste / recherche,
 List Filter,Filtre de liste,
+List Settings,Paramètres de la liste,Button in list view menu
 List Settings,Paramètres de la liste,
 List View Setting,Paramètres de la vue en liste,
 List View Settings,Paramètres de la vue en liste,
@@ -3792,6 +3809,7 @@ Message from server: {0},Message du serveur: {0},
 Message not setup,Message non configuré,
 Message to be displayed on successful completion (only for Guest users),Message à afficher après un traitement réussi (uniquement pour les utilisateurs invités),
 Message-id,Id-message,
+Message,Message,Default title of the message dialog
 Message,Message,
 Messages,Messages,
 Meta Description,Metadescription,
@@ -4113,6 +4131,7 @@ No {0} permission,Pas d'autorisation {0},
 No {0},Aucun {0},
 No {} Found,Aucun {0} trouvé,
 No.,N°,
+No,Non,Dismiss confirmation dialog
 No,Non,
 Non Negative,Non négative,
 None: End of Workflow,Aucun: Fin de Flux de Travail,
@@ -4731,6 +4750,7 @@ Print a PDF,Imprimer un PDF,
 Print format to use for portal view,Format d'impression à utiliser pour la vue sur le portail,
 Print taxes with zero amount,Impression des taxes avec un montant nul,
 Print with letterhead,Imprimer avec un en-tête,
+Print,Imprimer,Button in list view actions menu
 Print,Imprimer,
 Printer Mapping,Correspondance des imprimantes,
 Printer Name,Nom de l'imprimante,
@@ -5111,12 +5131,14 @@ Rich Text,Text riche,
 Right Bottom,Bas droit,
 Right Center,Centre droit,
 Right,Droit,Website Settings
+Right,Droite,alignment
 Right,Droit,
 Robots.txt,robots.txt,
 Rocket.Chat,Rocket.Chat,
 Role 'All' will be given to all System Users.,Le rôle 'Tous' sera attribué à tous les utilisateurs du système.,
 Role Name,Nom du Rôle,
 Role Permission for Page and Report,Autorisation du Rôle pour la Page et le Rapport,
+Role Permissions Manager,Gestionnaire des rôles,Button in list view menu
 Role Permissions Manager,Gestionnaire des rôles et autorisation,
 Role Permissions,Autorisations du Rôle,
 Role Profile,Profil de rôle,
@@ -5216,11 +5238,13 @@ Save Filter,Filtres personnalisés,
 Save Report,Enregistrer le rapport,
 Save filters,Enregistrer les filtres,
 Save on Completion,Sauvegarder à la fin,
+Save,Enregistrer,Button in web form
 Save,Enregistrer,
 Saved Successfully,Enregistré avec succès,
 Saved,Enregistré,
 Saving this will export this document as well as the steps linked here as json.,En enregistrant vous exporterez ce document ainsi que ses étapes liées dans un document JSON.,
 Saving...,Enregistrement...,
+Saving,Enregistrement,Freeze message while saving a document
 Saving,En Cours d'Enregistrement,
 Scan Barcode,Scanner le code barre,
 Scan QRCode,Scanner le QRCode,
@@ -5854,6 +5878,10 @@ Submit this document to complete this step.,Validez ce document pour terminer ce
 Submit this document to confirm,Valider ce document pour confirmer,
 Submit {0} documents?,Valider {0} document ?,Title of confirmation dialog
 Submit {0} documents?,Valider {0} documents ?,
+Submit,Valider,Button in list view actions menu
+Submit,Valider,Primary action in dialog
+Submit,Valider,Primary action of prompt dialog
+Submit,Valider,Submit password for Email Account
 Submit,Valider,
 Submiting {0},Validation de {0},
 Submitted By,Validé par,
@@ -6525,6 +6553,7 @@ User Permission for Page and Report,Autorisation de l'utilisateur pour la page e
 User Permission,Autorisations utilisateur,
 User Permissions are used to limit users to specific records.,Les autorisations utilisateur sont utilisées pour limiter l'accès des utilisateurs à des données spécifiques.,
 User Permissions created sucessfully,Autorisations utilisateur créées avec succès,
+User Permissions,Autorisations utilisateur,Button in list view menu
 User Permissions,Autorisations des utilisateurs,
 User Profile,Profil utilisateur,
 User Roles,Rôles utilisateur,
@@ -6785,6 +6814,7 @@ Yahoo Mail,Yahoo Mail,
 Yandex.Mail,Yandex.Mail,
 Year,Année,
 Yearly,Annuel,
+Yes,Oui,Approve confirmation dialog
 Yes,Oui,
 Yesterday,Hier,
 You are all set up!,Tout est prêt !,
@@ -7210,6 +7240,7 @@ second,deuxième,
 seconds,secondes,
 sent this month,envoyé depuis le début du mois,
 share-alt,part-alt,
+share,partager,Document
 share,part,
 shopping-cart,panier,
 show,montrer,
