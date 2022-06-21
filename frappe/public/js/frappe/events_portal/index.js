@@ -9,6 +9,8 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 import interactionPlugin from '@fullcalendar/interaction';
 
+//TODO: Adjust calendar start and end time to events + improve style
+
 frappe.events.EventsPortalView = class EventsPortalView {
 	constructor(options) {
 		Object.assign(this, options);
@@ -16,12 +18,11 @@ frappe.events.EventsPortalView = class EventsPortalView {
 	}
 
 	show() {
-		frappe.require([
-			'libs.bundle.js',
-			'controls.bundle.js'
-		], () => {
-			this.build_calendar()
-		});
+		this.build_calendar()
+	}
+
+	set_option(option, value) {
+		this.fullCalendar&&this.fullCalendar.setOption(option, value);
 	}
 
 	build_calendar() {
@@ -34,6 +35,7 @@ frappe.events.EventsPortalView = class EventsPortalView {
 	}
 
 	calendar_options() {
+		const me = this;
 		return {
 			eventClassNames: "events-calendar",
 			contentHeight: "auto",
@@ -58,13 +60,17 @@ frappe.events.EventsPortalView = class EventsPortalView {
 			],
 			locale: frappe.get_cookie('preferred_language') || frappe.boot.lang || 'en',
 			timeZone: frappe.boot.timeZone || 'UTC',
-			events: this.getEvents,
+			events: function(info, callback) {
+				return me.getEvents(info, callback)
+			},
 			eventClick: this.eventClick,
 			selectable: true,
 			noEventsContent: __("No events to display"),
 			allDayContent: function() {
 				return __("All Day");
-			}
+			},
+			slotMinTime: '08:00:00',
+			slotMaxTime: '20:00:00'
 		}
 	}
 
@@ -76,8 +82,19 @@ frappe.events.EventsPortalView = class EventsPortalView {
 				end: moment(parameters.end).format("YYYY-MM-DD"),
 			}
 		}).then(result => {
-			callback(result.message)
+			this.prepared_events = result.message || [];
+
+			this.set_min_max_times()
+
+			callback(this.prepared_events)
 		})
+	}
+
+	set_min_max_times() {
+		let minTimes = this.prepared_events.map(event => moment(event.start).format("HH:mm:ss")).sort()
+		minTimes.length && this.set_option("slotMinTime", minTimes[0])
+		let maxTimes =  this.prepared_events.map(event => moment(event.end).format("HH:mm:ss")).sort().reverse()
+		maxTimes.length && this.set_option("slotMaxTime", maxTimes[0])
 	}
 
 	eventClick(event) {

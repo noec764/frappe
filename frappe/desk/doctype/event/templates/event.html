@@ -12,7 +12,7 @@
 {% endblock %}
 
 {% block page_content %}
-	<div class="frappe-card mb-5">
+	<div class="mb-5">
 		{% if doc.image %}
 		<img class="card-img-top" src="{{ doc.image }}" alt="{{ doc.subject }}">
 		{% endif %}
@@ -79,6 +79,12 @@
 	</style>
 {% endblock%}
 
+
+{% block base_scripts %}
+{{ super() }}
+{{ include_script("controls.bundle.js") }}
+{{ include_script("dialog.bundle.js") }}
+{% endblock %}
 
 {% block script %}
 <script>
@@ -171,8 +177,5 @@
 		bind_register_btn()
 	});
 </script>
-
-{{ include_script("controls.bundle.js") }}
-{{ include_script("libs.bundle.js") }}
 {% endblock %}
 

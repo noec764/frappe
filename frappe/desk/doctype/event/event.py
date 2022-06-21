@@ -260,6 +260,7 @@ def get_list_context(context=None):
 			"header_action": frappe.render_template(
 				"desk/doctype/event/templates/event_list_action.html", {}
 			),
+			"base_scripts": ["events-portal.bundle.js", "controls.bundle.js"],
 		}
 	)
 

@@ -40,7 +40,6 @@ doctype_js = {
 
 web_include_js = [
 	"website_script.js",
-	# "assets/js/events-portal.min.js"
 ]
 
 web_include_css = []

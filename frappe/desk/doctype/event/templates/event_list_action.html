@@ -10,12 +10,10 @@
 		const calendar = content.appendChild(document.createElement('div'))
 		const listview = content.getElementsByClassName("website-list")[0]
 		const header = document.getElementsByClassName("page-header")[0]
-
 		if (listview) {
 			listview.classList.add("d-block");
 			calendar.id = "calendar-section";
 			calendar.classList.add("d-none");
-			calendar.classList.add("frappe-card");
 			document.getElementsByClassName("view-switcher")[0].addEventListener("click", function(e) {
 				e.preventDefault();
 				const switcher = document.getElementsByClassName("view-switcher")[0]
