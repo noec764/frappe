@@ -243,7 +243,7 @@ export default class QuickListWidget extends Widget {
 		}
 		let route = frappe.utils.generate_route({type: 'doctype', name: this.document_type});
 		this.see_all_button = $(`
-			<a href="${route}"class="see-all btn btn-xs">View List</a>
+			<a href="${route}"class="see-all btn btn-xs">${__("View List")}</a>
 		`).appendTo(this.footer);
 	}
 }
