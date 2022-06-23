@@ -253,6 +253,9 @@ def connect(site=None, db_name=None, set_admin_as_user=True):
 		init(site)
 
 	local.db = get_db(user=db_name or local.conf.db_name)
+	if not local.lang:
+		local.lang = db.get_single_value("System Settings", "language")
+
 	if set_admin_as_user:
 		set_user("Administrator")
 

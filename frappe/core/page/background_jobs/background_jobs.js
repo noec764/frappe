@@ -46,7 +46,7 @@ class BackgroundJobs {
 			fieldname: "view",
 			fieldtype: "Select",
 			options: [
-				{ label: __("Jobs"), value: "Job"},
+				{ label: __("Jobs", null, "Background Jobs"), value: "Job"},
 				{ label: __("Workers"), value: "Workers"}
 			],
 			default: "Jobs",
@@ -60,7 +60,7 @@ class BackgroundJobs {
 			fieldname: "queue_timeout",
 			fieldtype: "Select",
 			options: [
-				{ label: _("All Queues"), value: "all" },
+				{ label: __("All Queues"), value: "all" },
 				{ label: __("Default"), value: "default" },
 				{ label: __("Short"), value: "short" },
 				{ label: __("Long"), value: "long" }
@@ -72,7 +72,7 @@ class BackgroundJobs {
 			fieldname: "job_status",
 			fieldtype: "Select",
 			options: [
-				{ label: __("All Jobs"), value: "all" },
+				{ label: __("All Jobs", null, "Background Jobs"), value: "all" },
 				{ label: __("Queued"), value: "queued" },
 				{ label: __("Deferred"), value: "deferred" },
 				{ label: __("Started"), value: "started" },

@@ -589,7 +589,9 @@ export default class Grid {
 			if (num.toString().indexOf(value) > -1) {
 				return data;
 			}
-		} else if (fieldvalue && __(fieldvalue).toLowerCase().includes(value)) {
+		} else if (fieldtype === "Select" && fieldvalue && __(fieldvalue).toLowerCase().includes(value)) {
+			return data;
+		} else if (fieldvalue && fieldvalue.toLowerCase().includes(value)) {
 			return data;
 		}
 	}
