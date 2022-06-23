@@ -584,7 +584,7 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions: 
+<p>Allowed functions:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -597,7 +597,7 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Les conditions doivent être écrites en Python simple. Veuillez seulement utiliser les propriétés disponibles dans le formulaire.</p>
-<p>Fonctions autorisées: 
+<p>Fonctions autorisées:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -4781,7 +4781,7 @@ Progress,Progression,
 Project,Projet,
 Property Depends On,Propriété dépend de,
 Property Setter overrides a standard DocType or Field property,L'Initialisateur de Propriété remplace un DocType standard ou la propriété d'un champ,
-Property Setter,Initialisateur de Propriété,
+Property Setter,Propriété personnalisée,
 Property Type,Type de Propriété,
 Property,Propriété,
 Provider Name,Nom du fournisseur,
@@ -6175,10 +6175,10 @@ eval:doc.myfield=='My Value'
 eval:doc.age&gt;18","Ce champ n'apparaîtra que si le nom du champ défini ici a une valeur OU si les règles sont vraies (exemples) :
 myfield|µ|eval:doc.myfield=='My Value'
 eval:doc.age&gt;18",
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
-eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici à une valeur ou si les règles sont vrai (exemple): 
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici à une valeur ou si les règles sont vrai (exemple):
 myfield
 eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
