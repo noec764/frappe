@@ -68,7 +68,7 @@ def setup_help_database(help_db_name):
 	dbman.drop_database(help_db_name)
 
 	# make database
-	if not help_db_name in dbman.get_database_list():
+	if help_db_name not in dbman.get_database_list():
 		try:
 			dbman.create_user(help_db_name, help_db_name)
 		except Exception as e:
