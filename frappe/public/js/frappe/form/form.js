@@ -839,7 +839,7 @@ frappe.ui.form.Form = class FrappeForm {
 					.filter((link) => link.doctype == doctype)
 					.map((link) => frappe.utils.get_form_link(link.doctype, link.name, true))
 					.join(", ");
-				links_text += `<li><strong>${doctype}</strong>: ${docnames}</li>`;
+				links_text += `<li><strong>${__(doctype)}</strong>: ${docnames}</li>`;
 			}
 		}
 		links_text = `<ul>${links_text}</ul>`;
@@ -898,12 +898,12 @@ frappe.ui.form.Form = class FrappeForm {
 
 				var after_cancel = function(r) {
 					if (r.exc) {
-						this.handle_save_fail(btn, on_error);
+						me.handle_save_fail(btn, on_error);
 					} else {
 						frappe.utils.play_sound("cancel");
-						this.refresh();
+						me.refresh();
 						callback && callback();
-						this.script_manager.trigger("after_cancel");
+						me.script_manager.trigger("after_cancel");
 					}
 				};
 				frappe.ui.form.save(this, "cancel", after_cancel, btn);
