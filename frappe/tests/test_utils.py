@@ -111,8 +111,8 @@ class TestFilters(unittest.TestCase):
 class TestMoney(unittest.TestCase):
 	def test_money_in_words(self):
 		nums_bhd = [
-			(5000, "BHD Five Thousand only."),
-			(5000.0, "BHD Five Thousand only."),
+			(5000, "Five Thousand Bahraini Dinar"),
+			(5000.0, "Five Thousand Bahraini Dinar"),
 			(0.1, "One Hundred Fils only."),
 			(0, "BHD Zero only."),
 			("Fail", ""),

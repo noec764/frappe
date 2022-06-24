@@ -58,7 +58,7 @@ class TestTranslate(unittest.TestCase):
 	def test_translation_with_context(self):
 		try:
 			frappe.local.lang = "fr"
-			self.assertEqual(_("Change"), "Changement")
+			self.assertEqual(_("Change"), "Modifier")
 			self.assertEqual(_("Change", context="Coins"), "la monnaie")
 		finally:
 			frappe.local.lang = "en"
