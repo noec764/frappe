@@ -255,21 +255,26 @@ frappe.search.utils = {
 				});
 			}
 		});
+
 		var target = 'Calendar';
-		if(__('calendar').indexOf(keywords.toLowerCase()) === 0) {
+		if(keywords && me.fuzzy_search(keywords, __(target))) {
 			out.push({
 				type: "Calendar",
+				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
 				value: __("Open {0}", [__(target)]),
-				index: me.fuzzy_search(keywords, 'Calendar'),
+				index: me.fuzzy_search(keywords, target),
 				match: target,
 				route: ['List', 'Event', target],
 			});
 		}
-		if(__('email inbox').indexOf(keywords.toLowerCase()) === 0) {
+
+		target = 'Email Inbox'
+		if(keywords && me.fuzzy_search(keywords, __(target))) {
 			out.push({
 				type: "Inbox",
-				value: __("Open {0}", [__('Email Inbox')]),
-				index: me.fuzzy_search(keywords, 'email inbox'),
+				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
+				value: __("Open {0}", [__(target)]),
+				index: me.fuzzy_search(keywords, target),
 				match: target,
 				route: ['List', 'Communication', 'Inbox'],
 			});
