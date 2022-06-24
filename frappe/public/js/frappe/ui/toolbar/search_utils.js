@@ -15,7 +15,7 @@ frappe.search.utils = {
 				var _item = ($.isArray(item)) ? item[0] : item;
 				_item = __(_item || '').toLowerCase().replace(/-/g, " ");
 
-				if(keywords===_item || _item.indexOf(keywords) !== -1) {
+				if(keywords==='' || keywords===_item || _item.indexOf(keywords) !== -1) {
 					var option = process(item);
 
 					if(option) {
