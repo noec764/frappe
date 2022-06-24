@@ -550,7 +550,9 @@ frappe.search.utils = {
 			while (j < str_len) {
 				if (str.charCodeAt(j) === sub_ch) {
 					var str_char = str_orig.charAt(j);
-					if (str_char === str_char.toLowerCase()) {
+					if (str_char.match(/\s/)) {
+						rendered += '<mark>&nbsp;</mark>';
+					} else if (str_char === str_char.toLowerCase()) {
 						rendered += '<mark>' + subseq.charAt(i) + '</mark>';
 					} else {
 						rendered += '<mark>' + subseq.charAt(i).toUpperCase() + '</mark>';
