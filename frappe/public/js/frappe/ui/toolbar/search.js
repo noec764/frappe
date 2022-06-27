@@ -356,7 +356,9 @@ frappe.search.SearchDialog = class {
 		if (result.route) {
 			link = `href="/app/${result.route.join("/")}"`;
 		} else if (result.data_path) {
-			link = `data-path=${result.data_path}"`;
+			link = `href="#" data-path="${result.data_path}"`;
+		} else {
+			link = 'href="#"';
 		}
 		return link;
 	}
