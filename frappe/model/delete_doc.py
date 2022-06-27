@@ -31,6 +31,7 @@ DOCTYPES_TO_SKIP = (
 	"Email Queue",
 	"Archived Document",
 	"Document Share Key",
+	"Integration Request",
 )
 
 
