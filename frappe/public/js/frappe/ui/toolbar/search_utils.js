@@ -15,7 +15,7 @@ frappe.search.utils = {
 				var _item = ($.isArray(item)) ? item[0] : item;
 				_item = __(_item || '').toLowerCase().replace(/-/g, " ");
 
-				if(keywords===_item || _item.indexOf(keywords) !== -1) {
+				if(keywords==='' || keywords===_item || _item.indexOf(keywords) !== -1) {
 					var option = process(item);
 
 					if(option) {
@@ -255,21 +255,26 @@ frappe.search.utils = {
 				});
 			}
 		});
+
 		var target = 'Calendar';
-		if(__('calendar').indexOf(keywords.toLowerCase()) === 0) {
+		if(keywords && me.fuzzy_search(keywords, __(target))) {
 			out.push({
 				type: "Calendar",
+				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
 				value: __("Open {0}", [__(target)]),
-				index: me.fuzzy_search(keywords, 'Calendar'),
+				index: me.fuzzy_search(keywords, target),
 				match: target,
 				route: ['List', 'Event', target],
 			});
 		}
-		if(__('email inbox').indexOf(keywords.toLowerCase()) === 0) {
+
+		target = 'Email Inbox'
+		if(keywords && me.fuzzy_search(keywords, __(target))) {
 			out.push({
 				type: "Inbox",
-				value: __("Open {0}", [__('Email Inbox')]),
-				index: me.fuzzy_search(keywords, 'email inbox'),
+				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
+				value: __("Open {0}", [__(target)]),
+				index: me.fuzzy_search(keywords, target),
 				match: target,
 				route: ['List', 'Communication', 'Inbox'],
 			});
@@ -545,7 +550,9 @@ frappe.search.utils = {
 			while (j < str_len) {
 				if (str.charCodeAt(j) === sub_ch) {
 					var str_char = str_orig.charAt(j);
-					if (str_char === str_char.toLowerCase()) {
+					if (str_char.match(/\s/)) {
+						rendered += '<mark>&nbsp;</mark>';
+					} else if (str_char === str_char.toLowerCase()) {
 						rendered += '<mark>' + subseq.charAt(i) + '</mark>';
 					} else {
 						rendered += '<mark>' + subseq.charAt(i).toUpperCase() + '</mark>';

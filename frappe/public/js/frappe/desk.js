@@ -410,7 +410,7 @@ frappe.Application = class Application {
 		if (frappe.boot && frappe.boot.home_page !== 'setup-wizard') {
 			frappe.frappe_toolbar = new frappe.ui.toolbar.Toolbar();
 		}
-
+		frappe.quick_access_menu = new frappe.ui.quick_access.QuickAccessMenu();
 	}
 
 	logout() {
