@@ -17,7 +17,7 @@ frappe.standard_pages['Workspaces'] = function () {
 };
 
 // For translations
-// __("My Workspaces"), __("Public")
+// __("My Workspaces"), __("Public"), __("Private"), __("private")
 
 frappe.views.Workspace = class Workspace {
 	constructor(wrapper) {

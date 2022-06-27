@@ -9,17 +9,15 @@
 
 		<div class="QAM-modal">
 			<header style="grid-area: title; position: relative; padding: 1em; padding-bottom: 0;">
-				<a href="/app" style="position: absolute;" @click="hide()">
-					<!-- <img style="width: 24px" :src="frappe.boot.app_logo_url" /> -->
-					<span class="octicon octicon-home"></span>
-					{{ __('Home') }}
+				<a href="/app" style="position: absolute;" @click="hide()" v-if="frappe.get_route() && frappe.get_route().length && frappe.get_route()[0]">
+					<img style="width: 24px" :src="frappe.boot.app_logo_url" />
 				</a>
 				<h2 style="text-align: center; margin: 0; font-size: 1em;">
 					{{ __('Quick Access') }}
 				</h2>
 			</header>
 
-			<label class="QAM-filter-container" style="grid-area: input;">
+			<label class="QAM-filter-container my-5" style="grid-area: input;">
 				<span class="sr-only visually-hidden">{{ __('Search') }}</span>
 				<input
 					ref="input"
@@ -33,7 +31,7 @@
 				/>
 				<span class="search-icon" v-html="frappe.utils.icon('search', 'md')"></span>
 			</label>
- 
+
 			<div class="QAM-column QAM-sidebar" style="grid-area: side;">
 				<!-- <h3 class="QAM-title" style="font-size: 1em; text-align: center;">{{ __('Workspace') }}</h3> -->
 
@@ -96,7 +94,7 @@ export default {
 				"--y": this.dy + 'px',
 				display: this.isVisible ? undefined : 'none',
 			}
-        },
+		},
 		filteredItems() {
 			if (this.searchQuery === '') return this.items
 
@@ -432,10 +430,6 @@ export default {
 
 .QuickAccessMenu--anchor-fixed .QAM-close-backdrop {
 	opacity: 0.2;
-}
-
-.QAM-sidebar {
-	border-right: 2px solid #888;
 }
 
 

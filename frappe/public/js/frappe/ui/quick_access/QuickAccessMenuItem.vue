@@ -5,7 +5,7 @@
 			class="QAMI-box"
 			tabindex="0"
 			:href="href"
-			:title="__(label)"
+			:title="__(item.title)"
 			@click="onSelect()"
 			:style="{'--item-color': item.color}"
 		>
@@ -33,8 +33,8 @@ export default {
 			type: Object,
 			required: true,
 			validator: (x) => {
-				if (!x.label) {
-					console.warn('QuickAccessMenuItem', 'item.label is required.', 'Got item =', x)
+				if (!x.title) {
+					console.warn('QuickAccessMenuItem', 'item.title is required.', 'Got item =', x)
 					return false
 				}
 				return true
@@ -44,9 +44,6 @@ export default {
 
 	computed: {
 		label() {
-			if (typeof this.item.label === 'string') {
-				return this.item.label
-			}
 			if (typeof this.item.title === 'string') {
 				return this.item.title
 			}
@@ -83,9 +80,6 @@ export default {
 </script>
 
 <style>
-.QuickAccessMenuItem {
-}
-
 .QAMI-box {
 	display: flex;
 	flex-direction: row;
@@ -106,8 +100,8 @@ export default {
 button.QAMI-box {
 	border: none;
 	background: none;
-    width: 100%;
-    text-align: initial;
+	width: 100%;
+	text-align: initial;
 	outline: none;
 }
 
@@ -130,9 +124,5 @@ a.QAMI-box {
 .QuickAccessMenuItem:focus-within > .QAMI-box > .QAMI-label,
 .QuickAccessMenuItem:hover > .QAMI-box > .QAMI-label {
 	text-decoration: underline;
-}
-
-.QAMI-label {
-	/* color: var(--item-color, inherit); */
 }
 </style>

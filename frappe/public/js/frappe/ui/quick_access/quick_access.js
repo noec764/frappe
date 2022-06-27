@@ -1,4 +1,4 @@
-import { bus } from './bus'	
+import { bus } from './bus'
 
 import QuickAccessMenu from './QuickAccessMenu.vue'
 
@@ -6,7 +6,6 @@ frappe.provide('frappe.ui.quick_access')
 
 frappe.ui.quick_access.QuickAccessMenu = class {
 	constructor (opts = {}) {
-		console.error()
 		this.setup_menu()
 		this.setup_button()
 
@@ -54,7 +53,7 @@ frappe.ui.quick_access.QuickAccessMenu = class {
 		bus.$emit('quick-access-setItems', [
 			...frappe.boot.allowed_workspaces.map(w => ({
 				label: w.label,
-				title: w.label,
+				title: w.title,
 				icon: w.icon,
 				route: '/app/' + frappe.router.slug(w.name),
 				color: w.color,
