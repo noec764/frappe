@@ -1,6 +1,8 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import copy
+from typing import List
 
 import frappe
 import frappe.share
@@ -377,7 +379,7 @@ def get_valid_perms(doctype=None, user=None):
 
 	doctypes_with_custom_perms = get_doctypes_with_custom_docperms()
 	for p in perms:
-		if not p.parent in doctypes_with_custom_perms:
+		if p.parent not in doctypes_with_custom_perms:
 			custom_perms.append(p)
 
 	if doctype:
@@ -606,23 +608,17 @@ def reset_perms(doctype):
 	frappe.db.delete("Custom DocPerm", {"parent": doctype})
 
 
-def get_linked_doctypes(dt):
-	return list(
-		set(
-			[dt]
-			+ [
-				d.options
-				for d in frappe.get_meta(dt).get(
-					"fields",
-					{
-						"fieldtype": "Link",
-						"ignore_user_permissions": ("!=", 1),
-						"options": ("!=", "[Select]"),
-					},
-				)
-			]
+def get_linked_doctypes(dt: str) -> List:
+	meta = frappe.get_meta(dt)
+	linked_doctypes = [dt] + [
+		d.options
+		for d in meta.get(
+			"fields",
+			{"fieldtype": "Link", "ignore_user_permissions": ("!=", 1), "options": ("!=", "[Select]")},
 		)
-	)
+	]
+
+	return list(set(linked_doctypes))
 
 
 def get_doc_name(doc):
