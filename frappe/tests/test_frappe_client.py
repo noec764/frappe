@@ -153,9 +153,7 @@ class TestFrappeClient(unittest.TestCase):
 			{
 				"doctype": "Event",
 				"subject": "Sing a song of sixpence",
-				"event_participants": [
-					{"reference_doctype": "Contact", "reference_docname": "George Steevens"}
-				],
+				"event_participants": [{"contact": "George Steevens"}],
 			}
 		)
 
@@ -164,7 +162,7 @@ class TestFrappeClient(unittest.TestCase):
 			{
 				"doctype": "Event Participants",
 				"name": event.get("event_participants")[0].get("name"),
-				"reference_docname": "William Shakespeare",
+				"contact": "William Shakespeare",
 			}
 		)
 

@@ -189,6 +189,12 @@ class Event(WebsiteGenerator):
 
 		self.event_participants = participant_list
 
+	def add_reference(self, reference_doctype, reference_name):
+		self.append(
+			"event_references",
+			{"reference_doctype": reference_doctype, "reference_name": reference_name},
+		)
+
 	def get_context(self, context):
 		if not cint(self.published):
 			self.show_permission_error()
