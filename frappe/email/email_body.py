@@ -6,6 +6,7 @@ import re
 from email import policy
 from email.header import Header
 from email.mime.multipart import MIMEMultipart
+from typing import Optional
 
 import frappe
 from frappe.email.doctype.email_account.email_account import EmailAccount
@@ -355,7 +356,7 @@ def get_formatted_html(
 	print_html=None,
 	email_account=None,
 	header=None,
-	unsubscribe_link=None,
+	unsubscribe_link: Optional[frappe._dict] = None,
 	sender=None,
 	with_container=False,
 ):
