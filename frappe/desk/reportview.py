@@ -465,6 +465,8 @@ def get_labels(fields, doctype):
 				# For example, "Item Code (Sales Invoice Item)".
 				label += f" ({ _(parenttype) })"
 
+		labels.append(label)
+
 	return labels
 
 
