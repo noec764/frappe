@@ -79,7 +79,7 @@ def _(msg, lang=None, context=None):
 	from frappe.utils import is_html, strip_html_tags
 
 	if not hasattr(local, "lang"):
-		local.lang = lang or get_user_lang() or db.get_default("lang")
+		local.lang = lang or get_user_lang()
 
 	if not lang:
 		lang = local.lang

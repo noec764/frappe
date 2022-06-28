@@ -135,6 +135,8 @@ def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True,
 
 		if user:
 			frappe.set_user(user)
+		elif not frappe.local.lang:
+			frappe.local.lang = frappe.get_user_lang()
 
 	if isinstance(method, str):
 		method_name = method
