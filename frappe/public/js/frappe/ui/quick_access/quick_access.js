@@ -7,7 +7,7 @@ frappe.provide('frappe.ui.quick_access')
 frappe.ui.quick_access.QuickAccessMenu = class {
 	constructor (opts = {}) {
 		this.setup_menu()
-		this.setup_button()
+		// this.setup_button()
 
 		this.make()
 	}
