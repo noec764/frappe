@@ -64,6 +64,7 @@
   "otp_issuer_name",
   "email",
   "email_footer_address",
+  "email_retry_limit",
   "template_for_welcome_email",
   "column_break_18",
   "disable_standard_email_footer",
@@ -540,12 +541,18 @@
     "fieldtype": "Duration",
     "label": "Reset Password Link Expiry Duration",
     "non_negative": 1
+   },
+   {
+    "default": "3",
+    "fieldname": "email_retry_limit",
+    "fieldtype": "Int",
+    "label": "Email Retry Limit"
    }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2022-05-19 00:00:18.095269",
+ "modified": "2022-06-21 13:55:04.796152",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
