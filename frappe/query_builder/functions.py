@@ -1,8 +1,9 @@
+from enum import Enum
+
 from pypika.functions import *
 from pypika.terms import Arithmetic, ArithmeticExpression, CustomFunction, Function
 
 import frappe
-from frappe.database.query import Query
 from frappe.query_builder.custom import GROUP_CONCAT, MATCH, STRING_AGG, TO_TSVECTOR
 from frappe.query_builder.utils import ImportMapper, db_type_is
 
@@ -14,6 +15,11 @@ class Concat_ws(Function):
 		super(Concat_ws, self).__init__("CONCAT_WS", *terms, **kwargs)
 
 
+class Locate(Function):
+	def __init__(self, *terms, **kwargs):
+		super(Locate, self).__init__("LOCATE", *terms, **kwargs)
+
+
 GroupConcat = ImportMapper({db_type_is.MARIADB: GROUP_CONCAT, db_type_is.POSTGRES: STRING_AGG})
 
 Match = ImportMapper({db_type_is.MARIADB: MATCH, db_type_is.POSTGRES: TO_TSVECTOR})
@@ -22,9 +28,9 @@ Match = ImportMapper({db_type_is.MARIADB: MATCH, db_type_is.POSTGRES: TO_TSVECTO
 class _PostgresTimestamp(ArithmeticExpression):
 	def __init__(self, datepart, timepart, alias=None):
 		if isinstance(datepart, str):
-			datepart = Cast(datepart, "date")
+			datepart = Cast(datepart, "date")  # noqa
 		if isinstance(timepart, str):
-			timepart = Cast(timepart, "time")
+			timepart = Cast(timepart, "time")  # noqa
 
 		super().__init__(operator=Arithmetic.add, left=datepart, right=timepart, alias=alias)
 
@@ -39,7 +45,7 @@ CombineDatetime = ImportMapper(
 DateFormat = ImportMapper(
 	{
 		db_type_is.MARIADB: CustomFunction("DATE_FORMAT", ["date", "format"]),
-		db_type_is.POSTGRES: ToChar,
+		db_type_is.POSTGRES: ToChar,  # noqa
 	}
 )
 
@@ -73,25 +79,35 @@ class Cast_(Function):
 
 def _aggregate(function, dt, fieldname, filters, **kwargs):
 	return (
-		Query()
-		.build_conditions(dt, filters)
+		frappe.qb.engine.build_conditions(dt, filters)
 		.select(function(PseudoColumn(fieldname)))
 		.run(**kwargs)[0][0]
 		or 0
 	)
 
 
+class SqlFunctions(Enum):
+	DayOfYear = "dayofyear"
+	Extract = "extract"
+	Locate = "locate"
+	Count = "count"
+	Sum = "sum"
+	Avg = "avg"
+	Max = "max"
+	Min = "min"
+
+
 def _max(dt, fieldname, filters=None, **kwargs):
-	return _aggregate(Max, dt, fieldname, filters, **kwargs)
+	return _aggregate(Max, dt, fieldname, filters, **kwargs)  # noqa
 
 
 def _min(dt, fieldname, filters=None, **kwargs):
-	return _aggregate(Min, dt, fieldname, filters, **kwargs)
+	return _aggregate(Min, dt, fieldname, filters, **kwargs)  # noqa
 
 
 def _avg(dt, fieldname, filters=None, **kwargs):
-	return _aggregate(Avg, dt, fieldname, filters, **kwargs)
+	return _aggregate(Avg, dt, fieldname, filters, **kwargs)  # noqa
 
 
 def _sum(dt, fieldname, filters=None, **kwargs):
-	return _aggregate(Sum, dt, fieldname, filters, **kwargs)
+	return _aggregate(Sum, dt, fieldname, filters, **kwargs)  # noqa
