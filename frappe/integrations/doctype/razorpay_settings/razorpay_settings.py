@@ -291,7 +291,7 @@ class RazorpaySettings(Document):
 				frappe.log_error(message=str(resp), title="Razorpay Payment not authorized")
 
 		except Exception:
-			frappe.log_error(frappe.get_traceback())
+			frappe.log_error()
 			# failed
 			pass
 
@@ -310,7 +310,7 @@ class RazorpaySettings(Document):
 					).run_method("on_payment_authorized", self.flags.status_changed_to)
 
 				except Exception:
-					frappe.log_error(frappe.get_traceback())
+					frappe.log_error()
 
 				if custom_redirect_to:
 					redirect_to = custom_redirect_to
@@ -350,12 +350,12 @@ class RazorpaySettings(Document):
 		settings = self.get_settings({})
 
 		try:
-			resp = make_post_request(
+			make_post_request(
 				"https://api.razorpay.com/v1/subscriptions/{0}/cancel".format(subscription_id),
 				auth=(settings.api_key, settings.api_secret),
 			)
 		except Exception:
-			frappe.log_error(frappe.get_traceback())
+			frappe.log_error()
 
 	def verify_signature(self, body, signature, key):
 		key = bytes(key, "utf-8")
