@@ -94,7 +94,7 @@ frappe.ui.toolbar.Toolbar = class {
 				$("<a>", {
 					href: url,
 					class: "dropdown-item",
-					text: link.label,
+					text: __(link.label),
 					target: "_blank"
 				}).appendTo($help_links);
 			}
