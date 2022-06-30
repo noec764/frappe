@@ -68,7 +68,7 @@ def get_info_based_on_role(role, field="email"):
 	"""Get information of all users that have been assigned this role"""
 	users = frappe.get_list(
 		"Has Role",
-		filters={"role": role},
+		filters={"role": role, "parenttype": "User"},
 		parent_doctype="User",
 		fields=["parent as user_name"],
 	)
