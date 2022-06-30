@@ -10,7 +10,7 @@ source_link = "https://gitlab.com/dokos/dodock"
 app_license = "MIT"
 app_logo_url = "/assets/frappe/images/dokos-logo.png"
 
-develop_version = "1.x.x-develop"
+develop_version = "3.x.x-develop"
 
 app_email = "hello@dokos.io"
 

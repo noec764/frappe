@@ -13,7 +13,7 @@ import itertools
 import json
 import os
 import re
-from typing import List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from pypika.terms import PseudoColumn
 
@@ -151,13 +151,12 @@ def get_all_language_with_name():
 
 def get_lang_dict():
 	"""Returns all languages in dict format, full name is the key e.g. `{"english":"en"}`"""
-	result = dict(
+	return dict(
 		frappe.get_all("Language", fields=["language_name", "name"], order_by="modified", as_list=True)
 	)
-	return result
 
 
-def get_dict(fortype, name=None):
+def get_dict(fortype: str, name: Optional[str] = None) -> Dict:
 	"""Returns translation dict for a type of object.
 
 	:param fortype: must be one of `doctype`, `page`, `report`, `include`, `jsfile`, `boot`
@@ -227,18 +226,13 @@ def get_dict(fortype, name=None):
 		message_dict = make_dict_from_messages(messages, load_user_translation=False)
 		message_dict.update(get_dict_from_hooks(fortype, name))
 
-		try:
-			# get user specific translation data
-			user_translations = get_user_translations(frappe.local.lang)
-		except Exception:
-			user_translations = {}
-
-		if user_translations:
-			message_dict.update(user_translations)
-
 		translation_assets[asset_key] = message_dict
 
 		cache.hset("translation_assets", frappe.local.lang, translation_assets, shared=True)
+
+	translation_map: Dict = translation_assets[asset_key]
+
+	translation_map.update(get_user_translations(frappe.local.lang))
 
 	return translation_assets[asset_key]
 
@@ -279,13 +273,12 @@ def make_dict_from_messages(messages, full_dict=None, load_user_translation=True
 	return out
 
 
-def get_lang_js(fortype, name):
+def get_lang_js(fortype: str, name: str) -> str:
 	"""Returns code snippet to be appended at the end of a JS script.
-
 	:param fortype: Type of object, e.g. `DocType`
 	:param name: Document name
 	"""
-	return "\n\n$.extend(frappe._messages, %s)" % json.dumps(get_dict(fortype, name))
+	return f"\n\n$.extend(frappe._messages, {json.dumps(get_dict(fortype, name))})"
 
 
 def get_full_dict(lang):
@@ -762,10 +755,12 @@ def get_server_messages(app):
 	inside an app"""
 	messages = []
 	file_extensions = (".py", ".html", ".js", ".vue")
-	for basepath, folders, files in os.walk(frappe.get_pymodule_path(app)):
-		for dontwalk in (".git", "public", "locale", "query_builder"):
-			if dontwalk in folders:
-				folders.remove(dontwalk)
+	app_walk = os.walk(frappe.get_pymodule_path(app))
+
+	for basepath, folders, files in app_walk:
+		folders[:] = [
+			folder for folder in folders if folder not in {".git", "query_builder", "__pycache__"}
+		]
 
 		for f in files:
 			f = frappe.as_unicode(f)
