@@ -3,12 +3,12 @@
 		v-if="is_shown"
 		class="flex justify-between build-success-message align-center"
 	>
-		Compiled successfully
+		{{ __("Compiled successfully") }}
 		<a
 			v-if="!live_reload"
 			class="ml-4 text-white underline" href="/" @click.prevent="reload"
 		>
-			Refresh
+			{{ __("Refresh") }}
 		</a>
 	</div>
 </template>
