@@ -70,7 +70,7 @@
    "options": "Domain"
   },
   {
-   "depends_on": "eval:doc.type == \"DocType\"  && frappe.boot.developer_mode",
+   "depends_on": "eval:doc.type == \"DocType\"",
    "fieldname": "section_break_5",
    "fieldtype": "Section Break",
    "label": "Count Filter"
@@ -107,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2022-05-22 12:22:07.824388",
+ "modified": "2022-07-01 12:58:02.159647",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace Shortcut",
