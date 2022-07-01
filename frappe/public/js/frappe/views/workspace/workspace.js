@@ -1129,7 +1129,7 @@ frappe.views.Workspace = class Workspace {
 				class: this.blocks['paragraph'],
 				inlineToolbar: ['HeaderSize', 'bold', 'italic', 'link'],
 				config: {
-					placeholder: 'Choose a block or continue typing'
+					placeholder: __('Choose a block or continue typing')
 				}
 			},
 			chart: {
