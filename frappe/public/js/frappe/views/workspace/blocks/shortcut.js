@@ -2,7 +2,7 @@ import Block from "./block.js";
 export default class Shortcut extends Block {
 	static get toolbox() {
 		return {
-			title: 'Shortcut',
+			title: __('Shortcut'),
 			icon: frappe.utils.icon('shortcut', 'sm')
 		};
 	}

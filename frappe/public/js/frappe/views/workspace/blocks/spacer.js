@@ -2,7 +2,7 @@ import Block from './block.js';
 export default class Spacer extends Block {
 	static get toolbox() {
 		return {
-			title: 'Spacer',
+			title: __('Spacer'),
 			icon: frappe.utils.icon('spacer', 'sm')
 		};
 	}

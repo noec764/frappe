@@ -211,7 +211,7 @@ export default class Paragraph extends Block {
 
 	static get toolbox() {
 		return {
-			title: 'Text',
+			title: __('Text'),
 			icon: frappe.utils.icon('text', 'sm')
 		};
 	}

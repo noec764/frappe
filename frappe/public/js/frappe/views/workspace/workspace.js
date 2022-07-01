@@ -344,12 +344,16 @@ frappe.views.Workspace = class Workspace {
 	merge_extended_item(item_type, default_columns=4) {
 		const extended_shortcuts = this.page_data[`${item_type}s`] ? this.page_data[`${item_type}s`].items.filter(f => f.extension) : []
 		if (extended_shortcuts.length) {
+			const existing_cards = this.content.filter(f => f.type == item_type).map(f => f.data).map(f => f[`${item_type}_name`])
 			const last_index = (this.content || []).map(f => f.type).lastIndexOf(item_type) || content.length
 			extended_shortcuts.map((s, i) => {
+				if (existing_cards.includes(s.original_label || s.label)) {
+					return
+				}
 				this.content.splice(last_index + i, 0, {
 					type: item_type,
 					data: {
-						[`${item_type}_name`]: s.label,
+						[`${item_type}_name`]: s.original_label || s.label,
 						col: s.columns || default_columns
 					}
 				})

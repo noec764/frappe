@@ -136,7 +136,7 @@ export default class Header extends Block {
 
 	static get toolbox() {
 		return {
-			title: 'Heading',
+			title: __('Heading'),
 			icon: frappe.utils.icon('header', 'sm')
 		};
 	}
