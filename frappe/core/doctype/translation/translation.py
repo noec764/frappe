@@ -1,11 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
 
 import frappe
 from frappe.model.document import Document
-from frappe.translate import clear_cache
 from frappe.utils import is_html, strip_html_tags
 
 

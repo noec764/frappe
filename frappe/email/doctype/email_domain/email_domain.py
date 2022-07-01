@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
 
@@ -55,12 +54,12 @@ class EmailDomain(Document):
 
 			except Exception as e:
 				logger.warn(
-					'Incoming email account "{host}" not correct'.format(host=self.email_server),
+					f'Incoming email account "{self.email_server}" not correct',
 					exc_info=e,
 				)
 				frappe.throw(
 					title=_("Incoming email account not correct"),
-					msg='Error connecting IMAP/POP3 "{host}": {e}'.format(host=self.email_server, e=e),
+					msg=f'Error connecting IMAP/POP3 "{self.email_server}": {e}',
 				)
 
 			finally:
@@ -97,12 +96,12 @@ class EmailDomain(Document):
 				sess.quit()
 			except Exception as e:
 				logger.warn(
-					'Outgoing email account "{host}" not correct'.format(host=self.smtp_server),
+					f'Outgoing email account "{self.smtp_server}" not correct',
 					exc_info=e,
 				)
 				frappe.throw(
 					title=_("Outgoing email account not correct"),
-					msg='Error connecting SMTP "{host}": {e}'.format(host=self.smtp_server, e=e),
+					msg=f'Error connecting SMTP "{self.smtp_server}": {e}',
 				)
 		return
 

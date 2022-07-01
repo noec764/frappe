@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
 import json
@@ -132,7 +131,7 @@ def add_user_icon(_doctype, _report=None, label=None, link=None, type="link", st
 	if not label:
 		label = _doctype or _report
 	if not link:
-		link = "List/{0}".format(_doctype)
+		link = f"List/{_doctype}"
 
 	# find if a standard icon exists
 	icon_name = frappe.db.exists(
@@ -198,7 +197,7 @@ def add_user_icon(_doctype, _report=None, label=None, link=None, type="link", st
 
 			icon_name = new_icon.name
 
-		except frappe.UniqueValidationError as e:
+		except frappe.UniqueValidationError:
 			frappe.throw(_("Desktop Icon already exists"))
 		except Exception as e:
 			raise e

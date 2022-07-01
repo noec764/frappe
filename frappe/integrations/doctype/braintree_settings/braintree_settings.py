@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -157,7 +156,7 @@ class BraintreeSettings(PaymentGatewayController):
 	]
 
 	def __init__(self, *args, **kwargs):
-		super(BraintreeSettings, self).__init__(*args, **kwargs)
+		super().__init__(*args, **kwargs)
 		if not self.is_new():
 			self.configure_braintree()
 
@@ -204,7 +203,7 @@ class BraintreeSettings(PaymentGatewayController):
 			)
 
 	def get_payment_url(self, **kwargs):
-		return get_url("./integrations/braintree_checkout?{0}".format(urlencode(kwargs)))
+		return get_url(f"./integrations/braintree_checkout?{urlencode(kwargs)}")
 
 	def create_payment_request(self, data):
 		self.data = frappe._dict(data)
@@ -238,7 +237,7 @@ class BraintreeSettings(PaymentGatewayController):
 			self.merchant_account = matching_merchants[0]
 
 		if not hasattr(self, "merchant_account"):
-			frappe.log_error(_("Merchant account for currency {} missing".format(self.data.currency)))
+			frappe.log_error(_(f"Merchant account for currency {self.data.currency} missing"))
 
 	def create_charge_on_braintree(self):
 		self.get_merchant_account()

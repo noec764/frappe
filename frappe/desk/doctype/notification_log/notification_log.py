@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -30,7 +29,7 @@ def get_permission_query_conditions(for_user):
 	if for_user == "Administrator":
 		return
 
-	return """(`tabNotification Log`.for_user = {user})""".format(user=frappe.db.escape(for_user))
+	return f"""(`tabNotification Log`.for_user = {frappe.db.escape(for_user)})"""
 
 
 def get_title(doctype, docname, title_field=None):
@@ -41,7 +40,7 @@ def get_title(doctype, docname, title_field=None):
 
 
 def get_title_html(title):
-	return '<b class="subject-title">{0}</b>'.format(title)
+	return f'<b class="subject-title">{title}</b>'
 
 
 def enqueue_create_notification(users, doc):

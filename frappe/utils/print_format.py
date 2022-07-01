@@ -97,12 +97,12 @@ def download_multi_pdf(doctype, name, format=None, no_letterhead=False, options=
 				except Exception:
 					frappe.log_error(
 						title="Error in Multi PDF download",
-						message="Permission Error on doc {} of doctype {}".format(doc_name, doctype_name),
+						message=f"Permission Error on doc {doc_name} of doctype {doctype_name}",
 						reference_doctype=doctype_name,
 						reference_name=doc_name,
 					)
 
-		frappe.local.response.filename = "{}.pdf".format(name)
+		frappe.local.response.filename = f"{name}.pdf"
 
 	frappe.local.response.filecontent = read_multi_pdf(output)
 	frappe.local.response.type = "download"
@@ -110,7 +110,7 @@ def download_multi_pdf(doctype, name, format=None, no_letterhead=False, options=
 
 def read_multi_pdf(output):
 	# Get the content of the merged pdf files
-	fname = os.path.join("/tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
+	fname = os.path.join("/tmp", f"frappe-pdf-{frappe.generate_hash()}.pdf")
 	output.write(open(fname, "wb"))
 
 	with open(fname, "rb") as fileobj:
@@ -149,7 +149,7 @@ def letter_to_pdf(html, title, letterhead=None, attach=False, doctype=None, docn
 	if attach:
 		try:
 			private_files = frappe.get_site_path("private", "files")
-			fname = os.path.join(private_files, "{0}-{1}.pdf".format(title, frappe.generate_hash(length=6)))
+			fname = os.path.join(private_files, f"{title}-{frappe.generate_hash(length=6)}.pdf")
 			with open(fname, "wb") as f:
 				f.write(pdf)
 
@@ -167,7 +167,7 @@ def letter_to_pdf(html, title, letterhead=None, attach=False, doctype=None, docn
 		except Exception:
 			frappe.log_error("Letter error", frappe.get_traceback())
 
-	frappe.local.response.filename = "{0}.pdf".format(title.replace(" ", "-").replace("/", "-"))
+	frappe.local.response.filename = "{}.pdf".format(title.replace(" ", "-").replace("/", "-"))
 	frappe.local.response.filecontent = pdf
 	frappe.local.response.type = "pdf"
 
@@ -229,10 +229,10 @@ def print_by_server(
 			output=output,
 		)
 		if not file_path:
-			file_path = os.path.join("/", "tmp", "frappe-pdf-{0}.pdf".format(frappe.generate_hash()))
+			file_path = os.path.join("/", "tmp", f"frappe-pdf-{frappe.generate_hash()}.pdf")
 		output.write(open(file_path, "wb"))
 		conn.printFile(print_settings.printer_name, file_path, name, {})
-	except IOError as e:
+	except OSError as e:
 		if (
 			"ContentNotFoundError" in e.message
 			or "ContentOperationNotPermittedError" in e.message

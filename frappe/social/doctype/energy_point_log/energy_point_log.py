@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -13,7 +12,6 @@ from frappe.desk.doctype.notification_log.notification_log import (
 	get_title_html,
 )
 from frappe.desk.doctype.notification_settings.notification_settings import (
-	is_email_notifications_enabled,
 	is_email_notifications_enabled_for_type,
 )
 from frappe.model.document import Document
@@ -51,7 +49,7 @@ class EnergyPointLog(Document):
 				"document_name": self.reference_name,
 				"subject": get_notification_message(self),
 				"from_user": reference_user,
-				"email_content": "<div>{}</div>".format(self.reason) if self.reason else None,
+				"email_content": f"<div>{self.reason}</div>" if self.reason else None,
 			}
 
 			enqueue_create_notification(self.user, notification_doc)

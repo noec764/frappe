@@ -222,12 +222,12 @@ def insert_values_for_multiple_docs(all_contents):
 			{
 				"mariadb": """INSERT IGNORE INTO `__global_search`
 				(doctype, name, content, published, title, route)
-				VALUES {0} """.format(
+				VALUES {} """.format(
 					", ".join(batch_values)
 				),
 				"postgres": """INSERT INTO `__global_search`
 				(doctype, name, content, published, title, route)
-				VALUES {0}
+				VALUES {}
 				ON CONFLICT("name", "doctype") DO NOTHING""".format(
 					", ".join(batch_values)
 				),
@@ -522,7 +522,7 @@ def web_search(text, scope=None, start=0, limit=20):
 		mariadb_conditions = postgres_conditions = " ".join([published_condition, scope_condition])
 
 		# https://mariadb.com/kb/en/library/full-text-index-overview/#in-boolean-mode
-		text = '"{}"'.format(text)
+		text = f'"{text}"'
 		mariadb_conditions += "MATCH(`content`) AGAINST ({} IN BOOLEAN MODE)".format(
 			frappe.db.escape("+" + text + "*")
 		)

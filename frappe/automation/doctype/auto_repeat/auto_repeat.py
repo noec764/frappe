@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
-
-
-from dateutil.relativedelta import relativedelta
 
 import frappe
 from frappe import _
@@ -12,7 +8,6 @@ from frappe.contacts.doctype.contact.contact import (
 	get_contacts_linking_to,
 )
 from frappe.core.doctype.communication.email import make
-from frappe.desk.form import assign_to
 from frappe.model.document import Document
 from frappe.utils import (
 	add_days,
@@ -23,7 +18,6 @@ from frappe.utils import (
 	get_first_day,
 	get_last_day,
 	getdate,
-	month_diff,
 	now_datetime,
 	nowdate,
 	split_emails,
@@ -349,7 +343,7 @@ class AutoRepeat(Document):
 			order_by="transaction_date DESC",
 			limit=10,
 		)
-		max_log = max([getdate(x.transaction_date) for x in logs]) if logs else getdate(nowdate())
+		max_log = max(getdate(x.transaction_date) for x in logs) if logs else getdate(nowdate())
 
 		for log in logs:
 			if not frappe.db.exists(log.generated_doctype, log.generated_docname):

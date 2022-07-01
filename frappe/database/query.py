@@ -1,7 +1,7 @@
 import operator
 import re
 from functools import cached_property
-from typing import Any, Callable, Dict, List, Tuple, Union
+from typing import Any, Callable
 
 import frappe
 from frappe import _
@@ -25,7 +25,7 @@ def like(key: Field, value: str) -> frappe.qb:
 	return key.like(value)
 
 
-def func_in(key: Field, value: Union[List, Tuple]) -> frappe.qb:
+def func_in(key: Field, value: list | tuple) -> frappe.qb:
 	"""Wrapper method for `IN`
 
 	Args:
@@ -51,7 +51,7 @@ def not_like(key: Field, value: str) -> frappe.qb:
 	return key.not_like(value)
 
 
-def func_not_in(key: Field, value: Union[List, Tuple]):
+def func_not_in(key: Field, value: list | tuple):
 	"""Wrapper method for `NOT IN`
 
 	Args:
@@ -77,7 +77,7 @@ def func_regex(key: Field, value: str) -> frappe.qb:
 	return key.regex(value)
 
 
-def func_between(key: Field, value: Union[List, Tuple]) -> frappe.qb:
+def func_between(key: Field, value: list | tuple) -> frappe.qb:
 	"""Wrapper method for `BETWEEN`
 
 	Args:
@@ -107,7 +107,7 @@ def func_timespan(key: Field, value: str) -> frappe.qb:
 	return func_between(key, get_timespan_date_range(value))
 
 
-def make_function(key: Any, value: Union[int, str]):
+def make_function(key: Any, value: int | str):
 	"""returns fucntion query
 
 	Args:
@@ -141,7 +141,7 @@ def change_orderby(order: str):
 
 
 # default operators
-OPERATOR_MAP: Dict[str, Callable] = {
+OPERATOR_MAP: dict[str, Callable] = {
 	"+": operator.add,
 	"=": operator.eq,
 	"-": operator.sub,
@@ -191,7 +191,7 @@ class Query:
 
 		return all_operators
 
-	def get_condition(self, table: Union[str, Table], **kwargs) -> frappe.qb:
+	def get_condition(self, table: str | Table, **kwargs) -> frappe.qb:
 		"""Get initial table object
 
 		Args:
@@ -207,7 +207,7 @@ class Query:
 			return frappe.qb.into(table_object)
 		return frappe.qb.from_(table_object)
 
-	def get_table(self, table_name: Union[str, Table]) -> Table:
+	def get_table(self, table_name: str | Table) -> Table:
 		if isinstance(table_name, Table):
 			return table_name
 		table_name = table_name.strip('"').strip("'")
@@ -258,7 +258,7 @@ class Query:
 
 		return conditions
 
-	def misc_query(self, table: str, filters: Union[List, Tuple] = None, **kwargs):
+	def misc_query(self, table: str, filters: list | tuple = None, **kwargs):
 		"""Build conditions using the given Lists or Tuple filters
 
 		Args:
@@ -290,9 +290,7 @@ class Query:
 
 		return self.add_conditions(conditions, **kwargs)
 
-	def dict_query(
-		self, table: str, filters: Dict[str, Union[str, int]] = None, **kwargs
-	) -> frappe.qb:
+	def dict_query(self, table: str, filters: dict[str, str | int] = None, **kwargs) -> frappe.qb:
 		"""Build conditions using the given dictionary filters
 
 		Args:
@@ -329,7 +327,7 @@ class Query:
 	def build_conditions(
 		self,
 		table: str,
-		filters: Union[Dict[str, Union[str, int]], str, int] = None,
+		filters: dict[str, str | int] | str | int = None,
 		**kwargs,
 	) -> frappe.qb:
 		"""Build conditions for sql query
@@ -358,8 +356,8 @@ class Query:
 	def get_sql(
 		self,
 		table: str,
-		fields: Union[List, Tuple],
-		filters: Union[Dict[str, Union[str, int]], str, int, List[Union[List, str, int]]] = None,
+		fields: list | tuple,
+		filters: dict[str, str | int] | str | int | list[list | str | int] = None,
 		**kwargs,
 	):
 		# Clean up state before each query

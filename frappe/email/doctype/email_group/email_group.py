@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -13,7 +12,7 @@ class EmailGroup(Document):
 	def onload(self):
 		singles = [d.name for d in frappe.db.get_all("DocType", "name", {"issingle": 1})]
 		import_types = [
-			{"value": d.parent, "label": "{0} ({1})".format(_(d.parent), _(d.label))}
+			{"value": d.parent, "label": f"{_(d.parent)} ({_(d.label)})"}
 			for d in frappe.db.get_all("DocField", ("parent", "label"), {"options": "Email"})
 			if d.parent not in singles
 		]

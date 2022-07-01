@@ -1,9 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
-import functools
-
 import frappe
 from frappe import _
 from frappe.contacts.address_and_contact import set_link_title
@@ -321,7 +318,7 @@ def get_contact_with_phone_number(number):
 
 	contacts = frappe.get_all(
 		"Contact Phone",
-		filters=[["phone", "like", "%{0}".format(number)]],
+		filters=[["phone", "like", f"%{number}"]],
 		fields=["parent"],
 		limit=1,
 	)

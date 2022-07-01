@@ -1,6 +1,7 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
+
+import json
 
 import google.oauth2.credentials
 import requests
@@ -93,7 +94,7 @@ def authorize_access(g_contact, reauthorize=None):
 				frappe.db.commit()
 
 			frappe.local.response["type"] = "redirect"
-			frappe.local.response["location"] = "/app/Form/Google%20Contacts/{}".format(google_contact.name)
+			frappe.local.response["location"] = f"/app/Form/Google%20Contacts/{google_contact.name}"
 
 			frappe.msgprint(_("Google Contacts has been configured."))
 		except Exception as e:

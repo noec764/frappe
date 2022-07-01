@@ -100,7 +100,7 @@ def get_users(role):
 @frappe.validate_and_sanitize_search_inputs
 def role_query(doctype, txt, searchfield, start, page_len, filters):
 	report_filters = [
-		["Role", "name", "like", "%{}%".format(txt)],
+		["Role", "name", "like", f"%{txt}%"],
 		["Role", "is_custom", "=", 0],
 	]
 	if filters and isinstance(filters, list):

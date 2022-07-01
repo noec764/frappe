@@ -1,8 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies and contributors
 # For license information, please see license.txt
 
-from typing import List, Set
-
 import frappe
 from frappe import _
 from frappe.core.doctype.doctype.doctype import validate_series
@@ -24,7 +22,7 @@ class DocumentNamingSettings(Document):
 
 		return {"transactions": transactions, "prefixes": prefixes}
 
-	def _get_transactions(self) -> List[str]:
+	def _get_transactions(self) -> list[str]:
 
 		readable_doctypes = set(get_doctypes_with_read())
 
@@ -33,7 +31,7 @@ class DocumentNamingSettings(Document):
 
 		return sorted(readable_doctypes.intersection(standard + custom))
 
-	def _get_prefixes(self, doctypes) -> List[str]:
+	def _get_prefixes(self, doctypes) -> list[str]:
 		"""Get all prefixes for naming series.
 
 		- For all templates prefix is evaluated considering today's date
@@ -62,7 +60,7 @@ class DocumentNamingSettings(Document):
 
 		return self._evaluate_and_clean_templates(series_templates)
 
-	def _evaluate_and_clean_templates(self, series_templates: Set[str]) -> List[str]:
+	def _evaluate_and_clean_templates(self, series_templates: set[str]) -> list[str]:
 		evalauted_prefix = set()
 
 		series = frappe.qb.DocType("Series")
@@ -78,7 +76,7 @@ class DocumentNamingSettings(Document):
 
 		return sorted(evalauted_prefix)
 
-	def get_options_list(self, options: str) -> List[str]:
+	def get_options_list(self, options: str) -> list[str]:
 		return [op.strip() for op in options.split("\n") if op.strip()]
 
 	@frappe.whitelist()

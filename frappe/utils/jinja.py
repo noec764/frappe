@@ -3,8 +3,6 @@
 
 from bs4 import BeautifulSoup
 
-from frappe.utils import cint
-
 
 def get_jenv():
 	import frappe
@@ -63,7 +61,7 @@ def validate_template(html):
 	try:
 		jenv.from_string(html)
 	except TemplateSyntaxError as e:
-		frappe.msgprint("Line {}: {}".format(e.lineno, e.message))
+		frappe.msgprint(f"Line {e.lineno}: {e.message}")
 		frappe.throw(frappe._("Syntax error in template"))
 
 
@@ -95,7 +93,7 @@ def render_template(template, context, is_path=None, safe_render=True):
 		except TemplateError:
 			throw(
 				title="Jinja Template Error",
-				msg="<pre>{template}</pre><pre>{tb}</pre>".format(template=template, tb=get_traceback()),
+				msg=f"<pre>{template}</pre><pre>{get_traceback()}</pre>",
 			)
 
 
@@ -126,7 +124,7 @@ def get_jloader():
 
 		frappe.local.jloader = ChoiceLoader(
 			# search for something like app/templates/...
-			[PrefixLoader(dict((app, PackageLoader(app, ".")) for app in apps))]
+			[PrefixLoader({app: PackageLoader(app, ".") for app in apps})]
 			# search for something like templates/...
 			+ [PackageLoader(app, ".") for app in apps]
 		)
@@ -157,7 +155,7 @@ def transform_template_blot(template, context):
 	soup.insert(
 		0,
 		"{% "
-		+ " set doc_values = frappe.get_doc('{0}', '{1}') ".format(
+		+ " set doc_values = frappe.get_doc('{}', '{}') ".format(
 			context.get("doctype"), context.get("name")
 		)
 		+ " %}",
@@ -173,7 +171,7 @@ def transform_template_blot(template, context):
 		new_tag = soup.new_tag("span")
 
 		if f.get("data-doctype") == "Custom Functions" and f.get("data-function") != "null":
-			content = "{{" + "{0}|safe".format(f.get("data-function").split("#", 1)[-1]) + "}}"
+			content = "{{" + "{}|safe".format(f.get("data-function").split("#", 1)[-1]) + "}}"
 			if f.get("data-function").startswith("Signature"):
 				content = soup.new_tag("img", src=content, height=200, width=200)
 				new_tag.append(content)
@@ -188,7 +186,7 @@ def transform_template_blot(template, context):
 			):
 				doctypes.append({f.get("data-doctype"): f.get("data-reference")})
 
-			new_tag.string = "{{ " + "{0}|safe".format(get_newtag_string(f, context)) + " }}"
+			new_tag.string = "{{ " + f"{get_newtag_string(f, context)}|safe" + " }}"
 
 		f.replace_with(new_tag)
 
@@ -199,7 +197,7 @@ def transform_template_blot(template, context):
 				+ " set {0} = frappe.get_doc('{1}', {2}) if {2} else None".format(
 					key.replace(" ", "").lower(),
 					key,
-					"doc.{0}".format(doctype[key]) if "doc" in context else doctype[key],
+					f"doc.{doctype[key]}" if "doc" in context else doctype[key],
 				)
 				+ " %}"
 			)
@@ -225,12 +223,12 @@ def get_newtag_string(field, context):
 		)
 	else:
 		if docname:
-			value = "{0}.{1} or ''".format(docname, field.get("data-value"))
+			value = "{}.{} or ''".format(docname, field.get("data-value"))
 		else:
-			value = "{0} or ''".format(field.get("data-value"))
+			value = "{} or ''".format(field.get("data-value"))
 
 		if field["data-function"] != "null":
-			value = "{0}({1})".format(field.get("data-function"), value)
+			value = "{}({})".format(field.get("data-function"), value)
 
 	return value
 

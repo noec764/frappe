@@ -14,7 +14,7 @@ def execute():
 			path = get_file_path(doctype.module, "doctype", doctype.name)
 			try:
 				read_doc_from_file(path)
-			except IOError:
+			except OSError:
 				continue
 
 			frappe.reload_doc(doctype.module, "doctype", doctype.name, force=True)

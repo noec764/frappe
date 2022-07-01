@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -43,7 +42,7 @@ def export_languages_json():
 
 def sync_languages():
 	"""Sync frappe/geo/languages.json with Language"""
-	with open(frappe.get_app_path("frappe", "geo", "languages.json"), "r") as f:
+	with open(frappe.get_app_path("frappe", "geo", "languages.json")) as f:
 		data = json.loads(f.read())
 
 	for l in data:
@@ -60,7 +59,7 @@ def sync_languages():
 
 def update_language_names():
 	"""Update frappe/geo/languages.json names (for use via patch)"""
-	with open(frappe.get_app_path("frappe", "geo", "languages.json"), "r") as f:
+	with open(frappe.get_app_path("frappe", "geo", "languages.json")) as f:
 		data = json.loads(f.read())
 
 	for l in data:

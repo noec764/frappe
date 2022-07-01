@@ -1,8 +1,6 @@
 # Copyright (c) 2021, Dokos and Contributors
 # License: MIT. See LICENSE
 
-from typing import Optional
-
 import frappe
 import frappe.defaults
 from frappe import _
@@ -77,7 +75,7 @@ def get_roles_and_doctypes():
 
 
 @frappe.whitelist()
-def get_permissions(doctype: Optional[str] = None, role: Optional[str] = None):
+def get_permissions(doctype: str | None = None, role: str | None = None):
 	frappe.only_for("System Manager")
 
 	if role:

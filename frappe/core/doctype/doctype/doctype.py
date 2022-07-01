@@ -248,7 +248,7 @@ class DocType(Document):
 
 		self.flags.update_fields_to_fetch_queries = []
 
-		if set(old_fields_to_fetch) != set(df.fieldname for df in new_meta.get_fields_to_fetch()):
+		if set(old_fields_to_fetch) != {df.fieldname for df in new_meta.get_fields_to_fetch()}:
 			for df in new_meta.get_fields_to_fetch():
 				if df.fieldname not in old_fields_to_fetch:
 					link_fieldname, source_fieldname = df.fetch_from.split(".", 1)
@@ -386,7 +386,7 @@ class DocType(Document):
 		try:
 			frappe.db.updatedb(self.name, Meta(self))
 		except Exception as e:
-			print("\n\nThere was an issue while migrating the DocType: {}\n".format(self.name))
+			print(f"\n\nThere was an issue while migrating the DocType: {self.name}\n")
 			raise e
 
 		self.change_modified_of_parent()
@@ -560,7 +560,7 @@ class DocType(Document):
 		):
 			fname = os.path.join(new_path, fname.format(frappe.scrub(new)))
 			if os.path.exists(fname):
-				with open(fname, "r") as f:
+				with open(fname) as f:
 					code = f.read()
 				with open(fname, "w") as f:
 					if fname.endswith(".js"):
@@ -575,7 +575,7 @@ class DocType(Document):
 					f.write(file_content)
 
 		# updating json file with new name
-		doctype_json_path = os.path.join(new_path, "{}.json".format(frappe.scrub(new)))
+		doctype_json_path = os.path.join(new_path, f"{frappe.scrub(new)}.json")
 		current_data = frappe.get_file_json(doctype_json_path)
 		current_data["name"] = new
 
@@ -650,7 +650,7 @@ class DocType(Document):
 		path = get_file_path(self.module, "DocType", self.name)
 		if os.path.exists(path):
 			try:
-				with open(path, "r") as txtfile:
+				with open(path) as txtfile:
 					olddoc = json.loads(txtfile.read())
 
 				old_field_names = [f["fieldname"] for f in olddoc.get("fields", [])]
@@ -819,7 +819,7 @@ class DocType(Document):
 			},
 		)
 
-		parent_field_label = "Parent {}".format(self.name)
+		parent_field_label = f"Parent {self.name}"
 		parent_field_name = frappe.scrub(parent_field_label)
 		self.append(
 			"fields",
@@ -1441,7 +1441,7 @@ def validate_fields(meta):
 
 	def check_max_height(docfield):
 		if getattr(docfield, "max_height", None) and (docfield.max_height[-2:] not in ("px", "em")):
-			frappe.throw("Max for {} height must be in px, em, rem".format(frappe.bold(docfield.fieldname)))
+			frappe.throw(f"Max for {frappe.bold(docfield.fieldname)} height must be in px, em, rem")
 
 	def check_no_of_ratings(docfield):
 		if docfield.fieldtype == "Rating":

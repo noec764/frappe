@@ -9,7 +9,7 @@ from dateutil.rrule import rrulestr
 
 import frappe
 from frappe import _
-from frappe.utils import formatdate, get_datetime, get_weekdays, getdate
+from frappe.utils import formatdate, get_datetime, get_weekdays
 
 RRULE_FREQUENCIES = {
 	"RRULE:FREQ=DAILY": "Daily",
@@ -28,7 +28,7 @@ RRULE_DAYS = {
 	"SU": "sunday",
 }
 
-FRAMEWORK_FREQUENCIES = {v: "{};".format(k) for k, v in RRULE_FREQUENCIES.items()}
+FRAMEWORK_FREQUENCIES = {v: f"{k};" for k, v in RRULE_FREQUENCIES.items()}
 FRAMEWORK_DAYS = {v: k for k, v in RRULE_DAYS.items()}
 
 

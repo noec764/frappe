@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -89,7 +88,7 @@ def get_permission_query_conditions(user):
 	if "System Manager" in roles:
 		return """(`tabNotification Settings`.name != 'Administrator')"""
 
-	return """(`tabNotification Settings`.name = {user})""".format(user=frappe.db.escape(user))
+	return f"""(`tabNotification Settings`.name = {frappe.db.escape(user)})"""
 
 
 @frappe.whitelist()

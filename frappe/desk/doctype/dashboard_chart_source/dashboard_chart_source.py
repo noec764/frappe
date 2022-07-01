@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -20,7 +19,6 @@ def get_config(name):
 			scrub(doc.name),
 			scrub(doc.name) + ".js",
 		),
-		"r",
 	) as f:
 		return f.read()
 

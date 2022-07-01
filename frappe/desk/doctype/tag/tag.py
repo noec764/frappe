@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -58,7 +57,7 @@ def get_tagged_docs(doctype, tag):
 
 @frappe.whitelist()
 def get_tags(doctype, txt):
-	tag = frappe.get_list("Tag", filters=[["name", "like", "%{}%".format(txt)]])
+	tag = frappe.get_list("Tag", filters=[["name", "like", f"%{txt}%"]])
 	tags = [t.name for t in tag]
 
 	return sorted(filter(lambda t: t and txt.lower() in t.lower(), list(set(tags))))
@@ -81,7 +80,7 @@ class DocTags:
 	def add(self, dn, tag):
 		"""add a new user tag"""
 		tl = self.get_tags(dn).split(",")
-		if not tag in tl:
+		if tag not in tl:
 			tl.append(tag)
 			if not frappe.db.exists("Tag", tag):
 				frappe.get_doc({"doctype": "Tag", "name": tag}).insert(ignore_permissions=True)
@@ -106,7 +105,7 @@ class DocTags:
 			tags = "," + ",".join(tl)
 		try:
 			frappe.db.sql(
-				"update `tab%s` set _user_tags=%s where name=%s" % (self.dt, "%s", "%s"), (tags, dn)
+				"update `tab{}` set _user_tags={} where name={}".format(self.dt, "%s", "%s"), (tags, dn)
 			)
 			doc = frappe.get_doc(self.dt, dn)
 			update_tags(doc, tags)

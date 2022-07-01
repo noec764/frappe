@@ -2,7 +2,6 @@
 # License: MIT. See LICENSE
 import os
 import shutil
-from typing import List
 
 import frappe
 import frappe.defaults
@@ -203,7 +202,7 @@ def update_naming_series(doc):
 			revert_series_if_last(doc.meta.autoname, doc.name, doc)
 
 
-def delete_from_table(doctype: str, name: str, ignore_doctypes: List[str], doc):
+def delete_from_table(doctype: str, name: str, ignore_doctypes: list[str], doc):
 	if doctype != "DocType" and doctype == name:
 		frappe.db.delete("Singles", {"doctype": name})
 	else:
@@ -350,7 +349,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					reference_doctype = refdoc.parenttype if meta.istable else df.parent
 
 					reference_docname = refdoc.parent if meta.istable else refdoc.name
-					at_position = "at Row: {0}".format(refdoc.idx) if meta.istable else ""
+					at_position = f"at Row: {refdoc.idx}" if meta.istable else ""
 
 					if reference_doctype in DOCTYPES_TO_SKIP or (
 						reference_doctype in ignore_linked_doctypes and method == "Cancel"
@@ -362,8 +361,8 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 
 
 def raise_link_exists_exception(doc, reference_doctype, reference_docname, row=""):
-	doc_link = '<a href="/app/{0}/{1}">{2}</a>'.format(doc.doctype, doc.name, _(doc.name))
-	reference_link = '<a href="#Form/{0}/{1}">{2}</a>'.format(
+	doc_link = f'<a href="/app/{doc.doctype}/{doc.name}">{_(doc.name)}</a>'
+	reference_link = '<a href="#Form/{}/{}">{}</a>'.format(
 		reference_doctype, reference_docname, _(reference_docname)
 	)
 
@@ -449,7 +448,7 @@ def insert_feed(doc):
 			"doctype": "Comment",
 			"comment_type": "Deleted",
 			"reference_doctype": doc.doctype,
-			"subject": "{0} {1}".format(_(doc.doctype), doc.name),
+			"subject": f"{_(doc.doctype)} {doc.name}",
 			"full_name": get_fullname(doc.owner),
 		}
 	).insert(ignore_permissions=True)

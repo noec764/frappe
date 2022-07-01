@@ -22,7 +22,7 @@ def get_contact_list(txt, page_length=20):
 		return cached_contacts[:page_length]
 
 	match_conditions = build_match_conditions("Contact")
-	match_conditions = "and {0}".format(match_conditions) if match_conditions else ""
+	match_conditions = f"and {match_conditions}" if match_conditions else ""
 
 	out = frappe.db.sql(
 		"""select email_id as value,
@@ -87,7 +87,7 @@ def get_communication_doctype(doctype, txt, searchfield, start, page_len, filter
 			d[0] for d in frappe.db.get_values("DocType", {"issingle": 0, "istable": 0, "hide_toolbar": 0})
 		]
 
-	filtered_doctypes = tuple([v for v in com_doctypes if re.search(txt + ".*", _(v), re.IGNORECASE)])
+	filtered_doctypes = tuple(v for v in com_doctypes if re.search(txt + ".*", _(v), re.IGNORECASE))
 	allowed_doctypes = frappe.permissions.get_doctypes_with_read()
 
 	valid_doctypes = sorted(set(filtered_doctypes).intersection(set(allowed_doctypes)))

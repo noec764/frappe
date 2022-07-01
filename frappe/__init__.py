@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Union
+from typing import TYPE_CHECKING, Any, Callable
 
 import click
 from werkzeug.local import Local, release_local
@@ -94,7 +94,7 @@ def _(msg, lang=None, context=None) -> str:
 
 	translated_string = ""
 	if context:
-		string_key = "{msg}:::{context}".format(msg=msg, context=context)
+		string_key = f"{msg}:::{context}"
 		translated_string = get_full_dict(lang).get(string_key)
 
 	if not translated_string:
@@ -159,8 +159,8 @@ if TYPE_CHECKING:
 	from frappe.query_builder.builder import MariaDB, Postgres
 	from frappe.utils.redis_wrapper import RedisWrapper
 
-	db: Union[MariaDBDatabase, PostgresDatabase]
-	qb: Union[MariaDB, Postgres]
+	db: MariaDBDatabase | PostgresDatabase
+	qb: MariaDB | Postgres
 
 # end: static analysis hack
 
@@ -298,10 +298,10 @@ def get_site_config(sites_path=None, site_path=None):
 			try:
 				config.update(get_file_json(site_config))
 			except Exception as error:
-				click.secho("{0}/site_config.json is invalid".format(local.site), fg="red")
+				click.secho(f"{local.site}/site_config.json is invalid", fg="red")
 				print(error)
 		elif local.site and not local.flags.new_site:
-			raise IncorrectSitePath("{0} does not exist".format(local.site))  # noqa
+			raise IncorrectSitePath(f"{local.site} does not exist")  # noqa
 
 	return _dict(config)
 
@@ -993,7 +993,7 @@ def get_precision(doctype, fieldname, currency=None, doc=None):
 	return get_field_precision(get_meta(doctype).get_field(fieldname), doc, currency)
 
 
-def generate_hash(txt: Optional[str] = None, length: Optional[int] = None) -> str:
+def generate_hash(txt: str | None = None, length: int | None = None) -> str:
 	"""Generates random hash for given text + current timestamp + random string."""
 	import hashlib
 	import time
@@ -1405,7 +1405,7 @@ def get_doc_hooks():
 
 
 @request_cache
-def _load_app_hooks(app_name: Optional[str] = None):
+def _load_app_hooks(app_name: str | None = None):
 	hooks = {}
 	apps = [app_name] if app_name else get_installed_apps(sort=True)
 
@@ -1428,7 +1428,7 @@ def _load_app_hooks(app_name: Optional[str] = None):
 
 
 def get_hooks(
-	hook: str = None, default: Optional[Any] = "_KEEP_DEFAULT_LIST", app_name: str = None
+	hook: str = None, default: Any | None = "_KEEP_DEFAULT_LIST", app_name: str = None
 ) -> _dict:
 	"""Get hooks via `app/hooks.py`
 
@@ -1511,7 +1511,7 @@ def get_file_items(path, raise_not_found=False, ignore_empty_lines=True):
 
 def get_file_json(path):
 	"""Read a file and return parsed JSON object."""
-	with open(path, "r") as f:
+	with open(path) as f:
 		return json.load(f)
 
 
@@ -1521,10 +1521,10 @@ def read_file(path, raise_not_found=False):
 		path = path.encode("utf-8")
 
 	if os.path.exists(path):
-		with open(path, "r") as f:
+		with open(path) as f:
 			return as_unicode(f.read())
 	elif raise_not_found:
-		raise IOError("{} Not Found".format(path))
+		raise OSError(f"{path} Not Found")
 	else:
 		return None
 
@@ -1554,7 +1554,7 @@ def call(fn, *args, **kwargs):
 	return fn(*args, **newargs)
 
 
-def get_newargs(fn: Callable, kwargs: Dict[str, Any]) -> Dict[str, Any]:
+def get_newargs(fn: Callable, kwargs: dict[str, Any]) -> dict[str, Any]:
 	"""Remove any kwargs that are not supported by the function.
 	Example:
 	        >>> def fn(a=1, b=2): pass
@@ -1786,8 +1786,8 @@ def redirect_to_message(title, html, http_status_code=None, context=None, indica
 	if indicator_color:
 		message["context"].update({"indicator_color": indicator_color})
 
-	cache().set_value("message_id:{0}".format(message_id), message, expires_in_sec=60)
-	location = "/message?id={0}".format(message_id)
+	cache().set_value(f"message_id:{message_id}", message, expires_in_sec=60)
+	location = f"/message?id={message_id}"
 
 	if not getattr(local, "is_ajax", False):
 		local.response["type"] = "redirect"
@@ -1873,7 +1873,7 @@ def get_value(*args, **kwargs):
 	return db.get_value(*args, **kwargs)
 
 
-def as_json(obj: Union[Dict, List], indent=1, separators=None) -> str:
+def as_json(obj: dict | list, indent=1, separators=None) -> str:
 	from frappe.utils.response import json_handler
 
 	if separators is None:
@@ -1907,7 +1907,7 @@ def get_test_records(doctype):
 		"test_records.json",
 	)
 	if os.path.exists(path):
-		with open(path, "r") as f:
+		with open(path) as f:
 			return json.loads(f.read())
 	else:
 		return []
@@ -2197,7 +2197,7 @@ def get_desk_link(doctype, name):
 
 
 def bold(text):
-	return "<strong>{0}</strong>".format(text)
+	return f"<strong>{text}</strong>"
 
 
 def safe_eval(code, eval_globals=None, eval_locals=None):
@@ -2225,10 +2225,10 @@ def safe_eval(code, eval_globals=None, eval_locals=None):
 
 	for attribute in UNSAFE_ATTRIBUTES:
 		if attribute in code:
-			throw('Illegal rule {0}. Cannot use "{1}"'.format(bold(code), attribute))
+			throw(f'Illegal rule {bold(code)}. Cannot use "{attribute}"')
 
 	if "__" in code:
-		throw('Illegal rule {0}. Cannot use "__"'.format(bold(code)))
+		throw(f'Illegal rule {bold(code)}. Cannot use "__"')
 
 	if not eval_globals:
 		eval_globals = {}

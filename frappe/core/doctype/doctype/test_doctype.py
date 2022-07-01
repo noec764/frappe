@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 import random
 import string
 import unittest
-from typing import Dict, List, Optional
 from unittest.mock import patch
 
 import frappe
@@ -188,7 +186,7 @@ class TestDocType(unittest.TestCase):
 					"custom": 1,
 					"fields": [
 						{
-							"fieldname": "{0}_field".format(field_option),
+							"fieldname": f"{field_option}_field",
 							"fieldtype": "Data",
 							"options": field_option,
 						}
@@ -732,10 +730,10 @@ class TestDocType(unittest.TestCase):
 
 
 def new_doctype(
-	name: Optional[str] = None,
+	name: str | None = None,
 	unique: bool = False,
 	depends_on: str = "",
-	fields: Optional[List[Dict]] = None,
+	fields: list[dict] | None = None,
 	**kwargs,
 ):
 	if not name:

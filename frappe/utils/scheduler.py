@@ -63,12 +63,12 @@ def enqueue_events_for_all_sites():
 			enqueue_events_for_site(site=site)
 		except Exception as e:
 			# it should try to enqueue other sites
-			print(e.__class__, "Failed to enqueue events for site: {}".format(site))
+			print(e.__class__, f"Failed to enqueue events for site: {site}")
 
 
 def enqueue_events_for_site(site):
 	def log_and_raise():
-		error_message = "Exception in Enqueue Events for Site {0}\n{1}".format(
+		error_message = "Exception in Enqueue Events for Site {}\n{}".format(
 			site, frappe.get_traceback()
 		)
 		frappe.logger("scheduler").error(error_message)
@@ -81,10 +81,10 @@ def enqueue_events_for_site(site):
 
 		enqueue_events(site=site)
 
-		frappe.logger("scheduler").debug("Queued events for site {0}".format(site))
+		frappe.logger("scheduler").debug(f"Queued events for site {site}")
 	except frappe.db.OperationalError as e:
 		if frappe.db.is_access_denied(e):
-			frappe.logger("scheduler").debug("Access denied for site {0}".format(site))
+			frappe.logger("scheduler").debug(f"Access denied for site {site}")
 		else:
 			log_and_raise()
 	except Exception:

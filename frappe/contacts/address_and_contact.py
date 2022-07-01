@@ -1,9 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
 import functools
-from typing import Dict, List
 
 import frappe
 from frappe import _
@@ -117,9 +115,7 @@ def get_permission_query_conditions(doctype):
 		# when everything is not permitted
 		for df in links.get("not_permitted_links"):
 			# like ifnull(customer, '')='' and ifnull(supplier, '')=''
-			conditions.append(
-				"ifnull(`tab{doctype}`.`{fieldname}`, '')=''".format(doctype=doctype, fieldname=df.fieldname)
-			)
+			conditions.append(f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')=''")
 
 		return "( " + " and ".join(conditions) + " )"
 
@@ -128,9 +124,7 @@ def get_permission_query_conditions(doctype):
 
 		for df in links.get("permitted_links"):
 			# like ifnull(customer, '')!='' or ifnull(supplier, '')!=''
-			conditions.append(
-				"ifnull(`tab{doctype}`.`{fieldname}`, '')!=''".format(doctype=doctype, fieldname=df.fieldname)
-			)
+			conditions.append(f"ifnull(`tab{doctype}`.`{df.fieldname}`, '')!=''")
 
 		return "( " + " or ".join(conditions) + " )"
 
@@ -171,8 +165,8 @@ def delete_contact_and_address(doctype, docname):
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
 def filter_dynamic_link_doctypes(
-	doctype, txt: str, searchfield, start, page_len, filters: Dict
-) -> List[List[str]]:
+	doctype, txt: str, searchfield, start, page_len, filters: dict
+) -> list[list[str]]:
 	from frappe.permissions import get_doctypes_with_read
 
 	txt = txt or ""

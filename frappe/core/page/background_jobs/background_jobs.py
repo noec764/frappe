@@ -1,7 +1,7 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-from typing import TYPE_CHECKING, Dict, List
+from typing import TYPE_CHECKING
 
 import frappe
 from frappe.utils import convert_utc_to_user_timezone
@@ -20,7 +20,7 @@ JOB_COLORS = {
 
 
 @frappe.whitelist()
-def get_info(view=None, queue_timeout=None, job_status=None) -> List[Dict]:
+def get_info(view=None, queue_timeout=None, job_status=None) -> list[dict]:
 	jobs = []
 
 	def add_job(job: "Job", queue: str) -> None:

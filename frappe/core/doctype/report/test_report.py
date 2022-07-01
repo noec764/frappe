@@ -22,7 +22,7 @@ class TestReport(FrappeTestCase):
 		if frappe.db.exists("Report", "User Activity Report"):
 			frappe.delete_doc("Report", "User Activity Report")
 
-		with open(os.path.join(os.path.dirname(__file__), "user_activity_report.json"), "r") as f:
+		with open(os.path.join(os.path.dirname(__file__), "user_activity_report.json")) as f:
 			frappe.get_doc(json.loads(f.read())).insert()
 
 		report = frappe.get_doc("Report", "User Activity Report")
@@ -227,7 +227,6 @@ class TestReport(FrappeTestCase):
 			frappe.delete_doc("Report", "User Activity Report Without Sort")
 		with open(
 			os.path.join(os.path.dirname(__file__), "user_activity_report_without_sort.json"),
-			"r",
 		) as f:
 			frappe.get_doc(json.loads(f.read())).insert()
 

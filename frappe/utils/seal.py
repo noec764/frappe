@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Dokos and contributors
 # License: MIT. See LICENSE
 
@@ -6,8 +5,6 @@ import datetime
 import hashlib
 
 import frappe
-from frappe import _
-from frappe.model.document import Document
 from frappe.utils import get_datetime
 from frappe.utils.data import DATETIME_FORMAT
 

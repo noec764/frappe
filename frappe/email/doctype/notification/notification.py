@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 import json
@@ -398,7 +397,7 @@ def get_context(context):
 			template = ""
 			template_path = os.path.join(os.path.dirname(module.__file__), frappe.scrub(self.name) + extn)
 			if os.path.exists(template_path):
-				with open(template_path, "r") as f:
+				with open(template_path) as f:
 					template = f.read()
 			return template
 

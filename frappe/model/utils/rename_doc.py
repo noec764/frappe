@@ -2,7 +2,6 @@
 # License: MIT. See LICENSE
 
 from itertools import product
-from typing import Dict, List, Optional
 
 import frappe
 from frappe.model.rename_doc import get_link_fields
@@ -13,7 +12,7 @@ def update_linked_doctypes(
 	docname: str,
 	linked_to: str,
 	value: str,
-	ignore_doctypes: Optional[List] = None,
+	ignore_doctypes: list | None = None,
 ):
 	"""
 	linked_doctype_info_list = list formed by get_fetch_fields() function
@@ -35,8 +34,8 @@ def update_linked_doctypes(
 
 
 def get_fetch_fields(
-	doctype: str, linked_to: str, ignore_doctypes: Optional[List] = None
-) -> List[Dict]:
+	doctype: str, linked_to: str, ignore_doctypes: list | None = None
+) -> list[dict]:
 	"""
 	doctype = Master DocType in which the changes are being made
 	linked_to = DocType name of the field thats being updated in Master

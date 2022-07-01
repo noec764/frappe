@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -152,7 +151,7 @@ class AutoEmailReport(Document):
 		)
 
 	def get_file_name(self):
-		return "{0}.{1}".format(self.report.replace(" ", "-").replace("/", "-"), self.format.lower())
+		return "{}.{}".format(self.report.replace(" ", "-").replace("/", "-"), self.format.lower())
 
 	def prepare_dynamic_filters(self):
 		self.filters = frappe.parse_json(self.filters)

@@ -1,7 +1,5 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
-
 
 import unittest
 from unittest.mock import MagicMock, patch
@@ -62,7 +60,7 @@ class TestSocialLoginKey(unittest.TestCase):
 
 def make_social_login_key(**kwargs):
 	kwargs["doctype"] = "Social Login Key"
-	if not "provider_name" in kwargs:
+	if "provider_name" not in kwargs:
 		kwargs["provider_name"] = "Test OAuth2 Provider"
 	doc = frappe.get_doc(kwargs)
 	return doc

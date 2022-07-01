@@ -1,9 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 import json
 
 import frappe
+from frappe import _
 from frappe.desk.form.load import get_attachments
 from frappe.desk.query_report import generate_report_result
 from frappe.model.document import Document
@@ -102,7 +102,7 @@ def delete_prepared_reports(reports):
 def create_json_gz_file(data, dt, dn):
 	# Storing data in CSV file causes information loss
 	# Reports like P&L Statement were completely unsuable because of this
-	json_filename = "{0}.json.gz".format(
+	json_filename = "{}.json.gz".format(
 		frappe.utils.data.format_datetime(frappe.utils.now(), "Y-m-d-H:M")
 	)
 	encoded_content = frappe.safe_encode(frappe.as_json(data))

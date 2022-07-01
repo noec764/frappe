@@ -312,9 +312,9 @@ def delete_communication(event, reference_doctype, reference_docname):
 def get_permission_query_conditions(user):
 	if not user:
 		user = frappe.session.user
-	return """(`tabEvent`.`event_type`='Public' or `tabEvent`.`owner`=%(user)s)""" % {
-		"user": frappe.db.escape(user),
-	}
+	return """(`tabEvent`.`event_type`='Public' or `tabEvent`.`owner`={user})""".format(
+		user=frappe.db.escape(user),
+	)
 
 
 def has_permission(doc, user):
@@ -439,9 +439,7 @@ def get_events(
 			tables=", ".join(tables),
 			filter_condition=filter_condition,
 			reminder_condition="AND coalesce(`tabEvent`.send_reminder, 0)=1" if for_reminder else "",
-			limit_condition="LIMIT %s OFFSET %s" % (limit_page_length, limit_start)
-			if limit_page_length
-			else "",
+			limit_condition=f"LIMIT {limit_page_length} OFFSET {limit_start}" if limit_page_length else "",
 			additional_condition=additional_condition or "",
 		),
 		{

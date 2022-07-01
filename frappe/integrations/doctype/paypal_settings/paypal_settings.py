@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
@@ -108,11 +107,11 @@ class PayPalSettings(Document):
 	]
 
 	def __setup__(self):
-		setattr(self, "use_sandbox", 0)
+		setattr(self, "use_sandbox", 0)  # noqa
 
 	def setup_sandbox_env(self, token):
 		data = json.loads(frappe.db.get_value("Integration Request", token, "data"))
-		setattr(self, "use_sandbox", cint(frappe._dict(data).use_sandbox) or 0)
+		setattr(self, "use_sandbox", cint(frappe._dict(data).use_sandbox) or 0)  # noqa
 
 	def validate(self):
 		create_payment_gateway("PayPal")
@@ -171,7 +170,7 @@ class PayPalSettings(Document):
 			frappe.throw(_("Invalid payment gateway credentials"))
 
 	def get_payment_url(self, **kwargs):
-		setattr(self, "use_sandbox", cint(kwargs.get("use_sandbox", 0)))
+		setattr(self, "use_sandbox", cint(kwargs.get("use_sandbox", 0)))  # noqa
 
 		response = self.execute_set_express_checkout(**kwargs)
 
@@ -196,7 +195,7 @@ class PayPalSettings(Document):
 		params.update(
 			{
 				"METHOD": "SetExpressCheckout",
-				"returnUrl": get_url("{0}.get_express_checkout_details".format(api_path)),
+				"returnUrl": get_url(f"{api_path}.get_express_checkout_details"),
 				"cancelUrl": get_url("/payment-cancel"),
 				"PAYMENTREQUEST_0_PAYMENTACTION": "SALE",
 				"PAYMENTREQUEST_0_AMT": kwargs["amount"],
@@ -334,7 +333,7 @@ def confirm_payment(token):
 				).run_method("on_payment_authorized", "Completed")
 				frappe.db.commit()
 
-			redirect_url = "/integrations/payment-success?doctype={0}&docname={1}".format(
+			redirect_url = "/integrations/payment-success?doctype={}&docname={}".format(
 				data.get("reference_doctype"), data.get("reference_docname")
 			)
 		else:
@@ -407,7 +406,7 @@ def create_recurring_profile(token, payerid):
 				).run_method("on_payment_authorized", status_changed_to)
 				frappe.db.commit()
 
-			redirect_url = "/integrations/payment-success?doctype={0}&docname={1}".format(
+			redirect_url = "/integrations/payment-success?doctype={}&docname={}".format(
 				data.get("reference_doctype"), data.get("reference_docname")
 			)
 		else:
@@ -430,11 +429,9 @@ def get_redirect_uri(doc, token, payerid):
 	data = json.loads(doc.data)
 
 	if data.get("subscription_details") or data.get("subscription_id"):
-		return get_url(
-			"{0}.create_recurring_profile?token={1}&payerid={2}".format(api_path, token, payerid)
-		)
+		return get_url(f"{api_path}.create_recurring_profile?token={token}&payerid={payerid}")
 	else:
-		return get_url("{0}.confirm_payment?token={1}".format(api_path, token))
+		return get_url(f"{api_path}.confirm_payment?token={token}")
 
 
 def manage_recurring_payment_profile_status(profile_id, action, args, url):
@@ -481,7 +478,7 @@ def ipn_handler():
 			queue="long",
 			timeout=600,
 			is_async=True,
-			**{"doctype": "Integration Request", "docname": doc.name}
+			**{"doctype": "Integration Request", "docname": doc.name},
 		)
 
 	except frappe.InvalidStatusError:
