@@ -55,7 +55,7 @@ frappe.ui.quick_access.QuickAccessMenu = class {
 				label: w.label,
 				title: w.title,
 				icon: w.icon,
-				route: '/app/' + frappe.router.slug(w.name),
+				route: (w.public ? '/app/' : '/app/private/') + frappe.router.slug(w.name),
 				color: w.color,
 			})).sort((a,b) => a.label.localeCompare(b.label)),
 		])
