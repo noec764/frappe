@@ -136,7 +136,7 @@ frappe.router = {
 
 		if (frappe.workspaces[route[0]]) {
 			// public workspace
-			route = ['Workspaces', frappe.workspaces[route[0]].title];
+			route = ['Workspaces', frappe.workspaces[route[0]].name || frappe.workspaces[route[0]].title];
 		} else if (route[0] == 'private' && frappe.workspaces[route[1]]) {
 			// private workspace
 			route = ['Workspaces', 'private', (frappe.workspaces[route[1]].name || frappe.workspaces[route[1]].title)];
