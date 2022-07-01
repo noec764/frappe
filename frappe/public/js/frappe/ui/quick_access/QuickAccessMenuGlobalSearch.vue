@@ -149,7 +149,7 @@ import { bus } from './bus'
 
 export default {
 	name: 'QuickAccessMenuSearchBarAlt',
-	
+
 	props: {
 		value: { type: String, default: '' },
 	},
