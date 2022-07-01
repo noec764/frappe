@@ -11,7 +11,7 @@ $gray-100: #F4F5F6;
 $gray-50: #F9FAFA;
 $primary: #6195ff;
 
-$blue-500: #6195ff;
+$blue-500: #2D95F0;
 
 $text-color: $gray-900;
 $border-color: $gray-100;
@@ -67,7 +67,6 @@ hr {
 	font-family: $font-stack;
 	font-size: 14px;
 	line-height: 1.4;
-
 	.brand-logo {
 		margin: auto;
 		text-align: center;
@@ -78,19 +77,12 @@ hr {
 		width: auto;
 		margin-bottom: 10px;
 	}
-
 	td {
 		font-family: $font-stack;
 	}
 
 	.body-content {
 		padding: 20px 0;
-	}
-}
-
-@media only screen and (max-width: 600px) {
-	.email-container {
-		width: 90%;
 	}
 }
 
@@ -156,7 +148,7 @@ hr {
 	}
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 700px) {
 	.body-table.with-container {
 		.body-content {
 			padding: 30px 20px;
@@ -344,6 +336,7 @@ blockquote {
 	padding: 1px 15px;
 	position: relative;
 	margin-left: 0px;
+	border-left: 2px solid $gray-300;
 	p {
 		margin: 5px 0;
 	}
