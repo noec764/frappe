@@ -4,7 +4,7 @@
 # Database Module
 # --------------------
 
-from frappe.database.database import savepoint
+from frappe.database.database import savepoint  # noqa
 
 
 def setup_database(force, source_sql=None, verbose=None, no_mariadb_socket=False):

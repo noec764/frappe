@@ -10,50 +10,50 @@ from frappe.defaults import *
 
 class TestDefaults(unittest.TestCase):
 	def test_global(self):
-		clear_user_default("key1")
-		set_global_default("key1", "value1")
-		self.assertEqual(get_global_default("key1"), "value1")
+		clear_user_default("key1")  # noqa
+		set_global_default("key1", "value1")  # noqa
+		self.assertEqual(get_global_default("key1"), "value1")  # noqa
 
-		set_global_default("key1", "value2")
-		self.assertEqual(get_global_default("key1"), "value2")
+		set_global_default("key1", "value2")  # noqa
+		self.assertEqual(get_global_default("key1"), "value2")  # noqa
 
-		add_global_default("key1", "value3")
-		self.assertEqual(get_global_default("key1"), "value2")
-		self.assertEqual(get_defaults()["key1"], ["value2", "value3"])
-		self.assertEqual(get_user_default_as_list("key1"), ["value2", "value3"])
+		add_global_default("key1", "value3")  # noqa
+		self.assertEqual(get_global_default("key1"), "value2")  # noqa
+		self.assertEqual(get_defaults()["key1"], ["value2", "value3"])  # noqa
+		self.assertEqual(get_user_default_as_list("key1"), ["value2", "value3"])  # noqa
 
 	def test_user(self):
-		set_user_default("key1", "2value1")
-		self.assertEqual(get_user_default_as_list("key1"), ["2value1"])
+		set_user_default("key1", "2value1")  # noqa
+		self.assertEqual(get_user_default_as_list("key1"), ["2value1"])  # noqa
 
-		set_user_default("key1", "2value2")
-		self.assertEqual(get_user_default("key1"), "2value2")
+		set_user_default("key1", "2value2")  # noqa
+		self.assertEqual(get_user_default("key1"), "2value2")  # noqa
 
-		add_user_default("key1", "3value3")
-		self.assertEqual(get_user_default("key1"), "2value2")
-		self.assertEqual(get_user_default_as_list("key1"), ["2value2", "3value3"])
+		add_user_default("key1", "3value3")  # noqa
+		self.assertEqual(get_user_default("key1"), "2value2")  # noqa
+		self.assertEqual(get_user_default_as_list("key1"), ["2value2", "3value3"])  # noqa
 
 	def test_global_if_not_user(self):
-		set_global_default("key4", "value4")
-		self.assertEqual(get_user_default("key4"), "value4")
+		set_global_default("key4", "value4")  # noqa
+		self.assertEqual(get_user_default("key4"), "value4")  # noqa
 
 	def test_clear(self):
-		set_user_default("key5", "value5")
-		self.assertEqual(get_user_default("key5"), "value5")
-		clear_user_default("key5")
-		self.assertEqual(get_user_default("key5"), None)
+		set_user_default("key5", "value5")  # noqa
+		self.assertEqual(get_user_default("key5"), "value5")  # noqa
+		clear_user_default("key5")  # noqa
+		self.assertEqual(get_user_default("key5"), None)  # noqa
 
 	def test_clear_global(self):
-		set_global_default("key6", "value6")
-		self.assertEqual(get_user_default("key6"), "value6")
+		set_global_default("key6", "value6")  # noqa
+		self.assertEqual(get_user_default("key6"), "value6")  # noqa
 
-		clear_default("key6", value="value6")
-		self.assertEqual(get_user_default("key6"), None)
+		clear_default("key6", value="value6")  # noqa
+		self.assertEqual(get_user_default("key6"), None)  # noqa
 
 	def test_user_permission_on_defaults(self):
-		self.assertEqual(get_global_default("language"), "en")
-		self.assertEqual(get_user_default("language"), "en")
-		self.assertEqual(get_user_default_as_list("language"), ["en"])
+		self.assertEqual(get_global_default("language"), "en")  # noqa
+		self.assertEqual(get_user_default("language"), "en")  # noqa
+		self.assertEqual(get_user_default_as_list("language"), ["en"])  # noqa
 
 		old_user = frappe.session.user
 		user = "test@example.com"
@@ -68,9 +68,9 @@ class TestDefaults(unittest.TestCase):
 			)
 		).insert(ignore_permissions=True)
 
-		self.assertEqual(get_global_default("language"), None)
-		self.assertEqual(get_user_default("language"), None)
-		self.assertEqual(get_user_default_as_list("language"), [])
+		self.assertEqual(get_global_default("language"), None)  # noqa
+		self.assertEqual(get_user_default("language"), None)  # noqa
+		self.assertEqual(get_user_default_as_list("language"), [])  # noqa
 
 		frappe.delete_doc("User Permission", perm_doc.name)
 		frappe.set_user(old_user)
