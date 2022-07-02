@@ -378,7 +378,7 @@ frappe.views.Workspace = class Workspace {
 
 	setup_actions(page) {
 		let pages = page.public ? this.public_pages : this.private_pages;
-		let current_page = pages.filter(p => (p.name == page.name || p.title == page.name))[0];
+		let current_page = pages.filter(p => (p.name == page.name))[0];
 
 		if (!this.is_read_only) {
 			this.setup_customization_buttons(current_page);
