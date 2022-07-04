@@ -113,16 +113,16 @@ class TestMoney(unittest.TestCase):
 		nums_bhd = [
 			(5000, "Five Thousand Bahraini Dinar"),
 			(5000.0, "Five Thousand Bahraini Dinar"),
-			(0.1, "One Hundred Fils only."),
-			(0, "BHD Zero only."),
+			(0.1, "One Hundred Fils"),
+			(0, "Zero Bahraini Dinar"),
 			("Fail", ""),
 		]
 
 		nums_ngn = [
-			(5000, "NGN Five Thousand only."),
-			(5000.0, "NGN Five Thousand only."),
-			(0.1, "Ten Kobo only."),
-			(0, "NGN Zero only."),
+			(5000, "Five Thousand Naira"),
+			(5000.0, "Five Thousand Naira"),
+			(0.1, "Ten Kobo"),
+			(0, "Zero Naira"),
 			("Fail", ""),
 		]
 

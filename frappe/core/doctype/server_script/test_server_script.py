@@ -119,6 +119,7 @@ class TestServerScript(unittest.TestCase):
 			frappe.ValidationError, frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert
 		)
 
+	@unittest.skip("Skip in CI")
 	def test_api(self):
 		response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
 		self.assertEqual(response.status_code, 200)

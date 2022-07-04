@@ -692,7 +692,7 @@ class TestSiteMigration(BaseTestCommands):
 
 class TestBenchBuild(BaseTestCommands):
 	def test_build_assets_size_check(self):
-		with cli(frappe.commands.utils.build, "--force --production") as result:
+		with cli(frappe.commands.utils.build, "--production") as result:
 			self.assertEqual(result.exit_code, 0)
 			self.assertEqual(result.exception, None)
 
