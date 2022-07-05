@@ -3,14 +3,14 @@
 
 import unittest
 from contextlib import contextmanager
-from datetime import datetime, timedelta
+from datetime import timedelta
 from unittest.mock import patch
 
 import frappe
 from frappe.app import make_form_dict
 from frappe.desk.doctype.note.note import Note
 from frappe.model.naming import make_autoname, parse_naming_series, revert_series_if_last
-from frappe.utils import cast, cint, get_datetime, now_datetime, set_request
+from frappe.utils import cint, now_datetime, set_request
 from frappe.website.serve import get_response
 
 from . import update_system_settings
@@ -254,12 +254,7 @@ class TestDocument(unittest.TestCase):
 				"module": "Custom",
 				"custom": 1,
 				"fields": [
-					{
-						"label": "Currency",
-						"fieldname": "currency",
-						"reqd": 1,
-						"fieldtype": "Currency",
-					},
+					{"label": "Currency", "fieldname": "currency", "reqd": 1, "fieldtype": "Currency"},
 				],
 			}
 		).insert(ignore_if_duplicate=True)
@@ -384,59 +379,6 @@ class TestDocument(unittest.TestCase):
 						frappe.get_attr(hook)
 					except Exception as e:
 						self.fail(f"Invalid doc hook: {doctype}:{hook}\n{e}")
-
-	def test_date_casting(self):
-		create_time_custom_field()
-
-		_datetime_str = "2022-02-13 12:02:33.713418"
-		_datetime = get_datetime(_datetime_str)
-
-		# Check if the system parses the string for date and time
-		todo = frappe.get_doc(
-			{
-				"doctype": "ToDo",
-				"description": "test_date_and_time_casting",
-				"date": _datetime_str,
-				"time": _datetime_str,
-			}
-		).insert()
-
-		self.assertEqual(todo.date, cast("Date", _datetime_str))
-		self.assertEqual(todo.time, cast("Time", _datetime_str))
-
-		# Check if the system parses the datetime object for date and time
-		todo.date = _datetime
-		todo.time = _datetime
-		todo.save()
-
-		self.assertEqual(todo.date, cast("Date", _datetime))
-		self.assertEqual(todo.time, cast("Time", _datetime))
-
-		# Check if the system parses the datetime object for date and time
-		todo.date = None
-		todo.time = None
-		todo.save()
-
-		self.assertEqual(todo.date, None)
-		self.assertEqual(todo.time, None)
-
-		# Check for standard datetime fields
-		self.assertIsInstance(todo.creation, datetime)
-		self.assertIsInstance(todo.modified, datetime)
-
-
-def create_time_custom_field():
-	if not frappe.db.exists({"doctype": "Custom Field", "dt": "ToDo", "fieldname": "time"}):
-		frappe.get_doc(
-			{
-				"doctype": "Custom Field",
-				"label": "Time",
-				"dt": "ToDo",
-				"fieldname": "time",
-				"fieldtype": "Time",
-				"insert_after": "date",
-			}
-		).insert()
 
 
 class TestDocumentWebView(unittest.TestCase):

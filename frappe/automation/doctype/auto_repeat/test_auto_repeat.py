@@ -10,7 +10,7 @@ from frappe.automation.doctype.auto_repeat.auto_repeat import (
 	get_auto_repeat_entries,
 )
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
-from frappe.utils import add_days, add_months, cast, getdate, today
+from frappe.utils import add_days, add_months, getdate, today
 
 
 def add_custom_fields():
@@ -45,7 +45,7 @@ class TestAutoRepeat(unittest.TestCase):
 		).insert()
 
 		doc = make_auto_repeat(reference_document=todo.name, start_date=getdate(today()))
-		self.assertEqual(doc.next_schedule_date, cast("Date", today()))
+		self.assertEqual(getdate(doc.next_schedule_date), getdate(today()))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 		frappe.db.commit()
@@ -103,7 +103,7 @@ class TestAutoRepeat(unittest.TestCase):
 		doc = frappe.get_doc("Auto Repeat", doc.name)
 		doc.db_set("disabled", 0)
 
-		months = get_months(getdate(start_date), cast("Date", today()))
+		months = get_months(getdate(start_date), getdate(today()))
 		data = get_auto_repeat_entries(getdate(today()))
 		create_repeated_entries(data)
 
