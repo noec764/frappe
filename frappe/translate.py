@@ -757,7 +757,7 @@ def get_server_messages(app):
 
 	for basepath, folders, files in app_walk:
 		folders[:] = [
-			folder for folder in folders if folder not in {".git", "query_builder", "__pycache__"}
+			folder for folder in folders if folder not in {".git", "query_builder", "__pycache__", "dist"}
 		]
 
 		for f in files:
