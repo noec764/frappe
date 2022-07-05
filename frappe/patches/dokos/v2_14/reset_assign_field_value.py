@@ -1,0 +1,7 @@
+import frappe
+
+def execute():
+	for dt in frappe.get_all("DocType", filters={"issingle": 0, "is_virtual": 0, "istable": 0}, pluck="name"):
+		if frappe.get_meta(dt).has_field("_assign"):
+			for dn in frappe.get_all(dt, filters={"_assign": "[]"}, pluck="name"):
+				frappe.db.set_value(dt, dn, "_assign", None)

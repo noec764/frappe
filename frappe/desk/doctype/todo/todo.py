@@ -66,8 +66,13 @@ class ToDo(Document):
 				fields=["owner"], as_list=True)]
 
 			assignments.reverse()
-			frappe.db.set_value(self.reference_type, self.reference_name,
-				"_assign", json.dumps(assignments), update_modified=False)
+			frappe.db.set_value(
+				self.reference_type,
+				self.reference_name,
+				"_assign",
+				json.dumps(assignments) if assignments else None,
+				update_modified=False,
+			)
 
 		except Exception as e:
 			if frappe.db.is_table_missing(e) and frappe.flags.in_install:
@@ -90,7 +95,7 @@ def get_permission_query_conditions(user):
 	if not user: user = frappe.session.user
 
 	todo_roles = frappe.permissions.get_doctype_roles('ToDo')
-	if 'All' in todo_roles: 
+	if 'All' in todo_roles:
 		todo_roles.remove('All')
 
 	if any(check in todo_roles for check in frappe.get_roles(user)):
@@ -102,7 +107,7 @@ def get_permission_query_conditions(user):
 def has_permission(doc, ptype="read", user=None):
 	user = user or frappe.session.user
 	todo_roles = frappe.permissions.get_doctype_roles('ToDo', ptype)
-	if 'All' in todo_roles: 
+	if 'All' in todo_roles:
 		todo_roles.remove('All')
 
 	if any(check in todo_roles for check in frappe.get_roles(user)):
