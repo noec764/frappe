@@ -16,7 +16,7 @@ from frappe.model.base_document import BaseDocument, get_controller
 from frappe.model.docstatus import DocStatus
 from frappe.model.naming import set_new_name, validate_name
 from frappe.model.workflow import set_workflow_state_on_action, validate_workflow
-from frappe.utils import cstr, date_diff, file_lock, flt, get_datetime_str, now
+from frappe.utils import cast, cstr, date_diff, file_lock, flt, get_datetime_str, now
 from frappe.utils.data import get_absolute_url
 from frappe.utils.global_search import update_global_search
 
@@ -30,10 +30,9 @@ def get_doc(*args, **kwargs):
 
 	There are multiple ways to call `get_doc`
 
-	# will fetch the latest user object (with child table) from the database
+	1. will fetch the latest user object (with child table) from the database
 	user = get_doc("User", "test@example.com")
-
-	# create a new object
+	2. create a new object
 	user = get_doc({
 	                "doctype":"User"
 	                "email_id": "test@example.com",
@@ -41,11 +40,9 @@ def get_doc(*args, **kwargs):
 	                                {"role": "System Manager"}
 	                ]
 	})
-
-	# create new object with keyword arguments
+	3. create new object with keyword arguments
 	user = get_doc(doctype='User', email_id='test@example.com')
-
-	# select a document for update
+	4. select a document for update
 	user = get_doc("User", "test@example.com", for_update=True)
 	"""
 	if args:
@@ -142,7 +139,8 @@ class Document(BaseDocument):
 
 			if not d:
 				frappe.throw(
-					_("{0} {1} not found").format(_(self.doctype), self.name), frappe.DoesNotExistError
+					_("{0} {1} not found").format(_(self.doctype), self.name),
+					frappe.DoesNotExistError,
 				)
 
 			super().__init__(d)
@@ -419,17 +417,23 @@ class Document(BaseDocument):
 
 		if rows:
 			# select rows that do not match the ones in the document
-			deleted_rows = frappe.db.sql(
-				"""select name from `tab{}` where parent=%s
-				and parenttype=%s and parentfield=%s
-				and name not in ({})""".format(
-					df.options, ",".join(["%s"] * len(rows))
-				),
-				[self.name, self.doctype, fieldname] + rows,
+			Table = frappe.qb.DocType(df.options)
+
+			deleted_rows = (
+				frappe.qb.from_(Table)
+				.select(Table.name)
+				.where(
+					(Table.parent == self.name)
+					& (Table.parenttype == self.doctype)
+					& (Table.parentfield == fieldname)
+					& (Table.name.notin(rows))
+				)
+				.run(pluck=True)
 			)
-			if len(deleted_rows) > 0:
+
+			if deleted_rows:
 				# delete rows that do not match the ones in the document
-				frappe.db.delete(df.options, {"name": ("in", tuple(row[0] for row in deleted_rows))})
+				frappe.db.delete(df.options, {"name": ("in", deleted_rows)})
 
 		else:
 			# no rows found, delete all rows
@@ -527,11 +531,10 @@ class Document(BaseDocument):
 		frappe.db.delete("Singles", {"doctype": self.doctype})
 		for field, value in d.items():
 			if field != "doctype":
-				frappe.db.sql(
-					"""insert into `tabSingles` (doctype, field, value)
-					values (%s, %s, %s)""",
-					(self.doctype, field, value),
-				)
+				Singles = frappe.qb.DocType("Singles")
+				frappe.qb.into(Singles).columns(Singles.doctype, Singles.field, Singles.value).insert(
+					self.doctype, field, value
+				).run()
 
 		if self.doctype in frappe.db.value_cache:
 			del frappe.db.value_cache[self.doctype]
@@ -589,6 +592,7 @@ class Document(BaseDocument):
 			d._extract_images_from_text_editor()
 			d._sanitize_content()
 			d._save_passwords()
+
 		if self.is_new():
 			# don't set fields like _assign, _comments for new doc
 			for fieldname in optional_fields:
@@ -795,32 +799,35 @@ class Document(BaseDocument):
 		self._action = "save"
 		if not self.get("__islocal") and not self.meta.get("is_virtual"):
 			if self.meta.issingle:
-				modified = frappe.db.sql(
-					"""select value from tabSingles
-					where doctype=%s and field='modified' for update""",
-					self.doctype,
+				Singles = frappe.qb.DocType("Singles")
+				modified = (
+					frappe.qb.from_(Singles)
+					.select(Singles.value)
+					.where((Singles.doctype == self.doctype) & (Singles.field == "modified"))
+					.for_update()
+					.run(pluck=True)
 				)
-				modified = modified and modified[0][0]
-				if modified and modified != cstr(self._original_modified):
+				modified = modified and modified[0]
+
+				if modified and cast("Datetime", modified) != cast("Datetime", self._original_modified):
 					conflict = True
 			else:
-				tmp = frappe.db.sql(
-					"""select modified, docstatus from `tab{}`
-					where name = %s for update""".format(
-						self.doctype
-					),
-					self.name,
-					as_dict=True,
+				Table = frappe.qb.DocType(self.doctype)
+				tmp = (
+					frappe.qb.from_(Table)
+					.select(Table.modified, Table.docstatus)
+					.where(Table.name == self.name)
+					.for_update()
+					.run(as_dict=True)
 				)
 
 				if not tmp:
 					frappe.throw(_("Record does not exist"))
-				else:
-					tmp = tmp[0]
 
-				modified = cstr(tmp.modified)
+				tmp = tmp[0]
+				modified = tmp.modified
 
-				if modified and modified != cstr(self._original_modified):
+				if modified and cast("Datetime", modified) != cast("Datetime", self._original_modified):
 					conflict = True
 
 				self.check_docstatus_transition(tmp.docstatus)
@@ -828,7 +835,7 @@ class Document(BaseDocument):
 			if conflict:
 				frappe.msgprint(
 					_("Error: Document has been modified after you have opened it")
-					+ (f" ({modified}, {self.modified}). ")
+					+ (f" ({cstr(modified)}, {cstr(self.modified)}). ")
 					+ _("Please refresh to get the latest document."),
 					raise_exception=frappe.TimestampMismatchError,
 				)

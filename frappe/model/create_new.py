@@ -13,7 +13,7 @@ import frappe.defaults
 from frappe.core.doctype.user_permission.user_permission import get_user_permissions
 from frappe.model import data_fieldtypes
 from frappe.permissions import filter_allowed_docs_for_doctype
-from frappe.utils import cstr, now_datetime, nowdate, nowtime
+from frappe.utils import cstr, nowdate
 
 
 def get_new_doc(doctype, parent_doc=None, parentfield=None, as_dict=False):
@@ -145,12 +145,6 @@ def set_dynamic_default_values(doc, parent_doc, parentfield):
 				default_value = get_default_based_on_another_field(df, user_permissions, parent_doc)
 				if default_value is not None and not doc.get(df.fieldname):
 					doc[df.fieldname] = default_value
-
-			elif df.fieldtype == "Datetime" and df.default.lower() == "now":
-				doc[df.fieldname] = now_datetime()
-
-		if df.fieldtype == "Time":
-			doc[df.fieldname] = nowtime()
 
 	if parent_doc:
 		doc["parent"] = parent_doc.name

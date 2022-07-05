@@ -172,6 +172,15 @@ def to_timedelta(time_str: str | datetime.time) -> datetime.timedelta:
 		return time_str
 
 
+def to_datetime(
+	datetime_str: str | datetime.datetime, format: str | None = None
+) -> datetime.datetime:
+	if isinstance(datetime_str, datetime.datetime):
+		return datetime_str
+	elif isinstance(datetime_str, str):
+		return datetime.datetime.strptime(datetime_str, format or DATETIME_FORMAT)
+
+
 @typing.overload
 def add_to_date(
 	date,
@@ -986,13 +995,11 @@ def floor(s):
 
 	Parameters
 	----------
-	s : int or str or Decimal object
-	        The mathematical value to be floored
+	s : int or str or Decimal object. The mathematical value to be floored
 
 	Returns
 	-------
-	int
-	        number representing the largest integer less than or equal to the specified number
+	int: number representing the largest integer less than or equal to the specified number
 
 	"""
 	try:
@@ -1008,13 +1015,11 @@ def ceil(s):
 
 	Parameters
 	----------
-	s : int or str or Decimal object
-	        The mathematical value to be ceiled
+	s : int or str or Decimal object. The mathematical value to be ceiled
 
 	Returns
 	-------
-	int
-	        smallest integer greater than or equal to the given number
+	int: smallest integer greater than or equal to the given number
 
 	"""
 	try:
@@ -2168,3 +2173,6 @@ def parse_timedelta(s: str) -> datetime.timedelta:
 		m = TIMEDELTA_BASE_PATTERN.match(s)
 
 	return datetime.timedelta(**{key: float(val) for key, val in m.groupdict().items()})
+
+
+DEFAULT_DATETIME_SHORTCUTS = ["Today", "__today", "now", "Now"]
