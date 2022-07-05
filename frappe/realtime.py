@@ -57,7 +57,7 @@ def publish_realtime(
 
 		if task_id:
 			room = get_task_progress_room(task_id)
-			if not "task_id" in message:
+			if "task_id" not in message:
 				message["task_id"] = task_id
 
 			after_commit = False
@@ -67,10 +67,6 @@ def publish_realtime(
 			room = get_doc_room(doctype, docname)
 		else:
 			room = get_site_room()
-	else:
-		# frappe.chat
-		room = get_chat_room(room)
-		# end frappe.chat
 
 	if after_commit:
 		params = [event, message, room]
@@ -143,9 +139,3 @@ def get_site_room():
 
 def get_task_progress_room(task_id):
 	return "".join([frappe.local.site, ":task_progress:", task_id])
-
-
-def get_chat_room(room):
-	room = "".join([frappe.local.site, ":room:", room])
-
-	return room
