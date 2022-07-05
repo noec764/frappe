@@ -19,7 +19,6 @@
   "column_break_7",
   "float_precision",
   "currency_precision",
-  "currency_symbol_position",
   "first_day_of_the_week",
   "sec_backup_limit",
   "backup_limit",
@@ -424,14 +423,6 @@
    "label": "Logout All Sessions on Password Reset"
   },
   {
-   "default": "Right",
-   "fieldname": "currency_symbol_position",
-   "fieldtype": "Select",
-   "label": "Currency Symbol Position",
-   "options": "Left\nRight",
-   "reqd": 1
-  },
-  {
    "default": "0",
    "fieldname": "enable_onboarding",
    "fieldtype": "Check",
@@ -552,7 +543,7 @@
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2022-06-21 13:55:04.796152",
+ "modified": "2022-07-05 13:55:04.796152",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",

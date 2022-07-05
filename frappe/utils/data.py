@@ -1223,10 +1223,12 @@ def fmt_money(
 	if currency and frappe.defaults.get_global_default("hide_currency_symbol") != "Yes":
 		symbol = frappe.db.get_value("Currency", currency, "symbol", cache=True) or currency
 
-		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
-			amount = frappe._(symbol) + " " + amount
+		symbol_on_right = frappe.db.get_value("Currency", currency, "symbol_on_right", cache=True)
+
+		if symbol_on_right:
+			amount = f"{amount} {frappe._(symbol)}"
 		else:
-			amount = amount + " " + frappe._(symbol)
+			amount = f"{frappe._(symbol)} {amount}"
 
 	return amount
 
@@ -1293,6 +1295,8 @@ def money_in_words(
 		frappe.db.get_value("Currency", main_currency, "title", cache=True) or main_currency
 	)
 
+	symbol_on_right = frappe.db.get_value("Currency", main_currency, "symbol_on_right", cache=True)
+
 	fraction_length = get_number_format_info(number_format)[2]
 
 	n = f"%.{fraction_length}f" % number
@@ -1310,18 +1314,20 @@ def money_in_words(
 
 	# 0.00
 	if main == "0" and fraction in ["00", "000"]:
-		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
-			out = "{} {}".format(currency_title, _("Zero"))
-		else:
+		if symbol_on_right:
 			out = "{} {}".format(_("Zero"), currency_title)
+		else:
+			out = "{} {}".format(currency_title, _("Zero"))
+
 	# 0.XX
 	elif main == "0":
 		out = _(in_words(fraction, in_million).title()) + " " + fraction_currency
 	else:
-		if frappe.defaults.get_global_default("currency_symbol_position") == "Left":
-			out = currency_title + " " + _(in_words(main, in_million).title())
-		else:
+		if symbol_on_right:
 			out = _(in_words(main, in_million).title()) + " " + currency_title
+		else:
+			out = currency_title + " " + _(in_words(main, in_million).title())
+
 		if cint(fraction):
 			out = (
 				out

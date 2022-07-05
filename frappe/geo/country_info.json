@@ -45,6 +45,7 @@
     "Andorra": {
         "code": "ad",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -189,6 +190,7 @@
     "Austria": {
         "code": "at",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -274,6 +276,7 @@
     "Belgium": {
         "code": "be",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -886,6 +889,7 @@
     "Estonia": {
         "code": "ee",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "currency_name": "Euro",
@@ -943,6 +947,7 @@
     "Finland": {
         "code": "fi",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -957,6 +962,7 @@
     "France": {
         "code": "fr",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1033,6 +1039,7 @@
     "Germany": {
         "code": "de",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1074,6 +1081,7 @@
     "Greece": {
         "code": "gr",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1321,6 +1329,7 @@
     "Ireland": {
         "code": "ie",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1359,6 +1368,7 @@
     "Italy": {
         "code": "it",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1620,6 +1630,7 @@
     "Luxembourg": {
         "code": "lu",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1715,6 +1726,7 @@
     "Malta": {
         "code": "mt",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1819,6 +1831,7 @@
     "Monaco": {
         "code": "mc",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1849,6 +1862,7 @@
     "Montenegro": {
         "code": "me",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -1949,6 +1963,7 @@
     "Netherlands": {
         "code": "nl",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -2194,6 +2209,7 @@
     "Portugal": {
         "code": "pt",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -2343,6 +2359,7 @@
     "San Marino": {
         "code": "sm",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -2446,6 +2463,7 @@
     "Slovakia": {
         "code": "sk",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -2460,6 +2478,7 @@
     "Slovenia": {
         "code": "si",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,
@@ -2533,6 +2552,7 @@
     "Spain": {
         "code": "es",
         "currency": "EUR",
+        "symbol_on_right": 1,
         "currency_fraction": "Cent",
         "currency_fraction_units": 100,
         "smallest_currency_fraction_value": 0.01,

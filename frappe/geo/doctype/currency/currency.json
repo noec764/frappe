@@ -16,6 +16,7 @@
   "fraction_units",
   "smallest_currency_fraction_value",
   "symbol",
+  "symbol_on_right",
   "number_format"
  ],
  "fields": [
@@ -75,15 +76,22 @@
    "fieldname": "title",
    "fieldtype": "Data",
    "label": "Title"
+},
+{
+ "default": "0",
+ "fieldname": "symbol_on_right",
+ "fieldtype": "Check",
+ "label": "Show Currency Symbol on Right Side"
   }
  ],
  "icon": "fa fa-bitcoin",
  "idx": 1,
  "links": [],
- "modified": "2020-10-29 06:33:12.879978",
+ "modified": "2022-07-04 09:42:52.425440",
  "modified_by": "Administrator",
  "module": "Geo",
  "name": "Currency",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -106,6 +114,7 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "title",
  "track_changes": 1
 }

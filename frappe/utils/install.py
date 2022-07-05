@@ -236,6 +236,7 @@ def add_country_and_currency(name, country):
 				"fraction_units": country.currency_fraction_units,
 				"smallest_currency_fraction_value": country.smallest_currency_fraction_value,
 				"number_format": country.number_format,
+				"symbol_on_right": country.symbol_on_right,
 				"docstatus": 0,
 			}
 		).db_insert()

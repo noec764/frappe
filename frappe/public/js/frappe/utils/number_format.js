@@ -122,21 +122,22 @@ window.format_number = function (v, format, decimals) {
 };
 
 function format_currency(v, currency, decimals) {
-	var format = get_number_format(currency);
-	var symbol = get_currency_symbol(currency);
-	if(decimals === undefined) {
+	const format = get_number_format(currency);
+	const symbol = get_currency_symbol(currency);
+	const show_symbol_on_right = frappe.model.get_value(":Currency", currency, "symbol_on_right") ?? false;
+
+	if (decimals === undefined) {
 		decimals = frappe.boot.sysdefaults.currency_precision || frappe.boot.sysdefaults.float_precision || null;
 	}
 
 	if (symbol) {
-		if (frappe.boot && frappe.boot.sysdefaults && frappe.boot.sysdefaults.currency_symbol_position === "Left") {
-			return __(symbol) + " " + format_number(v, format, decimals);
-		} else {
+		if (show_symbol_on_right) {
 			return format_number(v, format, decimals) + " " + __(symbol);
 		}
-	} else {
-		return format_number(v, format, decimals);
+		return __(symbol) + " " + format_number(v, format, decimals);
 	}
+
+	return format_number(v, format, decimals);
 }
 
 function get_currency_symbol(currency) {
