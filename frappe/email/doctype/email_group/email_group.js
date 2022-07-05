@@ -106,10 +106,7 @@ class SubscriberImportDialog {
 		this.filters = []
 
 		if (doctype == this.frm.doc.import_doctype) {
-			const obj = JSON.parse(this.frm.doc.import_filters)
-			this.filters = Object.keys(obj).length ? Object.keys(obj).map(f => {
-				return [doctype, f, obj[f][0], obj[f][1]]
-			}) : []
+			this.filters = JSON.parse(this.frm.doc.import_filters)
 		}
 
 		this.filter_group = new frappe.ui.FilterGroup({
@@ -128,17 +125,8 @@ class SubscriberImportDialog {
 	}
 
 	process_data(data) {
-		let stats_filter = {};
-
 		if (this.filter_group) {
-			let filters = this.filter_group.get_filters();
-			if (filters.length) {
-				filters.forEach((arr) => {
-					stats_filter[arr[1]] = [arr[2], arr[3]];
-				});
-
-				data.filters = JSON.stringify(stats_filter);
-			}
+			data.filters = JSON.stringify(this.filter_group.get_filters());
 		}
 
 		return data;

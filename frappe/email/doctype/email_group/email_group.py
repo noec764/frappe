@@ -40,6 +40,7 @@ class EmailGroup(Document):
 		][0]
 		unsubscribed_field = "unsubscribed" if meta.get_field("unsubscribed") else None
 		added = 0
+		emails = []
 
 		frappe.flags.mute_messages = True
 		for user in frappe.db.get_all(
@@ -61,9 +62,16 @@ class EmailGroup(Document):
 					).insert(ignore_permissions=True)
 
 					added += 1
+					emails.append(email)
 			except frappe.UniqueValidationError:
-				continue
+				emails.append(email)
 		frappe.flags.mute_messages = False
+
+		if self.flags.from_auto_import:
+			for user in frappe.get_all(
+				"Email Group Member", filters={"email_group": self.name, "email": ("not in", emails)}
+			):
+				frappe.delete_doc("Email Group Member", user.name)
 
 		return added
 
@@ -139,5 +147,7 @@ def auto_update_email_groups():
 	email_groups = frappe.get_all("Email Group", filters={"auto_update": 1}, pluck="name")
 	for email_group in email_groups:
 		doc = frappe.get_doc("Email Group", email_group)
+		doc.flags.from_auto_import = True
 		doc.import_data()
+		doc.flags.from_auto_import = False
 		doc.update_total_subscribers()
