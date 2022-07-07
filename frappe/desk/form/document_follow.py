@@ -186,7 +186,7 @@ def get_version(doctype, doc_name, frequency, user):
 
 
 def get_comments(doctype, doc_name, frequency, user):
-	from html2text import html2text
+	from frappe.core.utils import html2text
 
 	timeline = []
 	filters = get_filters("reference_name", doc_name, frequency, user)
@@ -232,7 +232,7 @@ def get_follow_users(doctype, doc_name):
 
 
 def get_row_changed(row_changed, time, doctype, doc_name, v):
-	from html2text import html2text
+	from frappe.core.utils import html2text
 
 	items = []
 	for d in row_changed:
@@ -276,7 +276,7 @@ def get_added_row(added, time, doctype, doc_name, v):
 
 
 def get_field_changed(changed, time, doctype, doc_name, v):
-	from html2text import html2text
+	from frappe.core.utils import html2text
 
 	items = []
 	for d in changed:
