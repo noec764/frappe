@@ -1,6 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
 
 import unittest
 
@@ -19,12 +18,7 @@ class TestQueryReport(unittest.TestCase):
 		data.columns = [
 			{"label": "Column A", "fieldname": "column_a", "fieldtype": "Float"},
 			{"label": "Column B", "fieldname": "column_b", "width": 100, "fieldtype": "Float"},
-			{
-				"label": "Column C",
-				"fieldname": "column_c",
-				"width": 150,
-				"fieldtype": "Duration",
-			},
+			{"label": "Column C", "fieldname": "column_c", "width": 150, "fieldtype": "Duration"},
 		]
 		data.result = [
 			[1.0, 3.0, 600],
@@ -45,7 +39,12 @@ class TestQueryReport(unittest.TestCase):
 		self.assertListEqual(column_widths, [0, 10, 15])
 
 		for row in xlsx_data:
-			self.assertEqual(type(row), list)
+			self.assertIsInstance(row, list)
+
+		# ensure all types are preserved
+		for row in xlsx_data[1:]:
+			for cell in row:
+				self.assertIsInstance(cell, (int, float))
 
 	def test_xlsx_export_with_composite_cell_value(self):
 		"""Test excel export using rows with composite cell value"""
