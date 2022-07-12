@@ -197,7 +197,7 @@ $.extend(frappe.datetime, {
 	},
 
 	global_date_format: function(d) {
-		var m = moment(d);
+		var m = moment(d).locale(frappe.boot.lang);
 		if(m._f && m._f.indexOf("HH")!== -1) {
 			return m.format("Do MMMM YYYY, hh:mm A");
 		} else {
