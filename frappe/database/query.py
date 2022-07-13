@@ -170,11 +170,10 @@ class Query:
 
 	@cached_property
 	def OPERATOR_MAP(self):
+		from frappe.boot import get_additional_filters_from_hooks
+
 		# default operators
 		all_operators = OPERATOR_MAP.copy()
-
-		# update with site-specific custom operators
-		from frappe.boot import get_additional_filters_from_hooks
 
 		additional_filters_config = get_additional_filters_from_hooks()
 
