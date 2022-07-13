@@ -4,7 +4,6 @@
 
 import frappe
 from frappe.cache_manager import clear_defaults_cache, common_default_keys
-from frappe.desk.notifications import clear_notifications
 from frappe.query_builder import DocType
 
 # Note: DefaultValue records are identified by parenttype
@@ -243,8 +242,4 @@ def get_defaults_for(parent="__default"):
 
 
 def _clear_cache(parent):
-	if parent in common_default_keys:
-		frappe.clear_cache()
-	else:
-		clear_notifications(user=parent)
-		frappe.clear_cache(user=parent)
+	frappe.clear_cache(user=parent if parent not in common_default_keys else None)
