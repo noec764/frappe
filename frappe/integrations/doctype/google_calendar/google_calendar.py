@@ -13,7 +13,7 @@ from googleapiclient.errors import HttpError
 
 import frappe
 from frappe import _
-from frappe.integrations.doctype.google_settings.google_settings import get_auth_url
+from frappe.integrations.google_oauth import GoogleOAuth
 from frappe.model.document import Document
 from frappe.utils import (
 	convert_utc_to_user_timezone,
@@ -56,7 +56,7 @@ class GoogleCalendar(Document):
 		}
 
 		try:
-			r = requests.post(get_auth_url(), data=data).json()
+			r = requests.post(GoogleOAuth.OAUTH_URL, data=data).json()
 		except requests.exceptions.HTTPError:
 			button_label = frappe.bold(_("Allow Google Calendar Access"))
 			frappe.throw(
@@ -103,7 +103,7 @@ def authorize_access(g_calendar, reauthorize=None):
 				"redirect_uri": redirect_uri,
 				"grant_type": "authorization_code",
 			}
-			r = requests.post(get_auth_url(), data=data).json()
+			r = requests.post(GoogleOAuth.OAUTH_URL, data=data).json()
 
 			if "refresh_token" in r:
 				frappe.db.set_value(
@@ -168,7 +168,7 @@ def get_google_calendar_object(g_calendar):
 	credentials_dict = {
 		"token": account.get_access_token(),
 		"refresh_token": account.refresh_token,
-		"token_uri": get_auth_url(),
+		"token_uri": GoogleOAuth.OAUTH_URL,
 		"client_id": google_settings.client_id or frappe.conf.google_client_id,
 		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 		or frappe.conf.google_client_secret,

@@ -1,7 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
 
-
 import imaplib
 import poplib
 
