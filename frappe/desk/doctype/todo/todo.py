@@ -83,12 +83,11 @@ class ToDo(Document):
 			)
 
 			assignments.reverse()
-
 			frappe.db.set_value(
 				self.reference_type,
 				self.reference_name,
 				"_assign",
-				json.dumps(assignments),
+				json.dumps(assignments) if assignments else None,
 				update_modified=False,
 			)
 
