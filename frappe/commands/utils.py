@@ -10,7 +10,7 @@ import frappe
 from frappe.commands import get_site, pass_context
 from frappe.coverage import CodeCoverage
 from frappe.exceptions import SiteNotSpecifiedError
-from frappe.utils import cint, update_progress_bar
+from frappe.utils import update_progress_bar
 
 DATA_IMPORT_DEPRECATION = (
 	"[DEPRECATED] The `import-csv` command used 'Data Import Legacy' which has been deprecated.\n"
@@ -878,7 +878,6 @@ def run_ui_tests(
 		and os.path.exists(real_events_plugin_path)
 		and os.path.exists(testing_library_path)
 		and os.path.exists(coverage_plugin_path)
-		and cint(subprocess.getoutput("npm view cypress version")[:1]) >= 6
 	):
 		# install cypress
 		click.secho("Installing Cypress...", fg="yellow")
