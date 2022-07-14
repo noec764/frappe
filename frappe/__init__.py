@@ -210,7 +210,7 @@ def init(site: str, sites_path: str = ".", new_site: bool = False) -> None:
 	local.task_id = None
 
 	local.conf = _dict(get_site_config())
-	local.lang = local.conf.lang
+	local.lang = local.conf.lang or "en"
 	local.lang_full_dict = None
 
 	local.module_app = None

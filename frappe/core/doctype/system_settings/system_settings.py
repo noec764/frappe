@@ -4,6 +4,7 @@
 
 import frappe
 from frappe import _
+from frappe.installer import update_site_config
 from frappe.model import no_value_fields
 from frappe.model.document import Document
 from frappe.translate import set_default_language
@@ -58,6 +59,12 @@ class SystemSettings(Document):
 		if frappe.flags.update_last_reset_password_date:
 			update_last_reset_password_date()
 
+		self.update_lang_in_site_config()
+
+	def update_lang_in_site_config(self):
+		if frappe.conf.lang != self.language:
+			update_site_config("lang", self.language)
+
 
 def update_last_reset_password_date():
 	frappe.db.sql(
@@ -72,7 +79,7 @@ def update_last_reset_password_date():
 
 @frappe.whitelist()
 def load():
-	if not "System Manager" in frappe.get_roles():
+	if "System Manager" not in frappe.get_roles():
 		frappe.throw(_("Not permitted"), frappe.PermissionError)
 
 	all_defaults = frappe.db.get_defaults()
