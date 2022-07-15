@@ -647,12 +647,12 @@ frappe.Application = class Application {
 	}
 
 	setup_moment() {
-		moment.updateLocale('en', {
+		moment.locale(frappe.boot.lang);
+		moment.updateLocale(moment.locale(), {
 			week: {
 				dow: frappe.datetime.get_first_day_of_the_week_index(),
 			}
 		});
-		moment.locale("en");
 		moment.user_utc_offset = moment().utcOffset();
 		if (frappe.boot.timezone_info) {
 			moment.tz.add(frappe.boot.timezone_info);
