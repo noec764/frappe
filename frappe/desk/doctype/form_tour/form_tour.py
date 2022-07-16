@@ -10,17 +10,25 @@ class FormTour(Document):
 	def before_save(self):
 		meta = frappe.get_meta(self.reference_doctype)
 		for step in self.steps:
-			if step.is_table_field and step.parent_fieldname:
-				parent_field_df = meta.get_field(step.parent_fieldname)
-				step.child_doctype = parent_field_df.options
+			step_type = step.get('tour_step_type', 'Field')
+			if step_type == 'Field':
+				if step.is_table_field and step.parent_fieldname:
+					parent_field_df = meta.get_field(step.parent_fieldname)
+					step.child_doctype = parent_field_df.options
 
-				field_df = frappe.get_meta(step.child_doctype).get_field(step.fieldname)
-				step.label = field_df.label
-				step.fieldtype = field_df.fieldtype
-			else:
-				field_df = meta.get_field(step.fieldname)
-				step.label = field_df.label
-				step.fieldtype = field_df.fieldtype
+					field_df = frappe.get_meta(step.child_doctype).get_field(step.fieldname)
+					step.label = field_df.label
+					step.fieldtype = field_df.fieldtype
+				else:
+					field_df = meta.get_field(step.fieldname)
+					step.label = field_df.label
+					step.fieldtype = field_df.fieldtype
+			elif step_type == 'Button':
+				step.label = step.button_label
+				step.fieldtype = ''
+			elif step_type == 'Selector':
+				step.label = step.element_selector
+				step.fieldtype = ''
 
 	def on_update(self):
 		if frappe.conf.developer_mode and self.is_standard:
