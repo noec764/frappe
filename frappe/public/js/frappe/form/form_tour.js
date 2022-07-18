@@ -94,9 +94,11 @@ frappe.ui.form.FormTour = class FormTour {
 			const driver_step = this.get_step(step, on_next, on_previous);
 			this.driver_steps.push(driver_step);
 
-			if (step.fieldtype == 'Table') this.handle_table_step(step);
-			if (step.is_table_field) this.handle_child_table_step(step);
-			if (step.fieldtype == 'Attach Image') this.handle_attach_image_steps(step);
+			if (step.tour_step_type === 'Field' || !step.tour_step_type) {
+				if (step.fieldtype == 'Table') this.handle_table_step(step);
+				if (step.is_table_field) this.handle_child_table_step(step);
+				if (step.fieldtype == 'Attach Image') this.handle_attach_image_steps(step);
+			}
 		});
 
 		if (this.tour.save_on_complete) {
@@ -110,20 +112,39 @@ frappe.ui.form.FormTour = class FormTour {
 	}
 
 	get_step(step_info, on_next, on_previous) {
-		const { name, fieldname, title, description, position, is_table_field } = step_info;
-		let element = `.frappe-control[data-fieldname='${fieldname}']`;
+		const { tour_step_type } = step_info;
 
-		const field = this.frm.get_field(fieldname);
-		if (field) {
-			// wrapper for section breaks returns in a list
-			element = field.wrapper[0] ? field.wrapper[0] : field.wrapper;
+		let element = '';
+		if (tour_step_type === 'Field' || !tour_step_type) {
+			const { fieldname, is_table_field } = step_info;
+			element = `.frappe-control[data-fieldname='${fieldname}']`;
+
+			const field = this.frm.get_field(fieldname);
+			if (field) {
+				// wrapper for section breaks returns in a list
+				element = field.wrapper[0] ? field.wrapper[0] : field.wrapper;
+			}
+
+			if (is_table_field) {
+				// TODO: fix wrapper for grid sections
+				element = `.grid-row-open .frappe-control[data-fieldname='${fieldname}']`;
+			}
+		} else if (tour_step_type === 'Button') {
+			const { button_label } = step_info;
+			element = [
+				`button[data-label="${__(button_label)}"]`,
+				`button[data-label="${button_label}"]`,
+				`button[data-original-title="${__(button_label)}"]`,
+				`button[data-original-title="${button_label}"]`,
+			].join(',');
+			element = this.frm.wrapper.querySelector(element) || document.querySelector(element) || element;
+		} else if (tour_step_type === 'Selector') {
+			const { element_selector } = step_info;
+			element = element_selector;
+			element = this.frm.wrapper.querySelector(element) || document.querySelector(element) || element;
 		}
 
-		if (is_table_field) {
-			// TODO: fix wrapper for grid sections
-			element = `.grid-row-open .frappe-control[data-fieldname='${fieldname}']`;
-		}
-
+		const { name, title, description, position } = step_info;
 		return {
 			element,
 			name,
