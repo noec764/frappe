@@ -205,6 +205,17 @@ doc_events = {
 		"after_insert": "frappe.cache_manager.build_domain_restricted_page_cache",
 		"after_save": "frappe.cache_manager.build_domain_restricted_page_cache",
 	},
+	"File": {
+		"after_insert": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_create",
+		],
+		"on_trash": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_trash",
+		],
+		"on_update": [
+			"frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.api.file_on_update",
+		],
+	},
 }
 
 scheduler_events = {
@@ -213,7 +224,8 @@ scheduler_events = {
 			"frappe.oauth.delete_oauth2_data",
 			"frappe.website.doctype.web_page.web_page.check_publish_status",
 			"frappe.twofactor.delete_all_barcodes_for_users",
-		]
+		],
+		"* * * * *": ["frappe.integrations.doctype.nextcloud_settings.nextcloud_filesync.cron.run_cron"],
 	},
 	"all": [
 		"frappe.email.queue.flush",

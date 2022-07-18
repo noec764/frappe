@@ -100,7 +100,8 @@ class File(Document):
 	def on_trash(self):
 		if self.is_home_folder or self.is_attachments_folder:
 			frappe.throw(_("Cannot delete Home and Attachments folders"))
-		self.validate_empty_folder()
+		# self.validate_empty_folder()
+		self.folder_delete_children()
 		self._delete_file_on_disk()
 		if not self.is_folder:
 			self.add_comment_in_reference_doc("Attachment Removed", _("Removed {0}").format(self.file_name))
@@ -385,6 +386,19 @@ class File(Document):
 			self.delete_file_data_content()
 		else:
 			self.delete_file_data_content(only_thumbnail=True)
+
+	def folder_delete_children(self, flags=None):
+		"""Delete all children of folder"""
+		if self.is_folder:
+			files = self.get_successors()
+			for (f,) in files:
+				doc = frappe.get_doc("File", f)
+				if flags:
+					doc.flags.update(flags)
+				doc.flags.in_parent_delete = True
+				if doc.is_folder:
+					doc.folder_delete_children(flags=flags)
+				doc.delete()
 
 	def unzip(self) -> list["File"]:
 		"""Unzip current file and replace it by its children"""
