@@ -765,10 +765,6 @@ class FilterArea {
 
 		const doctype_fields = this.list_view.meta.fields;
 		const title_field = this.list_view.meta.title_field;
-		const has_existing_filters = (
-			this.list_view.filters
-			&& this.list_view.filters.length > 0
-		);
 
 		const standard_filter_fields = doctype_fields
 			.filter((df) => df.fieldname === title_field || (df.in_standard_filter && frappe.model.is_value_type(df.fieldtype)))
@@ -808,15 +804,6 @@ class FilterArea {
 							}
 						}
 					}
-					let default_value;
-
-					if (fieldtype === "Link" && !has_existing_filters) {
-						default_value = frappe.defaults.get_user_default(options);
-					}
-
-					if (["__default", "__global"].includes(default_value)) {
-						default_value = null;
-					}
 
 					return {
 						fieldtype: fieldtype,
@@ -825,7 +812,6 @@ class FilterArea {
 						options: options,
 						fieldname: df.fieldname,
 						condition: condition,
-						default: default_value,
 						onchange: () => this.refresh_list_view(),
 						ignore_link_validation: fieldtype === "Dynamic Link",
 						is_filter: 1,
