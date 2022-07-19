@@ -198,12 +198,10 @@ doc_events = {
 		"on_update": "frappe.integrations.doctype.google_contacts.google_contacts.update_contacts_to_google_contacts",
 	},
 	"DocType": {
-		"after_insert": "frappe.cache_manager.build_domain_restricted_doctype_cache",
-		"after_save": "frappe.cache_manager.build_domain_restricted_doctype_cache",
+		"on_update": "frappe.cache_manager.build_domain_restricted_doctype_cache",
 	},
 	"Page": {
-		"after_insert": "frappe.cache_manager.build_domain_restricted_page_cache",
-		"after_save": "frappe.cache_manager.build_domain_restricted_page_cache",
+		"on_update": "frappe.cache_manager.build_domain_restricted_page_cache",
 	},
 	"File": {
 		"after_insert": [
