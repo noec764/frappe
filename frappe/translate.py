@@ -122,6 +122,7 @@ def get_user_lang(user: str = None) -> str:
 			frappe.db.get_value("User", user, "language")
 			or frappe.db.get_default("lang")
 			or frappe.local.lang
+			or frappe.conf.lang
 			or "en"
 		)
 
@@ -387,6 +388,7 @@ def clear_cache():
 	cache.delete_key("lang_full_dict", shared=True)
 	cache.delete_key("translation_assets", shared=True)
 	cache.delete_key("lang_user_translations")
+	frappe.local.lang_full_dict = None
 
 
 def get_messages_for_app(app, deduplicate=True, context=False):
