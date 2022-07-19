@@ -23,14 +23,14 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		this.set_sections();
 		this.set_field_values();
 		this.setup_listeners();
-		if (this.introduction_text&&this.introduction_text!="<div class=\"ql-editor read-mode\"><p><br></p></div>") this.set_form_description(this.introduction_text);
-		if (this.allow_print && !this.is_new) this.setup_print_button();
-		if (this.allow_delete && !this.is_new) this.setup_delete_button();
-		if (this.is_new) this.setup_cancel_button();
-		if (this.allow_edit||this.is_new) this.setup_primary_action();
+
+		if (this.is_new || this.is_form_editable) {
+			this.setup_primary_action();
+		}
+
+		this.setup_footer_actions();
 		this.setup_previous_next_button();
 		this.toggle_section();
-		$(".link-btn").remove();
 
 		// webform client script
 		frappe.init_client_script && frappe.init_client_script();
@@ -71,6 +71,14 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		this.sections = $(`.form-section`);
 	}
 
+	setup_footer_actions() {
+		if (this.is_multi_step_form) return;
+
+		if ($('.web-form-container').height() > 600) {
+			$(".web-form-footer").removeClass("hide");
+		}
+	}
+
 	setup_previous_next_button() {
 		let me = this;
 
@@ -88,7 +96,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		$('.btn-previous').on('click', function () {
 			let is_validated = me.validate_section();
 
-			if (!is_validated) return;
+			if (!is_validated) return false;
 
 			/**
 				The eslint utility cannot figure out if this is an infinite loop in backwards and
@@ -108,12 +116,13 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			}
 			/* eslint-enable for-direction */
 			me.toggle_section();
+			return false;
 		});
 
 		$('.btn-next').on('click', function () {
 			let is_validated = me.validate_section();
 
-			if (!is_validated) return;
+			if (!is_validated) return false;
 
 			for (let idx = me.current_section; idx < me.sections.length; idx++) {
 				let is_empty = me.is_next_section_empty(idx);
@@ -124,6 +133,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 				}
 			}
 			me.toggle_section();
+			return false;
 		});
 	}
 
@@ -133,69 +143,20 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	set_default_values() {
+		let defaults = {};
+		for (let df of this.fields) {
+			if (df.default) {
+				defaults[df.fieldname] = df.default;
+			}
+		}
 		let values = frappe.utils.get_query_params();
 		delete values.new;
+		Object.assign(defaults, values);
 		this.set_values(values);
 	}
 
-	set_form_description(intro) {
-		let intro_wrapper = document.getElementById('introduction');
-		intro_wrapper.innerHTML = intro;
-		intro_wrapper.classList.remove('hidden');
-	}
-
-	add_button(id, name, type, action, wrapper_class=".web-form-actions") {
-		const button = document.createElement("button");
-		button.classList.add("btn", "btn-" + type, "btn-sm", "ml-2");
-		button.id = id;
-		button.innerHTML = name;
-		button.onclick = action;
-		document.querySelector(wrapper_class).appendChild(button);
-		this[id] = button;
-	}
-
-	add_button_to_footer(id, name, type, action) {
-		this.add_button(id, name, type, action, '.web-form-footer');
-	}
-
-	add_button_to_header(id, name, type, action) {
-		this.add_button(id, name, type, action, '.web-form-actions');
-	}
-
 	setup_primary_action() {
-		this.add_button_to_header('header_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
-			this.save()
-		);
-
-		if (!this.is_multi_step_form && $('.frappe-card').height() > 600) {
-			this.add_button_to_footer('footer_save_btn', this.button_label || __("Save", null, "Button in web form"), "primary", () =>
-				this.save()
-			);
-		}
-	}
-
-	setup_cancel_button() {
-		this.add_button_to_header('cancel_btn', __("Cancel", null, "Button in web form"), "light", () => this.cancel());
-	}
-
-	setup_delete_button() {
-		frappe.has_permission(this.doc_type, "", "delete", () => {
-			this.add_button_to_header(
-				'delete_btn',
-				frappe.utils.icon('delete'),
-				"danger",
-				() => this.delete()
-			);
-		});
-	}
-
-	setup_print_button() {
-		this.add_button_to_header(
-			'print_btn',
-			frappe.utils.icon('printer'),
-			"light",
-			() => this.print()
-		);
+		$(".web-form-container").on("submit", () => this.save());
 	}
 
 	validate_section() {
@@ -329,8 +290,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		window.saving = true;
 		frappe.form_dirty = false;
 
-		this.disable_enable_save_btns(true)
-
 		frappe.call({
 			type: "POST",
 			method: "frappe.website.doctype.web_form.web_form.accept",
@@ -346,10 +305,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					// Success
 					this.handle_success(response.message);
 					frappe.web_form.events.trigger('after_save');
-					this.after_save && this.after_save(response.message);
-
-					this.disable_enable_save_btns(false)
-
+					this.after_save && this.after_save();
 					// args doctype and docname added to link doctype in file manager
 					if (is_new && (response.message.attachment || response.message.file)) {
 						frappe.call({
@@ -364,59 +320,52 @@ export default class WebForm extends frappe.ui.FieldGroup {
 					}
 				}
 			},
-			always: () => {
-				this.disable_enable_save_btns(false)
+			always: function() {
 				window.saving = false;
 			}
 		});
-		return true;
+		return false;
 	}
 
-	disable_enable_save_btns(disable) {
-		const label = disable ? __("Saving...") : this.button_label || __("Save")
-		$("#header_save_btn").attr("disabled", disable)
-		$("#header_save_btn").text(label)
-		$("#footer_save_btn").attr("disabled", disable)
-		$("#footer_save_btn").text(label)
-	}
-
-	delete() {
-		frappe.call({
-			type: "POST",
-			method: "frappe.website.doctype.web_form.web_form.delete",
-			args: {
-				web_form_name: this.name,
-				docname: this.doc.name
-			}
-		});
-	}
-
-	print() {
-		window.open(`/printview?
-			doctype=${this.doc_type}
-			&name=${this.doc.name}
-			&format=${this.print_format || "Standard"}`, '_blank');
+	edit() {
+		window.location.href = window.location.pathname + "/edit";
 	}
 
 	cancel() {
-		window.location.href = window.location.pathname;
+		let path = window.location.pathname;
+		if (this.is_new) {
+			path = path.replace('/new', '');
+		} else {
+			path = path.replace('/edit', '');
+		}
+		window.location.href = path;
 	}
 
 	handle_success(data) {
+		if (this.accept_payment && !this.doc.paid) {
+			window.location.href = data;
+		}
+
 		const success_message =
 			this.success_message || __("Submitted");
+
 		frappe.toast({message: success_message, indicator:'green'});
 
 		// redirect
 		setTimeout(() => {
-			if (this.accept_payment && !this.doc.paid) {
-				window.location.href = data;
-			} else if (this.success_url) {
-				window.location.href = this.success_url;
-			} else if(this.login_required) {
-				window.location.href =
-					window.location.pathname + "?name=" + data.name;
+			let path = window.location.pathname;
+
+			if (this.success_url) {
+				path = this.success_url;
+			} else if (this.login_required) {
+				if (this.is_new && data.name) {
+					path = path.replace("/new", "");
+					path = path + "/" + data.name;
+				} else if (this.is_form_editable) {
+					path =  path.replace("/edit", "");
+				}
 			}
-		}, 2000);
+			window.location.href = path;
+		}, 1000);
 	}
 }

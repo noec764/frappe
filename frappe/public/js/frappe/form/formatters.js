@@ -199,7 +199,7 @@ frappe.form.formatters = {
 	Datetime: function(value) {
 		if(value) {
 			return moment(frappe.datetime.convert_to_user_tz(value))
-				.format(frappe.boot.sysdefaults.date_format.toUpperCase() + ' ' + frappe.boot.sysdefaults.time_format || 'HH:mm');
+				.format(frappe.boot.sysdefaults.date_format.toUpperCase() + ' ' + (frappe.boot.sysdefaults.time_format || 'HH:mm'));
 		} else {
 			return "";
 		}
