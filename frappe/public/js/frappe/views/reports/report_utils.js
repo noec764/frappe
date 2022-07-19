@@ -31,7 +31,8 @@ frappe.report_utils = {
 			colors: colors,
 			axisOptions: {
 				shortenYAxisNumbers: 1,
-				xAxisMode: 'tick'
+				xAxisMode: 'tick',
+				numberFormatter: frappe.utils.format_chart_axis_number,
 			},
 			tooltipOptions: {}
 		};
