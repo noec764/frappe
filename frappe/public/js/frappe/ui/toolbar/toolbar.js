@@ -36,6 +36,9 @@ frappe.ui.toolbar.Toolbar = class {
 				search_modal.find('#modal-search').focus();
 			}, 300);
 		});
+		$('.navbar-toggle-full-width').click(() => {
+			frappe.ui.toolbar.toggle_full_width();
+		});
 	}
 
 
@@ -176,6 +179,17 @@ $.extend(frappe.ui.toolbar, {
 		</li>`).get(0);
 
 		parent_element.insertBefore(new_element, parent_element.children[index]);
+	},
+	toggle_full_width() {
+		let fullwidth = JSON.parse(localStorage.container_fullwidth || 'false');
+		fullwidth = !fullwidth;
+		localStorage.container_fullwidth = fullwidth;
+		frappe.ui.toolbar.set_fullwidth_if_enabled();
+		$(document.body).trigger('toggleFullWidth');
+	},
+	set_fullwidth_if_enabled() {
+		let fullwidth = JSON.parse(localStorage.container_fullwidth || 'false');
+		$(document.body).toggleClass('full-width', fullwidth);
 	},
 	show_shortcuts (e) {
 		e.preventDefault();

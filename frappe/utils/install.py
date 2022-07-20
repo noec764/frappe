@@ -275,6 +275,12 @@ def add_standard_navbar_items():
 			"is_standard": 1,
 		},
 		{
+			"item_label": "Toggle Full Width",
+			"item_type": "Action",
+			"action": "frappe.ui.toolbar.toggle_full_width()",
+			"is_standard": 1,
+		},
+		{
 			"item_label": "View Website",
 			"item_type": "Action",
 			"action": "frappe.ui.toolbar.view_website()",
