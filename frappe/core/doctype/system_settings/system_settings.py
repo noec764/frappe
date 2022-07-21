@@ -46,13 +46,6 @@ class SystemSettings(Document):
 			frappe.flags.update_last_reset_password_date = True
 
 	def on_update(self):
-		for df in self.meta.get("fields"):
-			if df.fieldtype not in no_value_fields and self.has_value_changed(df.fieldname):
-				frappe.db.set_default(df.fieldname, self.get(df.fieldname))
-
-		if self.language:
-			set_default_language(self.language)
-
 		frappe.cache().delete_value("system_settings")
 		frappe.cache().delete_value("time_zone")
 
@@ -64,6 +57,14 @@ class SystemSettings(Document):
 	def update_lang_in_site_config(self):
 		if frappe.conf.lang != self.language:
 			update_site_config("lang", self.language)
+
+	def set_defaults(self):
+		for df in self.meta.get("fields"):
+			if df.fieldtype not in no_value_fields and self.has_value_changed(df.fieldname):
+				frappe.db.set_default(df.fieldname, self.get(df.fieldname))
+
+		if self.language:
+			set_default_language(self.language)
 
 
 def update_last_reset_password_date():
