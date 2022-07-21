@@ -118,6 +118,8 @@ class FormMeta(Meta):
 		self.add_code_via_hook("doctype_tree_js", "__tree_js")
 		self.add_code_via_hook("doctype_calendar_js", "__calendar_js")
 		self.add_html_templates(path)
+		if system_country:
+			self.add_code_via_hook("doctype_regional_js", "__js", system_country)
 
 	def _add_code(self, path, fieldname):
 		js = get_js(path)
@@ -137,8 +139,8 @@ class FormMeta(Meta):
 
 		self.set("__templates", templates or None)
 
-	def add_code_via_hook(self, hook, fieldname):
-		for path in get_code_files_via_hooks(hook, self.name):
+	def add_code_via_hook(self, hook, fieldname, country=None):
+		for path in get_code_files_via_hooks(hook, self.name, country):
 			self._add_code(path, fieldname)
 
 	def add_custom_script(self):
@@ -260,14 +262,14 @@ class FormMeta(Meta):
 			pass
 
 
-def get_code_files_via_hooks(hook, name):
+def get_code_files_via_hooks(hook, name, country=None):
 	code_files = []
 	for app_name in frappe.get_installed_apps():
 		code_hook = frappe.get_hooks(hook, default={}, app_name=app_name)
 		if not code_hook:
 			continue
 
-		files = code_hook.get(name, [])
+		files = code_hook.get(name, {}).get(country, []) if country else code_hook.get(name, [])
 		if not isinstance(files, list):
 			files = [files]
 
