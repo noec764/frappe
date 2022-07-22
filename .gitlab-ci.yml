@@ -46,7 +46,6 @@ unittests:
     - cd apps/frappe
     - yarn install
     - cd ../../
-    - EXPORT CI_NEXTCLOUD_TESTS = 0
     - python apps/frappe/test_sites/test_installer.py || true
     - python apps/frappe/test_sites/test_runner.py
 
