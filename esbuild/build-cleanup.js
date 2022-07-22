@@ -19,8 +19,8 @@ function clean_dist_files(new_files) {
 			if (file.endsWith(".map")) return;
 
 			const prefix_pattern = file.split(".").slice(0, -2);
-			const suffix_pattern = file.split(".").slice(-1)
-			const pattern = prefix_pattern.concat(["*"]).concat(suffix_pattern).join(".")
+			const suffix_pattern = file.split(".").slice(-1);
+			const pattern = prefix_pattern.concat(["*"]).join(".") + `{${suffix_pattern},${suffix_pattern}.map}`
 			glob.sync(pattern).forEach(
 				file_to_delete => {
 					if (file_to_delete.startsWith(file)) return;
