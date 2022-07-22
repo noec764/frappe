@@ -235,6 +235,8 @@ def bundle(
 	files=None,
 ):
 	"""concat / minify js files"""
+	import frappe.commands  # Keep for CI
+
 	setup()
 	make_asset_dirs(hard_link=hard_link)
 
@@ -259,6 +261,8 @@ def bundle(
 
 def watch(apps=None):
 	"""watch and rebuild if necessary"""
+	import frappe.commands  # Keep for CI
+
 	setup()
 
 	command = "yarn run watch"
