@@ -1,10 +1,10 @@
 import os
 import xml.etree.ElementTree as ET
 from datetime import datetime
+from typing import Literal
 from urllib.parse import quote
 
 from owncloud.owncloud import Client, FileInfo, HTTPResponseError
-from typing_extensions import Literal
 
 
 class NextcloudIntegrationClient(Client):

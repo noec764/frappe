@@ -1,12 +1,11 @@
 from dataclasses import dataclass
-from typing import Optional
-from typing_extensions import Literal
+from typing import Literal
 
 from .Entry import EntryLocal, EntryRemote
 
 
 @dataclass(unsafe_hash=True, frozen=True)
-class Action():
+class Action:
 	# NOTE:
 	# All actions should be idempotent.
 	# This means that if you run the same action twice,
@@ -20,108 +19,102 @@ class Action():
 	type: Literal[
 		# create a file, create a directory
 		# NOTE: Frappe File documents aren't checked for duplication before insertion
-		'local.create',
-		'remote.create',
-
+		"local.create",
+		"remote.create",
 		# rename/move a file
 		# NOTE: is done by updating the file_name and folder
-		'local.file.moveRename',
-		'remote.file.moveRename',
-
+		"local.file.moveRename",
+		"remote.file.moveRename",
 		# recursively rename/move a directory and its children
 		# NOTE: the children's path changes MAY not appear in the diff
 		#       if only the dir's filename changes.
-		'local.dir.moveRenamePlusChildren',
-		'remote.dir.moveRenamePlusChildren',
-
+		"local.dir.moveRenamePlusChildren",
+		"remote.dir.moveRenamePlusChildren",
 		# if file: delete a file
 		# if dir: delete a directory and its children
-		'local.delete',
-		'remote.delete',
-
+		"local.delete",
+		"remote.delete",
 		# update the content of a file
-		'local.file.updateContent',
-		'remote.file.updateContent',
-
+		"local.file.updateContent",
+		"remote.file.updateContent",
 		# special case: update the etag of a directory
-		'meta.updateEtag',
-
+		"meta.updateEtag",
 		# merge remote and local entries, with the remote entry being the source of truth
-		'local.join',
+		"local.join",
 		# merge remote and local entries, with the local entry being the source of truth
-		'remote.join',
-
+		"remote.join",
 		# triggered by a local update (hook) ???
-		'remote.createOrForceUpdate',
-		'remote.createOrUpdate',
-
+		"remote.createOrForceUpdate",
+		"remote.createOrUpdate",
 		# conflict
-		'conflict',
-
+		"conflict",
 		# conflict: local file has been updated after remote file
-		'conflict.localIsNewer',
-
+		"conflict.localIsNewer",
 		# conflict: remote file has been updated after local file
-		'conflict.remoteIsNewer',
-
+		"conflict.remoteIsNewer",
 		# conflict: one is a directory, the other is a file
-		'conflict.incompatibleTypesDirVsFile',
-
+		"conflict.incompatibleTypesDirVsFile",
 		# conflict: different ids
-		'conflict.differentIds',
+		"conflict.differentIds",
 	]
-	local: Optional[EntryLocal] = None
-	remote: Optional[EntryRemote] = None
+	local: EntryLocal | None = None
+	remote: EntryRemote | None = None
 
 	def __repr__(self) -> str:
-		z = self.local if self.local else '\x1b[31mø\x1b[m'
-		return f'{self.type.ljust(15)} {z} {self.remote}'
+		z = self.local if self.local else "\x1b[31mø\x1b[m"
+		return f"{self.type.ljust(15)} {z} {self.remote}"
 
 	def __eq__(self, o: object) -> bool:
 		if not isinstance(o, Action):
 			return NotImplemented
 
-		return all((
-			self.type == o.type,
-			self.local == o.local,
-			self.remote == o.remote,
-		))
+		return all(
+			(
+				self.type == o.type,
+				self.local == o.local,
+				self.remote == o.remote,
+			)
+		)
 
 	def __post_init__(self):
 		# valid_types = Action.__annotations__['type'].__args__
 		valid_types = [
-			'local.create',
-			'local.file.moveRename',
-			'local.dir.moveRenamePlusChildren',
-			'local.delete',
-			'local.file.updateContent',
-			'local.join',
-			'remote.create',
-			'remote.file.moveRename',
-			'remote.dir.moveRenamePlusChildren',
-			'remote.delete',
-			'remote.file.updateContent',
-			'remote.join',
-			'meta.updateEtag',
-			'remote.createOrForceUpdate',
-			'remote.createOrUpdate',
-			'conflict',
-			'conflict.localIsNewer',
-			'conflict.incompatibleTypesDirVsFile',
-			'conflict.differentIds',
+			"local.create",
+			"local.file.moveRename",
+			"local.dir.moveRenamePlusChildren",
+			"local.delete",
+			"local.file.updateContent",
+			"local.join",
+			"remote.create",
+			"remote.file.moveRename",
+			"remote.dir.moveRenamePlusChildren",
+			"remote.delete",
+			"remote.file.updateContent",
+			"remote.join",
+			"meta.updateEtag",
+			"remote.createOrForceUpdate",
+			"remote.createOrUpdate",
+			"conflict",
+			"conflict.localIsNewer",
+			"conflict.incompatibleTypesDirVsFile",
+			"conflict.differentIds",
 		]
 		valid_types += map(
-			lambda s: s.replace('local', 'remote'),
-			filter(lambda s: s.startswith('local'), valid_types))
+			lambda s: s.replace("local", "remote"), filter(lambda s: s.startswith("local"), valid_types)
+		)
 
 		if self.type not in valid_types:
-			raise ValueError(f'NextcloudIntegration.Action: invalid type `{self.type}`', self)
+			raise ValueError(f"NextcloudIntegration.Action: invalid type `{self.type}`", self)
 
 		if self.local is not None and not isinstance(self.local, EntryLocal):
-			raise ValueError('NextcloudIntegration.Action: `local` constructor parameter is not an EntryLocal', self)
+			raise ValueError(
+				"NextcloudIntegration.Action: `local` constructor parameter is not an EntryLocal", self
+			)
 
 		if self.remote is not None and not isinstance(self.remote, EntryRemote):
-			raise ValueError('NextcloudIntegration.Action: `remote` constructor parameter is not an EntryRemote', self)
+			raise ValueError(
+				"NextcloudIntegration.Action: `remote` constructor parameter is not an EntryRemote", self
+			)
 
 	def _invert(self):
 		"""
@@ -131,10 +124,10 @@ class Action():
 
 		t = self.type
 
-		if t.startswith('local'):
-			t = t.replace('local', 'remote')
-		elif t.startswith('remote'):
-			t = t.replace('remote', 'local')
+		if t.startswith("local"):
+			t = t.replace("local", "remote")
+		elif t.startswith("remote"):
+			t = t.replace("remote", "local")
 		else:
 			return self
 

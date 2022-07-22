@@ -4,10 +4,9 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from datetime import datetime
 from operator import attrgetter
-from typing import Generator, Optional
+from typing import Generator, Literal, Optional
 
 from owncloud.owncloud import FileInfo, HTTPResponseError
-from typing_extensions import Literal
 
 import frappe
 from frappe.core.doctype.file.file import File
