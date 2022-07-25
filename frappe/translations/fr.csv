@@ -245,7 +245,7 @@ frappe.ui.form.on('Task',  {
 frappe.ui.form.on('Task',  {
     validate: function(frm) {
         if(user=='user1@example.com' &amp;&amp; frm.doc.purpose!='Material Receipt') {
-            msgprint('Vous ne pouvez créer que des reçus d'achat');
+            msgprint('Vous ne pouvez créer que des reçus d\'achat');
             validated = false;
         }
     }
@@ -435,7 +435,7 @@ frappe.ui.form.on('Sales Invoice',  {
 	<tbody>
 		<tr>
 			<td style=""width: 30%;""><code>doc.get_formatted(""[fieldname]"", [parent_doc])</code></td>
-			<td>Obtenez la valeur formatée en Date, Devise, etc. Passez le <code>doc</code> parent pour les champ de type devise.</td>
+			<td>Obtenez la valeur formatée en Date, Devise, etc. Passez le <code>doc</code> parent pour les champs de type devise.</td>
 		</tr>
 		<tr>
 			<td style=""width: 30%;""><code>frappe.db.get_value(""[doctype]"", ""[name]"", ""fieldname"")</code></td>
@@ -488,7 +488,7 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
 
 <pre>&lt;h3&gt;Commande en retard&lt;/h3&gt;
 
-&lt;p&gt;La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.&lt;/p&gt;
+&lt;p&gt;La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesures nécessaires.&lt;/p&gt;
 
 &lt;!-- voir les derniers commentaires --&gt;
 {% if comments %}
@@ -521,7 +521,7 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
 
 <pre>*Commande en retard*
 
-La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesure nécessaires.
+La transaction {{ doc.name }} a dépassé la date d'échéance. Veuillez prendre les mesures nécessaires.
 
 <!-- voir les derniers commentaires -->
 {% if comments %}
@@ -845,7 +845,7 @@ Allow Modules,Modules activés,
 Allow Multiple,Autoriser plusieurs documents,
 Allow Older Web View Links (Insecure),Autoriser les liens de vue web anciens (non sécurisé),
 Allow Print for Cancelled,Autoriser les impressions des documents annulés,
-Allow Print for Draft,Autoriser les impression des documents en brouillon,
+Allow Print for Draft,Autoriser les impressions des documents en brouillon,
 Allow Print,Autoriser les impressions,
 Allow Read On All Link Options,Autoriser la lecture de toutes les options de lien,
 Allow Rename,Permettre le renommage,
@@ -1442,7 +1442,7 @@ Check broken links,Vérifier les liens brisés,
 Check list,Checklist,
 Check the Error Log for more information: {0},Vérifiez le journal d'erreurs pour plus d'informations: {0},
 Check this if you are testing your payment using the Sandbox API,Cochez cette case si vous testez votre paiement en utilisant l'API Sandbox,
-Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it.,Cochez cette case si vous ne voulez pas que les utilisateur puissent se créer un compte sur votre site. Les utilisateurs n'auront jamais accès au bureau sauf si vous leur donnez cet accès explicitement.,
+Check this if you don't want users to sign up for an account on your site. Users won't get desk access unless you explicitly provide it.,Cochez cette case si vous ne voulez pas que les utilisateurs puissent se créer un compte sur votre site. Les utilisateurs n'auront jamais accès au bureau sauf si vous leur donnez cet accès explicitement.,
 Check this to make this the default letter head in all prints,"Cochez cette case pour faire de cet en-tête de lettre, celui par défaut dans tous les imprimés",
 Check this to pull emails from your mailbox,Cochez cette case pour extraire des emails de votre boîte email,
 Check which Documents are readable by a User,Vérifier quels documents sont lisibles par un utilisateur,
@@ -1943,7 +1943,7 @@ Deleted,Supprimé,
 Deleting {0},Suppression de {0},
 Deletion Steps,Etapes de suppression,
 Delivery Failed,La livraison a échoué,
-Delivery Status,Statut de l'envoi',
+Delivery Status,Statut de l'envoi,
 Deny,Refuser,
 Department,Département,
 Depends On,Afficher si les conditions suivantes sont vrai,
@@ -3544,7 +3544,7 @@ Letter,Lettre,
 Letterhead,En-tête,
 "Level 0 is for document level permissions, \
 								higher levels for field level permissions.","Le niveau 0 est pour les autorisations au niveau du document, \ les niveaux supérieurs pour les autorisations au niveau des champs.",
-"Level 0 is for document level permissions, higher levels for field level permissions.","Le niveau 0 est pour les autorisations au niveau du document, les niveaux au dessus pour les autorisation au niveau des champs.",
+"Level 0 is for document level permissions, higher levels for field level permissions.","Le niveau 0 est pour les autorisations au niveau du document, les niveaux au dessus pour les autorisations au niveau des champs.",
 Level Name,Nom du niveau,
 Level,Niveau,
 Library,Bibliothèque,
@@ -4157,7 +4157,7 @@ Not allowed from this IP Address,Non autorisé à partir de cette Adresse IP,
 Not allowed to Import,Non autorisé à Importer,
 "Not allowed to attach {0} document,
 				please enable Allow Print For {0} in Print Settings","Vous n'êtes pas autorisé à joindre un document {0}, veuillez activer ""Autoriser l'impression"" pour {0} dans les paramètres d'impression.",
-"Not allowed to attach {0} document, please enable Allow Print For {0} in Print Settings","Attacher un document {0} n'est pas autorisé, veuillez cocher 'Autoriser l'impression pour les document {0}' dans les paramètres d'impression",
+"Not allowed to attach {0} document, please enable Allow Print For {0} in Print Settings","Attacher un document {0} n'est pas autorisé, veuillez cocher 'Autoriser l'impression pour les documents {0}' dans les paramètres d'impression",
 Not allowed to change {0} after submission,Non autorisé à changer {0} après la validation,
 Not allowed to create custom Virtual DocType.,Vous n'êtes pas autorisé à créer un type de document virtuel personnalisé.,
 Not allowed to print cancelled documents,Non autorisé à imprimer des documents annulés,
@@ -4632,7 +4632,7 @@ Please select document type first.,Veuillez d'abord sélectionner le type de doc
 Please select the Document Type.,Veuillez sélectionner le type de document.,
 Please select the LDAP Directory being used,Veuillez sélectionner le répertoire LDAP utilisé,
 Please select which module this Web Template belongs to.,Veuillez sélectionner le module auquel ce modèle de bloc web appartient,
-Please set API Key and Secret on the producer and consumer sites first.,Veuillez d'abord définir la clé et le secret d'API sur les site du producteur et du consommateur.,
+Please set API Key and Secret on the producer and consumer sites first.,Veuillez d'abord définir la clé et le secret d'API sur les sites du producteur et du consommateur.,
 Please set Base URL in Social Login Key for Dodock,Veuillez définir une URL de base dans la clé de connexion de social pour Dodock,
 Please set Base URL in Social Login Key for Frappe,Veuillez définir l'URL de base dans la clé de connexion sociale pour Frappe,
 Please set Dropbox access keys in your site config,Veuillez définir les clés d'accès Dropbox dans la configuration de votre site,
@@ -5623,7 +5623,7 @@ Show Line Breaks after Sections,Afficher les sauts de Ligne après chaque sectio
 Show Log,Afficher le Journal,
 Show More Activity,Voir plus d'activité,
 Show Only Communications,Afficher seulement les communications,
-Show Percentage Stats,Afficher les pourcentage d'évolution,
+Show Percentage Stats,Afficher les pourcentages d'évolution,
 Show Permissions,Afficher les Autorisations,
 Show Preview Popup,Afficher le popup de prévisualisation,
 Show Preview,Afficher l'aperçu,
@@ -6329,7 +6329,7 @@ Traceback,Retraçage,
 Track Changes,Suivre les modifications,
 Track Email Status,Suivre le statut des emails,
 Track Field,Suivre le champ,
-Track Print,Suivre les impression,
+Track Print,Suivre les impressions,
 Track Seen,Suivre les personnes l'ayant vu,
 Track Views,Suivre les vues,
 "Track if your email has been opened by the recipient.
@@ -6561,7 +6561,7 @@ User {0} cannot be deleted,Utilisateur {0} ne peut pas être supprimé,
 User {0} cannot be disabled,Utilisateur {0} ne peut pas être désactivé,
 User {0} cannot be renamed,Utilisateur {0} ne peut pas être renommé,
 User {0} does not have access to this document,L'utilisateur {0} n'a pas accès à ce document,
-User {0} does not have doctype access via role permission for document {1},L'utilisateur {0} n'a pas les autorisation pour accéder au type de document {1},
+User {0} does not have doctype access via role permission for document {1},L'utilisateur {0} n'a pas les autorisations pour accéder au type de document {1},
 User {0} has requested for data deletion,L'utilisateur {0} a demandé la suppression de ses données,
 User {0} is disabled,Utilisateur {0} est désactivé,
 User {0} not found on the producer site,L'utilisateur {0} n'a pas été trouvé sur le site du producteur,
@@ -6816,10 +6816,7 @@ You are not permitted to access this page.,Vous n'êtes pas autorisé à accéde
 You are not permitted to view the newsletter.,Vous n'êtes pas autorisé à consulter la newsletter.,
 You are now following this document. You will receive daily updates via email. You can change this in User Settings.,Vous suivez désormais ce document. Vous recevrez des mises à jours quotidiennes par email ou à la fréquence que vous avez déterminé dans vos paramètres utilisateur.,
 You are registered for this event,Vous êtes inscrit à cet événement,
-"You are selecting Sync Option as ALL, It will resync all \
-				read as well as unread message from server. This may also cause the duplication\
-				of Communication (emails).","Vous sélectionnez l'Option Sync avec TOUS, cela resynchronisera tout les message lu et non lu à partir du serveur. Cela peut également provoquer la duplication de Communication (emails).",
-"You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails).",Vous avez sélectionné l'option de synchronisation TOUS. Cela va resynchroniser tous les messages lus ainsi que les messages non lus. Cela peut également créer des communications (emails) en double.,
+"You are selecting Sync Option as ALL, It will resync all read as well as unread message from server. This may also cause the duplication of Communication (emails).",Vous avez sélectionné l'option de synchronisation TOUS. Cela va resynchroniser tous les messages lus ainsi que les messages non lus. Cela peut également créer des Communications (emails) en double.,
 You can add dynamic properties from the document by using Jinja templating.,Vous pouvez ajouter des propriétés dynamiques au document à l'aide des modèles Jinja.,
 You can also copy-paste following link in your browser,Vous pouvez aussi copier-coller le lien suivant dans votre navigateur,
 You can also copy-paste this ,Vous pouvez ausso copier/coller ce,
