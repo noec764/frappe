@@ -44,6 +44,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 			this.add_totals_row = this.view_user_settings.add_totals_row || 0;
 			this.chart_args = this.view_user_settings.chart_args;
 		}
+		return this.get_list_view_settings();
 	}
 
 	setup_view() {
@@ -54,6 +55,9 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	}
 
 	setup_events() {
+		if (this.list_view_settings?.disable_auto_refresh) {
+			return;
+		}
 		frappe.realtime.on("list_update", (data) => this.on_update(data));
 	}
 
@@ -219,6 +223,9 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 	}
 
 	render_count() {
+		if (this.list_view_settings?.disable_count) {
+			return;
+		}
 		let $list_count = this.$paging_area.find('.list-count');
 		if (!$list_count.length) {
 			$list_count = $('<span>')
@@ -1541,6 +1548,12 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 					frappe.set_route('List', 'User Permission', args);
 				}
 			});
+		}
+
+		if (frappe.user.has_role("System Manager")) {
+			if (this.get_view_settings) {
+				items.push(this.get_view_settings());
+			}
 		}
 
 		return items.map(i => Object.assign(i, { standard: true }));
