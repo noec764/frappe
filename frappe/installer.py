@@ -91,7 +91,7 @@ def _new_site(
 		no_mariadb_socket=no_mariadb_socket,
 	)
 	apps_to_install = (
-		["frappe"] + (frappe.conf.get("install_apps") or []) + (list(install_apps) or [])
+		["frappe"] + (frappe.conf.get("install_apps") or []) + (list(install_apps or []))
 	)
 
 	for app in apps_to_install:
