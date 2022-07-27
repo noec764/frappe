@@ -518,8 +518,7 @@ class TestReportview(unittest.TestCase):
 		frappe.db.get_list(
 			"Web Form",
 			filters=[["Web Form Field", "reqd", "=", 1]],
-			group_by="amount_field",
-			fields=["count(*) as count", "`amount_field` as name"],
+			fields=["count(*) as count"],
 			order_by="count desc",
 			limit=50,
 		)
