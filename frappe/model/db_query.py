@@ -106,7 +106,7 @@ class DatabaseQuery:
 			and not frappe.has_permission(self.doctype, "read", user=user, parent_doctype=parent_doctype)
 		):
 			frappe.flags.error_message = _("Insufficient Permission for {0}").format(
-				frappe.bold(self.doctype)
+				frappe.bold(_(self.doctype))
 			)
 			raise frappe.PermissionError(self.doctype)
 
@@ -473,7 +473,7 @@ class DatabaseQuery:
 			doctype, ptype=ptype, parent_doctype=self.doctype
 		):
 			frappe.flags.error_message = _("Insufficient Permission for {0}").format(frappe.bold(doctype))
-			raise frappe.PermissionError(doctype)
+			raise frappe.PermissionError(_(doctype))
 
 	def set_field_tables(self):
 		"""If there are more than one table, the fieldname must not be ambiguous.

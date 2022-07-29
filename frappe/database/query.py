@@ -559,7 +559,7 @@ class Permission:
 				user=kwargs.get("user"),
 				parent_doctype=kwargs.get("parent_doctype"),
 			):
-				frappe.throw(_("Insufficient Permission for {0}").format(frappe.bold(dt)))
+				frappe.throw(_("Insufficient Permission for {0}").format(frappe.bold(_(dt))))
 
 	@staticmethod
 	def get_tables_from_query(query: str):
