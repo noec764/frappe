@@ -50,14 +50,13 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 		let sysdefaults = frappe.boot.sysdefaults;
 
 		let lang = 'en';
-		frappe.boot.user && (lang = frappe.boot.user.language);
+		frappe.boot.user && (lang = frappe.boot.lang);
 		if(!$.fn.datepicker.language[lang]) {
 			lang = 'en';
 		}
 
 		let date_format = sysdefaults && sysdefaults.date_format
 			? sysdefaults.date_format : 'yyyy-mm-dd';
-
 		this.today_text = __("Today");
 		this.date_format = frappe.defaultDateFormat;
 		this.datepicker_options = {
