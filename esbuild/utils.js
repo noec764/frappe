@@ -119,7 +119,6 @@ function get_redis_subscriber(kind) {
 		retry_strategy = () => { }
 	} else {
 		retry_strategy = function (options) {
-		retry_strategy: function(options) {
 			// abort after 10 connection attempts
 			if (options.attempt > 10) {
 				return undefined;
