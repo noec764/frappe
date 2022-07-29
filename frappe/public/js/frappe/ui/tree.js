@@ -130,7 +130,7 @@ frappe.ui.Tree = class {
 	}
 
 	reload_node(node) {
-		this.load_children(node);
+		return this.load_children(node);
 	}
 
 	toggle() {
@@ -146,21 +146,20 @@ frappe.ui.Tree = class {
 	}
 
 	load_children(node, deep=false) {
-		let value = node.data.value, is_root = node.is_root;
+		const value = node.data.value,
+			is_root = node.is_root;
 
-		if(!deep) {
-			frappe.run_serially([
-				() => {return this.get_nodes(value, is_root);},
-				(data_set) => { this.render_node_children(node, data_set); },
-				() => { this.set_selected_node(node); }
+		return deep
+			? frappe.run_serially([
+				() => this.get_all_nodes(value, is_root, node.label),
+				data_list => this.render_children_of_all_nodes(data_list),
+				() => this.set_selected_node(node),
+			])
+			: frappe.run_serially([
+				() => this.get_nodes(value, is_root),
+				data_set => this.render_node_children(node, data_set),
+				() => this.set_selected_node(node),
 			]);
-		} else {
-			frappe.run_serially([
-				() => {return this.get_all_nodes(value, is_root);},
-				(data_list) => { this.render_children_of_all_nodes(data_list); },
-				() => { this.set_selected_node(node); }
-			]);
-		}
 	}
 
 	render_children_of_all_nodes(data_list) {
