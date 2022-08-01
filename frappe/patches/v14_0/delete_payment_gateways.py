@@ -2,7 +2,7 @@ import frappe
 
 
 def execute():
-	if "payments" in frappe.get_installed_apps():
+	if "payments" in frappe.get_installed_apps() or "erpnext" in frappe.get_installed_apps():
 		return
 
 	for doctype in (
