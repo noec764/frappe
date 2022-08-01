@@ -1768,6 +1768,8 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			$(this.$report_footer).append(this.$tree_footer);
 			this.$tree_footer.find('[data-action=collapse_all_rows]').show();
 			this.$tree_footer.find('[data-action=expand_all_rows]').hide();
+
+			this.report_settings.collapse_all_rows && this.collapse_all_rows()
 		}
 
 		const message = __('For comparison, use >5, <10 or =324. For ranges, use 5:10 (for values between 5 & 10).');
