@@ -160,6 +160,8 @@ export default class GridPagination {
 		if (!from_refresh) {
 			this.grid.scroll_to_top();
 		}
+
+		this.grid.wrapper.trigger('page_change');
 	}
 
 	go_to_last_page_to_add_row() {
