@@ -826,7 +826,6 @@ def get_all_messages_from_template_files(app_name=None):
 
 def get_messages_from_file(path: str) -> list[tuple[str, str, str, str]]:
 	"""Returns a list of transatable strings from a code file
-
 	:param path: path of the code file
 	"""
 	frappe.flags.setdefault("scanned_files", [])
@@ -871,6 +870,7 @@ def extract_messages_from_code(code):
 			frappe.clear_last_message()
 
 	messages = []
+
 	for m in TRANSLATE_PATTERN.finditer(code):
 		message = m.group("message")
 		context = m.group("py_context") or m.group("js_context")
@@ -899,7 +899,7 @@ def is_translatable(m):
 def add_line_number(messages, code):
 	ret = []
 	messages = sorted(messages, key=lambda x: x[0])
-	newlines = [m.start() for m in re.compile(r"\\n").finditer(code)]
+	newlines = [m.start() for m in re.compile(r"\n").finditer(code)]
 	line = 1
 	newline_i = 0
 	for pos, message, context in messages:
