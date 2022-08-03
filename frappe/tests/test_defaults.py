@@ -51,7 +51,8 @@ class TestDefaults(unittest.TestCase):
 		self.assertEqual(get_user_default("key6"), None)  # noqa
 
 	def test_user_permission_on_defaults(self):
-		self.assertEqual(get_user_default("language"), None)  # noqa
+		self.assertEqual(get_global_default("language"), "en")  # noqa
+		self.assertEqual(get_user_default("language"), "en")  # noqa
 		self.assertEqual(get_user_default_as_list("language"), ["en"])  # noqa
 
 		old_user = frappe.session.user
@@ -67,6 +68,7 @@ class TestDefaults(unittest.TestCase):
 			)
 		).insert(ignore_permissions=True)
 
+		self.assertEqual(get_global_default("language"), None)  # noqa
 		self.assertEqual(get_user_default("language"), None)  # noqa
 		self.assertEqual(get_user_default_as_list("language"), [])  # noqa
 
