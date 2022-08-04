@@ -16,7 +16,7 @@ from frappe.core.api.file import (
 	move_file,
 	unzip_file,
 )
-from frappe.exceptions import ValidationError
+from frappe.exceptions import DoesNotExistError, ValidationError
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_files_path
 
@@ -352,7 +352,8 @@ class TestFile(FrappeTestCase):
 		_file.save()
 
 		folder = frappe.get_doc("File", "Home/Test Folder 1/Test Folder 3")
-		self.assertRaises(ValidationError, folder.delete)
+		folder.delete()
+		self.assertRaises(DoesNotExistError, _file.reload)
 
 	def test_folder_delete(self):
 		folder = self.get_folder("Test Folder Delete")

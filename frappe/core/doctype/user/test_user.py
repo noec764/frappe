@@ -425,7 +425,6 @@ class TestUser(unittest.TestCase):
 		self.assertEqual(reset_password(user="random"), "not found")
 
 	def test_user_onload_modules(self):
-		from frappe.config import get_modules_from_all_apps
 		from frappe.desk.form.load import getdoc
 
 		frappe.response.docs = []
@@ -433,7 +432,14 @@ class TestUser(unittest.TestCase):
 		doc = frappe.response.docs[0]
 		self.assertListEqual(
 			[x.get("label") for x in doc.get("__onload").get("all_modules", [])],
-			[m.get("module_name") for m in get_modules_from_all_apps()],
+			[
+				m
+				for m in sorted(
+					frappe.get_all(
+						"Workspace", pluck="module", filters={"for_user": ("in", ("", "Administrator"))}, distinct=1
+					)
+				)
+			],
 		)
 
 	def test_reset_password_link_expiry(self):

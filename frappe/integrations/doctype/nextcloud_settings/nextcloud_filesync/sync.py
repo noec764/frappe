@@ -77,7 +77,6 @@ def optional_sync_module(**kwargs) -> Generator[Optional["NextcloudFileSync"], N
 
 def sync_log(*args):
 	s = " ".join(map(str, args))
-	print(s)
 	logger.info(s)
 
 
@@ -377,7 +376,7 @@ class NextcloudFileSync:
 			self._upload_to_remote(doc, event="sync")
 
 	def _upload_to_remote(self, doc: File, event=None):
-		self.log(f"* upload to remote: {doc} (event={event})")
+		self.log(f"* upload to remote: {str(doc)} (event={event})")
 
 		if check_flag(doc):
 			self.log("↳ skipping, flag nextcloud_triggered_update is set")
@@ -391,7 +390,7 @@ class NextcloudFileSync:
 		self._create_or_force_update_doc_in_remote(doc, check_remote=True)
 
 	def file_on_trash(self, doc: File):
-		self.log(f"* DELETE: {doc}")
+		self.log(f"* DELETE: {str(doc)}")
 		if not self.can_run_filesync(doc):
 			return
 
@@ -418,9 +417,9 @@ class NextcloudFileSync:
 			remote_file = self.client.file_info_by_fileid(nextcloud_id)
 			assert remote_file is not None
 			self.client.delete(remote_file.path)
-			self.log(f"↳ okay {doc} ({nextcloud_id}@nextcloud): removed nextcloud file")
+			self.log(f"↳ okay {str(doc)} ({nextcloud_id}@nextcloud): removed nextcloud file")
 		except Exception as e:
-			self.log(f"↳ fail {doc} ({nextcloud_id}@nextcloud): failed to remove nextcloud file")
+			self.log(f"↳ fail {str(doc)} ({nextcloud_id}@nextcloud): failed to remove nextcloud file")
 			self.log(e)
 			raise
 
@@ -432,7 +431,7 @@ class NextcloudFileSync:
 					"nextcloud_etag": None,
 				}
 			)
-			self.log(f"↳ updated {doc} to remove nextcloud_id")
+			self.log(f"↳ updated {str(doc)} to remove nextcloud_id")
 			set_flag(doc)
 
 	def _update_etag_for_id(self, nextcloud_id: int):
@@ -442,7 +441,7 @@ class NextcloudFileSync:
 			self.runner.run_actions([Action(type="meta.updateEtag", remote=remote, local=local)])
 
 	def file_on_create(self, doc: File):
-		self.log(f"* CREATE: {doc}")
+		self.log(f"* CREATE: {str(doc)}")
 		if not self.can_run_filesync(doc):
 			return
 
@@ -453,7 +452,7 @@ class NextcloudFileSync:
 		set_flag(doc)
 
 	def file_on_update(self, doc: File):
-		self.log(f"* UPDATE: {doc}")
+		self.log(f"* UPDATE: {str(doc)}")
 		if not self.can_run_filesync(doc, ignore_private_check=True):
 			return
 
@@ -540,7 +539,7 @@ class NextcloudFileSync:
 					dupl: str = self._check_weird_duplicate(doc, remote)
 					if dupl:
 						dupl_doc: File = frappe.get_doc("File", dupl)
-						self.log(f"a duplicate of file {doc} has been found: {dupl_doc}")
+						self.log(f"a duplicate of file {str(doc)} has been found: {dupl_doc}")
 						name, ext = os.path.splitext(dupl_doc.file_name)
 						dupl_doc.file_name = name + " (2)" + ext
 						dupl_doc.add_comment(text="Nextcloud: This file is a duplicate.")

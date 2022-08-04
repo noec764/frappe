@@ -46,8 +46,8 @@ unittests:
     - cd apps/frappe
     - yarn install
     - cd ../../
-    - python apps/frappe/test_sites/test_installer.py || true
-    - python apps/frappe/test_sites/test_runner.py
+    - ./env/bin/python apps/frappe/test_sites/test_installer.py || true
+    - ./env/bin/python apps/frappe/test_sites/test_runner.py frappe
 
 build_dodock:
   stage: Build Dodock

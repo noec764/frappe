@@ -95,7 +95,7 @@ def can_run_hook(doc=None):
 
 @frappe.whitelist()
 def file_on_trash(doc, event):
-	sync_log(f"file_on_trash({doc}, {event}, nc_id={doc.nextcloud_id})")
+	sync_log(f"file_on_trash({str(doc)}, {event}, nc_id={doc.nextcloud_id})")
 	if not can_run_hook(doc):
 		return
 	if not doc_has_nextcloud_id(doc):
@@ -115,7 +115,7 @@ def file_on_trash(doc, event):
 
 @frappe.whitelist()
 def file_on_update(doc, event):
-	sync_log(f"file_on_update({doc}, {event})")
+	sync_log(f"file_on_update({str(doc)}, {event})")
 	if not can_run_hook(doc):
 		return
 
@@ -133,7 +133,7 @@ def file_on_update(doc, event):
 					modified = entry.last_updated
 
 			doc.db_set("modified", modified, update_modified=False)
-			sync_log(f"corrected time of {doc}: ", modified)
+			sync_log(f"corrected time of {str(doc)}: ", modified)
 			frappe.db.commit()
 		return
 	# </TODO>
@@ -148,7 +148,7 @@ def file_on_update(doc, event):
 
 @frappe.whitelist()
 def file_on_create(doc, event):
-	sync_log(f"file_on_create({doc}, {event})")
+	sync_log(f"file_on_create({str(doc)}, {event})")
 	if not can_run_hook(doc):
 		return
 

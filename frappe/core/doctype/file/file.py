@@ -391,7 +391,7 @@ class File(Document):
 		"""Delete all children of folder"""
 		if self.is_folder:
 			files = self.get_successors()
-			for (f,) in files:
+			for f in files:
 				doc = frappe.get_doc("File", f)
 				if flags:
 					doc.flags.update(flags)
