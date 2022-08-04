@@ -122,7 +122,7 @@ class TestMoney(unittest.TestCase):
 			(5000, "Naira Five Thousand"),
 			(5000.0, "Naira Five Thousand"),
 			(0.1, "Ten Kobo"),
-			(0, "Zero Naira"),
+			(0, "Naira Zero"),
 			("Fail", ""),
 		]
 
