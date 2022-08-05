@@ -2,10 +2,12 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Module Onboarding", {
-	refresh: function(frm) {
+	refresh: function (frm) {
 		frappe.boot.developer_mode &&
 			frm.set_intro(
-				__("Saving this will export this document as well as the steps linked here as json."),
+				__(
+					"Saving this will export this document as well as the steps linked here as json."
+				),
 				true
 			);
 		if (!frappe.boot.developer_mode) {
@@ -15,13 +17,13 @@ frappe.ui.form.on("Module Onboarding", {
 		frm.set_query("step", "steps", () => {
 			return {
 				filters: {
-					"language": frm.doc.language
-				}
-			}
-		})
+					language: frm.doc.language,
+				},
+			};
+		});
 	},
 
-	disable_form: function(frm) {
+	disable_form: function (frm) {
 		frm.set_read_only();
 		frm.fields
 			.filter((field) => field.has_input)

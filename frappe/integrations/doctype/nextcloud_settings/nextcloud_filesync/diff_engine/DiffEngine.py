@@ -1,8 +1,6 @@
-from typing import Dict, Optional, Set
-
 from .BaseDiffEngine import BaseDiffEngineNC
-from .Entry import Entry, EntryLocal, EntryRemote
 from .Common import Common
+from .Entry import EntryLocal, EntryRemote
 
 
 class DiffEngine(BaseDiffEngineNC):
@@ -10,20 +8,20 @@ class DiffEngine(BaseDiffEngineNC):
 		super().__init__(logger=common.logger, **kwargs)
 		self.common = common
 
-	def get_local_entry_by_id(self, id: int) -> Optional[EntryLocal]:
+	def get_local_entry_by_id(self, id: int) -> EntryLocal | None:
 		return self.common.get_local_entry_by_id(id)
 
-	def get_local_entry_by_path(self, path: str) -> Optional[EntryLocal]:
+	def get_local_entry_by_path(self, path: str) -> EntryLocal | None:
 		return self.common.get_local_entry_by_path(path)
 
-	def get_remote_entry_by_id(self, id: int) -> Optional[EntryRemote]:
+	def get_remote_entry_by_id(self, id: int) -> EntryRemote | None:
 		return self.common.get_remote_entry_by_id(id)
 
-	def get_remote_entry_by_path(self, path: str) -> Optional[EntryRemote]:
+	def get_remote_entry_by_path(self, path: str) -> EntryRemote | None:
 		return self.common.get_remote_entry_by_path(path)
 
-	def get_local_children_ids(self, of_dir: EntryLocal) -> Set[int]:
+	def get_local_children_ids(self, of_dir: EntryLocal) -> set[int]:
 		return self.common.get_local_children_ids(of_dir)
 
-	def get_remote_children_entries(self, of_dir: EntryRemote) -> Dict[int, EntryRemote]:
+	def get_remote_children_entries(self, of_dir: EntryRemote) -> dict[int, EntryRemote]:
 		return self.common.get_remote_children_entries(of_dir)

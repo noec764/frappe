@@ -2,31 +2,35 @@
 # For license information, please see license.txt
 
 import os
-from datetime import datetime
 import socket
-from typing import Optional
+from datetime import datetime
+
+from owncloud import HTTPResponseError
 
 import frappe
 from frappe.model.document import Document
 from frappe.utils.data import cint
 
-from owncloud import HTTPResponseError
-
 from .client import NextcloudIntegrationClient
-from .exceptions import NextcloudExceptionInvalidCredentials, NextcloudExceptionInvalidUrl, NextcloudExceptionServerIsDown
+from .exceptions import (
+	NextcloudExceptionInvalidCredentials,
+	NextcloudExceptionInvalidUrl,
+	NextcloudExceptionServerIsDown,
+)
 
-if any((os.getenv('CI'), frappe.conf.developer_mode, frappe.conf.allow_tests)):
+if any((os.getenv("CI"), frappe.conf.developer_mode, frappe.conf.allow_tests)):
 	# Do not check certificates when in developer mode or while testing
-	os.environ['NEXTCLOUD_DONT_VERIFY_CERTS'] = '1'
+	os.environ["NEXTCLOUD_DONT_VERIFY_CERTS"] = "1"
 	# os.environ['CI_NEXTCLOUD_DISABLE'] = '1'
 
-if os.getenv('NEXTCLOUD_FORCE_VERIFY_CERTS'):
-	os.environ['NEXTCLOUD_DONT_VERIFY_CERTS'] = ''
+if os.getenv("NEXTCLOUD_FORCE_VERIFY_CERTS"):
+	os.environ["NEXTCLOUD_DONT_VERIFY_CERTS"] = ""
+
 
 class NextcloudSettings(Document):
 	enabled: bool = False
-	cloud_url: str = ''
-	username: str = ''
+	cloud_url: str = ""
+	username: str = ""
 	# password: str = ''
 
 	enable_sync: bool = False
@@ -35,40 +39,41 @@ class NextcloudSettings(Document):
 
 	debug_disable_filesync_cron: bool = False
 
-	path_to_files_folder: str = ''
+	path_to_files_folder: str = ""
 	filesync_rename_folder_on_save: bool = False
 	filesync_exclude_private: bool = True
 
 	# TODO: store sync_datetime for each of the 3 modules + configurable interval
-	last_filesync_dt: Optional[str] = None
+	last_filesync_dt: str | None = None
 
 	# TODO: remove these properties (conflict override)
 	next_filesync_ignore_id_conflicts: bool = False
-	filesync_override_conflict_strategy: str = ''
+	filesync_override_conflict_strategy: str = ""
 
 	def _get_credentials(self):
-		password: str = self.get_password(fieldname='password', raise_exception=False)
+		password: str = self.get_password(fieldname="password", raise_exception=False)
 		username: str = self.username
 		return username, password
 
 	def _get_cloud_base_url(self):
 		from urllib.parse import urlsplit, urlunsplit
+
 		o = urlsplit(self.cloud_url)
-		clean_url = urlunsplit((o.scheme, o.netloc, '', '', ''))
-		return clean_url.strip('/')
+		clean_url = urlunsplit((o.scheme, o.netloc, "", "", ""))
+		return clean_url.strip("/")
 
 	def nc_connect(self, **kwargs):
 		if not self.nc_ping_server():
 			raise NextcloudExceptionServerIsDown
 
 		username, password = self._get_credentials()
-		cloud_url = self._get_cloud_base_url() + '/'
+		cloud_url = self._get_cloud_base_url() + "/"
 
-		verify_certs = not cint(os.environ.get('NEXTCLOUD_DONT_VERIFY_CERTS', False))
+		verify_certs = not cint(os.environ.get("NEXTCLOUD_DONT_VERIFY_CERTS", False))
 		client = NextcloudIntegrationClient(cloud_url, verify_certs=verify_certs, **kwargs)
 		try:
 			client.login(username, password)
-			client.list('/', depth=0, properties=[])  # query to check that credentials are valid
+			client.list("/", depth=0, properties=[])  # query to check that credentials are valid
 			# https://github.com/nextcloud/server/issues/13561
 		except HTTPResponseError as e:
 			if e.status_code == 401:
@@ -79,11 +84,12 @@ class NextcloudSettings(Document):
 
 		return client
 
-	def nc_ping_server(self, n_tries = 2, t_timeout = 5):
+	def nc_ping_server(self, n_tries=2, t_timeout=5):
 		from urllib.parse import urlsplit
-		url = self._get_cloud_base_url().strip('/')
+
+		url = self._get_cloud_base_url().strip("/")
 		o = urlsplit(url)
-		default_port = {'http': 80, 'https': 443}
+		default_port = {"http": 80, "https": 443}
 		port = o.port or default_port.get(o.scheme, 80)
 		host = o.hostname
 
@@ -111,4 +117,4 @@ class NextcloudSettings(Document):
 		return frappe.utils.get_datetime(self.last_filesync_dt)
 
 	def set_last_filesync_dt(self, dt_local: datetime):
-		self.db_set('last_filesync_dt', dt_local, update_modified=False)
+		self.db_set("last_filesync_dt", dt_local, update_modified=False)

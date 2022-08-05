@@ -1,6 +1,6 @@
-from .test_actions import *
-from .test_diff_abstract import *
-from .test_diff_real import *
-from .test_fetcher import *
-from .test_idempotence import *
-from .test_other import *
+from .test_actions import *  # noqa
+from .test_diff_abstract import *  # noqa
+from .test_diff_real import *  # noqa
+from .test_fetcher import *  # noqa
+from .test_idempotence import *  # noqa
+from .test_other import *  # noqa

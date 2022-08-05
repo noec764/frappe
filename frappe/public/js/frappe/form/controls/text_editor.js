@@ -1,43 +1,66 @@
-import Quill from 'quill';
-import TemplateFieldSelector from './template_field_selector';
-import ImageResize from 'quill-image-resize';
-import MagicUrl from 'quill-magic-url';
+import Quill from "quill";
+import TemplateFieldSelector from "./template_field_selector";
+import ImageResize from "quill-image-resize";
+import MagicUrl from "quill-magic-url";
 
-Quill.register('modules/imageResize', ImageResize);
-Quill.register('modules/magicUrl', MagicUrl);
-const CodeBlockContainer = Quill.import('formats/code-block-container');
-CodeBlockContainer.tagName = 'PRE';
+Quill.register("modules/imageResize", ImageResize);
+Quill.register("modules/magicUrl", MagicUrl);
+const CodeBlockContainer = Quill.import("formats/code-block-container");
+CodeBlockContainer.tagName = "PRE";
 Quill.register(CodeBlockContainer, true);
 
 // font size
-let font_sizes = ['---', '8px', '9px', '10px', '11px', '12px', '13px', '14px', '15px', '16px', '18px', '20px', '22px', '24px', '32px', '36px', '40px', '48px', '54px', '64px', '96px', '128px'];
-const Size = Quill.import('attributors/style/size');
+let font_sizes = [
+	"---",
+	"8px",
+	"9px",
+	"10px",
+	"11px",
+	"12px",
+	"13px",
+	"14px",
+	"15px",
+	"16px",
+	"18px",
+	"20px",
+	"22px",
+	"24px",
+	"32px",
+	"36px",
+	"40px",
+	"48px",
+	"54px",
+	"64px",
+	"96px",
+	"128px",
+];
+const Size = Quill.import("attributors/style/size");
 Size.whitelist = font_sizes;
 Quill.register(Size, true);
 
 // table
-const Table = Quill.import('formats/table-container');
+const Table = Quill.import("formats/table-container");
 const superCreate = Table.create.bind(Table);
 Table.create = (value) => {
 	const node = superCreate(value);
-	node.classList.add('table');
-	node.classList.add('table-bordered');
+	node.classList.add("table");
+	node.classList.add("table-bordered");
 	return node;
 };
 
 Quill.register(Table, true);
 
 // link without href
-var Link = Quill.import('formats/link');
+var Link = Quill.import("formats/link");
 
 class MyLink extends Link {
 	static create(value) {
 		let node = super.create(value);
 		value = this.sanitize(value);
-		node.setAttribute('href', value);
-		if (value.startsWith('/') || value.indexOf(window.location.host)) {
+		node.setAttribute("href", value);
+		if (value.startsWith("/") || value.indexOf(window.location.host)) {
 			// no href if internal link
-			node.removeAttribute('target');
+			node.removeAttribute("target");
 		}
 		return node;
 	}
@@ -47,20 +70,20 @@ Quill.register(MyLink, true);
 
 // Template blot
 const ATTRS = {
-	PARENT: 'data-doctype',
-	FIELDNAME: 'data-value',
-	REFERENCE: 'data-reference',
-	LABEL: 'data-label',
-	FUNCTION: 'data-function',
-	FIELDTYPE: 'data-fieldtype'
+	PARENT: "data-doctype",
+	FIELDNAME: "data-value",
+	REFERENCE: "data-reference",
+	LABEL: "data-label",
+	FUNCTION: "data-function",
+	FIELDTYPE: "data-fieldtype",
 };
 
-const Embed = Quill.import('blots/embed');
+const Embed = Quill.import("blots/embed");
 
 class TemplateBlot extends Embed {
 	static create(value) {
 		let node = super.create(value);
-		node.setAttribute('class', 'badge');
+		node.setAttribute("class", "badge");
 		node.setAttribute(ATTRS.PARENT, value.parent);
 		node.setAttribute(ATTRS.FIELDNAME, value.fieldname);
 		node.setAttribute(ATTRS.REFERENCE, value.reference);
@@ -78,28 +101,31 @@ class TemplateBlot extends Embed {
 			reference: node.getAttribute(ATTRS.REFERENCE),
 			label: node.getAttribute(ATTRS.LABEL),
 			function: node.getAttribute(ATTRS.FUNCTION),
-			fieldtype: node.getAttribute(ATTRS.FIELDTYPE)
+			fieldtype: node.getAttribute(ATTRS.FIELDTYPE),
 		};
 	}
 }
-TemplateBlot.blotName = 'template-blot';
-TemplateBlot.tagName = 'template-blot';
+TemplateBlot.blotName = "template-blot";
+TemplateBlot.tagName = "template-blot";
 
-Quill.register({
-	'formats/template-blot': TemplateBlot
-}, true);
+Quill.register(
+	{
+		"formats/template-blot": TemplateBlot,
+	},
+	true
+);
 
 // image uploader
-const Uploader = Quill.import('modules/uploader');
-Uploader.DEFAULTS.mimetypes.push('image/gif');
+const Uploader = Quill.import("modules/uploader");
+Uploader.DEFAULTS.mimetypes.push("image/gif");
 
 // inline style
-const BackgroundStyle = Quill.import('attributors/style/background');
-const ColorStyle = Quill.import('attributors/style/color');
-const SizeStyle = Quill.import('attributors/style/size');
-const FontStyle = Quill.import('attributors/style/font');
-const AlignStyle = Quill.import('attributors/style/align');
-const DirectionStyle = Quill.import('attributors/style/direction');
+const BackgroundStyle = Quill.import("attributors/style/background");
+const ColorStyle = Quill.import("attributors/style/color");
+const SizeStyle = Quill.import("attributors/style/size");
+const FontStyle = Quill.import("attributors/style/font");
+const AlignStyle = Quill.import("attributors/style/align");
+const DirectionStyle = Quill.import("attributors/style/direction");
 Quill.register(BackgroundStyle, true);
 Quill.register(ColorStyle, true);
 Quill.register(SizeStyle, true);
@@ -108,17 +134,19 @@ Quill.register(AlignStyle, true);
 Quill.register(DirectionStyle, true);
 
 // direction class
-const DirectionClass = Quill.import('attributors/class/direction');
+const DirectionClass = Quill.import("attributors/class/direction");
 Quill.register(DirectionClass, true);
 
 // replace font tag with span
-const Inline = Quill.import('blots/inline');
+const Inline = Quill.import("blots/inline");
 
 class CustomColor extends Inline {
 	constructor(domNode, value) {
 		super(domNode, value);
 		this.domNode.style.color = this.domNode.color;
-		domNode.outerHTML = this.domNode.outerHTML.replace(/<font/g, '<span').replace(/<\/font>/g, '</span>');
+		domNode.outerHTML = this.domNode.outerHTML
+			.replace(/<font/g, "<span")
+			.replace(/<\/font>/g, "</span>");
 	}
 }
 
@@ -141,17 +169,19 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	make_quill_editor() {
 		if (this.quill) return;
 		const show_template = this.df.options == "Template" ? true : false;
-		this.quill_container = $(frappe.render_template("text_editor", {
-			...this.get_tooltips(),
-			showtemplate: show_template,
-			font_sizes: font_sizes
-		})).appendTo(this.input_area);
+		this.quill_container = $(
+			frappe.render_template("text_editor", {
+				...this.get_tooltips(),
+				showtemplate: show_template,
+				font_sizes: font_sizes,
+			})
+		).appendTo(this.input_area);
 		if (this.df.max_height) {
-			$(this.quill_container).css({'max-height': this.df.max_height, 'overflow': 'auto'});
+			$(this.quill_container).css({ "max-height": this.df.max_height, overflow: "auto" });
 		}
 		this.quill = new Quill(this.quill_container[2], this.get_quill_options());
 
-		this.make_template_editor()
+		this.make_template_editor();
 
 		this.bind_events();
 	}
@@ -159,9 +189,9 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	make_template_editor() {
 		const me = this;
 		if (["Email Template"].includes(this.doctype)) {
-			const toolbar = this.quill.getModule('toolbar');
-			toolbar.addHandler('template-blot', function() {
-				if(!me.field_selector) {
+			const toolbar = this.quill.getModule("toolbar");
+			toolbar.addHandler("template-blot", function () {
+				if (!me.field_selector) {
 					me.field_selector = new TemplateFieldSelector(me);
 				} else {
 					me.field_selector.make_dialog();
@@ -171,50 +201,53 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	}
 
 	bind_events() {
-		this.quill.on('text-change', frappe.utils.debounce((delta, oldDelta, source) => {
-			if (!this.is_quill_dirty(source)) return;
+		this.quill.on(
+			"text-change",
+			frappe.utils.debounce((delta, oldDelta, source) => {
+				if (!this.is_quill_dirty(source)) return;
 
-			const input_value = this.get_input_value();
-			this.parse_validate_and_set_in_model(input_value);
-		}, 300));
+				const input_value = this.get_input_value();
+				this.parse_validate_and_set_in_model(input_value);
+			}, 300)
+		);
 
-		$(this.quill.root).on('keydown', (e) => {
+		$(this.quill.root).on("keydown", (e) => {
 			const key = frappe.ui.keys && frappe.ui.keys.get_key(e);
-			if (['ctrl+b', 'meta+b'].includes(key)) {
+			if (["ctrl+b", "meta+b"].includes(key)) {
 				e.stopPropagation();
 			}
 		});
 
-		$(this.quill.root).on('drop', (e) => {
+		$(this.quill.root).on("drop", (e) => {
 			e.stopPropagation();
 		});
 
 		// table commands
-		this.$wrapper.on('click', '.ql-table .ql-picker-item', (e) => {
+		this.$wrapper.on("click", ".ql-table .ql-picker-item", (e) => {
 			const $target = $(e.currentTarget);
 			const action = $target.data().value;
 			e.preventDefault();
 
-			const table = this.quill.getModule('table');
-			if (action === 'insert-table') {
+			const table = this.quill.getModule("table");
+			if (action === "insert-table") {
 				table.insertTable(2, 2);
-			} else if (action === 'insert-row-above') {
+			} else if (action === "insert-row-above") {
 				table.insertRowAbove();
-			} else if (action === 'insert-row-below') {
+			} else if (action === "insert-row-below") {
 				table.insertRowBelow();
-			} else if (action === 'insert-column-left') {
+			} else if (action === "insert-column-left") {
 				table.insertColumnLeft();
-			} else if (action === 'insert-column-right') {
+			} else if (action === "insert-column-right") {
 				table.insertColumnRight();
-			} else if (action === 'delete-row') {
+			} else if (action === "delete-row") {
 				table.deleteRow();
-			} else if (action === 'delete-column') {
+			} else if (action === "delete-column") {
 				table.deleteColumn();
-			} else if (action === 'delete-table') {
+			} else if (action === "delete-table") {
 				table.deleteTable();
 			}
 
-			if (action !== 'delete-row') {
+			if (action !== "delete-row") {
 				table.balanceTables();
 			}
 
@@ -222,17 +255,17 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 		});
 
 		// font size dropdown
-		let $font_size_label = this.$wrapper.find('.ql-size .ql-picker-label:first');
-		let $default_font_size = this.$wrapper.find('.ql-size .ql-picker-item:first');
+		let $font_size_label = this.$wrapper.find(".ql-size .ql-picker-label:first");
+		let $default_font_size = this.$wrapper.find(".ql-size .ql-picker-item:first");
 
 		if ($font_size_label.length) {
-			$font_size_label.attr('data-value', '---');
-			$default_font_size.attr('data-value', '---');
+			$font_size_label.attr("data-value", "---");
+			$default_font_size.attr("data-value", "---");
 		}
 	}
 
 	is_quill_dirty(source) {
-		if (source === 'api') return false;
+		if (source === "api") return false;
 		let input_value = this.get_input_value();
 		return this.value !== input_value;
 	}
@@ -244,34 +277,34 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 				table: true,
 				imageResize: {},
 				magicUrl: true,
-				mention: this.get_mention_options()
+				mention: this.get_mention_options(),
 			},
-			theme: 'snow'
+			theme: "snow",
 		};
 	}
 
 	get_tooltips() {
 		return {
-			"header": __("Text Size"),
-			"size": __("Font Size"),
-			"bold": __("Bold"),
-			"italic": __("Add italic text <cmd+i>"),
-			"underline": __("Underline"),
-			"blockquote": __("Quote"),
-			"codeblock": __("Code"),
-			"link": __("Link"),
-			"image": __("Image"),
-			"orderedlist": __("Ordered list"),
-			"bulletlist": __("Bullet list"),
-			"checklist": __("Check list"),
-			"align": __("Align"),
-			"indent": __("Indent"),
-			"table": __("Add a table"),
-			"clean": __("Remove formatting"),
-			"templateblot": __("Add a variable"),
-			"direction": __("Direction"),
-			"strike": __("Strike")
-		}
+			header: __("Text Size"),
+			size: __("Font Size"),
+			bold: __("Bold"),
+			italic: __("Add italic text <cmd+i>"),
+			underline: __("Underline"),
+			blockquote: __("Quote"),
+			codeblock: __("Code"),
+			link: __("Link"),
+			image: __("Image"),
+			orderedlist: __("Ordered list"),
+			bulletlist: __("Bullet list"),
+			checklist: __("Check list"),
+			align: __("Align"),
+			indent: __("Indent"),
+			table: __("Add a table"),
+			clean: __("Remove formatting"),
+			templateblot: __("Add a variable"),
+			direction: __("Direction"),
+			strike: __("Strike"),
+		};
 	}
 
 	get_mention_options() {
@@ -283,10 +316,11 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			allowedChars: /^[A-Za-z0-9_]*$/,
 			mentionDenotationChars: ["@"],
 			isolateCharacter: true,
-			source: frappe.utils.debounce(async function(search_term, renderList) {
-				let method = me.mention_search_method || 'frappe.desk.search.get_names_for_mentions';
+			source: frappe.utils.debounce(async function (search_term, renderList) {
+				let method =
+					me.mention_search_method || "frappe.desk.search.get_names_for_mentions";
 				let values = await frappe.xcall(method, {
-					search_term
+					search_term,
 				});
 
 				let sorted_values = me.prioritize_involved_users_in_mention(values);
@@ -294,19 +328,20 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			}, 300),
 			renderItem(item) {
 				let value = item.value;
-				return `${value} ${item.is_group ? frappe.utils.icon('users') : ''}`;
-			}
+				return `${value} ${item.is_group ? frappe.utils.icon("users") : ""}`;
+			},
 		};
 	}
 
 	prioritize_involved_users_in_mention(values) {
-		const involved_users = this.frm?.get_involved_users()   // input on form
-			|| cur_frm?.get_involved_users()   // comment box / dialog on active form
-			|| [];
+		const involved_users =
+			this.frm?.get_involved_users() || // input on form
+			cur_frm?.get_involved_users() || // comment box / dialog on active form
+			[];
 
 		return values
-			.filter(val => involved_users.includes(val.id))
-			.concat(values.filter(val => !involved_users.includes(val.id)));
+			.filter((val) => involved_users.includes(val.id))
+			.concat(values.filter((val) => !involved_users.includes(val.id)));
 	}
 
 	parse(value) {
@@ -321,25 +356,25 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 		if (value === this.get_input_value()) return;
 		if (!value) {
 			// clear contents for falsy values like '', undefined or null
-			this.quill.setText('');
+			this.quill.setText("");
 			return;
 		}
 
 		// set html without triggering a focus
-		const delta = this.quill.clipboard.convert({ html: value, text: '' });
+		const delta = this.quill.clipboard.convert({ html: value, text: "" });
 		this.quill.setContents(delta);
 	}
 
 	get_input_value() {
-		let value = this.quill ? this.quill.root.innerHTML : '';
+		let value = this.quill ? this.quill.root.innerHTML : "";
 		// hack to retain space sequence.
-		value = value.replace(/(\s)(\s)/g, ' &nbsp;');
+		value = value.replace(/(\s)(\s)/g, " &nbsp;");
 
 		try {
-			if (!$(value).find('.ql-editor').length) {
+			if (!$(value).find(".ql-editor").length) {
 				value = `<div class="ql-editor read-mode">${value}</div>`;
 			}
-		} catch(e) {
+		} catch (e) {
 			value = `<div class="ql-editor read-mode">${value}</div>`;
 		}
 

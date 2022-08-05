@@ -1,13 +1,15 @@
-import frappe
-from typing import Optional
 from functools import lru_cache
 
-def maybe_int(v: Optional[str]) -> Optional[int]:
-	if isinstance(v, str) and v != '':
+import frappe
+
+
+def maybe_int(v: str | None) -> int | None:
+	if isinstance(v, str) and v != "":
 		return int(v)
 	if isinstance(v, int):
 		return v
 	return None
+
 
 # Environment variables:
 # NEXTCLOUD_DONT_VERIFY_CERTS
@@ -15,8 +17,8 @@ def maybe_int(v: Optional[str]) -> Optional[int]:
 # NEXTCLOUD_ALLOW_TESTS
 # NEXTCLOUD_SKIP_TESTS
 
-FLAG_NEXTCLOUD_DISABLE_HOOKS = 'nextcloud_disable_filesync_hooks'
-FLAG_NEXTCLOUD_IGNORE = 'nextcloud_triggered_update'
+FLAG_NEXTCLOUD_DISABLE_HOOKS = "nextcloud_disable_filesync_hooks"
+FLAG_NEXTCLOUD_IGNORE = "nextcloud_triggered_update"
 
 
 def set_flag(doc):
@@ -35,11 +37,12 @@ def get_home_folder():
 def get_home_folder_name() -> str:
 	docname = frappe.db.get_value("File", {"is_home_folder": 1})
 	if not docname:
-		raise frappe.exceptions.DoesNotExistError('missing home folder')
+		raise frappe.exceptions.DoesNotExistError("missing home folder")
 	return docname
 
+
 def doc_has_nextcloud_id(doc):
-	i = doc.get('nextcloud_id', None)
-	if i in (None, ''):
+	i = doc.get("nextcloud_id", None)
+	if i in (None, ""):
 		return False
 	return True

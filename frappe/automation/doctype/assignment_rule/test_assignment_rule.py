@@ -89,7 +89,7 @@ class TestAutoAssign(unittest.TestCase):
 		self.assignment_rule.save()
 
 		for _ in range(30):
-			note = make_note(dict(public=1))
+			make_note(dict(public=1))
 
 		# check if each user has 10 assignments (?)
 		for user in ("test@example.com", "test1@example.com", "test2@example.com"):

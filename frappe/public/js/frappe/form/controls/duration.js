@@ -41,8 +41,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 		let $control = $(`
 			<div class="col duration-col">
 				<div class="row duration-row duration-label">${__(label)}</div>
-			</div>`
-		);
+			</div>`);
 
 		if (hidden) {
 			$control.addClass("hidden");
@@ -59,7 +58,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 		let total_duration = frappe.utils.seconds_to_duration(value, this.duration_options);
 
 		if (this.$picker) {
-			Object.keys(total_duration).forEach(duration => {
+			Object.keys(total_duration).forEach((duration) => {
 				this.inputs[duration].prop("value", total_duration[duration]);
 			});
 		}
@@ -131,7 +130,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 			minutes: 0,
 			hours: 0,
 			days: 0,
-			seconds: 0
+			seconds: 0,
 		};
 		if (this.inputs) {
 			total_duration.minutes = parseInt(this.inputs.minutes.val());
@@ -148,7 +147,7 @@ frappe.ui.form.ControlDuration = class ControlDuration extends frappe.ui.form.Co
 
 	is_duration_picker_set(inputs) {
 		let is_set = false;
-		Object.values(inputs).forEach(duration => {
+		Object.values(inputs).forEach((duration) => {
 			if (duration.prop("value") != 0) {
 				is_set = true;
 			}

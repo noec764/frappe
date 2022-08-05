@@ -1,4 +1,4 @@
-import { Chart } from 'frappe-charts/dist/frappe-charts.esm.js'
+import { Chart } from "frappe-charts/dist/frappe-charts.esm.js";
 
 frappe.provide("frappe.ui");
 frappe.Chart = Chart;
@@ -17,17 +17,17 @@ frappe.ui.RealtimeChart = class RealtimeChart extends frappe.Chart {
 		this.socketEvent = socketEvent;
 		this.maxLabelPoints = maxLabelPoints;
 
-		this.start_updating = function() {
-			frappe.realtime.on(this.socketEvent, data => {
+		this.start_updating = function () {
+			frappe.realtime.on(this.socketEvent, (data) => {
 				this.update_chart(data.label, data.points);
 			});
 		};
 
-		this.stop_updating = function() {
+		this.stop_updating = function () {
 			frappe.realtime.off(this.socketEvent);
 		};
 
-		this.update_chart = function(label, data) {
+		this.update_chart = function (label, data) {
 			if (this.currentSize >= this.maxLabelPoints) {
 				this.removeDataPoint(0);
 			} else {

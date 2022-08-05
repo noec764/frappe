@@ -6,7 +6,7 @@ frappe.ui.form.ControlHTML = class ControlHTML extends frappe.ui.form.Control {
 
 	refresh_input() {
 		var content = this.get_content();
-		if(content) this.$wrapper.html(content);
+		if (content) this.$wrapper.html(content);
 	}
 
 	get_content() {
@@ -24,7 +24,7 @@ frappe.ui.form.ControlHTML = class ControlHTML extends frappe.ui.form.Control {
 	}
 
 	set_value(html) {
-		if(html.appendTo) {
+		if (html.appendTo) {
 			// jquery object
 			html.appendTo(this.$wrapper.empty());
 		} else {

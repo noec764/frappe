@@ -1,14 +1,13 @@
-from typing import Dict, Optional, Set, List
 import unicodedata
 
-from .Entry import Entry, EntryLocal, EntryRemote
 from .BaseDiffEngine import BaseDiffEngineNC
+from .Entry import Entry, EntryLocal, EntryRemote
 
 
 def unicode_str_equals(a: str, b: str):
 	if a == b:
 		return True
-	return unicodedata.normalize('NFC', a) == unicodedata.normalize('NFC', b)
+	return unicodedata.normalize("NFC", a) == unicodedata.normalize("NFC", b)
 
 
 class DiffEngineTest(BaseDiffEngineNC):
@@ -19,11 +18,11 @@ class DiffEngineTest(BaseDiffEngineNC):
 	def __init__(self, *args, **kwargs):
 		super().__init__(*args, **kwargs)
 
-	def _test_init(self, L: List[EntryLocal], R: List[EntryRemote]):
+	def _test_init(self, L: list[EntryLocal], R: list[EntryRemote]):
 		self._test_FRAPPE_local_entries = L
 		self._test_UNKNOWN_all_remote_entries = R
 
-	def get_local_entry_by_id(self, id: int) -> Optional[EntryLocal]:
+	def get_local_entry_by_id(self, id: int) -> EntryLocal | None:
 		if id is None:
 			return None
 		for local in self._test_FRAPPE_local_entries:
@@ -31,13 +30,13 @@ class DiffEngineTest(BaseDiffEngineNC):
 				return local
 		return None
 
-	def get_local_entry_by_path(self, path: str) -> Optional[EntryLocal]:
+	def get_local_entry_by_path(self, path: str) -> EntryLocal | None:
 		for local in self._test_FRAPPE_local_entries:
 			if unicode_str_equals(local.path, path):
 				return local
 		return None
 
-	def get_remote_entry_by_id(self, id: int) -> Optional[EntryRemote]:
+	def get_remote_entry_by_id(self, id: int) -> EntryRemote | None:
 		if id is None:
 			return None
 		for remote in self._test_UNKNOWN_all_remote_entries:
@@ -45,29 +44,36 @@ class DiffEngineTest(BaseDiffEngineNC):
 				return remote
 		return None
 
-	def get_remote_entry_by_path(self, path: str) -> Optional[EntryRemote]:
+	def get_remote_entry_by_path(self, path: str) -> EntryRemote | None:
 		for remote in self._test_UNKNOWN_all_remote_entries:
 			if unicode_str_equals(remote.path, path):
 				return remote
 		return None
 
-	def get_local_children_ids(self, of_dir: Entry) -> Set[int]:
-		old_children_ids: Set[int] = set(
-			map(lambda f: f.nextcloud_id or 0,
-				filter(lambda f: (f.nextcloud_id is not None) and (f.parent_id == of_dir.nextcloud_id),
-					   self._test_FRAPPE_local_entries))
+	def get_local_children_ids(self, of_dir: Entry) -> set[int]:
+		old_children_ids: set[int] = set(
+			map(
+				lambda f: f.nextcloud_id or 0,
+				filter(
+					lambda f: (f.nextcloud_id is not None) and (f.parent_id == of_dir.nextcloud_id),
+					self._test_FRAPPE_local_entries,
+				),
+			)
 		)
 		return old_children_ids
 
-	def get_remote_children_entries(self, of_dir: EntryRemote) -> Dict[int, EntryRemote]:
+	def get_remote_children_entries(self, of_dir: EntryRemote) -> dict[int, EntryRemote]:
 		cur_list = [
-			entry for entry in self._test_UNKNOWN_all_remote_entries if entry.parent_id == of_dir.nextcloud_id
+			entry
+			for entry in self._test_UNKNOWN_all_remote_entries
+			if entry.parent_id == of_dir.nextcloud_id
 		]
 		# cur_list.sort(key=lambda f: f.path)
 
 		new_children = {
 			# key: value
-			int(e.nextcloud_id): e for e in cur_list
+			int(e.nextcloud_id): e
+			for e in cur_list
 			# int(file.attributes[self._FILE_ID]): file for file in cur_list
 		}
 

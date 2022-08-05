@@ -1,5 +1,5 @@
 frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control {
-	static horizontal = true
+	static horizontal = true;
 	make() {
 		// parent element
 		super.make();
@@ -10,10 +10,11 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	}
 
 	make_wrapper() {
-		if(this.only_input) {
+		if (this.only_input) {
 			this.$wrapper = $('<div class="form-group frappe-control">').appendTo(this.parent);
 		} else {
-			this.$wrapper = $('<div class="frappe-control">\
+			this.$wrapper = $(
+				'<div class="frappe-control">\
 				<div class="form-group">\
 					<div class="clearfix">\
 						<label class="control-label" style="padding-right: 0px;"></label>\
@@ -24,7 +25,8 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 						<p class="help-box small text-muted"></p>\
 					</div>\
 				</div>\
-			</div>').appendTo(this.parent);
+			</div>'
+			).appendTo(this.parent);
 		}
 	}
 
@@ -37,7 +39,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	}
 
 	set_input_areas() {
-		if(this.only_input) {
+		if (this.only_input) {
 			this.input_area = this.wrapper;
 		} else {
 			this.label_area = this.label_span = this.$wrapper.find("label").get(0);
@@ -50,7 +52,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	}
 
 	set_max_width() {
-		if(this.constructor.horizontal) {
+		if (this.constructor.horizontal) {
 			this.$wrapper.addClass("input-max-width");
 		}
 	}
@@ -60,7 +62,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	// mandatory style on refresh
 	refresh_input() {
 		var me = this;
-		var make_input = function() {
+		var make_input = function () {
 			if (!me.has_input) {
 				me.make_input();
 				if (me.df.on_make) {
@@ -69,7 +71,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 			}
 		};
 
-		var update_input = function() {
+		var update_input = function () {
 			if (me.doctype && me.docname) {
 				me.set_input(me.value);
 			} else {
@@ -118,14 +120,16 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	}
 
 	set_disp_area(value) {
-		if(in_list(["Currency", "Int", "Float"], this.df.fieldtype)
-			&& (this.value === 0 || value === 0)) {
+		if (
+			in_list(["Currency", "Int", "Float"], this.df.fieldtype) &&
+			(this.value === 0 || value === 0)
+		) {
 			// to set the 0 value in readonly for currency, int, float field
 			value = 0;
 		} else {
 			value = this.value || value;
 		}
-		if (this.df.fieldtype === 'Data') {
+		if (this.df.fieldtype === "Data") {
 			value = frappe.utils.escape_html(value || "");
 		}
 		let doc = this.doc || (this.frm && this.frm.doc);
@@ -134,14 +138,14 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	}
 
 	set_label(label) {
-		if(label) this.df.label = label;
+		if (label) this.df.label = label;
 
-		if(this.only_input || this.df.label==this._label)
-			return;
+		if (this.only_input || this.df.label == this._label) return;
 
 		var icon = "";
-		this.label_span.innerHTML = (icon ? '<i class="'+icon+'"></i> ' : "") +
-			__(this.df.label, null, this.df.parent)  || "&nbsp;";
+		this.label_span.innerHTML =
+			(icon ? '<i class="' + icon + '"></i> ' : "") +
+				__(this.df.label, null, this.df.parent) || "&nbsp;";
 		this._label = this.df.label;
 	}
 
@@ -149,7 +153,7 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 		if (description !== undefined) {
 			this.df.description = description;
 		}
-		if (this.only_input || this.df.description===this._description) {
+		if (this.only_input || this.df.description === this._description) {
 			return;
 		}
 		if (this.df.description) {
@@ -182,23 +186,23 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 	set_invalid() {
 		let invalid = !!this.df.invalid;
 		if (this.grid) {
-			this.$wrapper.parents('.grid-static-col').toggleClass('invalid', invalid);
-			this.$input.toggleClass('invalid', invalid);
+			this.$wrapper.parents(".grid-static-col").toggleClass("invalid", invalid);
+			this.$input.toggleClass("invalid", invalid);
 			this.grid_row.columns[this.df.fieldname].is_invalid = invalid;
 		} else {
-			this.$wrapper.toggleClass('has-error', invalid);
+			this.$wrapper.toggleClass("has-error", invalid);
 		}
 	}
 
 	set_required() {
-		this.label_area && $(this.label_area).toggleClass('reqd', Boolean(this.df.reqd));
+		this.label_area && $(this.label_area).toggleClass("reqd", Boolean(this.df.reqd));
 	}
 
 	set_bold() {
-		if(this.$input) {
+		if (this.$input) {
 			this.$input.toggleClass("bold", !!(this.df.bold || this.df.reqd));
 		}
-		if(this.disp_area) {
+		if (this.disp_area) {
 			$(this.disp_area).toggleClass("bold", !!(this.df.bold || this.df.reqd));
 		}
 	}

@@ -1,1 +1,1 @@
-import "./frappe/events_portal/index.js"
+import "./frappe/events_portal/index.js";

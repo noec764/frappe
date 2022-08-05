@@ -2,7 +2,17 @@ import Widget from "./base_widget.js";
 
 frappe.provide("frappe.utils");
 
-const indicator_colors = ["Gray", "Green", "Red", "Orange", "Pink", "Yellow", "Blue", "Cyan", "Teal"]
+const indicator_colors = [
+	"Gray",
+	"Green",
+	"Red",
+	"Orange",
+	"Pink",
+	"Yellow",
+	"Blue",
+	"Cyan",
+	"Teal",
+];
 export default class ShortcutWidget extends Widget {
 	constructor(opts) {
 		opts.shadow = true;
@@ -34,7 +44,7 @@ export default class ShortcutWidget extends Widget {
 				type: this.type,
 				is_query_report: this.is_query_report,
 				doctype: this.ref_doctype,
-				doc_view: this.doc_view
+				doc_view: this.doc_view,
 			});
 
 			let filters = frappe.utils.get_filter_from_json(this.stats_filter);
@@ -69,7 +79,11 @@ export default class ShortcutWidget extends Widget {
 
 		this.action_area.empty();
 		const label = get_label();
-		let color = count ? (indicator_colors.includes(this.color) ? this.color.toLowerCase() : 'gray') : 'gray';
+		let color = count
+			? indicator_colors.includes(this.color)
+				? this.color.toLowerCase()
+				: "gray"
+			: "gray";
 		const buttons = $(`<div class="indicator-pill ellipsis ${color}">${label}</div>`);
 
 		buttons.appendTo(this.action_area);

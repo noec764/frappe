@@ -1,7 +1,7 @@
 from .Action import Action
 
 
-class _BaseActionRunner():
+class _BaseActionRunner:
 	def __init__(self):
 		...
 
@@ -13,4 +13,4 @@ class _BaseActionRunner():
 
 	def run_action(self, action: Action):
 		if not self.is_action_valid(action):
-			raise ValueError('invalid action')
+			raise ValueError("invalid action")

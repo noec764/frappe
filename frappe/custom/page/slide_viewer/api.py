@@ -1,5 +1,4 @@
 import frappe
-from frappe.translate import get_dict, send_translations
 
 
 @frappe.whitelist()

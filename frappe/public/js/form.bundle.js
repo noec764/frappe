@@ -15,5 +15,4 @@ import "./frappe/form/form.js";
 import "./frappe/form/slide_viewer_form.js";
 import "./frappe/meta_tag.js";
 import "./frappe/calendar_recurrence.js";
-import "./frappe/doctype/"
-
+import "./frappe/doctype/";

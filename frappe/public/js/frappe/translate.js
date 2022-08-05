@@ -2,11 +2,11 @@
 // MIT License. See license.txt
 
 // for translation
-frappe._ = function(txt, replace, context = null) {
+frappe._ = function (txt, replace, context = null) {
 	if (!txt) return txt;
 	if (typeof txt != "string") return txt;
 
-	let translated_text = '';
+	let translated_text = "";
 
 	let key = txt; // txt.replace(/\n/g, "");
 	if (context) {
@@ -22,15 +22,15 @@ frappe._ = function(txt, replace, context = null) {
 	}
 	return translated_text;
 };
-window.__ = frappe._
+window.__ = frappe._;
 
-frappe.get_languages = function() {
-	if(!frappe.languages) {
-		frappe.languages = []
-		$.each(frappe.boot.lang_dict, function(lang, value){
-			frappe.languages.push({'label': lang, 'value': value})
+frappe.get_languages = function () {
+	if (!frappe.languages) {
+		frappe.languages = [];
+		$.each(frappe.boot.lang_dict, function (lang, value) {
+			frappe.languages.push({ label: lang, value: value });
 		});
-		frappe.languages = frappe.languages.sort(function(a, b) {
+		frappe.languages = frappe.languages.sort(function (a, b) {
 			return a.value < b.value ? -1 : 1;
 		});
 	}

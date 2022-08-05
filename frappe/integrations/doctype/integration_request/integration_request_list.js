@@ -1,5 +1,5 @@
-frappe.listview_settings['Integration Request'] = {
-	get_indicator: function(doc) {
+frappe.listview_settings["Integration Request"] = {
+	get_indicator: function (doc) {
 		if (doc.status == "Autorized") {
 			return [__("Autorized"), "blue", "status,=,Autorized"];
 		} else if (doc.status == "Pending") {
@@ -15,5 +15,5 @@ frappe.listview_settings['Integration Request'] = {
 		} else {
 			return [__("Queued"), "darkgray", "status,=,Queued"];
 		}
-	}
+	},
 };

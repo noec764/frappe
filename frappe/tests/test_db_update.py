@@ -24,7 +24,7 @@ class TestDBUpdate(unittest.TestCase):
 
 		for field_def in field_defs:
 			fieldname = field_def.get("fieldname")
-			table_column = find(table_columns, lambda d: d.get("name") == fieldname)
+			table_column = find(table_columns, lambda d: d.get("name") == fieldname)  # noqa
 
 			fieldtype = get_fieldtype_from_def(field_def)
 

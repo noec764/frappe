@@ -16,7 +16,7 @@
  * @property {function} [on_complete]
  */
 
-frappe.provide('frappe.ui');
+frappe.provide("frappe.ui");
 
 frappe.ui.SlideViewer = class SlideViewer {
 	/**
@@ -38,27 +38,26 @@ frappe.ui.SlideViewer = class SlideViewer {
 	 */
 	constructor(options) {
 		// Defaults
-		this.SlideClass = frappe.ui.Slide
-		this.SlidesClass = frappe.ui.Slides
+		this.SlideClass = frappe.ui.Slide;
+		this.SlidesClass = frappe.ui.Slides;
 
 		/** @type {SlideView} */
-		this.slideView = null
-		this.route = null
-		this.starting_slide = 0
-		this.documentName = null
-		this.additional_settings = null
-		this.doc = null
+		this.slideView = null;
+		this.route = null;
+		this.starting_slide = 0;
+		this.documentName = null;
+		this.additional_settings = null;
+		this.doc = null;
 
 		/** @type {frappe.ui.Slides} */
-		this.slidesInstance = null
-
+		this.slidesInstance = null;
 
 		if (options.route) {
-			this.route = options.route
+			this.route = options.route;
 		} else if (options.slideView) {
-			this.slideView = options.slideView
+			this.slideView = options.slideView;
 			const slideViewDefaults = {
-				title: '',
+				title: "",
 				reference_doctype: null,
 				allow_back: true,
 				allow_any: true,
@@ -67,51 +66,72 @@ frappe.ui.SlideViewer = class SlideViewer {
 				can_create_doc: true,
 				add_fullpage_edit_btn: false,
 				slides: [],
-			}
+			};
 			for (const k in slideViewDefaults) {
 				// if (this.slideView[k] === undefined) {
 				if (!(k in this.slideView)) {
-					this.slideView[k] = slideViewDefaults[k]
+					this.slideView[k] = slideViewDefaults[k];
 				}
 			}
 		} else {
-			return this.throwDevError('should have either route or slideView param', 'constructor')
+			return this.throwDevError(
+				"should have either route or slideView param",
+				"constructor"
+			);
 		}
 
 		if (options.with_form) {
-			this.with_form = true
+			this.with_form = true;
 			Object.assign(this, {
 				SlidesClass: SlidesWithForm,
 				SlideClass: SlideWithForm,
-			})
+			});
 		}
 
-		if (options.docname) { this.documentName = options.docname }
-		if (options.starting_slide) { this.starting_slide = options.starting_slide }
-		if (options.additional_settings) { this.additional_settings = options.additional_settings }
+		if (options.docname) {
+			this.documentName = options.docname;
+		}
+		if (options.starting_slide) {
+			this.starting_slide = options.starting_slide;
+		}
+		if (options.additional_settings) {
+			this.additional_settings = options.additional_settings;
+		}
 
-		if (options.SlideClass) { this.SlideClass = options.SlideClass }
-		if (options.SlidesClass) { this.SlidesClass = options.SlidesClass }
+		if (options.SlideClass) {
+			this.SlideClass = options.SlideClass;
+		}
+		if (options.SlidesClass) {
+			this.SlidesClass = options.SlidesClass;
+		}
 	}
 
 	showDevWarning(warn, ctx) {
-		console.error((ctx ? `[Slide Viewer: ${ctx}]` : '[Slide Viewer]'), msg)
+		console.error(ctx ? `[Slide Viewer: ${ctx}]` : "[Slide Viewer]", msg);
 	}
 
 	throwDevError(error, ctx) {
-		return frappe.throw((ctx ? `[Slide Viewer: ${ctx}]` : '[Slide Viewer]') + ' ' + error)
+		return frappe.throw((ctx ? `[Slide Viewer: ${ctx}]` : "[Slide Viewer]") + " " + error);
 	}
 
 	hide() {
-		window.cur_slides = undefined
-		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.slide_viewer_form_destroy)
-			this.slidesInstance.parent_form.slide_viewer_form_destroy()
+		window.cur_slides = undefined;
+		if (
+			this.slidesInstance &&
+			this.slidesInstance.parent_form &&
+			this.slidesInstance.parent_form.slide_viewer_form_destroy
+		)
+			this.slidesInstance.parent_form.slide_viewer_form_destroy();
 	}
 
 	show() {
-		window.cur_slides = this.slidesInstance
-		if (this.slidesInstance && this.slidesInstance.parent_form && this.slidesInstance.parent_form.slide_viewer_form_rebuild)
-			this.slidesInstance.parent_form.slide_viewer_form_rebuild()
+		window.cur_slides = this.slidesInstance;
+		if (
+			this.slidesInstance &&
+			this.slidesInstance.parent_form &&
+			this.slidesInstance.parent_form.slide_viewer_form_rebuild
+		)
+			this.slidesInstance.parent_form.slide_viewer_form_rebuild();
 	}
 
 	/**
@@ -119,141 +139,158 @@ frappe.ui.SlideViewer = class SlideViewer {
 	 */
 	async _fetch() {
 		if (!this.slideView) {
-			await this._fetchSlideView()
+			await this._fetchSlideView();
 		}
 
-		const { reference_doctype } = this.slideView
+		const { reference_doctype } = this.slideView;
 
 		if (reference_doctype) {
 			// fetch meta for DocType
-			await new Promise((cb) => frappe.model.with_doctype(reference_doctype, cb))
+			await new Promise((cb) => frappe.model.with_doctype(reference_doctype, cb));
 		}
 
-		await this._fetchDoc()
+		await this._fetchDoc();
 	}
 
 	async _fetchDoc() {
-		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView
+		const { reference_doctype, can_create_doc, can_edit_doc } = this.slideView;
 
 		if (!reference_doctype) {
 			if (this.slideView.slides && this.slideView.on_complete) {
-				this.doc = {} // okay
+				this.doc = {}; // okay
 			} else if (this.slideView.slides) {
-				this.showDevWarning('missing slideView.on_complete function: the Slide Viewer cannot be submitted')
-				this.doc = {} // kinda okay
+				this.showDevWarning(
+					"missing slideView.on_complete function: the Slide Viewer cannot be submitted"
+				);
+				this.doc = {}; // kinda okay
 			} else {
-				this.throwDevError('cannot open Slide View with neither reference_doctype nor slides', 'constructor')
+				this.throwDevError(
+					"cannot open Slide View with neither reference_doctype nor slides",
+					"constructor"
+				);
 			}
-			return
+			return;
 		}
 
 		// check permissions
-		let mode = 'Error'
-		let error = ''
+		let mode = "Error";
+		let error = "";
 
-		const meta = frappe.get_meta(reference_doctype)
+		const meta = frappe.get_meta(reference_doctype);
 
-		const is_new = this.documentName && this.documentName.match(/^new-.*-\d+$/)
-		const in_locals = this.documentName && frappe.get_doc(reference_doctype, this.documentName)
+		const is_new = this.documentName && this.documentName.match(/^new-.*-\d+$/);
+		const in_locals =
+			this.documentName && frappe.get_doc(reference_doctype, this.documentName);
 
 		if (meta.issingle && !this.documentName) {
 			// Single DocType
-			mode = 'Edit'
-			this.documentName = meta.name
+			mode = "Edit";
+			this.documentName = meta.name;
 		} else if (in_locals && is_new) {
 			// edit if the document exists in locals and the name looks like a new name
-			mode = 'EditLocals'
+			mode = "EditLocals";
 		} else if (is_new) {
 			// create if the name looks like a new name but the document is not in locals
-			mode = 'Create'
+			mode = "Create";
 		} else if (this.documentName) {
 			// edit if a document name was given
-			mode = 'Edit'
+			mode = "Edit";
 		} else {
-			mode = 'Create'
+			mode = "Create";
 		}
 
-		if ((mode === 'Create' || mode === 'EditLocals') && !can_create_doc) {
-			mode = 'Error'
-			error = 'cannot create'
+		if ((mode === "Create" || mode === "EditLocals") && !can_create_doc) {
+			mode = "Error";
+			error = "cannot create";
 		}
-		if (mode === 'Edit' && !can_edit_doc) {
-			mode = 'Error'
-			error = 'cannot edit'
+		if (mode === "Edit" && !can_edit_doc) {
+			mode = "Error";
+			error = "cannot edit";
 		}
 
-		if (mode === 'Edit' || mode === 'EditLocals') {
-			if (mode === 'EditLocals') {
-				this.doc = frappe.get_doc(reference_doctype, this.documentName)
+		if (mode === "Edit" || mode === "EditLocals") {
+			if (mode === "EditLocals") {
+				this.doc = frappe.get_doc(reference_doctype, this.documentName);
 
 				if (!this.doc) {
-					error = 'missing document'
+					error = "missing document";
 				}
 			} else {
-				let is403 = false
-				this.doc = await frappe.model.with_doc(reference_doctype, this.documentName, (name, r) => {
-					// callback is called before promise resolution
-					if (r && r['403']) is403 = true;
-				})
+				let is403 = false;
+				this.doc = await frappe.model.with_doc(
+					reference_doctype,
+					this.documentName,
+					(name, r) => {
+						// callback is called before promise resolution
+						if (r && r["403"]) is403 = true;
+					}
+				);
 
 				if (!this.doc) {
-					error = 'missing document'
+					error = "missing document";
 				} else if (is403) {
-					error = 'forbidden'
+					error = "forbidden";
 				}
 			}
-		}
-		else if (mode === 'Create') {
-			const with_mandatory_children = true
-			this.doc = frappe.model.get_new_doc(reference_doctype, undefined, undefined, with_mandatory_children)
+		} else if (mode === "Create") {
+			const with_mandatory_children = true;
+			this.doc = frappe.model.get_new_doc(
+				reference_doctype,
+				undefined,
+				undefined,
+				with_mandatory_children
+			);
 			if (this.doc) {
 				// okay
-				this.documentName = this.doc.name
+				this.documentName = this.doc.name;
 
 				// if (cur_page.slideViewer === this) {
-				if (this.route && frappe.router.get_sub_path().startsWith('slide-viewer')) {
-					let newUrl = ['slide-viewer', this.slideView.route, this.documentName]
-					newUrl = frappe.router.get_route_from_arguments(newUrl)
-					newUrl = frappe.router.convert_to_standard_route(newUrl)
-					newUrl = frappe.router.make_url(newUrl)
+				if (this.route && frappe.router.get_sub_path().startsWith("slide-viewer")) {
+					let newUrl = ["slide-viewer", this.slideView.route, this.documentName];
+					newUrl = frappe.router.get_route_from_arguments(newUrl);
+					newUrl = frappe.router.convert_to_standard_route(newUrl);
+					newUrl = frappe.router.make_url(newUrl);
 					setTimeout(() => {
-						history.replaceState(null, null, newUrl)
+						history.replaceState(null, null, newUrl);
 						// frappe.router.route()
-					}, 0) // run after page_show event
+					}, 0); // run after page_show event
 				}
 			} else {
-				error = 'frappe.model.get_new_doc returned null --> doctype meta not loaded?'
+				error = "frappe.model.get_new_doc returned null --> doctype meta not loaded?";
 			}
 		}
 
 		if (error) {
-			this.showUserError(error)
-			throw new Error(error) // fallback
+			this.showUserError(error);
+			throw new Error(error); // fallback
 		}
 	}
 
 	async _fetchSlideView() {
 		// get Slide View by route
-		this.slideView = await frappe.xcall('frappe.custom.page.slide_viewer.api.get_slide_view_by_route', { route: this.route })
-		this._checkSlideViewPermissions()
+		this.slideView = await frappe.xcall(
+			"frappe.custom.page.slide_viewer.api.get_slide_view_by_route",
+			{ route: this.route }
+		);
+		this._checkSlideViewPermissions();
 	}
 
 	_checkSlideViewPermissions() {
 		if (!this.slideView) {
-			this.showUserError('missing slide view')
+			this.showUserError("missing slide view");
 		}
 
-		const perms = frappe.perm.get_perm('Slide View', this.slideView.name)
-		if (!perms.some(x => x.read)) {
-			this.showUserError('slide view permissions')
+		const perms = frappe.perm.get_perm("Slide View", this.slideView.name);
+		if (!perms.some((x) => x.read)) {
+			this.showUserError("slide view permissions");
 		}
 	}
 
 	update_page_title() {
 		if (this.documentName) {
-			frappe.utils.set_title(__(this.slideView.title) + " - " + this.documentName)
+			frappe.utils.set_title(__(this.slideView.title) + " - " + this.documentName);
 		} else {
-			frappe.utils.set_title(__(this.slideView.title))
+			frappe.utils.set_title(__(this.slideView.title));
 		}
 	}
 
@@ -262,9 +299,9 @@ frappe.ui.SlideViewer = class SlideViewer {
 	 * @param {HTMLElement|JQuery} wrapper
 	 */
 	async renderInWrapper(wrapper) {
-		await this._fetch()
+		await this._fetch();
 		if (!this.doc || !this.slideView) {
-			return this.throwDevError('missing .doc or .slideView', 'renderInWrapper')
+			return this.throwDevError("missing .doc or .slideView", "renderInWrapper");
 		}
 
 		this.update_page_title();
@@ -280,20 +317,20 @@ frappe.ui.SlideViewer = class SlideViewer {
 	 * Renders the Slide Viewer in the given Dialog
 	 * @param {frappe.ui.Dialog} dialog
 	 */
-	async renderInDialog(dialogOptions = { size: 'large' }) {
-		const svr = this
-		Object.assign(dialogOptions, { onhide: () => svr.hide() })
-		const dialog = new frappe.ui.Dialog(dialogOptions)
+	async renderInDialog(dialogOptions = { size: "large" }) {
+		const svr = this;
+		Object.assign(dialogOptions, { onhide: () => svr.hide() });
+		const dialog = new frappe.ui.Dialog(dialogOptions);
 
-		await this._fetch()
+		await this._fetch();
 		if (!this.doc || !this.slideView) {
-			return this.throwDevError('missing .doc or .slideView', 'renderInDialog')
+			return this.throwDevError("missing .doc or .slideView", "renderInDialog");
 		}
 
 		// make the Slides instance with optional values to populate the form.
 		dialog.standard_actions.empty();
 		$(dialog.footer).show();
-		$(dialog.footer).removeClass('hide');
+		$(dialog.footer).removeClass("hide");
 		dialog.doc = this.doc;
 		const slidesSettings = await this.getSlidesSettings({
 			parent: dialog.wrapper,
@@ -301,10 +338,10 @@ frappe.ui.SlideViewer = class SlideViewer {
 			$container: $(dialog.wrapper),
 			$body: dialog.$body,
 			$footer: $(dialog.standard_actions),
-			$header: $(dialog.header).find('.title-section').addClass('justify-center'),
+			$header: $(dialog.header).find(".title-section").addClass("justify-center"),
 			after_load() {
-				this.$slide_progress.css({ margin: '0' });
-				this.$footer.find('.flex-row').addClass('row');
+				this.$slide_progress.css({ margin: "0" });
+				this.$footer.find(".flex-row").addClass("row");
 				// this.make_all_slides();
 				// const all_fields = this.slide_settings.flatMap(s => s.fields)
 				// const fields_list = this.slide_instances.flatMap(s => s.form.fields_list)
@@ -320,7 +357,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 				if (this.doc && this.doc.doctype) {
 					frappe.call({
 						method: "frappe.desk.form.save.savedocs",
-						args: { doc: this.doc, action: 'Save' },
+						args: { doc: this.doc, action: "Save" },
 						callback: (r) => {
 							const doc = r.docs ? r.docs[0] : this.doc;
 							frappe.set_route("Form", doc.doctype, doc.name);
@@ -330,12 +367,12 @@ frappe.ui.SlideViewer = class SlideViewer {
 							console.error(r);
 						},
 						btn: this.$complete_btn,
-						freeze_message: __('Loading'),
-					})
+						freeze_message: __("Loading"),
+					});
 				} else {
-					this.showDevWarning('cannot save document without doctype', 'Dialog')
+					this.showDevWarning("cannot save document without doctype", "Dialog");
 				}
-			}
+			};
 		}
 
 		this._renderWithSettings(slidesSettings);
@@ -344,13 +381,13 @@ frappe.ui.SlideViewer = class SlideViewer {
 
 	_renderWithSettings(slidesSettings) {
 		if (!slidesSettings) {
-			this.showUserError('no slides');
+			this.showUserError("no slides");
 			return;
 		}
 
-		let SlidesClass = this.SlidesClass
+		let SlidesClass = this.SlidesClass;
 		if (this.with_form && this.slideView.add_fullpage_edit_btn) {
-			SlidesClass = extendsWithFullPageEditButton(SlidesClass)
+			SlidesClass = extendsWithFullPageEditButton(SlidesClass);
 		}
 		this.slidesInstance = new SlidesClass(slidesSettings);
 		this.show();
@@ -359,45 +396,64 @@ frappe.ui.SlideViewer = class SlideViewer {
 	showUserError(error) {
 		// const canRedirect = Boolean(this.route)
 		// const canRedirect = cur_page.slideViewer === this
-		const canRedirect = frappe.router.get_sub_path().startsWith('slide-viewer')
+		const canRedirect = frappe.router.get_sub_path().startsWith("slide-viewer");
 
-		if (error === 'cannot edit') {
-			canRedirect && frappe.show_not_permitted(__("Slide View"))
-			throw new Error('[Slide Viewer] cannot edit document with this Slide View')
-		} else if (error === 'cannot create') {
-			canRedirect && frappe.show_not_permitted(__("Slide View"))
-			throw new Error('[Slide Viewer] cannot create document with this Slide View')
-		} else if (error === 'missing document') {
-			canRedirect && frappe.show_not_found(__(this.slideView.reference_doctype) + " - " + __(this.documentName))
-			throw new Error('[Slide Viewer] ' + __("{0} {1} not found", [__(this.slideView.reference_doctype), __(this.documentName)]))
-		} else if (error === 'forbidden') {
-			canRedirect && frappe.show_not_permitted(__(this.slideView.reference_doctype) + " - " + __(this.documentName))
-			throw new Error('[Slide Viewer] ' + __("You don't have the permissions to access this document"))
-		} else if (error === 'slide view permissions') {
-			canRedirect && frappe.show_not_permitted(__(this.slideView.doctype) + " " + this.slideView.name)
-			throw new Error('[Slide View] Insufficient Permission for Slide View: ' + this.slideView.name)
-		} else if (error === 'missing slide view') {
-			return frappe.throw('[Slide Viewer] missing Slide View')
-		} else if (error === 'no slides') {
-			const msg = __("Oops, there are no slides to display.", null, "Slide View")
+		if (error === "cannot edit") {
+			canRedirect && frappe.show_not_permitted(__("Slide View"));
+			throw new Error("[Slide Viewer] cannot edit document with this Slide View");
+		} else if (error === "cannot create") {
+			canRedirect && frappe.show_not_permitted(__("Slide View"));
+			throw new Error("[Slide Viewer] cannot create document with this Slide View");
+		} else if (error === "missing document") {
+			canRedirect &&
+				frappe.show_not_found(
+					__(this.slideView.reference_doctype) + " - " + __(this.documentName)
+				);
+			throw new Error(
+				"[Slide Viewer] " +
+					__("{0} {1} not found", [
+						__(this.slideView.reference_doctype),
+						__(this.documentName),
+					])
+			);
+		} else if (error === "forbidden") {
+			canRedirect &&
+				frappe.show_not_permitted(
+					__(this.slideView.reference_doctype) + " - " + __(this.documentName)
+				);
+			throw new Error(
+				"[Slide Viewer] " + __("You don't have the permissions to access this document")
+			);
+		} else if (error === "slide view permissions") {
+			canRedirect &&
+				frappe.show_not_permitted(__(this.slideView.doctype) + " " + this.slideView.name);
+			throw new Error(
+				"[Slide View] Insufficient Permission for Slide View: " + this.slideView.name
+			);
+		} else if (error === "missing slide view") {
+			return frappe.throw("[Slide Viewer] missing Slide View");
+		} else if (error === "no slides") {
+			const msg = __("Oops, there are no slides to display.", null, "Slide View");
 			if (canRedirect) {
 				frappe.show_message_page({
 					page_name: msg,
 					message: msg,
-					img: `/assets/frappe/images/ui/empty.svg`
-				})
+					img: `/assets/frappe/images/ui/empty.svg`,
+				});
 			} else {
-				frappe.throw(msg)
+				frappe.throw(msg);
 			}
-			throw new Error('[Slide View] ' + msg)
+			throw new Error("[Slide View] " + msg);
 		} else if (error) {
-			return frappe.throw('[Slide Viewer] ' + error)
+			return frappe.throw("[Slide Viewer] " + error);
 		}
 	}
 
 	async getSlidesSettings(params) {
 		const allSlides = await this.getSlides();
-		if (!allSlides || allSlides.length === 0) { return null }
+		if (!allSlides || allSlides.length === 0) {
+			return null;
+		}
 
 		const settings = {
 			slideViewer: this,
@@ -410,52 +466,55 @@ frappe.ui.SlideViewer = class SlideViewer {
 			unidirectional_allow_back: false,
 			clickable_progress_dots: this.slideView.allow_any && this.slideView.allow_back,
 			done_state: this.slideView.done_state,
-			on_complete: typeof this.slideView.on_complete === 'function' ? this.slideView.on_complete : undefined,
+			on_complete:
+				typeof this.slideView.on_complete === "function"
+					? this.slideView.on_complete
+					: undefined,
 
 			...params,
-		}
+		};
 
 		if (this.with_form) {
-			settings.text_complete_btn = __("Save")
+			settings.text_complete_btn = __("Save");
 			settings.on_complete = function () {
 				if (this.parent_form) {
 					this.parent_form.save();
 				}
-			}
+			};
 		}
 
 		if (this.additional_settings) {
-			if (typeof this.additional_settings === 'function') {
-				Object.assign(settings, this.additional_settings(this))
+			if (typeof this.additional_settings === "function") {
+				Object.assign(settings, this.additional_settings(this));
 			} else {
-				Object.assign(settings, this.additional_settings)
+				Object.assign(settings, this.additional_settings);
 			}
 		}
 
-		return settings
+		return settings;
 	}
 
 	async getSlides() {
-		const docname = (this.doc&&this.doc.name) || this.documentName;
+		const docname = (this.doc && this.doc.name) || this.documentName;
 		return await getSlidesForSlideView(this.slideView, docname);
 	}
 
 	// utils
 	static getParamsFromRouter() {
-		let slideViewRoute = null
-		let docname = null
-		let starting_slide = null
+		let slideViewRoute = null;
+		let docname = null;
+		let starting_slide = null;
 
-		const route = frappe.router.get_sub_path_string().split('/')
+		const route = frappe.router.get_sub_path_string().split("/");
 		if (route[0] === "slide-viewer") {
 			if (route.length >= 2) {
-				slideViewRoute = decodeURIComponent(route[1])
+				slideViewRoute = decodeURIComponent(route[1]);
 			}
 			if (route.length >= 3) {
-				docname = decodeURIComponent(route[2])
+				docname = decodeURIComponent(route[2]);
 			}
 			if (route.length >= 4) {
-				starting_slide = cint(route[3])
+				starting_slide = cint(route[3]);
 			}
 		}
 
@@ -463,9 +522,9 @@ frappe.ui.SlideViewer = class SlideViewer {
 			route: slideViewRoute,
 			docname: docname,
 			starting_slide: starting_slide,
-		}
+		};
 	}
-}
+};
 
 // Slide classes with additional features to support SlideViewerForm
 
@@ -476,35 +535,41 @@ class SlidesWithForm extends frappe.ui.Slides {
 	}
 
 	before_load() {
-		super.before_load()
-		this.$container.css({ width: '100%', maxWidth: '800px' })
+		super.before_load();
+		this.$container.css({ width: "100%", maxWidth: "800px" });
 	}
 
 	setup() {
-		const slide_viewer_form = new frappe.ui.form.SlideViewerForm(this.$container, this.doc, { parentSlides: this })
-		this.parent_form = slide_viewer_form
-		cur_frm = slide_viewer_form
+		const slide_viewer_form = new frappe.ui.form.SlideViewerForm(this.$container, this.doc, {
+			parentSlides: this,
+		});
+		this.parent_form = slide_viewer_form;
+		cur_frm = slide_viewer_form;
 
-		slide_viewer_form.setup()
+		slide_viewer_form.setup();
 
-		super.setup()
+		super.setup();
 
 		for (const s of this.slide_instances) {
-			if (!s.made) { s.make() }
+			if (!s.made) {
+				s.make();
+			}
 		}
 
-		const all_fields = this.slide_settings.flatMap(s => s.fields)
-		const fields_list = this.slide_instances.flatMap(s => s.form.fields_list)
-		const fields_dict = Object.fromEntries(this.slide_instances.flatMap(s => Object.entries(s.form.fields_dict)))
+		const all_fields = this.slide_settings.flatMap((s) => s.fields);
+		const fields_list = this.slide_instances.flatMap((s) => s.form.fields_list);
+		const fields_dict = Object.fromEntries(
+			this.slide_instances.flatMap((s) => Object.entries(s.form.fields_dict))
+		);
 
 		slide_viewer_form.slide_viewer_form_set_fields({
 			df: all_fields,
 			list: fields_list,
 			dict: fields_dict,
-		})
+		});
 
-		slide_viewer_form.make()
-		slide_viewer_form.refresh()
+		slide_viewer_form.make();
+		slide_viewer_form.refresh();
 
 		frappe.model.on(slide_viewer_form.doctype, "*", (fieldname, value, doc) => {
 			if (doc.name === slide_viewer_form.docname) {
@@ -518,80 +583,88 @@ class SlidesWithForm extends frappe.ui.Slides {
 		if (!this.parent_form.slide_viewer_form_get_missing_fields) return;
 		const error_docs = this.parent_form.slide_viewer_form_get_missing_fields();
 		// Names of the invalid fields in the main document.
-		const error_root_fieldnames = []
+		const error_root_fieldnames = [];
 
 		for (const err of error_docs) {
-			const { doc, error_fields } = err
+			const { doc, error_fields } = err;
 			if (doc.parentfield) {
-				error_root_fieldnames.push(doc.parentfield)
+				error_root_fieldnames.push(doc.parentfield);
 			} else {
 				for (const fieldname of error_fields) {
-					error_root_fieldnames.push(fieldname)
+					error_root_fieldnames.push(fieldname);
 				}
 			}
 		}
 
-		this.slide_instances.forEach(s => {
-			const slide_fieldnames = s.fields.map(df => df.fieldname)
-			const has_error = error_root_fieldnames.some(fn => slide_fieldnames.includes(fn))
+		this.slide_instances.forEach((s) => {
+			const slide_fieldnames = s.fields.map((df) => df.fieldname);
+			const has_error = error_root_fieldnames.some((fn) => slide_fieldnames.includes(fn));
 			if (has_error) {
 				s.last_validation_result = false; // force error
 			}
-		})
+		});
 	}
 }
 
 class SlideWithForm extends frappe.ui.Slide {
-	set_form_values(values) { return Promise.resolve() } // ignore
+	set_form_values(values) {
+		return Promise.resolve();
+	} // ignore
 
 	should_skip() {
-		if (super.should_skip()) { return true }
+		if (super.should_skip()) {
+			return true;
+		}
 
 		// skip or not by evaluating depends_on
 		if (this.condition && this.parent_form && this.parent_form.layout) {
-			const conditionValid = this.parent_form.layout.evaluate_depends_on_value(this.condition)
-			if (!conditionValid) { return true }
+			const conditionValid = this.parent_form.layout.evaluate_depends_on_value(
+				this.condition
+			);
+			if (!conditionValid) {
+				return true;
+			}
 		}
 
-		return false
+		return false;
 	}
 }
 
-const extendsWithFullPageEditButton = (SlidesClass) => class SlidesWithFullPageEditButton extends SlidesClass {
-	before_load() {
-		super.before_load()
+const extendsWithFullPageEditButton = (SlidesClass) =>
+	class SlidesWithFullPageEditButton extends SlidesClass {
+		before_load() {
+			super.before_load();
 
-		if (this.doc && this.doc.doctype && this.doc.name) {
-			this.$fullPageEditBtn = $(`
+			if (this.doc && this.doc.doctype && this.doc.name) {
+				this.$fullPageEditBtn = $(`
 				<button class="btn btn-secondary btn-edit-in-full-page">
-					${frappe.utils.icon('edit', 'xs')}
+					${frappe.utils.icon("edit", "xs")}
 					${__("Edit in full page")}
 				</button>
 			`);
-			this.$fullPageEditBtn.appendTo(this.$footer.find('.text-left'));
-			this.$fullPageEditBtn.on('click', () => {
-				// @see open_doc() in frappe/public/js/frappe/form/quick_entry.js
-				frappe.set_route('Form', this.doc.doctype, this.doc.name);
-			});
-		}
-	}
-	before_show_slide(id) {
-		super.before_show_slide(id)
-
-		if (this.$fullPageEditBtn) {
-			if (this.can_go_prev(id)) {
-				this.$fullPageEditBtn.hide()
-			} else {
-				this.$fullPageEditBtn.show()
+				this.$fullPageEditBtn.appendTo(this.$footer.find(".text-left"));
+				this.$fullPageEditBtn.on("click", () => {
+					// @see open_doc() in frappe/public/js/frappe/form/quick_entry.js
+					frappe.set_route("Form", this.doc.doctype, this.doc.name);
+				});
 			}
 		}
-	}
-}
+		before_show_slide(id) {
+			super.before_show_slide(id);
+
+			if (this.$fullPageEditBtn) {
+				if (this.can_go_prev(id)) {
+					this.$fullPageEditBtn.hide();
+				} else {
+					this.$fullPageEditBtn.show();
+				}
+			}
+		}
+	};
 
 async function getSlidesForSlideView(slideView, docname) {
-	const doctype = slideView.reference_doctype
-	const meta = doctype && async_get_meta(doctype)
-
+	const doctype = slideView.reference_doctype;
+	const meta = doctype && async_get_meta(doctype);
 
 	if (slideView.slides) {
 		return fieldGroupsToSlides({
@@ -599,12 +672,12 @@ async function getSlidesForSlideView(slideView, docname) {
 			groups: slideView.slides,
 			docname,
 			meta,
-		})
+		});
 	} else if (doctype && meta) {
-		return getAutoslidesForMeta(meta, docname)
+		return getAutoslidesForMeta(meta, docname);
 		// return getAutoslidesForMeta(meta, docname, slideView.title)
 	} else {
-		return []
+		return [];
 	}
 
 	function async_get_meta(doctype) {
@@ -612,68 +685,68 @@ async function getSlidesForSlideView(slideView, docname) {
 		if (m) return m;
 
 		return new Promise((resolve) => {
-			frappe.model.with_doctype(doctype, () => resolve(frappe.get_meta(doctype)))
-		})
+			frappe.model.with_doctype(doctype, () => resolve(frappe.get_meta(doctype)));
+		});
 	}
 }
 
-function getAutoslidesForMeta(meta, docname = '', title = '') {
-	const doctype = meta.name
-	const fields = meta.fields.slice() // create a shallow copy of meta.fields
+function getAutoslidesForMeta(meta, docname = "", title = "") {
+	const doctype = meta.name;
+	const fields = meta.fields.slice(); // create a shallow copy of meta.fields
 
-	const is_new = docname && docname.match(/^new-.*-\d+$/)
+	const is_new = docname && docname.match(/^new-.*-\d+$/);
 	// const autonameFieldname = (is_new && meta && meta.autoname && meta.autoname.startsWith('field:')) ? meta.autoname.replace('field:', '') : null
-	if (is_new && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
-		if (!fields.find(x => x.fieldname === 'name' || x.fieldname === '__newname')) {
-			fields.unshift(getNewNameFieldForDocType(doctype))
+	if (is_new && meta.autoname && ["prompt", "name"].includes(meta.autoname.toLowerCase())) {
+		if (!fields.find((x) => x.fieldname === "name" || x.fieldname === "__newname")) {
+			fields.unshift(getNewNameFieldForDocType(doctype));
 		}
 	}
 
-	const slides = []
+	const slides = [];
 
 	const globalTitle = title || getSlidesTitleForMeta(meta, docname);
 
 	if (slides.length === 0) {
-		slides.push(newEmptySlide())
+		slides.push(newEmptySlide());
 	}
 
 	const filteredOutFieldTypes = [
-		'Section Break', // ...frappe.model.layout_fields,
-	]
+		"Section Break", // ...frappe.model.layout_fields,
+	];
 	for (const field of fields) {
-		let slide = slides[slides.length - 1]
+		let slide = slides[slides.length - 1];
 
 		const createNewSlide = [
 			slide == null,
-			field.fieldtype === 'Section Break',
+			field.fieldtype === "Section Break",
 			// field.fieldtype === 'Column Break',
-		].some(x => x == true) // at least one condition
+		].some((x) => x == true); // at least one condition
 
 		if (createNewSlide) {
-			let newSlideSubtitle = '???'
-			if (field.fieldtype === 'Section Break') {
-				newSlideSubtitle = __(field.label)
+			let newSlideSubtitle = "???";
+			if (field.fieldtype === "Section Break") {
+				newSlideSubtitle = __(field.label);
 			} else {
-				newSlideSubtitle = /*old slide*/slide.subtitle
+				newSlideSubtitle = /*old slide*/ slide.subtitle;
 			}
-			slide = newEmptySlide(newSlideSubtitle)
-			slides.push(slide)
+			slide = newEmptySlide(newSlideSubtitle);
+			slides.push(slide);
 
-			if (field.fieldtype === 'Section Break') {
-				slide.condition = field.depends_on
+			if (field.fieldtype === "Section Break") {
+				slide.condition = field.depends_on;
 			}
 		}
 
-		const ignoreThisField = filteredOutFieldTypes.includes(field.fieldtype)
+		const ignoreThisField = filteredOutFieldTypes.includes(field.fieldtype);
 		if (!ignoreThisField) {
 			slide.fields.push({
 				...field,
 				label: __(field.label), // translate label
-			})
+			});
 		}
 	}
 
-	return slides.filter(slide => slide.fields.length > 0)
+	return slides.filter((slide) => slide.fields.length > 0);
 	/* return slides.filter(slide => {
 		const f = slide.fields.filter(df => {
 			if (frappe.model.layout_fields.includes(df.fieldtype)) {
@@ -689,12 +762,12 @@ function getAutoslidesForMeta(meta, docname = '', title = '') {
 
 	function newEmptySlide(translatedSubtitle = undefined) {
 		return {
-			name: 'autoslide_' + slides.length,
+			name: "autoslide_" + slides.length,
 			title: globalTitle,
 			subtitle: translatedSubtitle,
 			// icon: "fa fa-flag",
 			fields: [],
-		}
+		};
 	}
 }
 
@@ -767,80 +840,86 @@ function getAutoslidesForMeta(meta, docname = '', title = '') {
  *
  * - The string `__newname` to insert the new name field if needed.
  */
-function fieldGroupsToSlides({
-	title,
-	groups,
-	docname,
-	meta,
-}) {
-	const globalTitle = title || (meta && getSlidesTitleForMeta(meta, docname))
-	const is_new = docname && docname.match(/^new-.*-\d+$/)
+function fieldGroupsToSlides({ title, groups, docname, meta }) {
+	const globalTitle = title || (meta && getSlidesTitleForMeta(meta, docname));
+	const is_new = docname && docname.match(/^new-.*-\d+$/);
 
-	const { fields_dict, sections } = getAliases(meta)
+	const { fields_dict, sections } = getAliases(meta);
 
-	const slides = []
-	const usedFieldnames = new Set()
+	const slides = [];
+	const usedFieldnames = new Set();
 	for (let index = 0; index < groups.length; index++) {
-		const group = groups[index]
-		const slide = groupToSlide(group, index)
+		const group = groups[index];
+		const slide = groupToSlide(group, index);
 		if (slide) {
-			slide.fields.forEach(x => usedFieldnames.add(x.fieldname))
-			slides.push(slide)
+			slide.fields.forEach((x) => usedFieldnames.add(x.fieldname));
+			slides.push(slide);
 		}
 	}
-	return slides
+	return slides;
 
 	function groupToSlide(group, index = 0) {
-		if (typeof group === 'string' && group.startsWith('section:')) {
-			const sectionName = group.replace('section:', '')
-			const { section, sectionBreak } = sectionByNameOrLabel(sectionName)
+		if (typeof group === "string" && group.startsWith("section:")) {
+			const sectionName = group.replace("section:", "");
+			const { section, sectionBreak } = sectionByNameOrLabel(sectionName);
 			if (section) {
 				return {
-					name: 'autoslide_' + index,
+					name: "autoslide_" + index,
 					title: globalTitle,
-					subtitle: sectionBreak ? __(sectionBreak.label) : '',
+					subtitle: sectionBreak ? __(sectionBreak.label) : "",
 					fields: section,
-				}
+				};
 			} else {
-				frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'no such section with name/label:', sectionName)
+				frappe.throw(
+					"[Slide Viewer: getSlidesForSlideView]",
+					"no such section with name/label:",
+					sectionName
+				);
 			}
-		} else if (group === '*') {
+		} else if (group === "*") {
 			if (meta) {
-				const missingFields = meta.fields.filter(x => !usedFieldnames.has(x.fieldname))
-				const slide = groupToSlide(missingFields, index)
-				slide.should_skip = () => true
-				return slide
+				const missingFields = meta.fields.filter((x) => !usedFieldnames.has(x.fieldname));
+				const slide = groupToSlide(missingFields, index);
+				slide.should_skip = () => true;
+				return slide;
 			} else {
-				frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'cannot use `*` shorthand if no doctype is provided')
+				frappe.throw(
+					"[Slide Viewer: getSlidesForSlideView]",
+					"cannot use `*` shorthand if no doctype is provided"
+				);
 			}
 		} else if (Array.isArray(group)) {
 			return {
-				name: 'autoslide_' + index,
+				name: "autoslide_" + index,
 				title: globalTitle,
 				fields: group.map(mapToField).filter(Boolean),
-			}
-		} else if (typeof group === 'object') {
-			const fields = mapFieldsIfArray(group.fields)
+			};
+		} else if (typeof group === "object") {
+			const fields = mapFieldsIfArray(group.fields);
 			return {
-				name: 'autoslide_' + index,
+				name: "autoslide_" + index,
 				title: globalTitle,
 				...group, // can override defaults
 				fields: fields,
-			}
-		} else if (typeof group === 'function') {
-			const slide = group(index, groupToSlide, globalTitle)
-			slide.fields = mapFieldsIfArray(slide.fields)
-			return slide
+			};
+		} else if (typeof group === "function") {
+			const slide = group(index, groupToSlide, globalTitle);
+			slide.fields = mapFieldsIfArray(slide.fields);
+			return slide;
 		} else {
-			frappe.throw('[Slide Viewer: getSlidesForSlideView]', 'invalid slide descriptor:', group)
+			frappe.throw(
+				"[Slide Viewer: getSlidesForSlideView]",
+				"invalid slide descriptor:",
+				group
+			);
 		}
 	}
 
 	function mapFieldsIfArray(fields) {
 		if (Array.isArray(fields)) {
-			return fields.map(mapToField).filter(Boolean)
+			return fields.map(mapToField).filter(Boolean);
 		} else {
-			return []
+			return [];
 		}
 	}
 
@@ -848,98 +927,110 @@ function fieldGroupsToSlides({
 	 * @returns {{ section?: DocField[]; sectionBreak?: DocField; }}
 	 */
 	function sectionByNameOrLabel(_name) {
-		if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `section:` shorthand if no doctype is provided')
+		if (!meta)
+			return frappe.throw(
+				"[Slide Viewer: fieldGroupsToSlides] cannot use `section:` shorthand if no doctype is provided"
+			);
 		// if (!meta) return { section: null, sectionBreak: null }
 
-		if (_name === '') return { section: sections[''], sectionBreak: null }
+		if (_name === "") return { section: sections[""], sectionBreak: null };
 
-		const name = _name.toLocaleLowerCase()
-		const nameMatch = (x) => x && (x.toLocaleLowerCase() === name)
-		const sectionBreak = meta.fields.find(x => (x.fieldtype === 'Section Break') && (nameMatch(x.label) || nameMatch(x.fieldname)))
-		const section = sections[sectionBreak.fieldname]
-		return { section, sectionBreak }
+		const name = _name.toLocaleLowerCase();
+		const nameMatch = (x) => x && x.toLocaleLowerCase() === name;
+		const sectionBreak = meta.fields.find(
+			(x) =>
+				x.fieldtype === "Section Break" && (nameMatch(x.label) || nameMatch(x.fieldname))
+		);
+		const section = sections[sectionBreak.fieldname];
+		return { section, sectionBreak };
 	}
 
 	function mapToField(fn) {
-		if (typeof fn === 'string') {
-			if (!meta) return frappe.throw('[Slide Viewer: fieldGroupsToSlides] cannot use `field_name` shorthand if no doctype is provided')
-			if (fn === '__newname') {
-				if (is_new && meta && meta.autoname && ['prompt', 'name'].includes(meta.autoname.toLowerCase())) {
-					return getNewNameFieldForDocType(meta.name)
+		if (typeof fn === "string") {
+			if (!meta)
+				return frappe.throw(
+					"[Slide Viewer: fieldGroupsToSlides] cannot use `field_name` shorthand if no doctype is provided"
+				);
+			if (fn === "__newname") {
+				if (
+					is_new &&
+					meta &&
+					meta.autoname &&
+					["prompt", "name"].includes(meta.autoname.toLowerCase())
+				) {
+					return getNewNameFieldForDocType(meta.name);
 				}
 			}
 
-			return fields_dict[fn]
+			return fields_dict[fn];
 		} else {
-			return fn
+			return fn;
 		}
 	}
 }
 
 function autoMiniSlides(doctype) {
-	const meta = frappe.get_meta(doctype)
+	const meta = frappe.get_meta(doctype);
 
 	const slides = [
 		getEmptySlide(0), // initial empty section
-	]
-	let cur_slide = slides[0]
+	];
+	let cur_slide = slides[0];
 	for (const df of meta.fields) {
-		if (df.fieldtype === 'Section Break') {
-			const new_slide = getEmptySlide(slides.length)
-			new_slide.title = cur_slide.title
-			new_slide.subtitle = __(df.label)
+		if (df.fieldtype === "Section Break") {
+			const new_slide = getEmptySlide(slides.length);
+			new_slide.title = cur_slide.title;
+			new_slide.subtitle = __(df.label);
 			if (df.depends_on) {
-				new_slide.condition = df.depends_on
+				new_slide.condition = df.depends_on;
 			}
 
 			if (cur_slide.fields.length === 0) {
-				slides.pop()
+				slides.pop();
 			}
-			slides.push(new_slide)
-			cur_slide = new_slide
-			continue
+			slides.push(new_slide);
+			cur_slide = new_slide;
+			continue;
 		}
 
-		const isImportant = (
-			(df.reqd || df.bold || df.allow_in_quick_entry) && !df.read_only
-			// || df.fieldname === 'attributes'
-			// || df.fieldname === 'item_defaults'
-			// || df.fieldname === 'taxes'
-			// || df.fieldname === 'item_group'
-		)
+		const isImportant = (df.reqd || df.bold || df.allow_in_quick_entry) && !df.read_only;
+		// || df.fieldname === 'attributes'
+		// || df.fieldname === 'item_defaults'
+		// || df.fieldname === 'taxes'
+		// || df.fieldname === 'item_group'
 		if (isImportant) {
-			cur_slide.fields.push(df)
+			cur_slide.fields.push(df);
 		}
 	}
 
-	return slides.filter(s => s.fields.length > 0)
+	return slides.filter((s) => s.fields.length > 0);
 
 	function getEmptySlide(index) {
 		return {
-			title: __('New {0}', [__(doctype)]),
-			name: 'autoslide_' + index,
+			title: __("New {0}", [__(doctype)]),
+			name: "autoslide_" + index,
 			fields: [],
-		}
+		};
 	}
 }
 
 function getNewNameFieldForDocType(doctype) {
 	return {
 		parent: doctype,
-		fieldtype: 'Data',
-		fieldname: '__newname',
+		fieldtype: "Data",
+		fieldname: "__newname",
 		reqd: 1,
 		// hidden: 1,
-		label: __('Name'),
-		get_status: () => 'Write'
-	}
+		label: __("Name"),
+		get_status: () => "Write",
+	};
 }
 
 function getSlidesTitleForMeta(meta, docname) {
-	const is_new = docname && docname.match(/^new-.*-\d+$/)
-	const doctype = meta.name
+	const is_new = docname && docname.match(/^new-.*-\d+$/);
+	const doctype = meta.name;
 
-	let globalTitle = '';
+	let globalTitle = "";
 	if (meta.issingle) {
 		globalTitle = __(meta.name);
 	} else if (!is_new) {
@@ -960,23 +1051,23 @@ function getAliases(meta) {
 	if (!meta) return { fields_dict: {}, sections: {} };
 
 	// key-value map: fieldname string -> docfield object
-	const fields_dict = {}
-	const sections = { '': [] }
-	let curr_section = ''
+	const fields_dict = {};
+	const sections = { "": [] };
+	let curr_section = "";
 	for (const df of meta.fields) {
-		fields_dict[df.fieldname] = df
+		fields_dict[df.fieldname] = df;
 
-		if (df.fieldtype === 'Section Break') {
-			curr_section = df.fieldname
-			sections[curr_section] = []
+		if (df.fieldtype === "Section Break") {
+			curr_section = df.fieldname;
+			sections[curr_section] = [];
 		} else {
-			sections[curr_section].push(df)
+			sections[curr_section].push(df);
 		}
 	}
-	return { fields_dict, sections }
+	return { fields_dict, sections };
 }
 
-frappe.provide('frappe.slide_viewer_templates')
+frappe.provide("frappe.slide_viewer_templates");
 
 /**
  * Open a Slide Viewer dialog with the given template name.
@@ -985,13 +1076,16 @@ frappe.provide('frappe.slide_viewer_templates')
  * @returns
  */
 frappe.show_slide_viewer_template = async function (template_name, docname = null) {
-	const template = (typeof template_name === 'object') ? template_name : frappe.slide_viewer_templates[template_name]
+	const template =
+		typeof template_name === "object"
+			? template_name
+			: frappe.slide_viewer_templates[template_name];
 	if (!template) {
-		return frappe.throw('[Slide Viewer] ' + 'no such template: ' + template_name)
+		return frappe.throw("[Slide Viewer] " + "no such template: " + template_name);
 	}
 	const slideViewer = new frappe.ui.SlideViewer({
 		docname,
 		...template,
-	})
-	await slideViewer.renderInDialog()
-}
+	});
+	await slideViewer.renderInDialog();
+};

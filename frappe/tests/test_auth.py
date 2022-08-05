@@ -110,13 +110,13 @@ class TestAuth(unittest.TestCase):
 
 		second_login = FrappeClient(self.HOST_NAME, self.test_user_email, self.test_user_password)
 		second_login.get_list("ToDo")
-		with self.assertRaises(Exception):
+		with self.assertRaises(Exception):  # noqa
 			first_login.get_list("ToDo")
 
 		third_login = FrappeClient(self.HOST_NAME, self.test_user_email, self.test_user_password)
-		with self.assertRaises(Exception):
+		with self.assertRaises(Exception):  # noqa
 			first_login.get_list("ToDo")
-		with self.assertRaises(Exception):
+		with self.assertRaises(Exception):  # noqa
 			second_login.get_list("ToDo")
 		third_login.get_list("ToDo")
 

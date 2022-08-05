@@ -145,7 +145,7 @@ log_types = (
 )
 
 
-def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=[]):
+def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=None):
 	if not tarfields:
 		tarfields = srcfields
 	l = []

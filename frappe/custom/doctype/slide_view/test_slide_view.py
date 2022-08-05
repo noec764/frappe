@@ -3,8 +3,6 @@
 
 import unittest
 
-import frappe
-
 
 class TestSlideView(unittest.TestCase):
 	pass

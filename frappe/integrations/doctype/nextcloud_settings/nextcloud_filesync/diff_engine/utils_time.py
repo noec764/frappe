@@ -6,14 +6,16 @@ We assume that these datetime objects are:
 - offset-naive (with no timezone information, .tzinfo is None)
 """
 
-from functools import lru_cache
-from frappe.utils import get_time_zone  # type: ignore
 from datetime import datetime
+from functools import lru_cache
+
+from frappe.utils import get_time_zone  # type: ignore
 
 
 @lru_cache(maxsize=None)
 def get_local_tzinfo():
 	from pytz import timezone
+
 	return timezone(get_time_zone())
 
 
@@ -24,10 +26,10 @@ def set_timezone_to_local(dt: datetime):
 	which is assumed everywhere in frappe to be in the local timezone.
 
 	Args:
-		dt (datetime): A datetime object, whose values are assumed to be in the local timezone, and whose tzinfo property does not matter.
+	        dt (datetime): A datetime object, whose values are assumed to be in the local timezone, and whose tzinfo property does not matter.
 
 	Returns:
-		datetime: A datetime object, whose values are in the local timezone, and whose tzinfo property is None.
+	        datetime: A datetime object, whose values are in the local timezone, and whose tzinfo property is None.
 	"""
 	return dt.replace(tzinfo=None)
 
@@ -48,23 +50,24 @@ def convert_utc_to_local_time(dt: datetime):
 	Offset-naive datetime objects are assumed everywhere in frappe to be in the local timezone.
 
 	Args:
-		dt (datetime): A datetime object, whose values are assumed to be in UTC, and whose tzinfo property does not matter.
+	        dt (datetime): A datetime object, whose values are assumed to be in UTC, and whose tzinfo property does not matter.
 
 	Returns:
-		datetime: A datetime object, whose values are in the local timezone, and whose tzinfo property is None.
+	        datetime: A datetime object, whose values are in the local timezone, and whose tzinfo property is None.
 
 	Example:
-		>>> from datetime import datetime
-		>>> dt = datetime(2021, 1, 1, 9, 0, 0)  # 9:00 UTC
-		>>> dt
-		datetime.datetime(2021, 1, 1, 9, 0, 0)
-		>>> frappe.utils.get_time_zone()
-		'Asia/Kolkata'
-		>>> convert_utc_to_local_time(dt)  # 9:00 UTC -> 14:30 UTC+5:30
-		datetime.datetime(2021, 1, 1, 14, 30, 0)
+	        >>> from datetime import datetime
+	        >>> dt = datetime(2021, 1, 1, 9, 0, 0)  # 9:00 UTC
+	        >>> dt
+	        datetime.datetime(2021, 1, 1, 9, 0, 0)
+	        >>> frappe.utils.get_time_zone()
+	        'Asia/Kolkata'
+	        >>> convert_utc_to_local_time(dt)  # 9:00 UTC -> 14:30 UTC+5:30
+	        datetime.datetime(2021, 1, 1, 14, 30, 0)
 	"""
 	tzinfo = get_local_tzinfo()
 	return dt.astimezone(tzinfo).replace(tzinfo=None)
+
 
 def strip_datetime_milliseconds(dt: datetime):
 	return dt.replace(microsecond=0)

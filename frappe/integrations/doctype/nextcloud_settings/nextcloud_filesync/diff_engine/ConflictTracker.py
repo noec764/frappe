@@ -1,13 +1,13 @@
 from typing import Iterable
 
+import frappe  # type: ignore
+
+from .Action import Action
 from .Common import Common
 from .DeferredTasks import DeferredTasks
 from .utils_normalize_paths import util_denormalize_to_local_path
-from .Action import Action
 
 # NOTE: possible optimisation, sort prefixes and do a binary search by length then text
-
-import frappe  # type: ignore
 
 
 class ConflictTracker:
@@ -34,11 +34,11 @@ class ConflictTracker:
 
 	def _track_conflict(self, action: Action):
 		l, r = action.local, action.remote
-		path = r.path if r else l.path if l else ''
+		path = r.path if r else l.path if l else ""
 		is_dir = (r.is_dir() if r else False) or (l.is_dir() if l else False)
 
 		if is_dir:
-			prefix = path.rstrip('/') + '/'
+			prefix = path.rstrip("/") + "/"
 			self._conflict_prefixes.add(prefix)
 		self._confict_paths.add(path)
 		self._local_conflicts.append(action)
@@ -48,7 +48,7 @@ class ConflictTracker:
 		Returns False if the action can be run.
 		Returns True if the action should be skipped.
 		"""
-		if action.type.startswith('conflict'):
+		if action.type.startswith("conflict"):
 			self._track_conflict(action)
 			return True
 		return False
@@ -74,14 +74,13 @@ class ConflictStopper(ConflictTracker):
 			yield skip, action
 
 	def on_before_action_run(self, action: Action):
-		if action.type.startswith('conflict'):
+		if action.type.startswith("conflict"):
 			self._track_conflict(action)
 			return True
 
-		path = action.remote.path if action.remote else action.local.path if action.local else ''
+		path = action.remote.path if action.remote else action.local.path if action.local else ""
 		if self._check_conflict_for_path(path):
-			print(f'\x1b[1;31m[conflict]\x1b[0m',
-				  action.type, action.local, action.remote)
+			print("\x1b[1;31m[conflict]\x1b[0m", action.type, action.local, action.remote)
 			self._skipped_actions.append(action)
 			return True
 
@@ -111,10 +110,9 @@ class ConflictResolverNCF(ConflictTracker):
 			if actions:
 				yield from actions
 
-
 	@staticmethod
 	def _upload_frappe_file(action: Action):
-		yield Action(type='remote.createOrForceUpdate', local=action.local, remote=action.remote)
+		yield Action(type="remote.createOrForceUpdate", local=action.local, remote=action.remote)
 
 	def _resolve_conflict(self, action: Action):
 		t = action.type
@@ -131,16 +129,16 @@ class ConflictResolverNCF(ConflictTracker):
 		# except EOFError:
 		#     exit()
 
-		if t == 'conflict.localIsNewer':
+		if t == "conflict.localIsNewer":
 			return self.deferred_tasks.push(self._upload_frappe_file, action)
 			# raise NotImplementedError
 			assert l
-			doc = frappe.get_doc('File', l._frappe_name)
+			doc = frappe.get_doc("File", l._frappe_name)
 			doc.save()
 			# self.common.cloud_client.put_file_contents(l.path, l)
 			yield  # empty generator
-			return print('save file')
-		elif t == 'conflict.incompatibleTypesDirVsFile':
+			return print("save file")
+		elif t == "conflict.incompatibleTypesDirVsFile":
 			raise NotImplementedError
 			assert l
 			assert r
@@ -149,9 +147,8 @@ class ConflictResolverNCF(ConflictTracker):
 				# Local is the simple file
 				folder, file_name = util_denormalize_to_local_path(l.path)
 				frappe.db.set_value(
-					'File', l._frappe_name,
-					'file_name', file_name + '__conflicted',
-					modified=r.last_updated)
+					"File", l._frappe_name, "file_name", file_name + "__conflicted", modified=r.last_updated
+				)
 			else:
 				# Remote is the simple file
 				p = self.common.denormalize_remote(r.path)
@@ -159,8 +156,8 @@ class ConflictResolverNCF(ConflictTracker):
 				# self.common.cloud_client.move(p, p + '__conflicted')
 
 			yield  # empty generator
-			return print('delete file')
-		elif t == 'conflict.differentIds':
+			return print("delete file")
+		elif t == "conflict.differentIds":
 			yield
 			raise NotImplementedError
 		else:
@@ -178,10 +175,10 @@ class ConflictResolverNCF(ConflictTracker):
 		#         self.action
 
 	def on_before_action_run(self, action: Action):
-		if action.type.startswith('conflict'):
+		if action.type.startswith("conflict"):
 			self._track_conflict(action)
 			return self._resolve_conflict(action)
 
-		path = action.remote.path if action.remote else action.local.path if action.local else ''
+		path = action.remote.path if action.remote else action.local.path if action.local else ""
 		if self._check_conflict_for_path(path):
 			return self._resolve_conflict(action)

@@ -1,11 +1,15 @@
 from datetime import datetime
-from typing import List
 
-from owncloud import HTTPResponseError, FileInfo
+from owncloud import FileInfo, HTTPResponseError
 
-from frappe.integrations.doctype.nextcloud_settings.exceptions import NextcloudSyncCannotCreateRoot, NextcloudSyncCannotFetchRoot, NextcloudSyncMissingRoot
+from frappe.integrations.doctype.nextcloud_settings.exceptions import (
+	NextcloudSyncCannotCreateRoot,
+	NextcloudSyncCannotFetchRoot,
+	NextcloudSyncMissingRoot,
+)
 
 from .Common import Common
+
 
 class RemoteFetcher:
 	def __init__(self, common: Common):
@@ -22,15 +26,15 @@ class RemoteFetcher:
 	def create_root(self) -> FileInfo:
 		p = self.root
 		self.client.mkdir_p(p)
-		msg = f'initializing empty root directory on remote ({p})'
+		msg = f"initializing empty root directory on remote ({p})"
 		self.log(msg)
 
 		f = self.client.file_info(p, properties=self.properties)
 		if f:
-			self.log('-> ok')
+			self.log("-> ok")
 			return f
 
-		self.log('-> failed to create root directory ({p})')
+		self.log("-> failed to create root directory ({p})")
 		raise NextcloudSyncCannotCreateRoot()
 
 	def fetch_root(self, create_if_missing=False) -> FileInfo:
@@ -45,17 +49,20 @@ class RemoteFetcher:
 					raise NextcloudSyncMissingRoot()
 			else:
 				raise
-		except Exception as e:
+		except Exception:
 			raise NextcloudSyncCannotFetchRoot()
 
 	def fetch_all(self):
 		root = self.fetch_root(create_if_missing=True)
 
-		files: List[FileInfo] = self.client.list(
-			self.root,
-			depth='infinity',
-			properties=self.properties,
-		) or []
+		files: list[FileInfo] = (
+			self.client.list(
+				self.root,
+				depth="infinity",
+				properties=self.properties,
+			)
+			or []
+		)
 
 		files = self.filter(files)
 
@@ -74,10 +81,7 @@ class RemoteFetcher:
 
 		root = self.fetch_root(create_if_missing=True)
 
-		files: List[FileInfo] = self.client.list_updated_since(
-			last_update,
-			path=self.root
-		) or []
+		files: list[FileInfo] = self.client.list_updated_since(last_update, path=self.root) or []
 
 		files = self.filter(files)
 
