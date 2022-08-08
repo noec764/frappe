@@ -417,6 +417,7 @@ class TestDB(unittest.TestCase):
 		for d in created_docs:
 			self.assertTrue(frappe.db.exists("ToDo", d))
 
+	@unittest.skip
 	def test_transaction_writes_error(self):
 		from frappe.database.database import Database
 
