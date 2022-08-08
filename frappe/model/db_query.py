@@ -327,9 +327,6 @@ class DatabaseQuery:
 				if linked_field.fieldtype == "Link":
 					self.append_link_table(linked_doctype, linked_fieldname)
 				field = f"`tab{linked_doctype}`.`{fieldname}`"
-
-				field = field.replace(linked_fieldname, f"`tab{linked_doctype}`")
-				field = field.replace(fieldname, f"`{fieldname}`")
 				if alias:
 					field = f"{field} as {alias}"
 				self.fields[self.fields.index(original_field)] = field
