@@ -5,6 +5,9 @@ from frappe.tests.utils import FrappeTestCase
 
 
 class TestBootData(FrappeTestCase):
+	def tearDown(self) -> None:
+		frappe.set_user("Administrator")
+
 	def test_get_unseen_notes(self):
 		frappe.db.delete("Note")
 		frappe.db.delete("Note Seen By")
