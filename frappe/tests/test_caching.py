@@ -89,6 +89,6 @@ class TestSiteCache(FrappeAPITestCase):
 		end = time.monotonic()
 
 		self.assertEqual(register_with_external_service.call_count, 2)
-		time.sleep(CACHE_TTL - (end - start))
+		time.sleep(CACHE_TTL - (end - start) + 1)
 		self.get(f"/api/method/{api_with_ttl}")
 		self.assertEqual(register_with_external_service.call_count, 3)
