@@ -85,7 +85,6 @@ dependencies = [
 
     # Dodock specific libraries
     "pandas>=1.1.5,<2.0.0",
-    "pyocclient==0.6"
 ]
 
 [build-system]
