@@ -208,7 +208,7 @@ class BaseTestCommands(unittest.TestCase):
 		return f"{output}\n\n{cmd_execution_summary}"
 
 
-@skipIf(frappe.flags.in_ci, "Skipped in CI")
+@unittest.skip
 class TestCommands(BaseTestCommands):
 	def test_execute(self):
 		# test 1: execute a command expecting a numeric output
