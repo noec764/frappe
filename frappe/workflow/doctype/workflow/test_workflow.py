@@ -156,7 +156,7 @@ class TestWorkflow(unittest.TestCase):
 		self.workflow.save()
 
 	def test_syntax_error_in_transition_rule(self):
-		self.workflow.transitions[0].condition = 'doc.status != "Closed"'
+		self.workflow.transitions[0].condition = 'doc.status =! "Closed"'
 
 		with self.assertRaises(frappe.ValidationError) as se:
 			self.workflow.save()
