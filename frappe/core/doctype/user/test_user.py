@@ -18,6 +18,7 @@ from frappe.desk.notifications import extract_mentions
 from frappe.frappeclient import FrappeClient
 from frappe.model.delete_doc import delete_doc
 from frappe.utils import get_url
+from frappe.utils.password import update_password as _update_password
 
 user_module = frappe.core.doctype.user.user
 test_records = frappe.get_test_records("User")
@@ -308,7 +309,8 @@ class TestUser(unittest.TestCase):
 		import frappe.website.utils
 
 		random_user = frappe.mock("email")
-		random_user_name = frappe.mock("name")
+		random_user_first_name = frappe.mock("first_name")
+		random_user_name = frappe.mock("last_name")
 		# disabled signup
 		with patch.object(user_module, "is_signup_disabled", return_value=True):
 			self.assertRaisesRegex(
@@ -316,19 +318,21 @@ class TestUser(unittest.TestCase):
 				"Sign Up is disabled",
 				sign_up,
 				random_user,
+				random_user_first_name,
 				random_user_name,
 				"/signup",
 			)
 
 		self.assertTupleEqual(
-			sign_up(random_user, random_user_name, "/welcome"),
+			sign_up(random_user, random_user_first_name, random_user_name, "/welcome"),
 			(1, "Please check your email for verification"),
 		)
 		self.assertEqual(frappe.cache().hget("redirect_after_login", random_user), "/welcome")
 
 		# re-register
 		self.assertTupleEqual(
-			sign_up(random_user, random_user_name, "/welcome"), (0, "Already Registered")
+			sign_up(random_user, random_user_first_name, random_user_name, "/welcome"),
+			(0, "Already Registered"),
 		)
 
 		# disabled user
@@ -337,7 +341,8 @@ class TestUser(unittest.TestCase):
 		user.save()
 
 		self.assertTupleEqual(
-			sign_up(random_user, random_user_name, "/welcome"), (0, "Registered but disabled")
+			sign_up(random_user, random_user_first_name, random_user_name, "/welcome"),
+			(0, "Registered but disabled"),
 		)
 
 		# throttle user creation
@@ -347,6 +352,7 @@ class TestUser(unittest.TestCase):
 				"Throttled",
 				sign_up,
 				frappe.mock("email"),
+				random_user_first_name,
 				random_user_name,
 				"/signup",
 			)
@@ -400,6 +406,10 @@ class TestUser(unittest.TestCase):
 
 		# test redirect URL for website users
 		frappe.set_user("test2@example.com")
+
+		# Make sure password is the original one
+		_update_password(user="test2@example.com", pwd=old_password)
+
 		self.assertEqual(update_password(new_password, old_password=old_password), "/")
 		# reset password
 		update_password(old_password, old_password=new_password)
