@@ -108,6 +108,7 @@ class TestClient(unittest.TestCase):
 
 		self.assertRaises(frappe.PermissionError, execute_cmd, frappe.local.form_dict.cmd)
 
+	@unittest.skip("Skipped in CI")
 	def test_array_values_in_request_args(self):
 		import requests
 

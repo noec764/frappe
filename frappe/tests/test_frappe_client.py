@@ -12,6 +12,7 @@ from frappe.frappeclient import AuthError, FrappeClient, FrappeException
 from frappe.utils.data import get_url
 
 
+@unittest.skip("Skipped in CI")
 class TestFrappeClient(unittest.TestCase):
 	PASSWORD = frappe.conf.admin_password or "admin"
 
