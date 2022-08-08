@@ -550,10 +550,10 @@ class TestReportview(unittest.TestCase):
 
 	def test_column_comparison(self):
 		"""Test DatabaseQuery.execute to test column comparison"""
-		users_unedited = frappe.get_all(
+		users_without_last_name = frappe.get_all(
 			"User",
-			filters={"creation": Column("modified")},
-			fields=["name", "creation", "modified"],
+			filters={"first_name": Column("full_name")},
+			fields=["name", "first_name", "full_name"],
 			limit=1,
 		)
 		users_edited = frappe.get_all(
@@ -563,7 +563,7 @@ class TestReportview(unittest.TestCase):
 			limit=1,
 		)
 
-		self.assertEqual(users_unedited[0].modified, users_unedited[0].creation)
+		self.assertEqual(users_without_last_name[0].first_name, users_without_last_name[0].full_name)
 		self.assertNotEqual(users_edited[0].modified, users_edited[0].creation)
 
 	def test_reportview_get(self):
