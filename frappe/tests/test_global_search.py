@@ -77,15 +77,16 @@ class TestGlobalSearch(unittest.TestCase):
 
 		self.assertTrue("testing global search" in results[0].content)
 
-	def test_update_fields(self):
-		self.insert_test_events()
-		results = global_search.search("Monthly")
-		self.assertEqual(len(results), 0)
-		doctype = "Event"
-		make_property_setter(doctype, "repeat_on", "in_global_search", 1, "Int")
-		global_search.rebuild_for_doctype(doctype)
-		results = global_search.search("Monthly")
-		self.assertEqual(len(results), 3)
+	# TODO: Refactor test for Dodock: Repeat On field doesn't exist
+	# def test_update_fields(self):
+	# 	self.insert_test_events()
+	# 	results = global_search.search("Monthly")
+	# 	self.assertEqual(len(results), 0)
+	# 	doctype = "Event"
+	# 	make_property_setter(doctype, "repeat_on", "in_global_search", 1, "Int")
+	# 	global_search.rebuild_for_doctype(doctype)
+	# 	results = global_search.search("Monthly")
+	# 	self.assertEqual(len(results), 3)
 
 	def test_delete_doc(self):
 		self.insert_test_events()
