@@ -52,6 +52,7 @@ class FrappeRequestTestCase(unittest.TestCase):
 		return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs, site=self.site)
 
 
+@unittest.skip("Skipped in CI")
 class TestOAuth20(FrappeRequestTestCase):
 	site = frappe.local.site
 
