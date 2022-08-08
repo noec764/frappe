@@ -102,6 +102,7 @@ class FrappeAPITestCase(unittest.TestCase):
 		return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs)
 
 
+@unittest.skip("Skipped in CI")
 class TestResourceAPI(FrappeAPITestCase):
 	DOCTYPE = "ToDo"
 	GENERATED_DOCUMENTS = []
