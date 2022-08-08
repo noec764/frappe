@@ -90,10 +90,6 @@ class TestNaming(FrappeTestCase):
 		"""
 		doctype = new_doctype(autoname="format:TODO-{MM}-{some_fieldname}-{##}").insert()
 
-		todo_doctype = frappe.get_doc("DocType", doctype)
-		todo_doctype.autoname = "format:TODO-{MM}-{status}-{##}"
-		todo_doctype.save()
-
 		description = "Format"
 
 		doc = frappe.new_doc(doctype.name)
