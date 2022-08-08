@@ -103,7 +103,6 @@ class TestBlogPost(FrappeTestCase):
 	def test_caching(self):
 		# to enable caching
 		frappe.flags.force_website_cache = True
-		print(frappe.session.user)
 
 		clear_website_cache()
 		# first response no-cache
