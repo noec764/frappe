@@ -251,6 +251,11 @@ def search_widget(
 					if re.search(re.escape(txt) + ".*", (_(v.name) if as_dict else _(v[0])), re.IGNORECASE)
 				)
 
+			# Sorting the values array so that relevant results always come first
+			# This will first bring elements on top in which query is a prefix of element
+			# Then it will bring the rest of the elements and sort them in lexicographical order
+			values = sorted(values, key=lambda x: relevance_sorter(x, txt, as_dict))
+
 			# remove _relevance from results
 			if as_dict:
 				for r in values:
