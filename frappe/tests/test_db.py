@@ -22,6 +22,10 @@ from frappe.utils.testutils import clear_custom_fields
 
 
 class TestDB(unittest.TestCase):
+	def setUp(self) -> None:
+		if not frappe.session.user:
+			frappe.set_user("Administrator")
+
 	def test_datetime_format(self):
 		now_str = now()
 		self.assertEqual(frappe.db.format_datetime(None), FallBackDateTimeStr)
