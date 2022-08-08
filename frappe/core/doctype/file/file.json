@@ -28,10 +28,7 @@
      "old_parent",
      "content_hash",
      "uploaded_to_dropbox",
-     "uploaded_to_google_drive",
-     "nextcloud_id",
-     "nextcloud_parent_id",
-     "nextcloud_etag"
+     "uploaded_to_google_drive"
     ],
     "fields": [
      {
@@ -187,34 +184,12 @@
       "fieldtype": "Check",
       "label": "Uploaded To Google Drive",
       "read_only": 1
-     },
-     {
-      "fieldname": "nextcloud_id",
-      "fieldtype": "Data",
-      "label": "Nextcloud ID",
-      "no_copy": 1,
-      "print_hide": 1,
-      "report_hide": 1,
-      "unique": 1
-     },
-     {
-      "fieldname": "nextcloud_parent_id",
-      "fieldtype": "Data",
-      "label": "Nextcloud Parent ID",
-      "no_copy": 1,
-      "print_hide": 1,
-      "report_hide": 1
-     },
-     {
-      "fieldname": "nextcloud_etag",
-      "fieldtype": "Data",
-      "label": "Nextcloud ETag"
      }
     ],
     "icon": "fa fa-file",
     "idx": 1,
     "links": [],
-    "modified": "2022-05-09 17:23:29.820573",
+    "modified": "2022-08-08 17:23:29.820573",
     "modified_by": "Administrator",
     "module": "Core",
     "name": "File",
