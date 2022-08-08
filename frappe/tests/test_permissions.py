@@ -226,6 +226,9 @@ class TestPermissions(FrappeTestCase):
 		fake_creation = now_datetime() + timedelta(days=-7)
 		fake_owner = frappe.db.get_value("User", {"name": ("!=", frappe.session.user)})
 
+		# TODO: remove after correcting conflict with other tests
+		frappe.flags.in_migrate = False
+
 		d = frappe.new_doc("ToDo")
 		d.description = "ToDo created via test_set_standard_fields_manually"
 		d.creation = fake_creation
