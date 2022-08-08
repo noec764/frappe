@@ -225,6 +225,9 @@ def add_country_and_currency(name, country):
 			}
 		).db_insert()
 
+	if name in ("El Salvador"):
+		return
+
 	if country.currency and not frappe.db.exists("Currency", country.currency):
 		frappe.get_doc(
 			{
