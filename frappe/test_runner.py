@@ -466,6 +466,8 @@ def make_test_records_for_doctype(doctype, verbose=0, force=False, commit=False)
 	else:
 		test_records = frappe.get_test_records(doctype)
 		if test_records:
+			if doctype not in frappe.local.test_objects:
+				frappe.local.test_objects[doctype] = []
 			frappe.local.test_objects[doctype] += make_test_objects(
 				doctype, test_records, verbose, force, commit=commit
 			)
