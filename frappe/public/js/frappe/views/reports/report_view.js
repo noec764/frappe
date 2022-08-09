@@ -539,7 +539,6 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 		this.last_chart_type = args.chart_type;
 
 		const get_df = (field) => this.columns_map[field].docfield;
-		const get_doc = (value, field) => this.data.find((d) => d[field] === value);
 
 		this.$charts_wrapper.removeClass("hidden");
 
@@ -554,13 +553,12 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				numberFormatter: frappe.utils.format_chart_axis_number,
 			},
 			tooltipOptions: {
-				formatTooltipY: (value) =>
-					frappe.format(
-						value,
-						get_df(this.chart_args.y_axes[0]),
-						{ always_show_decimals: true, inline: true },
-						get_doc(value.doc)
-					),
+				formatTooltipY: (value) => {
+					return frappe.format(value, get_df(this.chart_args.y_axes[0]), {
+						always_show_decimals: true,
+						inline: true,
+					});
+				},
 			},
 		});
 	}
