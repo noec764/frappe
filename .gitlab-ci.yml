@@ -52,13 +52,14 @@ unittests:
 
   script:
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-tests --app frappe --junit-xml-output /home/dokotest/rspec.xml" dokotest
+    - ls /home/dokotest/
 
   artifacts:
     when: always
     paths:
-      - rspec.xml
+      - /home/dokotest/rspec.xml
     reports:
-      junit: rspec.xml
+      junit: /home/dokotest/rspec.xml
 
 build_dodock:
   stage: Build Dodock
