@@ -91,6 +91,9 @@ def has_permission(
 	if not user:
 		user = frappe.session.user
 
+	if user == "Administrator":
+		return True
+
 	if not doc and hasattr(doctype, "doctype"):
 		# first argument can be doc or doctype
 		doc = doctype
