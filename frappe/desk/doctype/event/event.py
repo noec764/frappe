@@ -192,7 +192,7 @@ class Event(WebsiteGenerator):
 	def add_reference(self, reference_doctype, reference_name):
 		self.append(
 			"event_references",
-			{"reference_doctype": reference_doctype, "reference_name": reference_name},
+			{"reference_doctype": reference_doctype, "reference_docname": reference_name},
 		)
 
 	def get_context(self, context):
