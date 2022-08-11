@@ -121,6 +121,12 @@ class Document(BaseDocument):
 			# incorrect arguments. let's not proceed.
 			raise ValueError("Illegal arguments")
 
+	@staticmethod
+	def whitelist(fn):
+		"""Decorator: Whitelist method to be called remotely via REST API."""
+		frappe.whitelist()(fn)
+		return fn
+
 	def load_from_db(self):
 		"""Load document and children from database and create properties
 		from fields"""
@@ -353,7 +359,7 @@ class Document(BaseDocument):
 
 		if self._action == "submit" and getattr(self.meta, "name_after_submit"):
 			self._draft_name = self.name
-			self.set_new_name()
+			self.set_new_name(set_child_names=False)
 			from frappe.model.rename_doc import rename_doc
 
 			rename_doc(
@@ -649,7 +655,7 @@ class Document(BaseDocument):
 					fail = not self.is_child_table_same(field.fieldname)
 				elif field.fieldtype in ("Date", "Datetime", "Time"):
 					fail = str(value) != str(original_value)
-				elif original_value:
+				else:
 					fail = value != original_value
 
 				if fail:
@@ -1037,12 +1043,6 @@ class Document(BaseDocument):
 				_evaluate_alert(alert)
 			elif alert.event == "Method" and method == alert.method:
 				_evaluate_alert(alert)
-
-	@staticmethod
-	def whitelist(fn):
-		"""Decorator: Whitelist method to be called remotely via REST API."""
-		frappe.whitelist()(fn)
-		return fn
 
 	@whitelist.__func__
 	def _submit(self):
