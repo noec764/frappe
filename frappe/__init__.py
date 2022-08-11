@@ -444,7 +444,12 @@ def msgprint(
 		out.as_list = 1
 
 	if sys.stdin.isatty():
-		msg = _strip_html_tags(out.message)
+		if isinstance(out.message, (list, tuple)):
+			msg = ""
+			for m in out.message:
+				msg += _strip_html_tags(m)
+		else:
+			msg = _strip_html_tags(out.message)
 
 	if flags.print_messages and out.message:
 		print(f"Message: {_strip_html_tags(out.message)}")
