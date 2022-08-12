@@ -357,7 +357,9 @@ class Document(BaseDocument):
 
 		self.update_children()
 
-		if self._action == "submit" and getattr(self.meta, "name_after_submit"):
+		if (
+			self._action == "submit" and getattr(self.meta, "name_after_submit") and not self.flags.name_set
+		):
 			self._draft_name = self.name
 			self.set_new_name(set_child_names=False)
 			from frappe.model.rename_doc import rename_doc
@@ -483,7 +485,7 @@ class Document(BaseDocument):
 			for d in self.get_all_children():
 				set_new_name(d)
 
-		if draft_name:
+		if draft_name and not set_name:
 			self.flags.draft_name_set = True
 		else:
 			self.flags.name_set = True
