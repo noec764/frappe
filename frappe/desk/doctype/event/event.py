@@ -367,7 +367,7 @@ def get_events(
 	limit_page_length=None,
 	additional_condition=None,
 	ignore_permissions=False,
-):
+) -> list[frappe._dict]:
 	if not user:
 		user = frappe.session.user
 
