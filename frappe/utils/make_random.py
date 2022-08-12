@@ -39,11 +39,12 @@ def add_random_children(doc: "Document", fieldname: str, rows, randomize: dict, 
 
 
 def get_random(doctype: str, filters: dict = None, doc: bool = False):
+	from frappe.desk.reportview import get_filters_cond
+
 	condition = []
 	if filters:
-		condition.extend(
-			"{}='{}'".format(key, str(val).replace("'", "'")) for key, val in filters.items()
-		)
+		get_filters_cond(doctype, filters, condition, ignore_permissions=True)
+
 	condition = " where " + " and ".join(condition) if condition else ""
 
 	out = frappe.db.multisql(
