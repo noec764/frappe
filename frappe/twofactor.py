@@ -429,8 +429,9 @@ def create_barcode_folder():
 	folder = frappe.db.exists("File", {"file_name": folder_name})
 	if folder:
 		return folder
+	home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
 	folder = frappe.get_doc(
-		{"doctype": "File", "file_name": folder_name, "is_folder": 1, "folder": "Home"}
+		{"doctype": "File", "file_name": folder_name, "is_folder": 1, "folder": home_folder}
 	)
 	folder.insert(ignore_permissions=True)
 	return folder.name
@@ -438,8 +439,10 @@ def create_barcode_folder():
 
 def delete_qrimage(user, check_expiry=False):
 	"""Delete Qrimage when user logs in."""
+	home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
 	user_barcodes = frappe.get_all(
-		"File", {"attached_to_doctype": "User", "attached_to_name": user, "folder": "Home/Barcodes"}
+		"File",
+		{"attached_to_doctype": "User", "attached_to_name": user, "folder": f"{home_folder}/Barcodes"},
 	)
 
 	for barcode in user_barcodes:

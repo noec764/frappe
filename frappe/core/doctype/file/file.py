@@ -275,7 +275,7 @@ class File(Document):
 			self.folder = frappe.db.get_value("File", {"is_attachments_folder": 1})
 
 		elif not self.is_home_folder:
-			self.folder = "Home"
+			self.folder = frappe.db.get_value("File", {"is_home_folder": 1})
 
 	def validate_file_on_disk(self):
 		"""Validates existence file"""
