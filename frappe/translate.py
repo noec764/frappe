@@ -21,7 +21,7 @@ from pypika.terms import PseudoColumn
 import frappe
 from frappe.model.utils import InvalidIncludePath, render_include
 from frappe.query_builder import DocType, Field
-from frappe.utils import cstr, get_bench_path, is_html, strip, strip_html_tags
+from frappe.utils import cstr, get_bench_path, is_html, strip, strip_html_tags, unique
 from frappe.utils.csvutils import to_csv
 
 TRANSLATE_PATTERN = re.compile(
@@ -1373,6 +1373,14 @@ def set_preferred_language_cookie(preferred_language):
 
 def get_preferred_language_cookie():
 	return frappe.request.cookies.get("preferred_language")
+
+
+def get_translated_doctypes():
+	dts = frappe.get_all("DocType", {"translated_doctype": 1}, pluck="name")
+	custom_dts = frappe.get_all(
+		"Property Setter", {"property": "translated_doctype", "value": "1"}, pluck="doc_type"
+	)
+	return unique(dts + custom_dts)
 
 
 # TODO: Commonify with function in frappe.desk.form.meta
