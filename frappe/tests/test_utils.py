@@ -22,15 +22,22 @@ from frappe.model.document import Document
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import (
 	ceil,
+	dict_to_str,
 	evaluate_filters,
+	execute_in_shell,
 	floor,
 	format_timedelta,
 	get_bench_path,
+	get_file_timestamp,
 	get_gravatar,
+	get_site_info,
+	get_sites,
 	get_url,
 	money_in_words,
 	parse_timedelta,
 	random_string,
+	remove_blanks,
+	safe_json_loads,
 	scrub_urls,
 	validate_email_address,
 	validate_name,
@@ -39,13 +46,21 @@ from frappe.utils import (
 )
 from frappe.utils.data import (
 	add_to_date,
+	add_years,
 	cast,
+	cstr,
+	duration_to_seconds,
+	get_datetime,
 	get_first_day_of_week,
 	get_time,
 	get_timedelta,
+	get_timespan_date_range,
+	get_year_ending,
 	getdate,
 	now_datetime,
 	nowtime,
+	pretty_date,
+	to_timedelta,
 	validate_python_code,
 )
 from frappe.utils.dateutils import get_dates_from_timegrain
@@ -504,6 +519,79 @@ class TestDateUtils(unittest.TestCase):
 		self.assertIsInstance(get_timedelta(str(timedelta_input)), timedelta)
 		self.assertIsInstance(get_timedelta(str(time_input)), timedelta)
 
+	def test_to_timedelta(self):
+		self.assertEqual(to_timedelta("00:00:01"), timedelta(seconds=1))
+		self.assertEqual(to_timedelta("10:00:01"), timedelta(seconds=1, hours=10))
+		self.assertEqual(to_timedelta(time(hour=2)), timedelta(hours=2))
+
+	def test_add_date_utils(self):
+		self.assertEqual(add_years(datetime(2020, 1, 1), 1), datetime(2021, 1, 1))
+
+	def test_duration_to_sec(self):
+		self.assertEqual(duration_to_seconds("3h 34m 45s"), 12885)
+		self.assertEqual(duration_to_seconds("1h"), 3600)
+		self.assertEqual(duration_to_seconds("110m"), 110 * 60)
+		self.assertEqual(duration_to_seconds("110m"), 110 * 60)
+
+	def test_get_timespan_date_range(self):
+
+		supported_timespans = [
+			"last week",
+			"last month",
+			"last quarter",
+			"last 6 months",
+			"last year",
+			"yesterday",
+			"today",
+			"tomorrow",
+			"this week",
+			"this month",
+			"this quarter",
+			"this year",
+			"next week",
+			"next month",
+			"next quarter",
+			"next 6 months",
+			"next year",
+		]
+
+		for ts in supported_timespans:
+			res = get_timespan_date_range(ts)
+			self.assertEqual(len(res), 2)
+
+			# Manual type checking eh?
+			self.assertIsInstance(res[0], date)
+			self.assertIsInstance(res[1], date)
+
+	def test_timesmap_utils(self):
+		self.assertEqual(get_year_ending(date(2021, 1, 1)), date(2021, 12, 31))
+		self.assertEqual(get_year_ending(date(2021, 1, 31)), date(2021, 12, 31))
+
+	def test_pretty_date(self):
+		from frappe import _
+
+		# differnt cases
+		now = get_datetime()
+
+		test_cases = {
+			now: _("just now"),
+			add_to_date(now, minutes=-1): _("1 minute ago"),
+			add_to_date(now, minutes=-3): _("3 minutes ago"),
+			add_to_date(now, hours=-1): _("1 hour ago"),
+			add_to_date(now, hours=-2): _("2 hours ago"),
+			add_to_date(now, days=-1): _("Yesterday"),
+			add_to_date(now, days=-5): _("5 days ago"),
+			add_to_date(now, days=-8): _("1 week ago"),
+			add_to_date(now, days=-14): _("2 weeks ago"),
+			add_to_date(now, days=-32): _("1 month ago"),
+			add_to_date(now, days=-32 * 2): _("2 months ago"),
+			add_to_date(now, years=-1, days=-5): _("1 year ago"),
+			add_to_date(now, years=-2, days=-10): _("2 years ago"),
+		}
+
+		for dt, exp_message in test_cases.items():
+			self.assertEqual(pretty_date(dt), exp_message)
+
 	def test_date_from_timegrain(self):
 		start_date = getdate("2021-01-01")
 
@@ -775,3 +863,38 @@ class TestIdenticon(FrappeTestCase):
 		identicon_bs64 = identicon.base64()
 		self.assertIsInstance(identicon_bs64, str)
 		self.assertTrue(identicon_bs64.startswith("data:image/png;base64,"))
+
+
+class TestContainerUtils(FrappeTestCase):
+	def test_dict_to_str(self):
+		self.assertEqual(dict_to_str({"a": "b"}), "a=b")
+
+	def test_remove_blanks(self):
+		a = {"asd": "", "b": None, "c": "d"}
+		remove_blanks(a)
+		self.assertEqual(len(a), 1)
+		self.assertEqual(a["c"], "d")
+
+
+class TestMiscUtils(FrappeTestCase):
+	def test_get_file_timestamp(self):
+		self.assertIsInstance(get_file_timestamp(__file__), str)
+
+	def test_execute_in_shell(self):
+		err, out = execute_in_shell("ls")
+		self.assertIn("apps", cstr(out))
+
+	def test_get_all_sites(self):
+		self.assertIn(frappe.local.site, get_sites())
+
+	def test_get_site_info(self):
+		info = get_site_info()
+
+		installed_apps = [app["app_name"] for app in info["installed_apps"]]
+		self.assertIn("frappe", installed_apps)
+		self.assertGreaterEqual(len(info["users"]), 1)
+
+	def test_safe_json_load(self):
+		self.assertEqual(safe_json_loads("{}"), {})
+		self.assertEqual(safe_json_loads("{ /}"), "{ /}")
+		self.assertEqual(safe_json_loads("12"), 12)  # this is a quirk

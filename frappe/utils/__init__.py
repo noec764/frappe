@@ -1,7 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-# util __init__.py
 import functools
 import hashlib
 import io
@@ -10,14 +9,21 @@ import os
 import re
 import sys
 import traceback
-import typing  # noqa
-from collections.abc import MutableMapping, MutableSequence, Sequence
+from collections.abc import (
+	Container,
+	Generator,
+	Iterable,
+	MutableMapping,
+	MutableSequence,
+	Sequence,
+)
 from email.header import decode_header, make_header
 from email.utils import formataddr, parseaddr
 from gzip import GzipFile
-from typing import Generator, Iterable, Literal
+from typing import Any, Literal
 from urllib.parse import quote, urlparse
 
+from redis.exceptions import ConnectionError  # noqa
 from traceback_with_variables import iter_exc_lines
 from werkzeug.test import Client
 
@@ -127,8 +133,7 @@ def validate_phone_number(phone_number, throw=False):
 
 	if not match and throw:
 		frappe.throw(
-			frappe._("{0} is not a valid Phone Number").format(phone_number),
-			frappe.InvalidPhoneNumberError,
+			frappe._("{0} is not a valid Phone Number").format(phone_number), frappe.InvalidPhoneNumberError
 		)
 
 	return bool(match)
@@ -220,12 +225,18 @@ def split_emails(txt):
 	return email_list
 
 
-def validate_url(txt, throw=False, valid_schemes=None):
+def validate_url(
+	txt: str,
+	throw: bool = False,
+	valid_schemes: str | Container[str] | None = None,
+) -> bool:
 	"""
 	Checks whether `txt` has a valid URL string
+
 	Parameters:
 	        throw (`bool`): throws a validationError if URL is not valid
 	        valid_schemes (`str` or `list`): if provided checks the given URL's scheme against this
+
 	Returns:
 	        bool: if `txt` represents a valid URL
 	"""
@@ -244,7 +255,7 @@ def validate_url(txt, throw=False, valid_schemes=None):
 	return is_valid
 
 
-def random_string(length):
+def random_string(length: int) -> str:
 	"""generate a random string"""
 	import string
 	from random import choice
@@ -252,7 +263,7 @@ def random_string(length):
 	return "".join(choice(string.ascii_letters + string.digits) for i in range(length))
 
 
-def has_gravatar(email):
+def has_gravatar(email: str) -> str:
 	"""Returns gravatar url if user has set an avatar at gravatar.com"""
 	import requests
 
@@ -272,12 +283,12 @@ def has_gravatar(email):
 		return ""
 
 
-def get_gravatar_url(email, default: Literal["mm", "404"] = "mm"):
+def get_gravatar_url(email: str, default: Literal["mm", "404"] = "mm") -> str:
 	hexdigest = hashlib.md5(frappe.as_unicode(email).encode("utf-8")).hexdigest()
 	return f"https://secure.gravatar.com/avatar/{hexdigest}?d={default}&s=200"
 
 
-def get_gravatar(email):
+def get_gravatar(email: str) -> str:
 	from frappe.utils.identicon import Identicon
 
 	return has_gravatar(email) or Identicon(email).base64()
@@ -307,7 +318,7 @@ def log(event, details):
 	frappe.logger(event).info(details)
 
 
-def dict_to_str(args, sep="&"):
+def dict_to_str(args: dict[str, Any], sep: str = "&") -> str:
 	"""
 	Converts a dictionary to URL
 	"""
@@ -319,6 +330,7 @@ def dict_to_str(args, sep="&"):
 
 def list_to_str(seq, sep=", "):
 	"""Convert a sequence into a string using seperator.
+
 	Same as str.join, but does type conversion and strip extra spaces.
 	"""
 	return sep.join(map(str.strip, map(str, seq)))
@@ -342,18 +354,13 @@ def set_default(key, val):
 	return frappe.db.set_default(key, val)
 
 
-def remove_blanks(d):
+def remove_blanks(d: dict) -> dict:
 	"""
-	Returns d with empty ('' or None) values stripped
+	Returns d with empty ('' or None) values stripped. Mutates inplace.
 	"""
-	empty_keys = []
-	for key in d:
-		if d[key] == "" or d[key] is None:
-			# del d[key] raises runtime exception, using a workaround
-			empty_keys.append(key)
-	for key in empty_keys:
-		del d[key]
-
+	for k, v in tuple(d.items()):
+		if v == "" or v is None:
+			del d[k]
 	return d
 
 
@@ -413,21 +420,20 @@ def execute_in_shell(cmd, verbose=0, low_priority=False):
 	import tempfile
 	from subprocess import Popen
 
-	with tempfile.TemporaryFile() as stdout:
-		with tempfile.TemporaryFile() as stderr:
-			kwargs = {"shell": True, "stdout": stdout, "stderr": stderr}
+	with (tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr):
+		kwargs = {"shell": True, "stdout": stdout, "stderr": stderr}
 
-			if low_priority:
-				kwargs["preexec_fn"] = lambda: os.nice(10)
+		if low_priority:
+			kwargs["preexec_fn"] = lambda: os.nice(10)
 
-			p = Popen(cmd, **kwargs)
-			p.wait()
+		p = Popen(cmd, **kwargs)
+		p.wait()
 
-			stdout.seek(0)
-			out = stdout.read()
+		stdout.seek(0)
+		out = stdout.read()
 
-			stderr.seek(0)
-			err = stderr.read()
+		stderr.seek(0)
+		err = stderr.read()
 
 	if verbose:
 		if err:
@@ -493,7 +499,6 @@ def decode_dict(d, encoding="utf-8"):
 	for key in d:
 		if isinstance(d[key], str) and not isinstance(d[key], str):
 			d[key] = d[key].decode(encoding, "ignore")
-
 	return d
 
 
@@ -560,7 +565,7 @@ def update_progress_bar(txt, i, l, absolute=False):
 		sys.stdout.flush()
 		return
 
-	if not getattr(frappe.local, "request", None) or is_cli():
+	if not getattr(frappe.local, "request", None) or is_cli():  # pragma: no cover
 		lt = len(txt)
 		try:
 			col = 40 if os.get_terminal_size().columns > 80 else 20
@@ -743,7 +748,7 @@ def get_site_info():
 
 	kwargs = {
 		"fields": ["user", "creation", "full_name"],
-		"filters": {"Operation": "Login", "Status": "Success"},
+		"filters": {"operation": "Login", "status": "Success"},
 		"limit": "10",
 	}
 
@@ -855,9 +860,11 @@ def get_safe_filters(filters):
 
 def create_batch(iterable: Iterable, size: int) -> Generator[Iterable, None, None]:
 	"""Convert an iterable to multiple batches of constant size of batch_size
+
 	Args:
 	        iterable (Iterable): Iterable object which is subscriptable
 	        size (int): Maximum size of batches to be generated
+
 	Yields:
 	        Generator[List]: Batched iterable of maximum length `size`
 	"""
@@ -934,8 +941,10 @@ def get_assets_json():
 
 def get_bench_relative_path(file_path):
 	"""Fixes paths relative to the bench root directory if exists and returns the absolute path
+
 	Args:
 	        file_path (str, Path): Path of a file that exists on the file system
+
 	Returns:
 	        str: Absolute path of the file_path
 	"""
@@ -957,8 +966,10 @@ def get_bench_relative_path(file_path):
 
 def groupby_metric(iterable: dict[str, list], key: str):
 	"""Group records by a metric.
+
 	Usecase: Lets assume we got country wise players list with the ranking given for each player(multiple players in a country can have same ranking aswell).
 	We can group the players by ranking(can be any other metric) using this function.
+
 	>>> d = {
 	        'india': [{'id':1, 'name': 'iplayer-1', 'ranking': 1}, {'id': 2, 'ranking': 1, 'name': 'iplayer-2'}, {'id': 2, 'ranking': 2, 'name': 'iplayer-3'}],
 	        'Aus': [{'id':1, 'name': 'aplayer-1', 'ranking': 1}, {'id': 2, 'ranking': 1, 'name': 'aplayer-2'}, {'id': 2, 'ranking': 2, 'name': 'aplayer-3'}]
@@ -1017,10 +1028,7 @@ def add_user_info(user, user_info):
 	if user not in user_info:
 		info = (
 			frappe.db.get_value(
-				"User",
-				user,
-				["full_name", "user_image", "name", "email", "time_zone"],
-				as_dict=True,
+				"User", user, ["full_name", "user_image", "name", "email", "time_zone"], as_dict=True
 			)
 			or frappe._dict()
 		)
