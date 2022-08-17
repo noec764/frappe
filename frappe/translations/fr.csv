@@ -5122,7 +5122,7 @@ Robots.txt,robots.txt,
 Rocket.Chat,Rocket.Chat,
 Role 'All' will be given to all System Users.,Le rôle 'Tous' sera attribué à tous les utilisateurs du système.,
 Role Name,Nom du Rôle,
-Role Permission for Page and Report,Autorisation du Rôle pour la Page et le Rapport,
+Role Permission for Page and Report,Rôles autorisés pour les pages et les rapport,
 Role Permissions Manager,Gestionnaire des rôles,Button in list view menu
 Role Permissions Manager,Gestionnaire des rôles et autorisation,
 Role Permissions,Autorisations du Rôle,
