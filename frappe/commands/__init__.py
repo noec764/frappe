@@ -112,7 +112,7 @@ def get_commands():
 	from .translate import commands as translate_commands
 	from .utils import commands as utils_commands
 
-	clickable_link = "\x1b]8;;https://doc.dokos.io/\x1b]8;;\a"
+	clickable_link = "\x1b]8;;https://doc.dokos.io/\x1b\\https://doc.dokos.io/\x1b]8;;\x1b\\"
 	all_commands = (
 		scheduler_commands + site_commands + translate_commands + utils_commands + redis_commands
 	)
