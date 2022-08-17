@@ -1,17 +1,17 @@
 import copy
 import datetime
 import signal
-import unittest
 from contextlib import contextmanager
 
 import frappe
 from frappe.model.base_document import BaseDocument
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import cint
 
 datetime_like_types = (datetime.datetime, datetime.date, datetime.time, datetime.timedelta)
 
 
-class FrappeTestCase(unittest.TestCase):
+class FrappeTestCase(FrappeTestCase):
 	"""Base test class for Frappe tests."""
 
 	SHOW_TRANSACTION_COMMIT_WARNINGS = False

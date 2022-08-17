@@ -3,14 +3,14 @@
 
 
 import os
-import unittest
 
 import frappe
 import frappe.defaults
 from frappe.core.doctype.data_import.data_import import export_csv
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestDataImportFixtures(unittest.TestCase):
+class TestDataImportFixtures(FrappeTestCase):
 	def setUp(self):
 		pass
 

@@ -2,17 +2,16 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
 from frappe.core.doctype.doctype.doctype import clear_permissions_cache
 from frappe.model.db_query import DatabaseQuery
 from frappe.permissions import add_permission, reset_perms
+from frappe.tests.utils import FrappeTestCase
 
 test_dependencies = ["User"]
 
 
-class TestToDo(unittest.TestCase):
+class TestToDo(FrappeTestCase):
 	def test_delete(self):
 		todo = frappe.get_doc(
 			dict(doctype="ToDo", description="test todo", assigned_by="Administrator")

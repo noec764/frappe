@@ -1,7 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 
-import unittest
 from unittest.mock import MagicMock, patch
 
 from rauth import OAuth2Service
@@ -9,11 +8,12 @@ from rauth import OAuth2Service
 import frappe
 from frappe.auth import CookieManager, LoginManager
 from frappe.integrations.doctype.social_login_key.social_login_key import BaseUrlNotSetError
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import set_request
 from frappe.utils.oauth import login_via_oauth2
 
 
-class TestSocialLoginKey(unittest.TestCase):
+class TestSocialLoginKey(FrappeTestCase):
 	@classmethod
 	def tearDownClass(cls):
 		frappe.set_user("Administrator")

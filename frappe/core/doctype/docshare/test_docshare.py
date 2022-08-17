@@ -2,16 +2,15 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
 import frappe.share
 from frappe.automation.doctype.auto_repeat.test_auto_repeat import create_submittable_doctype
+from frappe.tests.utils import FrappeTestCase
 
 test_dependencies = ["User"]
 
 
-class TestDocShare(unittest.TestCase):
+class TestDocShare(FrappeTestCase):
 	def setUp(self):
 		self.user = "test@example.com"
 		self.event = frappe.get_doc(

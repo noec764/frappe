@@ -1,7 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 
-
 import unittest
 
 import frappe
@@ -10,6 +9,7 @@ from frappe.automation.doctype.auto_repeat.auto_repeat import (
 	get_auto_repeat_entries,
 )
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, add_months, getdate, today
 
 
@@ -27,7 +27,7 @@ def add_custom_fields():
 	create_custom_field("ToDo", df)
 
 
-class TestAutoRepeat(unittest.TestCase):
+class TestAutoRepeat(FrappeTestCase):
 	def setUp(self):
 		if not frappe.db.sql(
 			"SELECT `fieldname` FROM `tabCustom Field` WHERE `fieldname`='auto_repeat' and `dt`=%s",

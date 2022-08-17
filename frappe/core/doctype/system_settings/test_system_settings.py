@@ -1,8 +1,8 @@
 # Copyright (c) 2021, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestSystemSettings(unittest.TestCase):
+class TestSystemSettings(FrappeTestCase):
 	pass

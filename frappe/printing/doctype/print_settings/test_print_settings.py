@@ -2,8 +2,8 @@
 # License: MIT. See LICENSE
 
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestPrintSettings(unittest.TestCase):
+class TestPrintSettings(FrappeTestCase):
 	pass

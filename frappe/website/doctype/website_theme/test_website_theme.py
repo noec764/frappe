@@ -4,12 +4,13 @@
 import unittest
 
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 from .website_theme import get_scss_paths
 
 
 @unittest.skip("Skipped in CI")
-class TestWebsiteTheme(unittest.TestCase):
+class TestWebsiteTheme(FrappeTestCase):
 	def test_website_theme(self):
 		frappe.delete_doc_if_exists("Website Theme", "test-theme")
 		theme = frappe.get_doc(

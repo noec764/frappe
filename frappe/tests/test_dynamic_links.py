@@ -2,12 +2,11 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestDynamicLinks(unittest.TestCase):
+class TestDynamicLinks(FrappeTestCase):
 	def setUp(self):
 		frappe.db.delete("Email Unsubscribe")
 

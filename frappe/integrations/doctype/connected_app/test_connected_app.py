@@ -1,7 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
 
-
 import unittest
 from urllib.parse import urljoin
 
@@ -11,6 +10,7 @@ import frappe
 from frappe.integrations.doctype.social_login_key.test_social_login_key import (
 	create_or_update_social_login_key,
 )
+from frappe.tests.utils import FrappeTestCase
 
 
 def get_user(usr, pwd):
@@ -51,7 +51,7 @@ def get_oauth_client():
 
 
 @unittest.skip("Skipped in CI")
-class TestConnectedApp(unittest.TestCase):
+class TestConnectedApp(FrappeTestCase):
 	def setUp(self):
 		"""Set up a Connected App that connects to our own oAuth provider.
 

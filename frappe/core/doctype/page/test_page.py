@@ -2,14 +2,13 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 test_records = frappe.get_test_records("Page")
 
 
-class TestPage(unittest.TestCase):
+class TestPage(FrappeTestCase):
 	def test_naming(self):
 		self.assertRaises(
 			frappe.NameError,

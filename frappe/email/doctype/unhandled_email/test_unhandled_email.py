@@ -1,10 +1,10 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 # test_records = frappe.get_test_records('Unhandled Emails')
 
 
-class TestUnhandledEmail(unittest.TestCase):
+class TestUnhandledEmail(FrappeTestCase):
 	pass

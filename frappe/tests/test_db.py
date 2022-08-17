@@ -17,11 +17,12 @@ from frappe.database.utils import FallBackDateTimeStr
 from frappe.query_builder import Field
 from frappe.query_builder.functions import Concat_ws
 from frappe.tests.test_query_builder import db_type_is, run_only_if
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_days, cint, now, random_string
 from frappe.utils.testutils import clear_custom_fields
 
 
-class TestDB(unittest.TestCase):
+class TestDB(FrappeTestCase):
 	def setUp(self) -> None:
 		if not frappe.session.user:
 			frappe.set_user("Administrator")
@@ -564,7 +565,7 @@ class TestDB(unittest.TestCase):
 
 
 @run_only_if(db_type_is.MARIADB)
-class TestDDLCommandsMaria(unittest.TestCase):
+class TestDDLCommandsMaria(FrappeTestCase):
 	test_table_name = "TestNotes"
 
 	def setUp(self) -> None:
@@ -626,7 +627,7 @@ class TestDDLCommandsMaria(unittest.TestCase):
 		self.assertEqual(len(indexs_in_table), 2)
 
 
-class TestDBSetValue(unittest.TestCase):
+class TestDBSetValue(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		cls.todo1 = frappe.get_doc(doctype="ToDo", description="test_set_value 1").insert()
@@ -787,7 +788,7 @@ class TestDBSetValue(unittest.TestCase):
 
 
 @run_only_if(db_type_is.POSTGRES)
-class TestDDLCommandsPost(unittest.TestCase):
+class TestDDLCommandsPost(FrappeTestCase):
 	test_table_name = "TestNotes"
 
 	def setUp(self) -> None:
@@ -896,7 +897,7 @@ class TestDDLCommandsPost(unittest.TestCase):
 
 
 @run_only_if(db_type_is.POSTGRES)
-class TestTransactionManagement(unittest.TestCase):
+class TestTransactionManagement(FrappeTestCase):
 	def test_create_proper_transactions(self):
 		def _get_transaction_id():
 			return frappe.db.sql("select txid_current()", pluck=True)

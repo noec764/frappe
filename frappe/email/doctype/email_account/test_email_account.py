@@ -3,7 +3,6 @@
 
 import email
 import os
-import unittest
 from datetime import datetime, timedelta
 from unittest.mock import patch
 
@@ -14,12 +13,13 @@ from frappe.email.doctype.email_account.email_account import notify_unreplied
 from frappe.email.email_body import get_message_id
 from frappe.email.receive import Email, InboundMail, SentEmailInInboxError
 from frappe.test_runner import make_test_records
+from frappe.tests.utils import FrappeTestCase
 
 make_test_records("User")
 make_test_records("Email Account")
 
 
-class TestEmailAccount(unittest.TestCase):
+class TestEmailAccount(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")
@@ -443,7 +443,7 @@ class TestEmailAccount(unittest.TestCase):
 			email_account.receive()
 
 
-class TestInboundMail(unittest.TestCase):
+class TestInboundMail(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		email_account = frappe.get_doc("Email Account", "_Test Email Account 1")

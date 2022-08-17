@@ -1,5 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import time
 import unittest
 
@@ -7,6 +8,7 @@ import frappe
 import frappe.utils
 from frappe.auth import LoginAttemptTracker
 from frappe.frappeclient import AuthError, FrappeClient
+from frappe.tests.utils import FrappeTestCase
 
 
 def add_user(email, password, username=None, mobile_no=None):
@@ -26,7 +28,7 @@ def add_user(email, password, username=None, mobile_no=None):
 
 
 @unittest.skip("Skipped in CI")
-class TestAuth(unittest.TestCase):
+class TestAuth(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		cls.HOST_NAME = frappe.get_site_config().host_name or frappe.utils.get_site_url(
@@ -121,7 +123,7 @@ class TestAuth(unittest.TestCase):
 		third_login.get_list("ToDo")
 
 
-class TestLoginAttemptTracker(unittest.TestCase):
+class TestLoginAttemptTracker(FrappeTestCase):
 	def test_account_lock(self):
 		"""Make sure that account locks after `n consecutive failures"""
 		tracker = LoginAttemptTracker(

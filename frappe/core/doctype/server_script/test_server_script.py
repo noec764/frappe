@@ -5,6 +5,7 @@ import unittest
 import requests
 
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_site_url
 
 scripts = [
@@ -86,7 +87,7 @@ frappe.db.add_index("Todo", ["color", "date"])
 ]
 
 
-class TestServerScript(unittest.TestCase):
+class TestServerScript(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
 		frappe.db.commit()

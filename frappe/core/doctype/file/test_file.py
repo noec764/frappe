@@ -1,5 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import base64
 import json
 import os
@@ -540,7 +541,7 @@ class TestFile(FrappeTestCase):
 		assert test_file is not None
 
 
-class TestAttachment(unittest.TestCase):
+class TestAttachment(FrappeTestCase):
 	test_doctype = "Test For Attachment"
 
 	@classmethod

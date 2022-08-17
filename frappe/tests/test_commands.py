@@ -1,13 +1,14 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-# imports - standard imports
 import gzip
 import importlib
 import json
 import os
 import shlex
 import subprocess
+
+# imports - standard imports
 import unittest
 from contextlib import contextmanager
 from functools import wraps
@@ -29,6 +30,7 @@ import frappe.recorder
 from frappe.installer import add_to_installed_apps, remove_app
 from frappe.query_builder.utils import db_type_is
 from frappe.tests.test_query_builder import run_only_if
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import add_to_date, get_bench_path, get_bench_relative_path, now
 from frappe.utils.backups import fetch_latest_backups
 from frappe.utils.jinja_globals import bundled_asset
@@ -134,7 +136,7 @@ def cli(cmd: Command, args: list | None = None):
 			importlib.invalidate_caches()
 
 
-class BaseTestCommands(unittest.TestCase):
+class BaseTestCommands(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls) -> None:
 		cls.setup_test_site()
@@ -637,7 +639,7 @@ class TestBackups(BaseTestCommands):
 		self.assertEqual([], missing_in_backup(self.backup_map["excludes"]["excludes"], database))
 
 
-class TestRemoveApp(unittest.TestCase):
+class TestRemoveApp(FrappeTestCase):
 	def test_delete_modules(self):
 		from frappe.installer import (
 			_delete_doctypes,
@@ -716,7 +718,7 @@ class TestBenchBuild(BaseTestCommands):
 		)
 
 
-class TestCommandUtils(unittest.TestCase):
+class TestCommandUtils(FrappeTestCase):
 	def test_bench_helper(self):
 		from frappe.utils.bench_helper import get_app_groups
 

@@ -1,8 +1,8 @@
 # Copyright (c) 2021, Dokos SAS and Contributors
 # See license.txt
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestSlideView(unittest.TestCase):
+class TestSlideView(FrappeTestCase):
 	pass

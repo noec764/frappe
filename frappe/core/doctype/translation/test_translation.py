@@ -2,13 +2,12 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
 from frappe import _
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestTranslation(unittest.TestCase):
+class TestTranslation(FrappeTestCase):
 	def setUp(self):
 		frappe.db.delete("Translation")
 

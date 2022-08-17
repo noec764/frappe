@@ -3,8 +3,8 @@
 
 
 # import frappe
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestDocumentTypeMapping(unittest.TestCase):
+class TestDocumentTypeMapping(FrappeTestCase):
 	pass

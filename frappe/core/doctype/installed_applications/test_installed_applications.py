@@ -3,8 +3,8 @@
 
 
 # import frappe
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestInstalledApplications(unittest.TestCase):
+class TestInstalledApplications(FrappeTestCase):
 	pass

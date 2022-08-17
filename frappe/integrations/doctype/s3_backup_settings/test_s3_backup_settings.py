@@ -2,8 +2,8 @@
 # License: MIT. See LICENSE
 
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestS3BackupSettings(unittest.TestCase):
+class TestS3BackupSettings(FrappeTestCase):
 	pass

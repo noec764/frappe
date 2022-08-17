@@ -2,8 +2,8 @@
 # License: MIT. See LICENSE
 
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestIncomingWebhookURL(unittest.TestCase):
+class TestIncomingWebhookURL(FrappeTestCase):
 	pass

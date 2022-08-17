@@ -1,12 +1,11 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-import unittest
-
 import frappe
 from frappe.config import get_modules_from_all_apps_for_user
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestConfig(unittest.TestCase):
+class TestConfig(FrappeTestCase):
 	def setUp(self):
 		frappe.set_user("Administrator")
 

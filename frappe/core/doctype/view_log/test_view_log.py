@@ -2,12 +2,11 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestViewLog(unittest.TestCase):
+class TestViewLog(FrappeTestCase):
 	def tearDown(self):
 		frappe.set_user("Administrator")
 

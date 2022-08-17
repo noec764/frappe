@@ -1,8 +1,8 @@
 # Copyright (c) 2021, Dokos SAS and Contributors
 # License: MIT. See LICENSE
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestArchivedDocument(unittest.TestCase):
+class TestArchivedDocument(FrappeTestCase):
 	pass

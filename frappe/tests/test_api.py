@@ -10,6 +10,7 @@ from semantic_version import Version
 from werkzeug.test import TestResponse
 
 import frappe
+from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_site_url, get_test_client
 
 try:
@@ -69,7 +70,7 @@ class ThreadWithReturnValue(Thread):
 		return self._return
 
 
-class FrappeAPITestCase(unittest.TestCase):
+class FrappeAPITestCase(FrappeTestCase):
 	SITE = frappe.local.site
 	SITE_URL = get_site_url(SITE)
 	RESOURCE_URL = f"{SITE_URL}/api/resource"

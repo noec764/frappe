@@ -2,8 +2,6 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 import frappe
 from frappe.core.doctype.domain_settings.domain_settings import get_active_modules
 from frappe.core.page.permission_manager.permission_manager import get_roles_and_doctypes
@@ -12,9 +10,10 @@ from frappe.desk.doctype.desktop_icon.desktop_icon import (
 	clear_desktop_icons_cache,
 	get_desktop_icons,
 )
+from frappe.tests.utils import FrappeTestCase
 
 
-class TestDomainification(unittest.TestCase):
+class TestDomainification(FrappeTestCase):
 	def setUp(self):
 		# create test domain
 		self.new_domain("_Test Domain 1")

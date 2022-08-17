@@ -2,10 +2,10 @@
 # License: MIT. See LICENSE
 
 
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 # test_records = frappe.get_test_records('Help Article')
 
 
-class TestHelpArticle(unittest.TestCase):
+class TestHelpArticle(FrappeTestCase):
 	pass

@@ -2,12 +2,11 @@
 # License: MIT. See LICENSE
 
 
-import unittest
-
 from werkzeug.wrappers import Response
 
 import frappe
 from frappe.app import process_response
+from frappe.tests.utils import FrappeTestCase
 
 HEADERS = (
 	"Access-Control-Allow-Origin",
@@ -17,7 +16,7 @@ HEADERS = (
 )
 
 
-class TestCORS(unittest.TestCase):
+class TestCORS(FrappeTestCase):
 	def make_request_and_test(self, origin="http://example.com", absent=False):
 		self.origin = origin
 
