@@ -23,7 +23,7 @@ frappe.ui.form.ControlPassword = class ControlPassword extends frappe.ui.form.Co
 			}, 500);
 		});
 
-		this.$input.attr('autocomplete', 'new-password') // disable form autofill https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off
+		this.$input.attr("autocomplete", "new-password"); // disable form autofill https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off
 	}
 
 	get_password_strength(value) {
@@ -35,13 +35,13 @@ frappe.ui.form.ControlPassword = class ControlPassword extends frappe.ui.form.Co
 				new_password: value || "",
 			},
 			callback: function (r) {
-				if (r.message && r.message.entropy) {
+				if (r.message && r.message.score) {
 					var score = r.message.score,
 						feedback = r.message.feedback;
 
 					feedback.crack_time_display = r.message.crack_time_display;
 
-					var indicators = ["gray", "red", "orange", "yellow", "green"];
+					var indicators = ["grey", "red", "orange", "yellow", "green"];
 					me.set_strength_indicator(indicators[score]);
 				}
 			},
