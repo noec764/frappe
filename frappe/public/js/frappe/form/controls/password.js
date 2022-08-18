@@ -22,6 +22,8 @@ frappe.ui.form.ControlPassword = class ControlPassword extends frappe.ui.form.Co
 				me.get_password_strength(me.$input.val());
 			}, 500);
 		});
+
+		this.$input.attr('autocomplete', 'new-password') // disable form autofill https://stackoverflow.com/questions/12374442/chrome-ignores-autocomplete-off
 	}
 
 	get_password_strength(value) {
