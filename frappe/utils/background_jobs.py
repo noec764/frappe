@@ -126,7 +126,9 @@ def run_doc_method(doctype, name, doc_method, **kwargs):
 	getattr(frappe.get_doc(doctype, name), doc_method)(**kwargs)
 
 
-def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True, retry=0):
+def execute_job(
+	site, method, event, job_name, kwargs, user="Administrator", is_async=True, retry=0
+):
 	"""Executes job in a worker, performs commit/rollback and logs if there is any error"""
 	if is_async:
 		frappe.connect(site)
