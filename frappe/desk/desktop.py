@@ -44,7 +44,7 @@ class Workspace:
 		self.doc.extensions = (
 			[]
 			if frappe.conf.developer_mode
-			else frappe.db.get_all("Workspace", dict(extends_page=self.page_name), pluck="name")
+			else frappe.get_all("Workspace", dict(extends_page=self.page_name), pluck="name")
 		)
 
 		if (
@@ -188,7 +188,7 @@ class Workspace:
 
 		if not exists and frappe.db.exists(name):
 			if not frappe.db.get_value("DocType", name, "issingle"):
-				exists = bool(frappe.db.get_all(name, limit=1))
+				exists = bool(frappe.get_all(name, limit=1))
 			else:
 				exists = True
 			self.table_counts[name] = exists

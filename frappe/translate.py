@@ -148,7 +148,7 @@ def set_default_language(lang):
 
 
 def get_all_language_with_name():
-	return frappe.db.get_all("Language", ["language_code", "language_name"])
+	return frappe.get_all("Language", ["language_code", "language_name"])
 
 
 def get_lang_dict():

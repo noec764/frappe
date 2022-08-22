@@ -7,7 +7,7 @@ import frappe
 
 def execute():
 	frappe.reload_doc("website", "doctype", "Website Theme Ignore App")
-	themes = frappe.db.get_all(
+	themes = frappe.get_all(
 		"Website Theme", filters={"theme_url": ("not like", "/files/website_theme/%")}
 	)
 	for theme in themes:

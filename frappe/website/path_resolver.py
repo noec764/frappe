@@ -98,7 +98,7 @@ def resolve_redirect(path, query_string=None):
 	        ]
 	"""
 	redirects = frappe.get_hooks("website_redirects")
-	redirects += frappe.db.get_all("Website Route Redirect", ["source", "target"])
+	redirects += frappe.get_all("Website Route Redirect", ["source", "target"])
 
 	if not redirects:
 		return
