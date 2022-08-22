@@ -17,7 +17,7 @@ def execute():
 				{
 					"folder_name": "INBOX",
 					"append_to": doc.append_to,
-					"uid_validity": doc.uidvalidity,
+					"uidvalidity": doc.uidvalidity,
 					"uidnext": doc.uidnext,
 				},
 			)
