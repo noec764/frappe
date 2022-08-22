@@ -391,7 +391,7 @@ frappe.router = {
 		}).join("/");
 		let private_home = frappe.workspaces[`home-${frappe.user.name.toLowerCase()}`];
 		let default_page = private_home
-			? "private/home"
+			? `private/home-${frappe.user.name.toLowerCase()}`
 			: frappe.workspaces["home"]
 			? "home"
 			: Object.keys(frappe.workspaces)[0];
