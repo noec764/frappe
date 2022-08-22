@@ -16,8 +16,8 @@
 							<li v-for="(column, index) in columns.filter(c => c.sortable)" :key="index" @click="query.sort = column.slug"><a class="option">{{ column.label }}</a></li>
 						</ul>
 					</div>
-					<button class="btn btn-default btn-xs btn-order ml-2">
-						<span class="octicon text-muted" :class="query.order == 'asc' ? 'octicon-arrow-down' : 'octicon-arrow-up'"  @click="query.order = (query.order == 'asc') ? 'desc' : 'asc'"></span>
+					<button class="btn btn-default btn-xs btn-order" @click="query.order = (query.order == 'asc') ? 'desc' : 'asc'">
+						<span class="octicon text-muted" :class="query.order == 'asc' ? 'octicon-arrow-down' : 'octicon-arrow-up'"></span>
 					</button>
 				</div>
 			</div>

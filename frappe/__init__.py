@@ -547,6 +547,7 @@ def set_user(username: str):
 	local.session.sid = username
 	local.cache = {}
 	local.form_dict = _dict()
+	local.preload_assets = {"style": [], "script": []}
 	local.jenv = None
 	local.session.data = _dict()
 	local.role_permissions = {}
