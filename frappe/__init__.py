@@ -84,7 +84,7 @@ def _(msg: str, lang: str | None = None, context: str | None = None) -> str:
 	from frappe.utils import is_html, strip_html_tags
 
 	if not hasattr(local, "lang"):
-		local.lang = lang or get_user_lang()
+		local.lang = lang or (get_user_lang() if hasattr(local, "session") else "en")
 
 	if not lang:
 		lang = local.lang
