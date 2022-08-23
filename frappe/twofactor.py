@@ -224,7 +224,7 @@ def process_2fa_for_sms(user, token, otp_secret):
 
 def process_2fa_for_otp_app(user, otp_secret, otp_issuer):
 	"""Process OTP App method for 2fa."""
-	pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)
+	totp_uri = pyotp.TOTP(otp_secret).provisioning_uri(user, issuer_name=otp_issuer)  # noqa
 	if get_default(user + "_otplogin"):
 		otp_setup_completed = True
 	else:
@@ -275,11 +275,13 @@ def get_email_subject_for_2fa(kwargs_dict):
 
 def get_email_body_for_2fa(kwargs_dict):
 	"""Get email body for 2fa."""
-	body_template = """
-		Enter this code to complete your login:
+	body_template = (
+		_("Enter this code to complete your login:")
+		+ """
 		<br><br>
 		<b style="font-size: 18px;">{{ otp }}</b>
 	"""
+	)
 	body = frappe.render_template(body_template, kwargs_dict)
 	return body
 
@@ -296,7 +298,7 @@ def get_email_subject_for_qr_code(kwargs_dict):
 def get_email_body_for_qr_code(kwargs_dict):
 	"""Get QRCode email body."""
 	body_template = _(
-		"Please click on the following link and follow the instructions on the page. {0}"
+		"Please click on the following link and follow the instructions on the page. {}"
 	).format("<br><br> <a href='{{qrcode_link}}'>{{qrcode_link}}</a>")
 	body = frappe.render_template(body_template, kwargs_dict)
 	return body
