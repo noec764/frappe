@@ -119,7 +119,7 @@ frappe.ui.form.Control = class BaseControl {
 		) {
 			// eslint-disable-next-line
 			if (explain) console.log("By Hide Read-only, null fields: None"); // eslint-disable-line no-console
-			status = "None";
+			status = "Read";
 		}
 
 		return status;
