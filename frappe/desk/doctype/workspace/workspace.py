@@ -43,7 +43,7 @@ class Workspace(Document):
 			self.name = doc.name = doc.label = doc.title
 
 	def after_delete(self):
-		if self.module:
+		if not disable_saving_as_public() and self.module:
 			delete_folder(self.module, "Workspace", self.title)
 
 	@staticmethod

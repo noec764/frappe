@@ -4,7 +4,7 @@ from frappe import _
 
 def execute():
 	navbar_settings = frappe.get_single("Navbar Settings")
-	print(frappe.local.lang)
+
 	if frappe.db.exists("Navbar Item", {"item_label": _("Toggle Full Width")}):
 		return
 
