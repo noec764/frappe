@@ -36,11 +36,12 @@ frappe.ui.form.ControlCheck = class ControlCheck extends frappe.ui.form.ControlD
 	}
 
 	set_input(value) {
+		this.last_value = this.value;
 		value = cint(value);
+		this.value = value;
 		if (this.input) {
 			this.input.checked = value ? 1 : 0;
 		}
-		this.last_value = value;
 		this.set_mandatory(value);
 		this.set_disp_area(value);
 	}
