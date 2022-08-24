@@ -1012,7 +1012,7 @@ class Column:
 						"col": self.column_number,
 						"message": _(
 							"{0} format could not be determined from the values in this column. Defaulting to {1}."
-						).format(self.df.fieldtype, format),
+						).format(_(self.df.fieldtype), format),
 						"type": "info",
 					}
 				)
