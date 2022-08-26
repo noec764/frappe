@@ -43,7 +43,10 @@ class Workspace(Document):
 			self.name = doc.name = doc.label = doc.title
 
 	def after_delete(self):
-		if not disable_saving_as_public() and self.module:
+		if disable_saving_as_public():
+			return
+
+		if self.module and frappe.conf.developer_mode:
 			delete_folder(self.module, "Workspace", self.title)
 
 	@staticmethod
