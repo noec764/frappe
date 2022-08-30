@@ -23,10 +23,10 @@ export default class Column {
 
 		if (this.df.label) {
 			$(`
-				<label class="control-label">
+				<label class="control-label column-label">
 					${__(this.df.label)}
 				</label>
-			`).appendTo(this.wrapper);
+			`).prependTo(this.wrapper);
 		}
 	}
 
