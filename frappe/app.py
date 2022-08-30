@@ -45,7 +45,7 @@ class RequestContext:
 
 @local_manager.middleware
 @Request.application
-def application(request):
+def application(request: Request):
 	response = None
 
 	try:
