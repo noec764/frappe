@@ -9,8 +9,7 @@ frappe.ui.form.ControlDynamicLink = class ControlDynamicLink extends frappe.ui.f
 				cur_dialog.doc && this.df.options
 					? cur_dialog.doc[this.df.options]
 					: cur_dialog.get_value(this.df.options);
-		} else if (!cur_frm) {
-			console.log(this.df.options);
+		} else if (!cur_frm || cur_list || cur_page) {
 			const selector = `input[data-fieldname="${this.df.options}"]`;
 			let input = null;
 			if (cur_list) {
