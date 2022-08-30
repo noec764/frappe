@@ -215,7 +215,7 @@ frappe.ui.Slide = class Slide {
 				const v = {};
 				for (const df of this.form.fields) {
 					const n = df.fieldname;
-					if (n) {
+					if (n && !frappe.model.layout_fields.includes(df.fieldtype)) {
 						v[n] = this.form.get_value(n);
 					}
 				}
