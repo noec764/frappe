@@ -710,7 +710,7 @@ class TestBenchBuild(BaseTestCommands):
 			self.assertEqual(result.exit_code, 0)
 			self.assertEqual(result.exception, None)
 
-		CURRENT_SIZE = 4.3  # MB
+		CURRENT_SIZE = 4.9  # MB
 		JS_ASSET_THRESHOLD = 0.1
 
 		hooks = frappe.get_hooks()
