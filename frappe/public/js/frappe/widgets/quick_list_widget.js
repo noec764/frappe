@@ -99,7 +99,7 @@ export default class QuickListWidget extends Widget {
 		];
 		let me = this;
 		this.dialog = new frappe.ui.Dialog({
-			title: __("Set Filters for {0}", [this.document_type]),
+			title: __("Set Filters for {0}", [__(this.document_type)]),
 			fields: fields,
 			primary_action: function () {
 				let old_filter = me.quick_list_filter;
