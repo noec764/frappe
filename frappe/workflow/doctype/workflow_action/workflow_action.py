@@ -302,7 +302,7 @@ def get_next_possible_transitions(workflow_name, state, doc=None):
 			"state",
 			"allow_self_approval",
 			"next_state",
-			"`condition`",
+			"condition",
 		],
 		filters=[["parent", "=", workflow_name], ["state", "=", state]],
 	)
