@@ -335,7 +335,9 @@ frappe.views.Workspace = class Workspace {
 			this.create_page_skeleton();
 
 			let pages = page.public ? this.public_pages : this.private_pages;
-			let current_page = pages.filter((p) => p.name == page.name)[0];
+			let current_page = pages.filter(
+				(p) => p.name == page.name || (!page.public && p.title == page.name)
+			)[0];
 			this.content = current_page && JSON.parse(current_page.content);
 
 			this.add_custom_cards_in_content();
@@ -433,7 +435,9 @@ frappe.views.Workspace = class Workspace {
 
 	setup_actions(page) {
 		let pages = page.public ? this.public_pages : this.private_pages;
-		let current_page = pages.filter((p) => p.name == page.name)[0];
+		let current_page = pages.filter(
+			(p) => p.name == page.name || (!page.public && p.title == page.name)
+		)[0];
 
 		if (!this.is_read_only) {
 			this.setup_customization_buttons(current_page);
