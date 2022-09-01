@@ -905,8 +905,11 @@ frappe.views.Workspace = class Workspace {
 					callback: function (res) {
 						if (res.message) {
 							let new_page = res.message;
-							let message = `Duplicate of <b>${page.title}</b> named as <b>${new_page.title}</b> is created successfully`;
-							frappe.show_alert({ message: __(message), indicator: "green" });
+							let message = __(
+								"Duplicate of <b>{0}</b> named as <b>{1}</b> is created successfully",
+								[page.title, new_page.title]
+							);
+							frappe.show_alert({ message: message, indicator: "green" });
 						}
 					},
 				});
@@ -1127,7 +1130,9 @@ frappe.views.Workspace = class Workspace {
 							},
 							callback: function (res) {
 								if (res.message) {
-									let message = `Workspace <b>${new_page.title}</b> Created Successfully`;
+									let message = __("Workspace <b>{0}</b> Created Successfully", [
+										new_page.title,
+									]);
 									frappe.show_alert({
 										message: __(message),
 										indicator: "green",
