@@ -21,18 +21,12 @@ class StubSearchDialog extends frappe.search.SearchDialog {
 	}
 
 	make() {
-		// this.search_dialog = new frappe.ui.Dialog({
-		// 	minimizable: true,
-		// 	size: "large"
-		// });
-		// this.set_header();
 		this.$wrapper = $(this.opts.wrapperElement).addClass(
 			"search-dialog"
 		);
-		// this.$body = $(this.search_dialog.body);
-		// this.$body = this.$wrapper.append('<div>Body</div>');
+
 		this.$body = this.$wrapper;
-		// this.$input = this.$wrapper.find(".search-input");
+
 		this.$input = $(this.opts.inputElement);
 		this.setup();
 	}
@@ -48,21 +42,13 @@ class StubSearchDialog extends frappe.search.SearchDialog {
 
 	init_search(keywords, search_type) {
 		this.search = this.searches[search_type];
-		// this.$input.attr("placeholder", __(this.search.input_placeholder));
+
 		this.get_results(keywords);
-		// this.search_dialog.show();
-		// this.$input.val(keywords);
-		// setTimeout(() => this.$input.select(), 500);
 	}
 
 	render_data(result_sets) {
 		const $search_results = $('<div class="search-results"></div>');
 		const $results_area = $search_results.append('<div class="results-area"></div>');
-		// let $search_results = $(frappe.render_template("search")).addClass("hide");
-		// let $sidebar = $search_results.find(".search-sidebar").empty();
-		// let sidebar_item_html =
-		// 	'<li class="search-sidebar-item standard-sidebar-item list-link" data-category="{0}">' +
-		// 	'<a><span class="ellipsis">{1}</span></a></li>';
 
 		this.modal_state = 0;
 		this.full_lists = {
@@ -71,7 +57,6 @@ class StubSearchDialog extends frappe.search.SearchDialog {
 		this.nav_lists = {};
 
 		result_sets.forEach(set => {
-			// $sidebar.append($(__(sidebar_item_html, [set.title, __(set.title)])));
 			this.add_section_to_summary(set.title, set.results);
 			this.full_lists[set.title] = this.render_full_list(
 				set.title,
@@ -80,15 +65,7 @@ class StubSearchDialog extends frappe.search.SearchDialog {
 			);
 		});
 
-		// if (result_sets.length > 1) {
-		// 	$sidebar.prepend($(__(sidebar_item_html, ["All Results", __("All Results")])));
-		// }
-
 		this.update($search_results.clone());
-		// this.$body
-		// 	.find(".list-link")
-		// 	.first()
-		// 	.trigger("click");
 
 		this.$body.find(".results-area").empty().html(this.full_lists['All Results']);
 	}

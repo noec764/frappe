@@ -43,6 +43,17 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 		});
 	}
 
+	before_render() {
+		super.before_render();
+		this.settings = Object.assign(this.settings, {
+			button: {
+				action: (doc) => {
+					frappe.db.set_value("Communication", doc.name, "status", "Closed");
+				},
+			},
+		});
+	}
+
 	setup_defaults() {
 		super.setup_defaults();
 
@@ -70,6 +81,13 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 			df: {
 				label: this.is_sent_emails ? __("To") : __("From"),
 				fieldname: this.is_sent_emails ? "recipients" : "sender",
+			},
+		});
+		this.columns.push({
+			type: "Status",
+			df: {
+				label: __("Status"),
+				fieldname: "status",
 			},
 		});
 	}
@@ -115,11 +133,19 @@ frappe.views.InboxView = class InboxView extends frappe.views.ListView {
 		}
 
 		const communication_date = comment_when(email.communication_date, true);
-		const status =
+		let status =
 			email.status == "Closed"
 				? `<span class="fas fa-check fa-large" title="${__(email.status)}"></span>`
 				: email.status == "Replied"
 				? `<span class="fas fa-reply fa-large" title="${__(email.status)}"></span>`
+				: email.status == "Open"
+				? `<span class="list-actions">
+					<button class="btn btn-action btn-default btn-xs"
+						data-name="${email.name}" data-idx="${email._idx}"
+						title="${__("Close Email")}">
+						${__("Close")}
+					</button>
+				</span>`
 				: "";
 
 		return `
