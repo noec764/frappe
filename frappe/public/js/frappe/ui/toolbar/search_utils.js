@@ -465,26 +465,34 @@ frappe.search.utils = {
 	},
 
 	get_nav_results: function (keywords) {
-		function sort_uniques(array) {
-			var routes = [],
-				out = [];
-			array.forEach(function (d) {
-				if (d.route) {
-					if (d.route[0] === "List" && d.route[2]) {
-						d.route.splice(2);
+		function sort_uniques(options) {
+			// @see deduplicate in frappe/ui/toolbar/awesome_bar.js
+			var out = [],
+				routes = [];
+			options.forEach(function (option) {
+				if (option.route) {
+					if (
+						option.route[0] === "List" &&
+						option.route[2] !== "Report" &&
+						option.route[2] !== "Inbox"
+					) {
+						option.route = option.route.slice(0, 2);
 					}
-					var str_route = d.route.join("/");
+
+					var str_route =
+						typeof option.route === "string" ? option.route : option.route.join("/");
 					if (routes.indexOf(str_route) === -1) {
+						out.push(option);
 						routes.push(str_route);
-						out.push(d);
 					} else {
 						var old = routes.indexOf(str_route);
-						if (out[old].index > d.index) {
-							out[old] = d;
+						if (out[old].index < option.index && !option.recent) {
+							out[old] = option;
 						}
 					}
 				} else {
-					out.push(d);
+					out.push(option);
+					// routes.push("");
 				}
 			});
 			return out.sort(function (a, b) {

@@ -217,7 +217,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 					option.route[2] !== "Report" &&
 					option.route[2] !== "Inbox"
 				) {
-					option.route.splice(2);
+					option.route = option.route.slice(0, 2);
 				}
 
 				var str_route =
