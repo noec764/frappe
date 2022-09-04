@@ -130,7 +130,7 @@ export default {
 			this.searchQuery = ''
 		},
 		focusInput() {
-			this.$nextTick(() => this.$refs.input.focus())
+			this.$nextTick(() => this.$refs.input?.focus())
 		},
 		setPosition(opts) {
 			const { anchor: _anchor = 'center', dx: _dx = 0, dy: _dy = 0 } = opts
@@ -303,7 +303,7 @@ export default {
 .QAM-modal {
 	overflow: hidden;
 	position: relative;
-    pointer-events: all;
+	pointer-events: all;
 
 	background: var(--modal-bg, white);
 	color: var(--text-color, black);
