@@ -6,7 +6,7 @@
 </template>
 
 <script>
-class SearchThing extends frappe.search.SearchDialog {
+class StubSearchDialog extends frappe.search.SearchDialog {
 	constructor(opts = {}) {
 		if (!(opts.inputElement instanceof HTMLElement)) {
 			throw new TypeError('opts.inputElement should be an HTMLElement');
@@ -18,7 +18,6 @@ class SearchThing extends frappe.search.SearchDialog {
 			throw new TypeError('opts.callback should be a function');
 		}
 		super({ opts });
-		window.z = this
 	}
 
 	make() {
@@ -45,14 +44,6 @@ class SearchThing extends frappe.search.SearchDialog {
 		this.search = this.searches[search_type];
 
 		this.get_results(keywords);
-	}
-
-	__parse_results(result_sets, keyword) {
-		result_sets = result_sets.filter(function(set) {
-			return set.results.length > 0;
-		});
-
-		this.render_data(result_sets);
 	}
 
 	render_data(result_sets) {
@@ -84,6 +75,12 @@ class SearchThing extends frappe.search.SearchDialog {
 		let more_html = "";
 		let get_result_html = result => this.render_result(type, result);
 
+		// if (results.length > section_length) {
+		// 	more_html = `<div>
+		// 		<a class="section-more" data-category="${type}">${__("More")}</a>
+		// 	</div>`;
+		// }
+
 		let $result_section = $(`<div class="col-sm-12 result-section" data-type="${type}">
 			<div class="result-title">${__(type)}</div>
 			<div class="result-body">
@@ -107,14 +104,6 @@ export default {
 		value: { type: String, default: '' },
 	},
 
-	data() {
-		const searchBarId = "search-bar-" + Math.random().toString(16).substring(2)
-		return {
-			searchBarId,
-			searchThing: null,
-		}
-	},
-
 	watch: {
 		value() {
 			this.searchThing.get_results(this.value);
@@ -125,9 +114,8 @@ export default {
 		const inputElement = this.$refs.input
 		const wrapperElement = this.$refs.wrapper
 		const callback = () => bus.$emit('quick-access-selected', { item: null })
-		this.searchThing = new SearchThing({ inputElement, wrapperElement, callback })
+		this.searchThing = new StubSearchDialog({ inputElement, wrapperElement, callback })
 		this.searchThing.init_search(this.value, 'global_search');
-		this.$nextTick(() => this.searchThing.get_results(''))
 
 		bus.$on('quick-access-shown', () => this.searchThing.get_results(this.value));
 	},
@@ -155,8 +143,8 @@ export default {
 .QAMGlobalSearchResults button.result-section-link {
 	border: none;
 	background: none;
-    width: 100%;
-    text-align: initial;
+	width: 100%;
+	text-align: initial;
 	outline: none;
 }
 </style>

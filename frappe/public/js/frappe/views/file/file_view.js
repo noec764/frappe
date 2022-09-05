@@ -57,8 +57,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 
 	set_breadcrumbs() {
-		const route = frappe.get_route();
-		route.splice(-1);
+		const route = frappe.get_route().slice(0, -1);
 		const last_folder = route[route.length - 1];
 		if (last_folder === "File") return;
 
