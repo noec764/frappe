@@ -170,7 +170,7 @@ frappe.ui.form.PrintView = class {
 			this.page.add_menu_item(__("Customize"), () => this.edit_print_format());
 		}
 
-		if (this.print_settings.enable_print_server) {
+		if (cint(this.print_settings.enable_print_server)) {
 			this.page.add_menu_item(__("Select Network Printer"), () =>
 				this.network_printer_setting_dialog()
 			);
@@ -183,12 +183,12 @@ frappe.ui.form.PrintView = class {
 		this.set_breadcrumbs();
 		this.setup_customize_dialog();
 
-		// print format builder beta
-		this.page.add_inner_message(`
-			<a style="line-height: 2.4" href="/app/print-format-builder-beta?doctype=${this.frm.doctype}">
-				${__("Try the new Print Format Builder")}
-			</a>
-		`);
+		// print format builder beta => Hide for now => Implementation is not complete
+		// this.page.add_inner_message(`
+		// 	<a style="line-height: 2.4" href="/app/print-format-builder-beta?doctype=${this.frm.doctype}">
+		// 		${__("Try the new Print Format Builder")}
+		// 	</a>
+		// `);
 
 		let tasks = [
 			this.refresh_print_options,
