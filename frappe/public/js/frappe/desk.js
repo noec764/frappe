@@ -573,9 +573,9 @@ frappe.Application = class Application {
 		// Iterate over changelog
 		var change_log_dialog = frappe.msgprint({
 			message: frappe.render_template("change_log", { change_log: change_log }),
-			title: __("Updated To A New Version 🎉"),
-			wide: true,
+			title: __("New Version 🎉"),
 		});
+		$(change_log_dialog.wrapper).addClass("modal-lg");
 		change_log_dialog.keep_open = true;
 		change_log_dialog.custom_onhide = function () {
 			frappe.call({
