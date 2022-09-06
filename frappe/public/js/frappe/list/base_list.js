@@ -1,6 +1,17 @@
 frappe.provide("frappe.views");
 
 frappe.views.BaseList = class BaseList {
+	static icon_map = {
+		Image: "image-view",
+		List: "list",
+		Report: "small-file",
+		Calendar: "calendar",
+		Gantt: "gantt",
+		Kanban: "kanban",
+		Dashboard: "dashboard",
+		Map: "map",
+	};
+
 	constructor(opts) {
 		Object.assign(this, opts);
 	}
@@ -191,18 +202,6 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_view_menu() {
-		// TODO: add all icons
-		const icon_map = {
-			Image: "image-view",
-			List: "list",
-			Report: "small-file",
-			Calendar: "calendar",
-			Gantt: "gantt",
-			Kanban: "kanban",
-			Dashboard: "dashboard",
-			Map: "map",
-		};
-
 		if (frappe.boot.desk_settings.view_switcher) {
 			/* @preserve
 			for translation, don't remove
@@ -211,7 +210,7 @@ frappe.views.BaseList = class BaseList {
 			__("Tree View") __("Map View") */
 			this.views_menu = this.page.add_custom_button_group(
 				__("{0} View", [__(this.view_name)]),
-				icon_map[this.view_name] || "list"
+				BaseList.icon_map[this.view_name] || "list"
 			);
 			this.views_list = new frappe.views.ListViewSelect({
 				doctype: this.doctype,
@@ -219,7 +218,7 @@ frappe.views.BaseList = class BaseList {
 				page: this.page,
 				list_view: this,
 				sidebar: this.list_sidebar,
-				icon_map: icon_map,
+				icon_map: BaseList.icon_map,
 			});
 		}
 	}
