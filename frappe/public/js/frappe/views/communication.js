@@ -55,9 +55,17 @@ frappe.views.CommunicationComposer = class {
 				fieldname: "recipients",
 			},
 			{
+				fieldtype: "Button",
+				label: frappe.utils.icon("down"),
+				fieldname: "option_toggle_button",
+				click: () => {
+					this.toggle_more_options();
+				},
+			},
+			{
 				fieldtype: "Section Break",
-				collapsible: 1,
-				label: __("CC, BCC & Email Template"),
+				hidden: 1,
+				fieldname: "more_options",
 			},
 			{
 				label: __("CC"),
@@ -83,7 +91,6 @@ frappe.views.CommunicationComposer = class {
 				fieldname: "subject",
 				length: 524288,
 			},
-			{ fieldtype: "Section Break" },
 			{
 				label: __("Message"),
 				fieldtype: "Text Editor",
@@ -102,7 +109,6 @@ frappe.views.CommunicationComposer = class {
 				},
 			},
 			{ fieldtype: "Section Break" },
-			{ fieldtype: "Column Break" },
 			{
 				label: __("Send me a copy"),
 				fieldtype: "Check",
@@ -157,7 +163,6 @@ frappe.views.CommunicationComposer = class {
 				fieldname: "sender",
 				options: this.user_email_accounts,
 			});
-
 			//Preselect email senders if there is only one
 			if (this.user_email_accounts.length == 1) {
 				this["sender"] = this.user_email_accounts;
@@ -280,7 +285,7 @@ frappe.views.CommunicationComposer = class {
 				let content = content_field.get_value() || "";
 
 				content_field.set_value(`${reply.message}<br>${content}`);
-				reply.subject && subject_field.set_value(reply.subject);
+				subject_field.set_value(reply.subject);
 
 				me.reply_added = email_template;
 			}
