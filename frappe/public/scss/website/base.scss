@@ -3,10 +3,8 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	font-size: 16px;
 	color: $body-color;
-
-	main {
-		min-height: 70vh;
-	}
+	display: flex;
+	flex-direction: column;
 }
 
 .frappe-card {
