@@ -1,11 +1,16 @@
-import TemplateFieldSelectorDialog from './TemplateFieldSelector.vue';
+import TemplateFieldSelectorDialog from "./TemplateFieldSelector.vue";
+import EventEmitterMixin from "../../../event_emitter";
+
+frappe.provide("frappe.field_selector_updates");
 
 export default class TemplateFieldSelector {
 	constructor(opts) {
 		Object.assign(this, opts);
+		frappe.field_selector_updates = {};
+		Object.assign(frappe.field_selector_updates, EventEmitterMixin);
 		this.make_dialog();
 
-		frappe.field_selector_updates.on('done', () => {
+		frappe.field_selector_updates.on("done", () => {
 			this.selector_area.$destroy();
 		});
 	}
@@ -15,43 +20,41 @@ export default class TemplateFieldSelector {
 			title: __("Select a field"),
 			fields: [
 				{
-					label: __('Select a reference DocType'),
-					fieldname: 'references',
-					fieldtype: 'Link',
-					options: 'DocType',
+					label: __("Select a reference DocType"),
+					fieldname: "references",
+					fieldtype: "Link",
+					options: "DocType",
 					default: this.default_doctype,
 					onchange: () => {
 						const value = this.dialog.fields_dict.references.value;
 						this.default_doctype = value;
 						if (value) {
-							frappe.field_selector_updates.trigger('reference_update', value);
+							frappe.field_selector_updates.trigger("reference_update", value);
 						}
-					}
+					},
 				},
 				{
-					fieldtype: 'HTML',
-					fieldname: 'upload_area'
-				}
+					fieldtype: "HTML",
+					fieldname: "upload_area",
+				},
 			],
-			primary_action_label: __('Add'),
+			primary_action_label: __("Add"),
 			primary_action: () => {
-				frappe.field_selector_updates.trigger('submit');
+				frappe.field_selector_updates.trigger("submit");
 				this.dialog.hide();
-			}
+			},
 		});
 
 		this.wrapper = this.dialog.fields_dict.upload_area.$wrapper[0];
 
 		this.selector_area = new Vue({
 			el: this.wrapper,
-			render: h => h(TemplateFieldSelectorDialog, {
-				props: { quill: this.quill, Quill: this.Quill, doctype: this.default_doctype }
-			})
+			render: (h) =>
+				h(TemplateFieldSelectorDialog, {
+					props: { quill: this.quill, Quill: this.Quill, doctype: this.default_doctype },
+				}),
 		});
 
 		this.dialog.show();
 	}
 }
-
-frappe.provide('frappe.field_selector_updates')
-frappe.utils.make_event_emitter(frappe.field_selector_updates);

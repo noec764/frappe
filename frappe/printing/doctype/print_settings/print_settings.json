@@ -8,6 +8,8 @@
   "repeat_header_footer",
   "column_break_4",
   "pdf_page_size",
+  "pdf_page_height",
+  "pdf_page_width",
   "view_link_in_email",
   "with_letterhead",
   "allow_print_for_draft",
@@ -17,9 +19,6 @@
   "allow_print_for_cancelled",
   "server_printer",
   "enable_print_server",
-  "server_ip",
-  "printer_name",
-  "port",
   "print_style_section",
   "print_style",
   "print_style_preview",
@@ -55,7 +54,7 @@
    "fieldname": "pdf_page_size",
    "fieldtype": "Select",
    "label": "PDF Page Size",
-   "options": "A4\nLetter"
+   "options": "A0\nA1\nA2\nA3\nA4\nA5\nA6\nA7\nA8\nA9\nB0\nB1\nB2\nB3\nB4\nB5\nB6\nB7\nB8\nB9\nB10\nC5E\nComm10E\nDLE\nExecutive\nFolio\nLedger\nLegal\nLetter\nTabloid\nCustom"
   },
   {
    "fieldname": "view_link_in_email",
@@ -103,29 +102,11 @@
   },
   {
    "default": "0",
+   "depends_on": "enable_print_server",
    "fieldname": "enable_print_server",
    "fieldtype": "Check",
-   "label": "Enable Print Server"
-  },
-  {
-   "default": "localhost",
-   "depends_on": "enable_print_server",
-   "fieldname": "server_ip",
-   "fieldtype": "Data",
-   "label": "Server IP"
-  },
-  {
-   "depends_on": "enable_print_server",
-   "fieldname": "printer_name",
-   "fieldtype": "Select",
-   "label": "Printer Name"
-  },
-  {
-   "default": "631",
-   "depends_on": "enable_print_server",
-   "fieldname": "port",
-   "fieldtype": "Int",
-   "label": "Port"
+   "label": "Enable Print Server",
+   "mandatory_depends_on": "enable_print_server"
   },
   {
    "fieldname": "print_style_section",
@@ -133,7 +114,7 @@
    "label": "Print Style"
   },
   {
-   "default": "Modern",
+   "default": "TwentyTwenty",
    "fieldname": "print_style",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -163,11 +144,23 @@
    "fieldname": "font_size",
    "fieldtype": "Float",
    "label": "Font Size"
-  }
+},
+{
+ "depends_on": "eval:doc.pdf_page_size == \"Custom\"",
+ "fieldname": "pdf_page_height",
+ "fieldtype": "Float",
+ "label": "PDF Page Height (in mm)"
+},
+{
+ "depends_on": "eval:doc.pdf_page_size == \"Custom\"",
+ "fieldname": "pdf_page_width",
+ "fieldtype": "Float",
+ "label": "PDF Page Width (in mm)"
+}
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
- "modified": "2020-10-21 23:42:09.471022",
+ "modified": "2021-09-17 12:59:14.783694",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Print Settings",

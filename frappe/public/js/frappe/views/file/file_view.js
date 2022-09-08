@@ -50,32 +50,30 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		let args = super.get_args();
 		if (frappe.views.FileView.grid_view) {
 			Object.assign(args, {
-				order_by: `is_folder desc, ${this.sort_by} ${this.sort_order}`
+				order_by: `is_folder desc, ${this.sort_by} ${this.sort_order}`,
 			});
 		}
 		return args;
 	}
 
 	set_breadcrumbs() {
-		const route = frappe.get_route();
-		route.splice(-1);
+		const route = frappe.get_route().slice(0, -1);
 		const last_folder = route[route.length - 1];
 		if (last_folder === "File") return;
 
 		const home_index = route.indexOf("Home");
 		const new_route = home_index ? route.slice(home_index + 1) : [];
-		if (last_folder !== 'File' && new_route.length) {
+		if (last_folder !== "File" && new_route.length) {
 			frappe.breadcrumbs.add({
-				type: 'Custom',
+				type: "Custom",
 				label: __(last_folder),
-				route: `/app/file/view/Home/${new_route.join("/")}`
+				route: `/app/file/view/Home/${new_route.join("/")}`,
 			});
-
 		} else {
 			frappe.breadcrumbs.add({
 				type: "Custom",
 				label: __("Home"),
-				route: "/app/file/view/Home"
+				route: "/app/file/view/Home",
 			});
 		}
 	}
@@ -99,35 +97,30 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 				label: __("Home"),
 				action: () => {
 					frappe.set_route("List", "File", "Home");
-				}
+				},
 			},
 			{
 				label: __("New Folder"),
 				action: () => {
 					frappe.prompt(
 						__("Name"),
-						values => {
+						(values) => {
 							if (values.value.indexOf("/") > -1) {
-								frappe.throw(
-									__(
-										"Folder name should not include '/' (slash)"
-									)
-								);
+								frappe.throw(__("Folder name should not include '/' (slash)"));
 							}
 							const data = {
 								file_name: values.value,
-								folder: this.current_folder
+								folder: this.current_folder,
 							};
 							frappe.call({
-								method:
-									"frappe.core.doctype.file.file.create_new_folder",
-								args: data
+								method: "frappe.core.api.file.create_new_folder",
+								args: data,
 							});
 						},
 						__("Enter folder name"),
 						__("Create")
 					);
-				}
+				},
 			},
 			{
 				label: __("Import Zip"),
@@ -135,30 +128,23 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 					new frappe.ui.FileUploader({
 						folder: this.current_folder,
 						restrictions: {
-							allowed_file_types: [".zip"]
+							allowed_file_types: [".zip"],
 						},
-						on_success: file => {
+						on_success: (file) => {
 							frappe.show_alert(__("Unzipping files..."));
 							frappe
-								.call(
-									"frappe.core.doctype.file.file.unzip_file",
-									{
-										name: file.name
-									}
-								)
-								.then(r => {
+								.call("frappe.core.api.file.unzip_file", {
+									name: file.name,
+								})
+								.then((r) => {
 									if (r.message) {
-										frappe.show_alert(
-											__("Unzipped {0} files", [
-												r.message
-											])
-										);
+										frappe.show_alert(__("Unzipped {0} files", [r.message]));
 									}
 								});
-						}
+						},
 					});
-				}
-			}
+				},
+			},
 		];
 
 		return items;
@@ -167,34 +153,36 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	add_file_action_buttons() {
 		this.$cut_button = this.page
 			.add_button(__("Cut"), () => {
-				frappe.file_manager.cut(
-					this.get_checked_items(),
-					this.current_folder
-				);
+				frappe.file_manager.cut(this.get_checked_items(), this.current_folder);
 				this.$checks.parents(".file-wrapper").addClass("cut");
 			})
 			.hide();
 
 		this.$paste_btn = this.page
-			.add_button(__("Paste"), () =>
-				frappe.file_manager.paste(this.current_folder)
-			)
+			.add_button(__("Paste"), () => frappe.file_manager.paste(this.current_folder))
 			.hide();
+
+		this.page.add_actions_menu_item(__("Export as zip"), () => {
+			let docnames = this.get_checked_items(true);
+			if (docnames.length) {
+				open_url_post("/api/method/frappe.core.api.file.zip_files", {
+					files: JSON.stringify(docnames),
+				});
+			}
+		});
 	}
 
 	set_fields() {
 		this.fields = this.meta.fields
-			.filter(
-				df => frappe.model.is_value_type(df.fieldtype) && !df.hidden
-			)
-			.map(df => df.fieldname)
+			.filter((df) => frappe.model.is_value_type(df.fieldtype) && !df.hidden)
+			.map((df) => df.fieldname)
 			.concat(["name", "modified", "creation"]);
 	}
 
 	prepare_data(data) {
 		super.prepare_data(data);
 
-		this.data = this.data.map(d => this.prepare_datum(d));
+		this.data = this.data.map((d) => this.prepare_datum(d));
 
 		// Bring folders to the top
 		const { sort_by } = this.sort_selector;
@@ -241,13 +229,9 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 	before_render() {
 		super.before_render();
-		frappe.model.user_settings.save(
-			"File",
-			"grid_view",
-			frappe.views.FileView.grid_view
-		);
+		frappe.model.user_settings.save("File", "grid_view", frappe.views.FileView.grid_view);
 		this.save_view_user_settings({
-			last_folder: this.current_folder
+			last_folder: this.current_folder,
 		});
 	}
 
@@ -273,17 +257,15 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 	render_grid_view() {
 		let html = this.data
-			.map(d => {
+			.map((d) => {
 				const icon_class = d.icon_class + "-large";
 				let file_body_html =
 					d._type == "image"
-						? `<div class="file-image"><img src="${
-							d.file_url
-						}" alt="${d.file_name}"></div>`
+						? `<div class="file-image"><img src="${d.file_url}" alt="${d.file_name}"></div>`
 						: frappe.utils.icon(icon_class, {
-							width: "40px",
-							height: "45px"
-						});
+								width: "40px",
+								height: "45px",
+						  });
 				const name = escape(d.name);
 				const draggable = d.type == "Folder" ? false : true;
 				return `
@@ -338,8 +320,8 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 		let header_selector_html = !frappe.views.FileView.grid_view
 			? `<input class="level-item list-check-all hidden-xs" type="checkbox" title="${__(
-				"Select All"
-			)}">`
+					"Select All"
+			  )}">`
 			: "";
 
 		let header_columns_html = !frappe.views.FileView.grid_view
@@ -359,16 +341,11 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			${header_columns_html}
 		`;
 
-		return this.get_header_html_skeleton(
-			subject_html,
-			'<span class="list-count"></span>'
-		);
+		return this.get_header_html_skeleton(subject_html, '<span class="list-count"></span>');
 	}
 
 	get_route_url(file) {
-		return file.is_folder
-			? "/app/file/view/" + file.name
-			: this.get_form_link(file);
+		return file.is_folder ? "/app/file/view/" + file.name : this.get_form_link(file);
 	}
 
 	get_creation_date(file) {
@@ -384,15 +361,15 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 	get_left_html(file) {
 		file = this.prepare_datum(file);
-		const file_size = file.file_size
-			? frappe.form.formatters.FileSize(file.file_size)
-			: "";
+		const file_size = file.file_size ? frappe.form.formatters.FileSize(file.file_size) : "";
 		const route_url = this.get_route_url(file);
 
 		return `
 			<div class="list-row-col ellipsis list-subject level">
-				<input class="level-item list-row-checkbox hidden-xs"
-					type="checkbox" data-name="${file.name}">
+				<span class="level-item file-select">
+					<input class="list-row-checkbox"
+						type="checkbox" data-name="${file.name}">
+				</span>
 				<span class="level-item ellipsis" title="${file.file_name}">
 					<a class="ellipsis" href="${route_url}" title="${file.file_name}">
 						${file.subject_html}
@@ -422,12 +399,9 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 
 	setup_drag_events() {
-		this.$result.on("dragstart", ".files .file-wrapper", e => {
+		this.$result.on("dragstart", ".files .file-wrapper", (e) => {
 			e.stopPropagation();
-			e.originalEvent.dataTransfer.setData(
-				"Text",
-				$(e.currentTarget).attr("data-name")
-			);
+			e.originalEvent.dataTransfer.setData("Text", $(e.currentTarget).attr("data-name"));
 			e.target.style.opacity = "0.4";
 			frappe.file_manager.cut(
 				[{ name: $(e.currentTarget).attr("data-name") }],
@@ -437,19 +411,19 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 
 		this.$result.on(
 			"dragover",
-			e => {
+			(e) => {
 				e.preventDefault();
 			},
 			false
 		);
 
-		this.$result.on("dragend", ".files .file-wrapper", e => {
+		this.$result.on("dragend", ".files .file-wrapper", (e) => {
 			e.preventDefault();
 			e.stopPropagation();
 			e.target.style.opacity = "1";
 		});
 
-		this.$result.on("drop", e => {
+		this.$result.on("drop", (e) => {
 			e.stopPropagation();
 			e.preventDefault();
 			const $el = $(e.target).parents(".file-wrapper");
@@ -460,18 +434,14 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 			if (dataTransfer.files && dataTransfer.files.length > 0) {
 				new frappe.ui.FileUploader({
 					files: dataTransfer.files,
-					folder: this.current_folder
+					folder: this.current_folder,
 				});
 			} else if (dataTransfer.getData("Text")) {
 				if ($el.parents(".folders").length !== 0) {
 					const file_name = dataTransfer.getData("Text");
-					const folder_name = decodeURIComponent(
-						$el.attr("data-name")
-					);
+					const folder_name = decodeURIComponent($el.attr("data-name"));
 					frappe.file_manager.paste(folder_name);
-					frappe.show_alert(
-						`File ${file_name} moved to ${folder_name}`
-					);
+					frappe.show_alert(`File ${file_name} moved to ${folder_name}`);
 				}
 			}
 		});
@@ -498,8 +468,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 };
 
-frappe.views.FileView.grid_view =
-	frappe.get_user_settings("File").grid_view || false;
+frappe.views.FileView.grid_view = frappe.get_user_settings("File").grid_view || false;
 
 function redirect_to_home_if_invalid_route() {
 	const route = frappe.get_route();

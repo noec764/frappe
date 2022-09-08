@@ -1,6 +1,7 @@
 <div class="row">
+	{% set standard_users = ("Guest", "Administrator") %}
 	{% for d in frappe.get_all("User",
-		filters=[["User", "enabled", "=", 1], ["Has Role", "role", "=", role]],
+		filters=[["User", "enabled", "=", 1], ["Has Role", "role", "=", role], ["User", "name", "not in", standard_users]],
 		fields=["full_name", "bio", "user_image", "name", "interest", "email", "phone", "mobile_no", "birth_date", "website"],
 		order_by="full_name ASC"
 	) %}

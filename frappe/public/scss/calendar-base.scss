@@ -1,9 +1,8 @@
-@import '~@fullcalendar/common/main.css';
-@import '~@fullcalendar/list/main.css';
-@import '~@fullcalendar/daygrid/main.css';
-@import '~@fullcalendar/timegrid/main.css';
-@import '~@fullcalendar/premium-common/main.css';
-@import '~@fullcalendar/adaptive/main.css';
+@import '~@fullcalendar/common/main';
+@import '~@fullcalendar/list/main';
+@import '~@fullcalendar/daygrid/main';
+@import '~@fullcalendar/timegrid/main';
+@import '~@fullcalendar/adaptive/main';
 
 .fc {
 	font-size: 1em;
@@ -14,6 +13,10 @@
 
 	.fc-timegrid-axis {
 		border: none;
+	}
+
+	.fc-timegrid-axis-cushion {
+		font-size: 0.8em;
 	}
 
 	th.fc-col-header-cell.fc-day {
@@ -125,5 +128,9 @@
 		.icon {
 			--icon-stroke: white;
 		}
+	}
+
+	th[role="presentation"] {
+		border: none;
 	}
 }

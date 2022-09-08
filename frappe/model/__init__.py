@@ -1,93 +1,95 @@
-# Copyright (c) 2019, Dokos and Contributors
-# See license.txt
+# Copyright (c) 2021, Dokos and Contributors
+# License: MIT. See LICENSE
 
 # model __init__.py
-from __future__ import unicode_literals
+
 import frappe
 
 data_fieldtypes = (
-	'Currency',
-	'Int',
-	'Long Int',
-	'Float',
-	'Percent',
-	'Check',
-	'Small Text',
-	'Long Text',
-	'Code',
-	'Text Editor',
-	'Markdown Editor',
-	'HTML Editor',
-	'Date',
-	'Datetime',
-	'Time',
-	'Text',
-	'Data',
-	'Link',
-	'Dynamic Link',
-	'Password',
-	'Select',
-	'Rating',
-	'Read Only',
-	'Attach',
-	'Attach Image',
-	'Signature',
-	'Color',
-	'Barcode',
-	'Geolocation',
-	'Duration'
+	"Currency",
+	"Int",
+	"Long Int",
+	"Float",
+	"Percent",
+	"Check",
+	"Small Text",
+	"Long Text",
+	"Code",
+	"Text Editor",
+	"Markdown Editor",
+	"HTML Editor",
+	"Date",
+	"Datetime",
+	"Time",
+	"Text",
+	"Data",
+	"Link",
+	"Dynamic Link",
+	"Password",
+	"Select",
+	"Rating",
+	"Read Only",
+	"Attach",
+	"Attach Image",
+	"Signature",
+	"Color",
+	"Barcode",
+	"Geolocation",
+	"Duration",
+	"Icon",
+	"Phone",
+	"Autocomplete",
+	"JSON",
+)
+
+float_like_fields = {"Float", "Currency", "Percent"}
+datetime_fields = {"Datetime", "Date", "Time"}
+
+attachment_fieldtypes = (
+	"Attach",
+	"Attach Image",
 )
 
 no_value_fields = (
-	'Section Break',
-	'Column Break',
-	'HTML',
-	'Table',
-	'Table MultiSelect',
-	'Button',
-	'Image',
-	'Fold',
-	'Heading'
+	"Section Break",
+	"Column Break",
+	"Tab Break",
+	"HTML",
+	"Table",
+	"Table MultiSelect",
+	"Button",
+	"Image",
+	"Fold",
+	"Heading",
 )
 
 display_fieldtypes = (
-	'Section Break',
-	'Column Break',
-	'HTML',
-	'Button',
-	'Image',
-	'Fold',
-	'Heading')
-
-numeric_fieldtypes = (
-	'Currency',
-	'Int',
-	'Long Int',
-	'Float',
-	'Percent',
-	'Check'
+	"Section Break",
+	"Column Break",
+	"Tab Break",
+	"HTML",
+	"Button",
+	"Image",
+	"Fold",
+	"Heading",
 )
 
-data_field_options = (
-	'Email',
-	'Name',
-	'Phone',
-	'URL'
-)
+numeric_fieldtypes = ("Currency", "Int", "Long Int", "Float", "Percent", "Check")
+
+data_field_options = ("Email", "Name", "Phone", "URL", "Barcode")
 
 default_fields = (
-	'doctype',
-	'name',
-	'owner',
-	'creation',
-	'modified',
-	'modified_by',
-	'parent',
-	'parentfield',
-	'parenttype',
-	'idx',
-	'docstatus'
+	"doctype",
+	"name",
+	"owner",
+	"creation",
+	"modified",
+	"modified_by",
+	"docstatus",
+	"idx",
 )
+
+child_table_fields = ("parent", "parentfield", "parenttype")
 
 optional_fields = (
 	"_user_tags",
@@ -98,54 +100,52 @@ optional_fields = (
 	"_printed",
 	"_seal",
 	"_submitted",
-	"_submitted_by"
+	"_submitted_by",
 )
 
-table_fields = (
-	'Table',
-	'Table MultiSelect'
-)
+table_fields = ("Table", "Table MultiSelect")
 
 core_doctypes_list = (
-	'DocType',
-	'DocField',
-	'DocPerm',
-	'DocType Action',
-	'DocType Link',
-	'User',
-	'Role',
-	'Has Role',
-	'Page',
-	'Module Def',
-	'Print Format',
-	'Report',
-	'Customize Form',
-	'Customize Form Field',
-	'Property Setter',
-	'Custom Field',
-	'Client Script',
-	'Archived Document'
+	"DocType",
+	"DocField",
+	"DocPerm",
+	"DocType Action",
+	"DocType Link",
+	"User",
+	"Role",
+	"Has Role",
+	"Page",
+	"Module Def",
+	"Print Format",
+	"Report",
+	"Customize Form",
+	"Customize Form Field",
+	"Property Setter",
+	"Custom Field",
+	"Client Script",
+	"Archived Document",
 )
 
 log_types = (
-	'Version',
-	'Error Log',
-	'Scheduled Job Log',
-	'Event Sync Log',
-	'Event Update Log',
-	'Access Log',
-	'View Log',
-	'Activity Log',
-	'Energy Point Log',
-	'Notification Log',
-	'Email Queue',
-	'DocShare',
-	'Document Follow',
-	'Console Log',
-	'Archived Document'
+	"Version",
+	"Error Log",
+	"Scheduled Job Log",
+	"Event Sync Log",
+	"Event Update Log",
+	"Access Log",
+	"View Log",
+	"Activity Log",
+	"Energy Point Log",
+	"Notification Log",
+	"Email Queue",
+	"DocShare",
+	"Document Follow",
+	"Console Log",
+	"Archived Document",
 )
 
-def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=[]):
+
+def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfields=None):
 	if not tarfields:
 		tarfields = srcfields
 	l = []
@@ -160,62 +160,62 @@ def copytables(srctype, src, srcfield, tartype, tar, tarfield, srcfields, tarfie
 		l.append(newrow)
 	return l
 
+
 def db_exists(dt, dn):
 	return frappe.db.exists(dt, dn)
 
+
 def delete_fields(args_dict, delete=0):
 	"""
-		Delete a field.
-		* Deletes record from `tabDocField`
-		* If not single doctype: Drops column from table
-		* If single, deletes record from `tabSingles`
-		args_dict = { dt: [field names] }
+	Delete a field.
+	* Deletes record from `tabDocField`
+	* If not single doctype: Drops column from table
+	* If single, deletes record from `tabSingles`
+	args_dict = { dt: [field names] }
 	"""
 	import frappe.utils
+
 	for dt in args_dict:
 		fields = args_dict[dt]
 		if not fields:
 			continue
 
-		frappe.db.sql("""
-			DELETE FROM `tabDocField`
-			WHERE parent='%s' AND fieldname IN (%s)
-		""" % (dt, ", ".join(["'{}'".format(f) for f in fields])))
+		frappe.db.delete(
+			"DocField",
+			{
+				"parent": dt,
+				"fieldname": ("in", fields),
+			},
+		)
 
 		# Delete the data/column only if delete is specified
 		if not delete:
 			continue
 
 		if frappe.db.get_value("DocType", dt, "issingle"):
-			frappe.db.sql("""
-				DELETE FROM `tabSingles`
-				WHERE doctype='%s' AND field IN (%s)
-			""" % (dt, ", ".join(["'{}'".format(f) for f in fields])))
+			frappe.db.delete(
+				"Singles",
+				{
+					"doctype": dt,
+					"field": ("in", fields),
+				},
+			)
 		else:
-			existing_fields = frappe.db.multisql({
-					"mariadb": "DESC `tab%s`" % dt,
-					"postgres": """
-						SELECT
-							COLUMN_NAME
-						FROM
-							information_schema.COLUMNS
-						WHERE
-							TABLE_NAME = 'tab%s';
-					""" % dt,
-				})
+			existing_fields = frappe.db.describe(dt)
 			existing_fields = existing_fields and [e[0] for e in existing_fields] or []
 			fields_need_to_delete = set(fields) & set(existing_fields)
 			if not fields_need_to_delete:
 				continue
 
-			if frappe.conf.db_type == 'mariadb' or frappe.conf.db_type is None:
+			if frappe.conf.db_type == "mariadb" or frappe.conf.db_type is None:
 				# mariadb implicitly commits before DDL, make it explicit
 				frappe.db.commit()
 
-			query = "ALTER TABLE `tab%s` " % dt + \
-				", ".join(["DROP COLUMN `%s`" % f for f in fields_need_to_delete])
+			query = "ALTER TABLE `tab%s` " % dt + ", ".join(
+				"DROP COLUMN `%s`" % f for f in fields_need_to_delete
+			)
 			frappe.db.sql(query)
 
-		if frappe.conf.db_type == 'postgres':
+		if frappe.conf.db_type == "postgres":
 			# commit the results to db
 			frappe.db.commit()

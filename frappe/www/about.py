@@ -1,12 +1,13 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
-from __future__ import unicode_literals
+
 import frappe
 
 sitemap = 1
 
+
 def get_context(context):
-	context.doc = frappe.get_doc("About Us Settings", "About Us Settings")
+	context.doc = frappe.get_cached_doc("About Us Settings", "About Us Settings")
 
 	return context

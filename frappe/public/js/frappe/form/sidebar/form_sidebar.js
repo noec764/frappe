@@ -1,15 +1,13 @@
-
-
 // Copyright (c) 2019, DOKOS and contributors
 // For license information, please see license.txt
 
-import './assign_to';
-import './attachments';
-import './share';
-import './review';
-import './document_follow';
-import './user_image';
-import './form_sidebar_users';
+import "./assign_to";
+import "./attachments";
+import "./share";
+import "./review";
+import "./document_follow";
+import "./user_image";
+import "./form_sidebar_users";
 
 frappe.ui.form.Sidebar = class {
 	constructor(opts) {
@@ -17,7 +15,10 @@ frappe.ui.form.Sidebar = class {
 	}
 
 	make() {
-		var sidebar_content = frappe.render_template("form_sidebar", {doctype: this.frm.doctype, frm:this.frm});
+		var sidebar_content = frappe.render_template("form_sidebar", {
+			doctype: this.frm.doctype,
+			frm: this.frm,
+		});
 
 		this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden"></div>')
 			.html(sidebar_content)
@@ -26,7 +27,7 @@ frappe.ui.form.Sidebar = class {
 		this.comments = this.sidebar.find(".form-sidebar-stats .comments");
 		this.user_actions = this.sidebar.find(".user-actions");
 		this.image_section = this.sidebar.find(".sidebar-image-section");
-		this.image_wrapper = this.image_section.find('.sidebar-image-wrapper');
+		this.image_wrapper = this.image_section.find(".sidebar-image-wrapper");
 		this.make_assignments();
 		this.make_attachments();
 		this.make_review();
@@ -42,19 +43,18 @@ frappe.ui.form.Sidebar = class {
 		frappe.ui.form.setup_user_image_event(this.frm);
 
 		this.refresh();
-
 	}
 
 	bind_events() {
 		var me = this;
 
 		// scroll to comments
-		this.comments.on("click", function() {
+		this.comments.on("click", function () {
 			frappe.utils.scroll_to(me.frm.footer.wrapper.find(".comment-box"), true);
 		});
 
-		this.like_icon.on("click", function() {
-			frappe.ui.toggle_like(me.like_wrapper, me.frm.doctype, me.frm.doc.name, function() {
+		this.like_icon.on("click", function () {
+			frappe.ui.toggle_like(me.like_wrapper, me.frm.doctype, me.frm.doc.name, function () {
 				me.refresh_like();
 			});
 		});
@@ -62,10 +62,8 @@ frappe.ui.form.Sidebar = class {
 
 	setup_keyboard_shortcuts() {
 		// add assignment shortcut
-		let assignment_link = this.sidebar.find('.add-assignment');
-		frappe.ui.keys
-			.get_shortcut_group(this.page)
-			.add(assignment_link);
+		let assignment_link = this.sidebar.find(".add-assignment");
+		frappe.ui.keys.get_shortcut_group(this.page).add(assignment_link);
 	}
 
 	refresh() {
@@ -83,18 +81,34 @@ frappe.ui.form.Sidebar = class {
 				frappe.utils.get_page_view_count(route).then((res) => {
 					this.sidebar
 						.find(".pageview-count")
-						.html(
-							__("{0} Page Views", [String(res.message).bold()])
-						);
+						.html(__("{0} Page Views", [String(res.message).bold()]));
 				});
 			}
 
 			this.sidebar
 				.find(".modified-by")
-				.html(__("{0} edited this {1}", [frappe.user.full_name(this.frm.doc.modified_by).bold(), "<br>" + comment_when(this.frm.doc.modified).toLowerCase()], "For example, 'Jon Doe edited this 5 minutes ago'."));
+				.html(
+					__(
+						"{0} edited this {1}",
+						[
+							frappe.user.full_name(this.frm.doc.modified_by).bold(),
+							"<br>" + comment_when(this.frm.doc.modified).toLowerCase(),
+						],
+						"For example, 'Jon Doe edited this 5 minutes ago'."
+					)
+				);
 			this.sidebar
 				.find(".created-by")
-				.html(__("{0} created this {1}", [frappe.user.full_name(this.frm.doc.owner).bold(), "<br>" + comment_when(this.frm.doc.creation).toLowerCase()], "For example, 'Jon Doe created this 5 minutes ago'."));
+				.html(
+					__(
+						"{0} created this {1}",
+						[
+							frappe.user.full_name(this.frm.doc.owner).bold(),
+							"<br>" + comment_when(this.frm.doc.creation).toLowerCase(),
+						],
+						"For example, 'Jon Doe created this 5 minutes ago'."
+					)
+				);
 
 			this.refresh_like();
 			this.refresh_follow();
@@ -108,19 +122,21 @@ frappe.ui.form.Sidebar = class {
 			const me = this;
 			frappe.call({
 				method: "frappe.client.get_value",
-				args:{
+				args: {
 					doctype: "Auto Repeat",
 					filters: {
-						name: this.frm.doc.auto_repeat
+						name: this.frm.doc.auto_repeat,
 					},
-					fieldname: ["frequency"]
+					fieldname: ["frequency"],
 				},
-				callback: function(res) {
-					me.sidebar.find(".auto-repeat-status").html(__("Repeats {0}", [__(res.message.frequency)]));
-					me.sidebar.find(".auto-repeat-status").on("click", function(){
+				callback: function (res) {
+					me.sidebar
+						.find(".auto-repeat-status")
+						.html(__("Repeats {0}", [__(res.message.frequency)]));
+					me.sidebar.find(".auto-repeat-status").on("click", function () {
 						frappe.set_route("Form", "Auto Repeat", me.frm.doc.auto_repeat);
 					});
-				}
+				},
 			});
 		}
 	}
@@ -137,9 +153,9 @@ frappe.ui.form.Sidebar = class {
 			parent: tags_parent,
 			add_button: tags_parent.find(".add-tags-btn"),
 			frm: this.frm,
-			on_change: function(user_tags) {
+			on_change: function (user_tags) {
 				this.frm.tags && this.frm.tags.refresh(user_tags);
-			}
+			},
 		});
 	}
 
@@ -147,31 +163,35 @@ frappe.ui.form.Sidebar = class {
 		var me = this;
 		this.frm.attachments = new frappe.ui.form.Attachments({
 			parent: me.sidebar.find(".form-attachments"),
-			frm: me.frm
+			frm: me.frm,
 		});
 	}
 
 	make_assignments() {
 		this.frm.assign_to = new frappe.ui.form.AssignTo({
 			parent: this.sidebar.find(".form-assignments"),
-			frm: this.frm
+			frm: this.frm,
 		});
 	}
 
 	make_shared() {
 		this.frm.shared = new frappe.ui.form.Share({
 			frm: this.frm,
-			parent: this.sidebar.find(".form-shared")
+			parent: this.sidebar.find(".form-shared"),
 		});
 	}
 
 	add_user_action(label, click) {
-		return $('<a>').html(label).appendTo($('<li class="user-action-row">')
-			.appendTo(this.user_actions.removeClass("hidden"))).on("click", click);
+		return $("<a>")
+			.html(label)
+			.appendTo(
+				$('<li class="user-action-row">').appendTo(this.user_actions.removeClass("hidden"))
+			)
+			.on("click", click);
 	}
 
 	clear_user_actions() {
-		this.user_actions.addClass("hidden")
+		this.user_actions.addClass("hidden");
 		this.user_actions.find(".user-action-row").remove();
 	}
 
@@ -182,19 +202,26 @@ frappe.ui.form.Sidebar = class {
 		frappe.ui.setup_like_popover(this.sidebar.find(".form-stats-likes"), ".like-icon");
 	}
 
-	make_follow(){
+	make_follow() {
 		this.follow_button = this.sidebar.find(".form-sidebar-stats .form-follow");
 
-		this.follow_button.on('click', () => {
+		this.follow_button.on("click", () => {
 			let is_followed = this.frm.get_docinfo().is_document_followed;
-			frappe.call('frappe.desk.form.document_follow.update_follow', {
-				'doctype': this.frm.doctype,
-				'doc_name': this.frm.doc.name,
-				'following': !is_followed
-			}).then(() => {
-				frappe.model.set_docinfo(this.frm.doctype, this.frm.doc.name, "is_document_followed", !is_followed);
-				this.refresh_follow(!is_followed);
-			});
+			frappe
+				.call("frappe.desk.form.document_follow.update_follow", {
+					doctype: this.frm.doctype,
+					doc_name: this.frm.doc.name,
+					following: !is_followed,
+				})
+				.then(() => {
+					frappe.model.set_docinfo(
+						this.frm.doctype,
+						this.frm.doc.name,
+						"is_document_followed",
+						!is_followed
+					);
+					this.refresh_follow(!is_followed);
+				});
 		});
 	}
 
@@ -226,15 +253,14 @@ frappe.ui.form.Sidebar = class {
 		this.comments.find(".comments-count").html(count);
 	}
 
-	refresh_image() {
-	}
+	refresh_image() {}
 
 	make_review() {
 		const review_wrapper = this.sidebar.find(".form-reviews");
 		if (frappe.boot.energy_points_enabled && !this.frm.is_new()) {
 			this.frm.reviews = new frappe.ui.form.Review({
 				parent: review_wrapper,
-				frm: this.frm
+				frm: this.frm,
 			});
 		} else {
 			review_wrapper.remove();
@@ -246,16 +272,15 @@ frappe.ui.form.Sidebar = class {
 			method: "frappe.desk.form.load.get_docinfo",
 			args: {
 				doctype: this.frm.doctype,
-				name: this.frm.doc.name
+				name: this.frm.doc.name,
 			},
 			callback: (r) => {
 				// docinfo will be synced
-				if(callback) callback(r.docinfo);
+				if (callback) callback(r.docinfo);
 				this.frm.timeline && this.frm.timeline.refresh();
 				this.frm.assign_to.refresh();
 				this.frm.attachments.refresh();
-			}
+			},
 		});
 	}
-
 };

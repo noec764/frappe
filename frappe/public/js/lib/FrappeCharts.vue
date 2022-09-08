@@ -176,7 +176,7 @@
 			}
 		},
 		methods: {
-			startChart () { 
+			startChart () {
 				this.chart = new frappe.Chart(`#${this.id}`, this.getOptions())
 			},
 			getOptions() {
@@ -201,7 +201,7 @@
 					maxLegendPoints: this.maxLegendPoints,
 					maxSlices: this.maxSlices,
 				}
-				
+
 				return Object.assign(
 					baseOptions,
 					(this.type === 'heatmap') ? heatMapOptions : chartOptions

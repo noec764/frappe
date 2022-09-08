@@ -1,16 +1,19 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
+import base64
+import json
 
-from __future__ import unicode_literals
+import jwt
+
 import frappe
 import frappe.utils
-import json, jwt
-import base64
 from frappe import _
 from frappe.utils.password import get_decrypted_password
-from six import string_types
 
-class SignupDisabledError(frappe.PermissionError): pass
+
+class SignupDisabledError(frappe.PermissionError):
+	pass
+
 
 def get_oauth2_providers():
 	out = {}
@@ -25,7 +28,7 @@ def get_oauth2_providers():
 				"name": provider.name,
 				"authorize_url": authorize_url,
 				"access_token_url": access_token_url,
-				"base_url": provider.base_url
+				"base_url": provider.base_url,
 			},
 			"redirect_uri": provider.redirect_url,
 			"api_endpoint": provider.api_endpoint,
@@ -38,36 +41,38 @@ def get_oauth2_providers():
 
 	return out
 
+
 def get_oauth_keys(provider):
 	"""get client_id and client_secret from database or conf"""
 
 	# try conf
-	keys = frappe.conf.get("{provider}_login".format(provider=provider))
+	keys = frappe.conf.get(f"{provider}_login")
 
 	if not keys:
 		# try database
-		client_id, client_secret = frappe.get_value("Social Login Key", provider, ["client_id", "client_secret"])
+		client_id, client_secret = frappe.get_value(
+			"Social Login Key", provider, ["client_id", "client_secret"]
+		)
 		client_secret = get_decrypted_password("Social Login Key", provider, "client_secret")
-		keys = {
-			"client_id": client_id,
-			"client_secret": client_secret
-		}
+		keys = {"client_id": client_id, "client_secret": client_secret}
 		return keys
 	else:
-		return {
-			"client_id": keys["client_id"],
-			"client_secret": keys["client_secret"]
-		}
+		return {"client_id": keys["client_id"], "client_secret": keys["client_secret"]}
+
 
 def get_oauth2_authorize_url(provider, redirect_to):
 	flow = get_oauth2_flow(provider)
 
-	state = { "site": frappe.utils.get_url(), "token": frappe.generate_hash(), "redirect_to": redirect_to 	}
+	state = {
+		"site": frappe.utils.get_url(),
+		"token": frappe.generate_hash(),
+		"redirect_to": redirect_to,
+	}
 
 	# relative to absolute url
 	data = {
 		"redirect_uri": get_redirect_uri(provider),
-		"state": base64.b64encode(bytes(json.dumps(state).encode("utf-8")))
+		"state": base64.b64encode(bytes(json.dumps(state).encode("utf-8"))),
 	}
 
 	oauth2_providers = get_oauth2_providers()
@@ -76,6 +81,7 @@ def get_oauth2_authorize_url(provider, redirect_to):
 	data.update(oauth2_providers[provider].get("auth_url_data", {}))
 
 	return flow.get_authorize_url(**data)
+
 
 def get_oauth2_flow(provider):
 	from rauth import OAuth2Service
@@ -91,8 +97,9 @@ def get_oauth2_flow(provider):
 	# and we have setup the communication lines
 	return OAuth2Service(**params)
 
+
 def get_redirect_uri(provider):
-	keys = frappe.conf.get("{provider}_login".format(provider=provider))
+	keys = frappe.conf.get(f"{provider}_login")
 
 	if keys and keys.get("redirect_uri"):
 		# this should be a fully qualified redirect uri
@@ -106,13 +113,16 @@ def get_redirect_uri(provider):
 		# this uses the site's url + the relative redirect uri
 		return frappe.utils.get_url(redirect_uri)
 
+
 def login_via_oauth2(provider, code, state, decoder=None):
 	info = get_info_via_oauth(provider, code, decoder)
 	login_oauth_user(info, provider=provider, state=state)
 
+
 def login_via_oauth2_id_token(provider, code, state, decoder=None):
 	info = get_info_via_oauth(provider, code, decoder, id_token=True)
 	login_oauth_user(info, provider=provider, state=state)
+
 
 def get_info_via_oauth(provider, code, decoder=None, id_token=False):
 	flow = get_oauth2_flow(provider)
@@ -122,7 +132,7 @@ def get_info_via_oauth(provider, code, decoder=None, id_token=False):
 		"data": {
 			"code": code,
 			"redirect_uri": get_redirect_uri(provider),
-			"grant_type": "authorization_code"
+			"grant_type": "authorization_code",
 		}
 	}
 
@@ -134,24 +144,38 @@ def get_info_via_oauth(provider, code, decoder=None, id_token=False):
 	if id_token:
 		parsed_access = json.loads(session.access_token_response.text)
 
-		token = parsed_access['id_token']
+		token = parsed_access["id_token"]
 
-		info = jwt.decode(token, flow.client_secret, verify=False)
+		info = jwt.decode(token, flow.client_secret, options={"verify_signature": False})
 	else:
 		api_endpoint = oauth2_providers[provider].get("api_endpoint")
 		api_endpoint_args = oauth2_providers[provider].get("api_endpoint_args")
+
 		info = session.get(api_endpoint, params=api_endpoint_args).json()
+
+		if provider == "github" and not info.get("email"):
+			emails = session.get("/user/emails", params=api_endpoint_args).json()
+			email_dict = list(filter(lambda x: x.get("primary"), emails))[0]
+			info["email"] = email_dict.get("email")
 
 	if not (info.get("email_verified") or info.get("email")):
 		frappe.throw(_("Email not verified with {0}").format(provider.title()))
 
 	return info
 
-def login_oauth_user(data=None, provider=None, state=None, email_id=None, key=None, generate_login_token=False):
+
+def login_oauth_user(
+	data=None,
+	provider=None,
+	state=None,
+	email_id=None,
+	key=None,
+	generate_login_token=False,
+):
 	# NOTE: This could lead to security issue as the signed in user can type any email address in complete_signup
 	# if email_id and key:
 	# 	data = json.loads(frappe.db.get_temp(key))
-	#	# What if data is missing because of an invalid key
+	# 	# What if data is missing because of an invalid key
 	# 	data["email"] = email_id
 	#
 	# elif not (data.get("email") and get_first_name(data)) and not frappe.db.exists("User", data.get("email")):
@@ -163,10 +187,10 @@ def login_oauth_user(data=None, provider=None, state=None, email_id=None, key=No
 	# 	return
 
 	# json.loads data and state
-	if isinstance(data, string_types):
+	if isinstance(data, str):
 		data = json.loads(data)
 
-	if isinstance(state, string_types):
+	if isinstance(state, str):
 		state = base64.b64decode(state)
 		state = json.loads(state.decode("utf-8"))
 
@@ -177,7 +201,9 @@ def login_oauth_user(data=None, provider=None, state=None, email_id=None, key=No
 	user = get_email(data)
 
 	if not user:
-		frappe.respond_as_web_page(_("Invalid Request"), _("Please ensure that your profile has an email address"))
+		frappe.respond_as_web_page(
+			_("Invalid Request"), _("Please ensure that your profile has an email address")
+		)
 		return
 
 	try:
@@ -185,8 +211,12 @@ def login_oauth_user(data=None, provider=None, state=None, email_id=None, key=No
 			return
 
 	except SignupDisabledError:
-		return frappe.respond_as_web_page("Signup is Disabled", "Sorry. Signup from Website is disabled.",
-			success=False, http_status_code=403)
+		return frappe.respond_as_web_page(
+			"Signup is Disabled",
+			"Sorry. Signup from Website is disabled.",
+			success=False,
+			http_status_code=403,
+		)
 
 	frappe.local.login_manager.user = user
 	frappe.local.login_manager.post_login()
@@ -196,18 +226,20 @@ def login_oauth_user(data=None, provider=None, state=None, email_id=None, key=No
 
 	if frappe.utils.cint(generate_login_token):
 		login_token = frappe.generate_hash(length=32)
-		frappe.cache().set_value("login_token:{0}".format(login_token), frappe.local.session.sid, expires_in_sec=120)
+		frappe.cache().set_value(
+			f"login_token:{login_token}", frappe.local.session.sid, expires_in_sec=120
+		)
 
 		frappe.response["login_token"] = login_token
-
 
 	else:
 		redirect_to = state.get("redirect_to")
 		redirect_post_login(
-			desk_user=frappe.local.response.get('message') == 'Logged In',
+			desk_user=frappe.local.response.get("message") == "Logged In",
 			redirect_to=redirect_to,
-			provider=provider
+			provider=provider,
 		)
+
 
 def update_oauth_user(user, data, provider):
 	if isinstance(data.get("location"), dict):
@@ -230,49 +262,49 @@ def update_oauth_user(user, data, provider):
 			doc = frappe.new_doc("Gender", {"gender": gender})
 			doc.insert(ignore_permissions=True)
 
-		user.update({
-			"doctype": "User",
-			"first_name": get_first_name(data),
-			"last_name": get_last_name(data),
-			"email": get_email(data),
-			"gender": gender,
-			"enabled": 1,
-			"new_password": frappe.generate_hash(get_email(data)),
-			"location": data.get("location"),
-			"user_type": "Website User",
-			"user_image": data.get("picture") or data.get("avatar_url")
-		})
+		user.update(
+			{
+				"doctype": "User",
+				"first_name": get_first_name(data),
+				"last_name": get_last_name(data),
+				"email": get_email(data),
+				"gender": gender,
+				"enabled": 1,
+				"new_password": frappe.generate_hash(get_email(data)),
+				"location": data.get("location"),
+				"user_type": "Website User",
+				"user_image": data.get("picture") or data.get("avatar_url"),
+			}
+		)
 
 	else:
 		user = frappe.get_doc("User", user)
 		if not user.enabled:
-			frappe.respond_as_web_page(_('Not Allowed'), _('User {0} is disabled').format(user.email))
+			frappe.respond_as_web_page(_("Not Allowed"), _("User {0} is disabled").format(user.email))
 			return False
 
-	if provider=="facebook" and not user.get_social_login_userid(provider):
+	if provider == "facebook" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid=data["id"], username=data.get("username"))
-		user.update({
-			"user_image": "https://graph.facebook.com/{id}/picture".format(id=data["id"])
-		})
+		user.update({"user_image": "https://graph.facebook.com/{id}/picture".format(id=data["id"])})
 
-	elif provider=="google" and not user.get_social_login_userid(provider):
+	elif provider == "google" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid=data["id"])
 
-	elif provider=="github" and not user.get_social_login_userid(provider):
+	elif provider == "github" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid=data["id"], username=data.get("login"))
 
-	elif provider=="frappe" and not user.get_social_login_userid(provider):
+	elif provider == "frappe" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid=data["sub"])
 
-	elif provider=="office_365" and not user.get_social_login_userid(provider):
+	elif provider == "office_365" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid=data["sub"])
 
-	elif provider=="salesforce" and not user.get_social_login_userid(provider):
+	elif provider == "salesforce" and not user.get_social_login_userid(provider):
 		save = True
 		user.set_social_login_userid(provider, userid="/".join(data["sub"].split("/")[-2:]))
 
@@ -292,14 +324,18 @@ def update_oauth_user(user, data, provider):
 
 		user.save()
 
+
 def get_first_name(data):
 	return data.get("first_name") or data.get("given_name") or data.get("name")
+
 
 def get_last_name(data):
 	return data.get("last_name") or data.get("family_name")
 
+
 def get_email(data):
 	return data.get("email") or data.get("upn") or data.get("unique_name")
+
 
 def redirect_post_login(desk_user, redirect_to=None, provider=None):
 	# redirect!
@@ -307,7 +343,7 @@ def redirect_post_login(desk_user, redirect_to=None, provider=None):
 
 	if not redirect_to:
 		# the /app/workspace is added to prevent a facebook redirect bug
-		desk_uri = "/app/workspace" if provider == 'facebook' else '/app'
+		desk_uri = "/app/workspace" if provider == "facebook" else "/app"
 		redirect_to = desk_uri if desk_user else "/me"
 		redirect_to = frappe.utils.get_url(redirect_to)
 

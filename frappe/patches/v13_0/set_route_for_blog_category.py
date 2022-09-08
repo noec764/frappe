@@ -1,5 +1,6 @@
 import frappe
 
+
 def execute():
 	frappe.reload_doc("core", "doctype", "DocType", force=True)
 	categories = frappe.get_list("Blog Category")

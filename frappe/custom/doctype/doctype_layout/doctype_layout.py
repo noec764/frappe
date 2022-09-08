@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) 2020, Frappe Technologies and contributors
-# For license information, please see license.txt
+# Copyright (c) 2021, Frappe Technologies and contributors
+# License: MIT. See LICENSE
 
-from __future__ import unicode_literals
-
-from frappe.model.document import Document
 
 from frappe.desk.utils import slug
+from frappe.model.document import Document
+
 
 class DocTypeLayout(Document):
 	def validate(self):

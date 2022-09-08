@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block header %}
-	<h2>{{ title or (_("{0} List").format(_(doctype))) }}</h2>
+	<h3 class="my-account-header">{{ title or (_("{0} List").format(_(doctype))) }}</h3>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -26,11 +26,20 @@
 
 {% block page_content %}
 
-{% if introduction %}<p>{{ introduction }}</p>{% endif %}
-{% include list_template or "templates/includes/list/list.html" %}
-{% if list_footer %}{{ list_footer }}{% endif %}
+	{% if introduction %}<p>{{ introduction }}</p>{% endif %}
+	{% include list_template or "templates/includes/list/list.html" %}
+	{% if list_footer %}{{ list_footer }}{% endif %}
 
 {% endblock %}
+
+{% if base_scripts %}
+{% block base_scripts %}
+	{{ super() }}
+	{% for script in base_scripts %}
+		{{ include_script(script) }}
+	{% endfor %}
+{% endblock %}
+{% endif %}
 
 {% block script %}
 <script>{% include "templates/includes/list/list.js" %}</script>

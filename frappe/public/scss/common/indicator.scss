@@ -181,10 +181,14 @@
 	@include indicator-color('lightblue');
 }
 
-.indicator-pill.lightblue,
-.indicator-pill-right.lightblue,
-.indicator-pill-round.lightblue {
-	@include indicator-pill-color('lightblue');
+.indicator.light-blue {
+	@include indicator-color('light-blue');
+}
+
+.indicator-pill.light-blue,
+.indicator-pill-right.light-blue,
+.indicator-pill-round.light-blue {
+	@include indicator-pill-color('light-blue');
 }
 
 .indicator.blink {

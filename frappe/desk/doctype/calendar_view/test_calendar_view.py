@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) 2020, Dokos SAS and Contributors
-# See license.txt
-from __future__ import unicode_literals
+# Copyright (c) 2021, Dokos SAS and Contributors
+# License: MIT. See LICENSE
 
-import frappe
-import unittest
 
-class TestCalendarView(unittest.TestCase):
+from frappe.tests.utils import FrappeTestCase
+
+
+class TestCalendarView(FrappeTestCase):
 	pass
