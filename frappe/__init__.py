@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "4.0.0"
+__version__ = "v2.14.4"
 __title__ = "Dodock Framework"
 
 controllers = {}
