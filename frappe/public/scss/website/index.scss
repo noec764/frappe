@@ -1,18 +1,19 @@
 @import '../common/quill';
 @import 'variables';
-@import '/assets/frappe/css/fonts/fontawesome/css/all.css';
-@import '/assets/frappe/css/fonts/unicons/css/unicons.css';
 @import '~bootstrap/scss/bootstrap';
-@import "../common/mixins.scss";
-@import "../common/global.scss";
-@import "../common/icons.scss";
-@import 'base';
+@import "../common/mixins";
+@import "../common/global";
+@import "../common/icons";
+@import "../common/alert";
 @import "../common/flex";
 @import "../common/buttons";
 @import "../common/modal";
+@import "../common/toast";
+@import "../common/css_variables";
 @import "../common/indicator";
 @import "../common/controls";
 @import "../common/awesomeplete";
+@import 'base';
 @import 'multilevel_dropdown';
 @import 'website_image';
 @import 'website_avatar';
@@ -27,13 +28,8 @@
 @import 'navbar';
 @import 'footer';
 @import 'contact';
-@import "../common/toast";
-
-body {
-	display: flex;
-	flex-direction: column;
-	min-height: 100vh;
-}
+@import 'error-state';
+@import 'my_account';
 
 .ql-editor.read-mode {
 	padding: 0;
@@ -86,10 +82,26 @@ body {
 
 .dropdown-menu {
 	padding: 0.25rem;
+	box-shadow: var(--shadow-lg);
+	border-color: var(--gray-200);
 }
 
 .dropdown-item {
 	border-radius: $dropdown-border-radius;
+}
+
+.dropdown-item:active {
+	color: var(--fg-color);
+	text-decoration: none;
+	background-color: var(--gray-600);
+}
+
+.dropdown-item:active:hover {
+	color: var(--fg-color);
+}
+
+.dropdown-menu a:hover {
+	cursor: pointer;
 }
 
 .input-dark {
@@ -105,9 +117,19 @@ body {
 
 @media (max-width: map-get($grid-breakpoints, "lg")) {
 	.page-content-wrapper .container {
-		padding-left: 1rem;
-		padding-right: 1rem;
+		padding-left: 1.5rem;
+		padding-right: 1.5rem;
 	}
+}
+
+.page-header-wrapper {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.page_content {
+	min-height: 50vh;
 }
 
 .breadcrumb-container {
@@ -116,9 +138,30 @@ body {
 }
 
 .breadcrumb {
-	padding: 0;
+	padding-left: 0;
+	padding-right: 0;
 	font-size: $font-size-sm;
-	background-color: $breadcrumb-bg;
+}
+
+.breadcrumb-item {
+	+ .breadcrumb-item
+		{
+		font-size: $font-size-sm;
+		&::before {
+			content: #{"/*!rtl:var(--left-arrow-svg);*/"}var(--right-arrow-svg);
+			display: inline-block;
+		}
+	}
+	a {
+		color: var(--text-color)
+	}
+
+	li.disabled {
+		a {
+			color: var(--text-muted);
+			pointer-events: none;
+		}
+	}
 }
 
 a.card {
@@ -149,8 +192,13 @@ a.card {
 	font-size: inherit;
 }
 
+.indicator-pill {
+	font-size: var(--font-size-xs)
+}
+
 h4.modal-title {
 	font-size: 1em;
+	margin: 0px !important;
 }
 
 h5.modal-title {
@@ -203,8 +251,10 @@ h5.modal-title {
 }
 
 .hidden-xs {
-	@extend .d-none;
-	@extend .d-sm-block;
+	@extend .d-block;
+	@include media-breakpoint-between(xs, sm) {
+		display: none !important;
+	}
 }
 
 .visible-xs {
@@ -225,6 +275,10 @@ h5.modal-title {
 
 .pull-right {
 	float: right;
+}
+
+.pull-left {
+	float: left;
 }
 
 .image-with-blur {
@@ -266,6 +320,17 @@ h5.modal-title {
 	padding-top: 1rem;
 }
 
+.login-content.container {
+	background-color: var(--fg-color);
+	padding-bottom: 45px;
+	padding-top: 45px;
+	box-shadow: var(--shadow-base);
+	border-radius: var(--border-radius-md);
+	max-width: 400px;
+	margin: 70px auto;
+	font-size: $font-size-sm;
+}
+
 .frappe-control[data-fieldtype="Select"] .control-input {
 	position: relative;
 
@@ -303,4 +368,21 @@ h5.modal-title {
 .visually-hidden {
 	position: absolute;
 	clip: rect(0, 0, 0, 0);
+}
+
+.empty-list-icon {
+	height: 70px;
+}
+
+.null-state {
+	height: 60px;
+	width: auto;
+	margin-bottom: var(--margin-md);
+	img {
+		fill: var(--fg-color);
+	}
+}
+
+.no-result {
+	min-height: #{"calc(100vh - 284px)"};
 }

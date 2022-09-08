@@ -1,15 +1,18 @@
 # Copyright (c) 2021, Dokos SAS and contributors
-# For license information, please see license.txt
+# License: MIT. See LICENSE
+
+from collections import defaultdict
 
 import frappe
-from collections import defaultdict
 from frappe import _
 from frappe.utils import get_datetime
 from frappe.utils.seal import hash_chain
 
+
 def execute(filters=None):
 	columns, data = get_columns(filters), get_data(filters)
 	return columns, data
+
 
 def get_data(filters=None):
 	if filters is None:
@@ -25,7 +28,7 @@ def get_data(filters=None):
 			"seal": document._seal or "",
 			"submission_date": document._submitted or "",
 			"submitted_by": document._submitted_by or "",
-			"archive": archives.get(document.name, {})
+			"archive": archives.get(document.name, {}),
 		}
 
 	missing_keys = []
@@ -38,7 +41,7 @@ def get_data(filters=None):
 			"seal": "",
 			"submission_date": "",
 			"submitted_by": "",
-			"archive": archives.get(missing_key, {})
+			"archive": archives.get(missing_key, {}),
 		}
 
 	data = []
@@ -54,34 +57,39 @@ def get_data(filters=None):
 			"submitted_by": doc_dict[doc].get("submitted_by"),
 			"archive": archive.get("name", ""),
 			"comments": comments,
-			"icon": icon
+			"icon": icon,
 		}
 
 		data.append(row)
 
 	return data
 
+
 def get_documents(filters):
 	return frappe.get_all(
 		filters.get("doctype"),
 		filters={"docstatus": [">", 0]},
 		fields=["name", "_seal", "_submitted", "_submitted_by"],
-		order_by="name desc"
+		order_by="name desc",
 	)
+
 
 def get_documents_dict(documents):
 	return {x.name: x._seal for x in documents}
+
 
 def get_archives(filters):
 	return frappe.get_all(
 		"Archived Document",
 		filters={"reference_doctype": filters.get("doctype")},
 		fields=["name", "timestamp", "hash", "reference_docname", "data", "creation"],
-		order_by="creation"
+		order_by="creation",
 	)
+
 
 def get_archives_dict(archives):
 	return {x.reference_docname: x for x in archives}
+
 
 def check_integrity(name, doc, documents_list, documents_dict, archives):
 	if not doc.get("seal"):
@@ -117,36 +125,32 @@ def get_columns(filters=None):
 			"label": _("Document Name"),
 			"fieldname": "document_name",
 			"fieldtype": "Data",
-			"width": 300
+			"width": 300,
 		},
 		{
 			"label": _("Submission Date"),
 			"fieldname": "submission_date",
 			"fieldtype": "Datetime",
-			"width": 200
+			"width": 200,
 		},
 		{
 			"label": _("Submitted By"),
 			"fieldname": "submitted_by",
 			"fieldtype": "Link",
 			"options": "User",
-			"width": 200
+			"width": 200,
 		},
 		{
 			"label": _("Archive"),
 			"fieldname": "archive",
 			"fieldtype": "Link",
 			"options": "Archived Document",
-			"width": 300
+			"width": 300,
 		},
-		{
-			"label": _("Comments"),
-			"fieldname": "comments",
-			"fieldtype": "Data",
-			"width": 300
-		}
+		{"label": _("Comments"), "fieldname": "comments", "fieldtype": "Data", "width": 300},
 	]
 	return columns
+
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs

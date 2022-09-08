@@ -1,6 +1,6 @@
 {% extends "templates/web.html" %}
 
-{% block title %} Unsubscribe from Newsletter {% endblock %}
+{% block title %} {{ _("Unsubscribe from newsletter") }} {% endblock %}
 
 {% block page_content %}
 
@@ -24,7 +24,7 @@
 			</div>
 			{% if email_groups %}
 				<div>
-					Select groups you wish to unsubscribe from.
+					{{ _("Select groups you wish to unsubscribe from.") }}
 					<span class="text-muted">{{ email }}</span>
 				</div>
 				<!-- Show 'Select All' or 'Unselect All' buttons only if there are more than 5 groups -->

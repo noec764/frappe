@@ -1,33 +1,52 @@
 // Copyright (c) 2016, Frappe Technologies and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Email Group", "refresh", function(frm) {
-	if(!frm.is_new()) {
-		frm.add_custom_button(__("Import Subscribers"), function() {
-			new SubscriberImportDialog({frm: frm})
-		}, __("Action"));
+frappe.ui.form.on("Email Group", "refresh", function (frm) {
+	if (!frm.is_new()) {
+		frm.add_custom_button(
+			__("Import Subscribers"),
+			function () {
+				new SubscriberImportDialog({ frm: frm });
+			},
+			__("Action")
+		);
 
-		frm.add_custom_button(__("Add Subscribers"), function() {
-			frappe.prompt({fieldtype:"Text",
-				label:__("Email Addresses"), fieldname:"email_list", reqd:1},
-				function(data) {
-					frappe.call({
-						method: "frappe.email.doctype.email_group.email_group.add_subscribers",
-						args: {
-							"name": frm.doc.name,
-							"email_list": data.email_list
-						},
-						callback: function(r) {
-							frm.set_value("total_subscribers", r.message);
-						}
-					})
-				}, __("Add Subscribers"), __("Add"));
-		}, __("Action"));
+		frm.add_custom_button(
+			__("Add Subscribers"),
+			function () {
+				frappe.prompt(
+					{
+						fieldtype: "Text",
+						label: __("Email Addresses"),
+						fieldname: "email_list",
+						reqd: 1,
+					},
+					function (data) {
+						frappe.call({
+							method: "frappe.email.doctype.email_group.email_group.add_subscribers",
+							args: {
+								name: frm.doc.name,
+								email_list: data.email_list,
+							},
+							callback: function (r) {
+								frm.set_value("total_subscribers", r.message);
+							},
+						});
+					},
+					__("Add Subscribers"),
+					__("Add")
+				);
+			},
+			__("Action")
+		);
 
-		frm.add_custom_button(__("New Newsletter"), function() {
-			frappe.new_doc("Newsletter");
-		}, __("Action"));
-
+		frm.add_custom_button(
+			__("New Newsletter"),
+			function () {
+				frappe.new_doc("Newsletter");
+			},
+			__("Action")
+		);
 	}
 });
 
@@ -42,39 +61,41 @@ class SubscriberImportDialog {
 			title: __("Import Subscribers"),
 			fields: this.get_fields(),
 			primary_action: (data) => {
-				data = this.process_data(data)
-				frappe.call({
-					method: "frappe.email.doctype.email_group.email_group.import_from",
-					args: {
-						"name": this.frm.doc.name,
-						"doctype": data.doctype,
-						"filters": data.filters,
-						"auto_update": data.auto_update
-					}
-				}).then(r => {
-					this.frm.refresh_fields();
-				})
+				data = this.process_data(data);
+				frappe
+					.call({
+						method: "frappe.email.doctype.email_group.email_group.import_from",
+						args: {
+							name: this.frm.doc.name,
+							doctype: data.doctype,
+							filters: data.filters,
+							auto_update: data.auto_update,
+						},
+					})
+					.then((r) => {
+						this.frm.refresh_fields();
+					});
 
 				this.dialog.hide();
 			},
-			primary_action_label: __("Import")
+			primary_action_label: __("Import"),
 		});
-		this.frm.doc.import_doctype && this.setup_filters(this.frm.doc.import_doctype)
+		this.frm.doc.import_doctype && this.setup_filters(this.frm.doc.import_doctype);
 		this.dialog.show();
 	}
 
 	get_fields() {
 		return [
 			{
-				fieldtype:"Select",
+				fieldtype: "Select",
 				options: this.frm.doc.__onload.import_types,
-				label:__("Import Email From"),
-				fieldname:"doctype",
+				label: __("Import Email From"),
+				fieldname: "doctype",
 				default: this.frm.doc.import_doctype,
-				reqd:1,
+				reqd: 1,
 				onchange: () => {
 					this.setup_filters(this.dialog.get_value("doctype"));
-				}
+				},
 			},
 			{
 				fieldtype: "HTML",
@@ -89,9 +110,9 @@ class SubscriberImportDialog {
 				fieldtype: "Check",
 				fieldname: "auto_update",
 				label: __("Automatically update this email group"),
-				default: this.frm.doc.auto_update
-			}
-		]
+				default: this.frm.doc.auto_update,
+			},
+		];
 	}
 
 	setup_filters(doctype) {
@@ -103,10 +124,10 @@ class SubscriberImportDialog {
 		let $loading = this.dialog.get_field("filter_area_loading").$wrapper;
 		$(`<span class="text-muted">${__("Loading Filters...")}</span>`).appendTo($loading);
 
-		this.filters = []
+		this.filters = [];
 
 		if (doctype == this.frm.doc.import_doctype) {
-			this.filters = JSON.parse(this.frm.doc.import_filters)
+			this.filters = JSON.parse(this.frm.doc.import_filters);
 		}
 
 		this.filter_group = new frappe.ui.FilterGroup({
@@ -115,7 +136,7 @@ class SubscriberImportDialog {
 			on_change: () => {},
 		});
 
-		this.filter_group.wrapper.find('.apply-filters').hide();
+		this.filter_group.wrapper.find(".apply-filters").hide();
 
 		frappe.model.with_doctype(doctype, () => {
 			this.filter_group.add_filters_to_filter_group(this.filters);
@@ -139,5 +160,4 @@ class SubscriberImportDialog {
 	show_field(fieldname) {
 		this.dialog.set_df_property(fieldname, "hidden", false);
 	}
-
 }

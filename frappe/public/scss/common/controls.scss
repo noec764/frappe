@@ -1,6 +1,8 @@
 @import "grid";
 @import "color_picker";
+@import "icon_picker";
 @import "datepicker";
+@import "phone_picker";
 
 // password
 .form-control[data-fieldtype="Password"] {
@@ -85,12 +87,33 @@ select.form-control {
 	&::placeholder {
 		color: var(--gray-500);
 	}
+
+	.action-btn {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		padding: 3px;
+		z-index: 3;
+	}
+
+	button.action-btn {
+		padding: 3px 5px;
+		background-color: var(--fg-color);
+	}
+
+	.link-btn {
+		@extend .action-btn;
+		background-color: none;
+		display: none;
+	}
 }
 
 .frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype='Table MultiSelect']) {
 	&.has-error {
 		input {
-			border: 1px solid var(--error-border);
+			border-width: 1px;
+			border-color: var(--error-border);
+			border-style: none none solid;
 
 			&:focus {
 				box-shadow: 0 0 0 $input-btn-focus-width var(--error-bg);
@@ -103,7 +126,9 @@ select.form-control {
 .frappe-control[data-fieldtype='Table MultiSelect'] {
 	&.has-error {
 		.control-input {
-			border: 1px solid var(--error-border);
+			border-width: 1px;
+			border-color: var(--error-border);
+			border-style: none none solid;
 			border-radius: var(--border-radius);
 		}
 	}
@@ -175,7 +200,6 @@ select.form-control {
 	.ace_print-margin {
 		background-color: var(--dark-border-color);
 	}
-
 	.ace_scrollbar {
 		z-index: 4;
 	}
@@ -240,6 +264,13 @@ textarea.form-control {
 	background-color: var(--control-bg);
 	border-radius: var(--border-radius);
 	padding: var(--padding-md);
+
+	svg > rect {
+		fill: var(--control-bg) !important;
+	}
+	svg > g {
+		fill: var(--text-color) !important;
+	}
 }
 
 @media (min-width: 768px) {
@@ -254,12 +285,31 @@ textarea.form-control {
 
 // rating
 .rating {
+	cursor: pointer;
 	--star-fill: var(--gray-300);
 	.star-hover {
 		--star-fill: var(--yellow-100);
 	}
 	.star-click {
 		--star-fill: var(--yellow-300);
+	}
+
+	.rating-box {
+		background-color: var(--gray-300);
+		border-radius: 5px;
+		font-size: 14px;
+		text-align: center;
+		padding: 2px;
+		cursor: pointer;
+		width: 25px;
+		height: 25px;
+		margin: 4px 2px;
+	}
+	.rating-hover {
+		background-color: var(--yellow-100);
+	}
+	.rating-click {
+		background-color: var(--yellow-300);
 	}
 }
 
@@ -269,15 +319,6 @@ textarea.form-control {
 
 .frappe-control[data-fieldtype="Data"] .control-input, .control-value {
 	position: relative;
-}
-
-.link-btn {
-	position: absolute;
-	top: 4px;
-	right: 4px;
-	padding: 3px;
-	display: none;
-	z-index: 3;
 }
 
 .phone-btn {
@@ -326,11 +367,10 @@ textarea.form-control {
 .duration-picker {
 	position: absolute;
 	z-index: 999;
-
 	border-radius: var(--border-radius);
 	box-shadow: var(--shadow-sm);
 	background: var(--popover-bg);
-
+	width: max-content;
 	&:after,
 	&:before {
 		border: solid transparent;
@@ -442,4 +482,11 @@ button.data-pill {
 	color: var(--text-color);
 	justify-content: space-between;
 	align-items: center;
+}
+
+.capture-remove-btn {
+	position: absolute;
+	top: 0;
+	right: 0;
+	cursor: pointer;
 }

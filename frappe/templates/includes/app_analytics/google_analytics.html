@@ -18,7 +18,7 @@
         || (event.target.textContent && event.target.textContent.trim())
         || event.target.title;
     if(!label) return;
-    var category = frappe.get_route().splice(0, 2).join("/");
+    var category = frappe.get_route().slice(0, 2).join("/");
     ga('send', 'event', category, label);
   });
 </script>

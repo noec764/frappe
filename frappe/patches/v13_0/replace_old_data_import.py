@@ -1,12 +1,13 @@
-# Copyright (c) 2020, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
-from __future__ import unicode_literals
+
 import frappe
 
 
 def execute():
-	if not frappe.db.table_exists("Data Import"): return
+	if not frappe.db.table_exists("Data Import"):
+		return
 
 	meta = frappe.get_meta("Data Import")
 	# if Data Import is the new one, return early

@@ -1,5 +1,4 @@
 html {
-	height: 100%;
 	background-color: var(--bg-color);
 }
 
@@ -91,6 +90,10 @@ a.badge-hover {
 	text-decoration: underline;
 }
 
+.pointer {
+	cursor: pointer;
+}
+
 .inline-block {
 	display: inline-block;
 }
@@ -140,6 +143,12 @@ pre {
 
 .hidden-lg {
 	@include media-breakpoint-up(md) {
+		display: none !important;
+	}
+}
+
+.hidden-xl {
+	@include media-breakpoint-up(lg) {
 		display: none !important;
 	}
 }
@@ -363,7 +372,7 @@ select.input-xs {
 }
 
 .frappe-control[data-fieldtype="Select"].frappe-control[data-fieldname="color"] {
-	select {
+	.color-select {
 		padding-left: 40px;
 	}
 
@@ -654,6 +663,41 @@ details > summary:focus {
 	display: none;
 }
 
+.highlight {
+	transition: 0.5s ease background-color;
+	box-shadow: var(--highlight-shadow) !important;
+}
+
+.dropdown-menu.small {
+	font-size: var(--text-sm);
+	min-width: 140px;
+	.dropdown-item {
+		padding: var(--padding-xs);
+	}
+}
+
+.diffview {
+	font-family: monospace;
+	white-space: pre;
+	word-wrap: break-word;
+	color: var(--text-color);
+}
+
+
+.diffview .insert,
+.diff-add {
+	background-color: var(--diff-added);
+}
+
+.diffview .delete,
+.diff-remove {
+	background-color: var(--diff-removed);
+}
+
+.chart-wrapper {
+	padding: 1em;
+}
+
 // REDESIGN TODO: Handling of broken images?
 // img.no-image:before {
 // 	.img-background();
@@ -672,3 +716,15 @@ details > summary:focus {
 // 	font-family: 'Octicons';
 // 	content: "\f00b";
 // }
+
+/*rtl:raw:
+.dropdown-menu {
+	right: auto;
+}
+.popover {
+	right: auto;
+}
+.chart-container {
+	direction: ltr;
+}
+*/

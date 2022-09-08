@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block page_content %}
-<article itemscope itemtype="http://schema.org/BlogPost">
+<article itemscope itemtype="http://schema.org/BlogPosting">
 	<div>
 		<h6 class='text-muted'>{{ _("By {0} on {1}").format(author, frappe.format_date(creation)) }}</h6>
 		<span class="indicator-pill {{ level_class }}">{{ _(level) }}</span>

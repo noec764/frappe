@@ -2,7 +2,17 @@ import Widget from "./base_widget.js";
 
 frappe.provide("frappe.utils");
 
-const indicator_colors = ["Gray", "Green", "Red", "Orange", "Pink", "Yellow", "Blue", "Cyan", "Teal"]
+const indicator_colors = [
+	"Gray",
+	"Green",
+	"Red",
+	"Orange",
+	"Pink",
+	"Yellow",
+	"Blue",
+	"Cyan",
+	"Teal",
+];
 export default class ShortcutWidget extends Widget {
 	constructor(opts) {
 		opts.shadow = true;
@@ -34,10 +44,10 @@ export default class ShortcutWidget extends Widget {
 				type: this.type,
 				is_query_report: this.is_query_report,
 				doctype: this.ref_doctype,
-				doc_view: this.doc_view
+				doc_view: this.doc_view,
 			});
 
-			let filters = this.get_doctype_filter();
+			let filters = frappe.utils.get_filter_from_json(this.stats_filter);
 			if (this.type == "DocType" && filters) {
 				frappe.route_options = filters;
 			}
@@ -49,7 +59,7 @@ export default class ShortcutWidget extends Widget {
 		if (this.in_customize_mode) return;
 
 		this.widget.addClass("shortcut-widget-box");
-		let filters = this.get_doctype_filter();
+		let filters = frappe.utils.get_filter_from_json(this.stats_filter);
 		if (this.type == "DocType" && filters) {
 			frappe.db
 				.count(this.link_to, {
@@ -57,15 +67,6 @@ export default class ShortcutWidget extends Widget {
 				})
 				.then((count) => this.set_count(count));
 		}
-	}
-
-	get_doctype_filter() {
-		let count_filter = new Function(`return ${this.stats_filter}`)();
-		if (count_filter) {
-			return count_filter;
-		}
-
-		return null;
 	}
 
 	set_count(count) {
@@ -78,7 +79,11 @@ export default class ShortcutWidget extends Widget {
 
 		this.action_area.empty();
 		const label = get_label();
-		let color = count ? (indicator_colors.includes(this.color) ? this.color.toLowerCase() : 'gray') : 'gray';
+		let color = count
+			? indicator_colors.includes(this.color)
+				? this.color.toLowerCase()
+				: "gray"
+			: "gray";
 		const buttons = $(`<div class="indicator-pill ellipsis ${color}">${label}</div>`);
 
 		buttons.appendTo(this.action_area);

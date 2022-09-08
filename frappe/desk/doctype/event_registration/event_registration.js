@@ -1,9 +1,8 @@
 // Copyright (c) 2020, Dokos SAS and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Event Registration', {
+frappe.ui.form.on("Event Registration", {
 	// refresh: function(frm) {
-
 	// }
 });
 
@@ -41,6 +40,8 @@ frappe.tour["Event Registration"] = [
 	{
 		fieldname: "contact",
 		title: __("Contact"),
-		description: __("The contact will be assigned automatically if you have already set a user. However, you can also select a contact directly instead of a user."),
-	}
-]
+		description: __(
+			"The contact will be assigned automatically if you have already set a user. However, you can also select a contact directly instead of a user."
+		),
+	},
+];

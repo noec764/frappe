@@ -9,7 +9,7 @@
 		{% if(addr_list[i].is_shipping_address) { %}
 		<span class="text-muted">({%= __("Shipping") %})</span>{% } %}
 
-		<a href="#Form/Address/{%= encodeURIComponent(addr_list[i].name) %}" class="btn btn-default btn-xs ml-auto">
+		<a href="/app/address/{%= encodeURIComponent(addr_list[i].name) %}" class="btn btn-default btn-xs ml-auto">
 			{%= __("Edit") %}</a>
 	</p>
 	<p>{%= addr_list[i].display %}</p>

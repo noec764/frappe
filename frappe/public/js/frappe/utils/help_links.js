@@ -1,1 +1,1 @@
-frappe.provide('frappe.help.help_links');
+frappe.provide("frappe.help.help_links");

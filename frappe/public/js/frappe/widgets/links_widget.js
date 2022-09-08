@@ -4,7 +4,7 @@ frappe.provide("frappe.utils");
 
 export default class LinksWidget extends Widget {
 	constructor(opts) {
-		opts.icon = opts.icon || 'file';
+		opts.icon = opts.icon || "file";
 		super(opts);
 	}
 
@@ -12,68 +12,92 @@ export default class LinksWidget extends Widget {
 		return {
 			name: this.name,
 			links: JSON.stringify(this.links),
+			link_count: this.links.length,
 			label: this.label,
 			hidden: this.hidden,
 		};
 	}
 
 	set_body() {
-		this.options = {};
-		this.options.links = this.links;
+		if (!this.options) {
+			this.options = {};
+			this.options.links = this.links;
+		}
 		this.widget.addClass("links-widget-box");
-		const is_link_disabled = item => {
+		const is_link_disabled = (item) => {
 			return item.dependencies && item.incomplete_dependencies;
 		};
-		const disabled_dependent = item => {
+		const disabled_dependent = (item) => {
 			return is_link_disabled(item) ? "disabled-link" : "";
 		};
 
-		const get_link_for_item = item => {
+		const get_indicator_color = (item) => {
+			if (item.open_count) {
+				return "red";
+			}
+			if (item.onboard) {
+				return item.count ? "blue" : "yellow";
+			}
+			return "gray";
+		};
+
+		const get_link_for_item = (item) => {
 			if (is_link_disabled(item)) {
-				const incomplete_dependencies = item.incomplete_dependencies.map(value => {
-					return __(value)
-				}).join(", ")
 				return `<span class="link-content ellipsis disabled-link">${
 					item.label ? item.label : item.name
 				}</span>
-						<div class="module-link-popover popover fade top in" role="tooltip" style="display: none;">
-							<div class="arrow"></div>
-							<h3 class="popover-title" style="display: none;"></h3>
-							<div class="popover-content" style="padding: 12px;">
-								<div class="small text-muted">${__("You need to create these first: ")}</div>
-		 						<div class="small">${incomplete_dependencies}</div>
-							</div>
-						</div>`;
+					<div class="module-link-popover popover fade top in" role="tooltip" style="display: none;">
+						<div class="arrow"></div>
+						<h3 class="popover-title" style="display: none;"></h3>
+						<div class="popover-content" style="padding: 12px;">
+							<div class="small text-muted">${__("You need to create these first: ")}</div>
+							<div class="small">${item.incomplete_dependencies.join(", ")}</div>
+						</div>
+					</div>`;
 			}
 
 			if (item.youtube_id)
-				return `<span class="link-content help-video-link ellipsis" data-youtubeid="${item.youtube_id}">
+				return `<span class="link-content help-video-link ellipsis" data-youtubeid="${
+					item.youtube_id
+				}">
 						${item.label ? item.label : item.name}</span>`;
 
-				return `<span class="link-content ellipsis">
-					${item.label ? item.label : item.name}</span>`;
+			return `<span class="link-content ellipsis">${
+				item.label ? item.label : item.name
+			}</span>`;
 		};
 
-		this.link_list = this.links.map(item => {
-			const route = frappe.utils.generate_route({
+		this.link_list = this.links.map((item) => {
+			const opts = {
 				name: item.link_to,
 				type: item.link_type,
 				doctype: item.doctype,
-				is_query_report: item.is_query_report
-			});
+				is_query_report: item.is_query_report,
+			};
 
-			return $(`<a href="${route}" class="link-item ellipsis ${item.onboard ? "onboard-spotlight" : ""
-			} ${disabled_dependent(item)}" type="${item.type}">
+			if (item.link_type.toLowerCase() == "report" && !item.is_query_report) {
+				opts.doctype = item.dependencies;
+			}
+
+			const route = frappe.utils.generate_route(opts);
+
+			return $(`<a href="${route}" class="link-item ellipsis ${
+				item.onboard ? "onboard-spotlight" : ""
+			} ${disabled_dependent(item)}" type="${item.type}" title="${
+				item.label ? item.label : item.name
+			}">
+					<span class="indicator-pill no-margin ${get_indicator_color(item)}"></span>
 					${get_link_for_item(item)}
-					${item.open_count ? `<span class="badge badge-info">${item.open_count}</span>` : ''}
 			</a>`);
 		});
-
-		this.link_list.forEach(link => link.appendTo(this.body));
+		if (this.in_customize_mode) {
+			this.body.empty();
+		}
+		this.link_list.forEach((link) => link.appendTo(this.body));
 	}
 
 	setup_events() {
-		this.link_list.forEach(link => {
+		this.link_list.forEach((link) => {
 			// Bind Popver Event
 			const link_label = link.find(".link-content");
 
@@ -86,7 +110,7 @@ export default class LinksWidget extends Widget {
 				});
 				link_label.mouseout(() => popover.hide());
 			} else {
-				link_label.click(event => {
+				link_label.click((event) => {
 					if (this.in_customize_mode) return;
 
 					if (link_label.hasClass("help-video-link")) {

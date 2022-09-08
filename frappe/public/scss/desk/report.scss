@@ -90,9 +90,11 @@
 }
 
 .report-view {
-	.dt-row:last-child:not(.dt-row-filter) {
-		.dt-cell {
-			border-bottom: 1px solid var(--border-color);
+	.result {
+		.dt-row:last-child:not(.dt-row-filter) {
+			.dt-cell {
+				border-bottom: 1px solid var(--border-color);
+			}
 		}
 	}
 }
@@ -103,12 +105,12 @@
 }
 
 .group-by-button.btn-primary-light {
-	color: var(--blue-500);
+	color: var(--text-on-blue);
 }
 
 .group-by-icon.active {
 	use {
-		stroke: var(--blue-500);
+		stroke: var(--text-on-blue);
 	}
 }
 
@@ -195,8 +197,8 @@
 		&.blue { color: var(--blue-500); }
 
 		// SIZE & SPACING
-		margin-top: 12px;
-		margin-bottom: 5px;
+		padding-top: 12px;
+		padding-bottom: 5px;
 
 		// LAYOUT
 		text-align: center;

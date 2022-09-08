@@ -1,12 +1,10 @@
-# -*- coding: utf-8 -*-
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# See license.txt
-from __future__ import unicode_literals
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
-import frappe
-import unittest
+from frappe.tests.utils import FrappeTestCase
 
 # test_records = frappe.get_test_records('Email Unsubscribe')
 
-class TestEmailUnsubscribe(unittest.TestCase):
+
+class TestEmailUnsubscribe(FrappeTestCase):
 	pass

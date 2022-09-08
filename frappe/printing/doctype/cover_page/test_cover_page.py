@@ -1,10 +1,9 @@
-# -*- coding: utf-8 -*-
 # Copyright (c) 2021, Dokos SAS and Contributors
-# See license.txt
-from __future__ import unicode_literals
+# License: MIT. See LICENSE
 
-import frappe
-import unittest
 
-class TestCoverPage(unittest.TestCase):
+from frappe.tests.utils import FrappeTestCase
+
+
+class TestCoverPage(FrappeTestCase):
 	pass

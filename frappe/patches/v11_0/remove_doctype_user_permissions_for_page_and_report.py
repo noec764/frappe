@@ -1,8 +1,9 @@
-# Copyright (c) 2019, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
-from __future__ import unicode_literals
+
 import frappe
 
+
 def execute():
-	frappe.delete_doc_if_exists("DocType", "User Permission for Page and Report") 
+	frappe.delete_doc_if_exists("DocType", "User Permission for Page and Report")

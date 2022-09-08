@@ -1,5 +1,6 @@
 import frappe
 
+
 def execute():
 	if not frappe.get_meta("Communication").has_field("seen_internally"):
 		return

@@ -21,6 +21,7 @@
   "website_theme_image_link",
   "brand",
   "banner_image",
+  "splash_image",
   "brand_html",
   "set_banner_from_image",
   "favicon",
@@ -42,6 +43,7 @@
   "copyright",
   "address",
   "footer_items",
+  "footer_powered",
   "footer_template",
   "footer_template_values",
   "edit_footer_template_values",
@@ -56,6 +58,8 @@
   "google_analytics_id",
   "google_analytics_anonymize_ip",
   "misc_section",
+  "app_name",
+  "app_logo",
   "subdomain",
   "disable_signup",
   "column_break_45",
@@ -64,13 +68,9 @@
   "head_html",
   "robots_txt",
   "route_redirects",
-  "section_break_39",
-  "chat_enable",
-  "chat_enable_from",
-  "chat_enable_to",
-  "chat_room_name",
-  "chat_welcome_message",
-  "chat_operators"
+  "account_deletion_settings_section",
+  "show_account_deletion_link",
+  "auto_account_deletion"
  ],
  "fields": [
   {
@@ -79,7 +79,7 @@
    "label": "Landing Page"
   },
   {
-   "description": "Link that is the website home page. Standard Links (index, login, products, blog, about, contact)",
+   "description": "Link that is the website home page. Standard Links (home, login, products, blog, about, contact)",
    "fieldname": "home_page",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -146,7 +146,6 @@
   },
   {
    "collapsible": 1,
-   "collapsible_depends_on": "top_bar_items",
    "fieldname": "top_bar",
    "fieldtype": "Section Break",
    "label": "Navbar"
@@ -193,7 +192,8 @@
    "description": "Address and other legal information you may want to put in the footer.",
    "fieldname": "address",
    "fieldtype": "Text Editor",
-   "label": "Address"
+   "label": "Address",
+   "max_height": "8rem"
   },
   {
    "fieldname": "footer_items",
@@ -227,7 +227,7 @@
    "collapsible": 1,
    "fieldname": "misc_section",
    "fieldtype": "Section Break",
-   "label": "Signup"
+   "label": "Login Page"
   },
   {
    "description": "An icon file with .ico extension. Should be 16 x 16 px. Generated using a favicon generator. [favicon-generator.org]",
@@ -236,9 +236,9 @@
    "label": "FavIcon"
   },
   {
-   "description": "Sub-domain provided by erpnext.com",
+   "description": "Sub-domain provided by Dokos Cloud",
    "fieldname": "subdomain",
-   "fieldtype": "Text",
+   "fieldtype": "Small Text",
    "label": "Subdomain",
    "read_only": 1
   },
@@ -266,51 +266,6 @@
    "fieldname": "robots_txt",
    "fieldtype": "Code",
    "label": "Robots.txt"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "section_break_39",
-   "fieldtype": "Section Break",
-   "label": "Chat"
-  },
-  {
-   "default": "0",
-   "fieldname": "chat_enable",
-   "fieldtype": "Check",
-   "label": "Enable Chat"
-  },
-  {
-   "depends_on": "chat_enable",
-   "fieldname": "chat_enable_from",
-   "fieldtype": "Time",
-   "label": "From"
-  },
-  {
-   "depends_on": "chat_enable",
-   "fieldname": "chat_enable_to",
-   "fieldtype": "Time",
-   "label": "To"
-  },
-  {
-   "default": "Support",
-   "depends_on": "chat_enable",
-   "fieldname": "chat_room_name",
-   "fieldtype": "Data",
-   "label": "Chat Room Name"
-  },
-  {
-   "default": "Hi, how may I help you?",
-   "depends_on": "chat_enable",
-   "fieldname": "chat_welcome_message",
-   "fieldtype": "Data",
-   "label": "Welcome Message"
-  },
-  {
-   "depends_on": "chat_enable",
-   "fieldname": "chat_operators",
-   "fieldtype": "Table",
-   "label": "Chat Operators",
-   "options": "Chat Room User"
   },
   {
    "fieldname": "route_redirects",
@@ -439,6 +394,45 @@
  "fieldname": "navbar_template_section",
  "fieldtype": "Section Break",
  "label": "Navbar Template"
+},
+{
+ "default": "Dodock",
+ "fieldname": "app_name",
+ "fieldtype": "Data",
+ "label": "App Name"
+},
+{
+ "fieldname": "app_logo",
+ "fieldtype": "Attach Image",
+ "label": "App Logo"
+},
+{
+ "collapsible": 1,
+ "fieldname": "account_deletion_settings_section",
+ "fieldtype": "Section Break",
+ "label": "Account Deletion Settings"
+},
+{
+ "default": "0",
+ "fieldname": "show_account_deletion_link",
+ "fieldtype": "Check",
+ "label": "Show Account Deletion Link in My Account Page"
+},
+{
+ "default": "72",
+ "fieldname": "auto_account_deletion",
+ "fieldtype": "Int",
+ "label": "Auto Account Deletion within (Hours)"
+},
+{
+ "fieldname": "footer_powered",
+ "fieldtype": "Small Text",
+ "label": "Footer \"Powered By\""
+},
+{
+ "fieldname": "splash_image",
+ "fieldtype": "Attach Image",
+ "label": "Splash Image"
   }
  ],
  "icon": "fa fa-cog",
@@ -446,8 +440,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "max_attachments": 10,
- "modified": "2021-04-14 17:39:56.609771",
+ "modified": "2022-05-27 12:33:29.019998",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Settings",
@@ -470,5 +463,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "ASC",
+ "states": [],
  "track_changes": 1
 }

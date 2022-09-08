@@ -1,23 +1,27 @@
-# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
-from __future__ import unicode_literals
 import frappe
-from frappe import _, throw
 import frappe.utils.user
-from frappe.permissions import check_admin_or_system_manager, rights
+from frappe import _
 from frappe.model import data_fieldtypes
+from frappe.permissions import rights
+
 
 def execute(filters=None):
-	user, doctype, show_permissions = filters.get("user"), filters.get("doctype"), filters.get("show_permissions")
+	frappe.only_for("System Manager")
 
-	if not validate(user, doctype): return [], []
+	user, doctype, show_permissions = (
+		filters.get("user"),
+		filters.get("doctype"),
+		filters.get("show_permissions"),
+	)
 
 	columns, fields = get_columns_and_fields(doctype)
 	data = frappe.get_list(doctype, fields=fields, as_list=True, user=user)
 
 	if show_permissions:
-		columns = columns + [frappe.unscrub(right) + ':Check:80' for right in rights]
+		columns = columns + [frappe.unscrub(right) + ":Check:80" for right in rights]
 
 		data = list(data)
 		for i, doc in enumerate(data):
@@ -26,21 +30,22 @@ def execute(filters=None):
 
 	return columns, data
 
-def validate(user, doctype):
-	# check if current user is System Manager
-	check_admin_or_system_manager()
-	return user and doctype
 
 def get_columns_and_fields(doctype):
-	columns = ["Name:Link/{}:200".format(doctype)]
-	fields = ["`name`"]
+	columns = [f"Name:Link/{doctype}:200"]
+	fields = ["name"]
 	for df in frappe.get_meta(doctype).fields:
 		if df.in_list_view and df.fieldtype in data_fieldtypes:
-			fields.append("`{0}`".format(df.fieldname))
-			fieldtype = "Link/{}".format(df.options) if df.fieldtype=="Link" else df.fieldtype
-			columns.append("{label}:{fieldtype}:{width}".format(label=df.label, fieldtype=fieldtype, width=df.width or 100))
+			fields.append(f"`{df.fieldname}`")
+			fieldtype = f"Link/{df.options}" if df.fieldtype == "Link" else df.fieldtype
+			columns.append(
+				"{label}:{fieldtype}:{width}".format(
+					label=df.label, fieldtype=fieldtype, width=df.width or 100
+				)
+			)
 
 	return columns, fields
+
 
 @frappe.whitelist()
 @frappe.validate_and_sanitize_search_inputs
@@ -48,9 +53,11 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user = filters.get("user")
 	user_perms = frappe.utils.user.UserPermissions(user)
 	user_perms.build_permissions()
-	can_read = user_perms.can_read # Does not include child tables
+	can_read = user_perms.can_read  # Does not include child tables
 
-	single_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"issingle": 1})]
+	single_doctypes = []
+	if filters.get("no_single_doctypes"):
+		single_doctypes = [d[0] for d in frappe.db.get_values("DocType", {"issingle": 1})]
 
 	out = []
 	for dt in can_read:

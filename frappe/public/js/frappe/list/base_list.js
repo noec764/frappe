@@ -1,12 +1,27 @@
 frappe.provide("frappe.views");
 
 frappe.views.BaseList = class BaseList {
+	static icon_map = {
+		Image: "image-view",
+		List: "list",
+		Report: "small-file",
+		Calendar: "calendar",
+		Gantt: "gantt",
+		Kanban: "kanban",
+		Dashboard: "dashboard",
+		Map: "map",
+	};
+
 	constructor(opts) {
 		Object.assign(this, opts);
 	}
 
 	show() {
-		frappe.run_serially([
+		return frappe.run_serially([
+			() => this.show_skeleton(),
+			() => this.fetch_meta(),
+			() => this.hide_skeleton(),
+			() => this.check_permissions(),
 			() => this.init(),
 			() => this.before_refresh(),
 			() => this.refresh(),
@@ -49,7 +64,13 @@ frappe.views.BaseList = class BaseList {
 
 		this.fields = [];
 		this.filters = [];
-		this.nested_set_conditions = ['descendants of', 'not descendants of', 'ancestors of', 'not ancestors of', 'equals or descendants of']
+		this.nested_set_conditions = [
+			"descendants of",
+			"not descendants of",
+			"ancestors of",
+			"not ancestors of",
+			"equals or descendants of",
+		];
 		this.sort_by = "modified";
 		this.sort_order = "desc";
 
@@ -66,16 +87,21 @@ frappe.views.BaseList = class BaseList {
 		];
 	}
 
+	get_list_view_settings() {
+		return frappe
+			.call("frappe.desk.listview.get_list_settings", {
+				doctype: this.doctype,
+			})
+			.then((doc) => (this.list_view_settings = doc.message || {}));
+	}
+
 	setup_fields() {
 		this.set_fields();
 		this.build_fields();
 	}
 
 	set_fields() {
-		let fields = [].concat(
-			frappe.model.std_fields_list,
-			this.meta.title_field
-		);
+		let fields = [].concat(frappe.model.std_fields_list, this.meta.title_field);
 
 		fields.forEach((f) => this._add_field(f));
 	}
@@ -84,15 +110,9 @@ frappe.views.BaseList = class BaseList {
 		return this.meta.fields.filter((df) => {
 			return (
 				(frappe.model.is_value_type(df.fieldtype) &&
-					(df.in_list_view &&
-						frappe.perm.has_perm(
-							this.doctype,
-							df.permlevel,
-							"read"
-						))) ||
-				(df.fieldtype === "Currency" &&
-					df.options &&
-					!df.options.includes(":")) ||
+					df.in_list_view &&
+					frappe.perm.has_perm(this.doctype, df.permlevel, "read")) ||
+				(df.fieldtype === "Currency" && df.options && !df.options.includes(":")) ||
 				df.fieldname === "status"
 			);
 		});
@@ -121,7 +141,7 @@ frappe.views.BaseList = class BaseList {
 			// df is passed
 			const df = fieldname;
 			fieldname = df.fieldname;
-			doctype = df.parent;
+			doctype = df.parent || doctype;
 		}
 
 		if (!this.fields) this.fields = [];
@@ -140,9 +160,7 @@ frappe.views.BaseList = class BaseList {
 	set_stats() {
 		this.stats = ["_user_tags"];
 		// add workflow field (as priority)
-		this.workflow_state_fieldname = frappe.workflow.get_state_fieldname(
-			this.doctype
-		);
+		this.workflow_state_fieldname = frappe.workflow.get_state_fieldname(this.doctype);
 		if (this.workflow_state_fieldname) {
 			if (!frappe.workflow.workflows[this.doctype]["override_status"]) {
 				this._add_field(this.workflow_state_fieldname);
@@ -151,13 +169,25 @@ frappe.views.BaseList = class BaseList {
 		}
 	}
 
+	fetch_meta() {
+		return frappe.model.with_doctype(this.doctype);
+	}
+
+	show_skeleton() {}
+
+	hide_skeleton() {}
+
+	check_permissions() {
+		return true;
+	}
+
 	setup_page() {
 		this.page = this.parent.page;
 		this.$page = $(this.parent);
-		this.page.main.addClass('frappe-card');
+		!this.hide_card_layout && this.page.main.addClass("frappe-card");
 		this.page.page_form.removeClass("row").addClass("flex");
 		this.hide_page_form && this.page.page_form.hide();
-		this.hide_sidebar && this.$page.addClass('no-list-sidebar');
+		this.hide_sidebar && this.$page.addClass("no-list-sidebar");
 		this.setup_page_head();
 	}
 
@@ -172,27 +202,23 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_view_menu() {
-		// TODO: add all icons
-		const icon_map = {
-			'Image': 'image-view',
-			'List': 'list',
-			'Report': 'small-file',
-			'Calendar': 'calendar',
-			'Gantt': 'gantt',
-			'Kanban': 'kanban',
-			'Dashboard': 'dashboard',
-			'Map': 'map',
-		};
-
 		if (frappe.boot.desk_settings.view_switcher) {
-			this.views_menu = this.page.add_custom_button_group(__('{0} View', [__(this.view_name)]), icon_map[this.view_name] || 'list');
+			/* @preserve
+			for translation, don't remove
+			__("List View") __("Report View") __("Dashboard View") __("Gantt View"),
+			__("Kanban View") __("Calendar View") __("Image View") __("Inbox View"),
+			__("Tree View") __("Map View") */
+			this.views_menu = this.page.add_custom_button_group(
+				__("{0} View", [__(this.view_name)]),
+				BaseList.icon_map[this.view_name] || "list"
+			);
 			this.views_list = new frappe.views.ListViewSelect({
 				doctype: this.doctype,
 				parent: this.views_menu,
 				page: this.page,
 				list_view: this,
 				sidebar: this.list_sidebar,
-				icon_map: icon_map
+				icon_map: BaseList.icon_map,
 			});
 		}
 	}
@@ -219,20 +245,21 @@ frappe.views.BaseList = class BaseList {
 	set_menu_items() {
 		this.set_default_secondary_action();
 
-		this.menu_items && this.menu_items.map((item) => {
-			if (item.condition && item.condition() === false) {
-				return;
-			}
-			const $item = this.page.add_menu_item(
-				item.label,
-				item.action,
-				item.standard,
-				item.shortcut
-			);
-			if (item.class) {
-				$item && $item.addClass(item.class);
-			}
-		});
+		this.menu_items &&
+			this.menu_items.map((item) => {
+				if (item.condition && item.condition() === false) {
+					return;
+				}
+				const $item = this.page.add_menu_item(
+					item.label,
+					item.action,
+					item.standard,
+					item.shortcut
+				);
+				if (item.class) {
+					$item && $item.addClass(item.class);
+				}
+			});
 	}
 
 	set_breadcrumbs() {
@@ -245,7 +272,6 @@ frappe.views.BaseList = class BaseList {
 			doctype: this.doctype,
 			stats: this.stats,
 			parent: this.$page.find(".layout-side-section"),
-			// set_filter: this.set_filter.bind(this),
 			page: this.page,
 			list_view: this,
 		});
@@ -280,9 +306,7 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	setup_list_wrapper() {
-		this.$frappe_list = $('<div class="frappe-list">').appendTo(
-			this.page.main
-		);
+		this.$frappe_list = $('<div class="frappe-list">').appendTo(this.page.main);
 	}
 
 	setup_filter_area() {
@@ -375,9 +399,10 @@ frappe.views.BaseList = class BaseList {
 				$this.addClass("btn-info");
 
 				this.start = 0;
-				this.page_length = $this.data().value;
+				this.page_length = this.selected_page_count = $this.data().value;
 			} else if ($this.is(".btn-more")) {
 				this.start = this.start + this.page_length;
+				this.page_length = this.selected_page_count || 20;
 			}
 			this.refresh();
 		});
@@ -385,9 +410,15 @@ frappe.views.BaseList = class BaseList {
 
 	get_fields() {
 		// convert [fieldname, Doctype] => tabDoctype.fieldname
-		return this.fields.map((f) =>
-			frappe.model.get_full_column_name(f[0], f[1])
-		);
+		return this.fields.map((f) => frappe.model.get_full_column_name(f[0], f[1]));
+	}
+
+	get_group_by() {
+		let name_field = this.fields && this.fields.find((f) => f[0] == "name");
+		if (name_field) {
+			return frappe.model.get_full_column_name(name_field[0], name_field[1]);
+		}
+		return null;
 	}
 
 	setup_view() {
@@ -395,21 +426,20 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	get_filter_value(fieldname) {
-		const filter = this.get_filters_for_args().filter(f => f[1] == fieldname)[0];
+		const filter = this.get_filters_for_args().filter((f) => f[1] == fieldname)[0];
 		if (!filter) return;
-		return {
-			'like': filter[3].replace(/^%?|%$/g, ''),
-			'not set': null
-		}[filter[2]] || filter[3];
+		return (
+			{
+				like: filter[3]?.replace(/^%?|%$/g, ""),
+				"not set": null,
+			}[filter[2]] || filter[3]
+		);
 	}
 
 	get_filters_for_args() {
 		// filters might have a fifth param called hidden,
 		// we don't want to pass that server side
-		return this.filter_area
-			? this.filter_area.get()
-			.map((filter) => filter.slice(0, 4))
-			: [];
+		return this.filter_area ? this.filter_area.get().map((filter) => filter.slice(0, 4)) : [];
 	}
 
 	get_args() {
@@ -421,6 +451,7 @@ frappe.views.BaseList = class BaseList {
 			start: this.start,
 			page_length: this.page_length,
 			view: this.view,
+			group_by: this.get_group_by(),
 		};
 	}
 
@@ -440,9 +471,15 @@ frappe.views.BaseList = class BaseList {
 	}
 
 	refresh() {
+		let args = this.get_call_args();
+		if (this.no_change(args)) {
+			// console.log('throttled');
+			return Promise.resolve();
+		}
+
 		this.freeze(true);
 		// fetch data from server
-		return frappe.call(this.get_call_args()).then((r) => {
+		return frappe.call(args).then((r) => {
 			// render
 			this.prepare_data(r);
 			this.toggle_result_area();
@@ -450,25 +487,46 @@ frappe.views.BaseList = class BaseList {
 			this.render();
 			this.after_render();
 			this.freeze(false);
+			this.reset_defaults();
 			if (this.settings.refresh) {
 				this.settings.refresh(this);
 			}
 		});
 	}
 
+	no_change(args) {
+		// returns true if arguments are same for the last 3 seconds
+		// this helps in throttling if called from various sources
+		if (this.last_args && JSON.stringify(args) === this.last_args) {
+			return true;
+		}
+		this.last_args = JSON.stringify(args);
+		setTimeout(() => {
+			this.last_args = null;
+		}, 3000);
+		return false;
+	}
+
 	prepare_data(r) {
 		let data = r.message || {};
-		data = !Array.isArray(data)
-			? frappe.utils.dict(data.keys, data.values)
-			: data;
+
+		// extract user_info for assignments
+		Object.assign(frappe.boot.user_info, data.user_info);
+		delete data.user_info;
+
+		data = !Array.isArray(data) ? frappe.utils.dict(data.keys, data.values) : data;
 
 		if (this.start === 0) {
 			this.data = data;
 		} else {
 			this.data = this.data.concat(data);
 		}
-
 		this.data = this.data.uniqBy((d) => d.name);
+	}
+
+	reset_defaults() {
+		this.page_length = this.page_length + this.start;
+		this.start = 0;
 	}
 
 	freeze() {
@@ -516,12 +574,15 @@ class FilterArea {
 	constructor(list_view) {
 		this.list_view = list_view;
 		this.list_view.page.page_form.append(`<div class="standard-filter-section flex"></div>`);
+
 		const filter_area = this.list_view.hide_page_form
 			? this.list_view.page.custom_actions
 			: this.list_view.page.page_form;
+
 		this.list_view.$filter_section = $('<div class="filter-section flex">').appendTo(
 			filter_area
-		)
+		);
+
 		this.$filter_list_wrapper = this.list_view.$filter_section;
 		this.trigger_refresh = true;
 		this.setup();
@@ -549,8 +610,7 @@ class FilterArea {
 	}
 
 	add(filters, refresh = true) {
-		if (!filters || (Array.isArray(filters) && filters.length === 0))
-			return Promise.resolve();
+		if (!filters || (Array.isArray(filters) && filters.length === 0)) return Promise.resolve();
 
 		if (typeof filters[0] === "string") {
 			// passed in the format of doctype, field, condition, value
@@ -558,13 +618,11 @@ class FilterArea {
 			filters = [filter];
 		}
 
-		filters = filters.filter((f) => {
-			return !this.exists(f);
-		});
+		filters = filters.filter((f) => !this.exists(f));
 
-		const { non_standard_filters, promise } = this.set_standard_filter(
-			filters
-		);
+		// standard filters = filters visible on list view
+		// non-standard filters = filters set by filter button
+		const { non_standard_filters, promise } = this.set_standard_filter(filters);
 
 		return promise
 			.then(() => {
@@ -621,14 +679,15 @@ class FilterArea {
 			out.promise = out.promise || Promise.resolve();
 			out.non_standard_filters = out.non_standard_filters || [];
 
+			// set in list view area if filters are present
+			// don't set like filter on link fields (gets reset)
 			if (
 				fields_dict[fieldname] &&
-				(condition === "=" || condition === "like" || condition === "descendants of")
+				(condition === "=" ||
+					(condition === "like" && fields_dict[fieldname]?.df?.fieldtype != "Link"))
 			) {
 				// standard filter
-				out.promise = out.promise.then(() =>
-					fields_dict[fieldname].set_value(value)
-				);
+				out.promise = out.promise.then(() => fields_dict[fieldname].set_value(value));
 			} else {
 				// filter out non standard filters
 				out.non_standard_filters.push(filter);
@@ -640,7 +699,7 @@ class FilterArea {
 	}
 
 	remove_filters(filters) {
-		filters.map(f => {
+		filters.map((f) => {
 			this.remove(f[1]);
 		});
 	}
@@ -677,12 +736,14 @@ class FilterArea {
 	}
 
 	make_standard_filters() {
-		this.standard_filters_wrapper = this.list_view.page.page_form.find('.standard-filter-section');
-		const context = this.list_view && this.list_view.doctype ? this.list_view.doctype : null
+		this.standard_filters_wrapper = this.list_view.page.page_form.find(
+			".standard-filter-section"
+		);
+		const context = this.list_view && this.list_view.doctype ? this.list_view.doctype : null;
 		let fields = [
 			{
 				fieldtype: "Data",
-				label: __("Name"),
+				label: __("ID"),
 				condition: "like",
 				fieldname: "name",
 				onchange: () => this.refresh_list_view(),
@@ -699,73 +760,67 @@ class FilterArea {
 
 		const doctype_fields = this.list_view.meta.fields;
 		const title_field = this.list_view.meta.title_field;
-		const standard_filter_fields = doctype_fields
-			.filter(
-				(df) =>
-					df.fieldname === title_field ||
-					(df.in_standard_filter &&
-						frappe.model.is_value_type(df.fieldtype))
-			)
 
-		fields = fields.concat(
-				standard_filter_fields.map(df => {
-					let options = df.options;
-					let condition = df.condition || "=";
-					let fieldtype = df.fieldtype;
-					if (
-						[
-							"Text",
-							"Small Text",
-							"Text Editor",
-							"HTML Editor",
-							"Data",
-							"Code",
-							"Read Only",
-						].includes(fieldtype)
-					) {
-						fieldtype = "Data";
-						condition = "like";
-					}
-					if (df.fieldtype === 'Link' && frappe.boot.nested_set_doctypes.includes(df.options)) {
-						condition = "equals or descendants of"
-					}
-					if (df.fieldtype == "Select" && df.options) {
-						if (typeof df.options == 'string') {
-							options = df.options.split("\n");
-							if (options.length > 0 && options[0] != "") {
-								options.unshift("");
-								options = options.join("\n");
-							}
-						} else if (typeof options == 'object') {
-							if (options.length > 0 && options[0].value) {
-								options.unshift("");
-							}
-						}
-					}
-					let default_value =
-						fieldtype === "Link"
-							? frappe.defaults.get_user_default(options)
-							: null;
-					if (["__default", "__global"].includes(default_value)) {
-						default_value = null;
-					}
-
-					return {
-						fieldtype: fieldtype,
-						label: __(df.label, null, context),
-						context: context,
-						options: options,
-						fieldname: df.fieldname,
-						condition: condition,
-						default: default_value,
-						onchange: () => this.refresh_list_view(),
-						ignore_link_validation: fieldtype === "Dynamic Link",
-						is_filter: 1,
-					};
-				})
+		const standard_filter_fields = doctype_fields.filter(
+			(df) =>
+				df.fieldname === title_field ||
+				(df.in_standard_filter && frappe.model.is_value_type(df.fieldtype))
 		);
 
-		fields.map(df => {
+		fields = fields.concat(
+			standard_filter_fields.map((df) => {
+				let options = df.options;
+				let condition = df.condition || "=";
+				let fieldtype = df.fieldtype;
+				if (
+					[
+						"Text",
+						"Small Text",
+						"Text Editor",
+						"HTML Editor",
+						"Data",
+						"Code",
+						"Read Only",
+					].includes(fieldtype)
+				) {
+					fieldtype = "Data";
+					condition = "like";
+				}
+				if (
+					df.fieldtype === "Link" &&
+					frappe.boot.nested_set_doctypes.includes(df.options)
+				) {
+					condition = "equals or descendants of";
+				}
+				if (df.fieldtype == "Select" && df.options) {
+					if (typeof df.options == "string") {
+						options = df.options.split("\n");
+						if (options.length > 0 && options[0] != "") {
+							options.unshift("");
+							options = options.join("\n");
+						}
+					} else if (typeof options == "object") {
+						if (options.length > 0 && options[0].value) {
+							options.unshift("");
+						}
+					}
+				}
+
+				return {
+					fieldtype: fieldtype,
+					label: __(df.label, null, context),
+					context: context,
+					options: options,
+					fieldname: df.fieldname,
+					condition: condition,
+					onchange: () => this.refresh_list_view(),
+					ignore_link_validation: fieldtype === "Dynamic Link",
+					is_filter: 1,
+				};
+			})
+		);
+
+		fields.map((df) => {
 			this.list_view.page.add_field(df, this.standard_filters_wrapper);
 		});
 	}
@@ -796,16 +851,15 @@ class FilterArea {
 		$(`<div class="filter-selector">
 			<button class="btn btn-default btn-sm filter-button">
 				<span class="filter-icon">
-					${frappe.utils.icon('filter')}
+					${frappe.utils.icon("filter")}
 				</span>
 				<span class="button-label hidden-xs">
 					${__("Filter")}
 				<span>
 			</button>
-		</div>`
-		).appendTo(this.$filter_list_wrapper);
+		</div>`).appendTo(this.$filter_list_wrapper);
 
-		this.filter_button = this.$filter_list_wrapper.find('.filter-button');
+		this.filter_button = this.$filter_list_wrapper.find(".filter-button");
 		this.filter_list = new frappe.ui.FilterGroup({
 			base_list: this.list_view,
 			parent: this.$filter_list_wrapper,
@@ -839,5 +893,4 @@ frappe.views.view_modes = [
 	"Tree",
 	"Map",
 ];
-frappe.views.is_valid = (view_mode) =>
-	frappe.views.view_modes.includes(view_mode);
+frappe.views.is_valid = (view_mode) => frappe.views.view_modes.includes(view_mode);

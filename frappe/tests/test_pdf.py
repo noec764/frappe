@@ -1,15 +1,18 @@
-# Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
-# MIT License. See license.txt
-from __future__ import unicode_literals
+# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# License: MIT. See LICENSE
 
+import io
 import unittest
 
-import frappe.utils.pdf as pdfgen
-import frappe, io, six
-from PyPDF2 import PdfFileReader
+from PyPDF2 import PdfReader
 
-#class TestPdfBorders(unittest.TestCase):
-class TestPdf(unittest.TestCase):
+import frappe
+import frappe.utils.pdf as pdfgen
+from frappe.tests.utils import FrappeTestCase
+
+
+# class TestPdfBorders(FrappeTestCase):
+class TestPdf(FrappeTestCase):
 	@property
 	def html(self):
 		return """<style>
@@ -35,19 +38,17 @@ class TestPdf(unittest.TestCase):
 
 	def test_read_options_from_html(self):
 		_, html_options = pdfgen.read_options_from_html(self.html)
-		self.assertTrue(html_options['margin-top'] == '0')
-		self.assertTrue(html_options['margin-left'] == '10')
-		self.assertTrue(html_options['margin-right'] == '0')
+		self.assertTrue(html_options["margin-top"] == "0")
+		self.assertTrue(html_options["margin-left"] == "10")
+		self.assertTrue(html_options["margin-right"] == "0")
 
 	# TODO: fix this test
 	@unittest.skip("Skipped in CI")
 	def test_pdf_encryption(self):
 		password = "qwe"
 		pdf = pdfgen.get_pdf(self.html, options={"password": password})
-		reader = PdfFileReader(io.BytesIO(pdf))
+		reader = PdfReader(io.BytesIO(pdf))
 		self.assertTrue(reader.isEncrypted)
-		if six.PY2:
-			password = frappe.safe_encode(password)
 		self.assertTrue(reader.decrypt(password))
 
 	# TODO: fix this test
