@@ -2,5 +2,7 @@
 // before the bundle finishes loading, due to imports (datetime.js) in the bundle
 // that depend on `moment`.
 import momentTimezone from 'moment-timezone/builds/moment-timezone-with-data.js';
-import 'moment/min/locales';
+import momentjs from "moment/min/moment-with-locales.js";
+
+window.momentjs = momentjs
 window.moment = momentTimezone;
