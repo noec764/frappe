@@ -42,6 +42,7 @@ def get_context(context):
 	context.for_test = "login.html"
 	context["title"] = "Login"
 	context["provider_logins"] = []
+	context["hide_login"] = True  # dont show login link on login page again.
 	context["disable_signup"] = cint(frappe.get_website_settings("disable_signup"))
 	context["disable_user_pass_login"] = cint(frappe.get_system_settings("disable_user_pass_login"))
 	context["logo"] = frappe.get_website_settings("app_logo") or frappe.get_hooks("app_logo_url")[-1]
