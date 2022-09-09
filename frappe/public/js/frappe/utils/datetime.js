@@ -8,8 +8,6 @@ frappe.defaultTimeFormat = "HH:mm:ss";
 frappe.defaultDatetimeFormat = frappe.defaultDateFormat + " " + frappe.defaultTimeFormat;
 moment.defaultFormat = frappe.defaultDateFormat;
 
-frappe.provide("frappe.datetime");
-
 $.extend(frappe.datetime, {
 	convert_to_user_tz: function (date, format) {
 		// format defaults to true
@@ -199,7 +197,7 @@ $.extend(frappe.datetime, {
 	},
 
 	global_date_format: function (d) {
-		var m = moment(d).locale(frappe.boot.lang);
+		var m = momentjs(d).locale(frappe.boot.lang);
 		if (m._f && m._f.indexOf("HH") !== -1) {
 			return m.format("Do MMMM YYYY, hh:mm A");
 		} else {

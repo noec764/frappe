@@ -82,9 +82,6 @@ def application(request: Request):
 	except HTTPException as e:
 		return e
 
-	except frappe.SessionStopped:
-		response = frappe.utils.response.handle_session_stopped()
-
 	except Exception as e:
 		response = handle_exception(e)
 
@@ -238,6 +235,9 @@ def handle_exception(e):
 		# handle ajax responses first
 		# if the request is ajax, send back the trace or error message
 		response = frappe.utils.response.report_error(http_status_code)
+
+	elif isinstance(e, frappe.SessionStopped):
+		response = frappe.utils.response.handle_session_stopped()
 
 	elif (
 		http_status_code == 500

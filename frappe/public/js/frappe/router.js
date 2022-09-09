@@ -346,6 +346,8 @@ frappe.router = {
 				}
 				new_route = [this.slug(route[1])];
 			}
+		} else if (view === "file") {
+			frappe.route_options = route.slice(2)
 		} else if (view === "form") {
 			new_route = [this.slug(route[1])];
 			if (route[2]) {
