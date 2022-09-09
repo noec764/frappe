@@ -254,7 +254,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	set_primary_action() {
-		if (this.can_create) {
+		if (this.can_create && !frappe.boot.read_only) {
 			const templates = [];
 			frappe.provide("frappe.slide_viewer_templates");
 			for (const template_id in frappe.slide_viewer_templates) {
