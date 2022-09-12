@@ -1,8 +1,8 @@
 # Copyright (c) 2022, Frappe Technologies and Contributors
 
 # See license.txt
-
 import time
+import unittest
 
 from rq import exceptions as rq_exc
 from rq.job import Job
@@ -13,6 +13,7 @@ from frappe.tests.utils import FrappeTestCase, timeout
 from frappe.utils.background_jobs import is_job_queued
 
 
+@unittest.skip("Skipped in CI")
 class TestRQJob(FrappeTestCase):
 
 	BG_JOB = "frappe.core.doctype.rq_job.test_rq_job.test_func"

@@ -1,11 +1,13 @@
 # Copyright (c) 2022, Frappe Technologies and Contributors
 # See license.txt
+import unittest
 
 import frappe
 from frappe.core.doctype.rq_worker.rq_worker import RQWorker
 from frappe.tests.utils import FrappeTestCase
 
 
+@unittest.skip("Skipped in CI")
 class TestRQWorker(FrappeTestCase):
 	def test_get_worker_list(self):
 		workers = RQWorker.get_list({})
