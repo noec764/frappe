@@ -24,7 +24,7 @@ def load_address_and_contact(doc, key=None):
 		address_list,
 		key=functools.cmp_to_key(
 			lambda a, b: (int(a.is_primary_address - b.is_primary_address))
-			or (1 if a.modified - b.modified else 0)
+			or (1 if (a.modified or 0) - (b.modified or 0) else 0)
 		),
 		reverse=True,
 	)
@@ -65,7 +65,7 @@ def load_address_and_contact(doc, key=None):
 		contact_list,
 		key=functools.cmp_to_key(
 			lambda a, b: (int(a.is_primary_contact - b.is_primary_contact))
-			or (1 if a.modified - b.modified else 0)
+			or (1 if (a.modified or 0) - (b.modified or 0) else 0)
 		),
 		reverse=True,
 	)
