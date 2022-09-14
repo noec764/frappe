@@ -294,7 +294,7 @@ frappe.PermissionEngine = class PermissionEngine {
 			.attr("data-permlevel", d.permlevel)
 			.attr("data-doctype", d.parent);
 
-		checkbox.find("label").css("text-transform", "capitalize");
+		// checkbox.find("label").css("text-transform", "capitalize");
 
 		return checkbox;
 	}
@@ -302,7 +302,7 @@ frappe.PermissionEngine = class PermissionEngine {
 	setup_if_owner(d, role_cell) {
 		// Keep for translations
 		// __("Only If Creator")
-		this.add_check(role_cell, d, "if_owner", "Only if Creator")
+		this.add_check(role_cell, d, "if_owner", "Only If Creator")
 			.removeClass("col-md-4")
 			.css({ "margin-top": "15px" });
 	}

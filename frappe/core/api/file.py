@@ -43,9 +43,11 @@ def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> d
 	start = cint(start)
 	page_length = cint(page_length)
 
+	home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
+
 	attachment_folder = frappe.db.get_value(
 		"File",
-		"Home/Attachments",
+		f"{home_folder}/Attachments",
 		["name", "file_name", "file_url", "is_folder", "modified"],
 		as_dict=1,
 	)
@@ -58,7 +60,7 @@ def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> d
 		page_length=page_length + 1,
 	)
 
-	if folder == "Home" and attachment_folder not in files:
+	if not start and folder == home_folder and attachment_folder not in files:
 		files.insert(0, attachment_folder)
 
 	return {"files": files[:page_length], "has_more": len(files) > page_length}
