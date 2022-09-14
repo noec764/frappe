@@ -5,6 +5,7 @@ input[type="checkbox"] {
 	width: var(--checkbox-size) !important;
 	height: var(--checkbox-size);
 	margin-right: var(--checkbox-right-margin) !important;
+	padding-right: var(--checkbox-right-padding) !important;
 	background-repeat: no-repeat;
 	background-position: center;
 	border: 1px solid var(--gray-400);
