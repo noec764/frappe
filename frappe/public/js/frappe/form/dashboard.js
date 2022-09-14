@@ -574,7 +574,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		args = Object.assign(
 			{
 				type: "line",
-				colors: ["green"],
+				colors: args.colors || ["green"],
 				truncateLegends: 1,
 				axisOptions: {
 					shortenYAxisNumbers: 1,
