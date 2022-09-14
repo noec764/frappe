@@ -291,6 +291,7 @@ $input-height: 28px !default;
 
 	// Checkbox
 	--checkbox-right-margin: var(--margin-xs);
+	--checkbox-right-padding: 12px;
 	--checkbox-size: 14px;
 	--checkbox-focus-shadow: 0 0 0 2px var(--gray-300);
 	--checkbox-gradient: linear-gradient(180deg, #4AC3F8 -124.51%, var(--primary) 100%);
