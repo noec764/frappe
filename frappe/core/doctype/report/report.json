@@ -128,7 +128,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.is_standard == 'Yes'",
    "fieldname": "roles",
    "fieldtype": "Table",
    "label": "Roles",
@@ -192,7 +191,7 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-08-12 04:18:20.516127",
+ "modified": "2022-09-15 13:37:24.531848",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Report",
