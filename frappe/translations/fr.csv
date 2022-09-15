@@ -3290,7 +3290,7 @@ Insufficient Permission for {0},Vous n'avez pas les autorisations suffisantes po
 Insufficient Permissions for deleting Report,Autorisations insuffisantes pour supprimer le rapport,
 Insufficient Permissions for editing Report,Permissions insuffisantes pour éditer le rapport,
 Insufficient attachment limit,Limite de pièces jointes insuffisante,
-Int,Int,
+Int,Nombre entier,
 Integration Request Service,Service de Demande d'Intégration,
 Integration Request,Demande d'Intégration,
 Integration Type,Type d'Intégration,
