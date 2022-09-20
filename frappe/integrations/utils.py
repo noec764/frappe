@@ -129,10 +129,10 @@ class PaymentGatewayController(Document):
 			if custom_redirect_to and custom_redirect_to != "no-redirection":
 				redirect_to = custom_redirect_to
 
-			redirect_url = self.redirect_url if self.get("redirect_url") else "payment-success"
+			redirect_url = self.redirect_url if self.get("redirect_url") else "/payment-success"
 
 		else:
-			redirect_url = "payment-failed"
+			redirect_url = "/payment-failed"
 
 		if redirect_to and redirect_to != "no-redirection":
 			redirect_url += "?" + urlencode({"redirect_to": redirect_to})
