@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, overload
+from typing import TYPE_CHECKING, Any, Callable, Literal, Optional
 
 import click
 from werkzeug.local import Local, release_local
@@ -1059,7 +1059,6 @@ def set_value(doctype, docname, fieldname, value=None):
 	return frappe.client.set_value(doctype, docname, fieldname, value)
 
 
-@overload
 def get_cached_doc(*args, **kwargs) -> "Document":
 	def _respond(doc, from_redis=False):
 		if isinstance(doc, dict):
