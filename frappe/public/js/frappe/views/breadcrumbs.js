@@ -24,6 +24,8 @@ frappe.breadcrumbs = {
 		Desk: "Tools",
 	},
 
+	workspace: {},
+
 	set_doctype_module(doctype, module) {
 		localStorage["preferred_breadcrumbs:" + doctype] = module;
 	},
@@ -129,7 +131,13 @@ frappe.breadcrumbs = {
 			breadcrumbs.module_info = frappe.get_module(breadcrumbs.module);
 
 			// set workspace
-			if (breadcrumbs.module_info && frappe.boot.module_page_map[breadcrumbs.module]) {
+			if (this.workspace[breadcrumbs.doctype] !== undefined) {
+				// get preferred module for breadcrumbs
+				breadcrumbs.workspace = this.workspace[breadcrumbs.doctype];
+			} else if (
+				breadcrumbs.module_info &&
+				frappe.boot.module_page_map[breadcrumbs.module]
+			) {
 				breadcrumbs.workspace = frappe.boot.module_page_map[breadcrumbs.module];
 			}
 		}

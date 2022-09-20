@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, overload
+from typing import TYPE_CHECKING, Any, Callable, Literal, Optional
 
 import click
 from werkzeug.local import Local, release_local
@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.2.0"
+__version__ = "3.3.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -228,7 +228,6 @@ def init(site: str, sites_path: str = ".", new_site: bool = False) -> None:
 	local.jloader = None
 	local.cache = {}
 	local.document_cache = {}
-	local.meta_cache = {}
 	local.form_dict = _dict()
 	local.preload_assets = {"style": [], "script": []}
 	local.session = _dict()
@@ -1060,21 +1059,9 @@ def set_value(doctype, docname, fieldname, value=None):
 	return frappe.client.set_value(doctype, docname, fieldname, value)
 
 
-@overload
-def get_cached_doc(doctype, docname, _allow_dict=True) -> dict:
-	...
-
-
-@overload
 def get_cached_doc(*args, **kwargs) -> "Document":
-	...
-
-
-def get_cached_doc(*args, **kwargs):
-	allow_dict = kwargs.pop("_allow_dict", False)
-
 	def _respond(doc, from_redis=False):
-		if not allow_dict and isinstance(doc, dict):
+		if isinstance(doc, dict):
 			local.document_cache[key] = doc = get_doc(doc)
 
 		elif from_redis:
@@ -1098,16 +1085,19 @@ def get_cached_doc(*args, **kwargs):
 	if not key:
 		key = get_document_cache_key(doc.doctype, doc.name)
 
-	local.document_cache[key] = doc
+	_set_document_in_cache(key, doc)
 
+	return doc
+
+
+def _set_document_in_cache(key: str, doc: "Document") -> None:
+	local.document_cache[key] = doc
 	# Avoid setting in local.cache since we're already using local.document_cache above
 	# Try pickling the doc object as-is first, else fallback to doc.as_dict()
 	try:
 		cache().hset("document_cache", key, doc, cache_locally=False)
 	except Exception:
 		cache().hset("document_cache", key, doc.as_dict(), cache_locally=False)
-
-	return doc
 
 
 def can_cache_doc(args) -> str | None:
@@ -1147,7 +1137,7 @@ def get_cached_value(
 	doctype: str, name: str, fieldname: str = "name", as_dict: bool = False
 ) -> Any:
 	try:
-		doc = get_cached_doc(doctype, name, _allow_dict=True)
+		doc = get_cached_doc(doctype, name)
 	except DoesNotExistError:  # noqa
 		clear_last_message()
 		return
@@ -1183,13 +1173,9 @@ def get_doc(*args, **kwargs) -> "Document":
 
 	doc = frappe.model.document.get_doc(*args, **kwargs)
 
-	# Replace cache
-	if key := can_cache_doc(args):
-		if key in local.document_cache:
-			local.document_cache[key] = doc
-
-		if cache().hexists("document_cache", key):
-			cache().hset("document_cache", key, doc.as_dict())
+	# Replace cache if stale one exists
+	if (key := can_cache_doc(args)) and cache().hexists("document_cache", key):
+		_set_document_in_cache(key, doc)
 
 	return doc
 

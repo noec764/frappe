@@ -52,7 +52,7 @@ class Workspace(Document):
 	@staticmethod
 	def get_module_page_map():
 		pages = frappe.get_all(
-			"Workspace", fields=["name", "module"], filters={"for_user": ""}, as_list=1
+			"Workspace", fields=["name", "module", "parent_page"], filters={"for_user": ""}, as_list=1
 		)
 
 		mapping = dict()
@@ -60,6 +60,8 @@ class Workspace(Document):
 			if page[0] not in mapping:
 				mapping[page[0]] = page[1]
 			if page[1] not in mapping:
+				mapping[page[1]] = page[0]
+			if page[1] in mapping and not page[2]:
 				mapping[page[1]] = page[0]
 
 		return mapping
