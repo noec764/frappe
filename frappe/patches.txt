@@ -1,4 +1,5 @@
 [pre_model_sync]
+frappe.patches.dokos.v3_0.force_reload_doctype_model
 execute:frappe.reload_doc('core', 'doctype', 'doctype_state', force=True) #2021-12-15
 frappe.patches.v12_0.remove_deprecated_fields_from_doctype #2022-04-29
 execute:frappe.utils.global_search.setup_global_search_table()

@@ -14,6 +14,7 @@
  "label": "Website",
  "links": [
   {
+   "columns": 0,
    "hidden": 0,
    "icon": "setting",
    "is_query_report": 0,
@@ -23,6 +24,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -34,6 +36,18 @@
    "type": "Link"
   },
   {
+   "columns": 4,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "E Commerce Settings",
+   "link_count": 0,
+   "link_to": "E Commerce Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -45,6 +59,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -56,6 +71,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -67,6 +83,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -78,6 +95,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "icon": "",
    "is_query_report": 0,
@@ -87,6 +105,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -98,6 +117,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -109,6 +129,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -120,6 +141,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "icon": "website",
    "is_query_report": 0,
@@ -129,6 +151,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -140,6 +163,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -151,6 +175,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -162,6 +187,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -173,6 +199,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -184,6 +211,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "icon": "website",
    "is_query_report": 0,
@@ -193,6 +221,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -204,6 +233,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "icon": "project",
    "is_query_report": 0,
@@ -213,6 +243,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -224,6 +255,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -235,8 +267,8 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-20 10:42:10.358661",
- "modified_by": "Administrator",
+ "modified": "2022-09-22 09:25:12.275674",
+ "modified_by": "thierry@dokos.io",
  "module": "Website",
  "name": "Website",
  "owner": "Administrator",
@@ -249,6 +281,7 @@
  "shortcuts": [
   {
    "color": "Green",
+   "columns": 0,
    "format": "{} Published",
    "label": "Blog Post",
    "link_to": "Blog Post",
@@ -257,6 +290,7 @@
   },
   {
    "color": "Green",
+   "columns": 0,
    "format": "{} Active",
    "label": "Blogger",
    "link_to": "Blogger",
@@ -265,6 +299,7 @@
   },
   {
    "color": "Green",
+   "columns": 0,
    "format": "{} Published",
    "label": "Web Page",
    "link_to": "Web Page",
@@ -272,11 +307,13 @@
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "Web Form",
    "link_to": "Web Form",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "Website Settings",
    "link_to": "Website Settings",
    "type": "DocType"
