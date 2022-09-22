@@ -11,7 +11,7 @@ frappe.ui.form.on("Integration Request", {
 				});
 			});
 
-			if (frm.doc.integration_type === "Webhook") {
+			if (["Subscription Notification", "Webhook"].includes(frm.doc.request_description)) {
 				frm.page.add_action_item(__("Retry processing the webhook"), () => {
 					frappe.call({ method: "retry_webhook", doc: frm.doc }).then((r) => {
 						frappe.show_alert({
@@ -23,7 +23,7 @@ frappe.ui.form.on("Integration Request", {
 				});
 			}
 		} else {
-			if (frm.doc.integration_type === "Webhook") {
+			if (["Subscription Notification", "Webhook"].includes(frm.doc.request_description)) {
 				frm.page.add_action_item(__("Reset the webhook"), () => {
 					frm.set_value("status", "Queued");
 					frm.set_value("reference_doctype", "");
