@@ -226,7 +226,7 @@ def get_chart_config(chart, filters, timespan, timegrain, from_date, to_date):
 
 	return {
 		"labels": [
-			format_date(get_period(r[0], timegrain))
+			format_date(get_period(r[0], timegrain), parse_day_first=True)
 			if timegrain in ("Daily", "Weekly")
 			else get_period(r[0], timegrain)
 			for r in result
@@ -431,6 +431,7 @@ class DashboardChart(Document):
 				json.loads(self.custom_options)
 			except ValueError as error:
 				frappe.throw(_("Invalid json added in the custom options: {0}").format(error))
+
 
 @frappe.whitelist()
 def get_parent_doctypes(child_type: str) -> list[str]:
