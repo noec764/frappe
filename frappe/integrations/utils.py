@@ -58,7 +58,7 @@ def create_request_log(
 	if integration_type == "Remote":
 		kwargs["is_remote_request"] = 1
 
-	elif integration_type in ("Subscription Notification", "Webhook"):
+	else:
 		kwargs["request_description"] = integration_type
 
 	reference_doctype = reference_docname = None
