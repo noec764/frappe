@@ -29,7 +29,9 @@ frappe.dashboard_utils = {
 							`<li>
 						<a class="dropdown-item" data-fieldname="${filter.fieldnames[i]}" data-value="${
 								option.value || option
-							}">${option.label || option}</a>
+							}" data-option="${encodeURIComponent(option.value || option)}">${__(
+								option.label || option
+							)}</a>
 					</li>`
 					)
 					.join("");
@@ -37,9 +39,11 @@ frappe.dashboard_utils = {
 				options_html = filter.options
 					.map(
 						(option) =>
-							`<li><a class="dropdown-item" data-value="${option.value || option}">${
+							`<li><a class="dropdown-item" data-value="${
+								option.value || option
+							}" data-option="${encodeURIComponent(option.label || option)}">${__(
 								option.label || option
-							}</a></li>`
+							)}</a></li>`
 					)
 					.join("");
 			}
@@ -59,12 +63,12 @@ frappe.dashboard_utils = {
 					fieldname = $el.attr("data-fieldname");
 				}
 
-				let selected_item = $el.text();
+				let selected_item = decodeURIComponent($el.data("option"));
 				if ($el.attr("data-value")) {
 					selected_item = $el.attr("data-value");
 				}
 				const selected_label = $el.text();
-				$el.parents(`.${button_class}`).find(".filter-label").text(selected_label);
+				$el.parents(`.${button_class}`).find(".filter-label").html(__(selected_item));
 				filter.action(selected_item, fieldname);
 			});
 		});
