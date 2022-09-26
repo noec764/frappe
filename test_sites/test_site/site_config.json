@@ -10,6 +10,7 @@
  "admin_password": "admin",
  "root_password": "test_dodock",
  "host_name": "http://test_site:8000",
+ "monitor": 1,
  "server_script_enabled": 1,
  "install_apps": [],
  "redis_cache": "redis://redis_cache:6379",
