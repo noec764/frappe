@@ -380,10 +380,10 @@ def format_duration_fields(data: frappe._dict) -> None:
 		if col.get("fieldtype") != "Duration":
 			continue
 
-	for row in data.result:
-		index = col.fieldname if isinstance(row, dict) else i
-		if row[index]:
-			row[index] = format_duration(row[index])
+		for row in data.result:
+			index = col.fieldname if isinstance(row, dict) else i
+			if row[index]:
+				row[index] = format_duration(row[index])
 
 
 def build_xlsx_data(data, visible_idx, include_indentation, ignore_visible_idx=False):
