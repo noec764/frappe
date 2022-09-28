@@ -638,9 +638,9 @@ frappe.views.Workspace = class Workspace {
 					},
 					callback: function (res) {
 						if (res.message) {
-							let message = __(
-								`Workspace <b>${old_item.title}</b> Edited Successfully`
-							);
+							let message = __("Workspace {0} Edited Successfully", [
+								old_item.title.bold(),
+							]);
 							frappe.show_alert({ message: message, indicator: "green" });
 						}
 					},
@@ -831,29 +831,37 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	delete_page(page) {
-		frappe.confirm(__("Are you sure you want to delete page {0}?", [page.title]), () => {
-			frappe.call({
-				method: "frappe.desk.doctype.workspace.workspace.delete_page",
-				args: { page: page },
-				callback: function (res) {
-					if (res.message) {
-						let page = res.message;
-						let message = `Workspace <b>${page.title}</b> Deleted Successfully`;
-						frappe.show_alert({ message: __(message), indicator: "green" });
-					}
-				},
-			});
+		frappe.confirm(
+			__("Are you sure you want to delete page {0}?", [page.title.bold()]),
+			() => {
+				frappe.call({
+					method: "frappe.desk.doctype.workspace.workspace.delete_page",
+					args: { page: page },
+					callback: function (res) {
+						if (res.message) {
+							let page = res.message;
+							let message = __("Workspace {0} Deleted Successfully", [
+								page.title.bold(),
+							]);
+							frappe.show_alert({ message: message, indicator: "green" });
+						}
+					},
+				});
 
-			this.page.clear_primary_action();
-			this.update_cached_values(page);
+				this.page.clear_primary_action();
+				this.update_cached_values(page);
 
-			if (this.current_page.name == page.name && this.current_page.public == page.public) {
-				frappe.set_route("/");
+				if (
+					this.current_page.name == page.name &&
+					this.current_page.public == page.public
+				) {
+					frappe.set_route("/");
+				}
+
+				this.make_sidebar();
+				this.show_sidebar_actions();
 			}
-
-			this.make_sidebar();
-			this.show_sidebar_actions();
-		});
+		);
 	}
 
 	duplicate_page(page) {
@@ -913,8 +921,8 @@ frappe.views.Workspace = class Workspace {
 						if (res.message) {
 							let new_page = res.message;
 							let message = __(
-								"Duplicate of <b>{0}</b> named as <b>{1}</b> is created successfully",
-								[page.title, new_page.title]
+								"Duplicate of {0} named as {1} is created successfully",
+								[page.title.bold(), new_page.title.bold()]
 							);
 							frappe.show_alert({ message: message, indicator: "green" });
 						}
@@ -1135,11 +1143,11 @@ frappe.views.Workspace = class Workspace {
 							},
 							callback: function (res) {
 								if (res.message) {
-									let message = __("Workspace <b>{0}</b> Created Successfully", [
-										new_page.title,
+									let message = __("Workspace {0} Created Successfully", [
+										new_page.title.bold(),
 									]);
 									frappe.show_alert({
-										message: __(message),
+										message: message,
 										indicator: "green",
 									});
 								}
@@ -1169,18 +1177,21 @@ frappe.views.Workspace = class Workspace {
 		let section = this.sidebar_categories[new_page.is_public];
 
 		if (to_pages && to_pages.filter((p) => p.title == new_page.title)[0]) {
-			message = `Page with title ${new_page.title} already exist.`;
+			message = __("Page with title {0} already exist.", [new_page.title.bold()]);
 		}
 
 		if (frappe.router.doctype_route_exist(frappe.router.slug(new_page.title))) {
-			message = "Doctype with same route already exist. Please choose different title.";
+			message = __("Doctype with same route already exist. Please choose different title.");
 		}
 
 		let child_pages = old_page && from_pages.filter((p) => p.parent_page == old_page.title);
 		if (child_pages) {
 			child_pages.every((child_page) => {
 				if (to_pages && to_pages.find((p) => p.title == child_page.title)) {
-					message = `One of the child page with name <b>${child_page.title}</b> already exist in <b>${section}</b> Section. Please update the name of the child page first before moving`;
+					message = __(
+						"One of the child page with name {0} already exist in {1} Section. Please update the name of the child page first before moving",
+						[child_page.title.bold(), section.bold()]
+					);
 					cur_dialog.hide();
 					return false;
 				}
