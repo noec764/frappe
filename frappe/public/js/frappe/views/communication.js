@@ -285,7 +285,8 @@ frappe.views.CommunicationComposer = class {
 				let content = content_field.get_value() || "";
 
 				content_field.set_value(`${reply.message}<br>${content}`);
-				subject_field.set_value(reply.subject);
+				// Keep this to allow empty subjects in email templates
+				reply.subject && subject_field.set_value(reply.subject);
 
 				me.reply_added = email_template;
 			}
