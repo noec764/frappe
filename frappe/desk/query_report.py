@@ -251,10 +251,9 @@ def run(
 		result = get_prepared_report_result(report, filters, dn, user)
 	else:
 		result = generate_report_result(report, filters, user, custom_columns, is_tree, parent_field)
+		add_data_to_monitor(report=report)
 
 	result["add_total_row"] = report.add_total_row and not result.get("skip_total_row", False)
-
-	add_data_to_monitor(report=report)
 
 	return result
 
