@@ -443,7 +443,7 @@ def msgprint(
 	if as_list and type(msg) in (list, tuple):
 		out.as_list = 1
 
-	if sys.stdin.isatty():
+	if sys.stdin and sys.stdin.isatty():
 		if isinstance(out.message, (list, tuple)):
 			msg = ""
 			for m in out.message:
