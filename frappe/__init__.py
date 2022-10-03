@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.3.1"
+__version__ = "3.4.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -443,7 +443,7 @@ def msgprint(
 	if as_list and type(msg) in (list, tuple):
 		out.as_list = 1
 
-	if sys.stdin.isatty():
+	if sys.stdin and sys.stdin.isatty():
 		if isinstance(out.message, (list, tuple)):
 			msg = ""
 			for m in out.message:

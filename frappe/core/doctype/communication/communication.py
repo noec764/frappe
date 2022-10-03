@@ -159,7 +159,7 @@ class Communication(Document, CommunicationEmailMixin):
 				"email_signature",
 			)
 			if self.sender
-			else None
+			else ""
 		)
 
 		signature = user_email_signature or frappe.db.get_value(
@@ -173,9 +173,9 @@ class Communication(Document, CommunicationEmailMixin):
 
 		soup = BeautifulSoup(signature, "html.parser")
 		html_signature = soup.find("div", {"class": "ql-editor read-mode"})
-		_signature = None
+		_signature = ""
 		if html_signature:
-			_signature = html_signature.renderContents()
+			_signature = str(html_signature.renderContents())
 
 		if (_signature or signature) not in self.content:
 			self.content = f'{self.content}</p><br><p class="signature">{signature}'

@@ -456,7 +456,7 @@ def get_site_base_path():
 
 
 def get_site_path(*path):
-	return get_path(base=get_site_base_path(), *path)
+	return get_path(*path, base=get_site_base_path())
 
 
 def get_files_path(*path, **kwargs):
@@ -552,7 +552,7 @@ def is_cli() -> bool:
 	try:
 		invoked_from_terminal = bool(os.get_terminal_size())
 	except Exception:
-		invoked_from_terminal = sys.stdin.isatty()
+		invoked_from_terminal = sys.stdin and sys.stdin.isatty()
 	return invoked_from_terminal
 
 

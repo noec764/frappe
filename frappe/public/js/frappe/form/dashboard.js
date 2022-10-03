@@ -49,6 +49,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 		});
 
 		this.transactions_area = $(`<div class="transactions"></div`);
+
 		this.links_area = this.make_section({
 			label: __("Connections"),
 			css_class: "form-links",
@@ -78,6 +79,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 		// clear custom
 		this.parent.find(".custom").remove();
+		// this.hide();
 	}
 
 	add_section(body_html, label = null, css_class = "custom", hidden = false) {
@@ -213,6 +215,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 	}
 
 	after_refresh() {
+		// show / hide new buttons (if allowed)
 		this.links_area.body.find(".btn-new").each((i, el) => {
 			if (this.frm.can_create($(el).attr("data-doctype"))) {
 				$(el).removeClass("hidden");
@@ -368,13 +371,9 @@ frappe.ui.form.Dashboard = class FormDashboard {
 			? this.data.non_standard_fieldnames[doctype] || this.data.fieldname
 			: this.data.fieldname;
 
-		if (
-			this.data.dynamic_links &&
-			this.data.dynamic_links[fieldname] &&
-			this.data.dynamic_links[fieldname][doctype]
-		) {
-			let dynamic_fieldname = this.data.dynamic_links[fieldname][doctype][1];
-			filter[dynamic_fieldname] = this.data.dynamic_links[fieldname][doctype][0];
+		if (this.data.dynamic_links && this.data.dynamic_links[fieldname]) {
+			let dynamic_fieldname = this.data.dynamic_links[fieldname][1];
+			filter[dynamic_fieldname] = this.data.dynamic_links[fieldname][0];
 		}
 
 		filter[fieldname] = this.frm.doc.name;
@@ -444,7 +443,7 @@ frappe.ui.form.Dashboard = class FormDashboard {
 	}
 
 	set_badge_count(doctype, open_count, count, names) {
-		var $link = $(this.transactions_area).find(
+		let $link = $(this.transactions_area).find(
 			'.document-link[data-doctype="' + doctype + '"]'
 		);
 
@@ -571,19 +570,16 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 		this.chart_area.show();
 		this.chart_area.body.empty();
-		args = Object.assign(
-			{
-				type: "line",
-				colors: args.colors || ["green"],
-				truncateLegends: 1,
-				axisOptions: {
-					shortenYAxisNumbers: 1,
-					numberFormatter: frappe.utils.format_chart_axis_number,
-				},
-				tooltipOptions: {},
+		args = Object.assign({
+			type: "line",
+			colors: args.colors || ["green"],
+			truncateLegends: 1,
+			axisOptions: {
+				shortenYAxisNumbers: 1,
+				numberFormatter: frappe.utils.format_chart_axis_number,
 			},
-			args
-		);
+			tooltipOptions: {},
+		});
 		this.show();
 
 		this.chart = new frappe.Chart(".form-graph", args);
