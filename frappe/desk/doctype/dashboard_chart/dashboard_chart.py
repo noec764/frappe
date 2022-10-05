@@ -300,13 +300,6 @@ def get_group_by_chart_config(chart, filters):
 		data = get_assigned_by_data(data)
 
 	if data:
-		if chart.number_of_groups and chart.number_of_groups < len(data):
-			other_count = 0
-			for i in range(chart.number_of_groups - 1, len(data)):
-				other_count += data[i]["count"]
-			data = data[0 : chart.number_of_groups - 1]
-			data.append({"name": _("Other"), "count": other_count})
-
 		chart_config = {
 			"labels": [item["name"] if item["name"] else _("Not Specified") for item in data],
 			"datasets": [{"name": chart.name, "values": [item["count"] for item in data]}],
