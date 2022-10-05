@@ -1,5 +1,6 @@
-import frappe
 import json
+
+import frappe
 
 def execute():
 	if frappe.db.exists("Social Login Key", "github"):

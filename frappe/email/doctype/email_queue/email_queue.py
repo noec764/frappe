@@ -640,7 +640,7 @@ class QueueBuilder:
 		)
 
 		mail.set_message_id(self.message_id, self.is_notification)
-		if self.read_receipt:
+		if cint(self.read_receipt):
 			mail.msg_root["Disposition-Notification-To"] = self.sender
 		if self.in_reply_to:
 			mail.set_in_reply_to(self.in_reply_to)
