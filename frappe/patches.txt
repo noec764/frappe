@@ -242,7 +242,7 @@ frappe.patches.v14_0.set_suspend_email_queue_default
 frappe.patches.v14_0.delete_payment_gateways
 frappe.patches.v14_0.different_encryption_key
 frappe.patches.v14_0.drop_unused_indexes
-frappe.patches.v14_0.add_manage_subscriptions_in_navbar_settings
+# frappe.patches.v14_0.add_manage_subscriptions_in_navbar_settings
 
 frappe.patches.dokos.v3_0.currency_symbol_location
 frappe.patches.dokos.v3_0.set_language_for_onboarding_modules
