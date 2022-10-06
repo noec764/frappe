@@ -1211,7 +1211,7 @@ class Document(BaseDocument):
 			}
 			frappe.publish_realtime("list_update", data, after_commit=True)
 
-	def db_set(self, fieldname, value=None, update_modified=True, notify=False, commit=False):
+	def db_set(self, fieldname, value=None, update_modified=False, notify=False, commit=False):
 		"""Set a value in the document object, update the timestamp and update the database.
 
 		WARNING: This method does not trigger controller validations and should
