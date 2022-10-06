@@ -288,7 +288,6 @@ function format_content_for_timeline(content) {
 }
 
 function get_user_link(user) {
-	const user = doc.owner;
 	const user_display_text = (frappe.user_info(user).fullname || "").bold();
 	return frappe.utils.get_form_link("User", user, true, user_display_text);
 }
