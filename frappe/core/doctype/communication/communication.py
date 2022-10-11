@@ -19,6 +19,7 @@ from frappe.core.utils import get_parent_doc
 from frappe.model.document import Document
 from frappe.utils import (
 	cint,
+	cstr,
 	parse_addr,
 	split_emails,
 	strip_html,
@@ -175,9 +176,9 @@ class Communication(Document, CommunicationEmailMixin):
 		html_signature = soup.find("div", {"class": "ql-editor read-mode"})
 		_signature = ""
 		if html_signature:
-			_signature = str(html_signature.renderContents())
+			_signature = html_signature.renderContents()
 
-		if (_signature or signature) not in self.content:
+		if (cstr(_signature) or signature) not in self.content:
 			self.content = f'{self.content}</p><br><p class="signature">{signature}'
 
 	def before_save(self):
