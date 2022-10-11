@@ -264,7 +264,7 @@ export default class BulkOperations {
 							docnames: docnames,
 							action: "update",
 							data: {
-								[fieldname]: value || null,
+								[fieldname]: value ?? null,
 							},
 						},
 					})
