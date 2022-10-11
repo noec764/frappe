@@ -25,7 +25,7 @@
 				</button>
 			</div>
 		</div>
-		<div v-if="url && !preview_loaded">Generating preview...</div>
+		<div v-if="url && !preview_loaded">{{ __("Generating preview...") }}</div>
 		<iframe
 			ref="iframe"
 			:src="url"
@@ -130,7 +130,7 @@ onMounted(() => {
 	margin-top: auto;
 	margin-bottom: 1.2rem;
 }
-.preview-control >>> .form-control {
+.preview-control :deep(.form-control) {
 	background: var(--control-bg-on-gray);
 }
 </style>
