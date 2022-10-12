@@ -405,7 +405,7 @@ def clear_cache():
 def get_messages_for_app(app, deduplicate=True, context=False):
 	"""Returns all messages (list) for a specified `app`"""
 	messages = []
-	modules = [frappe.unscrub(m) for m in frappe.local.app_modules[app]]
+	modules = frappe.get_all("Module Def", filters={"app_name": app}, pluck="name")
 
 	# doctypes
 	if modules:

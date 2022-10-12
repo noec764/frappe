@@ -465,4 +465,5 @@ Object.defineProperty(window, "show_alert", {
 		);
 		return frappe.show_alert;
 	},
+	configurable: true
 });
