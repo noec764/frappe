@@ -50,7 +50,7 @@ frappe.events.EventsPortalView = class EventsPortalView {
 			},
 			plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin],
 			locale: frappe.get_cookie("preferred_language") || frappe.boot.lang || "en",
-			timeZone: frappe.boot.timeZone || "UTC",
+			timeZone: frappe.boot.time_zone.system || "UTC",
 			events: function (info, callback) {
 				return me.getEvents(info, callback);
 			},

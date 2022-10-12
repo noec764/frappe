@@ -782,7 +782,18 @@ export default class Grid {
 				if (!this.df.data) {
 					this.df.data = this.get_data() || [];
 				}
-				this.df.data.push({ idx: this.df.data.length + 1, __islocal: true });
+				const new_row = { idx: this.df.data.length + 1, __islocal: true };
+				if (this.doctype) {
+					new_row.doctype = this.doctype;
+					frappe.model.set_default_values(new_row);
+				} else {
+					for (const df of this.docfields) {
+						if (df.default && df.fieldname) {
+							new_row[df.fieldname] = df.default;
+						}
+					}
+				}
+				this.df.data.push(new_row);
 				this.refresh();
 			}
 
@@ -1023,6 +1034,7 @@ export default class Grid {
 				Int: (val) => cint(val),
 				Check: (val) => cint(val),
 				Float: (val) => flt(val),
+				Currency: (val) => flt(val),
 			};
 
 			// upload

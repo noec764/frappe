@@ -160,7 +160,7 @@ frappe.ui.form.ControlMultiCheck = class ControlMultiCheck extends frappe.ui.for
 
 	get_select_buttons() {
 		return $(`
-		<div class="bulk-select-options">
+		<div class="bulk-select-options pb-4">
 			<button class="btn btn-xs btn-default select-all">
 				${__("Select All")}
 			</button>
