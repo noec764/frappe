@@ -5,6 +5,7 @@ frappe.provide("frappe.ui");
 frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
 	constructor(opts) {
 		super(opts);
+		this.dirty = false;
 		$.each(this.fields || [], function (i, f) {
 			if (!f.fieldname && f.label) {
 				f.fieldname = f.label.replace(/ /g, "_").toLowerCase();
@@ -154,6 +155,7 @@ frappe.ui.FieldGroup = class FieldGroup extends frappe.ui.form.Layout {
 				promises.push(this.set_value(key, dict[key]));
 			}
 		}
+
 		return Promise.all(promises);
 	}
 

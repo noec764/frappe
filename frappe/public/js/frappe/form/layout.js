@@ -456,9 +456,10 @@ frappe.ui.form.Layout = class Layout {
 				fieldobj.doc = me.doc;
 				fieldobj.doctype = me.doc.doctype;
 				fieldobj.docname = me.doc.name;
+				// Keep original df properties for API generated field groups
 				fieldobj.df =
-					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.name) ||
-					fieldobj.df;
+					fieldobj.df ||
+					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.name);
 			}
 			refresh && fieldobj.df && fieldobj.refresh && fieldobj.refresh();
 		}
@@ -614,7 +615,6 @@ frappe.ui.form.Layout = class Layout {
 
 		for (let fkey in fields) {
 			let f = fields[fkey];
-			f.dependencies_clear = true;
 			if (f.df.depends_on || f.df.mandatory_depends_on || f.df.read_only_depends_on) {
 				has_dep = true;
 				break;
