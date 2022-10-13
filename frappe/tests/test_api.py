@@ -274,3 +274,9 @@ class TestMethodAPI(FrappeAPITestCase):
 		self.assertEqual(response.json["message"], "Administrator")
 
 		authorization_token = None
+
+	def test_404s(self):
+		response = self.get("/api/rest", {"sid": self.sid})
+		self.assertEqual(response.status_code, 404)
+		response = self.get("/api/resource/User/NonExistent@s.com", {"sid": self.sid})
+		self.assertEqual(response.status_code, 404)
