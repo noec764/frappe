@@ -1,6 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
 
 import csv
 import os
@@ -13,15 +12,7 @@ from frappe.core.doctype.access_log.access_log import make_access_log
 from frappe.utils import cint, cstr, format_datetime, format_duration, formatdate, parse_json
 from frappe.utils.csvutils import UnicodeWriter
 
-reflags = {
-	"I": re.I,
-	"L": re.L,
-	"M": re.M,
-	"U": re.U,
-	"S": re.S,
-	"X": re.X,
-	"D": re.DEBUG,
-}
+reflags = {"I": re.I, "L": re.L, "M": re.M, "U": re.U, "S": re.S, "X": re.X, "D": re.DEBUG}
 
 
 def get_data_keys():
@@ -46,6 +37,7 @@ def export_data(
 	file_type="CSV",
 	template=False,
 	filters=None,
+	export_without_column_meta=False,
 ):
 	_doctype = doctype
 	if isinstance(_doctype, list):
@@ -57,6 +49,15 @@ def export_data(
 		filters=filters,
 		method=parent_doctype,
 	)
+
+	template_bool = template
+	if isinstance(template, str):
+		template_bool = template.lower() == "true"
+
+	export_without_column_meta_bool = export_without_column_meta
+	if isinstance(export_without_column_meta, str):
+		export_without_column_meta_bool = export_without_column_meta.lower() == "true"
+
 	exporter = DataExporter(
 		doctype=doctype,
 		parent_doctype=parent_doctype,
@@ -64,8 +65,9 @@ def export_data(
 		with_data=with_data,
 		select_columns=select_columns,
 		file_type=file_type,
-		template=template,
+		template=template_bool,
 		filters=filters,
+		export_without_column_meta=export_without_column_meta_bool,
 	)
 	exporter.build_response()
 
@@ -81,6 +83,7 @@ class DataExporter:
 		file_type="CSV",
 		template=False,
 		filters=None,
+		export_without_column_meta=False,
 	):
 		self.doctype = doctype
 		self.parent_doctype = parent_doctype
@@ -90,6 +93,7 @@ class DataExporter:
 		self.file_type = file_type
 		self.template = template
 		self.filters = filters
+		self.export_without_column_meta = export_without_column_meta
 		self.data_keys = get_data_keys()
 
 		self.prepare_args()
@@ -126,7 +130,10 @@ class DataExporter:
 		if self.template:
 			self.add_main_header()
 
-		self.writer.writerow([""])
+		# No need of empty row at the start
+		if not self.export_without_column_meta:
+			self.writer.writerow([""])
+
 		self.tablerow = [self.data_keys.doctype]
 		self.labelrow = [_("Column Labels:")]
 		self.fieldrow = [self.data_keys.columns]
@@ -319,12 +326,18 @@ class DataExporter:
 			return ""
 
 	def add_field_headings(self):
-		self.writer.writerow(self.tablerow)
+		if not self.export_without_column_meta:
+			self.writer.writerow(self.tablerow)
+
+		# Just include Labels in the first row
 		self.writer.writerow(self.labelrow)
-		self.writer.writerow(self.fieldrow)
-		self.writer.writerow(self.mandatoryrow)
-		self.writer.writerow(self.typerow)
-		self.writer.writerow(self.inforow)
+
+		if not self.export_without_column_meta:
+			self.writer.writerow(self.fieldrow)
+			self.writer.writerow(self.mandatoryrow)
+			self.writer.writerow(self.typerow)
+			self.writer.writerow(self.inforow)
+
 		if self.template:
 			self.writer.writerow([self.data_keys.data_separator])
 
@@ -343,11 +356,7 @@ class DataExporter:
 			order_by = f"`tab{self.parent_doctype}`.`lft` asc"
 		# get permitted data only
 		self.data = frappe.get_list(
-			self.doctype,
-			fields=["*"],
-			filters=self.filters,
-			limit_page_length=None,
-			order_by=order_by,
+			self.doctype, fields=["*"], filters=self.filters, limit_page_length=None, order_by=order_by
 		)
 
 		for doc in self.data:
