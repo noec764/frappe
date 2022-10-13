@@ -197,10 +197,8 @@ frappe.router = {
 			route = ["List", doctype_route.doctype, "List"];
 		}
 
-		if (doctype_route.doctype_layout) {
-			// set the layout
-			this.doctype_layout = doctype_route.doctype_layout;
-		}
+		// reset the layout to avoid using incorrect views
+		this.doctype_layout = doctype_route.doctype_layout;
 
 		return route;
 	},
@@ -347,7 +345,7 @@ frappe.router = {
 				new_route = [this.slug(route[1])];
 			}
 		} else if (view === "file") {
-			frappe.route_options = route.slice(2)
+			frappe.route_options = route.slice(2);
 		} else if (view === "form") {
 			new_route = [this.slug(route[1])];
 			if (route[2]) {
