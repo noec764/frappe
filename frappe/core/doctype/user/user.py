@@ -255,7 +255,7 @@ class User(Document):
 		)
 
 	def share_with_self(self):
-		frappe.share.add(
+		frappe.share.add_docshare(
 			self.doctype,
 			self.name,
 			self.name,

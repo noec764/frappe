@@ -122,7 +122,12 @@ def resolve_redirect(path, query_string=None):
 		if rule.get("match_with_query_string"):
 			path_to_match = path + "?" + frappe.safe_decode(query_string)
 
-		if re.match(pattern, path_to_match):
+		try:
+			match = re.match(pattern, path_to_match)
+		except re.error:
+			frappe.log_error("Broken Redirect: " + pattern)
+
+		if match:
 			redirect_to = re.sub(pattern, rule["target"], path_to_match)
 			frappe.flags.redirect_location = redirect_to
 			frappe.cache().hset("website_redirects", path_to_match, redirect_to)
