@@ -19,6 +19,7 @@
     "misc_section",
     "app_name",
     "disable_signup",
+    "custom_signup",
     "column_break_9",
     "app_logo",
     "section_break_6",
@@ -469,6 +470,15 @@
      "fieldname": "analytics_section",
      "fieldtype": "Section Break",
      "label": "Analytics"
+    },
+    {
+     "depends_on": "eval:!doc.disable_signup",
+     "fieldname": "custom_signup",
+     "fieldtype": "Link",
+     "label": "Custom signup form",
+     "options": "Web Form",
+     "read_only": 1,
+     "description": "Deprecated: This option will be removed in version 4. Use the 'signup_form_template' hook instead."
     }
    ],
    "icon": "fa fa-cog",
