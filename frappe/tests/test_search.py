@@ -2,6 +2,7 @@
 # License: MIT. See LICENSE
 
 import frappe
+from frappe import _
 from frappe.app import make_form_dict
 from frappe.desk.search import get_names_for_mentions, search_link, search_widget
 from frappe.tests.utils import FrappeTestCase
@@ -260,4 +261,4 @@ class TestWebsiteSearch(FrappeTestCase):
 
 		response = self.get("/search?q=b")
 		self.assertEqual(response.status_code, 200)
-		self.assertIn("Search Results", response.get_data(as_text=True))
+		self.assertIn(_("Search results for"), response.get_data(as_text=True))
