@@ -380,6 +380,10 @@ frappe.views.CommunicationComposer = class {
 			delete last_edited.email_template;
 		}
 
+		for (const fieldname of ["recipients", "cc", "bcc", "sender"]) {
+			delete last_edited[fieldname];
+		}
+
 		await this.dialog.set_values(last_edited);
 		this.content_set = true;
 	}
