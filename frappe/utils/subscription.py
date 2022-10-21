@@ -29,7 +29,13 @@ def enable_manage_subscription():
 	navbar_item, hidden = frappe.db.get_value(
 		"Navbar Item", {"item_label": "Manage Subscriptions"}, ["name", "hidden"]
 	)
-	if navbar_item and hidden:
+
+	if navbar_item and hidden and frappe.conf.subscription.get("login_url"):
 		doc = frappe.get_cached_doc("Navbar Item", navbar_item)
 		doc.hidden = False
+		doc.save()
+
+	elif navbar_item and not hidden and not frappe.conf.subscription.get("login_url"):
+		doc = frappe.get_cached_doc("Navbar Item", navbar_item)
+		doc.hidden = True
 		doc.save()
