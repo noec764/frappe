@@ -464,11 +464,6 @@ class FormTimeline extends BaseTimeline {
 			subject: communication_doc && communication_doc.subject,
 		};
 
-		if (communication_doc && reply_all) {
-			args.cc = communication_doc.cc;
-			args.bcc = communication_doc.bcc;
-		}
-
 		if (this.frm.doctype === "Communication") {
 			args.message = "";
 			args.last_email = this.frm.doc;
@@ -477,6 +472,18 @@ class FormTimeline extends BaseTimeline {
 		} else {
 			const comment_value = frappe.markdown(this.frm.comment_box.get_value());
 			args.message = strip_html(comment_value) ? comment_value : "";
+		}
+
+		if (communication_doc && reply_all) {
+			args.cc = communication_doc.cc;
+			args.bcc = communication_doc.bcc;
+
+			if (communication_doc && communication_doc.recipients != frappe.session.user_email) {
+				const recipients_list = communication_doc.recipients.split(",");
+				recipients_list.unshift(args.recipients);
+				recipients_list.filter((r) => r != frappe.session.user_email);
+				args.recipients = recipients_list.join(",");
+			}
 		}
 
 		new frappe.views.CommunicationComposer(args);
