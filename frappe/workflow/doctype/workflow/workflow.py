@@ -42,7 +42,7 @@ class Workflow(Document):
 			).save()
 
 			frappe.msgprint(
-				_("Created Custom Field {0} in {1}").format(self.workflow_state_field, self.document_type)
+				_("Created Custom Field {0} in {1}").format(self.workflow_state_field, _(self.document_type))
 			)
 
 	def update_default_workflow_status(self):
