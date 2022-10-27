@@ -6,15 +6,14 @@ Dodock is a web framework for enterprise applications.
 
 Comprehensive web application framework that uses Python and MariaDB on the server side and a tightly integrated client-side library. Built for [dokos](https://gitlab.com/dokos/dokos), based on [Frappe](https://frappe.io/).
 
-Dodock allows you to run these different applications from the :
+Dodock allows you to run different applications such as:
 
+- [Dokos](https://gitlab.com/dokos/dokos)
 - [Nextcloud](https://gitlab.com/dokos/nextcloud)
 - [E-signature](https://gitlab.com/dokos/esignature)
 - [Venue Federation](https://gitlab.com/dokos/venues-federation)
 - [Federated Venue](https://gitlab.com/dokos/federated-venue)
-- [Docli](https://gitlab.com/dokos/docli)
 
-This application is not specific to Dokos.
 
 ## :rocket: Dokos project
 
