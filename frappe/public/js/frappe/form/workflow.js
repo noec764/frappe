@@ -25,24 +25,24 @@ frappe.ui.form.States = class FormStates {
 				frappe.workflow.setup(me.frm.doctype);
 				var state = me.get_state();
 				var d = new frappe.ui.Dialog({
-					title: "Workflow: " + frappe.workflow.workflows[me.frm.doctype].name,
+					title: __("Workflow: ") + frappe.workflow.workflows[me.frm.doctype].name,
 				});
 
 				frappe.workflow.get_transitions(me.frm.doc).then((transitions) => {
 					const next_actions =
 						$.map(
 							transitions,
-							(d) => `${d.action.bold()} ${__("by Role")} ${d.allowed}`
+							(d) => `${__(d.action).bold()} ${__("by Role")} ${__(d.allowed)}`
 						).join(", ") || __("None: End of Workflow").bold();
 
-					const document_editable_by = frappe.workflow
-						.get_document_state(me.frm.doctype, state)
-						.allow_edit.bold();
+					const document_editable_by = __(
+						frappe.workflow.get_document_state(me.frm.doctype, state).allow_edit
+					).bold();
 
 					$(d.body)
 						.html(
 							`
-					<p>${__("Current status")}: ${state.bold()}</p>
+					<p>${__("Current status")}: ${__(state).bold()}</p>
 					<p>${__("Document is only editable by users with role")}: ${document_editable_by}</p>
 					<p>${__("Next actions")}: ${next_actions}</p>
 					<p>${__("{0}: Other permission rules may also apply", [__("Note").bold()])}</p>

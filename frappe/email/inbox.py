@@ -1,6 +1,7 @@
 import json
 
 import frappe
+from frappe.query_builder.functions import IfNull
 
 
 def get_email_accounts(user=None):
@@ -56,8 +57,14 @@ def create_email_flag_queue(names, action):
 		return
 
 	for name in json.loads(names or []):
-		uid, seen_status, email_account = frappe.db.get_value(
-			"Communication", name, ["ifnull(uid, -1)", "ifnull(seen, 0)", "email_account"]
+		communication = frappe.qb.DocType("Communication")
+		uid, seen_status, email_account = (
+			frappe.qb.from_(communication)
+			.select(
+				IfNull(communication.uid, -1), IfNull(communication.seen, 0), communication.email_account
+			)
+			.where(communication.name == name)
+			.run()[0]
 		)
 
 		# can not mark email SEEN or UNSEEN without uid
