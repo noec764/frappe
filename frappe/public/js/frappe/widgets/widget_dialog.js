@@ -398,28 +398,22 @@ class ShortcutDialog extends WidgetDialog {
 					if (this.dialog.get_value("type") == "DocType") {
 						let doctype = this.dialog.get_value("link_to");
 
-						if (doctype && frappe.boot.single_types.includes(doctype)) {
-							this.hide_filters();
-						} else if (doctype) {
-							this.setup_filter(doctype);
-							this.show_filters();
-						}
+						frappe.model.with_doctype(doctype, () => {
+							let meta = frappe.get_meta(doctype);
 
-						const views = ["List", "Report Builder", "Dashboard", "New"];
-						if (frappe.boot.treeviews.includes(doctype)) views.push("Tree");
-						if (frappe.boot.calendars.includes(doctype)) views.push("Calendar");
-						if (doctype) {
-							frappe.model.with_doctype(doctype, () => {
-								const meta = frappe.get_meta(doctype);
-								if (
-									meta.fields.filter((f) => f.fieldtype === "Geolocation").length
-								) {
-									views.push("Map");
-								}
-							});
-						}
+							if (doctype && frappe.boot.single_types.includes(doctype)) {
+								this.hide_filters();
+							} else if (doctype) {
+								this.setup_filter(doctype);
+								this.show_filters();
+							}
 
-						this.dialog.set_df_property("doc_view", "options", views.join("\n"));
+							const views = ["List", "Report Builder", "Dashboard", "New"];
+							if (meta.is_tree === "Tree") views.push("Tree");
+							if (frappe.boot.calendars.includes(doctype)) views.push("Calendar");
+
+							this.dialog.set_df_property("doc_view", "options", views.join("\n"));
+						});
 					} else {
 						this.hide_filters();
 					}
@@ -429,7 +423,7 @@ class ShortcutDialog extends WidgetDialog {
 				fieldtype: "Select",
 				fieldname: "doc_view",
 				label: "DocType View",
-				options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar\nMap",
+				options: "List\nReport Builder\nDashboard\nTree\nNew\nCalendar\nMap\nnKanban",
 				description: __(
 					"Which view of the associated DocType should this shortcut take you to?"
 				),

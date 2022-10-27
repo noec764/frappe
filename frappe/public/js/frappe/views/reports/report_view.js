@@ -193,6 +193,11 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	prepare_data(r) {
 		let data = r.message || {};
+
+		// extract user_info for assignments
+		Object.assign(frappe.boot.user_info, data.user_info);
+		delete data.user_info;
+
 		data = frappe.utils.dict(data.keys, data.values);
 
 		if (this.start === 0) {
@@ -1118,6 +1123,21 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 				const keywordValue = frappe.datetime.user_to_obj(keyword);
 				const cellValue = frappe.datetime.str_to_obj(cell.content);
 				return [+cellValue, +keywordValue];
+			};
+		}
+
+		if (docfield.fieldname === "_assign") {
+			docfield.formatter = (value) => {
+				let text = "";
+				const values = JSON.parse(value || "[]");
+				values.map((v, i) => {
+					text += frappe.boot.user_info[v] ? frappe.boot.user_info[v].fullname : v;
+					if (i < values.length - 1) {
+						text += ", ";
+					}
+				});
+
+				return text;
 			};
 		}
 

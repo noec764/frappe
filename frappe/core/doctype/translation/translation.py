@@ -4,6 +4,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.translate import MERGED_TRANSLATION_KEY, USER_TRANSLATION_KEY
 from frappe.utils import is_html, strip_html_tags
 
 
@@ -23,4 +24,5 @@ class Translation(Document):
 
 
 def clear_user_translation_cache(lang):
-	frappe.cache().hdel("lang_user_translations", lang)
+	frappe.cache().hdel(USER_TRANSLATION_KEY, lang)
+	frappe.cache().hdel(MERGED_TRANSLATION_KEY, lang)

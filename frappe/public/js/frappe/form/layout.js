@@ -144,8 +144,16 @@ frappe.ui.form.Layout = class Layout {
 				fieldname: "__details",
 			};
 			let first_tab = this.fields[1].fieldtype === "Tab Break" ? this.fields[1] : null;
+
 			if (!first_tab) {
-				this.fields.splice(1, 0, default_tab);
+				this.fields.splice(0, 0, default_tab);
+			} else {
+				// reshuffle __newname field to accomodate under 1st Tab Break
+				let newname_field = this.fields.find((df) => df.fieldname === "__newname");
+				if (newname_field && newname_field.get_status(this) === "Write") {
+					this.fields.splice(0, 1);
+					this.fields.splice(1, 0, newname_field);
+				}
 			}
 		}
 
@@ -457,9 +465,13 @@ frappe.ui.form.Layout = class Layout {
 				fieldobj.doctype = me.doc.doctype;
 				fieldobj.docname = me.doc.name;
 				// Keep original df properties for API generated field groups
-				fieldobj.df =
-					fieldobj.df ||
-					frappe.meta.get_docfield(me.doc.doctype, fieldobj.df.fieldname, me.doc.name);
+				if (!fieldobj.df || (fieldobj.df.doctype && fieldobj.df.fieldname)) {
+					fieldobj.df = frappe.meta.get_docfield(
+						me.doc.doctype,
+						fieldobj.df.fieldname,
+						me.doc.name
+					);
+				}
 			}
 			refresh && fieldobj.df && fieldobj.refresh && fieldobj.refresh();
 		}
