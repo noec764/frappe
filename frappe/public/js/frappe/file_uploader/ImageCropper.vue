@@ -95,7 +95,7 @@ export default {
 					value: 16 / 9
 				},
 				{
-					label: __("Free"),
+					label: __("Free", null, "Image Cropper"),
 					value: NaN
 				}
 			];
