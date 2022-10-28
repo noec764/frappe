@@ -88,6 +88,7 @@ class File(Document):
 		if not self.is_folder:
 			# get_full_path validates file URL and name
 			full_path = self.get_full_path()
+			print(full_path)
 			self.validate_file_on_disk(full_path)
 
 		self.file_size = frappe.form_dict.file_size or self.file_size
@@ -277,6 +278,9 @@ class File(Document):
 
 		if full_path is None:
 			full_path = self.get_full_path()
+
+		if full_path.startswith(URL_PREFIXES):
+			return True
 
 		if not os.path.exists(full_path):
 			frappe.throw(_("File {0} does not exist").format(self.file_url), IOError)
