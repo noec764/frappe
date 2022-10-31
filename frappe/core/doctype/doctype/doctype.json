@@ -33,7 +33,6 @@
   "sb1",
   "naming_rule",
   "autoname",
-  "name_case",
   "allow_rename",
   "column_break_15",
   "description",
@@ -250,15 +249,6 @@
    "label": "Auto Name",
    "oldfieldname": "autoname",
    "oldfieldtype": "Data"
-  },
-  {
-   "depends_on": "eval:doc.naming_rule !== \"Autoincrement\"",
-   "fieldname": "name_case",
-   "fieldtype": "Select",
-   "label": "Name Case",
-   "oldfieldname": "name_case",
-   "oldfieldtype": "Select",
-   "options": "\nTitle Case\nUPPER CASE"
   },
   {
    "fieldname": "column_break_15",
@@ -741,7 +731,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2022-10-12 14:13:27.315351",
+ "modified": "2022-10-28 14:13:27.315351",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",
