@@ -159,11 +159,10 @@
  "icon": "fa fa-map-marker",
  "idx": 5,
  "links": [],
- "modified": "2022-04-27 18:56:55.645479",
+ "modified": "2022-10-27 18:56:55.645479",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address",
- "name_case": "Title Case",
  "owner": "Administrator",
  "permissions": [
   {
