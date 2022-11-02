@@ -49,6 +49,7 @@
 					position: absolute;
 					left: var(--padding-sm);
 					top: var(--padding-sm);
+					z-index: 1;
 
 					.list-row-checkbox {
 						&:before {
@@ -57,7 +58,6 @@
 
 						&:checked:before {
 							display: block;
-							z-index: 1;
 						}
 					}
 
