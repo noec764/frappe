@@ -309,7 +309,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 	}
 
-	make_menu_items() {
+	async make_menu_items() {
 		// Print
 		const me = this;
 		const p = this.frm.perm[0];
@@ -469,7 +469,15 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 
 		// Tour
-		if (Array.isArray(frappe.tour[this.frm.doctype])) {
+		const tour_exists = await frappe.db.get_value(
+			"Form Tour",
+			{ name: this.frm.doctype, language: frappe.boot.lang },
+			"name"
+		);
+		if (
+			Object.keys(tour_exists.message).length ||
+			Array.isArray(frappe.tour[this.frm.doctype])
+		) {
 			this.page.add_menu_item(
 				__("Show tour"),
 				function () {
