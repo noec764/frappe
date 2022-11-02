@@ -4,6 +4,8 @@
 import base64
 import json
 import os
+import shutil
+import tempfile
 import unittest
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
@@ -539,6 +541,34 @@ class TestFile(FrappeTestCase):
 			}
 		).insert()
 		assert test_file is not None
+
+	def test_symlinked_files_folder(self):
+		files_dir = os.path.abspath(get_files_path())
+		with convert_to_symlink(files_dir):
+			file = frappe.get_doc(
+				{
+					"doctype": "File",
+					"file_name": "symlinked_folder_test.txt",
+					"content": "42",
+				}
+			)
+			file.save()
+			file.content = ""
+			file._content = ""
+			file.save().reload()
+			self.assertIn("42", file.get_content())
+
+
+@contextmanager
+def convert_to_symlink(directory):
+	"""Moves a directory to temp directory and symlinks original path for testing"""
+	try:
+		new_directory = shutil.move(directory, tempfile.mkdtemp())
+		os.symlink(new_directory, directory)
+		yield
+	finally:
+		os.unlink(directory)
+		shutil.move(new_directory, directory)
 
 
 class TestAttachment(FrappeTestCase):
