@@ -2223,7 +2223,7 @@ def log_error(title=None, message=None, reference_doctype=None, reference_name=N
 		method=title,
 		reference_doctype=reference_doctype,
 		reference_name=reference_name,
-	).insert(ignore_permissions=True)
+	)
 
 	if flags.read_only:
 		error_log.deferred_insert()
