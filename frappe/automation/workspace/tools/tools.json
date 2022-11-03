@@ -14,6 +14,7 @@
  "label": "Tools",
  "links": [
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Tools",
@@ -22,6 +23,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -33,6 +35,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -44,6 +47,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -55,6 +59,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -66,6 +71,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -77,6 +83,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Email",
@@ -85,6 +92,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -96,6 +104,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -107,6 +116,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Automation",
@@ -115,6 +125,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -126,6 +137,18 @@
    "type": "Link"
   },
   {
+   "columns": 4,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Milestone Tracker",
+   "link_count": 0,
+   "link_to": "Milestone Tracker",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -137,6 +160,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -148,6 +172,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Event Streaming",
@@ -156,6 +181,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -167,6 +193,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -178,6 +205,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -189,6 +217,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -200,6 +229,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -211,7 +241,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-05-20 10:42:08.576412",
+ "modified": "2022-11-03 15:59:56.884369",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Tools",
@@ -224,26 +254,31 @@
  "sequence_id": 26.0,
  "shortcuts": [
   {
+   "columns": 0,
    "label": "ToDo",
    "link_to": "ToDo",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "Note",
    "link_to": "Note",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "File",
    "link_to": "File",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "Assignment Rule",
    "link_to": "Assignment Rule",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "label": "Auto Repeat",
    "link_to": "Auto Repeat",
    "type": "DocType"
