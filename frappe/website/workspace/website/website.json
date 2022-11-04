@@ -36,17 +36,6 @@
    "type": "Link"
   },
   {
-   "columns": 4,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "E Commerce Settings",
-   "link_count": 0,
-   "link_to": "E Commerce Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
    "columns": 0,
    "dependencies": "",
    "hidden": 0,
@@ -267,8 +256,8 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-22 09:25:12.275674",
- "modified_by": "thierry@dokos.io",
+ "modified": "2022-11-03 16:10:43.002913",
+ "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
  "owner": "Administrator",

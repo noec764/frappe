@@ -802,6 +802,9 @@ class Document(BaseDocument):
 
 		Will also validate document transitions (Save > Submit > Cancel) calling
 		`self.check_docstatus_transition`."""
+
+		self.load_doc_before_save()
+
 		conflict = False
 		self._action = "save"
 		if not self.get("__islocal") and not self.meta.get("is_virtual"):
@@ -1108,7 +1111,6 @@ class Document(BaseDocument):
 
 		Will also update title_field if set"""
 
-		self.load_doc_before_save()
 		self.reset_seen()
 
 		# before_validate method should be executed before ignoring validations
