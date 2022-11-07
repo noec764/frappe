@@ -96,7 +96,8 @@ def application(request: Request):
 
 		log_request(request, response)
 		process_response(response)
-		frappe.db.close()
+		if frappe.db:
+			frappe.db.close()
 
 	return response
 
