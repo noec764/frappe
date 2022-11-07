@@ -1,6 +1,6 @@
 from enum import Enum
 from importlib import import_module
-from typing import Any, Callable, get_type_hints
+from typing import Any, Callable, get_type_hints  # noqa
 
 from pypika import Query  # noqa
 from pypika.queries import Column  # noqa
@@ -112,8 +112,7 @@ def patch_query_execute():
 				raise frappe.PermissionError("Only SELECT SQL allowed in scripting")
 		return query, param_collector.get_parameters()
 
-	query_class = get_attr(str(frappe.qb).split("'")[1])
-	builder_class = get_type_hints(query_class._builder).get("return")
+	builder_class = frappe.qb._BuilderClasss
 
 	if not builder_class:
 		raise BuilderIdentificationFailed
