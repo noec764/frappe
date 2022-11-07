@@ -466,11 +466,12 @@ frappe.ui.form.Layout = class Layout {
 				fieldobj.docname = me.doc.name;
 				// Keep original df properties for API generated field groups
 				if (!fieldobj.df || (fieldobj.df.doctype && fieldobj.df.fieldname)) {
-					fieldobj.df = frappe.meta.get_docfield(
-						me.doc.doctype,
-						fieldobj.df.fieldname,
-						me.doc.name
-					);
+					fieldobj.df =
+						frappe.meta.get_docfield(
+							me.doc.doctype,
+							fieldobj.df.fieldname,
+							me.doc.name
+						) || fieldobj.df;
 				}
 			}
 			refresh && fieldobj.df && fieldobj.refresh && fieldobj.refresh();
