@@ -1072,7 +1072,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 				{
 					fieldname: "sb_1",
 					fieldtype: "Section Break",
-					label: __("Y axis"),
+					label: __("Y Axis"),
 				},
 				{
 					fieldname: "y_axis_fields",
