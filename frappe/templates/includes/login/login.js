@@ -2,25 +2,26 @@
 // don't remove this line (used in test)
 
 window.custom_signup = "{{ custom_signup }}";
+window.disable_signup = {{ disable_signup and "true" or "false" }};
 
 window.login = {};
 
 window.verify = {};
 
-login.bind_events = function() {
-	$(window).on("hashchange", function() {
+login.bind_events = function () {
+	$(window).on("hashchange", function () {
 		login.route();
 	});
 
 
-	$(".form-login").on("submit", function(event) {
+	$(".form-login").on("submit", function (event) {
 		event.preventDefault();
 		var args = {};
 		args.cmd = "login";
 		args.usr = frappe.utils.xss_sanitise(($("#login_email").val() || "").trim());
 		args.pwd = $("#login_password").val();
 		args.device = "desktop";
-		if(!args.usr || !args.pwd) {
+		if (!args.usr || !args.pwd) {
 			frappe.msgprint('{{ _("Both login and password required") }}');
 			return false;
 		}
@@ -28,7 +29,7 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$(".form-signup").on("submit", function(event) {
+	$(".form-signup").on("submit", function (event) {
 		event.preventDefault();
 		var args = {};
 		args.cmd = "frappe.core.doctype.user.user.sign_up";
@@ -36,7 +37,7 @@ login.bind_events = function() {
 		args.redirect_to = frappe.utils.sanitise_redirect(frappe.utils.get_url_arg("redirect-to"));
 		args.first_name = frappe.utils.xss_sanitise(($("#signup_firstname").val() || "").trim());
 		args.last_name = frappe.utils.xss_sanitise(($("#signup_lastname").val() || "").trim());
-		if(!args.email || !validate_email(args.email) || !args.last_name || !args.first_name) {
+		if (!args.email || !validate_email(args.email) || !args.last_name || !args.first_name) {
 			login.set_status('{{ _("Valid email and name required") }}', 'red');
 			return false;
 		}
@@ -44,12 +45,12 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$(".form-forgot").on("submit", function(event) {
+	$(".form-forgot").on("submit", function (event) {
 		event.preventDefault();
 		var args = {};
 		args.cmd = "frappe.core.doctype.user.user.reset_password";
 		args.user = ($("#forgot_email").val() || "").trim();
-		if(!args.user) {
+		if (!args.user) {
 			login.set_status('{{ _("Valid Login id required.") }}', 'red');
 			return false;
 		}
@@ -57,7 +58,7 @@ login.bind_events = function() {
 		return false;
 	});
 
-	$(".toggle-password").click(function() {
+	$(".toggle-password").click(function () {
 		var input = $($(this).attr("toggle"));
 		if (input.attr("type") == "password") {
 			input.attr("type", "text");
@@ -69,42 +70,43 @@ login.bind_events = function() {
 	});
 
 	{% if ldap_settings and ldap_settings.enabled %}
-		$(".btn-ldap-login").on("click", function(){
-			var args = {};
-			args.cmd = "{{ ldap_settings.method }}";
-			args.usr = ($("#login_email").val() || "").trim();
-			args.pwd = $("#login_password").val();
-			args.device = "desktop";
-			if(!args.usr || !args.pwd) {
-				login.set_status('{{ _("Both login and password required") }}', 'red');
-				return false;
-			}
-			login.call(args);
+	$(".btn-ldap-login").on("click", function () {
+		var args = {};
+		args.cmd = "{{ ldap_settings.method }}";
+		args.usr = ($("#login_email").val() || "").trim();
+		args.pwd = $("#login_password").val();
+		args.device = "desktop";
+		if (!args.usr || !args.pwd) {
+			login.set_status('{{ _("Both login and password required") }}', 'red');
 			return false;
-		});
+		}
+		login.call(args);
+		return false;
+	});
 	{% endif %}
 }
 
 
-login.route = function() {
+login.route = function () {
 	var route = window.location.hash.slice(1);
-	if(!route) route = "login";
+	if (!route) route = "login";
 	login[route]();
 }
 
 login.reset_sections = function (hide) {
-	if(hide || hide===undefined) {
+	if (hide || hide === undefined) {
 		$("section.for-login").toggle(false);
 		$("section.for-email-login").toggle(false);
 		$("section.for-forgot").toggle(false);
 		$("section.for-signup").toggle(false);
 	}
-	$('section:not(.signup-disabled) .indicator').each(function() {
-		$(this).removeClass().addClass('indicator blue modal-title').text($(this).attr('data-text'));
+	$('section:not(.signup-disabled) .indicator').each(function () {
+		$(this).removeClass().addClass('indicator').addClass('blue')
+			.text($(this).attr('data-text'));
 	});
 }
 
-login.login = function() {
+login.login = function () {
 	login.reset_sections();
 	$(".for-login").toggle(true);
 }
@@ -115,44 +117,46 @@ login.email = function () {
 	$("#login_email").focus();
 }
 
-login.steptwo = function() {
+login.steptwo = function () {
 	login.reset_sections();
 	$(".for-login").toggle(true);
 	$("#login_email").focus();
 }
 
-login.forgot = function() {
+login.forgot = function () {
 	login.reset_sections();
 	$(".for-forgot").toggle(true);
 	$("#forgot_email").focus();
 }
 
-login.signup = function() {
+login.signup = function () {
 	login.reset_sections();
 	window.custom_signup === "False" ? $(".for-signup").toggle(true) : window.location = `${custom_signup}?new=True`;
+	$(".for-signup").toggle(true);
 	$("#signup_fullname").focus();
 }
 
 
 // Login
-login.call = function(args, callback) {
+login.call = function (args, callback) {
 	login.set_status('{{ _("Verifying...") }}', 'blue');
 
 	return frappe.call({
 		type: "POST",
 		args: args,
 		callback: callback,
-		freeze: false,
+		freeze: true,
 		statusCode: login.login_handlers
 	});
 }
 
-login.set_status = function(message, color) {
-	$('section:visible .indicator')
-		.removeClass().addClass('indicator modal-title').addClass(color).text(message)
+login.set_status = function (message, color) {
+	$('section:visible .btn-primary').text(message)
+	if (color == "red") {
+		$('section:visible .page-card-body').addClass("invalid");
+	}
 }
-
-login.set_invalid = function(message) {
+login.set_invalid = function (message) {
 	$(".login-content.page-card").addClass('invalid-login');
 	setTimeout(() => {
 		$(".login-content.page-card").removeClass('invalid-login');
@@ -161,16 +165,16 @@ login.set_invalid = function(message) {
 	$("#login_password").focus();
 }
 
-login.login_handlers = (function() {
-	var get_error_handler = function(default_message) {
-		return function(xhr, data) {
-			if(xhr.responseJSON) {
+login.login_handlers = (function () {
+	var get_error_handler = function (default_message) {
+		return function (xhr, data) {
+			if (xhr.responseJSON) {
 				data = xhr.responseJSON;
 			}
 
 			var message = default_message;
 			if (data._server_messages) {
-				message = ($.map(JSON.parse(data._server_messages || '[]'), function(v) {
+				message = ($.map(JSON.parse(data._server_messages || '[]'), function (v) {
 					// temp fix for messages sent as dict
 					try {
 						return JSON.parse(v).message;
@@ -180,7 +184,7 @@ login.login_handlers = (function() {
 				}) || []).join('<br>') || default_message;
 			}
 
-			if(message===default_message) {
+			if (message === default_message) {
 				login.set_invalid(message);
 			} else {
 				login.reset_sections(false);
@@ -190,45 +194,45 @@ login.login_handlers = (function() {
 	}
 
 	var login_handlers = {
-		200: function(data) {
-			if(data.message == 'Logged In'){
+		200: function (data) {
+			if (data.message == 'Logged In') {
 				login.set_status('{{ _("Success") }}', 'green');
 				document.body.innerHTML = `{% include "templates/includes/splash_screen.html" %}`;
 				window.location.href = frappe.utils.sanitise_redirect(frappe.utils.get_url_arg("redirect-to")) || data.home_page;
-			} else if(data.message == 'Password Reset'){
+			} else if (data.message == 'Password Reset') {
 				window.location.href = frappe.utils.sanitise_redirect(data.redirect_to);
-			} else if(data.message=="No App") {
+			} else if (data.message == "No App") {
 				login.set_status("{{ _("Success") }}", 'green');
-				if(localStorage) {
+				if (localStorage) {
 					var last_visited =
 						localStorage.getItem("last_visited")
 						|| frappe.utils.sanitise_redirect(frappe.utils.get_url_arg("redirect-to"));
 					localStorage.removeItem("last_visited");
 				}
 
-				if(data.redirect_to) {
+				if (data.redirect_to) {
 					window.location.href = frappe.utils.sanitise_redirect(data.redirect_to);
 				}
 
-				if(last_visited && last_visited != "/login") {
+				if (last_visited && last_visited != "/login") {
 					window.location.href = last_visited;
 				} else {
 					window.location.href = data.home_page;
 				}
-			} else if(window.location.hash === '#forgot') {
-				if(data.message==='not found') {
+			} else if (window.location.hash === '#forgot') {
+				if (data.message === 'not found') {
 					login.set_status('{{ _("Not a valid user") }}', 'red');
-				} else if (data.message=='not allowed') {
+				} else if (data.message == 'not allowed') {
 					login.set_status('{{ _("Not Allowed") }}', 'red');
-				} else if (data.message=='disabled') {
+				} else if (data.message == 'disabled') {
 					login.set_status('{{ _("Not Allowed: Disabled User") }}', 'red');
 				} else {
 					login.set_status('{{ _("Instructions Emailed") }}', 'green');
 				}
 
 
-			} else if(window.location.hash === '#signup') {
-				if(cint(data.message[0])==0) {
+			} else if (window.location.hash === '#signup') {
+				if (cint(data.message[0]) == 0) {
 					login.set_status(data.message[1], 'red');
 				} else {
 					login.set_status('{{ _("Success") }}', 'green');
@@ -238,16 +242,16 @@ login.login_handlers = (function() {
 			}
 
 			//OTP verification
-			if(data.verification && data.message != 'Logged In') {
+			if (data.verification && data.message != 'Logged In') {
 				login.set_status('{{ _("Success") }}', 'green');
 
-				document.cookie = "tmp_id="+data.tmp_id;
+				document.cookie = "tmp_id=" + data.tmp_id;
 
-				if (data.verification.method == 'OTP App'){
+				if (data.verification.method == 'OTP App') {
 					continue_otp_app(data.verification.setup, data.verification.qrcode);
-				} else if (data.verification.method == 'SMS'){
+				} else if (data.verification.method == 'SMS') {
 					continue_sms(data.verification.setup, data.verification.prompt);
-				} else if (data.verification.method == 'Email'){
+				} else if (data.verification.method == 'Email') {
 					continue_email(data.verification.setup, data.verification.prompt);
 				}
 			}
@@ -257,9 +261,9 @@ login.login_handlers = (function() {
 	};
 
 	return login_handlers;
-} )();
+})();
 
-frappe.ready(function() {
+frappe.ready(function () {
 
 	login.bind_events();
 
@@ -273,14 +277,14 @@ frappe.ready(function() {
 	$(document).trigger('login_rendered');
 });
 
-var verify_token =  function(event) {
-	$(".form-verify").on("submit", function(eventx) {
+var verify_token = function (event) {
+	$(".form-verify").on("submit", function (eventx) {
 		eventx.preventDefault();
 		var args = {};
 		args.cmd = "login";
 		args.otp = $("#login_token").val();
 		args.tmp_id = frappe.get_cookie('tmp_id');
-		if(!args.otp) {
+		if (!args.otp) {
 			frappe.msgprint('{{ _("Login token required") }}');
 			return false;
 		}
@@ -307,44 +311,44 @@ var request_otp = function (r) {
 	verify_token();
 }
 
-var continue_otp_app = function(setup, qrcode){
+var continue_otp_app = function (setup, qrcode) {
 	request_otp();
 	var qrcode_div = $('<div class="text-muted" style="padding-bottom: 15px;"></div>');
 
-	if (setup){
-		direction = $('<div>').attr('id','qr_info').html("{{ _('Enter Code displayed in OTP App.') }}");
+	if (setup) {
+		direction = $('<div>').attr('id', 'qr_info').html("{{ _('Enter Code displayed in OTP App.') }}");
 		qrcode_div.append(direction);
 		$('#otp_div').prepend(qrcode_div);
 	} else {
-		direction = $('<div>').attr('id','qr_info').html("{{ _('OTP setup using OTP App was not completed. Please contact Administrator.') }}");
+		direction = $('<div>').attr('id', 'qr_info').html("{{ _('OTP setup using OTP App was not completed. Please contact Administrator.') }}");
 		qrcode_div.append(direction);
 		$('#otp_div').prepend(qrcode_div);
 	}
 }
 
-var continue_sms = function(setup, prompt){
+var continue_sms = function (setup, prompt) {
 	request_otp();
 	var sms_div = $('<div class="text-muted" style="padding-bottom: 15px;"></div>');
 
-	if (setup){
+	if (setup) {
 		sms_div.append(prompt)
 		$('#otp_div').prepend(sms_div);
 	} else {
-		direction = $('<div>').attr('id','qr_info').html(prompt || "{{ _('SMS was not sent. Please contact Administrator.') }}");
+		direction = $('<div>').attr('id', 'qr_info').html(prompt || "{{ _('SMS was not sent. Please contact Administrator.') }}");
 		sms_div.append(direction);
 		$('#otp_div').prepend(sms_div)
 	}
 }
 
-var continue_email = function(setup, prompt){
+var continue_email = function (setup, prompt) {
 	request_otp();
 	var email_div = $('<div class="text-muted" style="padding-bottom: 15px;"></div>');
 
-	if (setup){
+	if (setup) {
 		email_div.append(prompt)
 		$('#otp_div').prepend(email_div);
 	} else {
-		var direction = $('<div>').attr('id','qr_info').html(prompt || "{{ _('Verification code email not sent. Please contact Administrator.') }}");
+		var direction = $('<div>').attr('id', 'qr_info').html(prompt || "{{ _('Verification code email not sent. Please contact Administrator.') }}");
 		email_div.append(direction);
 		$('#otp_div').prepend(email_div);
 	}
