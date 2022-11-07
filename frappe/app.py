@@ -95,10 +95,8 @@ def application(request: Request):
 		frappe.recorder.dump()
 
 		log_request(request, response)
-
 		process_response(response)
-
-		frappe.destroy()
+		frappe.db.close()
 
 	return response
 
