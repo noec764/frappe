@@ -1291,7 +1291,7 @@ Object.assign(frappe.utils, {
 			: "";
 
 		return $(`<div class="summary-item">
-			<span class="summary-label">${summary.label || ""}</span>
+			<span class="summary-label">${__(summary.label)}</span>
 			<div class="summary-value ${color}">${value}</div>
 		</div>`);
 	},
