@@ -7724,3 +7724,5 @@ zoom-out,Réduire,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,
 Free,Défaut,Image Cropper
+Unread,Non Lu,Email Flag Queue
+Read,Lu,Email Flag Queue
