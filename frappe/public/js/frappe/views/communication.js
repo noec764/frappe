@@ -838,7 +838,11 @@ frappe.views.CommunicationComposer = class {
 			<div><br></div>
 			${separator_element || ""}
 			<p>
-			${__("On {0}, {1} wrote:", [communication_date, last_email.sender])}
+			${
+				last_email.sender
+					? __("On {0}, {1} wrote:", [communication_date, last_email.sender])
+					: __("On {0}:", [communication_date])
+			}
 			</p>
 			<blockquote>
 			${last_email_content}

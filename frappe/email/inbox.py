@@ -100,8 +100,9 @@ def create_email_flag_queue(names, action):
 					}
 				)
 				flag_queue.save(ignore_permissions=True)
-				frappe.db.set_value("Communication", name, "seen", seen, update_modified=False)
-				mark_as_seen_unseen(name, action)
+
+			frappe.db.set_value("Communication", name, "seen", seen, update_modified=False)
+			mark_as_seen_unseen(name, action)
 
 
 @frappe.whitelist()

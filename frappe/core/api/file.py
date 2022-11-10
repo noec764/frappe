@@ -54,10 +54,11 @@ def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> d
 
 	files = frappe.get_list(
 		"File",
-		{"folder": folder},
+		{"folder": folder, "name": ("!=", attachment_folder.name)},
 		["name", "file_name", "file_url", "is_folder", "modified"],
 		start=start,
 		page_length=page_length + 1,
+		order_by="file_name ASC",
 	)
 
 	if not start and folder == home_folder and attachment_folder not in files:
