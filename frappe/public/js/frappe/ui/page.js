@@ -327,7 +327,7 @@ frappe.ui.Page = class Page {
 
 	//--- Menu --//
 
-	add_menu_item(label, click, standard, shortcut) {
+	add_menu_item(label, click, standard, shortcut, show_parent) {
 		return this.add_dropdown_item({
 			label,
 			click,
