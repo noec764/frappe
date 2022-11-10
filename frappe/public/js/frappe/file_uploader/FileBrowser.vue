@@ -110,7 +110,7 @@ export default {
 					let { files = [], has_more = false } = r.message || {};
 					files.sort((a, b) => {
 						if (a.is_folder && b.is_folder) {
-							return a.name < b.name ? -1 : 1;
+							return a.file_name < b.file_name ? -1 : 1;
 						}
 						if (a.is_folder) {
 							return -1;

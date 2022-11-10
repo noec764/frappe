@@ -45,7 +45,6 @@ frappe.breadcrumbs = {
 				type: type,
 			};
 		}
-
 		this.all[frappe.breadcrumbs.current_page()] = obj;
 		this.update();
 	},
@@ -143,8 +142,9 @@ frappe.breadcrumbs = {
 		}
 	},
 
-	set_list_breadcrumb(breadcrumbs) {
+	async set_list_breadcrumb(breadcrumbs) {
 		const doctype = breadcrumbs.doctype;
+		await frappe.model.with_doctype(doctype);
 		const doctype_meta = frappe.get_doc("DocType", doctype);
 		if (
 			(doctype === "User" && !frappe.user.has_role("System Manager")) ||

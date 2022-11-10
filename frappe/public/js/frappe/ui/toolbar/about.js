@@ -15,6 +15,8 @@ frappe.ui.misc.about = function () {
 			Linkedin: <a href='https://www.linkedin.com/company/dokos.io' target='_blank'>https://www.linkedin.com/company/dokos.io</a></p>\
 		<p><i class='fab fa-twitter fa-fw'></i>\
 			Twitter: <a href='https://twitter.com/dokos_io' target='_blank'>https://twitter.com/dokos_io</a></p>\
+		<p><i class='fab fa-youtube fa-fw'></i>
+			YouTube: <a href='https://www.youtube.com/@dokos_io' target='_blank'>https://www.youtube.com/@dokos_io</a></p>
 		<hr>
 		<h4>${__("Installed Apps")}</h4>
 		<div id='about-app-versions'>${__("Loading versions...")}</div>

@@ -4348,7 +4348,8 @@ Old Password,Ancien Mot De Passe,
 Older backups will be automatically deleted,Les anciennes sauvegardes seront automatiquement supprimées,
 Older,Plus ancien,
 On Payment Authorization,Sur autorisation de paiement,
-"On {0}, {1} wrote:","Sur {0}, {1} a écrit :",
+"On {0}, {1} wrote:","Le {0}, {1} a écrit :",
+On {0}:,Le {0}:,
 Onboard,Accueillir,
 Onboarding Complete,Onboarding terminé,
 Onboarding Permission,Autorisations d'onboarding,
@@ -7723,3 +7724,5 @@ zoom-out,Réduire,
 {} is not a valid date string.,{} n'est pas une date valide,
 ← Back to upload files,← Retour au chargement de fichier,
 Free,Défaut,Image Cropper
+Unread,Non Lu,Email Flag Queue
+Read,Lu,Email Flag Queue
