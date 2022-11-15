@@ -12,7 +12,7 @@ class TestScheduledJobSanity(FrappeTestCase):
 	def setUp(self):
 		remove_failed_jobs()
 
-	@timeout(90)
+	@timeout(180)
 	def test_bg_jobs_run(self):
 		"""Enqueue all scheduled jobs, wait for finish and verify that none failed."""
 		for scheduled_job_type in frappe.get_all("Scheduled Job Type", pluck="name"):
