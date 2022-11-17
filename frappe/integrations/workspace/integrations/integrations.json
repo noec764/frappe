@@ -181,17 +181,6 @@
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Slack Webhook URL",
-   "link_count": 0,
-   "link_to": "Slack Webhook URL",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "SMS Settings",
    "link_count": 0,
    "link_to": "SMS Settings",
@@ -200,7 +189,7 @@
    "type": "Link"
   }
  ],
- "modified": "2022-07-23 18:00:28.805405",
+ "modified": "2022-10-23 18:00:28.805405",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integrations",
