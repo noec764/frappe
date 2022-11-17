@@ -3,6 +3,7 @@
 
 import time
 import typing
+import unittest
 
 import frappe
 from frappe.tests.utils import FrappeTestCase, timeout
@@ -12,6 +13,7 @@ if typing.TYPE_CHECKING:
 	from rq.job import Job
 
 
+@unittest.skip("Skip in CI")
 class TestSubmissionQueue(FrappeTestCase):
 	queue = get_queue(qtype="default")
 
