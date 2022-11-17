@@ -105,6 +105,10 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			if (item.onclick) {
 				item.onclick(item.match);
 			} else {
+				let event = o.originalEvent;
+				if (event.ctrlKey || event.metaKey) {
+					frappe.open_in_new_tab = true;
+				}
 				frappe.set_route(item.route);
 			}
 			$input.val("");
