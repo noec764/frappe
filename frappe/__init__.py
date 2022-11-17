@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.10.3"
+__version__ = "3.10.4"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -1431,6 +1431,8 @@ def get_doc_hooks():
 
 @request_cache
 def _load_app_hooks(app_name: str | None = None):
+	import types
+
 	hooks = {}
 	apps = [app_name] if app_name else get_installed_apps(sort=True)
 
@@ -1446,9 +1448,13 @@ def _load_app_hooks(app_name: str | None = None):
 			if not request:
 				raise SystemExit
 			raise
-		for key in dir(app_hooks):
+
+		def _is_valid_hook(obj):
+			return not isinstance(obj, (types.ModuleType, types.FunctionType, type))
+
+		for key, value in inspect.getmembers(app_hooks, predicate=_is_valid_hook):
 			if not key.startswith("_"):
-				append_hook(hooks, key, getattr(app_hooks, key))
+				append_hook(hooks, key, value)
 	return hooks
 
 
