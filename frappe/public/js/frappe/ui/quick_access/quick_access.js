@@ -1,11 +1,11 @@
-import { createApp } from 'vue'
+import { createApp } from "vue";
 import { bus } from "./bus";
 
 import QuickAccessMenu from "./QuickAccessMenu.vue";
 
 frappe.provide("frappe.ui.quick_access");
 
-frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenu {
+frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
 	constructor(opts = {}) {
 		this.setup_menu();
 		// this.setup_button()
