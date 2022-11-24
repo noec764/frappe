@@ -138,6 +138,7 @@ class Importer:
 								"skipping": True,
 								"data_import": self.data_import.name,
 							},
+							user=frappe.session.user,
 						)
 					continue
 
@@ -165,6 +166,7 @@ class Importer:
 								"row_indexes": row_indexes,
 								"eta": eta,
 							},
+							user=frappe.session.user,
 						)
 
 					create_import_log(
