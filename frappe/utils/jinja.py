@@ -262,7 +262,11 @@ def get_jinja_hooks():
 		return out
 
 	values = frappe.get_hooks("jinja")
-	methods, filters = values.get("methods", []), values.get("filters", [])
+
+	try:
+		methods, filters = values.get("methods", []), values.get("filters", [])
+	except Exception:
+		methods, filters = [], []
 
 	method_dict = get_obj_dict_from_paths(methods)
 	filter_dict = get_obj_dict_from_paths(filters)
