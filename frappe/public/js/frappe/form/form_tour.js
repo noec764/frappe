@@ -82,6 +82,14 @@ frappe.ui.form.FormTour = class FormTour {
 
 				if (!this.driver.hasNextStep()) {
 					this.on_finish && this.on_finish();
+				} else if (step.next_step_tab) {
+					const activeElement = this.driver.getHighlightedElement();
+					activeElement.hidePopover();
+					$(`[data-fieldname="${step.next_step_tab}"]`).tab("show");
+					this.driver.preventMove();
+					setTimeout(() => {
+						this.driver.moveNext();
+					}, 300);
 				} else if (
 					this.driver.steps[this.driver.currentStep + 1].node.classList.contains(
 						"hide-control"
@@ -92,7 +100,15 @@ frappe.ui.form.FormTour = class FormTour {
 			};
 
 			const on_previous = () => {
-				if (this.driver.currentStep - 1 >= 0) {
+				if (step.previous_step_tab) {
+					const activeElement = this.driver.getHighlightedElement();
+					activeElement.hidePopover();
+					$(`[data-fieldname="${step.previous_step_tab}"]`).tab("show");
+					this.driver.preventMove();
+					setTimeout(() => {
+						this.driver.movePrevious();
+					}, 300);
+				} else if (this.driver.currentStep - 1 >= 0) {
 					if (
 						this.driver.steps[this.driver.currentStep - 1].node.classList.contains(
 							"hide-control"
