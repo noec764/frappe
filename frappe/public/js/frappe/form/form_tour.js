@@ -143,6 +143,10 @@ frappe.ui.form.FormTour = class FormTour {
 				// TODO: fix wrapper for grid sections
 				element = `.grid-row-open .frappe-control[data-fieldname='${fieldname}']`;
 			}
+
+			if (!step_info.title) {
+				step_info.title = __(field.df.label);
+			}
 		} else if (tour_step_type === "Button") {
 			const { button_label } = step_info;
 			element = [

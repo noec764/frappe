@@ -474,10 +474,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 			{ name: this.frm.doctype, language: frappe.boot.lang },
 			"name"
 		);
-		if (
-			Object.keys(tour_exists.message).length ||
-			Array.isArray(frappe.tour[this.frm.doctype])
-		) {
+		if (Object.keys(tour_exists.message).length || frappe.tour[this.frm.doctype]) {
 			this.page.add_menu_item(
 				__("Show tour"),
 				function () {
