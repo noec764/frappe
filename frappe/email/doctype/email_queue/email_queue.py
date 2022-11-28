@@ -26,6 +26,7 @@ from frappe.utils import (
 	cstr,
 	get_hook_method,
 	get_string_between,
+	get_url,
 	nowdate,
 	sbool,
 	split_emails,
@@ -295,15 +296,14 @@ class SendMailContext:
 		message = self.include_attachments(message)
 		return message
 
-	def get_tracker_str(self):
+	def get_tracker_str(self) -> str:
 		tracker_url_html = '<img src="https://{}/api/method/frappe.core.doctype.communication.email.mark_email_as_seen?name={}"/>'
 
 		message = ""
 		if frappe.conf.use_ssl and self.email_account_doc.track_email_status:
-			message = quopri.encodestring(
-				tracker_url_html.format(frappe.local.site, self.queue_doc.communication).encode()
-			).decode()
-		return message
+			tracker_url_html = f'<img src="{get_url()}/api/method/frappe.core.doctype.communication.email.mark_email_as_seen?name={self.queue_doc.communication}"/>'
+			return quopri.encodestring(tracker_url_html.encode()).decode()
+		return ""
 
 	def get_unsubscribe_str(self, recipient_email: str) -> str:
 		unsubscribe_url = ""
