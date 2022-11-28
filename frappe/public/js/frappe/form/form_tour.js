@@ -122,7 +122,9 @@ frappe.ui.form.FormTour = class FormTour {
 			};
 
 			const driver_step = this.get_step(step, on_next, on_previous);
-			this.driver_steps.push(driver_step);
+			if (driver_step) {
+				this.driver_steps.push(driver_step);
+			}
 
 			if (step.tour_step_type === "Field" || !step.tour_step_type) {
 				if (step.fieldtype == "Table") this.handle_table_step(step);
@@ -153,6 +155,9 @@ frappe.ui.form.FormTour = class FormTour {
 			if (field) {
 				// wrapper for section breaks returns in a list
 				element = field.wrapper[0] ? field.wrapper[0] : field.wrapper;
+				if (element.classList.contains("hide-control")) {
+					return;
+				}
 			}
 
 			if (is_table_field) {

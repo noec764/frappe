@@ -55,7 +55,6 @@ frappe.ui.form.Toolbar = class Toolbar {
 			var title = this.frm.docname;
 		}
 
-		var me = this;
 		title = __(title);
 		this.page.set_title(title);
 
@@ -309,7 +308,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 	}
 
-	async make_menu_items() {
+	make_menu_items() {
 		// Print
 		const me = this;
 		const p = this.frm.perm[0];
@@ -469,6 +468,11 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 
 		// Tour
+		this.add_form_tour_btn();
+	}
+
+	async add_form_tour_btn() {
+		const me = this;
 		const tour_exists = await frappe.db.get_value(
 			"Form Tour",
 			{ name: this.frm.doctype, language: frappe.boot.lang },
