@@ -478,7 +478,9 @@ frappe.ui.form.Toolbar = class Toolbar {
 			this.page.add_menu_item(
 				__("Show tour"),
 				function () {
-					let first_visible_tab = me.frm.layout.tabs.find((tab) => !tab.is_hidden());
+					let first_visible_tab = me.frm.layout.tabs.find(
+						(tab) => !tab.is_hidden() && !tab.df.show_dashboard
+					);
 					first_visible_tab && first_visible_tab.set_active();
 					setTimeout(() => {
 						me.frm.show_tour(() => {
