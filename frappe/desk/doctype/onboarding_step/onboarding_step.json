@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "autoname": "prompt",
  "creation": "2020-04-14 15:50:25.782387",
  "doctype": "DocType",
@@ -227,7 +228,7 @@
   }
  ],
  "links": [],
- "modified": "2022-05-19 18:37:40.494485",
+ "modified": "2022-11-29 18:59:04.001740",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Onboarding Step",
