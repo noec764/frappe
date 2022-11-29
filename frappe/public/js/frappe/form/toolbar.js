@@ -24,6 +24,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 			if (this.frm.doc.__islocal) {
 				this.page.hide_menu();
 				this.print_icon && this.print_icon.addClass("hide");
+				this.add_form_tour_custom_btn();
 			} else {
 				this.page.show_menu();
 				this.print_icon && this.print_icon.removeClass("hide");
@@ -468,36 +469,60 @@ frappe.ui.form.Toolbar = class Toolbar {
 		}
 
 		// Tour
-		this.add_form_tour_btn();
+		if (!this.frm.doc.__islocal) {
+			this.add_form_tour_menu_btn();
+		}
 	}
 
-	async add_form_tour_btn() {
-		const me = this;
+	async tour_exists_for_doctype() {
 		const tour_exists = await frappe.db.get_value(
 			"Form Tour",
 			{ name: this.frm.doctype, language: frappe.boot.lang },
 			"name"
 		);
-		if (Object.keys(tour_exists.message).length || frappe.tour[this.frm.doctype]) {
+
+		return Object.keys(tour_exists.message).length;
+	}
+
+	add_form_tour_menu_btn() {
+		const me = this;
+		if (this.tour_exists_for_doctype() || frappe.tour[this.frm.doctype]) {
 			this.page.add_menu_item(
 				__("Show tour"),
 				function () {
-					let first_visible_tab = me.frm.layout.tabs.find(
-						(tab) => !tab.is_hidden() && !tab.df.show_dashboard
-					);
-					first_visible_tab && first_visible_tab.set_active();
-					setTimeout(() => {
-						me.frm.show_tour(() => {
-							frappe.show_alert({
-								message: __("You're all set !"),
-								indicator: "green",
-							});
-						});
-					}, 500);
+					me.show_tour();
 				},
 				true
 			);
 		}
+	}
+
+	add_form_tour_custom_btn() {
+		if (this.tour_exists_for_doctype() || frappe.tour[this.frm.doctype]) {
+			this.page.add_action_icon(
+				"view",
+				() => {
+					this.show_tour();
+				},
+				"show-tour",
+				__("Show tour")
+			);
+		}
+	}
+
+	show_tour() {
+		let first_visible_tab = this.frm.layout.tabs.find(
+			(tab) => !tab.is_hidden() && !tab.df.show_dashboard
+		);
+		first_visible_tab && first_visible_tab.set_active();
+		setTimeout(() => {
+			this.frm.show_tour(() => {
+				frappe.show_alert({
+					message: __("You're all set !"),
+					indicator: "green",
+				});
+			});
+		}, 500);
 	}
 
 	make_customize_buttons() {
