@@ -19,6 +19,7 @@ DEFAULT_LOGTYPES_RETENTION = {
 	"Route History": 90,
 	"Submission Queue": 30,
 	"Communication": 0,
+	"Prepared Report": 30,
 }
 
 
@@ -153,7 +154,6 @@ LOG_DOCTYPES = [
 	"Email Queue Recipient",
 	"Error Snapshot",
 	"Error Log",
-	"Submission Queue",
 ]
 
 
