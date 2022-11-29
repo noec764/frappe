@@ -105,6 +105,7 @@ class FormMeta(Meta):
 
 		self._add_code(_get_path(self.name + "_calendar.js"), "__calendar_js")
 		self._add_code(_get_path(self.name + "_tree.js"), "__tree_js")
+		self._add_code(_get_path(self.name + "_tour.js"), "__tour_js")
 
 		listview_template = _get_path(self.name + "_list.html")
 		if os.path.exists(listview_template):

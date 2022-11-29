@@ -44,7 +44,7 @@ frappe.ui.form.FormTour = class FormTour {
 			);
 			if (Object.keys(doctype_tour_exists.message).length) {
 				this.tour = await frappe.db.get_doc("Form Tour", this.frm.doctype);
-			} else {
+			} else if (Object.keys(frappe.tour[this.frm.doctype]).length) {
 				this.tour = {
 					steps:
 						frappe.tour[this.frm.doctype][frappe.boot.lang] ||
