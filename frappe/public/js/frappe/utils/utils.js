@@ -245,6 +245,7 @@ Object.assign(frappe.utils, {
 		return out.join(newline);
 	},
 	escape_html: function (txt) {
+		if (!txt) return "";
 		let escape_html_mapping = {
 			"&": "&amp;",
 			"<": "&lt;",
