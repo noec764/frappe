@@ -189,6 +189,7 @@ frappe.ui.form.on("Email Account", {
 		let msg = __(
 			"GMail will only work if you enable 2-step authentication and use app-specific password or use OAuth."
 		);
+		msg += " "
 		let cta = __("Read the step by step guide here.");
 		msg += __(
 			`<a target="_blank" href="https://support.google.com/mail/answer/185833?hl=en">${cta}</a>`

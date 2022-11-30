@@ -230,6 +230,9 @@ $.extend(frappe.model, {
 		if (meta.__tree_js) {
 			eval(meta.__tree_js);
 		}
+		if (meta.__tour_js) {
+			eval(meta.__tour_js);
+		}
 		if (meta.__templates) {
 			$.extend(frappe.templates, meta.__templates);
 		}

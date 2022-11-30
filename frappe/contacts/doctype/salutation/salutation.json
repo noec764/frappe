@@ -18,10 +18,11 @@
   }
  ],
  "links": [],
- "modified": "2022-08-05 18:33:28.196387",
+ "modified": "2022-11-28 16:40:41.602490",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Salutation",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -56,6 +57,5 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1,
- "translated_doctype": 1
+ "track_changes": 1
 }
