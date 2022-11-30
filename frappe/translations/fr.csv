@@ -7126,9 +7126,7 @@ You need to set one IMAP folder for {0},Vous devez définir un dossier IMAP pour
 You need write permission to rename,Vous devez avoir le droit d'écriture pour renommer,
 You need {0} permission to fetch values from {1} {2},Vous devez avoir l'autorisation de {0} pour récupérer les valeurs de {1} {2},
 You seem good to go!,Félicitations,
-You seem to have written your name instead of your email. Please enter a valid email address so that we can get back.,Vous semblez avoir écrit votre nom au lieu de votre e-mail. Merci d'entrer une adresse email valide afin que nous puissions revenir en arrière.,
-"You seem to have written your name instead of your email. \
-				Please enter a valid email address so that we can get back.",Vous semblez avoir écrit votre nom au lieu de votre email. \ Veuillez entrer une adresse email valide afin que nous puissions revenir vers vous.,
+You seem to have written your name instead of your email. Please enter a valid email address so that we can get back.,Vous semblez avoir écrit votre nom au lieu de votre e-mail. Merci d\'entrer une adresse email valide afin que nous puissions revenir vers vous.,
 You selected Draft or Cancelled documents,Vous avez sélectionné des documents Brouillon ou Annulés,
 You unfollowed this document,Vous ne suivez plus ce document,
 You viewed this {0},Vous avez vu {0},Form timeline
