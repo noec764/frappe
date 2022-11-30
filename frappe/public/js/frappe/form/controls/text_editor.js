@@ -58,7 +58,7 @@ class MyLink extends Link {
 		let node = super.create(value);
 		value = this.sanitize(value);
 		node.setAttribute("href", value);
-		if (value.startsWith("/") || value.indexOf(window.location.host)) {
+		if (value.startsWith("/") || value.indexOf(window.location.host) !== -1) {
 			// no href if internal link
 			node.removeAttribute("target");
 		}

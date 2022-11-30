@@ -44,7 +44,7 @@ frappe.ui.form.FormTour = class FormTour {
 			);
 			if (Object.keys(doctype_tour_exists.message).length) {
 				this.tour = await frappe.db.get_doc("Form Tour", this.frm.doctype);
-			} else {
+			} else if (Object.keys(frappe.tour[this.frm.doctype]).length) {
 				this.tour = {
 					steps:
 						frappe.tour[this.frm.doctype][frappe.boot.lang] ||
@@ -82,6 +82,14 @@ frappe.ui.form.FormTour = class FormTour {
 
 				if (!this.driver.hasNextStep()) {
 					this.on_finish && this.on_finish();
+				} else if (step.next_step_tab) {
+					const activeElement = this.driver.getHighlightedElement();
+					activeElement.hidePopover();
+					$(`[data-fieldname="${step.next_step_tab}"]`).tab("show");
+					this.driver.preventMove();
+					setTimeout(() => {
+						this.driver.moveNext();
+					}, 300);
 				} else if (
 					this.driver.steps[this.driver.currentStep + 1].node.classList.contains(
 						"hide-control"
@@ -92,7 +100,15 @@ frappe.ui.form.FormTour = class FormTour {
 			};
 
 			const on_previous = () => {
-				if (this.driver.currentStep - 1 >= 0) {
+				if (step.previous_step_tab) {
+					const activeElement = this.driver.getHighlightedElement();
+					activeElement.hidePopover();
+					$(`[data-fieldname="${step.previous_step_tab}"]`).tab("show");
+					this.driver.preventMove();
+					setTimeout(() => {
+						this.driver.movePrevious();
+					}, 300);
+				} else if (this.driver.currentStep - 1 >= 0) {
 					if (
 						this.driver.steps[this.driver.currentStep - 1].node.classList.contains(
 							"hide-control"
@@ -106,7 +122,9 @@ frappe.ui.form.FormTour = class FormTour {
 			};
 
 			const driver_step = this.get_step(step, on_next, on_previous);
-			this.driver_steps.push(driver_step);
+			if (driver_step) {
+				this.driver_steps.push(driver_step);
+			}
 
 			if (step.tour_step_type === "Field" || !step.tour_step_type) {
 				if (step.fieldtype == "Table") this.handle_table_step(step);
@@ -137,11 +155,18 @@ frappe.ui.form.FormTour = class FormTour {
 			if (field) {
 				// wrapper for section breaks returns in a list
 				element = field.wrapper[0] ? field.wrapper[0] : field.wrapper;
+				if (element.classList.contains("hide-control")) {
+					return;
+				}
 			}
 
 			if (is_table_field) {
 				// TODO: fix wrapper for grid sections
 				element = `.grid-row-open .frappe-control[data-fieldname='${fieldname}']`;
+			}
+
+			if (!step_info.title) {
+				step_info.title = __(field.df.label);
 			}
 		} else if (tour_step_type === "Button") {
 			const { button_label } = step_info;

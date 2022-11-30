@@ -126,7 +126,7 @@ frappe.ui.form.add_options = function (input, options_list, doctype) {
 			var is_disabled = Boolean(v.disabled);
 			var is_selected = Boolean(v.selected);
 
-			if (is_value_null && is_label_null && typeof v === "string") {
+			if (is_value_null && is_label_null) {
 				value = v;
 				label = __(v, null, doctype);
 			} else {

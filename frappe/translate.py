@@ -525,6 +525,11 @@ def get_messages_from_doctype(name, context=True):
 	for d in meta.get("actions"):
 		messages.extend([d.label])
 
+	# translations of links
+	for d in meta.get("links"):
+		print(d.group)
+		messages.extend([d.group])
+
 	# translations of roles
 	for d in meta.get("permissions"):
 		if d.role:
