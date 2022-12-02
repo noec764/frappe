@@ -253,6 +253,7 @@ def search_widget(
 			# Sorting the values array so that relevant results always come first
 			# This will first bring elements on top in which query is a prefix of element
 			# Then it will bring the rest of the elements and sort them in lexicographical order
+			# => 2022-12-02: Rule removed in order to keep order_by rule
 			values = sorted(values, key=lambda x: relevance_sorter(x, txt, as_dict))
 
 			# remove _relevance from results
@@ -317,7 +318,7 @@ def scrub_custom_query(query, key, txt):
 
 def relevance_sorter(key, query, as_dict):
 	value = _(key.name if as_dict else key[0])
-	return (cstr(value).lower().startswith(query.lower()) is not True, value)
+	return cstr(value).lower().startswith(query.lower()) is not True
 
 
 def validate_and_sanitize_search_inputs(fn):
