@@ -18,6 +18,7 @@ DEFAULT_LOGTYPES_RETENTION = {
 	"Scheduled Job Log": 90,
 	"Route History": 90,
 	"Submission Queue": 30,
+	"Communication": 0,
 }
 
 
