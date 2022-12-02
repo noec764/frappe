@@ -17,6 +17,8 @@ from frappe.core.doctype.communication.email import validate_email
 from frappe.core.doctype.communication.mixins import CommunicationEmailMixin
 from frappe.core.utils import get_parent_doc
 from frappe.model.document import Document
+from frappe.query_builder import DocType, Interval
+from frappe.query_builder.functions import Now
 from frappe.utils import (
 	cint,
 	cstr,
@@ -36,6 +38,22 @@ class Communication(Document, CommunicationEmailMixin):
 
 	no_feed_on_delete = True
 	DOCTYPE = "Communication"
+
+	@staticmethod
+	def clear_old_logs(days=None):
+		if not days:
+			return
+
+		table = DocType("Communication")
+		frappe.db.delete(
+			table,
+			filters=(
+				(table.modified < (Now() - Interval(days=days)))
+				& (table.status == "Open")
+				& (table.sent_or_received == "Received")
+				& (table.reference_name.isnull())
+			),
+		)
 
 	def onload(self):
 		"""create email flag queue"""
