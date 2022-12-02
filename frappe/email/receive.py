@@ -258,7 +258,6 @@ class EmailServer:
 			self.check_imap_uidvalidity(folder)
 
 			readonly = False if self.settings.email_sync_rule == "UNSEEN" else True
-
 			self.imap.select(folder, readonly=readonly)
 			response, message = self.imap.uid("search", None, self.settings.email_sync_rule)
 			if message[0]:
@@ -291,7 +290,7 @@ class EmailServer:
 				frappe.qb.update(IMAPFolder).set(IMAPFolder.uidvalidity, current_uid_validity).set(
 					IMAPFolder.uidnext, uidnext
 				).where(IMAPFolder.parent == self.settings.email_account_name).where(
-					IMAPFolder.folder_name == folder
+					IMAPFolder.folder_name == folder.replace('"', "")
 				).run()
 			else:
 				EmailAccount = frappe.qb.DocType("Email Account")
