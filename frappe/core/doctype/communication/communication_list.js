@@ -24,6 +24,10 @@ frappe.listview_settings["Communication"] = {
 		list_view.page.add_menu_item(__("Mark as Unread"), function () {
 			list_view.call_for_selected_items(method, { action: "Unread" });
 		});
+
+		frappe.require("logtypes.bundle.js", () => {
+			frappe.utils.logtypes.show_log_retention_message(cur_list.doctype);
+		});
 	},
 
 	primary_action: function () {
