@@ -11,6 +11,8 @@ def execute():
 	frappe.reload_doc("core", "doctype", "Logs To Clear")
 	frappe.reload_doc("core", "doctype", "Log Settings")
 
+	frappe.reload_doc("core", "doctype", "Scheduled Job Log")
+
 	log_settings = frappe.get_doc("Log Settings")
 	log_settings.add_default_logtypes()
 
