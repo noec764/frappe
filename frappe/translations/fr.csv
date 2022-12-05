@@ -3482,7 +3482,7 @@ It is risky to delete this file: {0}. Please contact your System Manager.,Il est
 Item Card Group,Carte de groupe d'articles,
 Item Label,Libellé de l'élément,
 Item Type,Type d'élément,
-Item cannot be added to its own descendents,L'article ne peut être ajouté à ses propres descendants,
+Item cannot be added to its own descendants,L'article ne peut être ajouté à ses propres descendants,
 JS,JS,
 JSON Request Body,Corps de requête JSON,
 JSON,JSON,

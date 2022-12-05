@@ -884,7 +884,7 @@ DocType: Payment Gateway,Gateway,Porta de entrada
 apps/frappe/frappe/contacts/doctype/address/address.py +37,Address Title is mandatory.,Titulo do Endereço é obrigatório.
 DocType: Website Settings,"Added HTML in the &lt;head&gt; section of the web page, primarily used for website verification and SEO","HTML adicionado na seção &lt;head&gt; da página web, principalmente utilizadas para a verificação do site e SEO"
 apps/frappe/frappe/core/doctype/error_snapshot/error_snapshot_list.js +9,Relapsed,Reincidente
-apps/frappe/frappe/utils/nestedset.py +183,Item cannot be added to its own descendents,O artigo não pode ser acrescentado para os seus próprios descendentes
+apps/frappe/frappe/utils/nestedset.py +183,Item cannot be added to its own descendants,O artigo não pode ser acrescentado para os seus próprios descendentes
 DocType: Error Snapshot,Relapses,Recaídas
 DocType: Address,Preferred Shipping Address,Endereço preferido para entrega
 apps/frappe/frappe/public/js/frappe/form/print.js +284,With Letter head,Com cabeçalho
