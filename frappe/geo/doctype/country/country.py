@@ -48,6 +48,7 @@ def get_countries_and_currencies():
 					doctype="Currency",
 					name=country.currency,
 					currency_name=country.currency,
+					title=country.currency_name,
 					fraction=country.currency_fraction,
 					symbol=country.currency_symbol,
 					fraction_units=country.currency_fraction_units,
