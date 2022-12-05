@@ -30,6 +30,9 @@ def execute():
 		)
 		if not frappe.db.exists("Custom Field", {"fieldname": "auto_repeat", "dt": reference}):
 			doc = frappe.get_doc("DocType", reference)
+			if frappe.get_meta(reference).has_field("auto_repeat"):
+				continue
+
 			insert_after = doc.fields[len(doc.fields) - 1].fieldname
 			df = dict(
 				fieldname="auto_repeat",

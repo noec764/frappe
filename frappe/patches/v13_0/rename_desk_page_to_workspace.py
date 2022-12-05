@@ -12,6 +12,9 @@ def execute():
 			rename_doc("DocType", "Desk Page", "Workspace")
 			frappe.flags.ignore_route_conflict_validation = False
 
+	else:
+		return
+
 	rename_doc("DocType", "Desk Chart", "Workspace Chart", ignore_if_exists=True)
 	rename_doc("DocType", "Desk Shortcut", "Workspace Shortcut", ignore_if_exists=True)
 	rename_doc("DocType", "Desk Link", "Workspace Link", ignore_if_exists=True)
