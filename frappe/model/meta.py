@@ -231,7 +231,7 @@ class Meta(Document):
 
 		return fields
 
-	def get_valid_columns(self):
+	def get_valid_columns(self) -> list[str]:
 		if not hasattr(self, "_valid_columns"):
 			table_exists = frappe.db.table_exists(self.name)
 			if self.name in self.special_doctypes and table_exists:
@@ -260,14 +260,13 @@ class Meta(Document):
 
 	def get_label(self, fieldname):
 		"""Get label of the given fieldname"""
-
 		if df := self.get_field(fieldname):
 			return df.label
 
 		if fieldname in DEFAULT_FIELD_LABELS:
 			return DEFAULT_FIELD_LABELS[fieldname]()
 
-		return _("No Label")
+		return "No Label"
 
 	def get_options(self, fieldname):
 		return self.get_field(fieldname).options
