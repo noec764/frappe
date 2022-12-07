@@ -8,6 +8,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.modules.export_file import export_doc
 from frappe.query_builder.functions import Max
+from frappe.utils import cint
 
 
 class PackageRelease(Document):
@@ -39,7 +40,7 @@ class PackageRelease(Document):
 				.run()[0][0]
 				or 0
 			)
-			self.patch = value + 1
+			self.patch = cint(value) + 1
 
 	def autoname(self):
 		self.set_version()
@@ -58,9 +59,18 @@ class PackageRelease(Document):
 		"""Export all the documents in this package to site/packages folder"""
 		package = frappe.get_doc("Package", self.package)
 
+		self.create_folders(package)
+
 		self.export_modules()
 		self.export_package_files(package)
 		self.make_tarfile(package)
+
+	def create_folders(self, package):
+		if not os.path.exists(frappe.get_site_path("packages")):
+			os.makedirs(frappe.get_site_path("packages"))
+
+		if not os.path.exists(frappe.get_site_path("packages", package.package_name)):
+			os.makedirs(frappe.get_site_path("packages", package.package_name))
 
 	def export_modules(self):
 		for m in frappe.get_all("Module Def", dict(package=self.package)):

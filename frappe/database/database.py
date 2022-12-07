@@ -9,6 +9,7 @@ import string
 import traceback
 from contextlib import contextmanager, suppress
 from time import time
+from typing import Any, Iterable, Sequence
 
 from pypika.dialects import MySQLQueryBuilder, PostgreSQLQueryBuilder
 from pypika.terms import Criterion
@@ -1204,7 +1205,15 @@ class Database:
 				frappe.flags.touched_tables = set()
 			frappe.flags.touched_tables.update(tables)
 
-	def bulk_insert(self, doctype, fields, values, ignore_duplicates=False, *, chunk_size=10_000):
+	def bulk_insert(
+		self,
+		doctype: str,
+		fields: list[str],
+		values: Iterable[Sequence[Any]],
+		ignore_duplicates=False,
+		*,
+		chunk_size=10_000,
+	):
 		"""
 		Insert multiple records at a time
 

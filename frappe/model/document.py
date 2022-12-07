@@ -3,6 +3,7 @@
 import hashlib
 import json
 import time
+from typing import Any, Generator, Iterable
 
 from werkzeug.exceptions import NotFound
 
@@ -758,17 +759,16 @@ class Document(BaseDocument):
 					d.reset_values_if_no_permlevel_access(has_access_to, high_permlevel_fields)
 
 	def get_permlevel_access(self, permission_type="write"):
-		if not hasattr(self, "_has_access_to"):
-			self._has_access_to = {}
-
-		self._has_access_to[permission_type] = []
+		allowed_permlevels = []
 		roles = frappe.get_roles()
-		for perm in self.get_permissions():
-			if perm.role in roles and perm.get(permission_type):
-				if perm.permlevel not in self._has_access_to[permission_type]:
-					self._has_access_to[permission_type].append(perm.permlevel)
 
-		return self._has_access_to[permission_type]
+		for perm in self.get_permissions():
+			if (
+				perm.role in roles and perm.get(permission_type) and perm.permlevel not in allowed_permlevels
+			):
+				allowed_permlevels.append(perm.permlevel)
+
+		return allowed_permlevels
 
 	def has_permlevel_access_to(self, fieldname, df=None, permission_type="read"):
 		if not df:
@@ -1573,11 +1573,14 @@ class Document(BaseDocument):
 			frappe.local.locked_documents.remove(self)
 
 	# validation helpers
-	def validate_from_to_dates(self, from_date_field, to_date_field):
-		"""
-		Generic validation to verify date sequence
-		"""
-		if date_diff(self.get(to_date_field), self.get(from_date_field)) < 0:
+	def validate_from_to_dates(self, from_date_field: str, to_date_field: str) -> None:
+		"""Validate that the value of `from_date_field` is not later than the value of `to_date_field`."""
+		from_date = self.get(from_date_field)
+		to_date = self.get(to_date_field)
+		if not (from_date and to_date):
+			return
+
+		if date_diff(to_date, from_date) < 0:
 			frappe.throw(
 				_("{0} must be after {1}").format(
 					frappe.bold(_(self.meta.get_label(to_date_field))),
@@ -1659,3 +1662,39 @@ def execute_action(__doctype, __name, __action, **kwargs):
 
 		doc.add_comment("Comment", _("Action Failed") + "<br><br>" + msg)
 	doc.notify_update()
+
+
+def bulk_insert(
+	doctype: str,
+	documents: Iterable["Document"],
+	ignore_duplicates: bool = False,
+	chunk_size=10_000,
+):
+	"""Insert simple Documents objects to database in bulk.
+	Warning/Info:
+	        - All documents are inserted without triggering ANY hooks.
+	        - This function assumes you've done the due dilligence and inserts in similar fashion as db_insert
+	        - Documents can be any iterable / generator containing Document objects
+	"""
+
+	columns = frappe.get_meta(doctype).get_valid_columns()
+	values = _document_values_generator(documents, columns)
+
+	frappe.db.bulk_insert(
+		doctype, columns, values, ignore_duplicates=ignore_duplicates, chunk_size=chunk_size
+	)
+
+
+def _document_values_generator(
+	documents: Iterable["Document"],
+	columns: list[str],
+) -> Generator[tuple[Any], None, None]:
+	for doc in documents:
+		doc.creation = doc.modified = now()
+		doc.created_by = doc.modified_by = frappe.session.user
+		doc_values = doc.get_valid_dict(
+			convert_dates_to_str=True,
+			ignore_nulls=True,
+			ignore_virtual=True,
+		)
+		yield tuple(doc_values.get(col) for col in columns)
