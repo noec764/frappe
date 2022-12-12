@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#e9c46a",
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ToDo\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Note\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"File\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Assignment Rule\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Repeat\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports & Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Email\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}}]",
+ "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ToDo\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Note\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"File\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Assignment Rule\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Repeat\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Email\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}}]",
  "creation": "2020-03-02 14:53:24.980279",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -13,75 +13,6 @@
  "is_standard": 1,
  "label": "Tools",
  "links": [
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Tools",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "To Do",
-   "link_count": 0,
-   "link_to": "ToDo",
-   "link_type": "DocType",
-   "onboard": 1,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Calendar",
-   "link_count": 0,
-   "link_to": "Event",
-   "link_type": "DocType",
-   "onboard": 1,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Note",
-   "link_count": 0,
-   "link_to": "Note",
-   "link_type": "DocType",
-   "onboard": 1,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Files",
-   "link_count": 0,
-   "link_to": "File",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Activity",
-   "link_count": 0,
-   "link_to": "activity",
-   "link_type": "Page",
-   "onboard": 0,
-   "type": "Link"
-  },
   {
    "columns": 0,
    "hidden": 0,
@@ -170,9 +101,66 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Tools",
+   "link_count": 4,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "To Do",
+   "link_count": 0,
+   "link_to": "ToDo",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Calendar",
+   "link_count": 0,
+   "link_to": "Event",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Note",
+   "link_count": 0,
+   "link_to": "Note",
+   "link_type": "DocType",
+   "onboard": 1,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Files",
+   "link_count": 0,
+   "link_to": "File",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-11-04 14:42:58.364898",
+ "modified": "2022-12-12 14:17:41.359295",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Tools",
