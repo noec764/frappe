@@ -74,6 +74,9 @@ class MariaDBTable(DBTable):
 		add_index_query = []
 		drop_index_query = []
 
+		for col in self.add_column:
+			add_column_query.append(f"ADD COLUMN `{col.fieldname}` {col.get_definition()}")
+
 		columns_to_modify = set(self.change_type + self.set_default)
 		for col in columns_to_modify:
 			modify_column_query.append(
@@ -106,12 +109,7 @@ class MariaDBTable(DBTable):
 					drop_index_query.append(f"DROP INDEX `{index_record.Key_name}`")
 
 		try:
-			for query_parts in [
-				add_column_query,
-				modify_column_query,
-				add_index_query,
-				drop_index_query,
-			]:
+			for query_parts in [add_column_query, modify_column_query, add_index_query, drop_index_query]:
 				if query_parts:
 					query_body = ", ".join(query_parts)
 					query = f"ALTER TABLE `{self.table_name}` {query_body}"
@@ -131,4 +129,4 @@ class MariaDBTable(DBTable):
 			elif e.args[0] == 1067:
 				frappe.throw(str(e.args[1]))
 			else:
-				raise e
+				raise
