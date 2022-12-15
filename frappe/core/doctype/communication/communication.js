@@ -241,7 +241,11 @@ frappe.ui.form.on("Communication", {
 			},
 			freeze: true,
 			callback: function () {
-				frm.reload_doc();
+				if (action == "Unread") {
+					frappe.set_route("List", "Communication");
+				} else {
+					frm.reload_doc();
+				}
 			},
 		});
 	},
