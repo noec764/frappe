@@ -11,7 +11,6 @@ from frappe.commands import get_site, pass_context
 from frappe.coverage import CodeCoverage
 from frappe.exceptions import SiteNotSpecifiedError
 from frappe.utils import update_progress_bar
-from frappe.utils.synchronization import filelock
 
 find_executable = which  # backwards compatibility
 DATA_IMPORT_DEPRECATION = (
@@ -52,6 +51,7 @@ def build(
 ):
 	"Compile JS and CSS source files"
 	from frappe.build import bundle
+	from frappe.utils.synchronization import filelock
 
 	frappe.init("")
 
