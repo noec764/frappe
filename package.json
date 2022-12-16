@@ -20,7 +20,7 @@
   },
   "homepage": "https://dokos.io",
   "dependencies": {
-    "@editorjs/editorjs": "2.20.0",
+    "@editorjs/editorjs": "^2.26.3",
     "@fullcalendar/adaptive": "^5.11.0",
     "@fullcalendar/core": "^5.11.0",
     "@fullcalendar/daygrid": "^5.11.0",

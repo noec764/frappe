@@ -13,6 +13,7 @@ import itertools
 import json
 import os
 import re
+from contextlib import contextmanager
 
 from babel.messages.extract import extract_python
 from babel.messages.jslexer import Token, tokenize, unquote_string
@@ -527,7 +528,6 @@ def get_messages_from_doctype(name, context=True):
 
 	# translations of links
 	for d in meta.get("links"):
-		print(d.group)
 		messages.extend([d.group])
 
 	# translations of roles
@@ -1390,6 +1390,35 @@ def get_translated_doctypes():
 		"Property Setter", {"property": "translated_doctype", "value": "1"}, pluck="doc_type"
 	)
 	return unique(dts + custom_dts)
+
+
+@contextmanager
+def print_language(language: str):
+	"""Ensure correct globals for printing in a specific language.
+	Usage:
+	```
+	with print_language("de"):
+	    html = frappe.get_print( ... )
+	```
+	"""
+	if not language or language == frappe.local.lang:
+		# do nothing
+		yield
+		return
+
+	# remember original values
+	_lang = frappe.local.lang
+	_jenv = frappe.local.jenv
+
+	# set language, empty any existing lang_full_dict and jenv
+	frappe.local.lang = language
+	frappe.local.jenv = None
+
+	yield
+
+	# restore original values
+	frappe.local.lang = _lang
+	frappe.local.jenv = _jenv
 
 
 # TODO: Commonify with function in frappe.desk.form.meta

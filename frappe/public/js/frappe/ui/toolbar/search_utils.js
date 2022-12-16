@@ -115,8 +115,8 @@ frappe.search.utils = {
 	get_search_in_list: function (keywords) {
 		var me = this;
 		var out = [];
-		if (in_list(keywords.split(" "), "in") && keywords.slice(-2) !== "in") {
-			var parts = keywords.split(" in ");
+		if (in_list(keywords.split(" "), __("in")) && keywords.slice(-2) !== __("in")) {
+			var parts = keywords.split(` ${__("in")} `);
 			frappe.boot.user.can_read.forEach(function (item) {
 				if (frappe.boot.user.can_search.includes(item)) {
 					var level = me.fuzzy_search(parts[1], item);

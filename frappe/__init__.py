@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.14.1"
+__version__ = "3.15.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -1977,7 +1977,6 @@ def get_print(
 	name=None,
 	print_format=None,
 	style=None,
-	html=None,
 	as_pdf=False,
 	doc=None,
 	output=None,
@@ -2009,18 +2008,22 @@ def get_print(
 	if password:
 		pdf_options["password"] = password
 
-	if not html:
-		html = get_response_content("printview")
+	html = get_response_content("printview")
 
 	doc = get_doc(doctype, name)
 	if get_meta(doctype).track_print == 1 and doc._printed is None:
 		doc.db_set("_printed", now(), update_modified=False, commit=True)
 
-	if as_pdf:
-		cover = db.get_value("Print Format", print_format, "cover_page")
-		return get_pdf(html, output=output, options=pdf_options, cover=cover)
-	else:
-		return html
+	return (
+		get_pdf(
+			html,
+			output=output,
+			options=pdf_options,
+			cover=db.get_value("Print Format", print_format, "cover_page"),
+		)
+		if as_pdf
+		else html
+	)
 
 
 def attach_print(
@@ -2029,7 +2032,6 @@ def attach_print(
 	file_name=None,
 	print_format=None,
 	style=None,
-	html=None,
 	doc=None,
 	lang=None,
 	print_letterhead=True,
@@ -2055,7 +2057,6 @@ def attach_print(
 	kwargs = dict(
 		print_format=print_format,
 		style=style,
-		html=html,
 		doc=doc,
 		no_letterhead=no_letterhead,
 		password=password,

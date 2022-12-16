@@ -117,8 +117,8 @@ def move_file(file_list: list[File], new_parent: str, old_parent: str) -> None:
 
 
 @frappe.whitelist()
-def zip_files(files: str):
+def zip_files(files: str, filename=None):
 	files = frappe.parse_json(files)
-	frappe.response["filename"] = "files.zip"
+	frappe.response["filename"] = filename or "files.zip"
 	frappe.response["filecontent"] = File.zip_files(files)
 	frappe.response["type"] = "download"
