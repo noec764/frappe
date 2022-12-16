@@ -801,7 +801,7 @@ class FilterArea {
 						}
 					} else if (typeof options == "object") {
 						if (options.length > 0 && options[0].value) {
-							options.unshift("");
+							options.unshift({ value: "", label: "" });
 						}
 					}
 				}

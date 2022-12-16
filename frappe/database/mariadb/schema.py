@@ -73,13 +73,19 @@ class MariaDBTable(DBTable):
 		add_index_query = []
 		drop_index_query = []
 
-		columns_to_modify = set(self.change_type + self.add_unique + self.set_default)
-
 		for col in self.add_column:
 			add_column_query.append(f"ADD COLUMN `{col.fieldname}` {col.get_definition()}")
 
+		columns_to_modify = set(self.change_type + self.set_default)
 		for col in columns_to_modify:
-			modify_column_query.append(f"MODIFY `{col.fieldname}` {col.get_definition()}")
+			modify_column_query.append(
+				f"MODIFY `{col.fieldname}` {col.get_definition(for_modification=True)}"
+			)
+
+		for col in self.add_unique:
+			modify_column_query.append(
+				f"ADD UNIQUE INDEX IF NOT EXISTS {col.fieldname} (`{col.fieldname}`)"
+			)
 
 		for col in self.add_index:
 			# if index key does not exists
@@ -102,12 +108,7 @@ class MariaDBTable(DBTable):
 					drop_index_query.append(f"DROP INDEX `{index_record.Key_name}`")
 
 		try:
-			for query_parts in [
-				add_column_query,
-				modify_column_query,
-				add_index_query,
-				drop_index_query,
-			]:
+			for query_parts in [add_column_query, modify_column_query, add_index_query, drop_index_query]:
 				if query_parts:
 					query_body = ", ".join(query_parts)
 					query = f"ALTER TABLE `{self.table_name}` {query_body}"
@@ -127,4 +128,4 @@ class MariaDBTable(DBTable):
 			elif e.args[0] == 1067:
 				frappe.throw(str(e.args[1]))
 			else:
-				raise e
+				raise

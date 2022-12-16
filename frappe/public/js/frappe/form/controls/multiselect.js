@@ -38,7 +38,11 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 	get_value() {
 		let data = super.get_value();
 		// find value of label from option list and return actual value string
-		if (this.df.options && this.df.options.length && this.df.options[0].label) {
+		if (
+			this.df.options &&
+			this.df.options.length &&
+			this.df.options[0].hasOwnProperty("label")
+		) {
 			data = data.split(",").map((op) => op.trim());
 			data = data
 				.map((val) => {

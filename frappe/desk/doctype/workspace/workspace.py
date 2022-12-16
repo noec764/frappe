@@ -33,21 +33,17 @@ class Workspace(Document):
 			if self.module:
 				export_to_files(record_list=[["Workspace", self.name]], record_module=self.module)
 
-			if self.has_value_changed("title") or self.has_value_changed("module"):
+			if self.has_value_changed("name") or self.has_value_changed("module"):
 				previous = self.get_doc_before_save()
-				if previous and previous.get("module") and previous.get("title"):
-					delete_folder(previous.get("module"), "Workspace", previous.get("title"))
-
-	def before_export(self, doc):
-		if doc.title != doc.label and doc.label == doc.name:
-			self.name = doc.name = doc.label = doc.title
+				if previous and previous.get("module") and previous.get("name"):
+					delete_folder(previous.get("module"), "Workspace", previous.get("name"))
 
 	def after_delete(self):
 		if disable_saving_as_public():
 			return
 
 		if self.module and frappe.conf.developer_mode:
-			delete_folder(self.module, "Workspace", self.title)
+			delete_folder(self.module, "Workspace", self.name)
 
 	@staticmethod
 	def get_module_page_map():
