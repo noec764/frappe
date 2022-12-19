@@ -179,6 +179,7 @@ frappe.patches.v13_0.update_notification_channel_if_empty
 frappe.patches.v13_0.set_first_day_of_the_week
 frappe.patches.v13_0.encrypt_2fa_secrets
 frappe.patches.v13_0.reset_corrupt_defaults
+frappe.patches.v13_0.remove_share_for_std_users
 execute:frappe.reload_doc('custom', 'doctype', 'custom_field')
 execute:frappe.delete_doc_if_exists("DocType", "Package Document Type")
 execute:frappe.delete_doc_if_exists("DocType", "Package Publish Target")
