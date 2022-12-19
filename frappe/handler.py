@@ -184,7 +184,11 @@ def upload_file():
 	docname = frappe.form_dict.docname
 	fieldname = frappe.form_dict.fieldname
 	file_url = frappe.form_dict.file_url
-	folder = home_folder if frappe.form_dict.folder == "Home" else frappe.form_dict.folder or frappe.db.get_value("File", {"is_home_folder": 1})
+	folder = (
+		home_folder
+		if frappe.form_dict.folder == "Home"
+		else frappe.form_dict.folder or frappe.db.get_value("File", {"is_home_folder": 1})
+	)
 	method = frappe.form_dict.method
 	filename = frappe.form_dict.file_name
 	optimize = frappe.form_dict.optimize
@@ -269,7 +273,7 @@ def ping():
 
 def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
 	"""run a whitelisted controller method"""
-	from inspect import getfullargspec
+	from inspect import signature
 
 	if not args and arg:
 		args = arg
@@ -299,7 +303,7 @@ def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
 	is_whitelisted(fn)
 	is_valid_http_method(fn)
 
-	fnargs = getfullargspec(method_obj).args
+	fnargs = list(signature(method_obj).parameters)
 
 	if not fnargs or (len(fnargs) == 1 and fnargs[0] == "self"):
 		response = doc.run_method(method)
