@@ -335,7 +335,7 @@ app_license = "{app_license}"
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {{
-# 	"Task": "{app_name}.task.get_dashboard_data"
+#	"Task": "{app_name}.task.get_dashboard_data"
 # }}
 
 # exempt linked doctypes from being automatically cancelled
@@ -344,6 +344,7 @@ app_license = "{app_license}"
 
 # Ignore links to specified DocTypes when deleting documents
 # -----------------------------------------------------------
+
 # ignore_links_on_delete = ["Communication", "ToDo"]
 
 
@@ -407,7 +408,6 @@ gitignore_template = """.DS_Store
 tags
 node_modules"""
 
-
 github_workflow_template = """
 name: CI
 
@@ -429,6 +429,18 @@ jobs:
     name: Server
 
     services:
+      redis-cache:
+        image: redis:alpine
+        ports:
+          - 13000:6379
+      redis-queue:
+        image: redis:alpine
+        ports:
+          - 11000:6379
+      redis-socketio:
+        image: redis:alpine
+        ports:
+          - 12000:6379
       mariadb:
         image: mariadb:10.6
         env:
@@ -439,17 +451,17 @@ jobs:
 
     steps:
       - name: Clone
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: '3.10'
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 16
           check-latest: true
 
       - name: Cache pip
@@ -465,7 +477,7 @@ jobs:
         id: yarn-cache-dir-path
         run: 'echo "::set-output name=dir::$(yarn cache dir)"'
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         id: yarn-cache
         with:
           path: ${{{{ steps.yarn-cache-dir-path.outputs.dir }}}}
