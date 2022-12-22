@@ -71,7 +71,7 @@ class TestHooks(FrappeTestCase):
 				"subject": "Test Event",
 				"starts_on": "2022-12-21",
 				"event_type": "Public",
-				"event_participants": [
+				"event_references": [
 					{
 						"reference_doctype": "Email Unsubscribe",
 						"reference_docname": email_unsubscribe.name,
@@ -81,7 +81,7 @@ class TestHooks(FrappeTestCase):
 		).insert()
 		self.assertRaises(frappe.LinkExistsError, email_unsubscribe.delete)
 
-		event.event_participants = []
+		event.event_references = []
 		event.save()
 
 		todo = frappe.get_doc(
