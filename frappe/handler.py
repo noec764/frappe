@@ -12,6 +12,7 @@ import frappe.sessions
 import frappe.utils
 from frappe import _, is_whitelisted
 from frappe.core.doctype.server_script.server_script_utils import get_server_script_map
+from frappe.monitor import add_data_to_monitor
 from frappe.utils import cint
 from frappe.utils.csvutils import build_csv_response
 from frappe.utils.image import optimize_image
@@ -184,7 +185,11 @@ def upload_file():
 	docname = frappe.form_dict.docname
 	fieldname = frappe.form_dict.fieldname
 	file_url = frappe.form_dict.file_url
-	folder = home_folder if frappe.form_dict.folder == "Home" else frappe.form_dict.folder or frappe.db.get_value("File", {"is_home_folder": 1})
+	folder = (
+		home_folder
+		if frappe.form_dict.folder == "Home"
+		else frappe.form_dict.folder or frappe.db.get_value("File", {"is_home_folder": 1})
+	)
 	method = frappe.form_dict.method
 	filename = frappe.form_dict.file_name
 	optimize = frappe.form_dict.optimize
@@ -320,6 +325,8 @@ def run_doc_method(method, docs=None, dt=None, dn=None, arg=None, args=None):
 		return
 
 	frappe.response["message"] = response
+
+	add_data_to_monitor(methodname=method)
 
 
 # for backwards compatibility
