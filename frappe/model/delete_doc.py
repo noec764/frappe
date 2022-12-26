@@ -16,25 +16,6 @@ from frappe.utils.file_manager import remove_all
 from frappe.utils.global_search import delete_for_document
 from frappe.utils.password import delete_all_passwords_for
 
-DOCTYPES_TO_SKIP = (
-	"Communication",
-	"ToDo",
-	"DocShare",
-	"Email Unsubscribe",
-	"Activity Log",
-	"File",
-	"Version",
-	"Document Follow",
-	"Comment",
-	"View Log",
-	"Tag Link",
-	"Notification Log",
-	"Email Queue",
-	"Archived Document",
-	"Document Share Key",
-	"Integration Request",
-)
-
 
 def delete_doc(
 	doctype=None,
@@ -289,7 +270,7 @@ def check_if_doc_is_linked(doc, method="Delete"):
 				item_parent = getattr(item, "parent", None)
 				linked_doctype = item.parenttype if item_parent else link_dt
 
-				if linked_doctype in DOCTYPES_TO_SKIP or (
+				if linked_doctype in frappe.get_hooks("ignore_links_on_delete") or (
 					linked_doctype in ignore_linked_doctypes and method == "Cancel"
 				):
 					# don't check for communication and todo!
@@ -316,7 +297,9 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 	"""Raise `frappe.LinkExistsError` if the document is dynamically linked"""
 	for df in get_dynamic_link_map().get(doc.doctype, []):
 		ignore_linked_doctypes = doc.get("ignore_linked_doctypes") or []
-		if df.parent in DOCTYPES_TO_SKIP or (df.parent in ignore_linked_doctypes and method == "Cancel"):
+		if df.parent in frappe.get_hooks("ignore_links_on_delete") or (
+			df.parent in ignore_linked_doctypes and method == "Cancel"
+		):
 			# don't check for communication and todo!
 			continue
 
@@ -360,7 +343,7 @@ def check_if_doc_is_dynamically_linked(doc, method="Delete"):
 					reference_docname = refdoc.parent if meta.istable else refdoc.name
 					at_position = f"at Row: {refdoc.idx}" if meta.istable else ""
 
-					if reference_doctype in DOCTYPES_TO_SKIP or (
+					if reference_doctype in frappe.get_hooks("ignore_links_on_delete") or (
 						reference_doctype in ignore_linked_doctypes and method == "Cancel"
 					):
 						# Avoid errors when unlinking dynamic links

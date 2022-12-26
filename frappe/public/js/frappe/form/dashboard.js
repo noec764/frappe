@@ -577,16 +577,19 @@ frappe.ui.form.Dashboard = class FormDashboard {
 
 		this.chart_area.show();
 		this.chart_area.body.empty();
-		args = Object.assign({
-			type: "line",
-			colors: args.colors || ["green"],
-			truncateLegends: 1,
-			axisOptions: {
-				shortenYAxisNumbers: 1,
-				numberFormatter: frappe.utils.format_chart_axis_number,
+		args = Object.assign(
+			{
+				type: "line",
+				colors: args.colors || ["green"],
+				truncateLegends: 1,
+				axisOptions: {
+					shortenYAxisNumbers: 1,
+					numberFormatter: frappe.utils.format_chart_axis_number,
+				},
+				tooltipOptions: {},
 			},
-			tooltipOptions: {},
-		});
+			args
+		);
 		this.show();
 
 		this.chart = new frappe.Chart(".form-graph", args);

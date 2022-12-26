@@ -153,13 +153,14 @@
   },
   {
    "fieldname": "map_location",
-   "fieldtype": "Geolocation"
+   "fieldtype": "Geolocation",
+   "label": "Geolocation"
   }
  ],
  "icon": "fa fa-map-marker",
  "idx": 5,
  "links": [],
- "modified": "2022-10-27 18:56:55.645479",
+ "modified": "2022-12-21 11:45:18.106889",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Address",
@@ -223,5 +224,6 @@
  "search_fields": "country, state",
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "address_title"
 }
