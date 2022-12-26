@@ -47,11 +47,12 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 			data = data
 				.map((val) => {
 					let option = this.df.options.find((op) => op.label === val);
-					return option ? option.value : null;
+					return option ? option.value : val;
 				})
 				.filter((n) => n != null)
 				.join(", ");
 		}
+
 		return data;
 	}
 
