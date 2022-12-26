@@ -39,6 +39,11 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		this.get_list_fields();
 	}
 
+	async before_refresh() {
+		await frappe.require(this.required_libs);
+		super.before_refresh();
+	}
+
 	render() {
 		this.make_wrapper();
 		this.bind_leaflet_map();
@@ -199,5 +204,18 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 
 	get_tooltip(value) {
 		return `<b>${value.name}</b>`;
+	}
+
+	get required_libs() {
+		return [
+			"assets/frappe/js/lib/leaflet_easy_button/easy-button.css",
+			"assets/frappe/js/lib/leaflet_control_locate/L.Control.Locate.css",
+			"assets/frappe/js/lib/leaflet_draw/leaflet.draw.css",
+			"assets/frappe/js/lib/leaflet/leaflet.css",
+			"assets/frappe/js/lib/leaflet/leaflet.js",
+			"assets/frappe/js/lib/leaflet_easy_button/easy-button.js",
+			"assets/frappe/js/lib/leaflet_draw/leaflet.draw.js",
+			"assets/frappe/js/lib/leaflet_control_locate/L.Control.Locate.js",
+		];
 	}
 };

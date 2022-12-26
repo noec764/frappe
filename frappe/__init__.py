@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.15.0"
+__version__ = "3.16.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -2032,12 +2032,14 @@ def attach_print(
 	file_name=None,
 	print_format=None,
 	style=None,
+	html=None,
 	doc=None,
 	lang=None,
 	print_letterhead=True,
 	password=None,
 ):
 	from frappe.utils import scrub_urls
+	from frappe.utils.pdf import get_pdf
 
 	if not file_name:
 		file_name = name
@@ -2066,10 +2068,14 @@ def attach_print(
 	if int(print_settings.send_print_as_pdf or 0):
 		ext = ".pdf"
 		kwargs["as_pdf"] = True
-		content = get_print(doctype, name, **kwargs)
+		content = (
+			get_pdf(html, options={"password": password} if password else None)
+			if html
+			else get_print(doctype, name, **kwargs)
+		)
 	else:
 		ext = ".html"
-		content = scrub_urls(get_print(doctype, name, **kwargs)).encode("utf-8")
+		content = html or scrub_urls(get_print(doctype, name, **kwargs)).encode("utf-8")
 
 	out = {"fname": file_name + ext, "fcontent": content}
 

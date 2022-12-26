@@ -2,6 +2,7 @@
 # License: MIT. See LICENSE
 
 import datetime
+import itertools
 import json
 import random
 import re
@@ -1307,25 +1308,24 @@ class Database:
 	):
 		"""
 		Insert multiple records at a time
-
 		:param doctype: Doctype name
 		:param fields: list of fields
-		:params values: list of list of values
+		:params values: iterable of values
 		"""
-		values = list(values)
 		table = frappe.qb.DocType(doctype)
 
-		for start_index in range(0, len(values), chunk_size):
-			query = frappe.qb.into(table)
-			if ignore_duplicates:
-				# Pypika does not have same api for ignoring duplicates
-				if self.db_type == "mariadb":
-					query = query.ignore()
-				elif self.db_type == "postgres":
-					query = query.on_conflict().do_nothing()
+		query = frappe.qb.into(table).columns(fields)
 
-			values_to_insert = values[start_index : start_index + chunk_size]
-			query.columns(fields).insert(*values_to_insert).run()
+		if ignore_duplicates:
+			# Pypika does not have same api for ignoring duplicates
+			if frappe.conf.db_type == "mariadb":
+				query = query.ignore()
+			elif frappe.conf.db_type == "postgres":
+				query = query.on_conflict().do_nothing()
+
+		value_iterator = iter(values)
+		while value_chunk := tuple(itertools.islice(value_iterator, chunk_size)):
+			query.insert(*value_chunk).run()
 
 	def create_sequence(self, *args, **kwargs):
 		from frappe.database.sequence import create_sequence
