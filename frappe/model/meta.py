@@ -111,12 +111,6 @@ class Meta(Document):
 	]
 
 	def __init__(self, doctype):
-		# from cache
-		if isinstance(doctype, dict):
-			super().__init__(doctype)
-			self.init_field_caches()
-			return
-
 		if isinstance(doctype, Document):
 			super().__init__(doctype.as_dict())
 
@@ -136,7 +130,7 @@ class Meta(Document):
 
 	def process(self):
 		# don't process for special doctypes
-		# prevent's circular dependency
+		# prevents circular dependency
 		if self.name in self.special_doctypes:
 			self.init_field_caches()
 			return
