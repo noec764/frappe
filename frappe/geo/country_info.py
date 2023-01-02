@@ -6,6 +6,7 @@
 
 import json
 import os
+from functools import lru_cache
 
 import frappe
 from frappe.utils.momentjs import get_all_timezones
@@ -28,8 +29,13 @@ def get_all():
 	return all_data
 
 
-@frappe.whitelist()
+@frappe.whitelist(allow_guest=True)
 def get_country_timezone_info():
+	return _get_country_timezone_info()
+
+
+@lru_cache(maxsize=2)
+def _get_country_timezone_info():
 	return {"country_info": get_all(), "all_timezones": get_all_timezones()}
 
 
