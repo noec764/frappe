@@ -1,17 +1,7 @@
 context("Permissions API", () => {
 	before(() => {
 		cy.visit("/login");
-
-		cy.login("Administrator");
-		cy.call("frappe.tests.ui_test_helpers.add_remove_role", {
-			action: "remove",
-			user: "frappe@example.com",
-			role: "System Manager",
-		});
-		cy.call("logout");
-
-		cy.login("frappe@example.com");
-		cy.visit("/app");
+		cy.remove_role("frappe@example.com", "System Manager");
 	});
 
 	it("Checks permissions via `has_perm` for Kanban Board DocType", () => {
@@ -44,14 +34,7 @@ context("Permissions API", () => {
 	});
 
 	after(() => {
-		cy.call("logout");
-
-		cy.login("Administrator");
-		cy.call("frappe.tests.ui_test_helpers.add_remove_role", {
-			action: "add",
-			user: "frappe@example.com",
-			role: "System Manager",
-		});
+		cy.add_role("frappe@example.com", "System Manager");
 		cy.call("logout");
 	});
 });
