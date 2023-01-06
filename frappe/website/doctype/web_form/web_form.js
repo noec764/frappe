@@ -132,6 +132,7 @@ frappe.ui.form.on("Web Form", {
 				label: df.label,
 				value: df.fieldname,
 			});
+			fields.push({label: "Name", fieldname: "name"})
 			update_options(fields.map(as_select_option));
 
 			let currency_fields = fields
@@ -169,10 +170,15 @@ frappe.ui.form.on("Web Form", {
 frappe.ui.form.on("Web Form List Column", {
 	fieldname: function (frm, doctype, name) {
 		let doc = frappe.get_doc(doctype, name);
-		let df = frappe.meta.get_docfield(frm.doc.doc_type, doc.fieldname);
-		if (!df) return;
-		doc.fieldtype = df.fieldtype;
-		doc.label = df.label;
+		if (doc.fieldname == "name") {
+			doc.fieldtype = "Data";
+			doc.label = "Name";
+		} else {
+			let df = frappe.meta.get_docfield(frm.doc.doc_type, doc.fieldname);
+			if (!df) return;
+			doc.fieldtype = df.fieldtype;
+			doc.label = df.label;
+		}
 		frm.refresh_field("list_columns");
 	},
 });
