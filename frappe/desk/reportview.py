@@ -22,7 +22,7 @@ from frappe.utils import add_user_info, cstr, format_duration
 @frappe.read_only()
 def get():
 	args = get_form_params()
-	# If virtual doctype get data from controller het_list method
+	# If virtual doctype get data from controller get_list method
 	if is_virtual_doctype(args.doctype):
 		controller = get_controller(args.doctype)
 		data = compress(controller.get_list(args))
