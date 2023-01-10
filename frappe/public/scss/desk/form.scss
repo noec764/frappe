@@ -15,6 +15,7 @@
 	cursor: copy;
 	transition: opacity 0.3s, transform 3s;
 	pointer-events: none;
+	display: block !important;
 }
 
 .show-tooltip .frappe-control:hover .tooltip-content {
