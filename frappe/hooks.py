@@ -412,4 +412,5 @@ ignore_links_on_delete = [
 	"Archived Document",
 	"Document Share Key",
 	"Integration Request",
+	"Unhandled Email",
 ]
