@@ -414,7 +414,6 @@ def get_workspace_sidebar_items():
 		"restrict_to_domain": ["in", frappe.get_active_domains()],
 		"for_user": ("in", (None, frappe.session.user)),
 		"module": ["not in", blocked_modules],
-		"hidden": 0,
 	}
 
 	if not frappe.conf.developer_mode:
@@ -433,6 +432,7 @@ def get_workspace_sidebar_items():
 		"icon",
 		"color",
 		"is_standard",
+		"is_hidden",
 	]
 	all_pages = frappe.get_all(
 		"Workspace",
@@ -450,7 +450,7 @@ def get_workspace_sidebar_items():
 		try:
 			workspace = Workspace(page, True)
 			if has_access or workspace.is_permitted():
-				if page.public:
+				if page.public and (has_access or not page.is_hidden):
 					pages.append(page)
 				elif page.for_user == frappe.session.user:
 					private_pages.append(page)
