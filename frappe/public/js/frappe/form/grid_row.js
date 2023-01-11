@@ -289,7 +289,7 @@ export default class GridRow {
 						delete this.grid.filter["row-index"];
 					}
 
-					this.grid.grid_sortable.option(
+					this.grid.grid_sortable?.option(
 						"disabled",
 						Object.keys(this.grid.filter).length !== 0
 					);
@@ -811,7 +811,7 @@ export default class GridRow {
 					delete this.grid.filter[df.fieldname];
 				}
 
-				this.grid.grid_sortable.option(
+				this.grid.grid_sortable?.option(
 					"disabled",
 					Object.keys(this.grid.filter).length !== 0
 				);
