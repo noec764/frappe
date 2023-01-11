@@ -7,25 +7,6 @@
 import frappe
 
 
-def rename(doctype, fieldname, newname):
-	"""rename docfield"""
-	df = frappe.db.sql(
-		"""select * from tabDocField where parent=%s and fieldname=%s""",
-		(doctype, fieldname),
-		as_dict=1,
-	)
-	if not df:
-		return
-
-	df = df[0]
-
-	if frappe.db.get_value("DocType", doctype, "issingle"):
-		update_single(df, newname)
-	else:
-		update_table(df, newname)
-		update_parent_field(df, newname)
-
-
 def update_single(f, new):
 	"""update in tabSingles"""
 	frappe.db.begin()
