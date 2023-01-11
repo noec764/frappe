@@ -411,6 +411,11 @@
 	display: inline-flex;
 }
 
+.grid-bulk-actions:not(:has(> :not(.hidden))) {
+	/* Only show if has visible buttons */
+	display: none;
+}
+
 .grid-custom-buttons:empty {
 	padding: 0;
 }
