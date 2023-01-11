@@ -13,12 +13,10 @@ export default class GridPagination {
 	}
 
 	render_pagination() {
-		if (this.grid.data.length <= this.page_length) {
-			this.wrapper.find(".grid-pagination").html("");
-		} else {
-			this.wrapper.find(".grid-pagination")
-				.html("") // clear
-				.append(this.get_pagination_elements());
+		const pagination = this.wrapper.find(".grid-pagination")
+		pagination.empty();
+		if (this.grid.data.length > this.page_length) {
+			pagination.append(this.get_pagination_elements());
 			this.prev_page_button = this.wrapper.find(".prev-page");
 			this.next_page_button = this.wrapper.find(".next-page");
 			this.$page_number = this.wrapper.find(".current-page-number");
