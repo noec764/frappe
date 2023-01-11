@@ -10,11 +10,13 @@
 	border-radius: var(--border-radius-sm);
 	background-color: var(--bg-dark-gray);
 	color: var(--text-dark);
+	font-weight: bold;
 	font-size: var(--text-xs);
 	opacity: 0;
 	cursor: copy;
 	transition: opacity 0.3s, transform 3s;
 	pointer-events: none;
+	display: block !important;
 }
 
 .show-tooltip .frappe-control:hover .tooltip-content {
