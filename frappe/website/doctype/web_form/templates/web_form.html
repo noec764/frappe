@@ -165,10 +165,7 @@
 		frappe.reference_doc = {{ reference_doc | json }};
 	</script>
 
-	{{ include_script("controls.bundle.js") }}
-	{{ include_script("dialog.bundle.js") }}
 	{{ include_script("web_form.bundle.js") }}
-	{{ include_script("bootstrap-4-web.bundle.js") }}
 
 	<script>
 		{% if client_script %}

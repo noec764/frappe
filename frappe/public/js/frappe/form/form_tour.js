@@ -171,10 +171,10 @@ frappe.ui.form.FormTour = class FormTour {
 		} else if (tour_step_type === "Button") {
 			const { button_label } = step_info;
 			element = [
-				`button[data-label="${__(button_label)}"]`,
-				`button[data-label="${button_label}"]`,
-				`button[data-original-title="${__(button_label)}"]`,
-				`button[data-original-title="${button_label}"]`,
+				`button[data-label="${encodeURIComponent(__(button_label))}"]`,
+				`button[data-label="${encodeURIComponent(button_label)}"]`,
+				`button[data-original-title="${encodeURIComponent(__(button_label))}"]`,
+				`button[data-original-title="${encodeURIComponent(button_label)}"]`,
 			].join(",");
 			element =
 				this.frm.wrapper.querySelector(element) ||
