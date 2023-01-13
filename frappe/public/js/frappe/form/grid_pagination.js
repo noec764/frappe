@@ -13,11 +13,10 @@ export default class GridPagination {
 	}
 
 	render_pagination() {
-		if (this.grid.data.length <= this.page_length) {
-			this.wrapper.find(".grid-pagination").html("");
-		} else {
-			let $pagination_template = this.get_pagination_html();
-			this.wrapper.find(".grid-pagination").html($pagination_template);
+		const pagination = this.wrapper.find(".grid-pagination")
+		pagination.empty();
+		if (this.grid.data.length > this.page_length) {
+			pagination.append(this.get_pagination_elements());
 			this.prev_page_button = this.wrapper.find(".prev-page");
 			this.next_page_button = this.wrapper.find(".next-page");
 			this.$page_number = this.wrapper.find(".current-page-number");
@@ -26,6 +25,7 @@ export default class GridPagination {
 			this.last_page_button = this.wrapper.find(".last-page");
 
 			this.bind_pagination_events();
+			this.update_pagination_buttons();
 		}
 	}
 
@@ -112,23 +112,38 @@ export default class GridPagination {
 		}
 	}
 
-	get_pagination_html() {
-		let page_text_html = `<div class="page-text">
-				<input class="current-page-number page-number" type="text" value="${__(this.page_index)}"/>
-				<span>${__("of")}</span>
-				<span class="total-page-number page-number"> ${__(this.total_pages)} </span>
-			</div>`;
+	get_pagination_elements() {
+		const page_indicator = $(`<div class="page-text">
+			<input class="current-page-number page-number bold" type="text" value="${this.page_index}" />
+			<span>${__("of")}</span>
+			<span class="total-page-number page-number">${this.total_pages}</span>
+		</div>`);
+		const first_button = $(`<button class="btn btn-secondary btn-xs first-page">
+			<span class="first-page-icon">&laquo;</span>
+			<span>${__("First")}</span>
+		</button>`);
+		const prev_button = $(`<button class="btn btn-secondary btn-xs prev-page">
+			${frappe.utils.icon("left", "xs")}
+		</button>`);
+		const next_button = $(`<button class="btn btn-secondary btn-xs next-page">
+			${frappe.utils.icon("right", "xs")}
+		</button>`);
+		const last_button = $(`<button class="btn btn-secondary btn-xs last-page">
+			<span>${__("Last")}</span>
+			<span class="last-page-icon">&raquo;</span>
+		</button>`);
 
-		return $(`<button class="btn btn-secondary btn-xs first-page"">
-				<span>${__("First")}</span>
-			</button>
-			<button class="btn btn-secondary btn-xs prev-page">${frappe.utils.icon("left", "xs")}</button>
-			${page_text_html}
-			<button class="btn btn-secondary btn-xs next-page">${frappe.utils.icon("right", "xs")}</button>
-			<button class="btn btn-secondary btn-xs last-page">
-				<span>${__("Last")}</span>
-				<span class="first-page-icon">&raquo;</span>
-			</button>`);
+		return $.makeArray([first_button, prev_button, page_indicator, next_button, last_button]);
+	}
+
+	update_pagination_buttons() {
+		if (!this.first_page_button) return;
+		const can_go_prev = this.page_index > 1; // can go left = can go to first page
+		const can_go_next = this.page_index < this.total_pages; // can go left = can go to first page
+		this.first_page_button.prop("disabled", !can_go_prev);
+		this.prev_page_button.prop("disabled", !can_go_prev);
+		this.next_page_button.prop("disabled", !can_go_next);
+		this.last_page_button.prop("disabled", !can_go_next);
 	}
 
 	render_next_page() {
@@ -156,6 +171,7 @@ export default class GridPagination {
 		if (this.$page_number) {
 			this.$page_number.val(index);
 			this.$page_number.css("width", (index.toString().length + 1) * 8 + "px");
+			this.update_pagination_buttons();
 		}
 
 		this.update_page_numbers();
