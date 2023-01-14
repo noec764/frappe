@@ -371,7 +371,7 @@ class Database:
 		self.sql(query, debug=debug)
 
 	def check_transaction_status(self, query):
-		"""Raises exception if more than 20,000 `INSERT`, `UPDATE` queries are
+		"""Raises exception if more than 200,000 `INSERT`, `UPDATE` queries are
 		executed in one transaction. This is to ensure that writes are always flushed otherwise this
 		could cause the system to hang."""
 		self.check_implicit_commit(query)
@@ -886,6 +886,11 @@ class Database:
 		"""
 		is_single_doctype = not (dn and dt != dn)
 		to_update = field if isinstance(field, dict) else {field: val}
+
+		if dn is None:
+			deprecation_warning(
+				"Calling db.set_value with no document name assumes a single doctype. This behaviour will be removed in version 15. Use db.set_single_value instead."
+			)
 
 		if update_modified:
 			modified = modified or now()

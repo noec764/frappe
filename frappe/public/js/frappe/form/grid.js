@@ -407,7 +407,7 @@ export default class Grid {
 		this.toggle_checkboxes(this.display_status !== "Read");
 
 		// sortable
-		if (this.frm && this.is_sortable() && !this.sortable_setup_done) {
+		if (this.is_sortable() && !this.sortable_setup_done) {
 			this.make_sortable($rows);
 			this.sortable_setup_done = true;
 		}
@@ -468,14 +468,16 @@ export default class Grid {
 	}
 
 	setup_toolbar() {
-		if (this.is_editable()) {
-			this.wrapper.find(".grid-footer").toggle(true);
+		const needs_pagination = this.data.length > this.grid_pagination.page_length;
+		let can_add_rows = false;
 
+		if (this.is_editable()) {
 			// show, hide buttons to add rows
 			if (this.cannot_add_rows || (this.df && this.df.cannot_add_rows)) {
 				// add 'hidden' to buttons
 				this.wrapper.find(".grid-add-row, .grid-add-multiple-rows").addClass("hidden");
 			} else {
+				can_add_rows = true;
 				// show buttons
 				this.wrapper.find(".grid-add-row").removeClass("hidden");
 
@@ -483,9 +485,10 @@ export default class Grid {
 					this.wrapper.find(".grid-add-multiple-rows").removeClass("hidden");
 				}
 			}
-		} else if (this.grid_rows.length < this.grid_pagination.page_length) {
-			this.wrapper.find(".grid-footer").toggle(false);
 		}
+
+		const show_footer = needs_pagination || can_add_rows;
+		this.wrapper.find(".grid-footer").toggle(show_footer);
 
 		this.wrapper.find(".grid-add-row, .grid-add-multiple-rows").toggle(this.is_editable());
 	}
@@ -559,17 +562,18 @@ export default class Grid {
 				let idx = $(event.item).closest(".grid-row").attr("data-idx") - 1;
 				let doc = this.data[idx % this.grid_pagination.page_length];
 				this.renumber_based_on_dom();
-				this.frm.script_manager.trigger(
-					this.df.fieldname + "_move",
-					this.df.options,
-					doc.name
-				);
+				this.frm &&
+					this.frm.script_manager.trigger(
+						this.df.fieldname + "_move",
+						this.df.options,
+						doc.name
+					);
 				this.refresh();
-				this.frm.dirty();
+				this.frm && this.frm.dirty();
 			},
 		});
 
-		$(this.frm.wrapper).trigger("grid-make-sortable", [this.frm]);
+		this.frm && $(this.frm.wrapper).trigger("grid-make-sortable", [this.frm]);
 	}
 
 	get_data(filter_field) {
@@ -848,11 +852,11 @@ export default class Grid {
 			let $item = $(item);
 			let index =
 				(this.grid_pagination.page_index - 1) * this.grid_pagination.page_length + i;
-			let d = locals[this.doctype][$item.attr("data-name")];
+			let d = this.grid_rows_by_docname[$item.attr("data-name")].doc;
 			d.idx = index + 1;
 			$item.attr("data-idx", d.idx);
 
-			this.frm.doc[this.df.fieldname][index] = d;
+			if (this.frm) this.frm.doc[this.df.fieldname][index] = d;
 			this.data[index] = d;
 			this.grid_rows[index] = this.grid_rows_by_docname[d.name];
 		});
