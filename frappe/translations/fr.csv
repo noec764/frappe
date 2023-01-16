@@ -3482,7 +3482,7 @@ It is risky to delete this file: {0}. Please contact your System Manager.,Il est
 Item Card Group,Carte de groupe d'articles,
 Item Label,Libellé de l'élément,
 Item Type,Type d'élément,
-Item cannot be added to its own descendants,L'article ne peut être ajouté à ses propres descendants,
+Item cannot be added to its own descendants,L'élément ne peut être ajouté à ses propres descendants,
 JS,JS,
 JSON Request Body,Corps de requête JSON,
 JSON,JSON,
@@ -6268,7 +6268,7 @@ The process for deletion of {0} data associated with {1} has been initiated.,La 
 "The project number obtained from Google Cloud Console under <a href=""https://console.cloud.google.com/iam-admin/settings"">
 ""IAM &amp; Admin"" &gt; ""Settings""
 </a>","Le numéro de projet obtenu à partir de Google Cloud Console sous <a href=""https://console.cloud.google.com/iam-admin/settings"">
-""IAM &amp ; Admin"" &gt ; ""Settings""|µ|</a>.",
+""IAM &amp ; Admin"" &gt ; ""Settings""</a>.",
 The reset password link has either been used before or is invalid,Le lien de réinitialisation du mot de passe a déjà été utilisé ou n'est pas valide.,
 The reset password link has expired,Le lien de réinitialisation du mot de passe a expiré,
 The resource you are looking for is not available,La ressource que vous recherchez n'est pas disponible,
