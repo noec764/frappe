@@ -40,7 +40,7 @@ frappe.ui.form.on("File", {
 					${__("Your browser does not support the video element.")}
 				</video>
 			</div>`);
-		} else if (frm.doc.file_name.split("?")[0].endsWith(".pdf")) {
+		} else if (frm.doc.file_name.split("?")[0].lower().endsWith(".pdf")) {
 			$preview = $(`<div class="img_preview">
 				<object style="background:#323639;" width="100%">
 					<embed
@@ -51,7 +51,7 @@ frappe.ui.form.on("File", {
 					>
 				</object>
 			</div>`);
-		} else if (frm.doc.file_name.split("?")[0].endsWith(".mp3")) {
+		} else if (frm.doc.file_name.split("?")[0].lower().endsWith(".mp3")) {
 			$preview = $(`<div class="img_preview">
 				<audio width="480" height="60" controls>
 					<source src="${frm.doc.file_url}" type="audio/mpeg">
