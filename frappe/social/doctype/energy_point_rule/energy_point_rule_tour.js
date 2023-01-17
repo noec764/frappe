@@ -14,6 +14,11 @@ frappe.tour["Energy Point Rule"] = {
 				"Evénement permettant le déclenchement de la règle.<br><i>Ex. <strong>Nouveau</strong>: La création d'un nouveau document déclenche l'attribution de points.</i>",
 		},
 		{
+			fieldname: "for_assigned_users",
+			description:
+				"La règle attribuera les points aux utilisateurs assignés au document déclencheur",
+		},
+		{
 			fieldname: "points",
 			description: "Nombre de points attribués",
 		},
@@ -31,6 +36,11 @@ frappe.tour["Energy Point Rule"] = {
 			fieldname: "apply_only_once",
 			description:
 				"Option permettant de n'appliquer la règle qu'une seule fois pour chaque document",
+		},
+		{
+			fieldname: "condition",
+			description:
+				"Condition permettant de filtrer les documents déclenchant l'attribution de points",
 		},
 	],
 };
