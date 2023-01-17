@@ -481,13 +481,24 @@ frappe.ui.form.Toolbar = class Toolbar {
 			"name"
 		);
 
-		return Boolean(Object.keys(tour_exists.message).length);
+		if (Boolean(Object.keys(tour_exists.message).length)) {
+			return true;
+		} else if (typeof frappe.tour[this.frm.doctype] == Array) {
+			return true;
+		} else if (
+			typeof frappe.tour[this.frm.doctype] == "object" &&
+			frappe.tour[this.frm.doctype][frappe.boot.lang]
+		) {
+			return true;
+		}
+
+		return false;
 	}
 
 	add_form_tour_menu_btn() {
 		const me = this;
 		this.tour_exists_for_doctype().then((exists) => {
-			if (exists || frappe.tour[this.frm.doctype]) {
+			if (exists) {
 				this.page.add_menu_item(
 					__("Show tour"),
 					function () {
@@ -501,7 +512,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 
 	add_form_tour_custom_btn() {
 		this.tour_exists_for_doctype().then((exists) => {
-			if (exists || frappe.tour[this.frm.doctype]) {
+			if (exists) {
 				this.page.clear_icons();
 				this.page.add_action_icon(
 					"view",
