@@ -3482,7 +3482,7 @@ It is risky to delete this file: {0}. Please contact your System Manager.,Il est
 Item Card Group,Carte de groupe d'articles,
 Item Label,Libellé de l'élément,
 Item Type,Type d'élément,
-Item cannot be added to its own descendants,L'article ne peut être ajouté à ses propres descendants,
+Item cannot be added to its own descendants,L'élément ne peut être ajouté à ses propres descendants,
 JS,JS,
 JSON Request Body,Corps de requête JSON,
 JSON,JSON,
@@ -4022,16 +4022,16 @@ Names and surnames by themselves are easy to guess.,Les noms et prénoms par eux
 "Naming Options:
 <ol><li><b>field:[fieldname]</b> - By Field</li><li><b>autoincrement</b> - Uses Databases' Auto Increment feature</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage :
-<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>auto-incrémentation</b> - Utilise la fonction d'incrémentation automatique des bases de données</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Demander</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
+<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>auto-incrémentation</b> - Utilise la fonction d'incrémentation automatique des bases de données</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplacer tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
 "Naming Options:
 <ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage:
-<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Demander</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
+<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplacer tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
 "Naming Options:
 <ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
-<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage: <ol><li> <b>field: [fieldname]</b> - Par champ </li><li> <b>naming_series:</b> - En nommant les séries (le champ appelé naming_series doit être présent </li><li> <b>Invite</b> - Demander à l'utilisateur un nom </li><li> <b>[série]</b> - Série par préfixe (séparé par un point); par exemple PRE. ##### </li><li> <b>format: EXEMPLE- {MM} morewords {fieldname1} - {fieldname2} - {#####}</b> - Remplace tous les mots accolés (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. Des accolades extérieures, des caractères peuvent être utilisés. </li></ol>",
+<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage: <ol><li> <b>field: [fieldname]</b> - Par champ </li><li> <b>naming_series:</b> - En nommant les séries (le champ appelé naming_series doit être présent </li><li> <b>Prompt</b> - Demander un nom à l'utilisateur </li><li> <b>[série]</b> - Série par préfixe (séparé par un point); par exemple PRE. ##### </li><li> <b>format: EXEMPLE- {MM} morewords {fieldname1} - {fieldname2} - {#####}</b> - Remplace tous les mots accolés (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. Des accolades extérieures, des caractères peuvent être utilisés. </li></ol>",
 Naming Rule,Règle de nommage,
 Naming Series mandatory,Nom de série obligatoire,
 Naming Series,Nom de série,
@@ -6268,7 +6268,7 @@ The process for deletion of {0} data associated with {1} has been initiated.,La 
 "The project number obtained from Google Cloud Console under <a href=""https://console.cloud.google.com/iam-admin/settings"">
 ""IAM &amp; Admin"" &gt; ""Settings""
 </a>","Le numéro de projet obtenu à partir de Google Cloud Console sous <a href=""https://console.cloud.google.com/iam-admin/settings"">
-""IAM &amp ; Admin"" &gt ; ""Settings""|µ|</a>.",
+""IAM &amp ; Admin"" &gt ; ""Settings""</a>.",
 The reset password link has either been used before or is invalid,Le lien de réinitialisation du mot de passe a déjà été utilisé ou n'est pas valide.,
 The reset password link has expired,Le lien de réinitialisation du mot de passe a expiré,
 The resource you are looking for is not available,La ressource que vous recherchez n'est pas disponible,

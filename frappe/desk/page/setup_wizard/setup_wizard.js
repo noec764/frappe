@@ -38,7 +38,7 @@ frappe.setup.get_slides_settings = () => [
 	{
 		// Welcome slide
 		name: "welcome",
-		title: __("Hello!"),
+		title: __("Welcome!"),
 
 		fields: [
 			{
@@ -112,16 +112,9 @@ frappe.setup.get_slides_settings = () => [
 	{
 		// Profile slide
 		name: "user",
-		title: __("The First User: You"),
+		title: __("Let's setup your account"),
 		icon: "far fa-user",
 		fields: [
-			{
-				fieldtype: "Attach Image",
-				fieldname: "attach_user_image",
-				label: __("Attach Your Picture"),
-				is_private: 0,
-				align: "center",
-			},
 			{
 				fieldname: "full_name",
 				label: __("Full Name"),
@@ -153,15 +146,6 @@ frappe.setup.get_slides_settings = () => [
 						[frappe.boot.user.first_name, frappe.boot.user.last_name].join(" ").trim()
 					);
 				}
-
-				var user_image = frappe.get_cookie("user_image");
-				var $attach_user_image = slide.form.fields_dict.attach_user_image.$wrapper;
-
-				if (user_image) {
-					$attach_user_image.find(".missing-image").toggle(false);
-					$attach_user_image.find("img").attr("src", decodeURIComponent(user_image));
-					$attach_user_image.find(".img-container").toggle(true);
-				}
 				delete slide.form.fields_dict.email;
 			} else {
 				slide.form.fields_dict.email.df.reqd = 1;
@@ -181,7 +165,7 @@ frappe.setup.get_slides_settings = () => [
 				let email = frappe.setup.data.email;
 				slide.form.fields_dict.email.set_input(email);
 				if (frappe.get_gravatar(email, 200)) {
-					var $attach_user_image = slide.form.fields_dict.attach_user_image.$wrapper;
+					let $attach_user_image = slide.form.fields_dict.attach_user_image.$wrapper;
 					$attach_user_image.find(".missing-image").toggle(false);
 					$attach_user_image.find("img").attr("src", frappe.get_gravatar(email, 200));
 					$attach_user_image.find(".img-container").toggle(true);
@@ -209,7 +193,7 @@ frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
 				frappe.setup.data.lang = r.message;
 
 				frappe.setup.run_event("before_load");
-				var wizard_settings = {
+				let wizard_settings = {
 					parent: wrapper,
 					values: { language: frappe.setup.data.default_language || "English" },
 					slides: frappe.setup.slides,
@@ -380,7 +364,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	get_setup_slides_filtered_by_domain() {
-		var filtered_slides = [];
+		let filtered_slides = [];
 		frappe.setup.slides.forEach(function (slide) {
 			if (frappe.setup.domains) {
 				let active_domains = frappe.setup.domains;
@@ -489,7 +473,7 @@ frappe.setup.utils = {
 	},
 
 	setup_language_field: function (slide) {
-		var language_field = slide.get_field("language");
+		let language_field = slide.get_field("language");
 		language_field.df.options = frappe.setup.data.lang.languages;
 		language_field.set_options();
 	},
@@ -544,7 +528,7 @@ frappe.setup.utils = {
 			.on("change", function () {
 				clearTimeout(slide.language_call_timeout);
 				slide.language_call_timeout = setTimeout(() => {
-					var lang = $(this).val() || "English";
+					let lang = $(this).val() || "English";
 					frappe._messages = {};
 					frappe.call({
 						method: "frappe.desk.page.setup_wizard.setup_wizard.load_messages",
@@ -566,9 +550,9 @@ frappe.setup.utils = {
 			Bind a slide's country, timezone and currency fields
 		*/
 		slide.get_input("country").on("change", function () {
-			var country = slide.get_input("country").val();
-			var $timezone = slide.get_input("timezone");
-			var data = frappe.setup.data.regional_data;
+			let country = slide.get_input("country").val();
+			let $timezone = slide.get_input("timezone");
+			let data = frappe.setup.data.regional_data;
 
 			$timezone.empty();
 
@@ -590,12 +574,12 @@ frappe.setup.utils = {
 		});
 
 		slide.get_input("currency").on("change", function () {
-			var currency = slide.get_input("currency").val();
+			let currency = slide.get_input("currency").val();
 			if (!currency) return;
 			frappe.model.with_doc("Currency", currency, function () {
 				frappe.provide("locals.:Currency." + currency);
-				var currency_doc = frappe.model.get_doc("Currency", currency);
-				var number_format = currency_doc.number_format;
+				let currency_doc = frappe.model.get_doc("Currency", currency);
+				let number_format = currency_doc.number_format;
 				if (number_format === "#.###") {
 					number_format = "#.###,##";
 				} else if (number_format === "#,###") {

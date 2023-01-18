@@ -12,6 +12,7 @@ from frappe.social.doctype.energy_point_log.energy_point_log import create_energ
 from frappe.social.doctype.energy_point_settings.energy_point_settings import (
 	is_energy_point_enabled,
 )
+from frappe.utils import flt
 
 
 class EnergyPointRule(Document):
@@ -27,7 +28,7 @@ class EnergyPointRule(Document):
 
 			points = self.points
 			if self.multiplier_field:
-				multiplier = doc.get(self.multiplier_field) or 1
+				multiplier = flt(doc.get(self.multiplier_field) or 1)
 				points = round(points * multiplier)
 				max_points = self.max_points
 				if max_points and points > max_points:

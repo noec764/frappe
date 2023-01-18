@@ -113,8 +113,6 @@ class EmailServer:
 					self.settings.email_account,
 					self.settings.username,
 					self.settings.access_token,
-					self.settings.refresh_token,
-					self.settings.service,
 				).connect()
 
 			else:
@@ -150,8 +148,6 @@ class EmailServer:
 					self.settings.email_account,
 					self.settings.username,
 					self.settings.access_token,
-					self.settings.refresh_token,
-					self.settings.service,
 				).connect()
 
 			else:
