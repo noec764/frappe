@@ -44,7 +44,7 @@ def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> d
 
 	attachment_folder = frappe.db.get_value(
 		"File",
-		f"{home_folder}/Attachments",
+		{"is_attachments_folder": 1},
 		["name", "file_name", "file_url", "is_folder", "modified"],
 		as_dict=1,
 	)
