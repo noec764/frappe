@@ -627,10 +627,6 @@ frappe.ui.form.Form = class FrappeForm {
 
 		frappe.after_ajax(() => {
 			$(document).ready(() => {
-				if (!this.hidden) {
-					this.layout.show_empty_form_message();
-				}
-
 				this.scroll_to_element();
 			});
 		});
