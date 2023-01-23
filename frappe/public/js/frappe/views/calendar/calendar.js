@@ -359,7 +359,8 @@ frappe.views.Calendar = class frappeCalendar {
 					event[me.field_map.allDay] = selectionInfo.allDay;
 
 					if (selectionInfo.allDay) {
-						event[me.field_map.end] = moment(selectionInfo.end).subtract(1, "seconds");
+						const last_second = moment(selectionInfo.end).subtract(1, "seconds");
+						event[me.field_map.end] = me.get_system_datetime(last_second.toDate());
 					}
 				}
 

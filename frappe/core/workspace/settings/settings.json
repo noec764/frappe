@@ -2,7 +2,7 @@
  "charts": [],
  "color": "#aec8ff",
  "content": "[{\"id\":\"XBf792HRWR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings</b></span>\",\"col\":12}},{\"id\":\"jl5AVVRU_o\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Settings\",\"col\":3}},{\"id\":\"R2Lh-Ol30q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Print Settings\",\"col\":3}},{\"id\":\"PMXMZUyvk6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"id\":\"D9Jkba7yty\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Document Naming Settings\",\"col\":3}},{\"id\":\"bVDxxxe_81\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ZFKjOn3dMz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"S5noCgPlpg\",\"type\":\"card\",\"data\":{\"card_name\":\"Data\",\"col\":4}},{\"id\":\"Vj7kZsZMgC\",\"type\":\"card\",\"data\":{\"card_name\":\"Email / Notifications\",\"col\":4}},{\"id\":\"O3KpcE1o2y\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"pKq7Zc7OrY\",\"type\":\"card\",\"data\":{\"card_name\":\"Core\",\"col\":4}},{\"id\":\"lep26xOJX2\",\"type\":\"card\",\"data\":{\"card_name\":\"Printing\",\"col\":4}},{\"id\":\"bpdh3uPFf-\",\"type\":\"card\",\"data\":{\"card_name\":\"Workflow\",\"col\":4}}]",
- "creation": "2020-03-02 15:09:40.527211",
+ "creation": "2023-01-21 17:58:18.795925",
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -431,6 +431,13 @@
    "icon": "website",
    "label": "Website Settings",
    "link_to": "Website Settings",
+   "type": "DocType"
+  },
+  {
+   "columns": 0,
+   "icon": "setting",
+   "label": "Navbar Settings",
+   "link_to": "Navbar Settings",
    "type": "DocType"
   }
  ],
