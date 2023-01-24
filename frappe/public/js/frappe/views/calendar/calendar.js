@@ -484,14 +484,28 @@ frappe.views.Calendar = class frappeCalendar {
 
 	update_event(info) {
 		var me = this;
-		frappe.model.remove_from_locals(me.doctype, info.event.name);
+		let firstEvent = info.event;
+		if (info.relatedEvents && info.relatedEvents[0]) {
+			// let ok = false;
+			// const dialog = new frappe.ui.Dialog();
+			// me.refresh();
+			const maybeFirst = info.relatedEvents[0]
+			if (maybeFirst.start < firstEvent.start) {
+				firstEvent = maybeFirst;
+			}
+		}
+		frappe.model.remove_from_locals(me.doctype, firstEvent.id);
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
-			args: me.get_update_args(info.event),
+			args: me.get_update_args(firstEvent),
 			callback: function (r) {
 				if (r.exc) {
 					frappe.show_alert(__("Unable to update event"));
 					info.revert();
+				} else {
+					if (firstEvent.extendedProps?.rrule) {
+						me.refresh();
+					}
 				}
 			},
 			error: function () {
