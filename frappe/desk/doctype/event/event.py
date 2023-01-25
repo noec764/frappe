@@ -99,6 +99,8 @@ class Event(WebsiteGenerator):
 		if isinstance(self.rrule, list) and self.rrule > 1:
 			self.rrule = self.rrule[0]
 
+		self.make_participants_unique()
+
 	def on_update(self):
 		self.sync_communication()
 
@@ -202,6 +204,18 @@ class Event(WebsiteGenerator):
 				participant_list.append(event_participant)
 
 		self.event_participants = participant_list
+
+	def make_participants_unique(self):
+		seen_contacts = set()
+		kept_participants = []
+
+		for event_participant in self.event_participants or []:
+			contact = event_participant.contact
+			if contact not in seen_contacts:
+				kept_participants.append(event_participant)
+			seen_contacts.add(contact)
+
+		self.event_participants = kept_participants
 
 	def add_reference(self, reference_doctype, reference_name):
 		self.append(
