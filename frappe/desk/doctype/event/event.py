@@ -149,16 +149,29 @@ class Event(WebsiteGenerator):
 		)
 		communication.not_added_to_reference_timeline = 1
 		communication.status = "Linked"
-		communication.timeline_links = []
+
+		current_links = set()
+		for link in communication.timeline_links:
+			current_links.add((link.link_doctype, link.link_name))
+
+		future_links = set()
 		for participant in participants:
-			communication.add_link("Contact", participant.contact)
+			future_links.add(("Contact", participant.contact))
 			contact = frappe.get_doc("Contact", participant.contact)
-			if contact.links:
-				for link in contact.links:
-					if link.link_doctype and link.link_name:
-						meta = frappe.get_meta(link.link_doctype)
-						if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
-							communication.add_link(link.link_doctype, link.link_name)
+			for link in contact.links or []:
+				if link.link_doctype and link.link_name:
+					meta = frappe.get_meta(link.link_doctype)
+					if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
+						future_links.add((link.link_doctype, link.link_name))
+
+		added_links = future_links.difference(current_links)  # only in future
+		removed_links = current_links.difference(future_links)  # only in current
+
+		for link_doctype, link_name in added_links:
+			communication.add_link(link_doctype, link_name)
+
+		for link_doctype, link_name in removed_links:
+			communication.remove_link(link_doctype, link_name)
 
 		communication.save(ignore_permissions=True)
 
