@@ -68,6 +68,11 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 			options = this.df.options.split("\n");
 		}
 
+		if (this.df.fieldname === "fieldtype" && options.every((s) => typeof s === "string")) {
+			const collator = new Intl.Collator().compare
+			options.sort((a, b) => collator(__(a), __(b)))
+		}
+
 		// nothing changed
 		if (JSON.stringify(options) === this.last_options) {
 			return;
