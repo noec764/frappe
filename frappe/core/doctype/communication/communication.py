@@ -529,7 +529,7 @@ def parse_email(communication, email_strings):
 		if email_string and isinstance(email_string, str):
 			for email in email_string.split(","):
 				if delimiter in email:
-					email = email.split("@")[0]
+					email = email.split("@", 1)[0]
 					email_local_parts = email.split(delimiter)
 					if not len(email_local_parts) == 3:
 						continue
