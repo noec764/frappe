@@ -494,7 +494,7 @@ frappe.views.Calendar = class frappeCalendar {
 				firstEvent = maybeFirst;
 			}
 		}
-		frappe.model.remove_from_locals(me.doctype, firstEvent.id);
+		frappe.model.remove_from_locals(firstEvent.extendedProps?.doctype || me.doctype, firstEvent.id);
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
 			args: me.get_update_args(firstEvent),
@@ -504,6 +504,10 @@ frappe.views.Calendar = class frappeCalendar {
 					info.revert();
 				} else {
 					if (firstEvent.extendedProps?.rrule) {
+						// Fetch some instances of the recurring event that might
+						// be missing because they were out of the displayed range
+						// but now should be displayed because the recurring event
+						// was moved to an earlier date.
 						me.refresh();
 					}
 				}
