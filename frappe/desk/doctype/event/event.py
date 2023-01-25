@@ -112,7 +112,7 @@ class Event(WebsiteGenerator):
 
 	def sync_communication(self):
 		if self.event_participants:
-			comms = []
+			comms = set()
 			for participant in self.event_participants:
 				filters = [
 					["Communication", "reference_doctype", "=", self.doctype],
@@ -120,11 +120,12 @@ class Event(WebsiteGenerator):
 					["Communication Link", "link_doctype", "=", "Contact"],
 					["Communication Link", "link_name", "=", participant.contact],
 				]
-				comms.extend(frappe.get_all("Communication", filters=filters, fields=["name"]))
+				comm_names = frappe.get_all("Communication", filters=filters, pluck="name")
+				comms.update(comm_names)
 
 			if comms:
 				for comm in comms:
-					communication = frappe.get_doc("Communication", comm.name)
+					communication = frappe.get_doc("Communication", comm)
 					self.update_communication(self.event_participants, communication)
 			else:
 				self.create_communication(self.event_participants)
