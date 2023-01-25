@@ -835,7 +835,6 @@ class Database:
 				fields=field,
 				filters=names,
 				order_by=order_by,
-				pluck=pluck,
 				distinct=distinct,
 				limit=limit,
 			).run(debug=debug, run=run, as_dict=as_dict, pluck=pluck)
