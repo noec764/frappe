@@ -82,9 +82,9 @@ frappe.ui.color = {
 		if (!this.is_standard(hex)) {
 			const brightness = this.brightness(hex);
 			if (brightness < 128) {
-				return this.lighten(hex, 0.5);
+				return this.lighten(hex, 0.9);
 			}
-			return this.lighten(hex, -0.5);
+			return this.lighten(hex, -0.9);
 		}
 
 		const color_name = this.get_color_name(hex);
@@ -102,10 +102,12 @@ frappe.ui.color = {
 	},
 
 	lighten(color, percent) {
+		const clamp = (value, min = 0, max = 255) => Math.max(min, Math.min(max, value))
 		// https://stackoverflow.com/a/13542669/5353542
-		var f = parseInt(color.slice(1), 16),
+		color = this.normalize_hex(color);
+		var f = parseInt(color, 16),
 			t = percent < 0 ? 0 : 255,
-			p = percent < 0 ? percent * -1 : percent,
+			p = Math.abs(percent),
 			R = f >> 16,
 			G = (f >> 8) & 0x00ff,
 			B = f & 0x0000ff;
@@ -113,9 +115,9 @@ frappe.ui.color = {
 			"#" +
 			(
 				0x1000000 +
-				(Math.round((t - R) * p) + R) * 0x10000 +
-				(Math.round((t - G) * p) + G) * 0x100 +
-				(Math.round((t - B) * p) + B)
+				clamp(Math.round((t - R) * p) + R) * 0x10000 +
+				clamp(Math.round((t - G) * p) + G) * 0x100 +
+				clamp(Math.round((t - B) * p) + B)
 			)
 				.toString(16)
 				.slice(1)
@@ -123,9 +125,7 @@ frappe.ui.color = {
 	},
 
 	hex_to_rgb(hex) {
-		if (hex.startsWith("#")) {
-			hex = hex.substring(1);
-		}
+		hex = this.normalize_hex(hex);
 		const r = parseInt(hex.substring(0, 2), 16);
 		const g = parseInt(hex.substring(2, 4), 16);
 		const b = parseInt(hex.substring(4, 6), 16);
@@ -133,12 +133,23 @@ frappe.ui.color = {
 	},
 
 	brightness(hex) {
+		hex = this.normalize_hex(hex);
 		const rgb = this.hex_to_rgb(hex);
 		// https://www.w3.org/TR/AERT#color-contrast
 		// 255 - brightest (#fff)
 		// 0 - darkest (#000)
 		return (rgb.r * 299 + rgb.g * 587 + rgb.b * 114) / 1000;
 	},
+
+	normalize_hex(hex) {
+		if (hex.startsWith("#")) {
+			hex = hex.substring(1);
+		}
+		if (hex.length === 3) {
+			hex = [0, 0, 1, 1, 2, 2].map(i => hex[i]).join('');
+		}
+		return hex;
+	}
 };
 
 frappe.ui.color_map = frappe.ui.color.get_color_map();
