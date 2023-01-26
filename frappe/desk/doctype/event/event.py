@@ -249,17 +249,6 @@ class Event(WebsiteGenerator):
 		context.content = content
 		context.event_style = event_style
 
-		fields = []
-		for field in frappe.get_meta("Event Registration").fields:
-			if not (field.fieldname == "amended_from" or field.permlevel > 0):
-				field.label = _(field.label)
-				fields.append(field)
-
-		context.registration_form = frappe.as_json(fields)
-		context.is_registered = frappe.session.user != "Guest" and frappe.db.exists(
-			"Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1)
-		)
-
 		context.attachments = (
 			frappe.get_all(
 				"File",
