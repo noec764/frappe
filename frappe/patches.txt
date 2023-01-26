@@ -256,4 +256,4 @@ execute:frappe.delete_doc("Page", "activity", force=1)
 frappe.patches.v14_0.disable_email_accounts_with_oauth
 
 frappe.patches.dokos.v3_0.currency_symbol_location
-frappe.patches.dokos.v3_0.set_language_for_onboarding_modules
+frappe.patches.dokos.v3_0.set_language_for_onboarding_modules #2023-01-20

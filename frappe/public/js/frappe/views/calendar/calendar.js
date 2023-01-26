@@ -335,9 +335,11 @@ frappe.views.Calendar = class frappeCalendar {
 			},
 			eventDrop: function (info) {
 				me.update_event(info);
+				$(info.el).tooltip("dispose");
 			},
 			eventResize: function (info) {
 				me.update_event(info);
+				$(info.el).tooltip("dispose");
 			},
 			select: function (selectionInfo) {
 				if (
@@ -391,6 +393,9 @@ frappe.views.Calendar = class frappeCalendar {
 					title: frappe.utils.html2text(info.event.title),
 					placement: "auto",
 				});
+			},
+			eventWillUnmount: function (info) {
+				$(info.el).tooltip("dispose");
 			},
 			slotMinTime: defaults.slots_start_time || "06:00:00",
 			slotMaxTime: defaults.slots_end_time || "22:00:00",

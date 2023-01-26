@@ -186,7 +186,7 @@ def extract_fieldname(field):
 	fieldname = field
 	for sep in (" as ", " AS "):
 		if sep in fieldname:
-			fieldname = fieldname.split(sep)[0]
+			fieldname = fieldname.split(sep, 1)[0]
 
 	# certain functions allowed, extract the fieldname from the function
 	if fieldname.startswith("count(") or fieldname.startswith("sum(") or fieldname.startswith("avg("):
@@ -444,16 +444,12 @@ def get_labels(fields, doctype):
 	"""get column labels based on column names"""
 	labels = []
 	for key in fields:
-		key = key.split(" as ")[0]
-
-		if key.startswith(("count(", "sum(", "avg(")):
+		try:
+			parenttype, fieldname = parse_field(key)
+		except ValueError:
 			continue
 
-		if "." in key:
-			parenttype, fieldname = key.split(".")[0][4:-1], key.split(".")[1].strip("`")
-		else:
-			parenttype = doctype
-			fieldname = fieldname.strip("`")
+		parenttype = parenttype or doctype
 
 		if parenttype == doctype and fieldname == "name":
 			label = _("ID", context="Label of name column in report")
@@ -472,17 +468,12 @@ def get_labels(fields, doctype):
 
 def handle_duration_fieldtype_values(doctype, data, fields):
 	for field in fields:
-		key = field.split(" as ")[0]
-
-		if key.startswith(("count(", "sum(", "avg(")):
+		try:
+			parenttype, fieldname = parse_field(field)
+		except ValueError:
 			continue
 
-		if "." in key:
-			parenttype, fieldname = key.split(".")[0][4:-1], key.split(".")[1].strip("`")
-		else:
-			parenttype = doctype
-			fieldname = field.strip("`")
-
+		parenttype = parenttype or doctype
 		df = frappe.get_meta(parenttype).get_field(fieldname)
 
 		if df and df.fieldtype == "Duration":
@@ -493,6 +484,20 @@ def handle_duration_fieldtype_values(doctype, data, fields):
 					duration_val = format_duration(val_in_seconds, df.hide_days)
 					data[i][index] = duration_val
 	return data
+
+
+def parse_field(field: str) -> tuple[str | None, str]:
+	"""Parse a field into parenttype and fieldname."""
+	key = field.split(" as ", 1)[0]
+
+	if key.startswith(("count(", "sum(", "avg(")):
+		raise ValueError
+
+	if "." in key:
+		table, column = key.split(".", 2)[:2]
+		return table[4:-1], column.strip("`")
+
+	return None, key.strip("`")
 
 
 @frappe.whitelist()
