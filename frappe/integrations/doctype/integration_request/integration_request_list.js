@@ -13,7 +13,7 @@ frappe.listview_settings["Integration Request"] = {
 		} else if (doc.status == "Not Handled") {
 			return [__("Not Handled"), "gray", "status,=,Not Handled"];
 		} else {
-			return [__("Queued"), "darkgray", "status,=,Queued"];
+			return [__("Queued"), "darkgrey", "status,=,Queued"];
 		}
 	},
 };
