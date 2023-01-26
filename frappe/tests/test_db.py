@@ -767,7 +767,7 @@ class TestDBSetValue(FrappeTestCase):
 			frappe.db.get_value("ToDo", todo.name, ["modified", "modified_by"]),
 		)
 
-	def test_for_update(self):
+	def test_set_value(self):
 		self.todo1.reload()
 
 		with patch.object(Database, "sql") as sql_called:
@@ -778,16 +778,13 @@ class TestDBSetValue(FrappeTestCase):
 				f"{self.todo1.description}-edit by `test_for_update`",
 			)
 			first_query = sql_called.call_args_list[0].args[0]
-			second_query = sql_called.call_args_list[1].args[0]
 
-			self.assertTrue(sql_called.call_count == 2)
-			self.assertTrue("FOR UPDATE" in first_query)
 			if frappe.conf.db_type == "postgres":
 				from frappe.database.postgres.database import modify_query
 
-				self.assertTrue(modify_query("UPDATE `tabToDo` SET") in second_query)
+				self.assertTrue(modify_query("UPDATE `tabToDo` SET") in first_query)
 			if frappe.conf.db_type == "mariadb":
-				self.assertTrue("UPDATE `tabToDo` SET" in second_query)
+				self.assertTrue("UPDATE `tabToDo` SET" in first_query)
 
 	def test_cleared_cache(self):
 		self.todo2.reload()
