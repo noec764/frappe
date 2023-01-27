@@ -60,8 +60,6 @@ E.g. 1 USD = 100 centimes",
 6 months,6 mois,
 ; not allowed in condition,; non autorisé dans la condition,
 "<a target=""_blank"" href=""https://support.google.com/mail/answer/185833?hl=en"">${cta}</a>","<a target=""_blank"" href=""https://support.google.com/mail/answer/185833?hl=en"">${cta}</a>",
-"<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Thank you ! You have been successfully registered"") }</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>${ __(""Merci ! Vous êtes inscrit·e à cet événement"") }</span></div>",
-"<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Thank you ! You have been successfully registered</span></div>","<div class=""alert alert-success mt-5 text-center"" role=""alert""><span>Merci ! Votre inscription est prise en compte</span></div>",
 "<div class=""alert"">Please don't update it as it can mess up your form. Use the Customize Form View and Custom Fields to set properties!</div>","<div class=""alert"">Veuillez ne pas mettre à jour les types de document directement. Utilisez la vue de personnalisation de formulaire et les champs personnalisés pour modifier des propriétés!</div>",
 "<div class=""well"">
     Edit list of Series in the box. Rules:
@@ -3871,6 +3869,7 @@ Max width for type Currency is 100px in row {0},Largeur max pour le type Devise 
 Maximum Attachment Limit for this record reached.,Taille maximale des Pièces Jointes pour cet enregistrement est atteint.,
 Maximum Attachment Limit of {0} has been reached for {1} {2}.,Le nombre limite de pièces jointes de {0} a été atteint pour {1} {2}.,
 Maximum Number of Fields,Nombre de champs maximum,
+Leave this field empty or write 0 to not set a limit.,Laissez ce champ vide ou mettez 0 pour ne pas définir de limite.,
 Maximum Points,Points maximum,
 Maximum attachment limit of {0} has been reached.,Le nombre limite de pièces jointes de {0} a été atteint.,
 "Maximum points allowed after multiplying points with the multiplier value
@@ -4248,7 +4247,7 @@ No,Non,Checkbox is not checked
 No,Non,Dismiss confirmation dialog
 No,Non,o
 No,Non,
-Non Negative,Non négative,
+Non Negative,Nombre non négatif,
 None: End of Workflow,Aucun: Fin de Flux de Travail,
 None,Aucun,
 Normal,Normal,
