@@ -45,7 +45,11 @@ frappe.form.formatters = {
 		return __(frappe.form.formatters["Data"](value, df));
 	},
 	Select: function (value, df) {
-		return __(frappe.form.formatters["Data"](value, df));
+		const txt = frappe.form.formatters["Data"](value, df)
+		if (df.fieldname === "fieldtype") {
+			return __(txt, null, "DocField");
+		}
+		return __(txt, null, df.parent);
 	},
 	Float: function (value, docfield, options, doc) {
 		// don't allow 0 precision for Floats, hence or'ing with null
