@@ -854,9 +854,7 @@ class Database:
 	):
 		"""Set a single value in the database, do not call the ORM triggers
 		but update the modified timestamp (unless specified not to).
-
 		**Warning:** this function will not call Document events and should be avoided in normal cases.
-
 		:param dt: DocType name.
 		:param dn: Document name.
 		:param field: Property / field name or dictionary of values to be updated
