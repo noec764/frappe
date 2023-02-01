@@ -497,6 +497,8 @@ def accept(web_form, data):
 	# set values
 	for field in web_form.web_form_fields:
 		fieldname = field.fieldname
+		if not fieldname: continue
+
 		df = meta.get_field(fieldname)
 		value = data.get(fieldname, None)
 
