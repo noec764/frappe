@@ -87,6 +87,8 @@ def get(doctype, name=None, filters=None, parent=None):
 		doc = frappe.get_doc(doctype)  # single
 
 	doc.check_permission()
+	doc.apply_fieldlevel_read_permissions()
+
 	return doc.as_dict()
 
 
