@@ -70,7 +70,7 @@ frappe.ui.form.ControlSelect = class ControlSelect extends frappe.ui.form.Contro
 
 		if (this.df.fieldname === "fieldtype" && options.every((s) => typeof s === "string")) {
 			const collator = new Intl.Collator().compare
-			options.sort((a, b) => collator(__(a), __(b)))
+			options.sort((a, b) => collator(__(a, null, "DocField"), __(b, null, "DocField")))
 		}
 
 		// nothing changed
