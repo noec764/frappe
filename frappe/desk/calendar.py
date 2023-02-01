@@ -130,6 +130,7 @@ def process_recurring_events(event, start, end, starts_on_field, ends_on_field, 
 					if event.get(ends_on_field)
 					else new_e.get(starts_on_field)
 				)
+				new_e["groupId"] = event.name
 				result.append(new_e)
 		except Exception:
 			return result
