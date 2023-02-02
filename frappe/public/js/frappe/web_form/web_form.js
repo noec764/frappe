@@ -161,7 +161,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		let values = frappe.utils.get_query_params();
 		delete values.new;
 		Object.assign(defaults, values);
-		this.set_values(values);
+		return this.set_values(values);
 	}
 
 	setup_primary_action() {
@@ -362,8 +362,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (!doc_values) return false;
 
 		if (window.saving) return false;
-		// TODO: remove this (used for payments app)
-		let for_payment = Boolean(this.accept_payment && !this.doc.paid);
 
 		Object.assign(this.doc, doc_values);
 		this.doc.doctype = this.doc_type;
@@ -379,7 +377,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			args: {
 				data: this.doc,
 				web_form: this.name,
-				for_payment,
 			},
 			btn: $("btn-primary"),
 			freeze: true,
@@ -412,9 +409,13 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	handle_success(data) {
-		// TODO: remove this (used for payments app)
-		if (this.accept_payment && !this.doc.paid) {
-			window.location.href = data;
+		if (data && typeof data === "string" && data.startsWith("https://")) {
+			window.location.href = data; // old style redirect
+			return;
+		}
+		if (data && (!data.doctype) && data.redirect) {
+			window.location.href = data.redirect;
+			return;
 		}
 
 		if (!this.is_new) {

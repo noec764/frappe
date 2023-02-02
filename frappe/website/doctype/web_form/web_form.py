@@ -457,6 +457,12 @@ def get_context(context):
 		else:
 			return False
 
+	def webform_validate_doc(self, doc):
+		self.validate_mandatory(doc)
+
+	def webform_accept_doc(self, doc):
+		return doc.run_method("on_webform_save", web_form=self)
+
 
 def get_web_form_module(doc):
 	if doc.is_standard:
@@ -491,11 +497,13 @@ def accept(web_form, data):
 	# set values
 	for field in web_form.web_form_fields:
 		fieldname = field.fieldname
+		if not fieldname: continue
+
 		df = meta.get_field(fieldname)
-		value = data.get(fieldname, "")
+		value = data.get(fieldname, None)
 
 		if df and df.fieldtype in ("Attach", "Attach Image"):
-			if value and "data:" and "base64" in value:
+			if value and ("data:" in value) and (";base64" in value):
 				files.append((fieldname, value))
 				if not doc.name:
 					doc.set(fieldname, "")
@@ -505,6 +513,8 @@ def accept(web_form, data):
 				files_to_delete.append(doc.get(fieldname))
 
 		doc.set(fieldname, value)
+
+	web_form.webform_validate_doc(doc=doc)
 
 	if doc.name:
 		if web_form.has_web_form_permission(doctype, doc.name, "write"):
@@ -533,7 +543,7 @@ def accept(web_form, data):
 
 			# save new file
 			filename, dataurl = filedata.split(",", 1)
-			_file = frappe.get_doc(
+			file_doc = frappe.get_doc(
 				{
 					"doctype": "File",
 					"file_name": filename,
@@ -543,10 +553,10 @@ def accept(web_form, data):
 					"decode": True,
 				}
 			)
-			_file.save()
+			file_doc.save()
 
 			# update values
-			doc.set(fieldname, _file.file_url)
+			doc.set(fieldname, file_doc.file_url)
 
 		doc.save(ignore_permissions=True)
 
@@ -556,7 +566,8 @@ def accept(web_form, data):
 				remove_file_by_url(f, doctype=doctype, name=doc.name)
 
 	frappe.flags.web_form_doc = doc
-	return doc
+
+	return web_form.webform_accept_doc(doc=doc) or doc
 
 
 @frappe.whitelist()

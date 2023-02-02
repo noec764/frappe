@@ -16,6 +16,7 @@
   "section_break_1",
   "introduction_text",
   "web_form_fields",
+  "footer_text",
   "settings_tab",
   "login_required",
   "allow_multiple",
@@ -359,13 +360,19 @@
    "fieldname": "meta_image",
    "fieldtype": "Attach Image",
    "label": "Meta Image"
+  },
+  {
+   "fieldname": "footer_text",
+   "fieldtype": "Text Editor",
+   "ignore_xss_filter": 1,
+   "label": "Footer"
   }
  ],
  "has_web_view": 1,
  "icon": "icon-edit",
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-01 14:23:58.486139",
+ "modified": "2023-02-01 18:29:30.014842",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Web Form",
