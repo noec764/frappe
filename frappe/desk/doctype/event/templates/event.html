@@ -6,15 +6,8 @@
 {% endblock %}
 
 {% block header_actions %}
-	{% if can_edit_event %}
-		<a class="btn btn-secondary" href="/app/event/{{ doc.name }}">
-			<svg class="icon icon-xs"><use href="#icon-edit"></use></svg>
-			{{ _("Edit") }}
-		</a>
-	{% endif %}
-
 	{% if show_close_button %}
-		<button class="btn btn-secondary close-btn">{{ _("Close") }}</button>
+		<button class="btn btn-secondary close-btn" onclick="history.back()">{{ _("Close") }}</button>
 	{% endif %}
 {% endblock %}
 
