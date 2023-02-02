@@ -30,6 +30,7 @@ from frappe.database.utils import (
 from frappe.exceptions import DoesNotExistError, ImplicitCommitError
 from frappe.model.utils.link_count import flush_local_link_count
 from frappe.query_builder.functions import Count
+from frappe.query_builder.utils import DocType
 from frappe.utils import cast as cast_fieldtype
 from frappe.utils import cint, get_datetime, get_table_name, getdate, now, sbool
 from frappe.utils.deprecations import deprecated, deprecation_warning
@@ -224,7 +225,7 @@ class Database:
 			self._cursor.execute(query, values)
 		except Exception as e:
 			if self.is_syntax_error(e):
-				frappe.errprint(f"Syntax error in query:\n{query} {values or ''}")
+				frappe.errprint(f"Syntax error in query:\n{query} {values}")
 
 			elif self.is_deadlocked(e):
 				raise frappe.QueryDeadlockError(e) from e
