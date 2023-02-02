@@ -71,5 +71,5 @@ class TestDefaults(FrappeTestCase):
 		self.assertEqual(get_user_default("language"), None)  # noqa
 		self.assertEqual(get_user_default_as_list("language"), [])  # noqa
 
-		frappe.delete_doc("User Permission", perm_doc.name)
+		frappe.delete_doc("User Permission", perm_doc.name, ignore_permissions=True)
 		frappe.set_user(old_user)
