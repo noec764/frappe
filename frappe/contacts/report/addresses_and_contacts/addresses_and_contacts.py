@@ -1,4 +1,4 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and contributors
+# Copyright (c) 2013, Frappe Technologies Pvt. Ltd. and contributors
 # License: MIT. See LICENSE
 import frappe
 from frappe import _
@@ -83,6 +83,9 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 	)
 
 	for reference_name, details in reference_details.items():
+		if not details:
+			continue
+
 		addresses = details.get("address", [])
 		contacts = details.get("contact", [])
 		if not any([addresses, contacts]):
@@ -97,10 +100,9 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 			max_length = max(len(addresses), len(contacts))
 			for idx in range(0, max_length):
 				result = [reference_name]
-				address = addresses[idx] if idx < len(addresses) else add_blank_columns_for("Address")
-				contact = contacts[idx] if idx < len(contacts) else add_blank_columns_for("Contact")
-				result.extend(address)
-				result.extend(contact)
+
+				result.extend(addresses[idx] if idx < len(addresses) else add_blank_columns_for("Address"))
+				result.extend(contacts[idx] if idx < len(contacts) else add_blank_columns_for("Contact"))
 
 				data.append(result)
 
@@ -108,22 +110,26 @@ def get_reference_addresses_and_contact(reference_doctype, reference_name):
 
 
 def get_reference_details(reference_doctype, doctype, reference_list, reference_details):
-	filters = [
-		["Dynamic Link", "link_doctype", "=", reference_doctype],
-		["Dynamic Link", "link_name", "in", reference_list],
-	]
+	filters = (
+		[
+			["Dynamic Link", "link_doctype", "=", reference_doctype],
+			["Dynamic Link", "link_name", "in", reference_list],
+		]
+		if reference_doctype != doctype
+		else []
+	)
 	fields = ["`tabDynamic Link`.link_name"] + field_map.get(doctype, [])
 
 	records = frappe.get_list(doctype, filters=filters, fields=fields, as_list=True)
+	temp_records = list()
 
 	for d in records:
-		details = reference_details.get(d[0])
-		if details is not None:
-			details.setdefault(frappe.scrub(doctype), []).append(d[1:])
+		temp_records.append(d[1:])
 
 	if not reference_list:
 		frappe.throw(_("No records present in {0}").format(reference_doctype))
 
+	reference_details[reference_list[0]][frappe.scrub(doctype)] = temp_records
 	return reference_details
 
 
