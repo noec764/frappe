@@ -246,14 +246,8 @@
  "idx": 1,
  "image_field": "image",
  "index_web_pages_for_search": 1,
- "links": [
-  {
-   "group": "Events",
-   "link_doctype": "Event Registration",
-   "link_fieldname": "contact"
-  }
- ],
- "modified": "2022-10-27 10:40:50.097481",
+ "links": [],
+ "modified": "2023-01-27 14:48:31.358289",
  "modified_by": "Administrator",
  "module": "Contacts",
  "name": "Contact",

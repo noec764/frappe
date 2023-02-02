@@ -99,6 +99,8 @@ class Event(WebsiteGenerator):
 		if isinstance(self.rrule, list) and self.rrule > 1:
 			self.rrule = self.rrule[0]
 
+		self.make_participants_unique()
+
 	def on_update(self):
 		self.sync_communication()
 
@@ -112,7 +114,7 @@ class Event(WebsiteGenerator):
 
 	def sync_communication(self):
 		if self.event_participants:
-			comms = []
+			comms = set()
 			for participant in self.event_participants:
 				filters = [
 					["Communication", "reference_doctype", "=", self.doctype],
@@ -120,11 +122,12 @@ class Event(WebsiteGenerator):
 					["Communication Link", "link_doctype", "=", "Contact"],
 					["Communication Link", "link_name", "=", participant.contact],
 				]
-				comms.extend(frappe.get_all("Communication", filters=filters, fields=["name"]))
+				comm_names = frappe.get_all("Communication", filters=filters, pluck="name")
+				comms.update(comm_names)
 
 			if comms:
 				for comm in comms:
-					communication = frappe.get_doc("Communication", comm.name)
+					communication = frappe.get_doc("Communication", comm)
 					self.update_communication(self.event_participants, communication)
 			else:
 				self.create_communication(self.event_participants)
@@ -148,16 +151,29 @@ class Event(WebsiteGenerator):
 		)
 		communication.not_added_to_reference_timeline = 1
 		communication.status = "Linked"
-		communication.timeline_links = []
+
+		current_links = set()
+		for link in communication.timeline_links:
+			current_links.add((link.link_doctype, link.link_name))
+
+		future_links = set()
 		for participant in participants:
-			communication.add_link("Contact", participant.contact)
+			future_links.add(("Contact", participant.contact))
 			contact = frappe.get_doc("Contact", participant.contact)
-			if contact.links:
-				for link in contact.links:
-					if link.link_doctype and link.link_name:
-						meta = frappe.get_meta(link.link_doctype)
-						if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
-							communication.add_link(link.link_doctype, link.link_name)
+			for link in contact.links or []:
+				if link.link_doctype and link.link_name:
+					meta = frappe.get_meta(link.link_doctype)
+					if hasattr(meta, "allow_events_in_timeline") and meta.allow_events_in_timeline == 1:
+						future_links.add((link.link_doctype, link.link_name))
+
+		added_links = future_links.difference(current_links)  # only in future
+		removed_links = current_links.difference(future_links)  # only in current
+
+		for link_doctype, link_name in added_links:
+			communication.add_link(link_doctype, link_name)
+
+		for link_doctype, link_name in removed_links:
+			communication.remove_link(link_doctype, link_name)
 
 		communication.save(ignore_permissions=True)
 
@@ -188,6 +204,18 @@ class Event(WebsiteGenerator):
 				participant_list.append(event_participant)
 
 		self.event_participants = participant_list
+
+	def make_participants_unique(self):
+		seen_contacts = set()
+		kept_participants = []
+
+		for event_participant in self.event_participants or []:
+			contact = event_participant.contact
+			if contact not in seen_contacts:
+				kept_participants.append(event_participant)
+			seen_contacts.add(contact)
+
+		self.event_participants = kept_participants
 
 	def add_reference(self, reference_doctype, reference_name):
 		self.append(
@@ -220,17 +248,6 @@ class Event(WebsiteGenerator):
 
 		context.content = content
 		context.event_style = event_style
-
-		fields = []
-		for field in frappe.get_meta("Event Registration").fields:
-			if not (field.fieldname == "amended_from" or field.permlevel > 0):
-				field.label = _(field.label)
-				fields.append(field)
-
-		context.registration_form = frappe.as_json(fields)
-		context.is_registered = frappe.session.user != "Guest" and frappe.db.exists(
-			"Event Registration", dict(user=frappe.session.user, event=self.name, docstatus=1)
-		)
 
 		context.attachments = (
 			frappe.get_all(
