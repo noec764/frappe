@@ -1060,7 +1060,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const title = docstatus_description[doc.docstatus || 0];
 		if (indicator) {
 			return `<span class="indicator-pill ${indicator[1]} filterable ellipsis"
-				data-filter='${indicator[2]}' title='${title}'>
+				data-filter='${indicator[2] || ""}' title='${title}'>
 				<span class="ellipsis"> ${__(indicator[0])}</span>
 			<span>`;
 		}
