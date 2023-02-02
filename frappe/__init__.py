@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional
+from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional
 
 import click
 from werkzeug.local import Local, release_local
@@ -506,7 +506,7 @@ def throw(
 	is_minimizable: bool = False,
 	wide: bool = False,
 	as_list: bool = False,
-) -> None:
+) -> NoReturn:
 	"""Throw execption and show message (`msgprint`).
 
 	:param msg: Message.
