@@ -125,6 +125,10 @@ Object.assign(frappe.model, {
 					local_doc[fieldname] = [];
 				}
 
+				if (doc[fieldname].length != local_doc[fieldname].length) {
+					local_doc[fieldname] = [];
+				}
+
 				// child table, override each row and append new rows if required
 				for (let i = 0; i < doc[fieldname].length; i++) {
 					let d = doc[fieldname][i];
