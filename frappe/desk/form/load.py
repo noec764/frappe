@@ -425,7 +425,7 @@ def get_document_email(doctype, name):
 		return None
 
 	email = email.split("@")
-	return f"{email[0]}+{quote(doctype)}+{quote(cstr(name))}@{email[1]}"
+	return f"{email[0]}+{quote(doctype)}={quote(cstr(name))}@{email[1]}"
 
 
 def get_automatic_email_link():
