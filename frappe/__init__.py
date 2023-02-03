@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, NoReturn
+from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional
 
 import click
 from werkzeug.local import Local, release_local
@@ -562,7 +562,7 @@ def get_user():
 
 def get_roles(username=None) -> list[str]:
 	"""Returns roles of current user."""
-	if not local.session:
+	if not local.session or not local.session.user:
 		return ["Guest"]
 	import frappe.permissions
 
