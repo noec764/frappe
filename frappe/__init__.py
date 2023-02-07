@@ -1193,7 +1193,7 @@ def get_single(doctype):
 	return get_doc(doctype, doctype)
 
 
-def get_meta(doctype, cached=True) -> "Meta":  # noqa
+def get_meta(doctype, cached=True):
 	"""Get `frappe.model.meta.Meta` instance of given doctype name."""
 	import frappe.model.meta
 
