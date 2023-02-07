@@ -238,8 +238,18 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.custom_awesomplete_filter && this.custom_awesomplete_filter(this.awesomplete);
 
 		const update_list = (e) => this.query_and_update_list(e.target.value);
-		this.$input.on("input", frappe.utils.debounce(update_list, 500));
-		this.$input.on("focus", update_list);
+		const debounced_update_list = frappe.utils.debounce(update_list, 500);
+		this.$input.on("input", (e) => {
+			// Immediately show from cache if possible
+			this.query_and_update_list(e.target.value, { onlyCache: true });
+			// And also query
+			debounced_update_list(e);
+		});
+		this.$input.on("focus", (e) => {
+			if (!e.target.value) {
+				update_list(e);
+			}
+		});
 
 		this.$input.on("blur", function () {
 			if (me.selected) {
