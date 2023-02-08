@@ -984,7 +984,7 @@ frappe.views.Workspace = class Workspace {
 							let new_page = res.message;
 							let message = __(
 								"Duplicate of {0} named as {1} is created successfully",
-								[page.title.bold(), new_page.title.bold()]
+								[__(page.title).bold(), __(new_page.title).bold()]
 							);
 							frappe.show_alert({ message: message, indicator: "green" });
 						}
