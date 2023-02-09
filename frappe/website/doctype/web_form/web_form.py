@@ -12,7 +12,9 @@ from frappe.custom.doctype.customize_form.customize_form import docfield_propert
 from frappe.desk.form.meta import get_code_files_via_hooks
 from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.rate_limiter import rate_limit
+from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import cstr, dict_with_keys, strip_html
+from frappe.utils.jinja import render_template
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -224,6 +226,14 @@ def get_context(context):
 		self.load_translations(context)
 		self.add_metatags(context)
 
+		for key in ("introduction_text", "footer_text"):
+			text = str(self.get(key) or "")
+			if "{" in text and "}" in text:
+				context[key] = self.render_jinja_and_extract_messages(text, context)
+			else:
+				context[key] = _(text)
+
+		context.translated_messages = json.dumps(context.translated_messages)
 		context.boot = get_boot_data()
 		context.boot["link_title_doctypes"] = frappe.boot.get_link_title_doctypes()
 
@@ -240,10 +250,13 @@ def get_context(context):
 		}
 
 	def load_translations(self, context):
-		translated_messages = frappe.translate.get_dict("doctype", self.doc_type)
-		# Sr is not added by default, had to be added manually
-		translated_messages["Sr"] = _("Sr")
-		context.translated_messages = frappe.as_json(translated_messages)
+		context.translated_messages = frappe.translate.get_dict("doctype", self.doc_type)
+
+	def render_jinja_and_extract_messages(self, text: str, context):
+		messages = extract_messages_from_code(text)
+		messages = make_dict_from_messages(messages)
+		context.translated_messages.update(messages)
+		return render_template(text, context)
 
 	def load_list_data(self, context):
 		if not self.list_columns:
