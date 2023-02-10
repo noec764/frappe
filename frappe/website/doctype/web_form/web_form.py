@@ -15,6 +15,7 @@ from frappe.rate_limiter import rate_limit
 from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import cstr, dict_with_keys, strip_html
 from frappe.utils.jinja import render_template
+from frappe.utils.jinja_globals import bundled_asset_absolute
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -251,6 +252,8 @@ def get_context(context):
 
 	def load_translations(self, context):
 		context.translated_messages = frappe.translate.get_dict("doctype", self.doc_type)
+		js_messages = frappe.translate.get_dict("jsfile", bundled_asset_absolute("web_form.bundle.js"))
+		context.translated_messages.update(js_messages)
 
 	def render_jinja_and_extract_messages(self, text: str, context):
 		messages = extract_messages_from_code(text)

@@ -135,6 +135,14 @@ def bundled_asset(path, rtl=None):
 
 	return abs_url(path)
 
+def bundled_asset_absolute(path, rtl=None):
+	if ".bundle." in path and not path.startswith("/assets"):
+		import frappe
+		import os
+		path = bundled_asset(path, rtl)
+		path = os.path.join(frappe.local.sites_path, path.lstrip("/"))
+	return path
+
 
 def is_rtl(rtl=None):
 	from frappe import local
