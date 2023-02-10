@@ -227,10 +227,11 @@ def get_context(context):
 		self.load_translations(context)
 		self.add_metatags(context)
 
+		# Render the introduction and footer text
 		for key in ("introduction_text", "footer_text"):
 			text = str(self.get(key) or "")
 			if "{" in text and "}" in text:
-				context[key] = self.render_jinja_and_extract_messages(text, context)
+				context[key] = render_template(text, context)
 			else:
 				context[key] = _(text)
 
@@ -251,15 +252,38 @@ def get_context(context):
 		}
 
 	def load_translations(self, context):
-		context.translated_messages = frappe.translate.get_dict("doctype", self.doc_type)
-		js_messages = frappe.translate.get_dict("jsfile", bundled_asset_absolute("web_form.bundle.js"))
-		context.translated_messages.update(js_messages)
+		# Collect translations from the DocType
+		msgs: dict = frappe.translate.get_dict("doctype", self.doc_type)
 
-	def render_jinja_and_extract_messages(self, text: str, context):
+		js_messages = frappe.translate.get_dict("jsfile", bundled_asset_absolute("web_form.bundle.js"))
+		msgs.update(js_messages)
+
+		# Translate the introduction and footer text
+		# for key in ("introduction_text", "footer_text"):
+		# 	if (text := self.get(key)) and ("{" in text) and ("}" in text):
+		# 		self.get_translations_from_code(str(text), context)
+
+		for df in self.web_form_fields:
+			if df.label:
+				# Get translations for label
+				msgs.setdefault(df.label, _(df.label, context=self.doc_type))
+
+			if df.fieldtype in ("Link", "Table"):
+				if df.options:
+					frappe.translate.get_dict("doctype", df.options)
+
+		for df in self.meta.get_code_fields() :
+			value = context.get(df.fieldname) or self.get(df.fieldname)
+			if value and isinstance(value, str):
+				msgs.update(self.get_translations_from_code(value, context))
+
+		context.translated_messages = msgs
+
+
+	def get_translations_from_code(self, text: str, context):
 		messages = extract_messages_from_code(text)
 		messages = make_dict_from_messages(messages)
-		context.translated_messages.update(messages)
-		return render_template(text, context)
+		return messages
 
 	def load_list_data(self, context):
 		if not self.list_columns:

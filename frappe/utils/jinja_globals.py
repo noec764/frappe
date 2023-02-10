@@ -141,6 +141,7 @@ def bundled_asset_absolute(path, rtl=None):
 		import os
 		path = bundled_asset(path, rtl)
 		path = os.path.join(frappe.local.sites_path, path.lstrip("/"))
+		path = os.path.abspath(path)
 	return path
 
 
