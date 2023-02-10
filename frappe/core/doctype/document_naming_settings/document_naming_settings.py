@@ -20,7 +20,7 @@ class DocumentNamingSettings(Document):
 		transactions = self._get_transactions()
 		prefixes = self._get_prefixes(transactions)
 
-		return {"transactions": transactions, "prefixes": prefixes}
+		return {"transactions": [{"label": _(t), "value": t} for t in transactions], "prefixes": prefixes}
 
 	def _get_transactions(self) -> list[str]:
 
