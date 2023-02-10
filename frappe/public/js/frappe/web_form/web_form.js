@@ -222,26 +222,40 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			}
 		}
 
-		let message = "";
-		if (invalid_values.length) {
-			message += __("Invalid values for fields:", null, "Error message in web form");
-			message += "<br><br><ul><li>" + invalid_values.join("<li>") + "</ul>";
-		}
+		const error_sections = [];
 
 		if (errors.length) {
-			message += __("Mandatory fields required:", null, "Error message in web form");
-			message += "<br><br><ul><li>" + errors.join("<li>") + "</ul>";
+			error_sections.push({
+				title: __("Missing values for fields", null, "Web Form"),
+				message: "<ul><li>" + errors.join("<li>") + "</ul>",
+			})
+		}
+		if (invalid_values.length) {
+			error_sections.push({
+				title: __("Invalid values for fields", null, "Web Form"),
+				message: "<ul><li>" + invalid_values.join("<li>") + "</ul>",
+			})
 		}
 
-		if (invalid_values.length || errors.length) {
+		if (error_sections.length) {
+			let title, message;
+			if (error_sections.length === 1) {
+				title = error_sections[0].title;
+				message = error_sections[0].message;
+			} else {
+				title = __("Error", null, "Web Form")
+				message = error_sections.map(section => {
+					return `<b>${section.title}</b><br/>${section.message}`;
+				}).join("<br>");
+			}
 			frappe.msgprint({
-				title: __("Error", null, "Title of error message in web form"),
+				title: title,
 				message: message,
 				indicator: "orange",
 			});
 		}
 
-		return !(errors.length || invalid_values.length);
+		return !(error_sections.length);
 	}
 
 	toggle_section() {

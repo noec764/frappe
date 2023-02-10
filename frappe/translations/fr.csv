@@ -2478,7 +2478,6 @@ Error while installing package to site {0}. Please check Error Logs.,Erreur lors
 Error while sending the notification,Erreur lors de l'envoi de la notification,
 Error: Document has been modified after you have opened it,Erreur : le document a été modifié après que vous l'ayez ouvert,
 Error: Value missing for {0}: {1},Erreur: Valeur absente pour {0}: {1},
-Error,Erreur,Title of error message in web form
 Error,Erreur,
 Errored Transactions,Transactions en erreur,
 Errors in Background Events,Erreurs dans les Événements en Tâche de Fond,
@@ -3428,7 +3427,8 @@ Invalid state.,Etat invalide.,
 Invalid template file for import,Fichier modèle invalide pour l'import,
 "Invalid token, please provide a valid token with prefix 'Basic' or 'Token'.","Jeton invalide, veuillez fournir un jeton valide avec le préfixe 'Basic' ou 'Token'",
 Invalid username or password,Mot de passe ou nom d'utilisateur invalide,
-Invalid values for fields,Valeurs invalides pour les champs,:Error message in web form
+Invalid values for fields,Valeurs invalides pour les champs,Web Form
+Missing values for fields,Valeurs manquantes pour les champs,Web Form
 Invalid {0} condition,Condition {0} invalide,
 Invalid,Invalide,
 Inverse,Inverse,
@@ -4790,6 +4790,7 @@ Please select Document Type first,Veuillez d'abord sélectionner le Type de Docu
 Please select Entity Type first,Veuillez d'abord sélectionner le type d'entité,
 Please select Minimum Password Score,Veuillez sélectionner le Score Minimum du Mot de Passe,
 Please select X and Y fields,Veuillez sélectionner les champs X et Y,
+Please select a {0} Field.,Veuillez sélectionner un champ {0}.,
 Please select a Amount Field.,Veuillez sélectionner un Champ Montant.,
 Please select a country code for field {1}.,Veuillez sélectionner un code de pays pour le champ {1}.,
 Please select a file or url,Veuillez sélectionner un fichier ou une URL,
