@@ -73,7 +73,7 @@ frappe.ui.form.on("Web Form", {
 		frm.add_custom_button(frm.doc.published ? __("Unpublish", [], "Web Form") : __("Publish", [], "Web Form"), () => {
 			frm.set_value("published", !frm.doc.published);
 			frm.save();
-		});
+		}).removeClass("btn-default").addClass(frm.doc.published ? "btn-danger" : "btn-default");
 	},
 
 	add_get_fields_button(frm) {
