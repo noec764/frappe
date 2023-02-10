@@ -32,6 +32,10 @@ frappe.ui.form.on("Web Form", {
 		}
 		render_list_settings_message(frm);
 
+		frm.add_custom_button(__("Show List"), () => {
+			frappe.router.set_route("List", frm.doc.doc_type);
+		});
+
 		frm.trigger("set_fields");
 		frm.trigger("add_get_fields_button");
 		frm.trigger("add_publish_button");
@@ -69,7 +73,7 @@ frappe.ui.form.on("Web Form", {
 		frm.add_custom_button(frm.doc.published ? __("Unpublish", [], "Web Form") : __("Publish", [], "Web Form"), () => {
 			frm.set_value("published", !frm.doc.published);
 			frm.save();
-		});
+		}).removeClass("btn-default").addClass(frm.doc.published ? "btn-danger" : "btn-default");
 	},
 
 	add_get_fields_button(frm) {
@@ -131,22 +135,33 @@ frappe.ui.form.on("Web Form", {
 				label: df.label,
 				value: df.fieldname,
 			});
-			fields.push({label: "Name", fieldname: "name"})
+			fields.push({ label: "Name", fieldname: "name" })
 			update_options(fields.map(as_select_option));
 
-			let currency_fields = fields
+			const amount_fields = fields
 				.filter((df) => ["Currency", "Float"].includes(df.fieldtype))
 				.map(as_select_option);
-			if (!currency_fields.length) {
-				currency_fields = [
-					{
-						label: `No currency fields in ${doc.doc_type}`,
-						value: "",
-						disabled: true,
-					},
-				];
+			if (amount_fields.length === 0) {
+				amount_fields.push({
+					label: __("No Currency/Float fields in {0}", [doc.doc_type], "Web Form"),
+					value: "",
+					disabled: true,
+				})
 			}
-			frm.set_df_property("amount_field", "options", currency_fields);
+			frm.set_df_property("amount_field", "options", amount_fields);
+
+			const currency_fields = fields
+				.filter((df) => df.fieldtype === "Link")
+				.filter((df) => df.options === "Currency")
+				.map(as_select_option);
+			if (currency_fields.length === 0) {
+				currency_fields.push({
+					label: __("No Link to Currency fields in {0}", [doc.doc_type], "Web Form"),
+					value: "",
+					disabled: true,
+				})
+			}
+			frm.set_df_property("currency_field", "options", currency_fields);
 		});
 	},
 
