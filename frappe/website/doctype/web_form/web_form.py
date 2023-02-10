@@ -3,6 +3,7 @@
 
 import json
 import os
+from typing import Literal
 
 import frappe
 from frappe import _, scrub
@@ -10,6 +11,7 @@ from frappe.core.api.file import get_max_file_size
 from frappe.core.doctype.file import remove_file_by_url
 from frappe.custom.doctype.customize_form.customize_form import docfield_properties
 from frappe.desk.form.meta import get_code_files_via_hooks
+from frappe.model.document import Document
 from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.rate_limiter import rate_limit
 from frappe.translate import extract_messages_from_code, make_dict_from_messages
@@ -497,10 +499,10 @@ def get_context(context):
 		else:
 			return False
 
-	def webform_validate_doc(self, doc):
+	def webform_validate_doc(self, doc) -> None:
 		self.validate_mandatory(doc)
 
-	def webform_accept_doc(self, doc):
+	def webform_accept_doc(self, doc) -> Document | dict[Literal["redirect"], str]:
 		return doc.run_method("on_webform_save", webform=self)
 
 
@@ -518,7 +520,7 @@ def accept(web_form, data):
 	files = []
 	files_to_delete = []
 
-	web_form = frappe.get_doc("Web Form", web_form)
+	web_form: WebForm = frappe.get_doc("Web Form", web_form)
 	doctype = web_form.doc_type
 
 	if data.name and not web_form.allow_edit:
