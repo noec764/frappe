@@ -32,6 +32,10 @@ frappe.ui.form.on("Web Form", {
 		}
 		render_list_settings_message(frm);
 
+		frm.add_custom_button(__("Show List"), () => {
+			frappe.router.set_route("List", frm.doc.doc_type);
+		});
+
 		frm.trigger("set_fields");
 		frm.trigger("add_get_fields_button");
 		frm.trigger("add_publish_button");
@@ -131,7 +135,7 @@ frappe.ui.form.on("Web Form", {
 				label: df.label,
 				value: df.fieldname,
 			});
-			fields.push({label: "Name", fieldname: "name"})
+			fields.push({ label: "Name", fieldname: "name" })
 			update_options(fields.map(as_select_option));
 
 			const amount_fields = fields
