@@ -501,7 +501,7 @@ def get_context(context):
 		self.validate_mandatory(doc)
 
 	def webform_accept_doc(self, doc):
-		return doc.run_method("on_webform_save", web_form=self)
+		return doc.run_method("on_webform_save", webform=self)
 
 
 def get_web_form_module(doc):
