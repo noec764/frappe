@@ -33,5 +33,17 @@ frappe.ui.form.on("Integration Request", {
 				});
 			}
 		}
+
+		if (frm.doc.error) {
+			try {
+				const error = JSON.parse(frm.doc.error);
+				if (typeof error.message === "string" && error.message.startsWith("Traceback")) {
+					const pre = document.createElement("pre");
+					pre.innerText = error.message;
+					frm.set_intro(pre.outerHTML, "red");
+				}
+			} catch (ignored) {
+			}
+		}
 	},
 });

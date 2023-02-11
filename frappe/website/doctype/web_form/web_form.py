@@ -3,6 +3,7 @@
 
 import json
 import os
+from typing import Literal
 
 import frappe
 from frappe import _, scrub
@@ -10,9 +11,13 @@ from frappe.core.api.file import get_max_file_size
 from frappe.core.doctype.file import remove_file_by_url
 from frappe.custom.doctype.customize_form.customize_form import docfield_properties
 from frappe.desk.form.meta import get_code_files_via_hooks
+from frappe.model.document import Document
 from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.rate_limiter import rate_limit
+from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import cstr, dict_with_keys, strip_html
+from frappe.utils.jinja import render_template
+from frappe.utils.jinja_globals import bundled_asset_absolute
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -224,6 +229,15 @@ def get_context(context):
 		self.load_translations(context)
 		self.add_metatags(context)
 
+		# Render the introduction and footer text
+		for key in ("introduction_text", "footer_text"):
+			text = str(self.get(key) or "")
+			if "{" in text and "}" in text:
+				context[key] = render_template(text, context)
+			else:
+				context[key] = _(text)
+
+		context.translated_messages = json.dumps(context.translated_messages)
 		context.boot = get_boot_data()
 		context.boot["link_title_doctypes"] = frappe.boot.get_link_title_doctypes()
 
@@ -240,10 +254,38 @@ def get_context(context):
 		}
 
 	def load_translations(self, context):
-		translated_messages = frappe.translate.get_dict("doctype", self.doc_type)
-		# Sr is not added by default, had to be added manually
-		translated_messages["Sr"] = _("Sr")
-		context.translated_messages = frappe.as_json(translated_messages)
+		# Collect translations from the DocType
+		msgs: dict = frappe.translate.get_dict("doctype", self.doc_type)
+
+		js_messages = frappe.translate.get_dict("jsfile", bundled_asset_absolute("web_form.bundle.js"))
+		msgs.update(js_messages)
+
+		# Translate the introduction and footer text
+		# for key in ("introduction_text", "footer_text"):
+		# 	if (text := self.get(key)) and ("{" in text) and ("}" in text):
+		# 		self.get_translations_from_code(str(text), context)
+
+		for df in self.web_form_fields:
+			if df.label:
+				# Get translations for label
+				msgs.setdefault(df.label, _(df.label, context=self.doc_type))
+
+			if df.fieldtype in ("Link", "Table"):
+				if df.options:
+					frappe.translate.get_dict("doctype", df.options)
+
+		for df in self.meta.get_code_fields() :
+			value = context.get(df.fieldname) or self.get(df.fieldname)
+			if value and isinstance(value, str):
+				msgs.update(self.get_translations_from_code(value, context))
+
+		context.translated_messages = msgs
+
+
+	def get_translations_from_code(self, text: str, context):
+		messages = extract_messages_from_code(text)
+		messages = make_dict_from_messages(messages)
+		return messages
 
 	def load_list_data(self, context):
 		if not self.list_columns:
@@ -457,11 +499,11 @@ def get_context(context):
 		else:
 			return False
 
-	def webform_validate_doc(self, doc):
+	def webform_validate_doc(self, doc) -> None:
 		self.validate_mandatory(doc)
 
-	def webform_accept_doc(self, doc):
-		return doc.run_method("on_webform_save", web_form=self)
+	def webform_accept_doc(self, doc) -> Document | dict[Literal["redirect"], str]:
+		return doc.run_method("on_webform_save", webform=self)
 
 
 def get_web_form_module(doc):
@@ -478,7 +520,7 @@ def accept(web_form, data):
 	files = []
 	files_to_delete = []
 
-	web_form = frappe.get_doc("Web Form", web_form)
+	web_form: WebForm = frappe.get_doc("Web Form", web_form)
 	doctype = web_form.doc_type
 
 	if data.name and not web_form.allow_edit:

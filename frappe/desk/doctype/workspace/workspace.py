@@ -292,6 +292,7 @@ def duplicate_page(page_name, new_page):
 	doc.for_user = ""
 	doc.label = doc.title
 	doc.module = ""
+	doc.is_standard = 0
 	if not doc.public:
 		doc.for_user = doc.for_user or frappe.session.user
 		doc.label = f"{doc.title}-{doc.for_user}"

@@ -1,5 +1,6 @@
 {
  "actions": [],
+ "allow_rename": 1,
  "creation": "2014-09-01 14:08:48.624556",
  "doctype": "DocType",
  "document_type": "Document",
@@ -64,7 +65,8 @@
    "fieldtype": "Data",
    "label": "Title",
    "no_copy": 1,
-   "reqd": 1
+   "reqd": 1,
+   "translatable": 1
   },
   {
    "fieldname": "route",
@@ -188,7 +190,8 @@
    "default": "Save",
    "fieldname": "button_label",
    "fieldtype": "Data",
-   "label": "Submit Button Label"
+   "label": "Submit Button Label",
+   "translatable": 1
   },
   {
    "description": "Message to be displayed on successful completion",
@@ -213,7 +216,8 @@
    "fieldname": "breadcrumbs",
    "fieldtype": "Code",
    "label": "Breadcrumbs",
-   "max_height": "140px"
+   "max_height": "140px",
+   "hidden": 1
   },
   {
    "fieldname": "custom_css",
@@ -372,7 +376,7 @@
  "icon": "icon-edit",
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-01 18:29:30.014842",
+ "modified": "2023-02-10 12:02:17.549720",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Web Form",

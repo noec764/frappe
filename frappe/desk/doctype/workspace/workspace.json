@@ -189,7 +189,8 @@
    "default": "0",
    "fieldname": "is_standard",
    "fieldtype": "Check",
-   "label": "Is Standard"
+   "label": "Is Standard",
+   "no_copy": 1
   },
   {
    "depends_on": "eval:doc.is_standard",
@@ -201,7 +202,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2023-01-07 19:37:39.512482",
+ "modified": "2023-02-08 11:35:48.488464",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",

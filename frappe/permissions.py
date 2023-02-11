@@ -720,7 +720,7 @@ def has_child_permission(
 		if not parentfield:
 			push_perm_check_log(
 				_("Parentfield not specified in {0}: {1}").format(
-					frappe.bold(child_doctype), frappe.bold(child_doc.name)
+					frappe.bold(_(child_doctype)), frappe.bold(child_doc.name)
 				)
 			)
 			return False

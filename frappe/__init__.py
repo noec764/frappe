@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.20.0"
+__version__ = "3.21.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -1176,7 +1176,7 @@ def get_single(doctype):
 	return get_doc(doctype, doctype)
 
 
-def get_meta(doctype, cached=True) -> "Meta":  # noqa
+def get_meta(doctype, cached=True):
 	"""Get `frappe.model.meta.Meta` instance of given doctype name."""
 	import frappe.model.meta
 
