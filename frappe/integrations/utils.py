@@ -2,11 +2,10 @@
 # License: MIT. See LICENSE
 import datetime
 import json
-from urllib.parse import parse_qs, urlencode
+from urllib.parse import parse_qs
 
 import frappe
 from frappe import _
-from frappe.model.document import Document
 from frappe.utils import get_request_session
 
 
@@ -55,7 +54,7 @@ def create_request_log(
 	DEPRECATED: The parameter integration_type will be removed in the next major release.
 	Use is_remote_request instead.
 	"""
-	if integration_type == "Remote":
+	if integration_type in ("Remote", "Webhook"):
 		kwargs["is_remote_request"] = 1
 
 	else:
@@ -99,53 +98,3 @@ def get_json(obj):
 def json_handler(obj):
 	if isinstance(obj, (datetime.date, datetime.timedelta, datetime.datetime)):
 		return str(obj)
-
-
-def get_gateway_controller(doctype, docname):
-	reference_doc = frappe.get_doc(doctype, docname)
-	gateway_controller = frappe.db.get_value(
-		"Payment Gateway", reference_doc.payment_gateway, "gateway_controller"
-	)
-	return gateway_controller
-
-
-class PaymentGatewayController(Document):
-	def finalize_request(self, reference_no=None):
-		redirect_to = self.data.get("redirect_to")
-		redirect_message = self.data.get("redirect_message")
-
-		if (
-			self.flags.status_changed_to in ["Completed", "Autorized", "Pending"]
-			and self.reference_document
-		):
-			custom_redirect_to = None
-			try:
-				custom_redirect_to = self.reference_document.run_method(
-					"on_payment_authorized", self.flags.status_changed_to, reference_no
-				)
-			except Exception:
-				frappe.log_error(frappe.get_traceback(), _("Payment custom redirect error"))
-
-			if custom_redirect_to and custom_redirect_to != "no-redirection":
-				redirect_to = custom_redirect_to
-
-			redirect_url = self.redirect_url if self.get("redirect_url") else "/payment-success"
-
-		else:
-			redirect_url = "/payment-failed"
-
-		if redirect_to and redirect_to != "no-redirection":
-			redirect_url += "?" + urlencode({"redirect_to": redirect_to})
-		if redirect_message:
-			redirect_url += "&" + urlencode({"redirect_message": redirect_message})
-
-		return {"redirect_to": redirect_url, "status": self.integration_request.status}
-
-	def change_integration_request_status(self, status, error_type, error):
-		if hasattr(self, "integration_request"):
-			self.flags.status_changed_to = status
-			self.integration_request.db_set("status", status, update_modified=True)
-			self.integration_request.db_set(error_type, error, update_modified=True)
-
-		if hasattr(self, "update_reference_document_status"):
-			self.update_reference_document_status(status)

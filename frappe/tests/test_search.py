@@ -55,7 +55,7 @@ class TestSearch(FrappeTestCase):
 			user.update(
 				{
 					"email": email,
-					"first_name": email.split("@")[0],
+					"first_name": email.split("@", 1)[0],
 					"enabled": False,
 					"allowed_in_mentions": True,
 				}

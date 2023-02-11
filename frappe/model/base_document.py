@@ -73,7 +73,7 @@ def get_controller(doctype):
 				raise ImportError(doctype)
 		return _class
 
-	if frappe.local.dev_server:
+	if frappe.local.dev_server or frappe.flags.in_migrate:
 		return _get_controller()
 
 	site_controllers = frappe.controllers.setdefault(frappe.local.site, {})
@@ -1062,7 +1062,7 @@ class BaseDocument:
 	def is_dummy_password(self, pwd):
 		return "".join(set(pwd)) == "*"
 
-	def precision(self, fieldname, parentfield=None):
+	def precision(self, fieldname, parentfield=None) -> int | None:
 		"""Returns float precision for a particular field (or get global default).
 
 		:param fieldname: Fieldname for which precision is required.
@@ -1103,7 +1103,8 @@ class BaseDocument:
 			df = get_default_df(fieldname)
 
 		if (
-			df.fieldtype == "Currency"
+			df
+			and df.fieldtype == "Currency"
 			and not currency
 			and (currency_field := df.get("options"))
 			and (currency_value := self.get(currency_field))

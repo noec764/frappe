@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional
+from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional
 
 import click
 from werkzeug.local import Local, release_local
@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.20.0"
+__version__ = "3.21.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -507,7 +507,7 @@ def throw(
 	is_minimizable: bool = False,
 	wide: bool = False,
 	as_list: bool = False,
-) -> None:
+) -> NoReturn:
 	"""Throw execption and show message (`msgprint`).
 
 	:param msg: Message.
@@ -562,7 +562,7 @@ def get_user():
 
 def get_roles(username=None) -> list[str]:
 	"""Returns roles of current user."""
-	if not local.session:
+	if not local.session or not local.session.user:
 		return ["Guest"]
 	import frappe.permissions
 
@@ -1193,7 +1193,7 @@ def get_single(doctype):
 	return get_doc(doctype, doctype)
 
 
-def get_meta(doctype, cached=True) -> "Meta":  # noqa
+def get_meta(doctype, cached=True):
 	"""Get `frappe.model.meta.Meta` instance of given doctype name."""
 	import frappe.model.meta
 
@@ -1578,7 +1578,7 @@ def read_file(path, raise_not_found=False):
 
 def get_attr(method_string: str) -> Any:
 	"""Get python method object from its name."""
-	app_name = method_string.split(".")[0]
+	app_name = method_string.split(".", 1)[0]
 	if (
 		not local.flags.in_uninstall
 		and not local.flags.in_install

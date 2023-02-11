@@ -295,7 +295,7 @@ class FrappeClient:
 					{
 						"doctype": "User",
 						"email": doc.get("owner"),
-						"first_name": doc.get("owner").split("@")[0],
+						"first_name": doc.get("owner").split("@", 1)[0],
 					}
 				).insert()
 

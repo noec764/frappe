@@ -161,7 +161,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		let values = frappe.utils.get_query_params();
 		delete values.new;
 		Object.assign(defaults, values);
-		this.set_values(values);
+		return this.set_values(values);
 	}
 
 	setup_primary_action() {
@@ -222,26 +222,40 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			}
 		}
 
-		let message = "";
-		if (invalid_values.length) {
-			message += __("Invalid values for fields:", null, "Error message in web form");
-			message += "<br><br><ul><li>" + invalid_values.join("<li>") + "</ul>";
-		}
+		const error_sections = [];
 
 		if (errors.length) {
-			message += __("Mandatory fields required:", null, "Error message in web form");
-			message += "<br><br><ul><li>" + errors.join("<li>") + "</ul>";
+			error_sections.push({
+				title: __("Missing values for fields", null, "Web Form"),
+				message: "<ul><li>" + errors.join("<li>") + "</ul>",
+			})
+		}
+		if (invalid_values.length) {
+			error_sections.push({
+				title: __("Invalid values for fields", null, "Web Form"),
+				message: "<ul><li>" + invalid_values.join("<li>") + "</ul>",
+			})
 		}
 
-		if (invalid_values.length || errors.length) {
+		if (error_sections.length) {
+			let title, message;
+			if (error_sections.length === 1) {
+				title = error_sections[0].title;
+				message = error_sections[0].message;
+			} else {
+				title = __("Error", null, "Web Form")
+				message = error_sections.map(section => {
+					return `<b>${section.title}</b><br/>${section.message}`;
+				}).join("<br>");
+			}
 			frappe.msgprint({
-				title: __("Error", null, "Title of error message in web form"),
+				title: title,
 				message: message,
 				indicator: "orange",
 			});
 		}
 
-		return !(errors.length || invalid_values.length);
+		return !(error_sections.length);
 	}
 
 	toggle_section() {
@@ -362,8 +376,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 		if (!doc_values) return false;
 
 		if (window.saving) return false;
-		// TODO: remove this (used for payments app)
-		let for_payment = Boolean(this.accept_payment && !this.doc.paid);
 
 		Object.assign(this.doc, doc_values);
 		this.doc.doctype = this.doc_type;
@@ -379,7 +391,6 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			args: {
 				data: this.doc,
 				web_form: this.name,
-				for_payment,
 			},
 			btn: $("btn-primary"),
 			freeze: true,
@@ -412,9 +423,13 @@ export default class WebForm extends frappe.ui.FieldGroup {
 	}
 
 	handle_success(data) {
-		// TODO: remove this (used for payments app)
-		if (this.accept_payment && !this.doc.paid) {
-			window.location.href = data;
+		if (data && typeof data === "string" && data.startsWith("https://")) {
+			window.location.href = data; // old style redirect
+			return;
+		}
+		if (data && (!data.doctype) && data.redirect) {
+			window.location.href = data.redirect;
+			return;
 		}
 
 		if (!this.is_new) {

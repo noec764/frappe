@@ -72,7 +72,7 @@ def validate_controller(doctype: str) -> None:
 		if not isinstance(method, staticmethod):
 			frappe.msgprint(
 				_("Virtual DocType {} requires a static method called {} found {}").format(
-					frappe.bold(doctype), frappe.bold(m), frappe.bold(_as_str(method))
+					frappe.bold(_(doctype)), frappe.bold(m), frappe.bold(_as_str(method))
 				),
 				title=_("Incomplete Virtual Doctype Implementation"),
 			)
@@ -85,7 +85,7 @@ def validate_controller(doctype: str) -> None:
 		if method == original_method:
 			frappe.msgprint(
 				_("Virtual DocType {} requires overriding an instance method called {} found {}").format(
-					frappe.bold(doctype), frappe.bold(m), frappe.bold(_as_str(method))
+					frappe.bold(_(doctype)), frappe.bold(m), frappe.bold(_as_str(method))
 				),
 				title=_("Incomplete Virtual Doctype Implementation"),
 			)

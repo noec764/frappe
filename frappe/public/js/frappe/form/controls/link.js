@@ -40,14 +40,14 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 					// hide link arrow to doctype if none is set
 					me.$link.toggle(false);
 				}
-			}, 500);
+			}, 150);
 		});
 		this.$input.on("blur", function () {
 			// if this disappears immediately, the user's click
 			// does not register, hence timeout
 			setTimeout(function () {
 				me.$link.toggle(false);
-			}, 500);
+			}, 150);
 		});
 		this.$input.attr("data-target", this.df.options);
 		this.input = this.$input.get(0);
@@ -237,99 +237,19 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 		this.custom_awesomplete_filter && this.custom_awesomplete_filter(this.awesomplete);
 
-		this.$input.on(
-			"input",
-			frappe.utils.debounce(function (e) {
-				var doctype = me.get_options();
-				if (!doctype) return;
-				if (!me.$input.cache[doctype]) {
-					me.$input.cache[doctype] = {};
-				}
-
-				var term = e.target.value;
-
-				if (me.$input.cache[doctype][term] != null) {
-					// immediately show from cache
-					me.awesomplete.list = me.$input.cache[doctype][term];
-				}
-				var args = {
-					txt: term,
-					doctype: doctype,
-					ignore_user_permissions: me.df.ignore_user_permissions,
-					reference_doctype: me.get_reference_doctype() || "",
-				};
-
-				me.set_custom_query(args);
-
-				frappe.call({
-					type: "POST",
-					method: "frappe.desk.search.search_link",
-					no_spinner: true,
-					args: args,
-					callback: function (r) {
-						if (!window.Cypress && !me.$input.is(":focus")) {
-							return;
-						}
-						r.results = me.merge_duplicates(r.results);
-
-						// show filter description in awesomplete
-						if (args.filters) {
-							let filter_string = me.get_filter_description(args.filters);
-							if (filter_string) {
-								r.results.push({
-									html: `<span class="text-muted" style="line-height: 1.5">${filter_string}</span>`,
-									value: "",
-									action: () => {},
-								});
-							}
-						}
-
-						if (!me.df.only_select) {
-							if (frappe.model.can_create(doctype)) {
-								// new item
-								r.results.push({
-									html:
-										"<span class='text-primary link-option'>" +
-										"<i class='uil uil-plus' style='margin-right: 5px;'></i> " +
-										__("Create a new {0}", [__(me.get_options())]) +
-										"</span>",
-									label: __("Create a new {0}", [__(me.get_options())]),
-									value: "create_new__link_option",
-									action: me.new_doc,
-								});
-							}
-
-							//custom link actions
-							let custom__link_options =
-								frappe.ui.form.ControlLink.link_options &&
-								frappe.ui.form.ControlLink.link_options(me);
-
-							if (custom__link_options) {
-								r.results = r.results.concat(custom__link_options);
-							}
-
-							// advanced search
-							if (locals && locals["DocType"]) {
-								// not applicable in web forms
-								r.results.push({
-									html:
-										"<span class='text-primary link-option'>" +
-										"<i class='uil uil-search-alt' style='margin-right: 5px;'></i> " +
-										__("Advanced Search") +
-										"</span>",
-									label: __("Advanced Search"),
-									value: "advanced_search__link_option",
-									action: me.open_advanced_search,
-								});
-							}
-						}
-						me.$input.cache[doctype][term] = r.results;
-						me.awesomplete.list = me.$input.cache[doctype][term];
-						me.toggle_href(doctype);
-					},
-				});
-			}, 500)
-		);
+		const update_list = (e) => this.query_and_update_list(e.target.value);
+		const debounced_update_list = frappe.utils.debounce(update_list, 500);
+		this.$input.on("input", (e) => {
+			// Immediately show from cache if possible
+			this.query_and_update_list(e.target.value, { onlyCache: true });
+			// And also query
+			debounced_update_list(e);
+		});
+		this.$input.on("focus", (e) => {
+			if (!e.target.value) {
+				update_list(e);
+			}
+		});
 
 		this.$input.on("blur", function () {
 			if (me.selected) {
@@ -400,6 +320,101 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			if (o.text.value.indexOf("__link_option") !== -1) {
 				me.$input.val("");
 			}
+		});
+	}
+
+	query_and_update_list(term, { onlyCache = false } = {}) {
+		const me = this;
+		const doctype = me.get_options();
+		if (!doctype) return;
+		if (!me.$input.cache[doctype]) {
+			me.$input.cache[doctype] = {};
+		}
+
+		if (me.$input.cache[doctype][term] != null) {
+			// immediately show from cache
+			me.awesomplete.list = me.$input.cache[doctype][term];
+		}
+
+		if (onlyCache) {
+			return;
+		}
+
+		const args = {
+			txt: term,
+			doctype: doctype,
+			ignore_user_permissions: me.df.ignore_user_permissions,
+			reference_doctype: me.get_reference_doctype() || "",
+		};
+
+		me.set_custom_query(args);
+
+		frappe.call({
+			type: "POST",
+			method: "frappe.desk.search.search_link",
+			no_spinner: true,
+			args: args,
+			callback: function (r) {
+				if (!window.Cypress && !me.$input.is(":focus")) {
+					return;
+				}
+				r.results = me.merge_duplicates(r.results);
+
+				// show filter description in awesomplete
+				if (args.filters) {
+					let filter_string = me.get_filter_description(args.filters);
+					if (filter_string) {
+						r.results.push({
+							html: `<span class="text-muted" style="line-height: 1.5">${filter_string}</span>`,
+							value: "",
+							action: () => {},
+						});
+					}
+				}
+
+				if (!me.df.only_select) {
+					if (frappe.model.can_create(doctype)) {
+						// new item
+						r.results.push({
+							html:
+								"<span class='text-primary link-option'>" +
+								"<i class='uil uil-plus' style='margin-right: 5px;'></i> " +
+								__("Create a new {0}", [__(me.get_options())]) +
+								"</span>",
+							label: __("Create a new {0}", [__(me.get_options())]),
+							value: "create_new__link_option",
+							action: me.new_doc,
+						});
+					}
+
+					//custom link actions
+					let custom__link_options =
+						frappe.ui.form.ControlLink.link_options &&
+						frappe.ui.form.ControlLink.link_options(me);
+
+					if (custom__link_options) {
+						r.results = r.results.concat(custom__link_options);
+					}
+
+					// advanced search
+					if (locals && locals["DocType"]) {
+						// not applicable in web forms
+						r.results.push({
+							html:
+								"<span class='text-primary link-option'>" +
+								"<i class='uil uil-search-alt' style='margin-right: 5px;'></i> " +
+								__("Advanced Search") +
+								"</span>",
+							label: __("Advanced Search"),
+							value: "advanced_search__link_option",
+							action: me.open_advanced_search,
+						});
+					}
+				}
+				me.$input.cache[doctype][term] = r.results;
+				me.awesomplete.list = me.$input.cache[doctype][term];
+				me.toggle_href(doctype);
+			},
 		});
 	}
 

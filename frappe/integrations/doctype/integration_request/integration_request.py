@@ -29,12 +29,16 @@ class IntegrationRequest(Document):
 		self.db_set("status", "Completed")
 		self.db_set("output", json.dumps(response, default=json_handler))
 
-	def handle_failure(self, response):
+	def handle_failure(self, response, status=None):
 		"""update the error field with the response along with the relevant status"""
 		if isinstance(response, str):
 			response = json.loads(response)
-		self.db_set("status", "Failed")
+		self.db_set("status", status or "Failed")
 		self.db_set("error", json.dumps(response, default=json_handler))
+
+	def set_references(self, dt, dn):
+		self.db_set("reference_doctype", dt)
+		self.db_set("reference_docname", dn)
 
 	@frappe.whitelist()
 	def retry_webhook(self):

@@ -416,7 +416,7 @@ def get_roles(user=None, with_standard=True):
 	if not user:
 		user = frappe.session.user
 
-	if user == "Guest":
+	if user == "Guest" or not user:
 		return ["Guest"]
 
 	def get():
@@ -638,7 +638,7 @@ def get_linked_doctypes(dt: str) -> list:
 def get_doc_name(doc):
 	if not doc:
 		return None
-	return doc if isinstance(doc, str) else doc.name
+	return doc if isinstance(doc, str) else str(doc.name)
 
 
 def allow_everything():
@@ -720,7 +720,7 @@ def has_child_permission(
 		if not parentfield:
 			push_perm_check_log(
 				_("Parentfield not specified in {0}: {1}").format(
-					frappe.bold(child_doctype), frappe.bold(child_doc.name)
+					frappe.bold(_(child_doctype)), frappe.bold(child_doc.name)
 				)
 			)
 			return False

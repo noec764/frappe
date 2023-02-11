@@ -175,7 +175,7 @@ def login_via_key(key: str):
 	else:
 		frappe.respond_as_web_page(
 			_("Not Permitted"),
-			_("The link you trying to login is invalid or expired."),
+			_("The link you are trying to login with is invalid or expired."),
 			http_status_code=403,
 			indicator_color="red",
 		)

@@ -924,7 +924,11 @@ frappe.views.Workspace = class Workspace {
 
 	duplicate_page(page) {
 		var me = this;
-		let parent_pages = this.get_parent_pages(page);
+		let new_page = { ...page };
+		if (!this.has_access && new_page.public) {
+			new_page.public = 0;
+		}
+		let parent_pages = this.get_parent_pages({ public: new_page.public });
 		const d = new frappe.ui.Dialog({
 			title: __("Create Duplicate"),
 			fields: [
@@ -980,7 +984,7 @@ frappe.views.Workspace = class Workspace {
 							let new_page = res.message;
 							let message = __(
 								"Duplicate of {0} named as {1} is created successfully",
-								[page.title.bold(), new_page.title.bold()]
+								[__(page.title).bold(), __(new_page.title).bold()]
 							);
 							frappe.show_alert({ message: message, indicator: "green" });
 						}

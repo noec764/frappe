@@ -4,6 +4,8 @@
 	{% include "templates/includes/meta_block.html" %}
 {% endblock %}
 
+{% block title %} {{ _(title) }} {% endblock %}
+
 {% block breadcrumbs %}{% endblock %}
 
 {% block header %}
@@ -38,7 +40,7 @@
 				{{ _("Discard", null, "Button in web form") }}
 			</button>
 			<!-- submit button -->
-			<button type="submit" class="submit-btn btn btn-primary btn-sm ml-2">{{ button_label or _("Submit", null, "Button in web form") }}</button>
+			<button type="submit" class="submit-btn btn btn-primary btn-sm ml-2">{{ _(button_label) or _("Submit", null, "Button in web form") }}</button>
 		{% endif %}
 	</div>
 {% endmacro %}
@@ -68,7 +70,7 @@
 							<h1 class="ellipsis">{{ _(title) }}</h1>
 						{% endif %}
 					</div>
-					<span class="indicator-pill orange hide">Not Saved</span>
+					<span class="indicator-pill orange hide">{{ _("Not Saved") }}</span>
 					<div class="web-form-actions">
 						{{ header_buttons() }}
 					</div>
@@ -90,6 +92,7 @@
 				<div class="web-form-actions">
 					{{ action_buttons() }}
 				</div>
+				<div class="web-form-footer-text">{{ footer_text or "" }}</div>
 			</div>
 		</form>
 

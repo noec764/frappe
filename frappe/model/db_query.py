@@ -317,13 +317,16 @@ class DatabaseQuery:
 
 		# convert child_table.fieldname to `tabChild DocType`.`fieldname`
 		for field in self.fields:
-			if "." in field and "tab" not in field:
+			if "." in field:
 				original_field = field
 				alias = None
 				if " as " in field:
-					field, alias = field.split(" as ")
-				linked_fieldname, fieldname = field.split(".")
+					field, alias = field.split(" as ", 1)
+				linked_fieldname, fieldname = field.split(".", 1)
 				linked_field = frappe.get_meta(self.doctype).get_field(linked_fieldname)
+				# this is not a link field
+				if not linked_field:
+					continue
 				linked_doctype = linked_field.options
 				if linked_field.fieldtype == "Link":
 					self.append_link_table(linked_doctype, linked_fieldname)
@@ -438,7 +441,7 @@ class DatabaseQuery:
 				if not ("tab" in field and "." in field) or any(x for x in sql_functions if x in field):
 					continue
 
-				table_name = field.split(".")[0]
+				table_name = field.split(".", 1)[0]
 
 				if table_name.lower().startswith("group_concat("):
 					table_name = table_name[13:]
@@ -786,7 +789,7 @@ class DatabaseQuery:
 
 			# share is an OR condition, if there is a role permission
 			if not only_if_shared and self.shared and conditions:
-				conditions = f"({conditions}) or ({self.get_share_condition()})"
+				conditions = f"(({conditions}) or ({self.get_share_condition()}))"
 
 			return conditions
 
@@ -904,8 +907,9 @@ class DatabaseQuery:
 					# will covert to
 					# `tabItem`.`idx` desc, `tabItem`.`modified` desc
 					args.order_by = ", ".join(
-						f"`tab{self.doctype}`.`{f.split()[0].strip()}` {f.split()[1].strip()}"
+						f"`tab{self.doctype}`.`{f_split[0].strip()}` {f_split[1].strip()}"
 						for f in meta.sort_field.split(",")
+						if (f_split := f.split(maxsplit=2))
 					)
 				else:
 					sort_field = meta.sort_field or "modified"
@@ -1033,8 +1037,9 @@ def get_order_by(doctype, meta):
 		# will covert to
 		# `tabItem`.`idx` desc, `tabItem`.`modified` desc
 		order_by = ", ".join(
-			f"`tab{doctype}`.`{f.split()[0].strip()}` {f.split()[1].strip()}"
+			f"`tab{doctype}`.`{f_split[0].strip()}` {f_split[1].strip()}"
 			for f in meta.sort_field.split(",")
+			if (f_split := f.split(maxsplit=2))
 		)
 
 	else:

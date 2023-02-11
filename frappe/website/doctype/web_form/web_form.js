@@ -1,5 +1,5 @@
 frappe.ui.form.on("Web Form", {
-	setup: function () {
+	setup: function (frm) {
 		frappe.meta.docfield_map["Web Form Field"].fieldtype.formatter = (value) => {
 			const prefix = {
 				"Page Break": "--red-600",
@@ -7,19 +7,18 @@ frappe.ui.form.on("Web Form", {
 				"Column Break": "--yellow-600",
 			};
 			if (prefix[value]) {
-				value = `<span class="bold" style="color: var(${prefix[value]})">${value}</span>`;
+				value = `<span class="bold" style="color: var(${prefix[value]})">${__(value, null, "DocField")}</span>`;
 			}
 			return value;
 		};
 
 		frappe.meta.docfield_map["Web Form Field"].fieldname.formatter = (value) => {
 			if (!value) return;
-			return frappe.unscrub(value);
+			return frappe.get_meta(frm.doc.doc_type)?.fields?.find(x => x.fieldname === value)?.label ?? value;
 		};
 
 		frappe.meta.docfield_map["Web Form List Column"].fieldname.formatter = (value) => {
-			if (!value) return;
-			return frappe.unscrub(value);
+			return frappe.meta.docfield_map["Web Form Field"].fieldname.formatter(value);
 		};
 	},
 
@@ -32,6 +31,10 @@ frappe.ui.form.on("Web Form", {
 			frm.disable_save();
 		}
 		render_list_settings_message(frm);
+
+		frm.add_custom_button(__("Show List"), () => {
+			frappe.router.set_route("List", frm.doc.doc_type);
+		});
 
 		frm.trigger("set_fields");
 		frm.trigger("add_get_fields_button");
@@ -67,10 +70,10 @@ frappe.ui.form.on("Web Form", {
 	},
 
 	add_publish_button(frm) {
-		frm.add_custom_button(frm.doc.published ? __("Unpublish") : __("Publish"), () => {
+		frm.add_custom_button(frm.doc.published ? __("Unpublish", [], "Web Form") : __("Publish", [], "Web Form"), () => {
 			frm.set_value("published", !frm.doc.published);
 			frm.save();
-		});
+		}).removeClass("btn-default").addClass(frm.doc.published ? "btn-danger" : "btn-default");
 	},
 
 	add_get_fields_button(frm) {
@@ -132,22 +135,33 @@ frappe.ui.form.on("Web Form", {
 				label: df.label,
 				value: df.fieldname,
 			});
-			fields.push({label: "Name", fieldname: "name"})
+			fields.push({ label: "Name", fieldname: "name" })
 			update_options(fields.map(as_select_option));
 
-			let currency_fields = fields
+			const amount_fields = fields
 				.filter((df) => ["Currency", "Float"].includes(df.fieldtype))
 				.map(as_select_option);
-			if (!currency_fields.length) {
-				currency_fields = [
-					{
-						label: `No currency fields in ${doc.doc_type}`,
-						value: "",
-						disabled: true,
-					},
-				];
+			if (amount_fields.length === 0) {
+				amount_fields.push({
+					label: __("No Currency/Float fields in {0}", [doc.doc_type], "Web Form"),
+					value: "",
+					disabled: true,
+				})
 			}
-			frm.set_df_property("amount_field", "options", currency_fields);
+			frm.set_df_property("amount_field", "options", amount_fields);
+
+			const currency_fields = fields
+				.filter((df) => df.fieldtype === "Link")
+				.filter((df) => df.options === "Currency")
+				.map(as_select_option);
+			if (currency_fields.length === 0) {
+				currency_fields.push({
+					label: __("No Link to Currency fields in {0}", [doc.doc_type], "Web Form"),
+					value: "",
+					disabled: true,
+				})
+			}
+			frm.set_df_property("currency_field", "options", currency_fields);
 		});
 	},
 
@@ -236,10 +250,11 @@ function get_fields_for_doctype(doctype) {
 function render_list_settings_message(frm) {
 	// render list setting message
 	if (frm.fields_dict["list_setting_message"] && !frm.doc.login_required) {
+		const login_required_label = frappe.get_meta('Web Form').fields
+			.find(x => x.fieldname === "login_required")
+			.label;
 		const go_to_login_required_field = `
-			<code class="pointer" title="${__("Go to Login Required field")}">
-				${__("login_required")}
-			</code>
+			<a class="pointer" title="${__("Go to Login Required field")}" href="#">${__(login_required_label)}</a>
 		`;
 		let message = __(
 			"Login is required to see web form list view. Enable {0} to see list settings",
@@ -247,8 +262,8 @@ function render_list_settings_message(frm) {
 		);
 		$(frm.fields_dict["list_setting_message"].wrapper)
 			.html($(`<div class="form-message blue">${message}</div>`))
-			.find("code")
-			.click(() => frm.scroll_to_field("login_required"));
+			.find("a")
+			.on("click", () => frm.scroll_to_field("login_required"));
 	} else {
 		$(frm.fields_dict["list_setting_message"].wrapper).empty();
 	}

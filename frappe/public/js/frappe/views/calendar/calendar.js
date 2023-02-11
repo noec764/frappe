@@ -335,9 +335,11 @@ frappe.views.Calendar = class frappeCalendar {
 			},
 			eventDrop: function (info) {
 				me.update_event(info);
+				$(info.el).tooltip("dispose");
 			},
 			eventResize: function (info) {
 				me.update_event(info);
+				$(info.el).tooltip("dispose");
 			},
 			select: function (selectionInfo) {
 				if (
@@ -391,6 +393,9 @@ frappe.views.Calendar = class frappeCalendar {
 					title: frappe.utils.html2text(info.event.title),
 					placement: "auto",
 				});
+			},
+			eventWillUnmount: function (info) {
+				$(info.el).tooltip("dispose");
 			},
 			slotMinTime: defaults.slots_start_time || "06:00:00",
 			slotMaxTime: defaults.slots_end_time || "22:00:00",
@@ -485,14 +490,32 @@ frappe.views.Calendar = class frappeCalendar {
 
 	update_event(info) {
 		var me = this;
-		frappe.model.remove_from_locals(me.doctype, info.event.name);
+		let firstEvent = info.event;
+		if (info.relatedEvents && info.relatedEvents[0]) {
+			// let ok = false;
+			// const dialog = new frappe.ui.Dialog();
+			// me.refresh();
+			const maybeFirst = info.relatedEvents[0]
+			if (maybeFirst.start < firstEvent.start) {
+				firstEvent = maybeFirst;
+			}
+		}
+		frappe.model.remove_from_locals(firstEvent.extendedProps?.doctype || me.doctype, firstEvent.id);
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
-			args: me.get_update_args(info.event),
+			args: me.get_update_args(firstEvent),
 			callback: function (r) {
 				if (r.exc) {
 					frappe.show_alert(__("Unable to update event"));
 					info.revert();
+				} else {
+					if (firstEvent.extendedProps?.rrule) {
+						// Fetch some instances of the recurring event that might
+						// be missing because they were out of the displayed range
+						// but now should be displayed because the recurring event
+						// was moved to an earlier date.
+						me.refresh();
+					}
 				}
 			},
 			error: function () {

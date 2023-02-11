@@ -871,9 +871,7 @@ class Database:
 	):
 		"""Set a single value in the database, do not call the ORM triggers
 		but update the modified timestamp (unless specified not to).
-
 		**Warning:** this function will not call Document events and should be avoided in normal cases.
-
 		:param dt: DocType name.
 		:param dn: Document name.
 		:param field: Property / field name or dictionary of values to be updated
@@ -882,23 +880,20 @@ class Database:
 		:param modified_by: Set this user as `modified_by`.
 		:param update_modified: default True. Set as false, if you don't want to update the timestamp.
 		:param debug: Print the query in the developer / js console.
-		:param for_update: Will add a row-level lock to the value that is being set so that it can be released on commit.
+		:param for_update: [DEPRECATED] This function now performs updates in single query, locking is not required.
 		"""
 		is_single_doctype = not (dn and dt != dn)
 		to_update = field if isinstance(field, dict) else {field: val}
 
-		if dn is None:
+		if is_single_doctype:
 			deprecation_warning(
-				"Calling db.set_value with no document name assumes a single doctype. This behaviour will be removed in version 15. Use db.set_single_value instead."
+				"Calling db.set_value to set single doctype values is deprecated. This behaviour will be removed in version 15. Use db.set_single_value instead."
 			)
 
 		if update_modified:
 			modified = modified or now()
 			modified_by = modified_by or frappe.session.user
 			to_update.update({"modified": modified, "modified_by": modified_by})
-
-		if for_update:
-			deprecation_warning("for_update parameter is deprecated and will be removed in v15.")
 
 		if is_single_doctype:
 			frappe.db.delete(
@@ -912,19 +907,11 @@ class Database:
 			frappe.clear_document_cache(dt, dt)
 
 		else:
-			table = DocType(dt)
+			query = frappe.qb.engine.build_conditions(table=dt, filters=dn, update=True)
 
-			if for_update:
-				docnames = tuple(
-					self.get_values(dt, dn, "name", debug=debug, for_update=for_update, pluck=True)
-				) or (NullValue(),)
-				query = frappe.qb.update(table).where(table.name.isin(docnames))
-
-				for docname in docnames:
-					frappe.clear_document_cache(dt, docname)
-
+			if isinstance(dn, str):
+				frappe.clear_document_cache(dt, dn)
 			else:
-				query = frappe.qb.engine.build_conditions(table=dt, filters=dn, update=True)
 				# TODO: Fix this; doesn't work rn - gavin@frappe.io
 				# frappe.cache().hdel_keys(dt, "document_cache")
 				# Workaround: clear all document caches

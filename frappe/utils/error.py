@@ -13,7 +13,7 @@ import pydoc
 import sys
 import traceback
 
-from ldap3.core.exceptions import LDAPInvalidCredentialsResult
+from ldap3.core.exceptions import LDAPException
 
 import frappe
 from frappe.utils import cstr, encode
@@ -22,7 +22,7 @@ EXCLUDE_EXCEPTIONS = (
 	frappe.AuthenticationError,
 	frappe.CSRFTokenError,  # CSRF covers OAuth too
 	frappe.SecurityException,
-	LDAPInvalidCredentialsResult,
+	LDAPException,
 )
 
 
@@ -69,7 +69,7 @@ def get_snapshot(exception, context=10):
 
 	s = {
 		"pyver": "Python {version:s}: {executable:s} (prefix: {prefix:s})".format(
-			version=sys.version.split()[0], executable=sys.executable, prefix=sys.prefix
+			version=sys.version.split(maxsplit=1)[0], executable=sys.executable, prefix=sys.prefix
 		),
 		"timestamp": cstr(datetime.datetime.now()),
 		"traceback": traceback.format_exc(),

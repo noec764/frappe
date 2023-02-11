@@ -35,7 +35,7 @@ class TestNamingSeries(FrappeTestCase):
 	def test_get_transactions(self):
 
 		naming_info = self.dns.get_transactions_and_prefixes()
-		self.assertIn("Webhook", naming_info["transactions"])
+		self.assertIn("Webhook", [i.get("value") for i in naming_info["transactions"]])
 
 		existing_naming_series = frappe.get_meta("Webhook").get_field("naming_series").options
 
