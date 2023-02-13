@@ -109,7 +109,8 @@ frappe.events.EventsPortalView = class EventsPortalView {
 
 		event.event.extendedProps.route &&
 			dialog.set_primary_action(__("See details"), () => {
-				window.location.href = event.event.extendedProps.route;
+				const absolutePath = event.event.extendedProps.route.replace(/^\/?/, "/")
+				window.location.href = absolutePath;
 			});
 		dialog.fields_dict.event_description.$wrapper.html(event_details(event));
 		dialog.show();
