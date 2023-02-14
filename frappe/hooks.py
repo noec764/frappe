@@ -247,7 +247,6 @@ scheduler_events = {
 		"frappe.core.doctype.prepared_report.prepared_report.delete_expired_prepared_reports",
 		"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
 		"frappe.email.doctype.email_group.email_group.auto_update_email_groups",
-		"frappe.utils.subscription.enable_manage_subscription",
 	],
 	"daily_long": [
 		"frappe.integrations.doctype.dropbox_settings.dropbox_settings.take_backups_daily",
