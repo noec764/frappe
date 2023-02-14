@@ -139,9 +139,15 @@ class User(Document):
 				ignore_mandatory=True,
 				ignore_links=True,
 				now=now,
+				enqueue_after_commit=True,
 			)
 		if self.name not in STANDARD_USERS and not self.user_image:
-			frappe.enqueue("frappe.core.doctype.user.user.update_gravatar", name=self.name, now=now)
+			frappe.enqueue(
+				"frappe.core.doctype.user.user.update_gravatar",
+				name=self.name,
+				now=now,
+				enqueue_after_commit=True,
+			)
 
 		# Set user selected timezone
 		if self.time_zone:
