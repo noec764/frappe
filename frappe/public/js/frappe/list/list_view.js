@@ -1874,7 +1874,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 					bulk_operations.edit(this.get_checked_items(true), field_mappings, () => {
 						this.disable_list_update = false;
-						this.clear_checked_items();
 						this.refresh();
 					});
 				},
