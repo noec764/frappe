@@ -3,14 +3,6 @@
 
 this.frm.add_fetch("sender", "email_id", "sender_email");
 
-this.frm.fields_dict.sender.get_query = function () {
-	return {
-		filters: {
-			enable_outgoing: 1,
-		},
-	};
-};
-
 frappe.notification = {
 	setup_fieldname_select: function (frm) {
 		// get the doctype to update fields
@@ -145,6 +137,15 @@ frappe.ui.form.on("Notification", {
 	refresh: function (frm) {
 		frappe.notification.setup_fieldname_select(frm);
 		frappe.notification.setup_example_message(frm);
+
+		frm.add_fetch("sender", "email_id", "sender_email");
+		frm.set_query("sender", () => {
+			return {
+				filters: {
+					enable_outgoing: 1,
+				},
+			};
+		});
 		frm.get_field("is_standard").toggle(frappe.boot.developer_mode);
 		frm.trigger("event");
 
