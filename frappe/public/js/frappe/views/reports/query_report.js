@@ -1478,7 +1478,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					open_url_post(frappe.request.url, args);
 				}
 			},
-			__("Export Report: {0}", [this.report_name]),
+			__("Export Report: {0}", [__(this.report_name)]),
 			__("Download")
 		);
 	}
