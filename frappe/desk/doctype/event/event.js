@@ -4,6 +4,7 @@ frappe.provide("frappe.desk");
 
 frappe.ui.form.on("Event", {
 	setup() {
+		frappe.realtime.off("event_synced");
 		frappe.realtime.on("event_synced", (data) => {
 			frappe.show_alert({ message: data.message, indicator: "green" });
 		});
