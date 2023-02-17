@@ -736,7 +736,10 @@ class BaseDocument:
 					if not _df.get("fetch_if_empty")
 					or (_df.get("fetch_if_empty") and not self.get(_df.fieldname))
 				]
-				if not frappe.get_meta(doctype).get("is_virtual"):
+				if frappe.get_meta(doctype).get("is_virtual"):
+					# virtual doctype, get whole document
+					values = frappe.get_doc(doctype, docname).as_dict()
+				else:
 					if not fields_to_fetch:
 						# cache a single value type
 						values = _dict(name=frappe.db.get_value(doctype, docname, "name", cache=True))
@@ -748,9 +751,6 @@ class BaseDocument:
 
 				if getattr(frappe.get_meta(doctype), "issingle", 0):
 					values.name = doctype
-
-				if frappe.get_meta(doctype).get("is_virtual"):
-					values = frappe.get_doc(doctype, docname).as_dict()
 
 				if values:
 					setattr(self, df.fieldname, values.name)
