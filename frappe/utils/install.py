@@ -53,6 +53,8 @@ def after_install():
 
 	add_standard_navbar_items()
 
+	frappe.db.set_single_value("Website Settings", "app_name", "Dodock")
+
 	frappe.db.commit()
 
 
