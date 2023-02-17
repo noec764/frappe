@@ -175,7 +175,10 @@ class Event(WebsiteGenerator):
 		for link_doctype, link_name in removed_links:
 			communication.remove_link(link_doctype, link_name)
 
-		communication.save(ignore_permissions=True)
+		from frappe.utils import validate_email_address
+
+		if validate_email_address(communication.sender):
+			communication.save(ignore_permissions=True)
 
 	def add_participant(self, contact):
 		"""Add a single participant to event participants

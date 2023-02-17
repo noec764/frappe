@@ -334,7 +334,7 @@
    "label": "Expiry time of QR Code Image Page"
   },
   {
-   "default": "Frappe Framework",
+   "default": "Dodock Framework",
    "depends_on": "enable_two_factor_auth",
    "fieldname": "otp_issuer_name",
    "fieldtype": "Data",
@@ -538,7 +538,7 @@
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2022-12-20 21:45:37.651668",
+ "modified": "2023-02-17 21:45:37.651668",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
