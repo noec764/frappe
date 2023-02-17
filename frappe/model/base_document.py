@@ -781,6 +781,9 @@ class BaseDocument:
 					):
 
 						cancelled_links.append((df.fieldname, docname, get_msg(df, docname)))
+				else:
+					# the linked document does not exist
+					invalid_links.append((df.fieldname, docname, get_msg(df, docname)))
 
 		return invalid_links, cancelled_links
 
