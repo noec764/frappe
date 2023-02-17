@@ -84,7 +84,6 @@ import "./frappe/ui/toolbar/search_utils.js";
 import "./frappe/ui/toolbar/about.js";
 import "./frappe/ui/toolbar/navbar.html";
 import "./frappe/ui/toolbar/toolbar.js";
-import "./frappe/ui/toolbar/subscription.js";
 // import "./frappe/ui/toolbar/notifications.js";
 
 import "./frappe/ui/quick_access/quick_access.js";
