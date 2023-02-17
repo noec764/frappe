@@ -390,7 +390,7 @@
      "label": "Navbar Template"
     },
     {
-     "default": "Frappe",
+     "default": "Dodock",
      "fieldname": "app_name",
      "fieldtype": "Data",
      "label": "App Name"
@@ -486,7 +486,7 @@
    "index_web_pages_for_search": 1,
    "issingle": 1,
    "links": [],
-   "modified": "2022-10-18 09:50:24.621839",
+   "modified": "2023-02-17 09:50:24.621839",
    "modified_by": "Administrator",
    "module": "Website",
    "name": "Website Settings",
