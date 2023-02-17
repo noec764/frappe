@@ -715,12 +715,12 @@ class BaseDocument:
 			docname = self.get(df.fieldname)
 
 			if docname:
-				if not isinstance(docname, str):
+				if not isinstance(docname, (str, int)):
 					raise frappe.LinkValidationError(
 						_("Invalid value for {0}, expected {1}, got {2}").format(
 							_(df.label),
-							"string",
-							type(docname).__name__,
+							"str | int",
+							repr(type(docname).__name__),
 						)
 					)
 
