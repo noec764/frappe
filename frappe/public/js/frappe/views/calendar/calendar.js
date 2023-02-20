@@ -163,6 +163,7 @@ frappe.views.Calendar = class frappeCalendar {
 			start: "start",
 			end: "end",
 			allDay: "all_day",
+			convertToUserTz: "convert_to_user_tz",
 		};
 		this.get_default_options();
 	}
@@ -445,10 +446,13 @@ frappe.views.Calendar = class frappeCalendar {
 			if (!me.field_map.allDay && !me.no_all_day) {
 				d.allDay = true;
 			}
+			if (!me.field_map.convertToUserTz) d.convertToUserTz = true;
 
 			// convert to user tz
-			d.start = frappe.datetime.convert_to_user_tz(d.start);
-			d.end = frappe.datetime.convert_to_user_tz(d.end);
+			if (d.convertToUserTz) {
+				d.start = frappe.datetime.convert_to_user_tz(d.start);
+				d.end = frappe.datetime.convert_to_user_tz(d.end);
+			}
 
 			// show event on single day if start or end date is invalid
 			if (!frappe.datetime.validate(d.start) && d.end) {
@@ -495,12 +499,15 @@ frappe.views.Calendar = class frappeCalendar {
 			// let ok = false;
 			// const dialog = new frappe.ui.Dialog();
 			// me.refresh();
-			const maybeFirst = info.relatedEvents[0]
+			const maybeFirst = info.relatedEvents[0];
 			if (maybeFirst.start < firstEvent.start) {
 				firstEvent = maybeFirst;
 			}
 		}
-		frappe.model.remove_from_locals(firstEvent.extendedProps?.doctype || me.doctype, firstEvent.id);
+		frappe.model.remove_from_locals(
+			firstEvent.extendedProps?.doctype || me.doctype,
+			firstEvent.id
+		);
 		return frappe.call({
 			method: me.update_event_method || "frappe.desk.calendar.update_event",
 			args: me.get_update_args(firstEvent),
