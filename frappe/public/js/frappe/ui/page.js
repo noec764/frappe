@@ -229,10 +229,12 @@ frappe.ui.Page = class Page {
 		`);
 
 		button.appendTo(this.icon_group.removeClass("hide"));
-		button.click(click);
-		button
-			.attr("title", __(tooltip_label || frappe.unscrub(icon)))
-			.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
+		button.on("click", click);
+		button.attr("aria-label", __(tooltip_label || frappe.unscrub(icon))).tooltip({
+			title: __(tooltip_label || frappe.unscrub(icon)),
+			delay: { show: 600, hide: 100 },
+			trigger: "hover",
+		});
 
 		return button;
 	}

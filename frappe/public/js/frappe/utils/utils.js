@@ -1362,6 +1362,10 @@ Object.assign(frappe.utils, {
 	},
 
 	icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
+		if (String(icon_name).match(/fa-|uil-/)) {
+			return this.font_icon(icon_name, size, icon_class, icon_style);
+		}
+
 		let size_class = "";
 
 		if (typeof size == "object") {
@@ -1372,6 +1376,10 @@ Object.assign(frappe.utils, {
 		return `<svg class="icon ${svg_class} ${size_class}" style="${icon_style}">
 			<use class="${icon_class}" href="#icon-${icon_name}"></use>
 		</svg>`;
+	},
+
+	font_icon(icon_name, size = "sm", icon_class = "", icon_style = "") {
+		return `<i class="${icon_name} ${icon_class}" style="font-size: var(--text-${size}); ${icon_style}"></i>`;
 	},
 
 	flag(country_code) {

@@ -117,11 +117,11 @@
    }
   ],
   "has_web_view": 1,
-  "icon": "icon-file-alt",
+  "icon": "uil uil-question-circle",
   "index_web_pages_for_search": 1,
   "is_published_field": "published",
   "links": [],
-  "modified": "2022-12-15 20:05:11.317400",
+  "modified": "2023-02-20 16:33:50.446725",
   "modified_by": "Administrator",
   "module": "Website",
   "name": "Help Article",
