@@ -125,14 +125,14 @@
       "fieldtype": "Column Break"
      }
     ],
-    "icon": "icon-inbox",
+    "icon": "uil uil-envelope",
     "links": [
      {
       "link_doctype": "Email Account",
       "link_fieldname": "domain"
      }
     ],
-    "modified": "2022-08-19 12:55:06.434541",
+    "modified": "2023-02-20 16:33:50.446725",
     "modified_by": "Administrator",
     "module": "Email",
     "name": "Email Domain",

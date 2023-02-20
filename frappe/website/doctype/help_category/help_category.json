@@ -52,9 +52,9 @@
    "label": "Login required"
   }
  ],
- "icon": "icon-list",
+ "icon": "uil uil-folder-question",
  "links": [],
- "modified": "2022-10-26 17:00:12.563712",
+ "modified": "2023-02-20 16:33:50.446725",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Help Category",
