@@ -79,10 +79,10 @@
       "options": "Note Seen By"
      }
     ],
-    "icon": "fa fa-file-text",
+    "icon": "uil uil-file-alt",
     "idx": 1,
     "links": [],
-    "modified": "2021-09-18 10:57:51.352643",
+    "modified": "2023-02-20 16:33:50.446725",
     "modified_by": "Administrator",
     "module": "Desk",
     "name": "Note",

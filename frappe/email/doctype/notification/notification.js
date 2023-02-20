@@ -1,8 +1,6 @@
 // Copyright (c) 2018, Frappe Technologies and contributors
 // For license information, please see license.txt
 
-this.frm.add_fetch("sender", "email_id", "sender_email");
-
 frappe.notification = {
 	setup_fieldname_select: function (frm) {
 		// get the doctype to update fields
