@@ -23,7 +23,6 @@ rights = (
 	"report",
 	"import",
 	"export",
-	"set_user_permissions",
 	"share",
 )
 
@@ -460,24 +459,6 @@ def get_doctypes_with_custom_docperms():
 
 	doctypes = frappe.get_all("Custom DocPerm", fields=["parent"], distinct=1)
 	return [d.parent for d in doctypes]
-
-
-def can_set_user_permissions(doctype, docname=None):
-	# System Manager can always set user permissions
-	if frappe.session.user == "Administrator" or "System Manager" in frappe.get_roles():
-		return True
-
-	meta = frappe.get_meta(doctype)
-
-	# check if current user has read permission for docname
-	if docname and not has_permission(doctype, "read", docname):
-		return False
-
-	# check if current user has a role that can set permission
-	if get_role_permissions(meta).set_user_permissions != 1:
-		return False
-
-	return True
 
 
 def set_user_permission_if_allowed(doctype, name, user, with_message=False):
