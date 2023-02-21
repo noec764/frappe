@@ -30,6 +30,7 @@ $.extend(frappe.perm, {
 		"print",
 		"email",
 		"share",
+		"set_user_permissions",
 	],
 
 	doctype_perm: {},
