@@ -12,6 +12,7 @@ from frappe.core.doctype.file import remove_file_by_url
 from frappe.custom.doctype.customize_form.customize_form import docfield_properties
 from frappe.desk.form.meta import get_code_files_via_hooks
 from frappe.model.document import Document
+from frappe.modules import load_doctype_module
 from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.rate_limiter import rate_limit
 from frappe.translate import extract_messages_from_code, make_dict_from_messages
@@ -274,13 +275,12 @@ def get_context(context):
 				if df.options:
 					frappe.translate.get_dict("doctype", df.options)
 
-		for df in self.meta.get_code_fields() :
+		for df in self.meta.get_code_fields():
 			value = context.get(df.fieldname) or self.get(df.fieldname)
 			if value and isinstance(value, str):
 				msgs.update(self.get_translations_from_code(value, context))
 
 		context.translated_messages = msgs
-
 
 	def get_translations_from_code(self, text: str, context):
 		messages = extract_messages_from_code(text)
@@ -366,6 +366,12 @@ def get_context(context):
 				)
 
 			context.reference_doc = context.reference_doc.as_dict(no_nulls=True)
+
+		module = load_doctype_module(self.doc_type)
+		if hasattr(module, "get_webform_context"):
+			out = frappe._dict(module.get_webform_context(context) or {})
+			if out:
+				context = out
 
 	def add_custom_context_and_script(self, context):
 		"""Update context from module if standard and append script"""
@@ -539,7 +545,8 @@ def accept(web_form, data):
 	# set values
 	for field in web_form.web_form_fields:
 		fieldname = field.fieldname
-		if not fieldname: continue
+		if not fieldname:
+			continue
 
 		df = meta.get_field(fieldname)
 		value = data.get(fieldname, None)

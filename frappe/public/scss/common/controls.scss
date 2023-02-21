@@ -519,3 +519,42 @@ button.data-pill {
 	right: 0;
 	cursor: pointer;
 }
+
+.frappe-control[data-fieldtype="Link"][data-link-icon],
+.frappe-control[data-fieldtype="Dynamic Link"][data-link-icon] {
+	.form-control {
+		padding-left: 2em;
+	}
+	.link-icon {
+		position: absolute;
+
+		left: 0.5em;
+		width: calc(2em - 0.5em);
+
+		top: 0;
+		bottom: 0;
+		height: 100%;
+
+		user-select: none;
+
+		color: currentColor;
+		--icon-stroke: currentColor;
+
+		transition: all 0.2s ease;
+		opacity: 0.7;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		.uil {
+			transform: scale(1.2); // Adjust optical size
+		}
+	}
+	.link-field:focus-within, .link-field:active {
+		.link-icon {
+			opacity: 1;
+			color: var(--primary);
+		}
+	}
+}

@@ -56,6 +56,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.setup_buttons();
 		this.setup_awesomeplete();
 		this.bind_change_event();
+		this.setup_icon();
 	}
 
 	get_options() {
@@ -76,6 +77,104 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		if (this.only_input && !this.with_link_btn) {
 			this.$input_area.find(".link-btn").remove();
 		}
+	}
+
+	refresh_input() {
+		super.refresh_input();
+		this.setup_icon(); // refresh icon for dynamic link
+	}
+
+	async setup_icon() {
+		// do not setup icon for child table
+		if (this.in_grid()) {
+			return this.clear_icon(); // clear icon
+		}
+
+		// do not change if doctype did not change
+		const doctype = this.get_options();
+		if (this._prev_doctype === doctype) {
+			return; // skip
+		}
+		this._prev_doctype = doctype;
+
+		const icon = await this.get_icon_for_doctype_memoized(doctype);
+		if (icon) {
+			return this.set_icon(icon, doctype);
+		}
+		return this.clear_icon();
+	}
+	async get_icon_for_doctype_memoized(doctype) {
+		// cache in a static property to avoid multiple network requests
+		const Super = ControlLink;
+		if (!Super.doctype_icons) {
+			Super.doctype_icons = {};
+		}
+		if (!(doctype in Super.doctype_icons)) {
+			Super.doctype_icons[doctype] = this.get_icon_for_doctype(doctype);
+		}
+		return Super.doctype_icons[doctype];
+	}
+	async get_icon_for_doctype(doctype) {
+		try {
+			if (!doctype) {
+				return null;
+			}
+			if (frappe.get_meta(doctype)?.icon) {
+				return frappe.get_meta(doctype).icon;
+			}
+			const m = await frappe.db.get_value("DocType", doctype, "icon");
+			if (m?.message?.icon) {
+				return m.message.icon;
+			}
+		} catch (e) {
+			console.error(e);
+		}
+	}
+	clear_icon() {
+		this.set_icon();
+	}
+	set_icon(icon_name = "", doctype = null) {
+		const prev = this.$wrapper.find(".link-icon");
+		if (prev.length) {
+			if (
+				icon_name &&
+				frappe.utils.escape_html(icon_name) === this.$wrapper.attr("data-link-icon")
+			) {
+				return; // no need to update
+			}
+			prev.tooltip("dispose");
+			prev.remove();
+		}
+
+		if (icon_name) {
+			this.$wrapper.attr("data-link-icon", frappe.utils.escape_html(icon_name));
+		} else {
+			this.$wrapper.removeAttr("data-link-icon");
+			return;
+		}
+
+		const icon_size = "xs";
+
+		const icon_html = document.createElement("div");
+		icon_html.classList.add("link-icon", "link-icon--main");
+		icon_html.innerHTML += frappe.utils.icon(icon_name, icon_size);
+		if (doctype) {
+			if (!this.only_input) {
+				// in a form, show tooltip
+				$(icon_html).tooltip({
+					title: __(doctype),
+					delay: { show: 600, hide: 100 },
+					trigger: "hover",
+				});
+			}
+			icon_html.addEventListener("click", () => {
+				// Focus and select all the text in the input field
+				this.$input.trigger("focus");
+				this.$input.trigger("select");
+			});
+		}
+
+		this.$wrapper.find(".link-field").append(icon_html);
 	}
 
 	set_formatted_input(value) {
