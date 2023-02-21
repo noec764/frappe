@@ -108,7 +108,6 @@
    "read": 1, 
    "report": 1, 
    "role": "System Manager", 
-   "set_user_permissions": 0, 
    "share": 1, 
    "submit": 0, 
    "write": 1
@@ -128,7 +127,6 @@
    "read": 1, 
    "report": 0, 
    "role": "All", 
-   "set_user_permissions": 0, 
    "share": 0, 
    "submit": 0, 
    "write": 0

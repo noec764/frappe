@@ -3186,7 +3186,7 @@ If you are updating/overwriting already created records.,Si vous mettez à jour 
 If you aren't using own publish Google Apps Script webapp you can use the default https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec ,"Si vous n'utiliser pas vos propres webapp Google Apps Script, vous pouvez utiliser l'application par défaut suivante :  https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec",
 If you don't want to create any new records while updating the older records.,Si vous ne souhaitez pas créer de nouveaux enregistrements lors de la mise à jour des anciens enregistrements.,
 "If you just want to customize for your site, use {0} instead.","Si vous voulez simplement personnaliser pour votre site, utilisez {0} à la place.",
-"If you set this, this Item will come in a drop-down under the selected parent.","Si vous définissez ceci, cet Article sera dans un menu déroulant sous le parent sélectionné.",
+"If you set this, this Item will come in a drop-down under the selected parent.","Cet élément sera dans un menu déroulant sous le parent sélectionné.",
 "If you think this is unauthorized, please change the Administrator password.","Si vous pensez que cela n'est pas autorisé, veuillez changer le mot de passe Administrateur.",
 "If your data is in HTML, please copy paste the exact HTML code with the tags.","Si vos données sont en HTML, veuillez copier-coller le code HTML exact avec les balises.",
 Ignore User Permissions,Ignorer les autorisations des utilisateurs,
