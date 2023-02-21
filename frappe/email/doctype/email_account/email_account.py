@@ -270,7 +270,8 @@ class EmailAccount(Document):
 
 	@property
 	def default_sender(self):
-		return email.utils.formataddr((self.name, self.get("email_id")))
+		if self.name and self.get("email_id"):
+			return email.utils.formataddr((self.name, self.get("email_id")))
 
 	def is_exists_in_db(self):
 		"""Some of the Email Accounts we create from configs and those doesn't exists in DB.

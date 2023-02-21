@@ -322,6 +322,7 @@ frappe.PermissionEngine = class PermissionEngine {
 			"report",
 			"import",
 			"export",
+			"set_user_permissions",
 			"share",
 		];
 	}

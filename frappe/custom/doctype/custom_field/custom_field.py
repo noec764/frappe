@@ -16,6 +16,18 @@ class CustomField(Document):
 		self.name = self.dt + "-" + self.fieldname
 
 	def set_fieldname(self):
+		restricted = (
+			"name",
+			"parent",
+			"creation",
+			"modified",
+			"modified_by",
+			"parentfield",
+			"parenttype",
+			"file_list",
+			"flags",
+			"docstatus",
+		)
 		if not self.fieldname:
 			label = self.label
 			if not label:
@@ -31,6 +43,9 @@ class CustomField(Document):
 
 		# fieldnames should be lowercase
 		self.fieldname = self.fieldname.lower()
+
+		if self.fieldname in restricted:
+			self.fieldname = self.fieldname + "1"
 
 	def before_insert(self):
 		self.set_fieldname()

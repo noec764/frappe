@@ -1702,7 +1702,7 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 						doctype: "Report",
 						name: this.report_name,
 					}),
-				condition: () => frappe.user.has_role("System Manager"),
+				condition: () => frappe.model.can_set_user_permissions("Report"),
 				standard: true,
 			},
 		];
