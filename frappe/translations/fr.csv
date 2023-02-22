@@ -6448,7 +6448,7 @@ This role update User Permissions for a user,Ce rôle met à jour les Autorisati
 This site is running in developer mode. Any change made here will be updated in code.,Ce site fonctionne en mode développement. Toute modification apportée ici sera mise à jour dans le code.,
 This slide is skipped,Cette diapositive est masquée,Slide View
 This title will be used as the title of the webpage as well as in meta tags,Ce titre sera utilisé comme titre de la page web de même que dans les meta-tags,
-This value is fetched from {0}'s {1} field,Cette value est récupérée depuis le champ {1} du document lié {0},
+This value is fetched from {0}'s {1} field,Cette valeur est récupérée depuis le champ {1} du document lié {0},
 "This will be automatically generated when you publish the page, you can also enter a route yourself if you wish",Cela sera automatiquement généré lors de la publication de la page. Vous pouvez également choisir une route si vous préférez.,
 This will be shown in a modal after routing,Sera affiché dans un popup,
 This will be shown to the user in a dialog after routing to the report,Cette description sera affichée dans un popup à l'affichage du rapport,
