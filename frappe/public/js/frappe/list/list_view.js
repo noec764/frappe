@@ -533,9 +533,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	get_args() {
 		const args = super.get_args();
 
-		return Object.assign(args, {
-			with_comment_count: true,
-		});
+		if (this.list_view_settings && !this.list_view_settings.disable_comment_count) {
+			args.with_comment_count = 1;
+		} else {
+			args.with_comment_count = 0;
+		}
+
+		return args;
 	}
 
 	before_refresh() {
@@ -935,12 +939,16 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const comments_tooltip = `data-toggle="tooltip" data-placement="top" title="${
 			unseen_communication.length || 0
 		} ${tooltip_text}"`;
-		const comment_count = `<span class="${
-			unseen_communication.length ? "unseen" : ""
-		} comment-count" ${comments_tooltip}>
-				${frappe.utils.icon("small-message")}
-				${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
-			</span>`;
+
+		let comment_count = "";
+		if (this.list_view_settings && !this.list_view_settings.disable_comment_count) {
+			comment_count = `<span class="${
+				unseen_communication.length ? "unseen" : ""
+			} comment-count" ${comments_tooltip}>
+					${frappe.utils.icon("small-message")}
+					${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
+				</span>`;
+		}
 
 		html += `
 			<div class="level-item list-row-activity hidden-xs">
