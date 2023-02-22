@@ -12,6 +12,7 @@ from werkzeug.wrappers import Response
 import frappe
 from frappe import _
 from frappe.model.document import Document
+from frappe.translate import get_language
 from frappe.utils import cint, get_time_zone, md_to_html
 
 FRONTMATTER_PATTERN = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M)
@@ -160,7 +161,7 @@ def get_home_page_via_hooks():
 
 def get_boot_data():
 	return {
-		"lang": "en",
+		"lang": get_language(),
 		"sysdefaults": {
 			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
 			"date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
