@@ -160,8 +160,9 @@ def get_home_page_via_hooks():
 
 
 def get_boot_data():
+	is_in_request = hasattr(frappe.local, "request")
 	return {
-		"lang": get_language(),
+		"lang": get_language() if is_in_request else "en",
 		"sysdefaults": {
 			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
 			"date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
