@@ -143,7 +143,7 @@ frappe.ui.form.on("Web Form", {
 				.map(as_select_option);
 			if (amount_fields.length === 0) {
 				amount_fields.push({
-					label: __("No Currency/Float fields in {0}", [doc.doc_type], "Web Form"),
+					label: __("No Currency/Float fields in {0}", [__(doc.doc_type)], "Web Form"),
 					value: "",
 					disabled: true,
 				})
@@ -156,7 +156,7 @@ frappe.ui.form.on("Web Form", {
 				.map(as_select_option);
 			if (currency_fields.length === 0) {
 				currency_fields.push({
-					label: __("No Link to Currency fields in {0}", [doc.doc_type], "Web Form"),
+					label: __("No Link to Currency fields in {0}", [__(doc.doc_type)], "Web Form"),
 					value: "",
 					disabled: true,
 				})
