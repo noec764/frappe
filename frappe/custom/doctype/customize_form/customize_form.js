@@ -154,6 +154,18 @@ frappe.ui.form.on("Customize Form", {
 		frm.events.setup_export(frm);
 		frm.events.setup_sort_order(frm);
 		frm.events.set_default_doc_type(frm);
+		frm.trigger("convert_values_to_strings");
+	},
+
+	convert_values_to_strings(frm) {
+		// fix: Fields of type Check whose default value are impacted by
+		// a Property Setter cannot be edited because the value is a boolean
+		// and not a string.
+		frm.doc.fields.forEach((field) => {
+			if (field.fieldtype === "Check") {
+				field.default = field.default ? "1" : "0";
+			}
+		});
 	},
 
 	set_default_doc_type(frm) {
