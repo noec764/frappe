@@ -611,7 +611,15 @@ def insert_event_in_google_calendar(doc, method=None):
 	)
 
 	try:
-		event = google_calendar.events().insert(calendarId=doc.google_calendar_id, body=event).execute()
+		event = (
+			google_calendar.events()
+			.insert(
+				calendarId=doc.google_calendar_id,
+				body=event,
+				sendUpdates="all",
+			)
+			.execute()
+		)
 		doc.db_set("google_calendar_event_id", event.get("id"), update_modified=False)
 		frappe.publish_realtime(
 			"event_synced",
@@ -670,7 +678,10 @@ def update_event_in_google_calendar(doc, method=None):
 		)
 
 		google_calendar.events().update(
-			calendarId=doc.google_calendar_id, eventId=doc.google_calendar_event_id, body=event
+			calendarId=doc.google_calendar_id,
+			eventId=doc.google_calendar_event_id,
+			body=event,
+			sendUpdates="all",
 		).execute()
 		frappe.publish_realtime(
 			"event_synced",
