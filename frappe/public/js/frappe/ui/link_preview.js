@@ -12,7 +12,7 @@ frappe.ui.LinkPreview = class {
 			this.element = $(e.currentTarget);
 			this.is_link = this.element.get(0).tagName.toLowerCase() === "a";
 
-			if (!this.element.parents().find(".popover").length) {
+			if (!this.element.closest(".popover").length) {
 				this.identify_doc();
 				this.popover = this.element.data("bs.popover");
 				if (this.name && this.doctype) {
@@ -50,14 +50,14 @@ frappe.ui.LinkPreview = class {
 		if (!this.popover || this.new_popover) {
 			this.data_timeout = setTimeout(() => {
 				this.create_popover(e);
-			}, 100);
+			}, 500);
 		} else {
 			this.popover_timeout = setTimeout(() => {
 				if (this.element.is(":focus")) {
 					return;
 				}
 				this.show_popover(e);
-			}, 1000);
+			}, 500);
 		}
 	}
 
@@ -81,7 +81,7 @@ frappe.ui.LinkPreview = class {
 						this.init_preview_popover(preview_data);
 					}
 					this.show_popover(e);
-				}, 1000);
+				}, 10);
 			}
 		});
 	}
