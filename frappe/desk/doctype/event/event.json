@@ -290,7 +290,7 @@
  "is_calendar_and_gantt": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-23 19:29:00.652741",
+ "modified": "2023-02-24 16:57:57.492921",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
@@ -322,6 +322,7 @@
   }
  ],
  "sender_field": "sender",
+ "show_preview_popup": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
