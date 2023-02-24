@@ -213,6 +213,7 @@ scheduler_events = {
 		"frappe.utils.global_search.sync_global_search",
 		"frappe.integrations.doctype.google_calendar.google_calendar.sync_all_calendars",
 		"frappe.monitor.flush",
+		"frappe.automation.doctype.reminder.reminder.send_reminders",
 	],
 	"hourly": [
 		"frappe.model.utils.link_count.update_link_count",
