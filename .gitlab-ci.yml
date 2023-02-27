@@ -1,6 +1,6 @@
 stages:
   - Unit Tests
-  - Build Dodock
+  - Build Docker image for Dodock
 
 unittests:
   image: "python:3.10-buster"
@@ -53,11 +53,38 @@ unittests:
   script:
     - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-parallel-tests --app frappe" dokotest
 
-# build_dodock:
-#   stage: Build Dodock
-#   script:
-#     - "curl -X POST -F token=$BUILD_TOKEN -F ref=develop -F variables[BUILD_DODOCK]=true -F variables[BUILD_DOKOS]=true -F variables[GIT_BRANCH]=$CI_COMMIT_REF_NAME https://gitlab.com/api/v4/projects/13223898/trigger/pipeline"
-#   only:
-#     refs:
-#       - master
-#       - develop
+build_dodock:
+  stage: Build Docker image for Dodock
+  only:
+    - tags
+  image: docker:git
+  services:
+    - docker:dind
+  before_script:
+    - docker version
+  script:
+    - if [[ $CI_COMMIT_REF_SLUG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+        IMAGE_VERSION=$CI_COMMIT_REF_SLUG;
+      else
+        echo "Not a tagged release, setting image version to latest";
+        IMAGE_VERSION=latest;
+      fi
+    - IMAGE_NAME="$CI_REGISTRY_IMAGE:$IMAGE_VERSION"
+    - echo "Building image $IMAGE_NAME"
+    - git clone https://github.com/frappe/frappe_docker.git
+    - cd frappe_docker
+    - export APPS_JSON='[]'
+    - export APPS_JSON_BASE64=$(echo ${APPS_JSON} | base64 -w 0)
+    - >
+      docker build \
+        --build-arg=FRAPPE_PATH=https://gitlab.com/dokos/dodock \
+        --build-arg=FRAPPE_BRANCH=$CI_COMMIT_REF_SLUG \
+        --build-arg=PYTHON_VERSION=3.10.6 \
+        --build-arg=NODE_VERSION=16.19.0 \
+        --build-arg=APPS_JSON_BASE64="$APPS_JSON_BASE64" \
+        --tag=$IMAGE_NAME \
+        --file=images/custom/Containerfile .
+    - echo "Logging in to registry $CI_REGISTRY"
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - echo "Pushing image $IMAGE_NAME"
+    - docker push $IMAGE_NAME

@@ -428,6 +428,7 @@ $.extend(frappe, {
 		}
 	},
 	get_user_lang: function () {
+		console.warn("frappe.get_user_lang() is deprecated");
 		return frappe
 			.call({
 				method: "frappe.get_user_lang",
@@ -645,8 +646,6 @@ $(document).ready(function () {
 	$("#website-login").toggleClass("hide", logged_in ? true : false);
 	$("#website-post-login").toggleClass("hide", logged_in ? false : true);
 	$(".logged-in").toggleClass("hide", logged_in ? false : true);
-
-	frappe.get_user_lang();
 
 	frappe.bind_navbar_search();
 

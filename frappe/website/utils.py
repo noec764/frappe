@@ -13,6 +13,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import cint, get_assets_json, get_time_zone, md_to_html
+from frappe.translate import get_language
 
 FRONTMATTER_PATTERN = re.compile(r"^\s*(?:---|\+\+\+)(.*?)(?:---|\+\+\+)\s*(.+)$", re.S | re.M)
 H1_TAG_PATTERN = re.compile("<h1>([^<]*)")
@@ -159,8 +160,9 @@ def get_home_page_via_hooks():
 
 
 def get_boot_data():
+	is_in_request = hasattr(frappe.local, "request")
 	return {
-		"lang": "en",
+		"lang": get_language() if is_in_request else "en",
 		"sysdefaults": {
 			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
 			"date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
