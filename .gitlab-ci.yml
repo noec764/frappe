@@ -55,21 +55,15 @@ unittests:
 
 build_dodock:
   stage: Build Docker image for Dodock
-  only:
-    - tags
+  rules:
+    - if: '$CI_COMMIT_TAG != null'
   image: docker:git
   services:
     - docker:dind
   before_script:
     - docker version
   script:
-    - if [[ $CI_COMMIT_REF_SLUG =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        IMAGE_VERSION=$CI_COMMIT_REF_SLUG;
-      else
-        echo "Not a tagged release, setting image version to latest";
-        IMAGE_VERSION=latest;
-      fi
-    - IMAGE_NAME="$CI_REGISTRY_IMAGE:$IMAGE_VERSION"
+    - IMAGE_NAME="$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
     - echo "Building image $IMAGE_NAME"
     - git clone https://github.com/frappe/frappe_docker.git
     - cd frappe_docker
@@ -78,7 +72,7 @@ build_dodock:
     - >
       docker build \
         --build-arg=FRAPPE_PATH=https://gitlab.com/dokos/dodock \
-        --build-arg=FRAPPE_BRANCH=$CI_COMMIT_REF_SLUG \
+        --build-arg=FRAPPE_BRANCH=$CI_COMMIT_REF_NAME \
         --build-arg=PYTHON_VERSION=3.10.6 \
         --build-arg=NODE_VERSION=16.19.0 \
         --build-arg=APPS_JSON_BASE64="$APPS_JSON_BASE64" \
