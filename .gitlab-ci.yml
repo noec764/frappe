@@ -55,15 +55,18 @@ unittests:
 
 build_dodock:
   stage: Build Docker image for Dodock
-  rules:
-    - if: '$CI_COMMIT_TAG != null'
+  rules:  # Run if the commit is tagged or if its title contains "[build]"
+    - if: $CI_COMMIT_TAG
+    - if: $CI_COMMIT_TITLE =~ /\[build\]/
   image: docker:git
   services:
     - docker:dind
   before_script:
     - docker version
   script:
-    - IMAGE_NAME="$CI_REGISTRY_IMAGE:$CI_COMMIT_TAG"
+    - IMAGE_VERSION=$CI_COMMIT_TAG
+    - if [ -z "$IMAGE_VERSION" ]; then IMAGE_VERSION=$CI_COMMIT_SHORT_SHA; fi
+    - IMAGE_NAME="$CI_REGISTRY_IMAGE:$IMAGE_VERSION"
     - echo "Building image $IMAGE_NAME"
     - git clone https://github.com/frappe/frappe_docker.git
     - cd frappe_docker
