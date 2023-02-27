@@ -468,7 +468,8 @@ export default class Grid {
 	}
 
 	setup_toolbar() {
-		const needs_pagination = this.data.length > this.grid_pagination.page_length;
+		const needs_pagination =
+			this.data.length > this.grid_pagination.page_length && !this.df.allow_bulk_edit;
 		let can_add_rows = false;
 
 		if (this.is_editable()) {
@@ -490,7 +491,9 @@ export default class Grid {
 		const show_footer = needs_pagination || can_add_rows;
 		this.wrapper.find(".grid-footer").toggle(show_footer);
 
-		this.wrapper.find(".grid-add-row, .grid-add-multiple-rows").toggle(this.is_editable());
+		this.wrapper
+			.find(".grid-add-row, .grid-add-multiple-rows, .grid-upload")
+			.toggle(this.is_editable());
 	}
 
 	truncate_rows() {

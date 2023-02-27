@@ -661,8 +661,6 @@ class EmailAccount(Document):
 		if not email_server:
 			return
 
-		email_server.connect()
-
 		if email_server.imap:
 			_, folders = email_server.imap.list()
 			sent_folders = [x for x in folders if "sent" in str(x).lower()]

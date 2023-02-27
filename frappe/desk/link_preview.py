@@ -1,5 +1,5 @@
 import frappe
-from frappe.model import no_value_fields, table_fields
+from frappe.model import no_value_fields
 
 
 @frappe.whitelist()
@@ -12,16 +12,16 @@ def get_preview_data(doctype, docname, force=False):
 	preview_fields = [
 		field.fieldname
 		for field in meta.fields
-		if field.in_preview
-		and field.fieldtype not in no_value_fields
-		and field.fieldtype not in table_fields
+		if field.in_preview and field.fieldtype not in no_value_fields
 	]
 
-	# no preview fields defined, build list from mandatory fields
+	# No preview fields defined, so use a simple heuristic to get important fields
 	if not preview_fields:
 		preview_fields = [
-			field.fieldname for field in meta.fields if field.reqd and field.fieldtype not in table_fields
-		]
+			field.fieldname
+			for field in meta.fields
+			if (field.reqd or field.bold) and not field.hidden and field.fieldtype not in no_value_fields
+		][:5]
 
 	title_field = meta.get_title_field()
 	image_field = meta.image_field
@@ -39,15 +39,17 @@ def get_preview_data(doctype, docname, force=False):
 
 	formatted_preview_data = {
 		"preview_image": preview_data.get(image_field),
-		"preview_title": preview_data.get(title_field),
+		"preview_title": preview_data.get(title_field, ""),
 		"name": preview_data.get("name"),
 	}
 
+	# Collect all other fields
 	for key, val in preview_data.items():
 		if val and meta.has_field(key) and key not in [image_field, title_field, "name"]:
-			formatted_preview_data[meta.get_field(key).label] = frappe.format(
+			df = meta.get_field(key)
+			formatted_preview_data[df.label] = frappe.format(
 				val,
-				meta.get_field(key).fieldtype,
+				df.fieldtype,
 				translated=True,
 			)
 

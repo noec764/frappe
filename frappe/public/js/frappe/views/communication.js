@@ -131,7 +131,7 @@ frappe.views.CommunicationComposer = class {
 				fieldname: "select_print_format",
 			},
 			{
-				label: __("Select Languages"),
+				label: __("Select Language"),
 				fieldtype: "Select",
 				fieldname: "language_sel",
 			},
