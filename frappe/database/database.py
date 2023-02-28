@@ -236,7 +236,7 @@ class Database:
 			elif self.is_read_only_mode_error(e):
 				frappe.throw(
 					_(
-						"Site is running in read only mode, this action can not be performed right now. Please try again later."
+						"Site is running in read only mode for maintenance or site update, this action can not be performed right now. Please try again later."
 					),
 					title=_("In Read Only Mode"),
 					exc=frappe.InReadOnlyMode,
@@ -935,8 +935,8 @@ class Database:
 	def touch(self, doctype, docname):
 		"""Update the modified timestamp of this document."""
 		modified = now()
-		DocType = frappe.qb.DocType(doctype)
-		frappe.qb.update(DocType).set(DocType.modified, modified).where(DocType.name == docname).run()
+		Doc_Type = frappe.qb.DocType(doctype)
+		frappe.qb.update(Doc_Type).set(Doc_Type.modified, modified).where(Doc_Type.name == docname).run()
 		return modified
 
 	@staticmethod
