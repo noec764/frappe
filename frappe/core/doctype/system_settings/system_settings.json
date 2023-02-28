@@ -488,7 +488,7 @@
       "label": "Disable System Update Notification"
      },
    {
-    "default": "Sunday",
+    "default": "Monday",
     "fieldname": "first_day_of_the_week",
     "fieldtype": "Select",
     "label": "First Day of the Week",
