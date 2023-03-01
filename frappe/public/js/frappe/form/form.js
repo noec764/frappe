@@ -915,7 +915,7 @@ frappe.ui.form.Form = class FrappeForm {
 		links_text = `<ul>${links_text}</ul>`;
 
 		let confirm_message = __("{0} {1} is linked with the following submitted documents: {2}", [
-			me.doc.doctype.bold(),
+			__(me.doc.doctype).bold(),
 			me.doc.name,
 			links_text,
 		]);
