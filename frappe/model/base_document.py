@@ -793,6 +793,10 @@ class BaseDocument:
 
 						cancelled_links.append((df.fieldname, docname, get_msg(df, docname)))
 				else:
+					if frappe.flags.in_test and not frappe.flags.validate_links_in_tests:
+						# test fixtures may contain invalid links
+						print(f"Ignoring invalid Link in test: {self!r}.{df.fieldname} = {docname!r}: not found")
+						continue
 					# the linked document does not exist
 					invalid_links.append((df.fieldname, docname, get_msg(df, docname)))
 
