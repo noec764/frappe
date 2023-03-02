@@ -74,6 +74,16 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 
 {% macro sidebar() %}
 <aside class="sidebar-column {{ 'sidebar-right' if sidebar_right else 'sidebar-left' }}">
+	<a class="navbar-brand" href="{{ url_prefix }}{{ home_page or "/" }}">
+		{%- if brand_html -%}
+			{{ brand_html }}
+		{%- elif banner_image -%}
+			<img src='{{ banner_image }}'>
+		{%- else -%}
+			<span>{{ (frappe.get_hooks("brand_html") or [_("Home")])[0] }}</span>
+		{%- endif -%}
+	</a>
+
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
@@ -83,25 +93,10 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {% endmacro %}
 
 {% if show_sidebar %}
-<div class="container-fluid sidebar-and-main-container" {{ container_attributes() }}>
-	{{ sidebar() }}
-	<div class="main-column">
-		{{ main_content() }}
-	</div>
-</div>
+{{ sidebar() }}
 <style>
 	body {
 		--sidebar-width: 300px;
-	}
-	.sidebar-and-main-container {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		z-index: 1;
-	}
-	.main-column {
-		padding-left: var(--sidebar-width);
-		flex: 1;
 	}
 	.sidebar-column {
 		position: fixed;
@@ -127,13 +122,16 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 	.sidebar-right {
 		right: 0;
 	}
-	.sidebar-column > :first-child {
-		margin-top: 2rem;
+	.sidebar-column .navbar-brand {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem auto;
+		margin: 2rem auto;
 	}
 
-	body > nav {
-		margin-left: var(--sidebar-width) !important;
-	}
+	body > nav,
+	body > main,
 	body > footer {
 		margin-left: var(--sidebar-width) !important;
 	}
@@ -172,10 +170,10 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 		}
 	}
 </style>
-{% else %}
-<div {{ container_attributes() }}>
-	{{ main_content() }}
-</div>
 {% endif %}
+
+<main class="main-column" {{ container_attributes() }}>
+	{{ main_content() }}
+</main>
 
 {% endblock %}
