@@ -525,3 +525,24 @@ def get_user_info_for_viewers(users):
 		frappe.utils.add_user_info(user, user_info)
 
 	return user_info
+
+
+@frappe.whitelist()
+def get_doctype_icons(last_updated=None) -> dict[str, str]:
+	"""Returns a dict of all icons in the system"""
+	filters = {"icon": ["!=", ""]}
+	if last_updated:
+		filters["modified"] = [">", last_updated]
+
+	values = frappe.get_all(
+		"DocType",
+		fields=["name", "icon", "modified"],
+		filters=filters,
+	)
+
+	if not values:
+		return {}
+
+	icons = {dt.name: dt.icon for dt in values}
+	icons["__last_updated"] = frappe.utils.now()
+	return icons
