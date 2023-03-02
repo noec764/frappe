@@ -1066,11 +1066,7 @@ class Database:
 		if not datetime:
 			return FallBackDateTimeStr
 
-		if isinstance(datetime, str):
-			if ":" not in datetime:
-				datetime = datetime + " 00:00:00.000000"
-		else:
-			datetime = datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+		return get_datetime(datetime).strftime("%Y-%m-%d %H:%M:%S.%f")
 
 		return datetime
 
