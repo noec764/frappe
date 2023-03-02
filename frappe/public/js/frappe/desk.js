@@ -428,7 +428,10 @@ frappe.Application = class Application {
 		// toolbar
 		if (frappe.boot && frappe.boot.home_page !== "setup-wizard") {
 			frappe.frappe_toolbar = new frappe.ui.toolbar.Toolbar();
-			frappe.quick_access_menu = new frappe.ui.quick_access.QuickAccessMenu();
+
+			if (frappe.boot.desk_settings.search_bar) {
+				frappe.quick_access_menu = new frappe.ui.quick_access.QuickAccessMenu();
+			}
 		}
 	}
 
