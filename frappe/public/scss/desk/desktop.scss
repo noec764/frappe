@@ -1093,6 +1093,11 @@ body {
 		}
 	}
 
+	// widgets
+	.widget.number-widget-box {
+		box-shadow: var(--shadow-sm);
+	}
+
 	.codex-editor__loader {
 		display: none !important;
 	}
