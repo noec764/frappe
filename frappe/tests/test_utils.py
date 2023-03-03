@@ -506,20 +506,32 @@ class TestDateUtils(FrappeTestCase):
 			)
 
 		# Sunday as start of the week
-		self.assertEqual(
-			frappe.utils.get_first_day_of_week("2020-12-25"), frappe.utils.getdate("2020-12-20")
-		)
-		self.assertEqual(
-			frappe.utils.get_first_day_of_week("2020-12-21"), frappe.utils.getdate("2020-12-20")
-		)
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Sunday"):
+			self.assertEqual(
+				frappe.utils.get_first_day_of_week("2020-12-25"), frappe.utils.getdate("2020-12-20")
+			)
+			self.assertEqual(
+				frappe.utils.get_first_day_of_week("2020-12-21"), frappe.utils.getdate("2020-12-20")
+			)
 
 	def test_last_day_of_week(self):
-		self.assertEqual(
-			frappe.utils.get_last_day_of_week("2020-12-24"), frappe.utils.getdate("2020-12-26")
-		)
-		self.assertEqual(
-			frappe.utils.get_last_day_of_week("2020-12-28"), frappe.utils.getdate("2021-01-02")
-		)
+		# Monday as start of the week
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Monday"):
+			self.assertEqual(
+				frappe.utils.get_last_day_of_week("2020-12-24"), frappe.utils.getdate("2020-12-27")
+			)
+			self.assertEqual(
+				frappe.utils.get_last_day_of_week("2020-12-28"), frappe.utils.getdate("2021-01-03")
+			)
+
+		# Sunday as start of the week
+		with patch.object(frappe.utils.data, "get_first_day_of_the_week", return_value="Sunday"):
+			self.assertEqual(
+				frappe.utils.get_last_day_of_week("2020-12-24"), frappe.utils.getdate("2020-12-26")
+			)
+			self.assertEqual(
+				frappe.utils.get_last_day_of_week("2020-12-28"), frappe.utils.getdate("2021-01-02")
+			)
 
 	def test_is_last_day_of_the_month(self):
 		self.assertEqual(frappe.utils.is_last_day_of_the_month("2020-12-24"), False)
