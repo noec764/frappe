@@ -511,7 +511,8 @@
 
 @media (max-width: map-get($grid-breakpoints, "md")) {
 	.form-grid-container {
-		overflow-x: clip;
+		// Scrollable grid on mobile, better than making it unusable.
+		overflow-x: scroll;
 
 		.form-grid {
 			min-width: 738px;
