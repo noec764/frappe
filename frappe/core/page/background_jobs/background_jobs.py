@@ -4,7 +4,7 @@
 from typing import TYPE_CHECKING
 
 import frappe
-from frappe.utils import convert_utc_to_user_timezone
+from frappe.utils import convert_utc_to_system_timezone
 from frappe.utils.background_jobs import get_queues, get_workers
 from frappe.utils.scheduler import is_scheduler_inactive
 
@@ -32,7 +32,7 @@ def get_info(view=None, queue_timeout=None, job_status=None) -> list[dict]:
 				or str(job.kwargs.get("job_name")),
 				"status": job.get_status(),
 				"queue": queue,
-				"creation": convert_utc_to_user_timezone(job.created_at),
+				"creation": convert_utc_to_system_timezone(job.created_at),
 				"color": JOB_COLORS[job.get_status()],
 			}
 

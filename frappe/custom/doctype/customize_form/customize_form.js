@@ -163,7 +163,7 @@ frappe.ui.form.on("Customize Form", {
 		// and not a string.
 		frm.doc.fields.forEach((field) => {
 			if (field.fieldtype === "Check") {
-				field.default = field.default ? "1" : "0";
+				field.default = cint(field.default) ? "1" : "0";
 			}
 		});
 	},

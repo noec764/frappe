@@ -9,6 +9,13 @@
 
 	.fc-toolbar.fc-header-toolbar {
 		font-size: 1em;
+
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 4px;
 	}
 
 	.fc-timegrid-axis {
@@ -54,10 +61,12 @@
 		display: inline-block;
 		vertical-align: middle;
 		padding: 0 1rem;
-		min-width: none;
-		max-width: 75%;
-		width: 300px;
-		text-align: center;
+
+		@media (min-width: 992px) {
+			min-width: 300px;
+			max-width: 75%;
+			text-align: center;
+		}
 	}
 
 	.fc-scrollgrid,
@@ -110,12 +119,7 @@
 	@media (max-width: 991px) {
 		.fc-toolbar.fc-header-toolbar,
 		.fc-toolbar-title {
-			font-size: 0.8em;
-		}
-
-		.fc-timeGridWeek-button,
-		.fc-listDay-button {
-			display: none;
+			font-size: 1em;
 		}
 	}
 

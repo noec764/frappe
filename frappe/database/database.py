@@ -236,7 +236,7 @@ class Database:
 			elif self.is_read_only_mode_error(e):
 				frappe.throw(
 					_(
-						"Site is running in read only mode, this action can not be performed right now. Please try again later."
+						"Site is running in read only mode for maintenance or site update, this action can not be performed right now. Please try again later."
 					),
 					title=_("In Read Only Mode"),
 					exc=frappe.InReadOnlyMode,
@@ -935,8 +935,8 @@ class Database:
 	def touch(self, doctype, docname):
 		"""Update the modified timestamp of this document."""
 		modified = now()
-		DocType = frappe.qb.DocType(doctype)
-		frappe.qb.update(DocType).set(DocType.modified, modified).where(DocType.name == docname).run()
+		Doc_Type = frappe.qb.DocType(doctype)
+		frappe.qb.update(Doc_Type).set(Doc_Type.modified, modified).where(Doc_Type.name == docname).run()
 		return modified
 
 	@staticmethod
@@ -1039,6 +1039,9 @@ class Database:
 					obj.on_rollback()
 			frappe.local.rollback_observers = []
 
+			frappe.local.realtime_log = []
+			frappe.flags.enqueue_after_commit = []
+
 	def field_exists(self, dt, fn):
 		"""Return true of field exists."""
 		return self.exists("DocField", {"fieldname": fn, "parent": dt})
@@ -1114,11 +1117,7 @@ class Database:
 		if not datetime:
 			return FallBackDateTimeStr
 
-		if isinstance(datetime, str):
-			if ":" not in datetime:
-				datetime = datetime + " 00:00:00.000000"
-		else:
-			datetime = datetime.strftime("%Y-%m-%d %H:%M:%S.%f")
+		return get_datetime(datetime).strftime("%Y-%m-%d %H:%M:%S.%f")
 
 		return datetime
 

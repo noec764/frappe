@@ -367,11 +367,15 @@ def get_context(context):
 
 			context.reference_doc = context.reference_doc.as_dict(no_nulls=True)
 
-		module = load_doctype_module(self.doc_type)
-		if hasattr(module, "get_webform_context"):
-			out = frappe._dict(module.get_webform_context(context) or {})
-			if out:
-				context = out
+		try:
+			module = load_doctype_module(self.doc_type)
+			if hasattr(module, "get_webform_context"):
+				out = frappe._dict(module.get_webform_context(context) or {})
+				if out:
+					context = out
+		except (ImportError, KeyError):
+			# in case of Custom DocType
+			pass
 
 	def add_custom_context_and_script(self, context):
 		"""Update context from module if standard and append script"""

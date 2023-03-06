@@ -114,6 +114,14 @@
 	margin-bottom: 8px;
 }
 
+.ql-formats button, .ql-formats [role="button"] {
+	margin-inline: 1px;
+	border-radius: 3px;
+	&.ql-active {
+		background: var(--bg-blue);
+	}
+}
+
 .ql-code-block-container {
 	background-color: var(--code-block-bg);
 	color: var(--code-block-text);
