@@ -16,10 +16,10 @@ from frappe import _
 from frappe.integrations.google_oauth import GoogleOAuth
 from frappe.model.document import Document
 from frappe.utils import (
-	convert_utc_to_user_timezone,
+	convert_utc_to_system_timezone,
 	get_datetime,
 	get_request_site_address,
-	get_time_zone,
+	get_system_timezone,
 )
 from frappe.utils.password import set_encrypted_password
 
@@ -328,11 +328,11 @@ def format_date_according_to_google_calendar(all_day, starts_on, ends_on=None):
 	date_format = {
 		"start": {
 			"dateTime": starts_on.isoformat(),
-			"timeZone": get_time_zone(),
+			"timeZone": get_system_timezone(),
 		},
 		"end": {
 			"dateTime": ends_on.isoformat(),
-			"timeZone": get_time_zone(),
+			"timeZone": get_system_timezone(),
 		},
 	}
 
@@ -351,7 +351,7 @@ def get_timezone_naive_datetime(gcalendar_date_object):
 	iso_date = arrow.get(gcalendar_date_object.get("dateTime"))
 	naive = iso_date.to("UTC").naive
 
-	return convert_utc_to_user_timezone(naive).strftime("%Y-%m-%d %H:%M:%S")
+	return convert_utc_to_system_timezone(naive).strftime("%Y-%m-%d %H:%M:%S")
 
 
 """API Response
