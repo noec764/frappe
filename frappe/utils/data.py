@@ -1128,17 +1128,20 @@ def round_based_on_smallest_currency_fraction(value, currency, precision=2):
 	smallest_currency_fraction_value = flt(
 		frappe.db.get_value("Currency", currency, "smallest_currency_fraction_value", cache=True)
 	)
+	original_value = value
+	value = abs(value)
 
 	if smallest_currency_fraction_value:
 		remainder_val = remainder(value, smallest_currency_fraction_value, precision)
-		if remainder_val > (smallest_currency_fraction_value / 2):
+		if remainder_val >= (smallest_currency_fraction_value / 2):
 			value += smallest_currency_fraction_value - remainder_val
 		else:
 			value -= remainder_val
 	else:
 		value = rounded(value)
 
-	return flt(value, precision)
+	value = flt(value, precision)
+	return math.copysign(value, original_value)
 
 
 def encode(obj, encoding="utf-8"):
