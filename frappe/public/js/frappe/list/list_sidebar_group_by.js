@@ -228,7 +228,11 @@ frappe.views.ListGroupBy = class ListGroupBy {
 		return `<li class="group-by-item ${applied ? "selected" : ""}" data-value="${value}">
 			<a class="dropdown-item" href="#" onclick="return false;">
 				${applied_html}
-				<span class="group-by-value ellipsis" data-name="${field.name}">${label}</span>
+				<span class="group-by-value ellipsis" data-name="${field.name}">${__(
+			label,
+			null,
+			this.list_view.doctype
+		)}</span>
 				<span class="group-by-count">${field.count}</span>
 			</a>
 		</li>`;
