@@ -40,7 +40,7 @@ export default class Block {
 	}
 
 	resizer() {
-		this.wrapper.className = this.wrapper.className + " resizable";
+		this.wrapper.classList.add("resizable");
 		var resizer = document.createElement("div");
 		resizer.className = "resizer";
 		this.wrapper.parentElement.appendChild(resizer);
