@@ -129,7 +129,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 				if (df.fieldtype == "Select" && typeof df.options == "string") {
 					const options = df.options.split("\n").map((o) => {
 						return {
-							label: __(o),
+							label: __(o, null, me.doctype),
 							value: o,
 						};
 					});
@@ -180,10 +180,10 @@ frappe.ui.FieldSelect = class FieldSelect {
 		let table = null;
 
 		if (me.doctype && df.parent == me.doctype) {
-			label = __(df.label);
+			label = __(df.label, null, me.doctype);
 			table = me.doctype;
 		} else {
-			label = __(df.label) + " (" + __(df.parent) + ")";
+			label = __(df.label, null, me.doctype) + " (" + __(df.parent) + ")";
 			table = df.parent;
 		}
 
