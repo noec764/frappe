@@ -1,9 +1,57 @@
 import Picker from "../../color_picker/color_picker";
 
+const DEFAULT_SWATCHES = [
+	// full palette
+	"#940015",
+	"#694000",
+	"#2D5000",
+	"#015050",
+	"#2438AF",
+	"#6E0DB3",
+	"#911136",
+
+	"#E13321",
+	"#CE9514",
+	"#248B20",
+	"#04838F",
+	"#0E6DFE",
+	"#A14BD6",
+	"#BC367E",
+
+	"#FF897D",
+	"#ECAD4B",
+	"#5EC13A",
+	"#40BCBB",
+	"#63ADFF",
+	"#D094FF",
+	"#F28CBA",
+
+	// gray scale
+	"#181818",
+	"#333333",
+	"#555555",
+	"#888888",
+	"#AAAAAA",
+	"#CCCCCC",
+	"#EEEEEE",
+];
+
 frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlData {
 	make_input() {
 		this.df.placeholder = this.df.placeholder || __("Choose a color");
 		super.make_input();
+
+		/** Colors selected in the picker during this session */
+		this.most_recent_colors = [];
+
+		/** Colors used in similar documents */
+		this.recent_colors = [];
+
+		this.refresh_swatches_debounced = frappe.utils.throttle(
+			this.refresh_swatches.bind(this),
+			50
+		);
+		this.fetch_recent_colors();
 		this.make_color_input();
 	}
 
@@ -12,52 +60,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 		this.picker = new Picker({
 			parent: picker_wrapper[0],
 			color: this.get_color(),
-			swatches: [
-				// accessible palette
-				"#CB2929",
-				"#ECAD4B",
-				"#29CD42",
-				"#449CF0",
-				"#4463F0",
-				"#761ACB",
-				"#ED6396",
-
-				// gray scale
-				"#111111",
-				"#333333",
-				"#555555",
-				"#666666",
-				"#AAAAAA",
-				"#CCCCCC",
-				"#EEEEEE",
-
-				"divider",
-
-				// full palette
-				"#940015",
-				"#694000",
-				"#2d5000",
-				"#015050",
-				"#272dc5",
-				"#6e0db3",
-				"#911136",
-
-				"#de3921",
-				"#d69915",
-				"#248b20",
-				"#04838c",
-				"#4463f0",
-				"#a14bd6",
-				"#bc367e",
-
-				"#ff897d",
-				"#ecc500",
-				"#5ec13a",
-				"#00bfca",
-				"#46b4ff",
-				"#d094ff",
-				"#f28cba",
-			],
+			swatches: this.get_swatches(),
 		});
 
 		this.$wrapper
@@ -83,6 +86,13 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 			.on("hidden.bs.popover", () => {
 				$("body").off("click.color-popover");
 				$(window).off("hashchange.color-popover");
+
+				// Add to most recent colors
+				const color = this.get_color().toUpperCase();
+				this.most_recent_colors = this.most_recent_colors || [];
+				if (color && !this.most_recent_colors.includes(color)) {
+					this.most_recent_colors.push(color);
+				}
 			});
 
 		this.picker.on_change = (color) => {
@@ -117,6 +127,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 	refresh() {
 		super.refresh();
 		let color = this.get_color();
+		this.refresh_swatches_debounced();
 		if (this.picker && this.picker.color !== color) {
 			this.picker.color = color;
 			this.picker.refresh();
@@ -145,5 +156,82 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 			return value;
 		}
 		return null;
+	}
+
+	async fetch_recent_colors() {
+		if (this.df.parent && this.df.fieldname) {
+			const colors = await frappe.ui.color.get_colors_used_in_documents?.({
+				doctype: this.df.parent,
+				fieldname: this.df.fieldname,
+			});
+			if (!Array.isArray(colors)) return;
+			this.recent_colors = colors;
+			this.refresh_swatches();
+		}
+	}
+
+	get_swatches() {
+		const current_color = this.get_color();
+		const extra_swatches = [
+			{
+				label: __("Recent Colors"),
+				colors: this.recent_colors,
+				sorted: true,
+			},
+			{
+				label: null,
+				colors: this.most_recent_colors,
+				include_current_color: true,
+			},
+			{
+				label: __("Custom Colors"),
+				colors: frappe.boot.custom_colors,
+				sorted: true,
+			},
+		];
+
+		const swatches = DEFAULT_SWATCHES.slice();
+
+		for (const source of extra_swatches) {
+			if (!Array.isArray(source.colors)) {
+				continue;
+			}
+
+			const colors = source.colors
+				.map((color) => color?.toUpperCase().trim())
+				.filter((color) => color.startsWith("#") && !swatches.includes(color))
+				.slice(0, 3 * 7);
+
+			if (source.sorted) {
+				colors.sort((a, b) => {
+					const h1 = frappe.ui.color.hue(a);
+					const h2 = frappe.ui.color.hue(b);
+					return h1 - h2 || a > b || -1;
+				});
+			}
+
+			if (
+				source.include_current_color &&
+				current_color &&
+				!swatches.includes(current_color)
+			) {
+				colors.push(current_color);
+			}
+
+			if (!colors.length) {
+				continue;
+			}
+
+			if (source.label) {
+				swatches.push("divider:" + source.label);
+			}
+			swatches.push(...colors);
+		}
+
+		return swatches;
+	}
+
+	refresh_swatches() {
+		this.picker?.set_swatches(this.get_swatches());
 	}
 };

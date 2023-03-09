@@ -102,7 +102,7 @@ frappe.ui.color = {
 	},
 
 	lighten(color, percent) {
-		const clamp = (value, min = 0, max = 255) => Math.max(min, Math.min(max, value))
+		const clamp = (value, min = 0, max = 255) => Math.max(min, Math.min(max, value));
 		// https://stackoverflow.com/a/13542669/5353542
 		color = this.normalize_hex(color);
 		var f = parseInt(color, 16),
@@ -146,10 +146,68 @@ frappe.ui.color = {
 			hex = hex.substring(1);
 		}
 		if (hex.length === 3) {
-			hex = [0, 0, 1, 1, 2, 2].map(i => hex[i]).join('');
+			hex = [0, 0, 1, 1, 2, 2].map((i) => hex[i]).join("");
 		}
 		return hex;
-	}
+	},
+
+	/**
+	 * Returns a list of colors used in documents of a given doctype
+	 * @param {object} args
+	 * @param {string} args.doctype Doctype name
+	 * @param {string} args.fieldname Fieldname
+	 * @param {function} callback Optional callback function
+	 * @returns {Promise<string[]>} List of colors
+	 */
+	async get_colors_used_in_documents({ doctype, fieldname }, callback = null) {
+		const res = await frappe.xcall(
+			"frappe.website.doctype.color.color.get_colors_used_in_documents",
+			{ doctype, fieldname }
+		);
+		if (typeof callback === "function") {
+			callback(res);
+		}
+		return res;
+	},
+
+	/**
+	 * Computes the hue a given RGB color, in degrees (0-360).
+	 * If g and b are not provided, it is assumed that the color is in hex format.
+	 * If the color is a shade of gray, 360 is returned.
+	 * @param {number} r Red value (0-255)
+	 * @param {number} g Green value (0-255)
+	 * @param {number} b Blue value (0-255)
+	 * @returns {number} Hue in degrees (0-360)
+	 */
+	hue(r, g, b) {
+		if (g === undefined && b === undefined) {
+			({ r, g, b } = this.hex_to_rgb(r));
+		}
+
+		if (r === g && g === b) {
+			// The color is a shade of gray.
+			return 360;
+		}
+
+		const max = Math.max(r, g, b);
+		const min = Math.min(r, g, b);
+		const delta = max - min;
+
+		let hue = 0;
+		if (r === max) {
+			hue = (g - b) / delta;
+		} else if (g === max) {
+			hue = 2 + (b - r) / delta;
+		} else if (b === max) {
+			hue = 4 + (r - g) / delta;
+		}
+
+		if (hue < 0) {
+			hue += 6;
+		}
+
+		return Math.round(hue * 60);
+	},
 };
 
 frappe.ui.color_map = frappe.ui.color.get_color_map();
