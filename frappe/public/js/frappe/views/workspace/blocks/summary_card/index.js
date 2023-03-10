@@ -27,7 +27,7 @@ export default class SummaryCard extends Block {
 			allow_hiding: false,
 			allow_edit: true,
 			allow_resize: true,
-			min_width: 2,
+			min_width: 1,
 			// max_widget_count: 2,
 		};
 	}
@@ -80,29 +80,28 @@ export default class SummaryCard extends Block {
 			);
 		}
 
-		this.render_body();
+		this.setup_contents();
 
 		return this.wrapper;
 	}
 
 	async edit() {
-		const docname = this.data.summary_card_name;
 		const editDialog = new SummaryCardEditDialog({
 			title: __("Edit"),
 			type: "summary-card",
 			label: "label test",
 			values: {
-				summary_card_name: docname,
+				summary_card_name: this.data.summary_card_name,
 			},
 			primary_action: (values) => {
 				this.data.summary_card_name = values.summary_card_name;
-				this.render_body();
+				this.refresh();
 			},
 		});
 		editDialog.make();
 	}
 
-	render_body() {
+	setup_contents() {
 		if (!this.renderer) {
 			this.renderer = new SummaryCardRenderer({
 				wrapper: this.wrapper,
@@ -115,6 +114,14 @@ export default class SummaryCard extends Block {
 				},
 			});
 		}
+	}
+
+	refresh() {
+		if (!this.renderer) {
+			this.setup_contents();
+		}
+		this.renderer.summary_card_name = this.data.summary_card_name;
+		this.renderer.render();
 	}
 
 	validate(savedData) {

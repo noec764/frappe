@@ -268,6 +268,9 @@ def get_summary(summary_card_name: str):
 		summary_card: SummaryCard = frappe.get_doc("Summary Card", summary_card_name)
 		return summary_card.get_data()
 	except Exception as e:
-		last_message = frappe.local.message_log[-1]
-		frappe.clear_last_message()
+		if len(frappe.local.message_log) > 0:
+			last_message = frappe.local.message_log[-1]
+			frappe.clear_last_message()
+		else:
+			last_message = str(e)
 		return {"error": last_message, "exc": e}
