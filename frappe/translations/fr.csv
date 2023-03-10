@@ -1437,7 +1437,7 @@ Change User,Changer d'utilisateur,
 "Change field properties (hide, readonly, permission etc.)","Modification des propriétés de champ (masquer , en lecture seule , permission etc )",
 "Change the starting / current sequence number of an existing series. <br>
 
-Warning: Incorrectly updating counters can prevent documents from getting created.","Modifiez la séquence de début / actuelle d'une série existante. <br>
+Warning: Incorrectly updating counters can prevent documents from getting created.","Modifiez le compteur d'un masque de numérotation. <br>
 
 Attention: Une mise à jour erronée du décompte peut générer des erreurs lors de la création des documents.",
 "Change type of field. (Currently, Type change is \
@@ -5729,7 +5729,7 @@ Set Filters for {0},Définir des filtres pour {0},
 Set Filters,Définir des filtres,
 Set Limit,Définir une limite,
 Set Meta Tags,Définir les meta tags,
-Set Naming Series options on your transactions.,Définissez les options de masque de numérotation pour vos transactions,
+Set Naming Series options on your transactions.,Définissez les masques de numérotation pour vos transactions,
 Set New Password,Définir un nouveau mot de passe,
 Set Number of Backups,Définir le nombre de sauvegardes,
 Set Only Once,Ne définir qu'une seule fois,
@@ -5783,7 +5783,7 @@ Setup Limited Access for a User,Configuration de l'accès limité pour un utilis
 Setup Naming Series,Configuration des séries de noms,
 Setup Notifications based on various criteria.,Configurer les notifications en fonction de divers critères.,
 Setup Reports to be emailed at regular intervals,Configurer les Rapports pour être envoyer par email à intervalles réguliers,
-Setup Series for transactions,Configuration des séries pour les transactions,
+Setup Series for transactions,Paramétrage des masques de numérotation,
 Setup Wizard Help Link,Lien d'aide de l'assistant d'installation,
 Setup Wizard Slide Field,Champ de l'assistant d'installation,
 Setup Wizard Slide,Diapositive de l'assistant d'installation,
@@ -6714,7 +6714,7 @@ Update Existing Records,Mettre à jour des données existantes,
 Update Field,Mettre à jour le Champ,
 Update Hooks Resolution Order,Mettre à jour l'ordre de résolution des Hooks,
 Update Order,Mettre à jour l'ordre,
-Update Series Counter,Mettre à jour le décompte pour une série,
+Update Series Counter,Mettre à jour le compteur d'un masque de numérotation,
 Update Settings,Mettre à jour les paramètres,
 Update Translations,Mettre à jour les traductions,
 Update Type,Type de mise à jour,
