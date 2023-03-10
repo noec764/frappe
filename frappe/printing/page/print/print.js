@@ -659,7 +659,7 @@ frappe.ui.form.PrintView = class {
 	}
 
 	get_letterhead() {
-		return this.letterhead_selector.val();
+		return this.letterhead_selector.val() || __("No Letterhead");
 	}
 
 	get_no_preview_html() {
