@@ -85,8 +85,8 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	}
 
 	async setup_icon() {
-		// do not setup icon for child table
-		if (this.in_grid()) {
+		// do not setup icon for child table or read-only
+		if (this.in_grid() || this.disp_status !== "Write") {
 			return this.clear_icon(); // clear icon
 		}
 
@@ -126,6 +126,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	}
 	clear_icon() {
 		this.set_icon();
+		this._prev_doctype = null;
 	}
 	set_icon(icon_name = "", doctype = null) {
 		const prev = this.$wrapper.find(".link-icon");
