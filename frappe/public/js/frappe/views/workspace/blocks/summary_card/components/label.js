@@ -1,15 +1,15 @@
 export class SCLabel {
-	static render(props, container) {
-		const { label } = props;
+	static render(props) {
+		const { label, href } = props;
 
-		const $label_wrapper = $(`<div class="sc-row__label">`);
-		const $label = $(`<div class="sc-label">`).appendTo($label_wrapper);
-		if (label) {
-			$label.text(label);
+		const type = href ? "a" : "div";
+
+		const $label = $(`<${type} class="sc-label">`);
+		$label.text(label);
+		if (href) {
+			$label.attr("href", href);
 		}
-		if (container) {
-			$label_wrapper.appendTo(container);
-		}
-		return $label_wrapper;
+
+		return $label;
 	}
 }

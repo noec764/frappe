@@ -150,7 +150,8 @@ export default class SummaryCardRenderer {
 
 	render_loading_state() {
 		this.wrapper.setAttribute("data-state", "loading");
-		this.$freeze.text(__("Loading..."));
+		this.$freeze.empty();
+		this.render_skeleton();
 	}
 
 	render_no_data_state() {
@@ -187,7 +188,9 @@ export default class SummaryCardRenderer {
 		} catch (e) {
 			// pass
 		}
-		this.$freeze.html(`<div style="user-select:all;white-space:pre-line;"></div>`);
+		this.$freeze.html(
+			`<div style="user-select:all;white-space:pre-line;font-size:var(--text-xs);"></div>`
+		);
 		this.$freeze.find("div").text(error?.message || JSON.stringify(error, null, 2));
 
 		const msg = [__("Summary Card"), __("Error")].join(" &middot; ");
@@ -196,12 +199,23 @@ export default class SummaryCardRenderer {
 
 	render_header() {
 		const $new_header = SCHeader.render_for_card(this);
-
 		$new_header.addClass(this.$header.attr("class"));
 		this.$header.replaceWith($new_header);
 		this.$header = $new_header;
+	}
 
-		return this.$header;
+	render_skeleton() {
+		const $spinner = this.$freeze; // $('<div class="summary-card__loader">');
+		$spinner.append($("<div>").text(__("Loading...")));
+		// $spinner.appendTo(this.$footer);
+
+		const $skel_header = SCHeader.render_skeleton(this);
+		$skel_header.addClass(this.$header.attr("class"));
+		this.$header.replaceWith($skel_header);
+		this.$header = $skel_header;
+
+		SCSection.render_skeleton("Lorem", 3).appendTo(this.$body);
+		SCSection.render_skeleton("Lorem ipsum", 2).appendTo(this.$body);
 	}
 
 	async render() {

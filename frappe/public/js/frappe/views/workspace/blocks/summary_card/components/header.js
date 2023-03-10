@@ -20,17 +20,35 @@ export class SCHeader {
 	}
 
 	static render_for_card(summary_card_renderer) {
+		const sc = summary_card_renderer.data;
+		const primary_route = summary_card_renderer.get_primary_route();
 		return SCHeader.render({
 			children: [
-				SCIcon.render({ icon: "file" }),
-				SCLabel.render({ label: summary_card_renderer.data.title }),
+				SCIcon.render({ icon: sc.icon || "file" }),
+				SCLabel.render({ label: sc.title, href: primary_route }),
+			],
+			actions: [
+				SCButton.render({
+					icon: sc.primary_button.icon || "view",
+					label: sc.primary_button.label,
+					className: "summary-card__primary-button",
+					href: primary_route,
+				}),
+			],
+		});
+	}
+
+	static render_skeleton() {
+		return SCHeader.render({
+			children: [
+				SCIcon.render({ icon: "file" }), // icon
+				SCLabel.render({ label: "Lorem ipsum" }),
 			],
 			actions: [
 				SCButton.render({
 					icon: "view",
-					label: summary_card_renderer.data.primary_button.label,
+					label: "Lorem",
 					className: "summary-card__primary-button",
-					href: summary_card_renderer.get_primary_route(),
 				}),
 			],
 		});

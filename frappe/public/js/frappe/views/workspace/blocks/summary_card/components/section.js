@@ -103,8 +103,14 @@ export class SCSection {
 	static render_row(row, card_renderer) {
 		const href = card_renderer.get_route({ name: row.dt, filters: row.filters, view: "List" });
 
+		let title = row.label || row.badge;
+		if (row.badge?.length && row.label?.length) {
+			title = __("{0}: {1}", [row.label, row.badge]);
+		}
+
 		const $row = $(`<a class="sc-row sc-link">`)
 			.css("--sc-color", row.color)
+			.attr("title", title)
 			.attr("href", href);
 
 		for (const key of Object.keys(row.data || {})) {
@@ -136,6 +142,28 @@ export class SCSection {
 			SCIcon.render({ icon }).appendTo($row);
 		}
 
+		return $row;
+	}
+
+	static render_skeleton(text = "Lorem ipsum", length = 3) {
+		const $section = $(`<div class="sc-section">`);
+		const $header = $(`<button class="sc-row sc-section__header">`).appendTo($section);
+
+		SCArrow.render({ icon: "small-down" }).appendTo($header);
+		SCLabel.render({ label: text }).appendTo($header);
+
+		const $items = $(`<div class="sc-section__items">`).appendTo($section);
+		for (let i = 0; i < length; i++) {
+			SCSection.render_skeleton_row().appendTo($items);
+		}
+		return $section;
+	}
+
+	static render_skeleton_row() {
+		const $row = $(`<div class="sc-row sc-link">`);
+		SCBadge.render({ label: "23" }).appendTo($row);
+		SCLabel.render({ label: "Lorem ipsum" }).appendTo($row);
+		SCIcon.render({ icon: "arrow-right" }).appendTo($row);
 		return $row;
 	}
 }
