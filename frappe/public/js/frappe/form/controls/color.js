@@ -13,18 +13,50 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 			parent: picker_wrapper[0],
 			color: this.get_color(),
 			swatches: [
-				"#449CF0",
+				// accessible palette
+				"#CB2929",
 				"#ECAD4B",
 				"#29CD42",
-				"#761ACB",
-				"#CB2929",
-				"#ED6396",
-				"#29CD42",
+				"#449CF0",
 				"#4463F0",
-				"#EC864B",
-				"#4F9DD9",
-				"#39E4A5",
-				"#B4CD29",
+				"#761ACB",
+				"#ED6396",
+
+				// gray scale
+				"#111111",
+				"#333333",
+				"#555555",
+				"#666666",
+				"#AAAAAA",
+				"#CCCCCC",
+				"#EEEEEE",
+
+				"divider",
+
+				// full palette
+				"#940015",
+				"#694000",
+				"#2d5000",
+				"#015050",
+				"#272dc5",
+				"#6e0db3",
+				"#911136",
+
+				"#de3921",
+				"#d69915",
+				"#248b20",
+				"#04838c",
+				"#4463f0",
+				"#a14bd6",
+				"#bc367e",
+
+				"#ff897d",
+				"#ecc500",
+				"#5ec13a",
+				"#00bfca",
+				"#46b4ff",
+				"#d094ff",
+				"#f28cba",
 			],
 		});
 
