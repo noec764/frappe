@@ -185,35 +185,15 @@ def start_scheduler():
 
 
 @click.command("worker")
-@click.option(
-	"--queue",
-	type=str,
-	help="Queue to consume from. Multiple queues can be specified using comma-separated string. If not specified all queues are consumed.",
-)
+@click.option("--queue", type=str)
 @click.option("--quiet", is_flag=True, default=False, help="Hide Log Outputs")
 @click.option("-u", "--rq-username", default=None, help="Redis ACL user")
 @click.option("-p", "--rq-password", default=None, help="Redis ACL user password")
-@click.option("--burst", is_flag=True, default=False, help="Run Worker in Burst mode.")
-@click.option(
-	"--strategy",
-	required=False,
-	type=click.Choice(["round_robin", "random"]),
-	help="Dequeuing strategy to use",
-)
-def start_worker(
-	queue, quiet=False, rq_username=None, rq_password=None, burst=False, strategy=None
-):
+def start_worker(queue, quiet=False, rq_username=None, rq_password=None):
 	"""Start a backgrond worker"""
 	from frappe.utils.background_jobs import start_worker
 
-	start_worker(
-		queue,
-		quiet=quiet,
-		rq_username=rq_username,
-		rq_password=rq_password,
-		burst=burst,
-		strategy=strategy,
-	)
+	start_worker(queue, quiet=quiet, rq_username=rq_username, rq_password=rq_password)
 
 
 @click.command("ready-for-migration")
