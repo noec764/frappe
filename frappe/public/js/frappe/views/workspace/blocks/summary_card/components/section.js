@@ -13,9 +13,9 @@ export class SCSection {
 			case "Me":
 				return SCSection.render_for_me(data, card_renderer);
 			case "Section Break":
-				return SCSection.render_collapsable(data, card_renderer);
+				return SCSection.render_collapsible(data, card_renderer);
 			default:
-				return SCSection.render_collapsable(data, card_renderer);
+				return SCSection.render_collapsible(data, card_renderer);
 		}
 	}
 
@@ -41,12 +41,12 @@ export class SCSection {
 		return $section;
 	}
 
-	static render_collapsable(section, card_renderer) {
+	static render_collapsible(section, card_renderer) {
 		if (!section.label) {
 			return SCSection.render_no_label(section, card_renderer);
 		}
-		if (["0", "false"].includes("" + section.collapsable)) {
-			return SCSection.render_non_collapsable(section, card_renderer);
+		if (["0", "false"].includes("" + section.collapsible)) {
+			return SCSection.render_non_collapsible(section, card_renderer);
 		}
 
 		const collapseId = "sc-section-" + Math.random().toString(36).substring(2);
@@ -75,7 +75,7 @@ export class SCSection {
 		return $section;
 	}
 
-	static render_non_collapsable(section, card_renderer) {
+	static render_non_collapsible(section, card_renderer) {
 		const $section = $(`<div class="sc-section">`);
 		const $header = $(`<button class="sc-row sc-section__header">`).appendTo($section);
 

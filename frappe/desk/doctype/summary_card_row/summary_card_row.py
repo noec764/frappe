@@ -13,6 +13,6 @@ class SummaryCardRow(Document):
 	dt: str
 	counter_format: str
 	filters_code: str
-	collapsable: bool
+	collapsible: bool
 	color: str
 	icon: str
