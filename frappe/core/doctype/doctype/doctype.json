@@ -27,6 +27,7 @@
   "custom",
   "beta",
   "is_virtual",
+  "queue_in_background",
   "app",
   "fields_section_break",
   "fields",
@@ -634,6 +635,14 @@
  "label": "Make Attachments Public by Default"
 },
 {
+   "default": "0",
+   "depends_on": "eval: doc.is_submittable",
+   "description": "Enabling this will submit documents in background",
+   "fieldname": "queue_in_background",
+   "fieldtype": "Check",
+   "label": "Queue in Background"
+  },
+{
  "fieldname": "default_view",
  "fieldtype": "Select",
  "label": "Default View"
@@ -731,7 +740,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2022-12-13 15:50:27.315351",
+ "modified": "2023-01-04 17:23:09.206018",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",

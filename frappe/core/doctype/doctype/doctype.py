@@ -33,7 +33,7 @@ from frappe.model.meta import Meta
 from frappe.modules import get_doc_path, make_boilerplate
 from frappe.modules.import_file import get_file_path
 from frappe.query_builder.functions import Concat
-from frappe.utils import cint
+from frappe.utils import cint, random_string
 from frappe.website.utils import clear_cache
 
 if TYPE_CHECKING:
@@ -342,7 +342,7 @@ class DocType(Document):
 			dict(fieldtype=["in", frappe.model.table_fields], options=self.name),
 		)
 		for p in parent_list:
-			frappe.db.update("DocType", p.parent, {}, for_update=False)
+			frappe.db.set_value("DocType", p.parent, {}, for_update=False)
 
 	def scrub_field_names(self):
 		"""Sluggify fieldnames if not set from Label."""
@@ -1219,6 +1219,9 @@ def validate_fields(meta):
 			frappe.throw(_("Precision should be between 1 and 6"))
 
 	def check_unique_and_text(docname, d):
+		if meta.is_virtual:
+			return
+
 		if meta.issingle:
 			d.unique = 0
 			d.search_index = 0
@@ -1778,24 +1781,3 @@ def get_field(doc, fieldname):
 	for field in doc.fields:
 		if field.fieldname == fieldname:
 			return field
-
-
-@frappe.whitelist()
-def set_field_order(doctype, field_order):
-	"""Update field order in doctype"""
-
-	frappe.only_for("System Manager")
-
-	field_order = json.loads(field_order)
-
-	idx = 1
-	for fieldname in field_order:
-		docfield = frappe.qb.DocType("DocField")
-		frappe.qb.update(docfield).set(docfield.idx, idx).where(
-			(docfield.fieldname == fieldname) & (docfield.parent == doctype)
-		).run()
-		idx += 1
-
-	# save to update
-	frappe.get_doc("DocType", doctype).save()
-	frappe.clear_cache(doctype=doctype)

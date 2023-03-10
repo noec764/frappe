@@ -21,6 +21,11 @@ frappe.ui.form.on("DocType", {
 			frm.toggle_enable("beta", 0);
 		}
 
+		!frm.is_new() &&
+			frm.add_custom_button(__("Try new form builder", [__(frm.doc.name)]), () => {
+				frappe.set_route("form-builder", frm.doc.name);
+			});
+
 		if (!frm.is_new() && !frm.doc.istable) {
 			if (frm.doc.issingle) {
 				frm.add_custom_button(__("Go to {0}", [__(frm.doc.name)]), () => {
@@ -50,7 +55,7 @@ frappe.ui.form.on("DocType", {
 			msg += __("If you just want to customize for your site, use {0} instead.", [
 				customize_form_link,
 			]);
-			frm.dashboard.add_comment(msg, "yellow");
+			frm.dashboard.add_comment(msg, "yellow", true);
 		}
 
 		if (frm.is_new()) {

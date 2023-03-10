@@ -22,7 +22,7 @@ from frappe.email.oauth import Oauth
 from frappe.utils import (
 	add_days,
 	cint,
-	convert_utc_to_user_timezone,
+	convert_utc_to_system_timezone,
 	cstr,
 	extract_email_id,
 	get_datetime,
@@ -474,7 +474,7 @@ class Email:
 			try:
 				utc = email.utils.mktime_tz(email.utils.parsedate_tz(self.mail["Date"]))
 				utc_dt = datetime.datetime.utcfromtimestamp(utc)
-				self.date = convert_utc_to_user_timezone(utc_dt).strftime("%Y-%m-%d %H:%M:%S")
+				self.date = convert_utc_to_system_timezone(utc_dt).strftime("%Y-%m-%d %H:%M:%S")
 			except Exception:
 				self.date = now()
 		else:
@@ -991,10 +991,10 @@ class TimerMixin:
 			self.sock.settimeout(self.timeout / 5.0)
 
 	def _getline(self, *args, **kwargs):
-		start_time = time.time()
+		start_time = time.monotonic()
 		ret = self._super._getline(self, *args, **kwargs)
 
-		self.elapsed_time += time.time() - start_time
+		self.elapsed_time += time.monotonic() - start_time
 		if self.timeout and self.elapsed_time > self.timeout:
 			raise EmailTimeoutError
 

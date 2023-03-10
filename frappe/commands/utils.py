@@ -52,26 +52,28 @@ def build(
 ):
 	"Compile JS and CSS source files"
 	from frappe.build import bundle
+	from frappe.utils.synchronization import filelock
 
 	frappe.init("")
 
 	if not apps and app:
 		apps = app
 
-	# don't minify in developer_mode for faster builds
-	development = frappe.local.conf.developer_mode or frappe.local.dev_server
-	mode = "development" if development else "production"
-	if production:
-		mode = "production"
+	with filelock("bench_build", is_global=True, timeout=10):
+		# don't minify in developer_mode for faster builds
+		development = frappe.local.conf.developer_mode or frappe.local.dev_server
+		mode = "development" if development else "production"
+		if production:
+			mode = "production"
 
-	if make_copy or restore:
-		hard_link = make_copy or restore
-		click.secho(
-			"bench build: --make-copy and --restore options are deprecated in favour of --hard-link",
-			fg="yellow",
-		)
+		if make_copy or restore:
+			hard_link = make_copy or restore
+			click.secho(
+				"bench build: --make-copy and --restore options are deprecated in favour of --hard-link",
+				fg="yellow",
+			)
 
-	bundle(mode, apps=apps, hard_link=hard_link, verbose=verbose, skip_frappe=False)
+		bundle(mode, apps=apps, hard_link=hard_link, verbose=verbose, skip_frappe=False)
 
 
 @click.command("watch")
@@ -1096,6 +1098,8 @@ def set_config(context, key, value, global_=False, parse=False, as_dict=False):
 		common_site_config_path = os.path.join(sites_path, "common_site_config.json")
 		update_site_config(key, value, validate=False, site_config_path=common_site_config_path)
 	else:
+		if not context.sites:
+			raise SiteNotSpecifiedError
 		for site in context.sites:
 			frappe.init(site=site)
 			update_site_config(key, value, validate=False)

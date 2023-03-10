@@ -192,7 +192,7 @@ $input-height: 28px !default;
 	--bg-green: var(--dark-green-50);
 	--bg-yellow: var(--yellow-50);
 	--bg-orange: var(--orange-50);
-	--bg-red: var(--red-50);
+	--bg-red: var(--red-100);
 	--bg-gray: var(--gray-200);
 	--bg-darkgray: var(--dark-gray-200);
 	--bg-purple: var(--purple-100);
@@ -275,6 +275,8 @@ $input-height: 28px !default;
 	--table-border-color: var(--gray-200);
 	--highlight-color: var(--gray-50);
 	--yellow-highlight-color: var(--yellow-50);
+
+	--field-placeholder-color: var(--gray-50);
 
 	--highlight-shadow: 1px 1px 10px var(--blue-50), 0px 0px 4px var(--blue-600);
 

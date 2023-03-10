@@ -363,7 +363,6 @@ frappe.views.KanbanView.show_kanban_dialog = function (doctype) {
 			primary_action_label,
 			primary_action,
 		});
-		return dialog;
 	}
 
 	function get_fields_for_dialog(select_fields) {

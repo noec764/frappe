@@ -192,11 +192,18 @@ class TestWorkflow(FrappeTestCase):
 
 
 def create_todo_workflow():
+	from frappe.tests.ui_test_helpers import UI_TEST_USER
+
 	if frappe.db.exists("Workflow", "Test ToDo"):
 		frappe.delete_doc("Workflow", "Test ToDo")
 
-	if not frappe.db.exists("Role", "Test Approver"):
-		frappe.get_doc(dict(doctype="Role", role_name="Test Approver")).insert(ignore_if_duplicate=True)
+	TEST_ROLE = "Test Approver"
+
+	if not frappe.db.exists("Role", TEST_ROLE):
+		frappe.get_doc(dict(doctype="Role", role_name=TEST_ROLE)).insert(ignore_if_duplicate=True)
+		if frappe.db.exists("User", UI_TEST_USER):
+			frappe.get_doc("User", UI_TEST_USER).add_roles(TEST_ROLE)
+
 	workflow = frappe.new_doc("Workflow")
 	workflow.workflow_name = "Test ToDo"
 	workflow.document_type = "ToDo"
@@ -206,12 +213,7 @@ def create_todo_workflow():
 	workflow.append("states", dict(state="Pending", allow_edit="All"))
 	workflow.append(
 		"states",
-		dict(
-			state="Approved",
-			allow_edit="Test Approver",
-			update_field="status",
-			update_value="Closed",
-		),
+		dict(state="Approved", allow_edit=TEST_ROLE, update_field="status", update_value="Closed"),
 	)
 	workflow.append("states", dict(state="Rejected", allow_edit="Test Approver"))
 	workflow.append(
@@ -220,7 +222,7 @@ def create_todo_workflow():
 			state="Pending",
 			action="Approve",
 			next_state="Approved",
-			allowed="Test Approver",
+			allowed=TEST_ROLE,
 			allow_self_approval=1,
 		),
 	)
@@ -230,7 +232,7 @@ def create_todo_workflow():
 			state="Pending",
 			action="Reject",
 			next_state="Rejected",
-			allowed="Test Approver",
+			allowed=TEST_ROLE,
 			allow_self_approval=1,
 		),
 	)

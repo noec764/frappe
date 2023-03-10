@@ -1357,7 +1357,7 @@ def get_translations(source_text):
 
 
 @frappe.whitelist(allow_guest=True)
-def get_all_languages(with_language_name=False):
+def get_all_languages(with_language_name: bool = False) -> list:
 	"""Returns all enabled language codes ar, ch etc"""
 
 	def get_language_codes():
@@ -1376,7 +1376,7 @@ def get_all_languages(with_language_name=False):
 
 
 @frappe.whitelist(allow_guest=True)
-def set_preferred_language_cookie(preferred_language):
+def set_preferred_language_cookie(preferred_language: str):
 	frappe.local.cookie_manager.set_cookie("preferred_language", preferred_language)
 
 

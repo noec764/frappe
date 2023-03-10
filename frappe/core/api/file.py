@@ -40,9 +40,6 @@ def get_attached_images(doctype: str, names: list[str] | str) -> frappe._dict:
 
 @frappe.whitelist()
 def get_files_in_folder(folder: str, start: int = 0, page_length: int = 20) -> dict:
-	start = cint(start)
-	page_length = cint(page_length)
-
 	home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
 
 	attachment_folder = frappe.db.get_value(
@@ -104,10 +101,11 @@ def create_new_folder(file_name: str, folder: str) -> File:
 
 
 @frappe.whitelist()
-def move_file(file_list: list[File], new_parent: str, old_parent: str) -> None:
+def move_file(file_list: list[File | dict] | str, new_parent: str, old_parent: str) -> None:
 	if isinstance(file_list, str):
 		file_list = json.loads(file_list)
 
+	# will check for permission on each file & update parent
 	for file_obj in file_list:
 		setup_folder_path(file_obj.get("name"), new_parent)
 

@@ -13,7 +13,6 @@ import "./script_helpers";
 import "./sidebar/form_sidebar";
 import "./footer/footer";
 import "./form_tour";
-import "./form_editor";
 import { UndoManager } from "./undo_manager";
 
 frappe.ui.form.Controller = class FormController {
@@ -263,10 +262,6 @@ frappe.ui.form.Form = class FrappeForm {
 			frm: this,
 		});
 
-		this.form_editor = new frappe.ui.form.FormEditor({
-			frm: this,
-		});
-
 		// workflow state
 		this.states = new frappe.ui.form.States({
 			frm: this,
@@ -455,6 +450,7 @@ frappe.ui.form.Form = class FrappeForm {
 				.toggleClass("cancelled-form", this.doc.docstatus === 2);
 
 			this.show_conflict_message();
+			this.show_submission_queue_banner();
 
 			if (frappe.boot.read_only) {
 				this.disable_form();
@@ -2056,6 +2052,70 @@ frappe.ui.form.Form = class FrappeForm {
 			.uniqBy((u) => u)
 			.filter((user) => !["Administrator", frappe.session.user].includes(user))
 			.filter(Boolean);
+	}
+
+	show_submission_queue_banner() {
+		let wrapper = this.layout.wrapper.find(".submission-queue-banner");
+
+		if (
+			!(
+				this.meta.is_submittable &&
+				this.meta.queue_in_background &&
+				!this.doc.__islocal &&
+				this.doc.docstatus === 0
+			)
+		) {
+			wrapper.length && wrapper.remove();
+			return;
+		}
+
+		if (!wrapper.length) {
+			wrapper = $('<div class="submission-queue-banner form-message">');
+			this.layout.wrapper.prepend(wrapper);
+		}
+
+		frappe
+			.call({
+				method: "frappe.core.doctype.submission_queue.submission_queue.get_latest_submissions",
+				args: { doctype: this.doctype, docname: this.docname },
+			})
+			.then((r) => {
+				if (r.message?.latest_submission) {
+					// if we are here that means some submission(s) were queued and are in queued/failed state
+					let submission_label = __("Previous Submission");
+					let secondary = "";
+					let div_class = "col-md-12";
+
+					if (r.message.exc) {
+						secondary = `: <span>${r.message.exc}</span>`;
+					} else {
+						div_class = "col-md-6";
+						secondary = `
+						</div>
+						<div class="col-md-6">
+							<a href='/app/submission-queue?ref_doctype=${encodeURIComponent(
+								this.doctype
+							)}&ref_docname=${encodeURIComponent(this.docname)}'>${__(
+							"All Submissions"
+						)}</a>
+						`;
+					}
+
+					let html = `
+						<div class="row">
+						<div class="${div_class}">
+							<a href='/app/submission-queue/${r.message.latest_submission}'>${submission_label} (${r.message.status})</a>${secondary}
+						</div>
+					</div>
+					`;
+
+					wrapper.removeClass("red").removeClass("yellow");
+					wrapper.addClass(r.message.status == "Failed" ? "red" : "yellow");
+					wrapper.html(html);
+				} else {
+					wrapper.remove();
+				}
+			});
 	}
 };
 

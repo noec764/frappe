@@ -30,17 +30,6 @@ _site = None
 _sites_path = os.environ.get("SITES_PATH", ".")
 
 
-class RequestContext:
-	def __init__(self, environ):
-		self.request = Request(environ)
-
-	def __enter__(self):
-		init_request(self.request)
-
-	def __exit__(self, type, value, traceback):
-		frappe.destroy()
-
-
 @local_manager.middleware
 @Request.application
 def application(request: Request):
@@ -51,9 +40,6 @@ def application(request: Request):
 
 		init_request(request)
 
-		frappe.recorder.record()
-		frappe.monitor.start()
-		frappe.rate_limiter.apply()
 		frappe.api.validate_auth()
 
 		if request.method == "OPTIONS":
@@ -84,15 +70,15 @@ def application(request: Request):
 		response = handle_exception(e)
 
 	else:
-		rollback = after_request(rollback)
+		rollback = sync_database(rollback)
 
 	finally:
 		if request.method in UNSAFE_HTTP_METHODS and frappe.db and rollback:
 			frappe.db.rollback()
 
-		frappe.rate_limiter.update()
-		frappe.monitor.stop(response)
-		frappe.recorder.dump()
+		if getattr(frappe.local, "initialised", False):
+			for after_request_task in frappe.get_hooks("after_request"):
+				frappe.call(after_request_task, response=response, request=request)
 
 		log_request(request, response)
 		process_response(response)
@@ -128,6 +114,9 @@ def init_request(request):
 
 	if request.method != "OPTIONS":
 		frappe.local.http_request = HTTPRequest()
+
+	for before_request_task in frappe.get_hooks("before_request"):
+		frappe.call(before_request_task)
 
 
 def setup_read_only_mode():
@@ -248,6 +237,12 @@ def handle_exception(e):
 		or (frappe.local.request.path.startswith("/api/") and not accept_header.startswith("text"))
 	)
 
+	if not frappe.session.user:
+		# If session creation fails then user won't be unset. This causes a lot of code that
+		# assumes presence of this to fail. Session creation fails => guest or expired login
+		# usually.
+		frappe.session.user = "Guest"
+
 	if respond_as_json:
 		# handle ajax responses first
 		# if the request is ajax, send back the trace or error message
@@ -325,7 +320,7 @@ def handle_exception(e):
 	return response
 
 
-def after_request(rollback):
+def sync_database(rollback: bool) -> bool:
 	# if HTTP method would change server state, commit if necessary
 	if (
 		frappe.db
@@ -339,9 +334,8 @@ def after_request(rollback):
 		rollback = False
 
 	# update session
-	if getattr(frappe.local, "session_obj", None):
-		updated_in_db = frappe.local.session_obj.update()
-		if updated_in_db:
+	if session := getattr(frappe.local, "session_obj", None):
+		if session.update():
 			frappe.db.commit()
 			rollback = False
 

@@ -12,12 +12,13 @@ import typing
 from code import compile_command
 from enum import Enum
 from typing import Any, Literal, Optional, TypeVar, Union
-from urllib.parse import quote, urljoin
+from urllib.parse import parse_qsl, quote, urlencode, urljoin, urlparse, urlunparse
 
 from click import secho
 
 import frappe
 from frappe.desk.utils import slug
+from frappe.utils.deprecations import deprecation_warning
 
 DateTimeLikeObject = Union[str, datetime.date, datetime.datetime]
 NumericType = Union[int, float]
@@ -313,7 +314,7 @@ def time_diff_in_hours(string_ed_date, string_st_date):
 
 
 def now_datetime():
-	dt = convert_utc_to_user_timezone(datetime.datetime.utcnow())
+	dt = convert_utc_to_system_timezone(datetime.datetime.utcnow())
 	return dt.replace(tzinfo=None)
 
 
@@ -326,15 +327,15 @@ def get_eta(from_time, percent_complete):
 	return str(datetime.timedelta(seconds=(100 - percent_complete) / percent_complete * diff))
 
 
-def _get_time_zone():
+def _get_system_timezone():
 	return frappe.db.get_system_setting("time_zone") or "UTC"
 
 
-def get_time_zone():
+def get_system_timezone():
 	if frappe.local.flags.in_test:
-		return _get_time_zone()
+		return _get_system_timezone()
 
-	return frappe.cache().get_value("time_zone", _get_time_zone)
+	return frappe.cache().get_value("time_zone", _get_system_timezone)
 
 
 def convert_utc_to_timezone(utc_timestamp, time_zone):
@@ -352,8 +353,8 @@ def get_datetime_in_timezone(time_zone):
 	return convert_utc_to_timezone(utc_timestamp, time_zone)
 
 
-def convert_utc_to_user_timezone(utc_timestamp):
-	time_zone = get_time_zone()
+def convert_utc_to_system_timezone(utc_timestamp):
+	time_zone = get_system_timezone()
 	return convert_utc_to_timezone(utc_timestamp, time_zone)
 
 
@@ -1128,17 +1129,20 @@ def round_based_on_smallest_currency_fraction(value, currency, precision=2):
 	smallest_currency_fraction_value = flt(
 		frappe.db.get_value("Currency", currency, "smallest_currency_fraction_value", cache=True)
 	)
+	original_value = value
+	value = abs(value)
 
 	if smallest_currency_fraction_value:
 		remainder_val = remainder(value, smallest_currency_fraction_value, precision)
-		if remainder_val > (smallest_currency_fraction_value / 2):
+		if remainder_val >= (smallest_currency_fraction_value / 2):
 			value += smallest_currency_fraction_value - remainder_val
 		else:
 			value -= remainder_val
 	else:
 		value = rounded(value)
 
-	return flt(value, precision)
+	value = flt(value, precision)
+	return math.copysign(value, original_value)
 
 
 def encode(obj, encoding="utf-8"):
@@ -2221,3 +2225,32 @@ def get_job_name(key: str, doctype: str = None, doc_name: str = None) -> str:
 	if doc_name:
 		job_name += f"_{doc_name}"
 	return job_name
+
+
+def get_imaginary_pixel_response():
+	return {
+		"type": "binary",
+		"filename": "imaginary_pixel.png",
+		"filecontent": (
+			b"\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00"
+			b"\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\r"
+			b"IDATx\x9cc\xf8\xff\xff?\x03\x00\x08\xfc\x02\xfe\xa7\x9a\xa0"
+			b"\xa0\x00\x00\x00\x00IEND\xaeB`\x82"
+		),
+	}
+
+
+def is_site_link(link: str) -> bool:
+	if link.startswith("/"):
+		return True
+	return urlparse(link).netloc == urlparse(frappe.utils.get_url()).netloc
+
+
+def add_source_to_url(url: str, reference_doctype: str, reference_docname: str) -> str:
+	url_parts = list(urlparse(url))
+	query = dict(parse_qsl(url_parts[4])) | {
+		"source": f"{reference_doctype} > {reference_docname}",
+	}
+
+	url_parts[4] = urlencode(query)
+	return urlunparse(url_parts)

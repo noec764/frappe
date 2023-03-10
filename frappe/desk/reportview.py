@@ -22,7 +22,7 @@ from frappe.utils import add_user_info, cstr, format_duration
 @frappe.read_only()
 def get():
 	args = get_form_params()
-	# If virtual doctype get data from controller het_list method
+	# If virtual doctype get data from controller get_list method
 	if is_virtual_doctype(args.doctype):
 		controller = get_controller(args.doctype)
 		data = compress(controller.get_list(args))
@@ -152,12 +152,8 @@ def setup_group_by(data):
 			frappe.throw(_("Invalid aggregate function"))
 		if frappe.db.has_column(data.aggregate_on_doctype, data.aggregate_on_field):
 			data.fields.append(
-				"{aggregate_function}(`tab{aggregate_on_doctype}`.`{aggregate_on_field}`) AS _aggregate_column".format(
-					**data
-				)
+				f"{data.aggregate_function}(`tab{data.aggregate_on_doctype}`.`{data.aggregate_on_field}`) AS _aggregate_column"
 			)
-			if data.aggregate_on_field:
-				data.fields.append(f"`tab{data.aggregate_on_doctype}`.`{data.aggregate_on_field}`")
 		else:
 			raise_invalid_field(data.aggregate_on_field)
 

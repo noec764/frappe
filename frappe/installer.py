@@ -16,6 +16,7 @@ import frappe
 from frappe.defaults import _clear_cache
 from frappe.utils import cint, is_git_url
 from frappe.utils.dashboard import sync_dashboards
+from frappe.utils.synchronization import filelock
 
 
 def _is_scheduler_enabled() -> bool:
@@ -80,38 +81,40 @@ def _new_site(
 
 	installing = touch_file(get_site_path("locks", "installing.lock"))
 
-	install_db(
-		root_login=db_root_username,
-		root_password=db_root_password,
-		db_name=db_name,
-		admin_password=admin_password,
-		verbose=verbose,
-		source_sql=source_sql,
-		force=force,
-		reinstall=reinstall,
-		db_password=db_password,
-		db_type=db_type,
-		db_host=db_host,
-		db_port=db_port,
-		no_mariadb_socket=no_mariadb_socket,
-	)
-	apps_to_install = (
-		["frappe"] + (frappe.conf.get("install_apps") or []) + (list(install_apps or []))
-	)
+	with filelock("bench_new_site", timeout=1):
+		install_db(
+			root_login=db_root_username,
+			root_password=db_root_password,
+			db_name=db_name,
+			admin_password=admin_password,
+			verbose=verbose,
+			source_sql=source_sql,
+			force=force,
+			reinstall=reinstall,
+			db_password=db_password,
+			db_type=db_type,
+			db_host=db_host,
+			db_port=db_port,
+			no_mariadb_socket=no_mariadb_socket,
+		)
 
-	for app in apps_to_install:
-		# NOTE: not using force here for 2 reasons:
-		# 	1. It's not really needed here as we've freshly installed a new db
-		# 	2. If someone uses a sql file to do restore and that file already had
-		# 		installed_apps then it might cause problems as that sql file can be of any previous version(s)
-		# 		which might be incompatible with the current version and using force might cause problems.
-		# 		Example: the DocType DocType might not have `migration_hash` column which will cause failure in the restore.
-		install_app(app, verbose=verbose, set_as_patched=not source_sql, force=False)
+		apps_to_install = (
+			["frappe"] + (frappe.conf.get("install_apps") or []) + (list(install_apps or []))
+		)
 
-	os.remove(installing)
+		for app in apps_to_install:
+			# NOTE: not using force here for 2 reasons:
+			# 	1. It's not really needed here as we've freshly installed a new db
+			# 	2. If someone uses a sql file to do restore and that file already had
+			# 		installed_apps then it might cause problems as that sql file can be of any previous version(s)
+			# 		which might be incompatible with the current version and using force might cause problems.
+			# 		Example: the DocType DocType might not have `migration_hash` column which will cause failure in the restore.
+			install_app(app, verbose=verbose, set_as_patched=not source_sql, force=False)
 
-	scheduler.toggle_scheduler(enable_scheduler)
-	frappe.db.commit()
+		os.remove(installing)
+
+		scheduler.toggle_scheduler(enable_scheduler)
+		frappe.db.commit()
 
 	scheduler_status = "disabled" if frappe.utils.scheduler.is_scheduler_disabled() else "enabled"
 	print("*** Scheduler is", scheduler_status, "***")
@@ -540,7 +543,6 @@ def make_site_config(
 
 def update_site_config(key, value, validate=True, site_config_path=None):
 	"""Update a value in site_config"""
-	from frappe.utils.synchronization import filelock
 
 	if not site_config_path:
 		site_config_path = get_site_config_path()

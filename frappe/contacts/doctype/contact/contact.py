@@ -13,9 +13,7 @@ from frappe.utils import cstr, has_gravatar
 class Contact(Document):
 	def autoname(self):
 		# concat first and last name
-		self.name = " ".join(
-			filter(None, [cstr(self.get(f)).strip() for f in ["first_name", "last_name"]])
-		)
+		self.name = self._get_full_name()
 
 		if frappe.db.exists("Contact", self.name):
 			self.name = append_number_if_name_exists("Contact", self.name)
@@ -26,6 +24,7 @@ class Contact(Document):
 			break
 
 	def validate(self):
+		self.full_name = self._get_full_name()
 		self.set_primary_email()
 		self.clear_primary_phone_numbers()
 		self.set_primary("phone")
@@ -152,6 +151,9 @@ class Contact(Document):
 		"""Returns true if the user is linked to the contact"""
 		return self.user == frappe.session.user
 
+	def _get_full_name(self) -> str:
+		return get_full_name(self.first_name, self.middle_name, self.last_name, self.company_name)
+
 
 def get_default_contact(doctype, name):
 	"""Returns default contact for the given doctype, name"""
@@ -237,8 +239,9 @@ def update_contact(doc, method):
 def contact_query(doctype, txt, searchfield, start, page_len, filters):
 	from frappe.desk.reportview import get_match_cond
 
+	doctype = "Contact"
 	if (
-		not frappe.get_meta("Contact").get_field(searchfield)
+		not frappe.get_meta(doctype).get_field(searchfield)
 		and searchfield not in frappe.db.DEFAULT_COLUMNS
 	):
 		return []
@@ -248,7 +251,7 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 
 	return frappe.db.sql(
 		"""select
-			`tabContact`.name, `tabContact`.first_name, `tabContact`.last_name
+			`tabContact`.name, `tabContact`.full_name, `tabContact`.company_name
 		from
 			`tabContact`, `tabDynamic Link`
 		where
@@ -259,8 +262,8 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 			`tabContact`.`{key}` like %(txt)s
 			{mcond}
 		order by
-			if(locate(%(_txt)s, `tabContact`.name), locate(%(_txt)s, `tabContact`.name), 99999),
-			`tabContact`.idx desc, `tabContact`.name
+			if(locate(%(_txt)s, `tabContact`.full_name), locate(%(_txt)s, `tabContact`.company_name), 99999),
+			`tabContact`.idx desc, `tabContact`.full_name
 		limit %(start)s, %(page_len)s """.format(
 			mcond=get_match_cond(doctype), key=searchfield
 		),
@@ -356,3 +359,16 @@ def get_contacts_linked_from(doctype, docname, fields=None):
 		return []
 
 	return frappe.get_list("Contact", fields=fields, filters={"name": ("in", contact_names)})
+
+
+def get_full_name(
+	first: str | None = None,
+	middle: str | None = None,
+	last: str | None = None,
+	company: str | None = None,
+) -> str:
+	full_name = " ".join(filter(None, [cstr(f).strip() for f in [first, middle, last]]))
+	if not full_name and company:
+		full_name = company
+
+	return full_name

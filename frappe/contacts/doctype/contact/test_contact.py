@@ -3,6 +3,7 @@
 
 
 import frappe
+from frappe.contacts.doctype.contact.contact import get_full_name
 from frappe.tests.utils import FrappeTestCase
 
 test_dependencies = ["Contact", "Salutation"]
@@ -32,6 +33,18 @@ class TestContact(FrappeTestCase):
 
 		self.assertEqual(contact.phone, "+91 0000000002")
 		self.assertEqual(contact.mobile_no, "+91 0000000003")
+
+	def test_get_full_name(self):
+		self.assertEqual(get_full_name(first="John"), "John")
+		self.assertEqual(get_full_name(last="Doe"), "Doe")
+		self.assertEqual(get_full_name(company="Doe Pvt Ltd"), "Doe Pvt Ltd")
+		self.assertEqual(get_full_name(first="John", last="Doe"), "John Doe")
+		self.assertEqual(get_full_name(first="John", middle="Jane"), "John Jane")
+		self.assertEqual(get_full_name(first="John", last="Doe", company="Doe Pvt Ltd"), "John Doe")
+		self.assertEqual(
+			get_full_name(first="John", middle="Jane", last="Doe", company="Doe Pvt Ltd"),
+			"John Jane Doe",
+		)
 
 
 def create_contact(name, salutation, emails=None, phones=None, save=True):

@@ -1,10 +1,11 @@
+import { createApp } from "vue";
 import { bus } from "./bus";
 
 import QuickAccessMenu from "./QuickAccessMenu.vue";
 
 frappe.provide("frappe.ui.quick_access");
 
-frappe.ui.quick_access.QuickAccessMenu = class {
+frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
 	constructor(opts = {}) {
 		this.setup_menu();
 		// this.setup_button()
@@ -47,10 +48,8 @@ frappe.ui.quick_access.QuickAccessMenu = class {
 	}
 
 	setup_menu() {
-		this.menu = new Vue({
-			el: "#modules-menu",
-			render: (h) => h(QuickAccessMenu),
-		});
+		this.menu = createApp(QuickAccessMenu);
+		this.menu.mount("#modules-menu");
 
 		bus.$emit("quick-access-setItems", [
 			...frappe.boot.allowed_workspaces

@@ -32,7 +32,6 @@ frappe.Application = class Application {
 		frappe.socketio.init();
 		frappe.model.init();
 
-		this.setup_frappe_vue();
 		this.load_bootinfo();
 		this.load_user_permissions();
 		this.make_nav_bar();
@@ -139,17 +138,6 @@ frappe.Application = class Application {
 		}
 
 		if (!frappe.boot.developer_mode) {
-			setInterval(function () {
-				frappe.call({
-					method: "frappe.core.page.background_jobs.background_jobs.get_scheduler_status",
-					callback: function (r) {
-						if (r.message[0] == __("Inactive")) {
-							frappe.call("frappe.utils.scheduler.activate_scheduler");
-						}
-					},
-				});
-			}, 300000); // check every 5 minutes
-
 			if (frappe.user.has_role("System Manager")) {
 				setInterval(function () {
 					frappe.call({
@@ -182,11 +170,6 @@ frappe.Application = class Application {
 		frappe.router.on("change", () => {
 			$(".tooltip").hide();
 		});
-	}
-
-	setup_frappe_vue() {
-		Vue.prototype.__ = window.__;
-		Vue.prototype.frappe = window.frappe;
 	}
 
 	set_password(user) {

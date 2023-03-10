@@ -20,6 +20,7 @@
    "track_views",
    "allow_auto_repeat",
    "allow_import",
+   "queue_in_background",
    "fields_section_break",
    "fields",
    "naming_section",
@@ -341,6 +342,12 @@
    "fieldtype": "Check",
    "label": "Make Attachments Public by Default"
   },
+  {
+    "default": "0",
+    "fieldname": "queue_in_background",
+    "fieldtype": "Check",
+    "label": "Queue in Background"
+   },
   {
    "fieldname": "default_view",
    "fieldtype": "Select",

@@ -106,6 +106,7 @@ optional_fields = (
 table_fields = ("Table", "Table MultiSelect")
 
 core_doctypes_list = (
+	"DefaultValue",
 	"DocType",
 	"DocField",
 	"DocPerm",
@@ -126,6 +127,8 @@ core_doctypes_list = (
 	"Archived Document",
 )
 
+# NOTE: this is being used for dynamic autoincrement in new sites,
+# removing any of these will require patches.
 log_types = (
 	"Version",
 	"Error Log",
@@ -219,3 +222,24 @@ def delete_fields(args_dict, delete=0):
 		if frappe.conf.db_type == "postgres":
 			# commit the results to db
 			frappe.db.commit()
+
+
+def get_permitted_fields(
+	doctype: str, parenttype: str | None = None, user: str | None = None
+) -> list[str]:
+	meta = frappe.get_meta(doctype)
+	valid_columns = meta.get_valid_columns()
+
+	if doctype in core_doctypes_list:
+		return valid_columns
+
+	if permitted_fields := meta.get_permitted_fieldnames(parenttype=parenttype, user=user):
+		meta_fields = meta.default_fields.copy()
+		optional_meta_fields = [x for x in optional_fields if x in valid_columns]
+
+		if meta.istable:
+			meta_fields.extend(child_table_fields)
+
+		return meta_fields + permitted_fields + optional_meta_fields
+
+	return []

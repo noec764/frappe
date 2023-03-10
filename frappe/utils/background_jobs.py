@@ -3,13 +3,14 @@ import socket
 import time
 from collections import defaultdict
 from functools import lru_cache
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Literal, NoReturn, Union
 from uuid import uuid4
 
 import redis
 from redis.exceptions import BusyLoadingError, ConnectionError
 from rq import Connection, Queue, Worker
 from rq.logutils import setup_loghandlers
+from rq.worker import RandomWorker, RoundRobinWorker
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
 
 import frappe
@@ -22,6 +23,10 @@ from frappe.utils.redis_queue import RedisQueue
 if TYPE_CHECKING:
 	from rq.job import Job
 
+# TTL to keep RQ job logs in redis for.
+RQ_JOB_FAILURE_TTL = 7 * 24 * 60 * 60  # 7 days instead of 1 year (default)
+RQ_RESULTS_TTL = 10 * 60
+
 
 @lru_cache
 def get_queues_timeout():
@@ -29,9 +34,11 @@ def get_queues_timeout():
 	custom_workers_config = common_site_config.get("workers", {})
 	default_timeout = 300
 
+	# Note: Order matters here
+	# If no queues are specified then RQ prioritizes queues in specified order
 	return {
-		"default": default_timeout,
 		"short": default_timeout,
+		"default": default_timeout,
 		"long": 1500,
 		**{
 			worker: config.get("timeout", default_timeout)
@@ -47,6 +54,8 @@ def enqueue(
 	method,
 	queue="default",
 	timeout=None,
+	on_success=None,
+	on_failure=None,
 	event=None,
 	is_async=True,
 	job_name=None,
@@ -55,7 +64,7 @@ def enqueue(
 	*,
 	at_front=False,
 	**kwargs,
-) -> "Job" | Any:
+) -> Union["Job", Any]:
 	"""
 	Enqueue method to be executed using a background worker
 
@@ -109,7 +118,16 @@ def enqueue(
 		)
 		return frappe.flags.enqueue_after_commit
 
-	return q.enqueue_call(execute_job, timeout=timeout, kwargs=queue_args, at_front=at_front)
+	return q.enqueue_call(
+		execute_job,
+		on_success=on_success,
+		on_failure=on_failure,
+		timeout=timeout,
+		kwargs=queue_args,
+		at_front=at_front,
+		failure_ttl=RQ_JOB_FAILURE_TTL,
+		result_ttl=RQ_RESULTS_TTL,
+	)
 
 
 def enqueue_doc(
@@ -134,6 +152,7 @@ def run_doc_method(doctype, name, doc_method, **kwargs):
 
 def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True, retry=0):
 	"""Executes job in a worker, performs commit/rollback and logs if there is any error"""
+	retval = None
 	if is_async:
 		frappe.connect(site)
 		if os.environ.get("CI"):
@@ -148,9 +167,11 @@ def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True,
 	else:
 		method_name = cstr(method.__name__)
 
-	frappe.monitor.start("job", method_name, kwargs)
+	for before_job_task in frappe.get_hooks("before_job"):
+		frappe.call(before_job_task, method=method_name, kwargs=kwargs, transaction_type="job")
+
 	try:
-		method(**kwargs)
+		retval = method(**kwargs)
 
 	except (frappe.db.InternalError, frappe.RetryBackgroundJobError) as e:
 		frappe.db.rollback()
@@ -181,34 +202,47 @@ def execute_job(site, method, event, job_name, kwargs, user=None, is_async=True,
 
 	else:
 		frappe.db.commit()
+		return retval
 
 	finally:
-		# background job hygiene: release file locks if unreleased
-		# if this breaks something, move it to failed jobs alone - gavin@frappe.io
-		for doc in frappe.local.locked_documents:
-			doc.unlock()
+		for after_job_task in frappe.get_hooks("after_job"):
+			frappe.call(after_job_task, method=method_name, kwargs=kwargs, result=retval)
 
-		frappe.monitor.stop()
 		if is_async:
 			frappe.destroy()
 
 
-def start_worker(queue=None, quiet=False, rq_username=None, rq_password=None):
+def start_worker(
+	queue: str | None = None,
+	quiet: bool = False,
+	rq_username: str | None = None,
+	rq_password: str | None = None,
+	burst: bool = False,
+	strategy: Literal["round_robbin", "random"] | None = None,
+) -> NoReturn | None:  # pragma: no cover
 	"""Wrapper to start rq worker. Connects to redis and monitors these queues."""
+	DEQUEUE_STRATEGIES = {"round_robbin": RoundRobinWorker, "random": RandomWorker}
+
 	with frappe.init_site():
 		# empty init is required to get redis_queue from common_site_config.json
 		redis_connection = get_redis_conn(username=rq_username, password=rq_password)
+
+		if queue:
+			queue = [q.strip() for q in queue.split(",")]
 		queues = get_queue_list(queue, build_queue_name=True)
 		queue_name = queue and generate_qname(queue)
 
 	if os.environ.get("CI"):
 		setup_loghandlers("ERROR")
 
+	WorkerKlass = DEQUEUE_STRATEGIES.get(strategy, Worker)
+
 	with Connection(redis_connection):
 		logging_level = "INFO"
 		if quiet:
 			logging_level = "WARNING"
-		Worker(queues, name=get_worker_name(queue_name)).work(logging_level=logging_level)
+		worker = WorkerKlass(queues, name=get_worker_name(queue_name))
+		worker.work(logging_level=logging_level, burst=burst)
 
 
 def get_worker_name(queue):
@@ -351,6 +385,8 @@ def generate_qname(qtype: str) -> str:
 
 	qnames are useful to define namespaces of customers.
 	"""
+	if isinstance(qtype, list):
+		qtype = ",".join(qtype)
 	return f"{get_bench_id()}:{qtype}"
 
 
@@ -369,3 +405,14 @@ def test_job(s):
 
 	print("sleeping...")
 	time.sleep(s)
+
+
+def is_job_queued(job_name: str) -> bool:
+	for queue in get_queues():
+		for job_id in queue.get_job_ids():
+			if not job_id:
+				continue
+			job = queue.fetch_job(job_id)
+			if job.kwargs.get("job_name") == job_name and job.kwargs.get("site") == frappe.local.site:
+				return True
+	return False
