@@ -54,7 +54,7 @@ class Picker {
 		let swatch_template = document.createElement("template");
 		swatch_template.innerHTML = '<div class="swatch" tabindex=0></div>';
 		this.swatches.forEach((color) => {
-			console.log(color);
+
 			if (color === "divider") {
 				const divider = document.createElement("div");
 				divider.style.height = "1em";
