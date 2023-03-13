@@ -148,14 +148,22 @@ export default class SummaryCardRenderer {
 		});
 	}
 
-	render_loading_state() {
-		this.wrapper.setAttribute("data-state", "loading");
+	_render_empty() {
+		this.$header.empty();
+		this.$body.empty();
 		this.$freeze.empty();
+	}
+
+	render_loading_state() {
+		this._render_empty();
+		this.wrapper.setAttribute("data-state", "loading");
 		this.render_skeleton();
 	}
 
 	render_no_data_state() {
+		this._render_empty();
 		this.wrapper.setAttribute("data-state", "no-data");
+		this.$header.text(__("Summary Card"));
 
 		const input = frappe.ui.form.make_control({
 			df: {
@@ -176,11 +184,14 @@ export default class SummaryCardRenderer {
 			parent: this.$freeze,
 		});
 		input.refresh();
-		console.log(input);
 	}
 
 	render_error_state(error) {
+		this._render_empty();
 		this.wrapper.setAttribute("data-state", "error");
+
+		const msg = [__("Summary Card"), __("Error")].join(" &middot; ");
+		this.$header.html(msg);
 
 		console.error(error);
 		try {
@@ -192,9 +203,6 @@ export default class SummaryCardRenderer {
 			`<div style="user-select:all;white-space:pre-line;font-size:var(--text-xs);"></div>`
 		);
 		this.$freeze.find("div").text(error?.message || JSON.stringify(error, null, 2));
-
-		const msg = [__("Summary Card"), __("Error")].join(" &middot; ");
-		this.$header.html(msg);
 	}
 
 	render_header() {
@@ -205,9 +213,8 @@ export default class SummaryCardRenderer {
 	}
 
 	render_skeleton() {
-		const $spinner = this.$freeze; // $('<div class="summary-card__loader">');
+		const $spinner = this.$freeze;
 		$spinner.append($("<div>").text(__("Loading...")));
-		// $spinner.appendTo(this.$footer);
 
 		const $skel_header = SCHeader.render_skeleton(this);
 		$skel_header.addClass(this.$header.attr("class"));
@@ -219,11 +226,7 @@ export default class SummaryCardRenderer {
 	}
 
 	async render() {
-		this.$header.empty();
-		this.$header.text(__("Summary Card"));
-
-		this.$freeze.empty();
-		this.$body.empty();
+		this._render_empty();
 
 		if (!this.summary_card_name) {
 			this.render_no_data_state();
