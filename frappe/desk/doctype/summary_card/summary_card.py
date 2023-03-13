@@ -8,7 +8,7 @@ import frappe
 import frappe.utils
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils.data import cint
+from frappe.modules.utils import export_module_json
 
 if TYPE_CHECKING:
 	from frappe.desk.doctype.summary_card_row.summary_card_row import SummaryCardRow
@@ -54,8 +54,20 @@ class SummaryCard(Document):
 	]
 	button_label: str
 
+	def autoname(self):
+		if frappe.session.user == "Administrator":
+			self.name = self.label
+		else:
+			self.name = self.label + "-" + frappe.session.user
+
 	def validate(self):
+		if self.is_standard and not frappe.conf.developer_mode:
+			frappe.throw(_("Cannot edit standard document"))
 		self.validate_summary_card_rows()
+
+	def on_update(self):
+		if self.is_standard and frappe.conf.developer_mode:
+			export_module_json(self, self.is_standard, self.module)
 
 	def validate_summary_card_rows(self):
 		if not self.rows:
@@ -199,9 +211,10 @@ class SummaryCard(Document):
 
 	def get_button_label_for_view(self, view):
 		if self.button_label:
-			return self.button_label
+			return _(self.button_label, context="Summary Card Button Label")
 
-		text = _(f"View {view}")
+		text = f"View {view}"
+		text = _(text)
 
 		is_english = frappe.local.lang == "en"
 		if (not is_english) and text == f"View {view}":

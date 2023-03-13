@@ -3,6 +3,14 @@
 
 frappe.ui.form.on("Summary Card", {
 	setup(frm) {
+		if (
+			frm.doc.is_standard &&
+			!frappe.boot.developer_mode &&
+			frappe.session.user !== "Administrator"
+		) {
+			frm.disable_form();
+		}
+
 		frm.set_query("dt", function () {
 			return {
 				filters: {

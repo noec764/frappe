@@ -1368,6 +1368,7 @@ Cannot edit Standard Dashboards,Impossible de modifier les tableaux de bord stan
 Cannot edit Standard charts,Impossible de modifier les graphiques standard,
 Cannot edit a standard report. Please duplicate and create a new report,Modification du rapport standard impossible. Veuillez le dupliquer et créer un nouveau rapport,
 Cannot edit cancelled document,Impossible de modifier un document annulé,
+Cannot edit standard document,Impossible de modifier un document standard,
 Cannot edit filters for standard charts,Vous ne pouvez pas modifier les filtres des graphiques standards,
 Cannot edit standard fields,Impossible de modifier les champs standards,
 Cannot enable {0} for a non-submittable doctype,{0} ne peut pas être activé pour un type de document non validable,
