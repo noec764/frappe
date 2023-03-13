@@ -9,10 +9,13 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "is_standard",
+  "module",
+  "section_break_4",
   "dt",
-  "column_break_2",
+  "preview_column",
   "preview_html",
-  "section_break_2",
+  "section_break_8",
   "header_section",
   "label",
   "show_liked_by_me",
@@ -83,24 +86,47 @@
    "label": "Button"
   },
   {
-   "fieldname": "section_break_2",
+   "fieldname": "preview_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_standard",
+   "fieldtype": "Check",
+   "label": "Is Standard",
+   "no_copy": 1,
+   "read_only_depends_on": "eval:!frappe.boot.developer_mode",
+   "set_only_once": 1
+  },
+  {
+   "depends_on": "eval:doc.is_standard",
+   "fieldname": "module",
+   "fieldtype": "Link",
+   "label": "Module",
+   "mandatory_depends_on": "eval:doc.is_standard",
+   "no_copy": 1,
+   "options": "Module Def",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "section_break_4",
    "fieldtype": "Section Break"
   },
   {
    "depends_on": "eval:!doc.__islocal",
-   "fieldname": "column_break_2",
+   "fieldname": "preview_column",
    "fieldtype": "Column Break",
    "label": "Preview"
   },
   {
-   "fieldname": "preview_html",
-   "fieldtype": "HTML"
+   "fieldname": "section_break_8",
+   "fieldtype": "Section Break"
   }
  ],
  "icon": "card",
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-03-09 02:40:46.886256",
+ "modified": "2023-03-11 02:42:34.750409",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Summary Card",
