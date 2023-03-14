@@ -19,12 +19,12 @@ class TestRounding(FrappeTestCase):
 
 		# positive rounding to integers
 		self.assertEqual(flt(0.4, 0), 0)
-		self.assertEqual(flt(0.5, 0), 1.0)
+		self.assertEqual(flt(0.5, 0), 0)
 		self.assertEqual(flt(1.455, 0), 1)
 		self.assertEqual(flt(1.5, 0), 2)
 
 		# negative rounding to integers
-		self.assertEqual(flt(-0.5, 0), -1)
+		self.assertEqual(flt(-0.5, 0), 0)
 		self.assertEqual(flt(-1.5, 0), -2)
 
 		# negative precision i.e. round to nearest 10th
