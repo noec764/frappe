@@ -197,7 +197,7 @@ frappe.views.Workspace = class Workspace {
 		}
 
 		$item_container.appendTo(container);
-		this.sidebar_items[item.public ? "public" : "private"][item.title] = $item_container;
+		this.sidebar_items[item.public ? "public" : "private"][item.name] = $item_container;
 
 		if ($item_container.parent().hasClass("hidden") && is_current_page) {
 			$item_container.parent().toggleClass("hidden");
@@ -1348,9 +1348,9 @@ frappe.views.Workspace = class Workspace {
 		if (
 			this.sidebar_items &&
 			this.sidebar_items[section] &&
-			!this.sidebar_items[section][item.title]
+			!this.sidebar_items[section][item.name]
 		) {
-			this.sidebar_items[section][item.title] = $sidebar_item;
+			this.sidebar_items[section][item.name] = $sidebar_item;
 		}
 	}
 
