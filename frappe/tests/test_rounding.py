@@ -12,7 +12,7 @@ class TestRounding(FrappeTestCase):
 	def test_rounding(self):
 		self.assertEqual(flt("what"), 0)
 
-		self.assertEqual(flt("0.5", 0), 1.0)
+		self.assertEqual(flt("0.5", 0), 0)
 		self.assertEqual(flt("0.3"), 0.3)
 
 		self.assertEqual(flt("1.5", 0), 2)
