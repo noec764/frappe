@@ -202,7 +202,14 @@ def start_worker(
 	"""Start a background worker"""
 	from frappe.utils.background_jobs import start_worker
 
-	start_worker(queue, quiet=quiet, rq_username=rq_username, rq_password=rq_password)
+	start_worker(
+		queue,
+		quiet=quiet,
+		rq_username=rq_username,
+		rq_password=rq_password,
+		burst=burst,
+		strategy=strategy,
+	)
 
 
 @click.command("ready-for-migration")
