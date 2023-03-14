@@ -813,6 +813,37 @@ $.extend(frappe.model, {
 		});
 	},
 
+	async get_views_of_doctype(doctype) {
+		await frappe.model.with_doctype(doctype);
+		const meta = frappe.get_meta(doctype);
+
+		if (meta.issingle || meta.istable) {
+			return [];
+		}
+
+		const views = ["List", "Report", "Dashboard", "Kanban"];
+		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
+			views.push("Calendar", "Gantt");
+		}
+		if (meta.is_tree) {
+			views.push("Tree");
+		}
+		if (meta.image_field) {
+			views.push("Image");
+		}
+		if (doctype === "Communication" && frappe.boot.email_accounts.length) {
+			views.push("Inbox");
+		}
+		if (
+			(meta.fields.find((i) => i.fieldname === "latitude") &&
+				meta.fields.find((i) => i.fieldname === "longitude")) ||
+			meta.fields.find((i) => i.fieldname === "location" && i.fieldtype == "Geolocation")
+		) {
+			views.push("Map");
+		}
+		return views;
+	},
+
 	/**
 	 * @returns {Promise<Record<string, string>>}
 	 * Returns a map of doctype icons
