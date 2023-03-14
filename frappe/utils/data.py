@@ -1136,6 +1136,9 @@ def _bankers_rounding_legacy(num, precision):
 
 
 def _bankers_rounding(num, precision):
+	if num == 0:
+		return 0.0
+
 	multiplier = 10**precision
 	num = round(num * multiplier, 12)
 
