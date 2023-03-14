@@ -1138,4 +1138,4 @@ class TestRounding(FrappeTestCase):
 		self.assertEqual(Decimal(str(flt(float(number), precision))), round(number, precision))
 
 	def test_default_rounding(self):
-		self.assertEqual(frappe.get_system_settings("rounding_method"), "Banker's Rounding")
+		self.assertEqual(frappe.get_system_settings("rounding_method"), "Commercial Rounding")
