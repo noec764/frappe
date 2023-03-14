@@ -29,7 +29,7 @@ class TestPreparedReport(FrappeTestCase):
 
 		return doc
 
-	def test_queueing(self):
+	def test_queueing_and_data(self):
 		doc_ = self.create_prepared_report()
 		self.assertEqual("Queued", doc_.status)
 		self.assertTrue(doc_.queued_at)
@@ -37,14 +37,10 @@ class TestPreparedReport(FrappeTestCase):
 		frappe.db.commit()
 		time.sleep(5)
 
-		doc_ = frappe.get_last_doc("Prepared Report")
+		doc_ = frappe.get_doc("Prepared Report", doc_.name)
 		self.assertEqual("Completed", doc_.status)
 		self.assertTrue(doc_.job_id)
 		self.assertTrue(doc_.report_end_time)
-
-	def test_prepared_data(self):
-		doc_ = self.create_prepared_report(commit=True)
-		time.sleep(5)
 
 		prepared_data = json.loads(doc_.get_prepared_data().decode("utf-8"))
 		generated_data = generate_report_result(get_report_doc("Database Storage Usage By Tables"))

@@ -4,6 +4,8 @@ from frappe.tests.utils import FrappeTestCase
 
 class TestBaseDocument(FrappeTestCase):
 	def test_link_validation(self):
+		frappe.flags.validate_links_in_tests = True
+
 		meta = frappe.get_meta("ToDo")
 		if (
 			not meta.has_field("reference_type")
@@ -72,4 +74,4 @@ class TestBaseDocument(FrappeTestCase):
 		)
 		self.assertRaises(frappe.LinkValidationError, todo6.insert)
 
-		frappe.db.rollback()
+		frappe.flags.validate_links_in_tests = False
