@@ -277,8 +277,16 @@ $.extend(frappe.datetime, {
 
 	get_first_day_of_the_week_index() {
 		const first_day_of_the_week = frappe.sys_defaults.first_day_of_the_week || "Sunday";
-		moment.locale("en");
-		return moment.weekdays().indexOf(first_day_of_the_week);
+		const weekdays = [
+			"Sunday",
+			"Monday",
+			"Tuesday",
+			"Wednesday",
+			"Thursday",
+			"Friday",
+			"Saturday",
+		];
+		return weekdays.indexOf(first_day_of_the_week);
 	},
 });
 
