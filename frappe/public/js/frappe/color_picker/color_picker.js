@@ -13,20 +13,28 @@ class Picker {
 	refresh() {
 		this.set_selector_position(true);
 		this.update_color_map();
+		this.highlight_selected_swatch();
+	}
+
+	set_swatches(swatches) {
+		this.swatches = swatches;
+		if (this.swatches_wrapper) {
+			this.swatches_wrapper.innerHTML = "";
+			this.setup_swatches();
+		}
 	}
 
 	setup_picker() {
 		let color_picker_template = document.createElement("template");
 		color_picker_template.innerHTML = `
 			<div class="color-picker">
-				<div class="swatch-section">
-					${__("SWATCHES")}<br>
-					<div class="swatches"></div>
-				</div>
-				${__("COLOR PICKER")}<br>
+				<div class="swatch-section"></div>
+
+				<div class="section-title">${__("COLOR PICKER")}</div>
 				<div class="color-map">
 					<div class="color-selector"></div>
 				</div>
+
 				<div class="hue-map">
 					<div class="hue-selector"></div>
 				</div>
@@ -38,7 +46,8 @@ class Picker {
 		this.color_map = this.color_picker_wrapper.getElementsByClassName("color-map")[0];
 		this.color_selector_circle = this.color_map.getElementsByClassName("color-selector")[0];
 		this.hue_map = this.color_picker_wrapper.getElementsByClassName("hue-map")[0];
-		this.swatches_wrapper = this.color_picker_wrapper.getElementsByClassName("swatches")[0];
+		this.swatches_wrapper =
+			this.color_picker_wrapper.getElementsByClassName("swatch-section")[0];
 		this.hue_selector_circle = this.hue_map.getElementsByClassName("hue-selector")[0];
 		this.refresh();
 		this.setup_events();
@@ -51,15 +60,24 @@ class Picker {
 	}
 
 	setup_swatches() {
-		let swatch_template = document.createElement("template");
-		swatch_template.innerHTML = '<div class="swatch" tabindex=0></div>';
+		this.swatches_wrapper.innerHTML = "";
+		let current_collection = this.make_collection(__("SWATCHES"));
+
 		this.swatches.forEach((color) => {
-			let swatch = swatch_template.content.firstElementChild.cloneNode(true);
-			this.swatches_wrapper.appendChild(swatch);
+			if (typeof color === "string" && color.startsWith("divider")) {
+				const text = color.split(":").slice(1).join(":") || "";
+				current_collection = this.make_collection(text);
+				return;
+			}
+
+			const swatch = this.make_swatch(color);
+			current_collection.appendChild(swatch);
+
 			const set_values = () => {
 				this.set_color(color);
 				this.set_selector_position();
 				this.update_color_map();
+				this.highlight_selected_swatch();
 			};
 			swatch.addEventListener("click", () => {
 				set_values();
@@ -71,8 +89,32 @@ class Picker {
 					set_values();
 				}
 			};
-			swatch.style.backgroundColor = color;
 		});
+
+		this.highlight_selected_swatch();
+	}
+
+	make_swatch(color) {
+		const swatch = document.createElement("div");
+		swatch.classList.add("swatch");
+		swatch.tabIndex = 0;
+		swatch.dataset.color = color?.toUpperCase();
+		swatch.style.backgroundColor = color;
+		swatch.style.color = color;
+		return swatch;
+	}
+
+	make_collection(title) {
+		const collection = document.createElement("div");
+		collection.classList.add("swatches");
+		if (title) {
+			const title_element = document.createElement("div");
+			title_element.classList.add("section-title");
+			title_element.innerText = title;
+			this.swatches_wrapper.appendChild(title_element);
+		}
+		this.swatches_wrapper.appendChild(collection);
+		return collection;
 	}
 
 	set_selector_position(silent) {
@@ -200,6 +242,20 @@ class Picker {
 
 	get_color() {
 		return this.color || "#ffffff";
+	}
+
+	highlight_selected_swatch() {
+		const prev = this.swatches_wrapper?.querySelector(".swatch.selected");
+		if (prev) {
+			prev.classList.remove("selected");
+		}
+
+		const selected = this.swatches_wrapper?.querySelector(
+			`.swatch[data-color="${this.color?.toUpperCase()}"]`
+		);
+		if (selected) {
+			selected.classList.add("selected");
+		}
 	}
 }
 

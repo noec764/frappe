@@ -133,9 +133,10 @@ class CommunicationEmailMixin:
 		return get_formatted_email(self.mail_sender_fullname(), mail=self.mail_sender())
 
 	def get_content(self, print_format=None):
+		content = self.content or ""
 		if print_format:
-			return self.content + self.get_attach_link(print_format)
-		return self.content
+			return content + self.get_attach_link(print_format)
+		return content
 
 	def get_attach_link(self, print_format):
 		"""Returns public link for the attachment via `templates/emails/print_link.html`."""

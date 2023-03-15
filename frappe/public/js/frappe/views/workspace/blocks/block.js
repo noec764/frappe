@@ -40,7 +40,7 @@ export default class Block {
 	}
 
 	resizer() {
-		this.wrapper.className = this.wrapper.className + " resizable";
+		this.wrapper.classList.add("resizable");
 		var resizer = document.createElement("div");
 		resizer.className = "resizer";
 		this.wrapper.parentElement.appendChild(resizer);
@@ -97,6 +97,7 @@ export default class Block {
 		const dialog_class = get_dialog_constructor(widget_type);
 		let block_name = block + "_name";
 		this.dialog = new dialog_class({
+			for_workspace: true,
 			label: this.label,
 			type: widget_type,
 			primary_action: (widget) => {

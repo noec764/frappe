@@ -1379,7 +1379,7 @@ Object.assign(frappe.utils, {
 	},
 
 	font_icon(icon_name, size = "sm", icon_class = "", icon_style = "") {
-		return `<i class="${icon_name} ${icon_class}" style="font-size: var(--text-${size}); ${icon_style}"></i>`;
+		return `<span class="${icon_name} ${icon_class}" style="font-size: var(--text-${size}); ${icon_style}"></span>`;
 	},
 
 	flag(country_code) {

@@ -95,13 +95,7 @@ def main(
 
 		if doctype:
 			ret = run_tests_for_doctype(
-				doctype,
-				verbose,
-				tests,
-				force,
-				profile,
-				failfast=failfast,
-				junit_xml_output=junit_xml_output,
+				doctype, verbose, tests, force, profile, failfast=failfast, junit_xml_output=junit_xml_output
 			)
 		elif module_def:
 			doctypes = frappe.db.get_list(
@@ -122,12 +116,7 @@ def main(
 			)
 		else:
 			ret = run_all_tests(
-				app,
-				verbose,
-				profile,
-				ui_tests,
-				failfast=failfast,
-				junit_xml_output=junit_xml_output,
+				app, verbose, profile, ui_tests, failfast=failfast, junit_xml_output=junit_xml_output
 			)
 
 		if not scheduler_disabled_by_user:
@@ -171,12 +160,7 @@ class TimeLoggingTestResult(unittest.TextTestResult):
 
 
 def run_all_tests(
-	app=None,
-	verbose=False,
-	profile=False,
-	ui_tests=False,
-	failfast=False,
-	junit_xml_output=False,
+	app=None, verbose=False, profile=False, ui_tests=False, failfast=False, junit_xml_output=False
 ):
 	import os
 
@@ -262,13 +246,7 @@ def run_tests_for_doctype(
 
 
 def run_tests_for_module(
-	module,
-	verbose=False,
-	tests=(),
-	profile=False,
-	failfast=False,
-	junit_xml_output=False,
-	case=None,
+	module, verbose=False, tests=(), profile=False, failfast=False, junit_xml_output=False, case=None
 ):
 	module = importlib.import_module(module)
 	if hasattr(module, "test_dependencies"):
@@ -288,13 +266,7 @@ def run_tests_for_module(
 
 
 def _run_unittest(
-	modules,
-	verbose=False,
-	tests=(),
-	profile=False,
-	failfast=False,
-	junit_xml_output=False,
-	case=None,
+	modules, verbose=False, tests=(), profile=False, failfast=False, junit_xml_output=False, case=None
 ):
 	frappe.db.begin()
 

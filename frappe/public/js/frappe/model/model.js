@@ -854,6 +854,89 @@ $.extend(frappe.model, {
 			frm.set_df_property("default_view", "options", default_views);
 		});
 	},
+
+	async get_views_of_doctype(doctype) {
+		await frappe.model.with_doctype(doctype);
+		const meta = frappe.get_meta(doctype);
+
+		if (meta.issingle || meta.istable) {
+			return [];
+		}
+
+		const views = ["List", "Report", "Dashboard", "Kanban"];
+		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
+			views.push("Calendar", "Gantt");
+		}
+		if (meta.is_tree) {
+			views.push("Tree");
+		}
+		if (meta.image_field) {
+			views.push("Image");
+		}
+		if (doctype === "Communication" && frappe.boot.email_accounts.length) {
+			views.push("Inbox");
+		}
+		if (
+			(meta.fields.find((i) => i.fieldname === "latitude") &&
+				meta.fields.find((i) => i.fieldname === "longitude")) ||
+			meta.fields.find((i) => i.fieldname === "location" && i.fieldtype == "Geolocation")
+		) {
+			views.push("Map");
+		}
+		return views;
+	},
+
+	/**
+	 * @returns {Promise<Record<string, string>>}
+	 * Returns a map of doctype icons
+	 * Icons are stored in localStorage to avoid multiple requests to the server.
+	 * The result is returned immediately if the icons are already in localStorage,
+	 * but the server is still queried to update the icons in the background (once).
+	 */
+	async get_doctype_icons() {
+		const KEY = "frappe.model.get_doctype_icons";
+		if (!frappe.model.doctype_icons) {
+			// First call, try to get icons from localStorage
+			frappe.model.doctype_icons = _get_in_cache();
+			const do_later =
+				window.requestIdleCallback || window.requestAnimationFrame || window.setTimeout;
+			do_later(_fetch_icon_updates);
+		}
+		return frappe.model.doctype_icons;
+
+		async function _fetch_icon_updates() {
+			const last_updated = frappe.model.doctype_icons?.__last_updated;
+			const res = await frappe.call({
+				method: "frappe.desk.form.load.get_doctype_icons",
+				args: { last_updated },
+			});
+			if (res.message && Object.keys(res.message).length > 0) {
+				if (typeof frappe.model.doctype_icons !== "object") {
+					frappe.model.doctype_icons = {};
+				}
+				// Perform a partial update
+				for (const [doctype, icon] of Object.entries(res.message)) {
+					// NOTE: __last_updated is a special key that is also stored in localStorage
+					frappe.model.doctype_icons[doctype] = icon;
+				}
+				_set_in_cache(frappe.model.doctype_icons);
+			}
+		}
+
+		/** @param {Record<string, string>} doctype_icons */
+		function _set_in_cache(doctype_icons) {
+			localStorage.setItem(KEY, JSON.stringify(doctype_icons));
+		}
+
+		/** @returns {Record<string, string>} */
+		function _get_in_cache() {
+			try {
+				return JSON.parse(localStorage.getItem(KEY) || "{}") || {};
+			} catch (e) {
+				return {};
+			}
+		}
+	},
 });
 
 // legacy

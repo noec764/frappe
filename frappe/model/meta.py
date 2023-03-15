@@ -848,3 +848,33 @@ def _update_field_order_based_on_insert_after(field_order, insert_after_map):
 		# insert_after is an invalid fieldname, add these fields to the end
 		for fields in insert_after_map.values():
 			field_order.extend(fields)
+
+
+def get_views_of_doctype(doctype):
+	"""List, Report, Dashboard, Kanban, Calendar, Gantt, Tree, Image, Inbox, Map"""
+
+	meta = frappe.get_meta(doctype)
+
+	if meta.issingle or meta.istable:
+		return []
+
+	views = ["List", "Report", "Dashboard", "Kanban"]
+
+	if meta.is_calendar_and_gantt and frappe.views.calendar[doctype]:
+		views.extend(["Calendar", "Gantt"])
+
+	if meta.is_tree:
+		views.append("Tree")
+
+	if meta.image_field:
+		views.append("Image")
+
+	if doctype == "Communication" and frappe.boot.email_accounts.length:
+		views.append("Inbox")
+
+	if meta.has_field("latitude") and meta.has_field("longitude"):
+		views.append("Map")
+	elif meta.has_field("location") and meta.get_field("location").fieldtype == "Geolocation":
+		views.append("Map")
+
+	return views

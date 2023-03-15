@@ -25,8 +25,16 @@ export default class Widget {
 		this.in_customize_mode = true;
 		this.action_area.empty();
 
-		options.allow_sorting &&
-			frappe.utils.add_custom_button(frappe.utils.icon("drag", "xs"), null, "drag-handle");
+		if (options.allow_sorting) {
+			frappe.utils.add_custom_button(
+				frappe.utils.icon("drag", "xs"),
+				null,
+				"drag-handle",
+				__("Drag"),
+				null,
+				this.action_area
+			);
+		}
 
 		if (options.allow_hiding) {
 			if (this.hidden) {
@@ -124,6 +132,7 @@ export default class Widget {
 		const dialog_class = get_dialog_constructor(this.widget_type);
 
 		this.edit_dialog = new dialog_class({
+			for_workspace: this.options?.for_workspace,
 			label: this.label,
 			type: this.widget_type,
 			values: this.get_config(),

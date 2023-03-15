@@ -122,24 +122,74 @@ def sync_customizations_for_doctype(data: dict, folder: str):
 	doctype = data["doctype"]
 	update_schema = False
 
+	def make_version(doctype, docname, new_data):
+		try:
+			# Create a Version
+			version = frappe.new_doc("Version")
+			version.ref_doctype = doctype
+			version.docname = docname
+			old = frappe.get_doc(doctype, docname)
+			new = frappe.get_doc(
+				{
+					**new_data,
+					"doctype": doctype,
+				}
+			)
+			version.update_version_info(old, new)
+			version.insert()
+		except Exception:
+			pass
+
 	def sync(key, custom_doctype, doctype_fieldname):
 		doctypes = list(set(map(lambda row: row.get(doctype_fieldname), data[key])))
 
 		# sync single doctype exculding the child doctype
 		def sync_single_doctype(doc_type):
+			print(f" └─ Updating {custom_doctype}s")
+
 			def _insert(data):
 				if data.get(doctype_fieldname) == doc_type:
 					data["doctype"] = custom_doctype
 					doc = frappe.get_doc(data)
 					doc.db_insert()
 
-			if custom_doctype != "Custom Field":
+			def _insert_overwrite(data):
+				if data.get(doctype_fieldname) != doc_type:
+					return
+				data["doctype"] = custom_doctype
+
+				docname = data.get("name")
+				if not docname:
+					print(f"    └─ Warning: {custom_doctype} name not found: {data}, skipping")
+					return
+
+				if cint(data.get("is_system_generated")) != 1:
+					print(f"    └─ Warning: {custom_doctype} {docname!r} is not marked as system generated")
+
+				# Just in case the doc is not system generated
+				if frappe.db.exists(custom_doctype, docname):
+					print(f"    └─ Warning: Overwriting custom {custom_doctype} {docname!r}")
+					make_version(custom_doctype, docname, data)
+					frappe.db.delete(custom_doctype, docname)
+
+				_insert(d)
+
+			if custom_doctype == "Property Setter":
+				# Delete all standard property setters
+				frappe.db.delete("Property Setter", {doctype_fieldname: doc_type, "is_system_generated": 1})
+
+				# Insert all new/updated standard property setters
+				for d in data[key]:
+					_insert_overwrite(d)
+
+			elif custom_doctype != "Custom Field":
+				# Delete all DocPerms
 				frappe.db.delete(custom_doctype, {doctype_fieldname: doc_type})
 
 				for d in data[key]:
 					_insert(d)
 
-			else:
+			elif custom_doctype == "Custom Field":
 				for d in data[key]:
 					field = frappe.db.get_value("Custom Field", {"dt": doc_type, "fieldname": d["fieldname"]})
 					if not field:
@@ -156,6 +206,8 @@ def sync_customizations_for_doctype(data: dict, folder: str):
 			if doc_type == doctype or not os.path.exists(os.path.join(folder, scrub(doc_type) + ".json")):
 				sync_single_doctype(doc_type)
 
+	print(f"Updating customizations for {doctype}")
+
 	if data["custom_fields"]:
 		sync("custom_fields", "Custom Field", "dt")
 		update_schema = True
@@ -166,7 +218,6 @@ def sync_customizations_for_doctype(data: dict, folder: str):
 	if data.get("custom_perms"):
 		sync("custom_perms", "Custom DocPerm", "parent")
 
-	print(f"Updating customizations for {doctype}")
 	validate_fields_for_doctype(doctype)
 
 	if update_schema and not frappe.db.get_value("DocType", doctype, "issingle"):

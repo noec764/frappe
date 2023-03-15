@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.25.0"
+__version__ = "3.26.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -613,6 +613,7 @@ def sendmail(
 	header=None,
 	print_letterhead=False,
 	with_container=False,
+	email_read_tracker_url=None,
 ):
 	"""Send email using user's default **Email Account** or global default **Email Account**.
 
@@ -694,6 +695,7 @@ def sendmail(
 		header=header,
 		print_letterhead=print_letterhead,
 		with_container=with_container,
+		email_read_tracker_url=email_read_tracker_url,
 	)
 
 	# build email queue and send the email if send_now is True.

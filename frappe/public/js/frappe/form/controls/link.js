@@ -85,8 +85,8 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	}
 
 	async setup_icon() {
-		// do not setup icon for child table
-		if (this.in_grid()) {
+		// do not setup icon for child table or read-only
+		if (this.in_grid() || this.disp_status !== "Write") {
 			return this.clear_icon(); // clear icon
 		}
 
@@ -103,41 +103,30 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		}
 		this._prev_doctype = doctype;
 
-		const icon = await this.get_icon_for_doctype_memoized(doctype);
+		const icon = await this.get_icon_for_doctype(doctype);
 		if (icon) {
 			return this.set_icon(icon, doctype);
 		}
 		return this.clear_icon();
-	}
-	async get_icon_for_doctype_memoized(doctype) {
-		// cache in a static property to avoid multiple network requests
-		const Super = ControlLink;
-		if (!Super.doctype_icons) {
-			Super.doctype_icons = {};
-		}
-		if (!(doctype in Super.doctype_icons)) {
-			Super.doctype_icons[doctype] = this.get_icon_for_doctype(doctype);
-		}
-		return Super.doctype_icons[doctype];
 	}
 	async get_icon_for_doctype(doctype) {
 		try {
 			if (!doctype) {
 				return null;
 			}
-			if (frappe.get_meta(doctype)?.icon) {
-				return frappe.get_meta(doctype).icon;
+			const meta = frappe.get_meta(doctype);
+			if (meta?.icon) {
+				return meta.icon;
 			}
-			const m = await frappe.db.get_value("DocType", doctype, "icon");
-			if (m?.message?.icon) {
-				return m.message.icon;
-			}
+			const all_icons = await frappe.model.get_doctype_icons();
+			return all_icons?.[doctype];
 		} catch (e) {
 			console.error(e);
 		}
 	}
 	clear_icon() {
 		this.set_icon();
+		this._prev_doctype = null;
 	}
 	set_icon(icon_name = "", doctype = null) {
 		const prev = this.$wrapper.find(".link-icon");

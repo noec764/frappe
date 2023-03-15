@@ -49,9 +49,8 @@ def get_monthly_goal_graph_data(
 	goal_doctype_link: str,
 	goal_field: str,
 	date_field: str,
-	filter_str: str = None,
 	aggregation: str = "sum",
-	filters: dict | None = None,
+	filters: str | dict | None = None,
 ) -> dict:
 	"""
 	Get month-wise graph data for a doctype based on aggregation values of a field in the goal doctype
@@ -71,12 +70,6 @@ def get_monthly_goal_graph_data(
 
 	:return: dict of graph data
 	"""
-	if isinstance(filter_str, str):
-		frappe.throw(
-			"String filters have been deprecated. Pass Dict filters instead.",
-			exc=DeprecationWarning,
-		)  # nosemgrep
-
 	doc = frappe.get_doc(doctype, docname)
 	doc.check_permission()
 

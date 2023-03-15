@@ -91,7 +91,7 @@ frappe.ui.form.ControlIcon = class ControlIcon extends frappe.ui.form.ControlDat
 	set_formatted_input(value) {
 		super.set_formatted_input(value);
 		this.$input.val(value);
-		this.selected_icon.find("use").attr("href", "#icon-" + (value || "folder-normal"));
+		this.selected_icon.html(frappe.utils.icon(value || "folder-normal", "md"));
 		this.selected_icon.toggleClass("no-value", !value);
 	}
 
