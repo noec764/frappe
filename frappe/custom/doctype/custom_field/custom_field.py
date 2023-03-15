@@ -50,10 +50,6 @@ class CustomField(Document):
 	def before_insert(self):
 		self.set_fieldname()
 
-		# Add a prefix to avoid collisions with standard fields
-		if not self.is_system_generated:
-			self.fieldname = f"custom_{self.fieldname}"
-
 	def validate(self):
 		# these imports have been added to avoid cyclical import, should fix in future
 		from frappe.core.doctype.doctype.doctype import check_fieldname_conflicts
