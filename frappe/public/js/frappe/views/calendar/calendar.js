@@ -297,6 +297,7 @@ frappe.views.Calendar = class frappeCalendar {
 
 	setup_options(defaults) {
 		const me = this;
+		/** @type {typeof import("@fullcalendar/common/main").BASE_OPTION_DEFAULTS} */
 		this.cal_options = {
 			locale: frappe.get_cookie("preferred_language") || frappe.boot.lang || "en",
 			plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin],
@@ -401,13 +402,8 @@ frappe.views.Calendar = class frappeCalendar {
 			},
 			slotMinTime: defaults.slots_start_time || "06:00:00",
 			slotMaxTime: defaults.slots_end_time || "22:00:00",
+			firstDay: defaults.first_day ?? frappe.datetime.get_first_day_of_the_week_index(),
 		};
-
-		if (defaults.first_day) {
-			Object.assign(this.cal_options, {
-				firstDay: defaults.first_day,
-			});
-		}
 
 		if (this.options) {
 			$.extend(this.cal_options, this.options);
