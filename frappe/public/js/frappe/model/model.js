@@ -752,13 +752,16 @@ $.extend(frappe.model, {
 	},
 
 	get_all_docs: function (doc) {
-		var all = [doc];
-		for (var key in doc) {
-			if ($.isArray(doc[key])) {
-				var children = doc[key];
-				for (var i = 0, l = children.length; i < l; i++) {
-					all.push(children[i]);
-				}
+		const all = [doc];
+		const valid_keys = frappe.meta.get_table_fields(doc.doctype).map((df) => df.fieldname);
+		for (const table_name of valid_keys) {
+			const children = doc[table_name];
+			if (!Array.isArray(children)) {
+				console.error(`Property '${table_name}' should be an array:`, doc);
+				continue;
+			}
+			for (const child of children) {
+				all.push(child);
 			}
 		}
 		return all;
