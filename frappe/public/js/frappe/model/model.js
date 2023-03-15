@@ -752,13 +752,16 @@ $.extend(frappe.model, {
 	},
 
 	get_all_docs: function (doc) {
-		var all = [doc];
-		for (var key in doc) {
-			if ($.isArray(doc[key])) {
-				var children = doc[key];
-				for (var i = 0, l = children.length; i < l; i++) {
-					all.push(children[i]);
-				}
+		const all = [doc];
+		const valid_keys = frappe.meta.get_table_fields(doc.doctype).map((df) => df.fieldname);
+		for (const table_name of valid_keys) {
+			const children = doc[table_name];
+			if (!Array.isArray(children)) {
+				console.error(`Property '${table_name}' should be an array:`, doc);
+				continue;
+			}
+			for (const child of children) {
+				all.push(child);
 			}
 		}
 		return all;
@@ -811,6 +814,37 @@ $.extend(frappe.model, {
 
 			frm.set_df_property("default_view", "options", default_views);
 		});
+	},
+
+	async get_views_of_doctype(doctype) {
+		await frappe.model.with_doctype(doctype);
+		const meta = frappe.get_meta(doctype);
+
+		if (meta.issingle || meta.istable) {
+			return [];
+		}
+
+		const views = ["List", "Report", "Dashboard", "Kanban"];
+		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
+			views.push("Calendar", "Gantt");
+		}
+		if (meta.is_tree) {
+			views.push("Tree");
+		}
+		if (meta.image_field) {
+			views.push("Image");
+		}
+		if (doctype === "Communication" && frappe.boot.email_accounts.length) {
+			views.push("Inbox");
+		}
+		if (
+			(meta.fields.find((i) => i.fieldname === "latitude") &&
+				meta.fields.find((i) => i.fieldname === "longitude")) ||
+			meta.fields.find((i) => i.fieldname === "location" && i.fieldtype == "Geolocation")
+		) {
+			views.push("Map");
+		}
+		return views;
 	},
 
 	/**

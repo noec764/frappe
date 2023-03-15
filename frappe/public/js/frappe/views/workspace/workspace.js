@@ -164,7 +164,10 @@ frappe.views.Workspace = class Workspace {
 			sidebar_section.addClass("hidden");
 		}
 
-		if (sidebar_section.find("> [item-is-hidden='0']").length == 0) {
+		if (
+			sidebar_section.find("sidebar-item-container").length &&
+			sidebar_section.find("> [item-is-hidden='0']").length == 0
+		) {
 			sidebar_section.addClass("hidden show-in-edit-mode");
 		}
 	}
@@ -197,7 +200,7 @@ frappe.views.Workspace = class Workspace {
 		}
 
 		$item_container.appendTo(container);
-		this.sidebar_items[item.public ? "public" : "private"][item.title] = $item_container;
+		this.sidebar_items[item.public ? "public" : "private"][item.name] = $item_container;
 
 		if ($item_container.parent().hasClass("hidden") && is_current_page) {
 			$item_container.parent().toggleClass("hidden");
@@ -1348,9 +1351,9 @@ frappe.views.Workspace = class Workspace {
 		if (
 			this.sidebar_items &&
 			this.sidebar_items[section] &&
-			!this.sidebar_items[section][item.title]
+			!this.sidebar_items[section][item.name]
 		) {
-			this.sidebar_items[section][item.title] = $sidebar_item;
+			this.sidebar_items[section][item.name] = $sidebar_item;
 		}
 	}
 
@@ -1406,6 +1409,7 @@ frappe.views.Workspace = class Workspace {
 					page_data: this.page_data || [],
 				},
 			},
+			summary_card: this.blocks["summary_card"],
 			spacer: this.blocks["spacer"],
 			HeaderSize: frappe.workspace_block.tunes["header_size"],
 		};
@@ -1510,15 +1514,15 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	create_sidebar_skeleton() {
-		if (this.sidebar.find(".workspace-sidebar-skeleton").length) return;
+		if ($(".workspace-sidebar-skeleton").length) return;
 
-		this.sidebar.prepend(frappe.render_template("workspace_sidebar_loading_skeleton"));
-		this.sidebar.find(".standard-sidebar-section").addClass("hidden");
+		$(frappe.render_template("workspace_sidebar_loading_skeleton")).insertBefore(this.sidebar);
+		this.sidebar.addClass("hidden");
 	}
 
 	remove_sidebar_skeleton() {
-		this.sidebar.find(".standard-sidebar-section").removeClass("hidden");
-		this.sidebar.find(".workspace-sidebar-skeleton").remove();
+		this.sidebar.removeClass("hidden");
+		$(".workspace-sidebar-skeleton").remove();
 	}
 
 	register_awesomebar_shortcut() {

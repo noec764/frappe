@@ -1,0 +1,110 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "hash",
+ "beta": 1,
+ "creation": "2023-03-05 18:59:15.572406",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "type",
+  "label",
+  "column_break_3",
+  "dt",
+  "counter_format",
+  "section_break_6",
+  "filters_code",
+  "style_settings_column",
+  "collapsible",
+  "color",
+  "icon"
+ ],
+ "fields": [
+  {
+   "default": "Count",
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "Section Break\nCount",
+   "reqd": 1
+  },
+  {
+   "description": "Example: Next invoices",
+   "fieldname": "label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Label",
+   "reqd": 1
+  },
+  {
+   "fieldname": "dt",
+   "fieldtype": "Link",
+   "label": "Reference DocType",
+   "options": "DocType"
+  },
+  {
+   "description": "Example: [[\"modified\", \">=\", last_month]] + parent_filters",
+   "fieldname": "filters_code",
+   "fieldtype": "Code",
+   "in_list_view": 1,
+   "label": "Filters",
+   "options": "Python"
+  },
+  {
+   "default": "#",
+   "depends_on": "eval:doc.type==\"Counter\"",
+   "description": "A string containing a \"#\" character which will be replaced with the number of documents found. Example: \"# unpaid invoices\". Leave empty to not include a counter. ",
+   "fieldname": "counter_format",
+   "fieldtype": "Data",
+   "label": "Format",
+   "read_only_depends_on": "eval:doc.type==\"Section Break\""
+  },
+  {
+   "depends_on": "eval:doc.type!==\"Section Break\"",
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color"
+  },
+  {
+   "depends_on": "eval:doc.type!==\"Section Break\" || (!doc.collapsible)",
+   "fieldname": "icon",
+   "fieldtype": "Icon",
+   "label": "Icon"
+  },
+  {
+   "fieldname": "column_break_3",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_6",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "style_settings_column",
+   "fieldtype": "Column Break",
+   "label": "Style Settings"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:doc.type===\"Section Break\"",
+   "fieldname": "collapsible",
+   "fieldtype": "Check",
+   "label": "Collapsible"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2023-03-09 15:52:33.935830",
+ "modified_by": "Administrator",
+ "module": "Desk",
+ "name": "Summary Card Row",
+ "naming_rule": "Random",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

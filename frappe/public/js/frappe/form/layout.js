@@ -438,6 +438,11 @@ frappe.ui.form.Layout = class Layout {
 
 				if (df.collapsible_depends_on) {
 					collapse = !this.evaluate_depends_on_value(df.collapsible_depends_on);
+				} else {
+					const stored = localStorage.getItem(section.get_section_localstorage_key());
+					if (typeof stored === "string" && stored.length > 0) {
+						collapse = stored === "1";
+					}
 				}
 
 				if (collapse && section.has_missing_mandatory()) {

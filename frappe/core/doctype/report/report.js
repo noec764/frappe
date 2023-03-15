@@ -44,6 +44,14 @@ frappe.ui.form.on("Report", {
 				doc.disabled ? "uil uil-check" : "uil uil-times"
 			);
 		}
+
+		frm.set_query("ref_doctype", () => {
+			return {
+				filters: {
+					istable: 0,
+				},
+			};
+		});
 	},
 
 	ref_doctype: function (frm) {
