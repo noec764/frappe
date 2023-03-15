@@ -21,6 +21,8 @@ IMAGE_TAG_PATTERN = re.compile(r"""<img[^>]*src\s?=\s?['"]([^'"]*)['"]""")
 CLEANUP_PATTERN_1 = re.compile(r'[~!@#$%^&*+()<>,."\'\?]')
 CLEANUP_PATTERN_2 = re.compile("[:/]")
 CLEANUP_PATTERN_3 = re.compile(r"(-)\1+")
+CLEANUP_PATTERN_BLANKS = re.compile(r"\s+")
+LETTER_OR_IDEOGRAM_PATTERN = re.compile(r"[^\w\s-]", re.UNICODE)
 
 
 def delete_page_cache(path):
@@ -180,26 +182,39 @@ def is_signup_disabled():
 	return frappe.db.get_single_value("Website Settings", "disable_signup", True)
 
 
-def cleanup_page_name(title):
+def cleanup_page_name(title: str):
 	"""make page name from title"""
 	if not title:
 		return ""
 
+	import unicodedata
+
 	name = title.lower()
+	name = unicodedata.normalize("NFC", name)
 	name = CLEANUP_PATTERN_1.sub("", name)
 	name = CLEANUP_PATTERN_2.sub("-", name)
 
-	special_characters = dict(
-		zip(
-			"àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóœøōõṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż",
-			"aaaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnooooooooprrsssssttuuuuuuuuuwxyyzzz",
-		)
+	# TODO: Is it still relevant to remove "special characters" in WebsiteGenerator routes?
+	special_characters = str.maketrans(
+		"àáâäãåāăąçćčđďèéêëēėęěğǵḧîïíīįìłḿñńǹňôöòóøōõṕŕřśšşșťțûüùúūǘůűųẃẍÿýžźż",
+		"aaaaaaaaacccddeeeeeeeegghiiiiiilmnnnnoooooooprrssssttuuuuuuuuuwxyyzzz",
 	)
+	# Also handle œ -> oe, ß -> ss, etc.
+	special_characters.update(
+		{
+			ord("ß"): "ss",
+			ord("œ"): "oe",
+			ord("æ"): "ae",
+		}
+	)
+	name = name.translate(special_characters)
 
-	for key in special_characters.keys():
-		name = re.sub(key, special_characters.get(key), name)
+	# Remove non-letter and non-ideogram characters (e.g. remove emojis)
+	name = LETTER_OR_IDEOGRAM_PATTERN.sub("", name)
 
-	name = "-".join(name.split())
+	# Replace blanks with hyphens
+	name = CLEANUP_PATTERN_BLANKS.sub("-", name)
+
 	# replace repeating hyphens
 	name = CLEANUP_PATTERN_3.sub(r"\1", name)
 	return name[:140]

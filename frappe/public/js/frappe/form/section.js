@@ -10,14 +10,6 @@ export default class Section {
 
 		this.make();
 
-		if (
-			this.df.label &&
-			this.df.collapsible &&
-			localStorage.getItem(df.css_class + "-closed")
-		) {
-			this.collapse();
-		}
-
 		this.row = {
 			wrapper: this.wrapper,
 		};
@@ -119,8 +111,9 @@ export default class Section {
 		});
 
 		// save state for next reload ('' is falsy)
-		if (this.df.css_class)
-			localStorage.setItem(this.df.css_class + "-closed", hide ? "1" : "");
+		if (this.df) {
+			localStorage.setItem(this.get_section_localstorage_key(), hide ? "1" : "0");
+		}
 	}
 
 	set_icon(hide) {
@@ -155,5 +148,9 @@ export default class Section {
 	on_section_toggle(show) {
 		this.wrapper.toggleClass("hide-control", !show);
 		// this.on_section_toggle && this.on_section_toggle(show);
+	}
+
+	get_section_localstorage_key() {
+		return `collapsed:${this.df.parent || "*"}.${this.df.fieldname || this.df.label}`;
 	}
 }
