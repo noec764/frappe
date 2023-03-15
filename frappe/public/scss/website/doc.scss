@@ -12,14 +12,6 @@ $navbar-height-lg: 4.5rem !default;
 	}
 }
 
-.sidebar-column {
-	display: none;
-
-	@include media-breakpoint-up(lg) {
-		display: block;
-	}
-}
-
 .doc-container {
 	max-width: 1280px;
 	padding-left: 1.5rem;

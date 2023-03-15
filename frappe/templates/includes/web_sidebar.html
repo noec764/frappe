@@ -26,7 +26,7 @@
 
 {% macro render_sidebar_items(items) %}
 {%- if items | len > 0 -%}
-<ul class="list-unstyled">
+<ul>
 	{% for item in items -%}
 	{{ render_sidebar_item(item) }}
 	{%- endfor %}
@@ -36,7 +36,7 @@
 
 {% macro my_account() %}
 {% if frappe.user != 'Guest' %}
-<ul class="list-unstyled">
+<ul>
 	<li class="sidebar-item">
 		<a href="/me">{{ _("My Account") }}</a>
 	</li>
@@ -52,7 +52,7 @@
 	{% endif %}
 	<div class="sidebar-items">
 		{{ render_sidebar_items(sidebar_items) }}
-		{{ my_account() }}
+		<!-- {{ my_account() }} -->
 	</div>
 </div>
 
@@ -71,12 +71,5 @@
 				$(this).removeClass(active_class).addClass(non_active_class);
 			}
 		});
-
-		// scroll the active sidebar item into view
-		let active_sidebar_item = $('.sidebar-item a.active');
-		if (active_sidebar_item.length > 0) {
-			active_sidebar_item.get(0)
-				.scrollIntoView({behavior: "auto", block: "center", inline: "nearest"});
-		}
 	});
 </script>
