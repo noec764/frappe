@@ -1,11 +1,14 @@
 <template>
 	<form class="QAMGlobalSearchResults" role="search" onsubmit="return false;">
-		<div ref="wrapper"></div>
-		<input :value="value" type="search" style="display: none;" disabled ref="input" />
+		<div ref="wrapperElement"></div>
+		<input :value="value" type="search" style="display: none;" disabled ref="inputElement" />
 	</form>
 </template>
 
-<script>
+<script setup>
+import { bus } from './bus'
+import { ref, onMounted, watch } from 'vue'
+
 class StubSearchDialog extends frappe.search.SearchDialog {
 	constructor(opts = {}) {
 		if (!(opts.inputElement instanceof HTMLElement)) {
@@ -94,32 +97,32 @@ class StubSearchDialog extends frappe.search.SearchDialog {
 	}
 }
 
+const props = defineProps({
+	value: { type: String, default: '' },
+})
 
-import { bus } from './bus'
+const searchThing = ref(null)
+const inputElement = ref(null)
+const wrapperElement = ref(null)
 
-export default {
-	name: 'QuickAccessMenuSearchBarAlt',
+onMounted(() => {
+	const callback = () => bus.$emit('quick-access-selected', { item: null })
+	const stub = new StubSearchDialog({
+		inputElement: inputElement.value,
+		wrapperElement: wrapperElement.value,
+		callback,
+	})
 
-	props: {
-		value: { type: String, default: '' },
-	},
+	searchThing.value = stub
+	stub.init_search(props.value, 'global_search');
 
-	watch: {
-		value() {
-			this.searchThing.get_results(this.value);
-		},
-	},
+	bus.$on('quick-access-shown', () => searchThing.value.get_results(props.value));
+})
 
-	mounted() {
-		const inputElement = this.$refs.input
-		const wrapperElement = this.$refs.wrapper
-		const callback = () => bus.$emit('quick-access-selected', { item: null })
-		this.searchThing = new StubSearchDialog({ inputElement, wrapperElement, callback })
-		this.searchThing.init_search(this.value, 'global_search');
-
-		bus.$on('quick-access-shown', () => this.searchThing.get_results(this.value));
-	},
-}
+// Watchers
+watch(() => props.value, () => {
+	searchThing.value.get_results(props.value);
+})
 </script>
 
 <style>

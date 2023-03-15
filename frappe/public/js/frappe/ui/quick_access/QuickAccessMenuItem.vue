@@ -22,60 +22,53 @@
 	</li>
 </template>
 
-<script>
+<script setup>
 import { bus } from './bus'
 
-export default {
-	name: 'QuickAccessMenuItem',
-
-	props: {
-		item: {
-			type: Object,
-			required: true,
-			validator: (x) => {
-				if (!x.title) {
-					console.warn('QuickAccessMenuItem', 'item.title is required.', 'Got item =', x)
-					return false
-				}
-				return true
-			},
+const props = defineProps({
+	item: {
+		type: Object,
+		required: true,
+		validator: (x) => {
+			if (!x.title) {
+				console.warn('QuickAccessMenuItem', 'item.title is required.', 'Got item =', x)
+				return false
+			}
+			return true
 		},
 	},
+})
 
-	computed: {
-		label() {
-			if (typeof this.item.title === 'string') {
-				return this.item.title
-			}
-			if (typeof this.item.name === 'string') {
-				return this.item.name
-			}
-		},
-		href() {
-			if (Array.isArray(this.item.route)) {
-				return frappe.router.make_url(this.item.route)
-			}
-			if (typeof this.item.route === 'string') {
-				return this.item.route
-			}
-			if (typeof this.item.href === 'string') {
-				return this.item.href
-			}
-			return undefined
-		},
-	},
-
-	methods: {
-		onSelect() {
-			bus.$emit('quick-access-selected', {
-				item: this.item,
-				allow: {
-					action: true,
-					href: this.item.href ? false : true, // don't repeat the link navigation action
-				},
-			})
-		},
+const label = computed(() => {
+	if (typeof props.item.title === 'string') {
+		return props.item.title
 	}
+	if (typeof props.item.name === 'string') {
+		return props.item.name
+	}
+})
+
+const href = computed(() => {
+	if (Array.isArray(props.item.route)) {
+		return frappe.router.make_url(props.item.route)
+	}
+	if (typeof props.item.route === 'string') {
+		return props.item.route
+	}
+	if (typeof props.item.href === 'string') {
+		return props.item.href
+	}
+	return undefined
+})
+
+const onSelect = () => {
+	bus.$emit('quick-access-selected', {
+		item: props.item,
+		allow: {
+			action: true,
+			href: props.item.href ? false : true, // don't repeat the link navigation action
+		},
+	})
 }
 </script>
 
