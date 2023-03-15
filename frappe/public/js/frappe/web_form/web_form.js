@@ -178,7 +178,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 				__("Discard?"),
 				__("Are you sure you want to discard the changes?"),
 				() => (window.location.href = path),
-				__("Discard")
+				__("Discard", null, "Button in web form")
 			);
 		} else {
 			window.location.href = path;
