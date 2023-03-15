@@ -1789,29 +1789,29 @@ def get_link_to_report(
 
 
 def get_absolute_url(doctype: str, name: str) -> str:
-	return f"/app/{quoted(slug(doctype))}/{quoted(name)}"
+	return f"/app/{squoted(slug(doctype))}/{squoted(name)}"
 
 
 def get_url_to_form(doctype: str, name: str) -> str:
-	return get_url(uri=f"/app/{quoted(slug(doctype))}/{quoted(name)}")
+	return get_url(uri=f"/app/{squoted(slug(doctype))}/{squoted(name)}")
 
 
 def get_url_to_list(doctype: str) -> str:
-	return get_url(uri=f"/app/{quoted(slug(doctype))}")
+	return get_url(uri=f"/app/{squoted(slug(doctype))}")
 
 
 def get_url_to_report(name, report_type: str | None = None, doctype: str | None = None) -> str:
 	if report_type == "Report Builder":
-		return get_url(uri=f"/app/{quoted(slug(doctype))}/view/report/{quoted(name)}")
+		return get_url(uri=f"/app/{squoted(slug(doctype))}/view/report/{squoted(name)}")
 	else:
-		return get_url(uri=f"/app/query-report/{quoted(name)}")
+		return get_url(uri=f"/app/query-report/{squoted(name)}")
 
 
 def get_url_to_report_with_filters(name, filters, report_type=None, doctype=None):
 	if report_type == "Report Builder":
-		return get_url(uri=f"/app/{quoted(slug(doctype))}/view/report?{filters}")
+		return get_url(uri=f"/app/{squoted(slug(doctype))}/view/report?{filters}")
 
-	return get_url(uri=f"/app/query-report/{quoted(name)}?{filters}")
+	return get_url(uri=f"/app/query-report/{squoted(name)}?{filters}")
 
 
 operator_map = {
@@ -2044,6 +2044,11 @@ def expand_relative_urls(html: str) -> str:
 
 def quoted(url: str) -> str:
 	return cstr(quote(encode(cstr(url)), safe=b"~@#$&()*!+=:;,.?/'"))
+
+
+def squoted(url: str) -> str:
+	"""URL-encode a string, also encoding slashes. This is useful for encoding parts of URLs that are not path components."""
+	return cstr(quote(encode(cstr(url)), safe=b"~@#$&()*!+=:;,.?'"))
 
 
 def quote_urls(html: str) -> str:
