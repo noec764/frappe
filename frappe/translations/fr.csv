@@ -7326,7 +7326,7 @@ composing an email,rédiger un email,
 controller method,méthode de contrôleur,
 count,décompte,
 created,créé,
-d,d,Days (Field: Duration)
+d,j,Days (Field: Duration)
 danger,danger,
 darkgray,gris foncé,
 darkgrey,gris foncé,
