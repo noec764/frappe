@@ -21,6 +21,7 @@ DEFAULT_LOGTYPES_RETENTION = {
 	"Communication": 0,
 	"Prepared Report": 30,
 	"Webhook Request Log": 30,
+	"Integration Request": 90,
 	"Reminder": 30,
 }
 
