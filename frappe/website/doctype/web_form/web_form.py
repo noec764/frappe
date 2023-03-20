@@ -18,7 +18,6 @@ from frappe.rate_limiter import rate_limit
 from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import cstr, dict_with_keys, strip_html
 from frappe.utils.jinja import render_template
-from frappe.utils.jinja_globals import bundled_asset_absolute
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
 
@@ -238,7 +237,6 @@ def get_context(context):
 			else:
 				context[key] = _(text)
 
-		context.translated_messages = json.dumps(context.translated_messages)
 		context.boot = get_boot_data()
 		context.boot["link_title_doctypes"] = frappe.boot.get_link_title_doctypes()
 
@@ -257,14 +255,6 @@ def get_context(context):
 	def load_translations(self, context):
 		# Collect translations from the DocType
 		msgs: dict = frappe.translate.get_dict("doctype", self.doc_type)
-
-		js_messages = frappe.translate.get_dict("jsfile", bundled_asset_absolute("web_form.bundle.js"))
-		msgs.update(js_messages)
-
-		# Translate the introduction and footer text
-		# for key in ("introduction_text", "footer_text"):
-		# 	if (text := self.get(key)) and ("{" in text) and ("}" in text):
-		# 		self.get_translations_from_code(str(text), context)
 
 		for df in self.web_form_fields:
 			if df.label:

@@ -101,7 +101,7 @@
 		{%- endif %}
 	{%- endblock %}
 	<script>
-		window.frappe._messages = {{ translated_messages }};
+		{{ js_extend_translations(translated_messages, web_translations) }}
 	</script>
 	<!-- csrf_token -->
 	{%- block body_include %}{{ body_include or "" }}{% endblock -%}

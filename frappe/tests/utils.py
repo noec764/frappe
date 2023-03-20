@@ -108,6 +108,7 @@ def _restore_thread_locals(flags):
 	frappe.local.cache = {}
 	frappe.local.lang = "en"
 	frappe.local.preload_assets = {"style": [], "script": []}
+	frappe.local.web_translations = {}
 
 
 @contextmanager
