@@ -92,7 +92,7 @@ def web_blocks(blocks):
 def get_dom_id(seed=None):
 	from frappe import generate_hash
 
-	return "id-" + generate_hash(12)
+	return "id-" + generate_hash(length=12)
 
 
 def include_script(path: str, preload=True):
