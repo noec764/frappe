@@ -258,12 +258,16 @@ def get_context(context):
 
 		for df in self.web_form_fields:
 			if df.label:
-				# Get translations for label
-				msgs.setdefault(df.label, _(df.label, context=self.doc_type))
+				msgs[df.label] = _(df.label, context=self.doc_type)
 
 			if df.fieldtype in ("Link", "Table"):
 				if df.options:
 					frappe.translate.get_dict("doctype", df.options)
+
+			if df.fieldtype in ("Select"):
+				if df.options:
+					for option in df.options.split("\n"):
+						msgs[option] = _(option, context=self.doc_type)
 
 		for df in self.meta.get_code_fields():
 			value = context.get(df.fieldname) or self.get(df.fieldname)
