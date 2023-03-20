@@ -35,6 +35,13 @@ class BaseTemplatePage(BaseRenderer):
 		self.context._context_dict = self.context
 		self.set_missing_values()
 
+		# Store a reference to frappe.local.web_translations
+		# NOTE: The dict is empty at this point
+		if hasattr(frappe.local, "web_translations"):
+			self.context.web_translations = frappe.local.web_translations
+		else:
+			self.context.web_translations = {}
+
 	def set_base_template_if_missing(self):
 		if not self.context.base_template_path:
 			app_base = frappe.get_hooks("base_template")

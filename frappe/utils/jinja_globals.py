@@ -95,16 +95,22 @@ def get_dom_id(seed=None):
 	return "id-" + generate_hash(12)
 
 
-def include_script(path, preload=True):
+def include_script(path: str, preload=True):
 	"""Get path of bundled script files.
 	If preload is specified the path will be added to preload headers so browsers can prefetch
 	assets."""
+	import frappe
+
 	path = bundled_asset(path)
 
 	if preload:
-		import frappe
-
 		frappe.local.preload_assets["script"].append(path)
+
+	if hasattr(frappe.local, "web_translations") and path.startswith("/assets"):
+		from frappe.translate import get_dict
+
+		messages = get_dict("jsfile", "." + path)
+		frappe.local.web_translations.update(messages)
 
 	return f'<script type="text/javascript" src="{path}"></script>'
 
@@ -135,15 +141,6 @@ def bundled_asset(path, rtl=None):
 
 	return abs_url(path)
 
-def bundled_asset_absolute(path, rtl=None):
-	if ".bundle." in path and not path.startswith("/assets"):
-		import frappe
-		import os
-		path = bundled_asset(path, rtl)
-		path = os.path.join(frappe.local.sites_path, path.lstrip("/"))
-		path = os.path.abspath(path)
-	return path
-
 
 def is_rtl(rtl=None):
 	from frappe import local
@@ -151,3 +148,43 @@ def is_rtl(rtl=None):
 	if rtl is None:
 		return local.lang in ["ar", "he", "fa", "ps"]
 	return rtl
+
+
+def js_extend_translations(*args):
+	"""Use Object.assign to extend the frappe._messages object with the given arguments.
+	Because arguments are a mix of dicts and strings, we cannot use smarter methods like
+	directly assigning a single dict using the equal sign.
+
+	Args:
+	        *args: A list of dicts or strings.
+	        If a dict is passed, it will be JSON encoded.
+	        If a string is passed, it will be used as is, assuming it is already JSON encoded.
+
+	Raises:
+	        TypeError: If any of the arguments is not a dict or a string.
+
+	Returns:
+	        str: A string containing the JavaScript code to extend the frappe._messages object.
+	"""
+
+	import json
+	import re
+
+	items: list[str] = []
+
+	for arg in args:
+		if isinstance(arg, dict):
+			items.append(json.dumps(arg, separators=(",", ":"), ensure_ascii=False))
+		elif isinstance(arg, str):
+			items.append(arg)
+		elif arg:
+			raise TypeError("js_extend_translations() only accepts dict or str")
+
+	out_js = "frappe._messages = Object.assign(frappe._messages || {}, " + ", ".join(items) + ");"
+
+	# Remove closing script tags from the output, to prevent the enclosing script tag from
+	# being closed prematurely when the output is rendered inside a script tag.
+	# https://www.w3.org/TR/2011/WD-html5-20110525/syntax.html#end-tags
+	out_js = re.sub("</script", "<\\/script", out_js, flags=re.IGNORECASE)
+
+	return out_js

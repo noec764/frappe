@@ -25,11 +25,15 @@
 {% block script %}
 	<script>
 		frappe.boot = {{ boot }};
-		frappe._messages = {{ translated_messages }};
+		{{ js_extend_translations(translated_messages) }}
 		frappe.web_form_doc = {{ web_form_doc | json }};
 	</script>
 
 	{{ include_script("web_form.bundle.js") }}
+
+	<script>
+		{{ js_extend_translations(web_translations) }}
+	</script>
 {% endblock script %}
 
 {% block style %}
