@@ -149,8 +149,12 @@ class Document(BaseDocument):
 			self._fix_numeric_types()
 
 		else:
+			get_value_kwargs = {"for_update": self.flags.for_update, "as_dict": True}
+			if not isinstance(self.name, (dict, list)):
+				get_value_kwargs["order_by"] = None
+
 			d = frappe.db.get_value(
-				self.doctype, self.name, "*", as_dict=1, for_update=self.flags.for_update
+				doctype=self.doctype, filters=self.name, fieldname="*", **get_value_kwargs
 			)
 
 			if not d:
@@ -1121,16 +1125,20 @@ class Document(BaseDocument):
 		self.set_title_field()
 
 	def load_doc_before_save(self, *, raise_exception: bool = False):
-		"""Save load document from db before saving"""
-		self._doc_before_save = None
-		if not self.is_new():
-			try:
-				self._doc_before_save = frappe.get_doc(self.doctype, self.name)
-			except frappe.DoesNotExistError:
-				if raise_exception:
-					raise
+		"""load existing document from db before saving"""
 
-				frappe.clear_last_message()
+		self._doc_before_save = None
+
+		if self.is_new():
+			return
+
+		try:
+			self._doc_before_save = frappe.get_doc(self.doctype, self.name, for_update=True)
+		except frappe.DoesNotExistError:
+			if raise_exception:
+				raise
+
+			frappe.clear_last_message()
 
 	def run_post_save_methods(self):
 		"""Run standard methods after `INSERT` or `UPDATE`. Standard Methods are:
