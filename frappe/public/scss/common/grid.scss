@@ -175,9 +175,20 @@
 		display: flex;
 		padding-top: var(--padding-sm);
 		justify-content: center;
-		div {
+
+		.edit-grid-row {
 			margin-left: var(--margin-xs);
-			line-height: 1.7em;
+		}
+	}
+
+	// Hide edit button label when there are many columns
+	.col:has(.btn-open-row) {
+		container-type: inline-size;
+
+		@container (max-width: 48px) {
+			& .edit-grid-row {
+				display: none;
+			}
 		}
 	}
 
@@ -511,7 +522,8 @@
 
 @media (max-width: map-get($grid-breakpoints, "md")) {
 	.form-grid-container {
-		overflow-x: clip;
+		// Scrollable grid on mobile, better than making it unusable.
+		overflow-x: scroll;
 
 		.form-grid {
 			min-width: 738px;

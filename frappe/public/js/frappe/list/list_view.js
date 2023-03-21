@@ -352,6 +352,27 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		$check_all_checkbox.prop("checked", this.$checks.length === this.data.length);
 	}
 
+	setup_selection_buttons() {
+		const actions = []
+
+		const selection_actions = ["Cancel", "Delete"]
+		const labels_to_find = selection_actions.map((txt) => __(txt))
+		for (const menu_item of this.actions_menu_items) {
+			if (labels_to_find.includes(menu_item.label)) {
+				actions.push(menu_item)
+			}
+		}
+
+		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show()
+		for (const action of actions) {
+			const btn_class = "btn-danger"
+			const btn = $(`<button class="btn btn-xs ${btn_class}">`)
+				.text(action.label)
+				.on("click", action.action)
+				.appendTo(container)
+		}
+	}
+
 	setup_freeze_area() {
 		this.$freeze = $(
 			`<div class="freeze flex justify-center align-center text-muted">
@@ -704,6 +725,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 						<input class="level-item list-check-all" type="checkbox"
 							title="${__("Select All")}">
 						<span class="level-item list-header-meta"></span>
+						<div class="list-selection-buttons"></div>
 					</div>
 				</div>
 				<div class="level-right">
@@ -1499,6 +1521,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				.html(__("{0} items selected", [this.$checks.length]));
 			this.$checkbox_actions.show();
 			this.$list_head_subject.hide();
+			this.setup_selection_buttons();
 		}
 		this.update_checkbox();
 		this.toggle_actions_menu_button(this.$checks.length > 0);
