@@ -287,7 +287,7 @@ class TestWebsite(FrappeTestCase):
 
 	def test_colocated_assets(self):
 		content = get_response_content("/_test/_test_folder/_test_page")
-		self.assertIn("""<script>console.log("test data");\n</script>""", content)
+		self.assertIn("""<script>console.log("test data");</script>""", content)
 		self.assertIn("background-color: var(--bg-color);", content)
 
 	def test_raw_assets_are_loaded(self):
