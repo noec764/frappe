@@ -1,6 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # MIT License. See LICENSE
 
+
 import frappe
 import frappe.utils
 from frappe import _
@@ -44,7 +45,6 @@ class Newsletter(WebsiteGenerator):
 			elif row.status == "Error":
 				error = row.count
 			total += row.count
-
 		emails_queued = is_job_queued(
 			job_name=frappe.utils.get_job_name("send_bulk_emails_for", self.doctype, self.name),
 			queue="long",
@@ -167,7 +167,7 @@ class Newsletter(WebsiteGenerator):
 		attachments = self.get_newsletter_attachments()
 		sender = self.send_from or frappe.utils.get_formatted_email(self.owner)
 		args = self.as_dict()
-		args["message"] = self.get_message()
+		args["message"] = self.get_message(medium="email")
 
 		is_auto_commit_set = bool(frappe.db.auto_commit_on_many_writes)
 		frappe.db.auto_commit_on_many_writes = not frappe.flags.in_test
@@ -193,7 +193,7 @@ class Newsletter(WebsiteGenerator):
 
 		frappe.db.auto_commit_on_many_writes = is_auto_commit_set
 
-	def get_message(self) -> str:
+	def get_message(self, medium=None) -> str:
 		message = self.message
 		if self.content_type == "Markdown":
 			message = frappe.utils.md_to_html(self.message_md)
@@ -202,9 +202,9 @@ class Newsletter(WebsiteGenerator):
 
 		html = frappe.render_template(message, {"doc": self.as_dict()})
 
-		return self.add_source(html)
+		return self.add_source(html, medium=medium)
 
-	def add_source(self, html: str) -> str:
+	def add_source(self, html: str, medium="None") -> str:
 		"""Add source to the site links in the newsletter content."""
 		from bs4 import BeautifulSoup
 
@@ -216,8 +216,8 @@ class Newsletter(WebsiteGenerator):
 			if href and not href.startswith("#"):
 				if not frappe.utils.is_site_link(href):
 					continue
-				new_href = frappe.utils.add_source_to_url(
-					href, reference_doctype=self.doctype, reference_docname=self.name
+				new_href = frappe.utils.add_trackers_to_url(
+					href, source="Newsletter", campaign=self.campaign, medium=medium
 				)
 				link["href"] = new_href
 
@@ -283,11 +283,7 @@ def subscribe(email, email_group=None):  # noqa
 
 	# build email and send
 	if email_confirmation_template:
-		args = {
-			"email": email,
-			"confirmation_url": confirm_subscription_url,
-			"email_group": email_group,
-		}
+		args = {"email": email, "confirmation_url": confirm_subscription_url, "email_group": email_group}
 		email_template = frappe.get_doc("Email Template", email_confirmation_template)
 		email_subject = email_template.subject
 		content = frappe.render_template(email_template.response, args)
@@ -371,7 +367,7 @@ def send_scheduled_email():
 
 			# wasn't able to send emails :(
 			frappe.db.set_value("Newsletter", newsletter_name, "email_sent", 0)
-			newsletter.log_error(_("Failed to send newsletter"))
+			newsletter.log_error("Failed to send newsletter")
 
 		if not frappe.flags.in_test:
 			frappe.db.commit()
