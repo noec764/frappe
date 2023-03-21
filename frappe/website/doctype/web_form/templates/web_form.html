@@ -163,14 +163,17 @@
 {% block script %}
 	<script>
 		frappe.boot = {{ boot }};
-		frappe._messages = {{ translated_messages }};
 		frappe.web_form_doc = {{ web_form_doc | json }};
 		frappe.reference_doc = {{ reference_doc | json }};
+
+		{{ js_extend_translations(translated_messages) }}
 	</script>
 
 	{{ include_script("web_form.bundle.js") }}
 
 	<script>
+		{{ js_extend_translations(web_translations) }}
+
 		{% if client_script %}
 			frappe.init_client_script = () => {
 				try {
