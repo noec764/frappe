@@ -353,23 +353,23 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	setup_selection_buttons() {
-		const actions = []
+		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete"]
-		const labels_to_find = selection_actions.map((txt) => __(txt))
+		const selection_actions = ["Cancel", "Delete"];
+		const labels_to_find = selection_actions.map((txt) => __(txt));
 		for (const menu_item of this.actions_menu_items) {
 			if (labels_to_find.includes(menu_item.label)) {
-				actions.push(menu_item)
+				actions.push(menu_item);
 			}
 		}
 
-		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show()
+		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show();
 		for (const action of actions) {
-			const btn_class = "btn-danger"
+			const btn_class = "btn-danger";
 			const btn = $(`<button class="btn btn-xs ${btn_class}">`)
 				.text(action.label)
 				.on("click", action.action)
-				.appendTo(container)
+				.appendTo(container);
 		}
 	}
 
@@ -1417,6 +1417,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	process_document_refreshes() {
 		if (!this.pending_document_refreshes.length) return;
+
+		const route = frappe.get_route() || [];
+		if (!cur_list || route[0] != "List" || cur_list.doctype != route[1]) {
+			// wait till user is back on list view before refreshing
+			this.pending_document_refreshes = [];
+			return;
+		}
 
 		const names = this.pending_document_refreshes.map((d) => d.name);
 		this.pending_document_refreshes = this.pending_document_refreshes.filter(
