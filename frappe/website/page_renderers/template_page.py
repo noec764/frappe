@@ -251,7 +251,9 @@ class TemplatePage(BaseTemplatePage):
 		"""load co-located css/js files with the same name"""
 		js_path = self.basename + ".js"
 		if os.path.exists(js_path) and "{% block script %}" not in self.source:
-			self.context.colocated_js = self.get_colocated_file(js_path)
+			js = self.get_colocated_file(js_path)
+			js = frappe.render_template(js, self.context, safe_render=True)
+			self.context.colocated_js = js
 
 		css_path = self.basename + ".css"
 		if os.path.exists(css_path) and "{% block style %}" not in self.source:

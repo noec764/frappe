@@ -252,7 +252,7 @@ export default class GridRow {
 
 			this.row_check = $(
 				`<div class="row-check sortable-handle col">
-					${this.row_check_html}
+				${this.row_check_html}
 				</div>`
 			).appendTo(this.row);
 
@@ -338,7 +338,7 @@ export default class GridRow {
 					this.open_form_button = $(`
 						<div class="btn-open-row">
 							<a>${frappe.utils.icon("edit", "xs")}</a>
-							<div class="hidden-xs edit-grid-row">${__("Edit")}</div>
+							<div class="hidden-md edit-grid-row">${__("Edit")}</div>
 						</div>
 					`)
 						.appendTo(this.open_form_button)
