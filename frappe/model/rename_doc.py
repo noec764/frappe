@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, Optional
 
 import frappe
 from frappe import _, bold
-from frappe.model.dynamic_links import get_dynamic_link_map
+from frappe.model.dynamic_links import get_all_single_doctypes, get_dynamic_link_map
 from frappe.model.naming import validate_name
 from frappe.model.utils.user_settings import sync_user_settings, update_user_settings_data
 from frappe.query_builder import Field
@@ -627,9 +627,11 @@ def update_parenttype_values(old: str, new: str):
 
 def rename_dynamic_links(doctype: str, old: str, new: str):
 	Singles = frappe.qb.DocType("Singles")
+	all_singles = get_all_single_doctypes()
 	for df in get_dynamic_link_map().get(doctype, []):
 		# dynamic link in single, just one value to check
-		if frappe.get_meta(df.parent).issingle:
+		is_single = df.parent in all_singles
+		if is_single:
 			refdoc = frappe.db.get_singles_dict(df.parent)
 			if refdoc.get(df.options) == doctype and refdoc.get(df.fieldname) == old:
 				frappe.qb.update(Singles).set(Singles.value, new).where(
