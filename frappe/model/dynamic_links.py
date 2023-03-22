@@ -2,7 +2,7 @@
 # License: MIT. See LICENSE
 
 
-from functools import lru_cache
+# from functools import lru_cache
 
 import frappe
 
@@ -78,12 +78,12 @@ def get_dynamic_links():
 	return df
 
 
-@lru_cache
+# @lru_cache
 def get_dynamic_links_cached():
 	return get_dynamic_links()
 
 
-@lru_cache
+# @lru_cache
 def get_all_single_doctypes() -> set[str]:
 	return set(frappe.db.get_all("DocType", filters={"issingle": 1}, pluck="name"))
 
