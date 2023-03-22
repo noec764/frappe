@@ -756,6 +756,9 @@ $.extend(frappe.model, {
 		const valid_keys = frappe.meta.get_table_fields(doc.doctype).map((df) => df.fieldname);
 		for (const table_name of valid_keys) {
 			const children = doc[table_name];
+			if (!children) {
+				continue;
+			}
 			if (!Array.isArray(children)) {
 				console.error(`Property '${table_name}' should be an array:`, doc);
 				continue;
