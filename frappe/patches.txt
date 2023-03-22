@@ -229,6 +229,7 @@ frappe.patches.dokos.v2_14.reset_assign_field_value #2022-07-14
 frappe.patches.dokos.v3_0.correct_links_in_navbar
 execute:frappe.delete_doc_if_exists('DocType', 'Slack Webhook URL')
 frappe.patches.dokos.v3_0.rename_hidden_field_in_workspace
+frappe.core.doctype.role.patches.dokos_v3_26_fix_desk_properties
 
 [post_model_sync]
 frappe.core.doctype.role.patches.v13_set_default_desk_properties
