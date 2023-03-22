@@ -40,7 +40,7 @@ export default class GridRow {
 			render_row = this.render_row();
 		}
 
-		if (!this.render_row) return;
+		if (!render_row) return;
 
 		this.set_data();
 		this.wrapper.appendTo(this.parent);
@@ -252,7 +252,7 @@ export default class GridRow {
 
 			this.row_check = $(
 				`<div class="row-check sortable-handle col">
-					${this.row_check_html}
+				${this.row_check_html}
 				</div>`
 			).appendTo(this.row);
 
@@ -338,7 +338,7 @@ export default class GridRow {
 					this.open_form_button = $(`
 						<div class="btn-open-row">
 							<a>${frappe.utils.icon("edit", "xs")}</a>
-							<div class="hidden-xs edit-grid-row">${__("Edit")}</div>
+							<div class="hidden-md edit-grid-row">${__("Edit")}</div>
 						</div>
 					`)
 						.appendTo(this.open_form_button)
@@ -762,7 +762,8 @@ export default class GridRow {
 
 	show_search_row() {
 		// show or remove search columns based on grid rows
-		this.show_search = this.show_search && this.grid?.data?.length >= 20;
+		this.show_search =
+			this.show_search && (this.grid?.data?.length >= 20 || this.grid.filter_applied);
 		!this.show_search && this.wrapper.remove();
 		return this.show_search;
 	}

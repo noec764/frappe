@@ -476,3 +476,9 @@ input.list-check-all {
 	height: calc(100vh - 284px);
 	z-index: 0;
 }
+
+.list-selection-buttons {
+	display: flex;
+	gap: 0.5em;
+}
+

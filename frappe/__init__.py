@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.27.0"
+__version__ = "3.28.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -230,6 +230,7 @@ def init(site: str, sites_path: str = ".", new_site: bool = False) -> None:
 	local.document_cache = {}
 	local.form_dict = _dict()
 	local.preload_assets = {"style": [], "script": []}
+	local.web_translations = {}
 	local.session = _dict()
 	local.dev_server = _dev_server
 	local.qb = get_query_builder(local.conf.db_type or "mariadb")

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-light navbar-expand-lg">
 	<div class="container">
-		<a class="navbar-brand" href="{{ url_prefix }}{{ home_page or "/" }}">
+		<a class="{% if show_sidebar %}d-block d-lg-none{% endif %} navbar-brand" href="{{ url_prefix }}{{ home_page or "/" }}">
 			{%- if brand_html -%}
 				{{ brand_html }}
 			{%- elif banner_image -%}

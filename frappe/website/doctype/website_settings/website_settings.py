@@ -176,20 +176,13 @@ def get_website_settings(context=None):
 
 	context.web_include_js = hooks.web_include_js or []
 
-	from frappe.utils.jinja_globals import bundled_asset_absolute
 	from frappe.translate import get_dict
+
 	translated_messages = {}
 	translated_messages.update(get_dict("template"))
 	translated_messages.update(get_dict("include"))
-	translated_messages.update(get_dict("jsfile", bundled_asset_absolute("frappe-web.bundle.js")))
-	translated_messages.update(get_dict("jsfile", bundled_asset_absolute("bootstrap-4-web.bundle.js")))
-	for filename in context.web_include_js:
-		if ".bundle." in filename:
-			translated_messages.update(get_dict("jsfile", bundled_asset_absolute(filename)))
-		else:
-			translated_messages.update(get_dict("jsfile", filename))
 
-	context.translated_messages = frappe.as_json(translated_messages)
+	context.translated_messages = translated_messages
 
 	context.web_include_css = hooks.web_include_css or []
 

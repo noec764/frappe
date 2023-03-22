@@ -44,33 +44,136 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 {%- if source_content_type %}source-content-type="{{ source_content_type }}"{%- endif %}
 {%- endmacro %}
 
+{% macro user_pill() %}
+	{% if frappe.session.user != 'Guest' %}
+	<div class="dropdown logged-in sidebar-login-container" style="display: none">
+		{% set full_name = frappe.db.get_value("User", frappe.session.user, "full_name") %}
+		<button class="btn btn-default sidebar-user-pill" data-toggle="dropdown">
+			<span class="user-image-wrapper"><!-- JS --></span>
+			<span class="sidebar-user-pill__fullname ellipsis">
+				{{ full_name }}
+			</span>
+		</button>
+		<ul class="dropdown-menu dropdown-menu-right" role="menu">
+			{%- for child in post_login -%}
+			{%- if child.url -%}
+			<a class="dropdown-item" href="{{ child.url | abs_url }}" {% if child.open_in_new_tab %} target="_blank" {% endif %} rel="nofollow">
+				{{ child.label }}
+			</a>
+			{%- endif -%}
+			{%- endfor -%}
+			<a class="dropdown-item switch-to-desk hidden" href="/app">{{ _('Switch To Desk') }}</a>
+		</ul>
+	</div>
+	{% elif not hide_login %}
+	<div class="sidebar-login-container">
+		<a class="btn-login-area" href="/login">{{ _("Login") }}</a>
+	</div>
+	{% endif %}
+{% endmacro %}
+
 {% macro sidebar() %}
-<div class="sidebar-column col-sm-{{ columns }}">
+<aside class="sidebar-column {{ 'sidebar-right' if sidebar_right else 'sidebar-left' }}">
+	<a class="navbar-brand" href="{{ url_prefix }}{{ home_page or "/" }}">
+		{%- if brand_html -%}
+			{{ brand_html }}
+		{%- elif banner_image -%}
+			<img src='{{ banner_image }}'>
+		{%- else -%}
+			<span>{{ (frappe.get_hooks("brand_html") or [_("Home")])[0] }}</span>
+		{%- endif -%}
+	</a>
+
 	{% block page_sidebar %}
 	{% include "templates/includes/web_sidebar.html" %}
 	{% endblock %}
-</div>
+
+	{{ user_pill() }}
+</aside>
 {% endmacro %}
 
 {% if show_sidebar %}
-<div class="container">
-	<div class="row" {{ container_attributes() }}>
-		{%- set columns = sidebar_columns or 2 -%}
-		{%- if not sidebar_right -%}
-		{{ sidebar() }}
-		{%- endif -%}
-		<div class="main-column col-sm-{{ 12 - columns }}">
-			{{ main_content() }}
-		</div>
-		{%- if sidebar_right -%}
-		{{ sidebar() }}
-		{%- endif -%}
-	</div>
-</div>
-{% else %}
-<div {{ container_attributes() }}>
-	{{ main_content() }}
-</div>
+{{ sidebar() }}
+<style>
+	body {
+		--sidebar-width: 300px;
+	}
+	.sidebar-column {
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		width: var(--sidebar-width);
+		overflow: hidden auto;
+	}
+	.sidebar-column::before {
+		content: "";
+		display: block;
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: 100%;
+		background-color: var(--light);
+		opacity: 0.2;
+		z-index: -1;
+	}
+	.sidebar-left {
+		left: 0;
+	}
+	.sidebar-right {
+		right: 0;
+	}
+	.sidebar-column .navbar-brand {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 1rem auto;
+		margin: 2rem auto;
+	}
+
+	body > nav,
+	body > main,
+	body > footer {
+		margin-left: var(--sidebar-width) !important;
+	}
+
+	.sidebar-login-container {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 1rem;
+	}
+
+	.sidebar-user-pill {
+		border: none;
+		background: none;
+		padding: 0;
+		margin: 0;
+
+		display: flex;
+		width: 100%;
+		align-items: center;
+		padding: 1rem;
+		gap: 1rem;
+	}
+	.sidebar-user-pill__fullname {
+		font-weight: 500;
+		font-size: 1.2rem;
+	}
+
+	@media (max-width: 991px) {
+		body {
+			--sidebar-width: 0px !important;
+		}
+		.sidebar-column {
+			display: none;
+		}
+	}
+</style>
 {% endif %}
+
+<main class="main-column" {{ container_attributes() }}>
+	{{ main_content() }}
+</main>
 
 {% endblock %}

@@ -294,7 +294,9 @@ def get_lang_js(fortype: str, name: str) -> str:
 	:param fortype: Type of object, e.g. `DocType`
 	:param name: Document name
 	"""
-	return f"\n\n$.extend(frappe._messages, {json.dumps(get_dict(fortype, name))})"
+	return (
+		f"\n\n$.extend(frappe._messages, {json.dumps(get_dict(fortype, name), separators=(',', ':'))});"
+	)
 
 
 def get_all_translations(lang: str) -> dict[str, str]:
