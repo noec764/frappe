@@ -24,7 +24,7 @@
 						{% for tdf in visible_columns %}
 						{% if not d.flags.compact_item_print or tdf.fieldname in doc.get(df.fieldname)[0].flags.compact_item_fields %}
 							<td class="{{ get_align_class(tdf) }}" {{ fieldmeta(df) }}>
-								<div class="value">{{ print_value(tdf, d, doc, visible_columns) }}</div></td>
+								<div class="value">{{ _(print_value(tdf, d, doc, visible_columns, child_templates)) }}</div></td>
 						{% endif %}
 						{% endfor %}
 					</tr>
