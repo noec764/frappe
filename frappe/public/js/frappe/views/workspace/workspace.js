@@ -86,6 +86,15 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	sidebar_item_container(item) {
+		const iconAttributes = Object.entries({
+			"item-icon": item.icon || "folder-normal",
+			"item-color": item.color || "",
+			style: item.color ? "--icon-fill:" + item.color : "",
+		})
+			.map(([key, value]) => `${key}="${value}"`)
+			.join(" ");
+		const iconHtml = frappe.utils.icon(item.icon || "folder-normal", "md");
+
 		return $(`
 			<div
 				class="sidebar-item-container ${item.is_editable ? "is-draggable" : ""}"
@@ -103,9 +112,9 @@ frappe.views.Workspace = class Workspace {
 						}"
 						class="item-anchor ${item.is_editable ? "" : "block-click"}" title="${__(item.title)}"
 					>
-						<span class="sidebar-item-icon" item-icon=${item.icon || "folder-normal"} ${
-			item.color ? "style=--icon-fill:" + item.color : ""
-		}>${frappe.utils.icon(item.icon || "folder-normal", "md")}</span>
+						<span class="sidebar-item-icon" ${iconAttributes}>
+							${iconHtml}
+						</span>
 						<span class="sidebar-item-label">${__(item.title)}<span>
 					</a>
 					<div class="sidebar-item-control"></div>

@@ -87,22 +87,22 @@
 
 /* SCArrow */
 
-.sc-arrow {
+.sc-arrow, .sc-icon {
 	height: 100%;
-	width: 2em;
+	min-width: 2em;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 
-	--icon-stroke: var(--sc-color, currentColor);
-}
+	color: var(--sc-color, currentColor);
 
-.sc-arrow .icon {
-	font-size: 18px;
-	text-align: center;
-	line-height: 18px;
-	height: 18px;
-	width: 18px;
+	.fonticon {
+		color: var(--sc-color, currentColor);
+		--icon-fill: var(--sc-color, currentColor);
+	}
+	.icon:not(.fonticon) {
+		--icon-stroke: currentColor;
+	}
 }
 
 .sc-section__header .sc-arrow {
@@ -210,32 +210,6 @@ a.sc-label {
 .summary-card.edit-mode .sc-header>.sc-header__actions {
 	display: none;
 }
-
-
-/* SCIcon */
-
-.sc-icon {
-	height: 100%;
-	width: 2em;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	color: var(--sc-color, currentColor);
-	--icon-stroke: currentColor;
-}
-
-.sc-icon .icon {
-	font-size: 18px;
-	text-align: center;
-	line-height: 18px;
-	height: 18px;
-	width: 18px;
-}
-
-
-/* SCLabel */
-
 
 
 /* SCPill */
