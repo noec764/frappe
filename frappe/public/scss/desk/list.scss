@@ -63,6 +63,10 @@
 	&:focus {
 		background-color: var(--yellow-highlight-color);
 	}
+
+	&:last-child {
+		border-bottom: 0px;
+	}
 }
 
 .list-row {
