@@ -102,7 +102,7 @@ frappe.ui.color = {
 	},
 
 	lighten(color, percent) {
-		const clamp = (value, min = 0, max = 255) => Math.max(min, Math.min(max, value))
+		const clamp = (value, min = 0, max = 255) => Math.max(min, Math.min(max, value));
 		// https://stackoverflow.com/a/13542669/5353542
 		color = this.normalize_hex(color);
 		var f = parseInt(color, 16),
@@ -146,7 +146,7 @@ frappe.ui.color = {
 			hex = hex.substring(1);
 		}
 		if (hex.length === 3) {
-			hex = [0, 0, 1, 1, 2, 2].map(i => hex[i]).join('');
+			hex = [0, 0, 1, 1, 2, 2].map((i) => hex[i]).join("");
 		}
 		return hex;
 	},
