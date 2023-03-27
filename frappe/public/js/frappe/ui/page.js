@@ -198,12 +198,11 @@ frappe.ui.Page = class Page {
 
 		this.close_sidebar = () => {
 			scroll_container.css("overflow-y", "");
-			this.sidebar.find("div.close-sidebar").fadeOut(() => {
-				overlay_sidebar
-					.removeClass("opened")
-					.find(".dropdown-toggle")
-					.removeClass("text-muted");
-			});
+			overlay_sidebar
+				.removeClass("opened")
+				.find(".dropdown-toggle")
+				.removeClass("text-muted");
+			this.sidebar.find("div.close-sidebar").fadeOut();
 		};
 	}
 
