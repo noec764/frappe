@@ -58,18 +58,30 @@
 
 <script>
 	frappe.ready(function () {
-		$('.sidebar-item a').each(function (index) {
-			const active_class = 'active'
-			const non_active_class = ''
-			let page_href = window.location.href;
-			if (page_href.indexOf('#') !== -1) {
-				page_href = page_href.slice(0, page_href.indexOf('#'));
+		const url = new URL(window.location.href);
+		const hrefs = frappe.utils.unique([
+			url.origin + url.pathname + url.search + url.hash,
+			url.origin + url.pathname + url.hash,
+			url.origin + url.pathname + url.search,
+			url.origin + url.pathname,
+		]);
+		const comparisons = [
+			(a, b) => a === b,
+			(a, b) => b.startsWith(a),
+		];
+		for (const compare of comparisons) {
+			for (const href of hrefs) {
+				let found = false;
+				$(".sidebar-item a").each(function () {
+					if (compare(this.href.trim(), href)) {
+						this.classList.add("active");
+						found = true;
+					}
+				});
+				if (found) {
+					break;
+				}
 			}
-			if (this.href.trim() == page_href) {
-				$(this).removeClass(non_active_class).addClass(active_class);
-			} else {
-				$(this).removeClass(active_class).addClass(non_active_class);
-			}
-		});
+		}
 	});
 </script>
