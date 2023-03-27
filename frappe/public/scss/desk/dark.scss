@@ -208,4 +208,10 @@
 			--indicator-dot-#{"" + $color}: var(--bg-#{$color});
 		}
 	}
+
+	--list-body-bg: var(--card-bg);
+	--list-header-fg: var(--heading-color);
+	--list-header-bg: var(--modal-bg);
+	--list-header-shadow-color: transparent;
+	--list-header-contrast: black;
 }
