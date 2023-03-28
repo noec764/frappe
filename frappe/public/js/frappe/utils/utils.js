@@ -945,10 +945,28 @@ Object.assign(frappe.utils, {
 			return __("{0} Report", [__(route[3]) || __(route[1])]);
 		}
 		if (route[0] === "List") {
+			switch (route[2]) {
+				case "Tree":
+					return __("{0} Tree", [__(route[1])]);
+				case "Dashboard":
+					return __("{0} Dashboard", [__(route[1])]);
+				case "New":
+					return __("New {0}", [__(route[1])]);
+				case "Calendar":
+					return __("{0} Calendar", [__(route[1])]);
+				case "Map":
+					return __("{0} Map", [__(route[1])]);
+				case "Kanban":
+					return __("{0} Kanban", [__(route[1])]);
+			}
 			return __("{0} List", [__(route[1])]);
 		}
 		if (route[0] === "modules") {
 			return __("{0} Modules", [__(route[1])]);
+		}
+		if (route[0] === "Workspaces") {
+			const name = route[1] === "private" ? __(route[2]) : __(route[1]);
+			return __("{0} Workspace", [name]);
 		}
 		if (route[0] === "dashboard") {
 			return __("{0} Dashboard", [__(route[1])]);
