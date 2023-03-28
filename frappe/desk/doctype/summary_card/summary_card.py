@@ -43,6 +43,8 @@ def get_filters_global_context():
 
 
 class SummaryCard(Document):
+	is_standard: bool
+	module: str
 	dt: str
 	label: str
 	show_liked_by_me: bool
@@ -65,7 +67,7 @@ class SummaryCard(Document):
 	button_label: str
 
 	def autoname(self):
-		if frappe.session.user == "Administrator":
+		if frappe.session.user == "Administrator" or self.is_standard:
 			self.name = self.label
 		else:
 			self.name = self.label + "-" + frappe.session.user
@@ -169,7 +171,7 @@ class SummaryCard(Document):
 		if row.type == "Count":
 			formatted_data = frappe.format_value(data["count"])
 			fmt = (row.counter_format or "#").replace("#", "{0}", 1)
-			return _(fmt).format(formatted_data)
+			return self._(fmt).format(formatted_data)
 		return repr(data)
 
 	def get_section_for_me(self):
@@ -187,13 +189,13 @@ class SummaryCard(Document):
 					filters = [["_assign", "like", f'%"{user_name}"%']]
 					icon = "assign"
 					color = "var(--cyan)"
-					label = _("Assigned To Me")
+					label = _("Assigned To Me", context="Summary Card")
 					fmt = _("{0} assigned")
 				case "Liked By Me":
 					filters = [["_liked_by", "like", f'%"{user_name}"%']]
 					icon = "heart"
 					color = "var(--pink)"
-					label = _("Liked")
+					label = _("Liked", context="Summary Card")
 					fmt = _("{0} likes")
 				case _:
 					raise NotImplementedError
@@ -224,7 +226,7 @@ class SummaryCard(Document):
 
 	def get_button_label_for_view(self, view):
 		if self.button_label:
-			return _(self.button_label, context="Summary Card Button Label")
+			return self._(self.button_label, context="Summary Card Button Label")
 
 		text = f"View {view}"
 		text = _(text)
@@ -290,7 +292,7 @@ class SummaryCard(Document):
 		for row in self.iterate_rows():
 			row_out = {
 				"type": row.type,
-				"label": _(row.label or ""),
+				"label": self._(row.label or ""),
 				"dt": row._dt,
 				"index": row._index,
 				"filters": row._filters,
@@ -331,12 +333,17 @@ class SummaryCard(Document):
 			}
 
 		return {
-			"title": _(self.label or self.dt),
+			"title": self._(self.label or self.dt),
 			"dt": self.dt,
 			"icon": dt_meta.icon,
 			"sections": sections,
 			"primary_button": primary_button,
 		}
+
+	def _(self, text: str, context: str = "Summary Card"):
+		if self.get("do_not_translate", False):
+			return text
+		return _(text, context=context)
 
 
 @frappe.whitelist()
