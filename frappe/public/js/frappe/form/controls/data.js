@@ -99,7 +99,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			}, 500);
 		});
 
-		this.$input.bind("input", () => {
+		this.$input.on("input", () => {
 			let inputValue = this.get_input_value();
 
 			if (inputValue && validate_url(inputValue)) {

@@ -11,6 +11,15 @@
 	stroke: var(--icon-stroke);
 }
 
+$icon-sizes: (
+	"xs": 12px,
+	"sm": 16px,
+	"base": 20px,
+	"md": 20px,
+	"lg": 24px,
+	"xl": 75px
+);
+
 /* like icon */
 use.like-icon {
 	cursor: pointer;
@@ -44,32 +53,34 @@ use.like-icon {
 	}
 }
 
-.icon-xs {
-	width: 12px;
-	height: 12px;
-}
-
-.icon-sm {
-	width: 16px;
-	height: 16px;
-}
-
-.icon-base,
-.icon-md {
-	width: 20px;
-	height: 20px;
-}
-
-.icon-lg {
-	width: 24px;
-	height: 24px;
-}
-
-.icon-xl {
-	width: 75px;
-	height: 75px;
+// .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
+@each $size, $value in $icon-sizes {
+	.icon-#{$size} {
+		width: $value;
+		height: $value;
+	}
 }
 
 .no-stroke {
 	stroke: none;
+}
+
+.fonticon {
+	color: var(--icon-stroke, var(--icon-fill, transparent));
+
+	text-align: center;
+	line-height: 1;
+	transform: scale(0.8);
+
+	@each $size, $value in $icon-sizes {
+		&.icon-#{$size} {
+			font-size: $value;
+			line-height: $value;
+		}
+	}
+
+	&.uil::before {
+		margin: 0px !important;
+		transform: scale(1.2); // Adjust optical size
+	}
 }
