@@ -66,6 +66,8 @@ frappe.search.AwesomeBar = class AwesomeBar {
 					me.add_defaults(txt);
 					me.options = me.options.concat(me.build_options(txt));
 					me.options = me.options.concat(me.global_results);
+				} else if (txt === "#") {
+					me.options = me.options.concat(frappe.tags.utils.get_tags(txt));
 				} else {
 					me.options = me.options.concat(
 						me.deduplicate(frappe.search.utils.get_recent_pages(txt || ""))
