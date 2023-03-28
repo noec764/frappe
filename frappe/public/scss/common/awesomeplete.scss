@@ -50,6 +50,8 @@
 				overflow-y: clip;
 				text-overflow: ellipsis;
 			}
+
+			transition-duration: 100ms;
 		}
 
 		&> li .link-option {
