@@ -228,7 +228,7 @@ frappe.search.utils = {
 				if (in_list(frappe.boot.single_types, item)) {
 					out.push(option("", ["Form", item, item], 0.05));
 				} else if (frappe.boot.user.can_search.includes(item)) {
-					const expanded_search = !!frappe.boot.user.expanded_search;
+					const expanded_results = !!frappe.boot.user.expanded_desk_search;
 
 					if (frappe.boot.calendars?.includes(item)) {
 						out.push(
@@ -238,11 +238,11 @@ frappe.search.utils = {
 						);
 					} else {
 						out.push(
-							option("List", ["List", item], 0.05, { add_type: expanded_search })
+							option("List", ["List", item], 0.05, { add_type: expanded_results })
 						);
 					}
 
-					if (expanded_search) {
+					if (expanded_results) {
 						// include 'making new' option
 						if (in_list(frappe.boot.user.can_create, item)) {
 							const match = item;

@@ -47,6 +47,7 @@
   "settings_tab",
   "desk_settings_section",
   "mute_sounds",
+  "expanded_desk_search",
   "desk_theme",
   "banner_image",
   "change_password",
@@ -301,6 +302,12 @@
    "fieldname": "mute_sounds",
    "fieldtype": "Check",
    "label": "Mute Sounds"
+  },
+  {
+   "default": "0",
+   "fieldname": "expanded_desk_search",
+   "fieldtype": "Check",
+   "label": "Expanded results in search bar"
   },
   {
    "collapsible": 1,
@@ -760,7 +767,7 @@
    "link_fieldname": "user"
   }
  ],
- "modified": "2023-02-24 16:58:08.784081",
+ "modified": "2023-03-28 12:04:59.309797",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
