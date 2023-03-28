@@ -44,9 +44,18 @@ export function fuzzy_match(pattern, str) {
 		matches,
 		max_matches,
 		0 /* next_match */,
+		0 /* accents_penalty */,
 		recursion_count,
 		recursion_limit
 	);
+}
+
+const collator = new Intl.Collator(undefined, { usage: "search", sensitivity: "base" });
+export function character_compare_i18n(a, b) {
+	return collator.compare(a, b) === 0;
+}
+function character_compare_exact(a, b) {
+	return a.toLowerCase() === b.toLowerCase();
 }
 
 function fuzzy_match_recursive(
@@ -58,6 +67,7 @@ function fuzzy_match_recursive(
 	matches,
 	max_matches,
 	next_match,
+	accents_penalty,
 	recursion_count,
 	recursion_limit
 ) {
@@ -82,7 +92,9 @@ function fuzzy_match_recursive(
 	let first_match = true;
 	while (pattern_cur_index < pattern.length && str_curr_index < str.length) {
 		// Match found.
-		if (pattern[pattern_cur_index].toLowerCase() === str[str_curr_index].toLowerCase()) {
+		const c1 = pattern[pattern_cur_index];
+		const c2 = str[str_curr_index];
+		if (character_compare_i18n(c1, c2)) {
 			if (next_match >= max_matches) {
 				return [false, out_score];
 			}
@@ -102,6 +114,7 @@ function fuzzy_match_recursive(
 				recursive_matches,
 				max_matches,
 				next_match,
+				accents_penalty,
 				recursion_count,
 				recursion_limit
 			);
@@ -115,6 +128,8 @@ function fuzzy_match_recursive(
 				recursive_match = true;
 			}
 
+			// Register accents not matching.
+			accents_penalty += character_compare_exact(c1, c2) ? 0 : 1;
 			matches[next_match++] = str_curr_index;
 			++pattern_cur_index;
 		}
@@ -131,9 +146,13 @@ function fuzzy_match_recursive(
 		penalty = penalty < MAX_LEADING_LETTER_PENALTY ? MAX_LEADING_LETTER_PENALTY : penalty;
 		out_score += penalty;
 
-		//Apply unmatched penalty
+		// Apply unmatched penalty
 		const unmatched = str.length - next_match;
 		out_score += UNMATCHED_LETTER_PENALTY * unmatched;
+
+		// Apply unmatched accents penalty
+		const unmatched_accents = str.length - accents_penalty;
+		out_score += UNMATCHED_LETTER_PENALTY * unmatched_accents;
 
 		// Apply ordering bonuses
 		for (let i = 0; i < next_match; i++) {

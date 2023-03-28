@@ -1,5 +1,5 @@
 frappe.provide("frappe.search");
-import { fuzzy_match } from "./fuzzy_match.js";
+import { fuzzy_match, character_compare_i18n } from "./fuzzy_match.js";
 
 frappe.search.utils = {
 	setup_recent: function () {
@@ -563,41 +563,37 @@ frappe.search.utils = {
 		return match[1];
 	},
 
-	bolden_match_part: function (str, subseq) {
+	bolden_match_part(str, subseq) {
 		if (fuzzy_match(subseq, str)[0] === false) {
 			return str;
 		}
 		if (str.indexOf(subseq) == 0) {
-			var tail = str.split(subseq)[1];
+			const tail = str.split(subseq)[1];
 			return "<mark>" + subseq + "</mark>" + tail;
 		}
-		var rendered = "";
-		var str_orig = str;
-		var str_len = str.length;
-		str = str.toLowerCase();
-		subseq = subseq.toLowerCase();
+		let rendered = "";
+		const str_len = str.length;
 
-		outer: for (var i = 0, j = 0; i < subseq.length; i++) {
-			var sub_ch = subseq.charCodeAt(i);
+		let j = 0;
+		outer: for (let i = 0; i < subseq.length; i++) {
+			const sub_ch = subseq[i];
 			while (j < str_len) {
-				if (str.charCodeAt(j) === sub_ch) {
-					var str_char = str_orig.charAt(j);
-					if (str_char.match(/\s/)) {
+				const ch = str[j];
+				if (character_compare_i18n(sub_ch, ch)) {
+					if (ch.match(/\s/)) {
 						rendered += "<mark>&nbsp;</mark>";
-					} else if (str_char === str_char.toLowerCase()) {
-						rendered += "<mark>" + subseq.charAt(i) + "</mark>";
 					} else {
-						rendered += "<mark>" + subseq.charAt(i).toUpperCase() + "</mark>";
+						rendered += "<mark>" + ch + "</mark>";
 					}
 					j++;
 					continue outer;
 				}
-				rendered += str_orig.charAt(j);
+				rendered += ch;
 				j++;
 			}
-			return str_orig;
+			return str;
 		}
-		rendered += str_orig.slice(j);
+		rendered += str.slice(j);
 		return rendered;
 	},
 
