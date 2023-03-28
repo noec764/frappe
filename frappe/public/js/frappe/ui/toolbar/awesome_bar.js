@@ -290,7 +290,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			`,
 			value: __("Search for {0}", [txt]),
 			match: txt,
-			index: 100,
+			index: Number.POSITIVE_INFINITY,
 			default: "Search",
 			onclick: function () {
 				frappe.searchdialog.search.init_search(txt, "global_search");
