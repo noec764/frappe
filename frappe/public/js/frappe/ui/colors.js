@@ -208,6 +208,36 @@ frappe.ui.color = {
 
 		return Math.round(hue * 60);
 	},
+
+	/**
+	 * Parses a color string and returns a hex string or null.
+	 * @param {string} color_string
+	 * @returns {string|null}
+	 * @example
+	 * frappe.ui.color.parse_color("red"); // "#ff0000"
+	 * frappe.ui.color.parse_color("#ff0000"); // "#ff0000"
+	 * frappe.ui.color.parse_color("rgb(255, 0, 0)"); // "#ff0000"
+	 * frappe.ui.color.parse_color("rgba(255, 0, 0, 0.5)"); // null
+	 */
+	parse_color(color_string) {
+		if (typeof color_string !== "string") {
+			return null;
+		}
+
+		// Use the browser's built-in parser to parse the color string
+		const canvas = document.createElement("canvas");
+		const context = canvas.getContext("2d");
+		context.fillStyle = "rgba(0, 0, 0, 0)";
+		context.fillStyle = color_string;
+
+		// Invalid values are ignored. Colors with transparency are returned as rgba.
+		// Other fully opaque colors are returned as hex strings.
+		// https://html.spec.whatwg.org/multipage/canvas.html#serialisation-of-a-color
+		if (context.fillStyle.startsWith("#")) {
+			return context.fillStyle;
+		}
+		return null;
+	},
 };
 
 frappe.ui.color_map = frappe.ui.color.get_color_map();

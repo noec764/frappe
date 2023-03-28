@@ -24,7 +24,7 @@ export class SCHeader {
 		const primary_route = summary_card_renderer.get_primary_route();
 		return SCHeader.render({
 			children: [
-				SCIcon.render({ icon: sc.icon || "file" }),
+				SCIcon.render({ icon: sc.icon || "file", size: "md" }),
 				SCLabel.render({ label: sc.title, href: primary_route }),
 			],
 			actions: [
@@ -41,7 +41,7 @@ export class SCHeader {
 	static render_skeleton() {
 		return SCHeader.render({
 			children: [
-				SCIcon.render({ icon: "file" }), // icon
+				SCIcon.render({ icon: "file", size: "md" }), // icon
 				SCLabel.render({ label: "Lorem ipsum" }),
 			],
 			actions: [

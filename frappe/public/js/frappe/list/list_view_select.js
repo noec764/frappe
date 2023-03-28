@@ -151,19 +151,28 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		} else {
 			const page_name = this.get_page_name();
 			items.map((item) => {
+				let item_label = item.name;
+				if (item_label === "Default") {
+					item_label = __("Default {0}", [__(view)]);
+				}
+
 				if (item.name.toLowerCase() == page_name.toLowerCase()) {
-					placeholder = item.name;
+					placeholder = item_label;
 				} else {
-					html += `<li><a class="dropdown-item" href="${item.route}">${item.name}</a></li>`;
+					html += `<li><a class="dropdown-item" href="${item.route}">${item_label}</a></li>`;
 				}
 			});
 		}
 
 		views_wrapper.find(".selected-view").html(placeholder);
 
+		const a = views_wrapper.find(".sidebar-action a");
 		if (default_action) {
-			views_wrapper.find(".sidebar-action a").html(default_action.label);
-			views_wrapper.find(".sidebar-action a").click(() => default_action.action());
+			a.text(default_action.label);
+			a.on("click", () => default_action.action());
+			a.show();
+		} else {
+			a.hide();
 		}
 
 		$dropdown.html(html);

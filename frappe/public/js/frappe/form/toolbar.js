@@ -498,7 +498,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 
 		if (Boolean(Object.keys(tour_exists.message).length)) {
 			return true;
-		} else if (typeof frappe.tour[this.frm.doctype] == Array) {
+		} else if (Array.isArray(frappe.tour[this.frm.doctype])) {
 			return true;
 		} else if (
 			typeof frappe.tour[this.frm.doctype] == "object" &&

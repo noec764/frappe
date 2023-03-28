@@ -53,6 +53,12 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 		);
 		this.fetch_recent_colors();
 		this.make_color_input();
+
+		this.$input.on("blur", () => {
+			if (!this.get_color()) {
+				this.set_value("");
+			}
+		});
 	}
 
 	make_color_input() {
@@ -143,19 +149,18 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 		this.selected_color?.toggleClass("no-value", !value);
 	}
 
-	get_color() {
-		return this.validate(this.get_value());
+	parse(value) {
+		if (typeof value !== "string") {
+			return null;
+		}
+		if (value.includes("rgb") && !value.includes(")")) {
+			return null;
+		}
+		return frappe.ui.color.parse_color(value);
 	}
 
-	validate(value) {
-		if (value === "") {
-			return "";
-		}
-		var is_valid = /^#[0-9A-F]{6}$/i.test(value);
-		if (is_valid) {
-			return value;
-		}
-		return null;
+	get_color() {
+		return this.parse(this.get_value());
 	}
 
 	async fetch_recent_colors() {
