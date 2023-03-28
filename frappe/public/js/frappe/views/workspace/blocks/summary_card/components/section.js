@@ -80,7 +80,7 @@ export class SCSection {
 		const $header = $(`<button class="sc-row sc-section__header">`).appendTo($section);
 
 		if (section.icon) {
-			SCIcon.render({ icon: section.icon }).appendTo($header);
+			SCIcon.render({ icon: section.icon, size: "sm" }).appendTo($header);
 		}
 		SCLabel.render({ label: section.label }).appendTo($header);
 

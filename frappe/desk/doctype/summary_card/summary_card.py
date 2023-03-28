@@ -249,6 +249,7 @@ class SummaryCard(Document):
 
 			if row.type == "Section Break":
 				row_out["items"] = []
+				row_out["collapsible"] = row.collapsible
 				sections.append(row_out)
 				continue
 
