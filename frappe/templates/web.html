@@ -13,7 +13,7 @@
 	</div>
 
 	{% block page_container %}
-	<main class="{% if full_width %}container-fluid{% else %}container my-4{% endif %}">
+	<main class="{% if not full_width %}container my-4{% endif %}">
 		<div class="page-header-wrapper">
 			<div class="page-header">
 				{% block header %}{% endblock %}
@@ -94,10 +94,21 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 
 {% if show_sidebar %}
 {{ sidebar() }}
+<style>
+	:root {
+		--web-sidebar-width: 300px;
+	}
+	body > nav,
+	body > main,
+	body > .main-column,
+	body > footer {
+		margin-left: var(--web-sidebar-width) !important;
+	}
+</style>
 {% endif %}
 
-<main class="main-column" {{ container_attributes() }}>
+<div class="main-column" {{ container_attributes() }}>
 	{{ main_content() }}
-</main>
+</div>
 
 {% endblock %}
