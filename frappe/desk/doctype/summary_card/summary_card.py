@@ -48,9 +48,19 @@ class SummaryCard(Document):
 	show_liked_by_me: bool
 	show_assigned_to_me: bool
 	rows: list["SummaryCardRow"]
-	primary_button_section: str
 	button_view: Literal[
-		"", "List", "Report", "Dashboard", "Kanban", "Calendar", "Gantt", "Tree", "Image", "Inbox", "Map"
+		"",
+		"List",
+		"Report",
+		"Dashboard",
+		"Kanban",
+		"Calendar",
+		"Gantt",
+		"Tree",
+		"Image",
+		"Inbox",
+		"Map",
+		"No button",
 	]
 	button_label: str
 
@@ -313,16 +323,19 @@ class SummaryCard(Document):
 
 		dt_meta = frappe.get_meta(self.dt)
 		button_view = self.button_view or dt_meta.default_view or "List"
+		primary_button = None
+		if button_view != "No button":
+			primary_button = {
+				"view": button_view,
+				"label": self.get_button_label_for_view(button_view),
+			}
 
 		return {
 			"title": _(self.label or self.dt),
 			"dt": self.dt,
 			"icon": dt_meta.icon,
 			"sections": sections,
-			"primary_button": {
-				"view": button_view,
-				"label": self.get_button_label_for_view(button_view),
-			},
+			"primary_button": primary_button,
 		}
 
 

@@ -41,7 +41,7 @@ frappe.ui.form.on("Summary Card", {
 		if (!views?.length) {
 			return;
 		}
-		frm.set_df_property("button_view", "options", ["", ...views]);
+		frm.set_df_property("button_view", "options", ["", ...views, "No button"]);
 	},
 
 	render_fallback(frm) {
