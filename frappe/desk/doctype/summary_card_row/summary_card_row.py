@@ -16,3 +16,4 @@ class SummaryCardRow(Document):
 	collapsible: bool
 	color: str
 	icon: str
+	icon_first: bool

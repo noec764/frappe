@@ -286,6 +286,7 @@ class SummaryCard(Document):
 				"filters": row._filters,
 				"color": row.get("color", ""),
 				"icon": row.get("icon", ""),
+				"iconFirst": row.get("icon_first", row._dt != self.dt),
 			}
 
 			if row._dt != self.dt and not row_out["icon"]:

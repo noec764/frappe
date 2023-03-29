@@ -138,11 +138,10 @@ export class SCSection {
 			icon = "arrow-right";
 		}
 
-		if (row.dt !== card_renderer.data.dt) {
-			$row.addClass("sc-icon-left");
-		}
-
 		if (icon) {
+			if (row.iconFirst) {
+				$row.addClass("sc-icon-first");
+			}
 			SCIcon.render({ icon }).appendTo($row);
 		}
 
