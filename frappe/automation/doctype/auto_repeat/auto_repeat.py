@@ -506,7 +506,6 @@ def generate_message_preview(reference_dt, reference_doc, message=None, subject=
 class AutoRepeatScheduler:
 	def __init__(self, auto_repeat, current_date=None):
 		self.auto_repeat = auto_repeat
-		self.schedule = []
 		self.current_date = current_date or nowdate()
 		self.frequency_map = {
 			"Daily": self.add_day,
@@ -518,50 +517,54 @@ class AutoRepeatScheduler:
 		}
 
 	def get_schedule(self):
-		self.schedule = [self.auto_repeat.start_date]
+		if self.auto_repeat.end_date:
+			end_date = getdate(self.auto_repeat.end_date)
+		else:
+			end_date = add_years(getdate(nowdate()), 2)
 
-		scheduled_date = getdate(self.auto_repeat.start_date)
-		while getdate(scheduled_date) <= (
-			(self.auto_repeat.end_date and getdate(self.auto_repeat.end_date))
-			or add_years(getdate(nowdate()), 2)
-		):
+		initial_date = getdate(self.auto_repeat.start_date)
+		scheduled_date = initial_date
+		offset = 0
+		while getdate(scheduled_date) <= end_date:
+			offset += 1
+			scheduled_date = self.get_next_date(initial_date, offset)
 			yield scheduled_date
-			scheduled_date = self.get_next_date(scheduled_date)
-			self.schedule.append(scheduled_date)
 
-		return self.schedule
-
-	def get_next_date(self, current_date):
+	def get_next_date(self, initial_date, offset: int = 1):
+		next_date = self.get_next_date_pure(initial_date, offset)
 		if self.auto_repeat.frequency == "Monthly" and self.auto_repeat.repeat_on_last_day:
-			return get_last_day(add_months(getdate(current_date), 1))
+			return get_last_day(next_date)
 		elif (
 			self.auto_repeat.frequency in ["Monthly", "Quarterly", "Half-yearly", "Yearly"]
 			and cint(self.auto_repeat.repeat_on_day) > 0
 		):
 			return add_days(
-				get_first_day(self.frequency_map.get(self.auto_repeat.frequency)(current_date)),
+				get_first_day(next_date),
 				cint(self.auto_repeat.repeat_on_day) - 1,
 			)
 		else:
-			return self.frequency_map.get(self.auto_repeat.frequency)(current_date)
+			return next_date
 
-	def add_day(self, date):
-		return add_days(date, 1)
+	def get_next_date_pure(self, initial_date, offset: int):
+		return self.frequency_map.get(self.auto_repeat.frequency)(initial_date, n=offset)
 
-	def add_week(self, date):
-		return add_days(date, 7)
+	def add_day(self, date, n=1):
+		return add_days(date, n)
 
-	def add_month(self, date):
-		return add_months(date, 1)
+	def add_week(self, date, n=1):
+		return add_days(date, 7 * n)
 
-	def add_quarter(self, date):
-		return add_months(date, 3)
+	def add_month(self, date, n=1):
+		return add_months(date, n)
 
-	def add_semester(self, date):
-		return add_months(date, 6)
+	def add_quarter(self, date, n=1):
+		return add_months(date, 3 * n)
 
-	def add_year(self, date):
-		return add_years(date, 1)
+	def add_semester(self, date, n=1):
+		return add_months(date, 6 * n)
+
+	def add_year(self, date, n=1):
+		return add_years(date, n)
 
 	def get_already_generated(self):
 		return [
