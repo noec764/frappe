@@ -1,6 +1,5 @@
 // .layout-main-section {
 // 	overflow: hidden;
-
 // }
 
 .freeze-row {
@@ -63,6 +62,10 @@
 
 	&:focus {
 		background-color: var(--yellow-highlight-color);
+	}
+
+	&:last-child {
+		border-bottom: 0px;
 	}
 }
 
@@ -482,3 +485,73 @@ input.list-check-all {
 	gap: 0.5em;
 }
 
+.frappe-list {
+	--list-gap-size: var(--padding-xs);
+
+	.list-row-head {
+		position: sticky;
+		z-index: 1;
+		top: var(--list-gap-size);
+		background-color: var(--list-header-bg);
+		box-shadow: 0px 1px 3px -2px var(--list-header-shadow-color),
+			0px 0px 0px 2px var(--list-body-bg);
+		border-bottom: none;
+		border-radius: var(--border-radius-sm);
+		height: 30px;
+		margin-top: var(--list-gap-size);
+
+		& .list-row-col > span {
+			color: var(--list-header-fg) !important;
+			text-shadow: 0px 0px 2px var(--list-header-contrast);
+			font-weight: 600;
+		}
+	}
+	.list-paging-area {
+		position: sticky;
+		z-index: 1;
+		bottom: var(--list-gap-size);
+		color: var(--list-header-fg) !important;
+		background-color: var(--list-header-bg) !important;
+		box-shadow: 0px -4px 4px 0px var(--list-body-bg);
+		border-top: none;
+		border-radius: 5px; // to work well with the frappe-card md radius
+		margin-bottom: var(--list-gap-size);
+		margin-top: var(--list-gap-size);
+		padding: var(--padding-sm);
+	}
+}
+
+/*
+.frappe-list {
+	top: 100px;
+	bottom: 0px;
+	position: absolute;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	max-height: 70vh;
+
+	.list-row-head::before {
+		// Hide content visible through the gap above the header
+		display: block;
+		content: '';
+		background: var(--list-body-bg);
+		position: absolute;
+		top: calc(-1 * var(--list-gap-size));
+		left: 0px;
+		width: 100%;
+		height: var(--list-gap-size);
+	}
+
+	.list-paging-area::after {
+		// Hide content visible through the gap below the table footer
+		display: block;
+		content: '';
+		background: var(--list-body-bg);
+		position: absolute;
+		bottom: calc(-1 * var(--list-gap-size));
+		left: 0px;
+		width: 100%;
+		height: var(--list-gap-size);
+	}
+}
+*/
