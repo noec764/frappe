@@ -579,9 +579,11 @@ class AutoRepeatScheduler:
 
 	def get_next_scheduled_date(self):
 		already_generated = self.get_already_generated()
-		next_dates = [
+		# Ensure that the next date is neither in the past nor the current date
+		min_date = max(getdate(self.current_date), getdate(nowdate()))
+		next_dates = (
 			getdate(x)
 			for x in self.get_schedule()
-			if getdate(x) > getdate(self.current_date) and getdate(x) not in already_generated
-		]
-		return min(next_dates) if next_dates else None
+			if getdate(x) > min_date and getdate(x) not in already_generated
+		)
+		return min(next_dates, default=None)
