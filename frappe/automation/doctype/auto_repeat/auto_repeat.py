@@ -409,11 +409,14 @@ def get_auto_repeat_entries(date=None, auto_repeat=None):
 
 def create_repeated_entries(data):
 	for d in data:
-		disabled = d.disabled
-		schedule_date = getdate(d.next_schedule_date)
+		doc: AutoRepeat = frappe.get_doc("Auto Repeat", d.name)
 
-		while schedule_date and schedule_date <= getdate(nowdate()) and not disabled:
-			doc = frappe.get_doc("Auto Repeat", d.name)
+		disabled = doc.disabled
+		current_date = getdate(nowdate())
+		schedule_date = getdate(doc.next_schedule_date)
+
+		while schedule_date and schedule_date <= current_date and not disabled:
+			doc: AutoRepeat = frappe.get_doc("Auto Repeat", d.name)
 			doc.create_documents()
 			schedule_date = AutoRepeatScheduler(doc, schedule_date).get_next_scheduled_date()
 			disabled = frappe.db.get_value("Auto Repeat", doc.name, "disabled")
