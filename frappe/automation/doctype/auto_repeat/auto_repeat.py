@@ -65,14 +65,8 @@ class AutoRepeat(Document):
 		doc_before_save = self.get_doc_before_save()
 		if self.disabled:
 			self.next_schedule_date = None
-		elif (
-			doc_before_save
-			and getdate(doc_before_save.start_date) != getdate(self.start_date)
-			or not self.next_schedule_date
-		):
-			self.next_schedule_date = AutoRepeatScheduler(
-				self, add_days(self.start_date, -1)
-			).get_next_scheduled_date()
+		elif doc_before_save and self.next_schedule_date:
+			self.next_schedule_date = AutoRepeatScheduler(self).get_next_scheduled_date()
 		elif not self.next_schedule_date:
 			self.next_schedule_date = AutoRepeatScheduler(self).get_next_scheduled_date()
 
