@@ -37,7 +37,6 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 	prepare_data(data) {
 		super.prepare_data(data);
 		this.get_list_fields();
-		console.log(data);
 	}
 
 	async before_refresh() {
