@@ -92,7 +92,7 @@
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Frequency",
-   "options": "\nDaily\nWeekly\nMonthly\nQuarterly\nHalf-yearly\nYearly",
+   "options": "Daily\nWeekly\nMonthly\nQuarterly\nHalf-yearly\nYearly",
    "reqd": 1
   },
   {
