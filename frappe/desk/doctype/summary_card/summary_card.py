@@ -73,13 +73,16 @@ class SummaryCard(Document):
 		if not self.rows:
 			return
 		try:
-			# parse all the filters
 			idx = 0
+			# parse all the filters
 			for row in self.iterate_rows():
 				idx += 1
 		except Exception as e:
 			row = self.rows[idx]
-			frappe.throw(_("Invalid Filter: {0}").format(row.label), exc=e)
+			msg = _("{0} {1}").format(f"#{idx + 1}", row.label)
+			msg = _("Invalid Filter: {0}").format(msg)
+			msg += f" ({e})"
+			frappe.throw(msg, exc=e)
 
 	def iterate_rows(self):
 		parent = self
@@ -143,7 +146,7 @@ class SummaryCard(Document):
 		elif isinstance(filters, dict):
 			filters = [make_filter_tuple(row._dt, key, value) for key, value in filters.items()]
 		else:
-			frappe.throw(_("Invalid Filter: {0}").format(row.label or row._index))
+			raise ValueError("Return value must be a list or dict (filters).")
 
 		return filters
 
@@ -222,6 +225,47 @@ class SummaryCard(Document):
 			return _("View {0}").format(_(view))
 		return text
 
+	def handle_error(
+		self, e, row_out: dict = None, row: "SummaryCardRow" = None, sections: list = None
+	):
+		if frappe.conf.developer_mode:
+			error_text = _("Error in row {0}").format(repr(row._index) + ": " + row.label)
+			error_text += (
+				"\n"
+				+ frappe.as_json(
+					{
+						**row.as_dict(),
+						"_dt": row._dt,
+						"_index": row._index,
+						"_filters": row._filters,
+					}
+				)
+				+ "\n\n"
+			)
+			error_text += repr(e)
+			return {
+				"error": {
+					"message": error_text,
+					"traceback": frappe.get_traceback(),
+				}
+			}
+		else:
+			sections[-1]["items"].append(
+				{
+					**row_out,
+					"type": row.type,
+					"label": _(row.label or ""),
+					"dt": row._dt,
+					"index": row._index,
+					"filters": row._filters,
+					"color": "var(--red)",
+					"icon": "solid-warning",
+					"data": {"count": 0},
+					"badge": _("Error"),
+					"error": repr(e),
+				}
+			)
+
 	@frappe.whitelist()
 	def get_data(self):
 		sections = []
@@ -253,7 +297,12 @@ class SummaryCard(Document):
 				sections.append(row_out)
 				continue
 
-			data = self.row_query(row)
+			try:
+				data = self.row_query(row)
+			except Exception as e:
+				if err := self.handle_error(e, row_out, row, sections):
+					return err
+				continue
 
 			if row.type == "Count":
 				row_out["data"] = data

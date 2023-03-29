@@ -9,7 +9,7 @@ const assert = (condition, message) => {
 /**
  * @typedef {Object} Data
  * @property {string} error
- * @property {string} title
+ * @property {string} label
  * @property {string} dt
  * @property {string} icon
  * @property {Object[]} sections
@@ -200,7 +200,7 @@ export default class SummaryCardRenderer {
 			// pass
 		}
 		this.$freeze.html(
-			`<div style="user-select:all;white-space:pre-line;font-size:var(--text-xs);"></div>`
+			`<div style="user-select:text;white-space:pre-wrap;font-size:var(--text-xs);"></div>`
 		);
 		this.$freeze.find("div").text(error?.message || JSON.stringify(error, null, 2));
 	}
