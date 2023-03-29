@@ -203,3 +203,21 @@ def get_week_number(dt):
 	adjusted_dom = dom + first_day.weekday()
 
 	return int(ceil(adjusted_dom / 7.0))
+
+
+@frappe.whitelist()
+def get_resource_ids(doctype, resource):
+	return [{"id": r, "title": _(r) or _("No value")} for r in frappe.get_all(doctype, fields=[resource], distinct=True, pluck=resource)]
+
+@frappe.whitelist()
+def get_resources_for_doctype(doctype):
+	meta = frappe.get_meta(doctype)
+
+	excluded_fields = ["amended_from"]
+
+	select_and_link_fields = [
+		{"id": f.fieldname, "title": f.label}
+		for f in meta.fields if f.fieldtype in ["Select", "Link"] and not f.hidden and f.fieldname not in excluded_fields
+	]
+
+	return select_and_link_fields

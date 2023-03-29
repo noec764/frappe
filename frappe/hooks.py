@@ -71,6 +71,8 @@ email_append_to = ["Event", "ToDo", "Communication"]
 
 calendars = ["Event"]
 
+fullcalendar_scheduler_licence_key = ""
+
 gcalendar_integrations = {
 	"Event": {
 		"pull_insert": "frappe.desk.doctype.event.event.insert_event_to_calendar",
