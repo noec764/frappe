@@ -4,19 +4,9 @@ import { Calendar } from '@fullcalendar/core';
 import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
 import adaptivePlugin from '@fullcalendar/adaptive';
 import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
 frappe.provide("frappe.views.calendar");
-frappe.provide("frappe.views.calendars");
-
-const day_map = {
-	Sunday: 0,
-	Monday: 1,
-	Tuesday: 2,
-	Wednesday: 3,
-	Thursday: 4,
-	Friday: 5,
-	Saturday: 6,
-};
 
 frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 	static load_last_view() {
@@ -32,7 +22,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		}
 	}
 
-	toggle_result_area() {}
+	toggle_result_area() { }
 
 	get view_name() {
 		// __("Planning")
@@ -51,6 +41,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		this.planning_name = frappe.get_route()[3];
 		this.resource_section = null;
 		this.resource = null;
+		this.resource_label = null;
 		this.setup_resources()
 	}
 
@@ -62,7 +53,8 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 			}
 		}).then(resources => {
 			if (!this.resource) {
-				this.resource = resources.message[0].id
+				this.resource = resources.message[0].id;
+				this.resource_label = resources.message[0].title;
 			}
 			this.setup_dropdown_for_resources(resources.message);
 		})
@@ -82,7 +74,6 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 	setup_view() {
 		this.sort_selector.wrapper.hide();
 	}
-
 
 	render() {
 		if (this.calendar) {
@@ -114,7 +105,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		});
 	}
 
-	get required_libs() {}
+	get required_libs() { }
 
 	setup_dropdown_for_resources(resources) {
 		if (!this.list_sidebar || this.resource_section) return;
@@ -122,7 +113,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		const views_wrapper = this.list_sidebar.sidebar.find(".views-section");
 
 		this.resource_section = $(`<div class="sidebar-section resource-section">
-			<li class="sidebar-label">${__("Planning Resource")}</li>
+			<li class="sidebar-label">${__("Group Planning By")}</li>
 			<div class="current-resources">
 				<li class="list-link">
 					<a class="btn btn-default btn-sm list-sidebar-button"
@@ -140,7 +131,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 					</a>
 					<ul class="dropdown-menu list-resources-dropdown" role="menu">
 						<div class="dropdown-search">
-							<input type="text" placeholder=${__("Search") } data-element="search" class="form-control input-xs">
+							<input type="text" placeholder=${__("Search")} data-element="search" class="form-control input-xs">
 						</div>
 						<div class="resources-result">
 						</div>
@@ -149,15 +140,16 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 			</div>
 		</div>`).insertAfter(views_wrapper)
 
-		const resources_list = $(frappe.render_template("resource_dropdown", {resources: resources})).on(
+		const resources_list = $(frappe.render_template("resource_dropdown", { resources: resources })).on(
 			"click",
 			".resources-link",
 			(e) => {
 				const value = $(e.currentTarget).attr("data-value");
 				const label = $(e.currentTarget).attr("data-label");
-				console.log(value, label)
 				this.resource_section.find(".selected-resource").html(__(label));
 				this.resource = value;
+				this.resource_label = label;
+				this.calendar.fullcalendar.setOption("resourceAreaColumns", this.calendar.get_resource_area_columns());
 				this.calendar.refresh()
 			}
 		);
@@ -171,14 +163,7 @@ frappe.views.Planning = class frappePlanning {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
-		this.resource = this.list_view.resource;
-		this.calendar_defaults =
-			this.calendar_defaults && Object.keys(this.calendar_defaults)
-				? this.calendar_defaults
-				: {
-						display_event_time: true,
-						display_event_end: true,
-				  };
+		this.calendar_defaults = {};
 		this.sidebar_menu = this.list_view.list_sidebar?.sidebar.find(".sidebar-menu");
 
 		this.field_map = this.field_map || {
@@ -198,9 +183,9 @@ frappe.views.Planning = class frappePlanning {
 			let defaults = {
 				initialView:
 					initialView &&
-					["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
-						? initialView
-						: "dayGridMonth",
+						["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
+						? initialView.replace("timeGrid", "resourceTimeline")
+						: "resourceTimelineMonth",
 				weekends: weekends ? weekends : true,
 			};
 			resolve(defaults);
@@ -222,7 +207,7 @@ frappe.views.Planning = class frappePlanning {
 		$.each(frappe.boot.calendars, function (i, doctype) {
 			if (frappe.model.can_read(doctype)) {
 				me.page.add_menu_item(__(doctype), function () {
-					frappe.set_route("List", doctype, "Calendar");
+					frappe.set_route("List", doctype, "Planning");
 				});
 			}
 		});
@@ -233,7 +218,6 @@ frappe.views.Planning = class frappePlanning {
 	}
 
 	make() {
-		const me = this;
 		this.$wrapper = this.parent;
 		this.$cal = $("<div>").appendTo(this.$wrapper);
 		this.footnote_area = frappe.utils.set_footnote(
@@ -264,15 +248,15 @@ frappe.views.Planning = class frappePlanning {
 
 	bind() {
 		const me = this;
-		const btn_group = me.$wrapper.find(".fc-button-group");
-		btn_group.on("click", ".fc-button", function () {
-			const value = $(this).hasClass("fc-timeGridWeek-button")
-				? "timeGridWeek"
-				: $(this).hasClass("fc-timeGridDay-button")
-				? "timeGridDay"
-				: "dayGridMonth";
-			me.set_localStorage_option("cal_initialView", value);
-		});
+		// const btn_group = me.$wrapper.find(".fc-button-group");
+		// btn_group.on("click", ".fc-button", function () {
+		// 	const value = $(this).hasClass("fc-timeGridWeek-button")
+		// 		? "timeGridWeek"
+		// 		: $(this).hasClass("fc-timeGridDay-button")
+		// 			? "timeGridDay"
+		// 			: "dayGridMonth";
+		// 	me.set_localStorage_option("cal_initialView", value);
+		// });
 
 		me.$wrapper.on("click", ".btn-weekend", function () {
 			me.cal_options.weekends = !me.cal_options.weekends;
@@ -292,11 +276,11 @@ frappe.views.Planning = class frappePlanning {
 
 		this.cal_options = {
 			locale: frappe.get_cookie("preferred_language") || frappe.boot.lang || "en",
-			plugins: [resourceTimelinePlugin, interactionPlugin, adaptivePlugin],
+			plugins: [resourceTimelinePlugin, interactionPlugin, adaptivePlugin, resourceTimeGridPlugin],
 			schedulerLicenseKey: frappe.boot.fullcalendar_scheduler_licence_key,
 			initialView: 'resourceTimelineWeek',
 			headerToolbar: {
-				left: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth',
+				left: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth resourceTimeGridDay',
 				center: 'prev,title,next',
 				right: 'today'
 			},
@@ -307,13 +291,14 @@ frappe.views.Planning = class frappePlanning {
 			forceEventDuration: true,
 			weekends: defaults.weekends,
 			nowIndicator: true,
+			resourceAreaColumns: this.get_resource_area_columns(),
 			resources: function (parameters, callback) {
 				return frappe
 					.xcall(
 						me.get_resources_method || "frappe.desk.calendar.get_resource_ids",
 						{
 							doctype: me.doctype,
-							resource: me.resource
+							resource: me.list_view.resource
 						}
 					)
 					.then((r) => {
@@ -369,8 +354,8 @@ frappe.views.Planning = class frappePlanning {
 				frappe.set_route("Form", me.doctype, event.name);
 			},
 			dateClick: function (info) {
-				if (info.view.type === "dayGridMonth") {
-					me.fullcalendar.changeView("timeGridDay");
+				if (info.view.type === "resourceTimelineMonth") {
+					me.fullcalendar.changeView("resourceTimelineDay");
 					me.fullcalendar.gotoDate(info.date);
 
 					// update "active view" btn
@@ -384,6 +369,7 @@ frappe.views.Planning = class frappePlanning {
 				month: __("Month"),
 				week: __("Week"),
 				day: __("Day"),
+				resourceTimeGridDay: __("Vertical")
 			},
 			eventDidMount: function (info) {
 				$(info.el).tooltip({
@@ -394,8 +380,6 @@ frappe.views.Planning = class frappePlanning {
 			eventWillUnmount: function (info) {
 				$(info.el).tooltip("dispose");
 			},
-			slotMinTime: defaults.slots_start_time || "06:00:00",
-			slotMaxTime: defaults.slots_end_time || "22:00:00",
 			firstDay: defaults.first_day ?? frappe.datetime.get_first_day_of_the_week_index(),
 			expandRows: true,
 			refetchResourcesOnNavigate: true,
@@ -415,12 +399,11 @@ frappe.views.Planning = class frappePlanning {
 			end: this.get_system_datetime(end),
 			filters: this.list_view.filter_area.get(),
 			field_map: this.field_map,
-			fields: [this.resource]
+			fields: [this.list_view.resource]
 		};
 	}
 
 	refresh() {
-		this.resource = this.list_view.resource;
 		this.fullcalendar.refetchResources();
 		this.fullcalendar.refetchEvents();
 	}
@@ -431,7 +414,7 @@ frappe.views.Planning = class frappePlanning {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
 			d.classNames = d.classNames || [];
-			d.resourceId = d[me.resource];
+			d.resourceId = d[me.list_view.resource];
 
 			// do not allow submitted/cancelled events to be moved / extended
 			if (d.docstatus && d.docstatus > 0) {
@@ -561,5 +544,13 @@ frappe.views.Planning = class frappePlanning {
 				? this.get_system_datetime(moment(event.end).add(1, "day"))
 				: null;
 		}
+	}
+
+	get_resource_area_columns() {
+		return [
+			{
+				headerContent: __(this.list_view.resource_label),
+			}
+		]
 	}
 };

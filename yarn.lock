@@ -110,6 +110,23 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/premium-common/-/premium-common-6.1.5.tgz#d12503aadb350ce5e4578317f9b85e6cc7d6bfe3"
   integrity sha512-uPIA+eK66+C89/WAqlhEdtY042iFDsbLuY5/vaSWoxSx2hNXHvjf3pGWSj7knmgCInfJYho8/zp76IFyBlGjAQ==
 
+"@fullcalendar/resource-daygrid@~6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-daygrid/-/resource-daygrid-6.1.5.tgz#db6265bf14532b5f043509c1e458603104c0fda7"
+  integrity sha512-jlb6DadU7mzpupHnjAIf+YuAcWBIvefHJVdJK+YI4ZjBceFF8ItU348TLKOLy2Z7wW/AP/e6Iuj15Y3NqSkczA==
+  dependencies:
+    "@fullcalendar/daygrid" "~6.1.5"
+    "@fullcalendar/premium-common" "~6.1.5"
+
+"@fullcalendar/resource-timegrid@^6.1.5":
+  version "6.1.5"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/resource-timegrid/-/resource-timegrid-6.1.5.tgz#c2f3ea62725835706635572cf7b65cb8f5b89c84"
+  integrity sha512-Ez9tOiJHVDH7fmZpfiIIOCo+UJpb8Ok9Dbc9ayONtvfa1WjHu7ncD3IRtbsM2gVsmVln+Fla381D3KQWxOUl1Q==
+  dependencies:
+    "@fullcalendar/premium-common" "~6.1.5"
+    "@fullcalendar/resource-daygrid" "~6.1.5"
+    "@fullcalendar/timegrid" "~6.1.5"
+
 "@fullcalendar/resource-timeline@^6.1.5":
   version "6.1.5"
   resolved "https://registry.yarnpkg.com/@fullcalendar/resource-timeline/-/resource-timeline-6.1.5.tgz#0a4993a7728b23641b50f8acb54432c48d127c36"
@@ -133,7 +150,7 @@
   dependencies:
     "@fullcalendar/premium-common" "~6.1.5"
 
-"@fullcalendar/timegrid@^6.1.5":
+"@fullcalendar/timegrid@^6.1.5", "@fullcalendar/timegrid@~6.1.5":
   version "6.1.5"
   resolved "https://registry.yarnpkg.com/@fullcalendar/timegrid/-/timegrid-6.1.5.tgz#cf76716e279a383e17d624b36e4befd1d1558368"
   integrity sha512-phofe7XQ+JbejQB9zGqtZOGmPr/vMkfkK5dwPY4rOjxZOG/wspL3aXoSurmXaVP5CIiRWBvX9QPq0UgVJt0j5A==
