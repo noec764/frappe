@@ -31,7 +31,11 @@ export class SCSection {
 				title: row.label,
 				icon: row.icon,
 				color: row.color,
-				href: card_renderer.get_route({ filters: row.filters, view: "List" }),
+				href: card_renderer.get_route({
+					filters: row.filters,
+					name: row.dt,
+					view: "List",
+				}),
 				className: "sc-foryou-" + type,
 				dataset: row.data,
 			});

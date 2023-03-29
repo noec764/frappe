@@ -150,11 +150,11 @@ class SummaryCard(Document):
 	def row_query(self, row: "SummaryCardRow"):
 		if row.type == "Count":
 			count = frappe.db.count(row._dt, filters=row._filters)
-			return count
+			return {"count": count}
 
 	def row_format_badge(self, row: "SummaryCardRow", data: Any):
 		if row.type == "Count":
-			formatted_data = frappe.format_value(data)
+			formatted_data = frappe.format_value(data["count"])
 			fmt = (row.counter_format or "#").replace("#", "{0}", 1)
 			return _(fmt).format(formatted_data)
 		return repr(data)
@@ -256,7 +256,7 @@ class SummaryCard(Document):
 			data = self.row_query(row)
 
 			if row.type == "Count":
-				row_out["data"] = {"count": data}
+				row_out["data"] = data
 				row_out["badge"] = self.row_format_badge(row, data)
 
 			sections[-1]["items"].append(row_out)
