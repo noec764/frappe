@@ -122,6 +122,15 @@ frappe.views.ListViewSelect = class ListViewSelect {
 					.length,
 				action: () => this.set_route("map"),
 			},
+			Planning: {
+				condition: frappe.views.calendar[this.doctype],
+				action: () => this.set_route("planning"),
+				current_view_handler: () => {
+					this.get_calendars().then((calendars) => {
+						this.setup_dropdown_in_sidebar("Planning", calendars);
+					});
+				},
+			},
 		};
 
 		frappe.views.view_modes.forEach((view) => {

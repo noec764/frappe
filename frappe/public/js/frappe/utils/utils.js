@@ -1239,6 +1239,9 @@ Object.assign(frappe.utils, {
 						case "Kanban":
 							route = `${doctype_slug}/view/kanban`;
 							break;
+						case "Planning":
+							route = `${doctype_slug}/view/planning`;
+							break;
 						default:
 							route = doctype_slug;
 					}
