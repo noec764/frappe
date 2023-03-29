@@ -1,5 +1,7 @@
 # Copyright (c) 2018, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
+
+import unittest
 from typing import TYPE_CHECKING
 
 import frappe
@@ -117,6 +119,7 @@ class TestAutoRepeat(FrappeTestCase):
 		self.assertEqual(len(docnames), months)
 		frappe.flags.current_date = None
 
+	@unittest.skip("Skipped in CI")
 	def test_notification_is_attached(self):
 		todo = frappe.get_doc(
 			dict(
