@@ -74,7 +74,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				condition: frappe.views.calendar[this.doctype],
 				action: () => this.set_route("calendar"),
 				current_view_handler: () => {
-					this.get_calendars().then((calendars) => {
+					this.get_calendars("calendar").then((calendars) => {
 						this.setup_dropdown_in_sidebar("Calendar", calendars);
 					});
 				},
@@ -126,7 +126,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				condition: frappe.views.calendar[this.doctype],
 				action: () => this.set_route("planning"),
 				current_view_handler: () => {
-					this.get_calendars().then((calendars) => {
+					this.get_calendars("planning").then((calendars) => {
 						this.setup_dropdown_in_sidebar("Planning", calendars);
 					});
 				},
@@ -296,7 +296,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		}
 	}
 
-	get_calendars() {
+	get_calendars(view) {
 		const doctype = this.doctype;
 		let calendars = [];
 
@@ -313,13 +313,13 @@ frappe.views.ListViewSelect = class ListViewSelect {
 					// has standard calendar view
 					calendars.push({
 						name: "Default",
-						route: `/app/${this.slug()}/view/calendar/default`,
+						route: `/app/${this.slug()}/view/${view}/default`,
 					});
 				}
 				result.map((calendar) => {
 					calendars.push({
 						name: calendar.name,
-						route: `/app/${this.slug()}/view/calendar/${calendar.name}`,
+						route: `/app/${this.slug()}/view/${view}/${calendar.name}`,
 					});
 				});
 
