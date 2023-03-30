@@ -82,15 +82,24 @@ const Embed = Quill.import("blots/embed");
 
 class TemplateBlot extends Embed {
 	static create(value) {
-		let node = super.create(value);
-		node.setAttribute("class", "badge");
+		const node = super.create(value);
+		node.setAttribute("class", "indicator-pill blue no-indicator-dot");
 		node.setAttribute(ATTRS.PARENT, value.parent);
 		node.setAttribute(ATTRS.FIELDNAME, value.fieldname);
 		node.setAttribute(ATTRS.REFERENCE, value.reference);
 		node.setAttribute(ATTRS.LABEL, value.label);
 		node.setAttribute(ATTRS.FUNCTION, value.function);
 		node.setAttribute(ATTRS.FIELDTYPE, value.fieldtype);
-		node.innerHTML = value.label;
+
+		let label = value.label;
+		let icon = "";
+		if (value.function && value.function !== "null") {
+			icon = frappe.utils.icon("uil uil-cog", "xs") + " ";
+		} else {
+			icon = frappe.utils.icon("uil uil-tag-alt", "xs") + " ";
+		}
+		node.innerHTML = icon;
+		node.appendChild(document.createTextNode(label));
 		return node;
 	}
 
@@ -188,16 +197,22 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 
 	make_template_editor() {
 		const me = this;
-		if (["Email Template"].includes(this.doctype)) {
-			const toolbar = this.quill.getModule("toolbar");
-			toolbar.addHandler("template-blot", function () {
-				if (!me.field_selector) {
-					me.field_selector = new TemplateFieldSelector(me);
-				} else {
-					me.field_selector.make_dialog();
-				}
-			});
-		}
+		const toolbar = this.quill.getModule("toolbar");
+		toolbar.addHandler("template-blot", function () {
+			const inferred_doctype =
+				me.frm?.doc?.ref_doctype ||
+				me.frm?.doc?.reference_doctype ||
+				me.frm?.doc?.ref_dt ||
+				me.frm?.doc?.reference_dt;
+			if (!me.field_selector) {
+				me.field_selector = new TemplateFieldSelector({
+					default_doctype: inferred_doctype,
+					editor: me,
+				});
+			} else {
+				me.field_selector.make_dialog();
+			}
+		});
 	}
 
 	bind_events() {

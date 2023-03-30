@@ -8,6 +8,11 @@ export default class TemplateFieldSelector {
 		Object.assign(this, opts);
 		frappe.field_selector_updates = {};
 		Object.assign(frappe.field_selector_updates, EventEmitterMixin);
+
+		if (!this.editor) {
+			throw new Error("`editor` parameter");
+		}
+
 		this.make_dialog();
 
 		frappe.field_selector_updates.on("done", () => {
@@ -51,7 +56,11 @@ export default class TemplateFieldSelector {
 			el: this.wrapper,
 			render: (h) =>
 				h(TemplateFieldSelectorDialog, {
-					props: { quill: this.quill, Quill: this.Quill, doctype: this.default_doctype },
+					props: {
+						quill: this.editor.quill,
+						Quill: this.editor.Quill,
+						doctype: this.default_doctype,
+					},
 				}),
 		});
 

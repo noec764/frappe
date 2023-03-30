@@ -72,7 +72,9 @@
 	</span>
 	{% if showtemplate %}
 	<span class="ql-formats">
-		<button class="ql-template-blot" data-toggle="tooltip" title="{{ templateblot }}"></button>
+		<button class="ql-template-blot" data-toggle="tooltip" title="{{ templateblot }}">
+			{{ frappe.utils.icon("shortcut") }}
+		</button>
 	</span>
 	{% endif %}
 
