@@ -6,7 +6,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
 frappe.provide("frappe.views.calendar");
-frappe.provide("frappe.views.calendars");
 
 const day_map = {
 	Sunday: 0,

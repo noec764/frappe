@@ -8,13 +8,23 @@ import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
 frappe.provide("frappe.views.calendar");
 
+const day_map = {
+	Sunday: 0,
+	Monday: 1,
+	Tuesday: 2,
+	Wednesday: 3,
+	Thursday: 4,
+	Friday: 5,
+	Saturday: 6,
+};
+
 frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 	static load_last_view() {
 		const route = frappe.get_route();
 		if (route.length === 3) {
 			const doctype = route[1];
-			const user_settings = frappe.get_user_settings(doctype)["Planning"] || {};
-			route.push(user_settings.last_planning || "default");
+			const user_settings = frappe.get_user_settings(doctype)["Calendar"] || {};
+			route.push(user_settings.calendar || "default");
 			frappe.set_route(route);
 			return true;
 		} else {
@@ -38,7 +48,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		super.setup_defaults();
 		this.page_title = __("{0} Planning", [this.page_title]);
 		this.calendar_settings = frappe.views.calendar[this.doctype] || {};
-		this.planning_name = frappe.get_route()[3];
+		this.calendar_name = frappe.get_route()[3];
 		this.resource_section = null;
 		this.resource = null;
 		this.resource_label = null;
@@ -51,8 +61,8 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 			args: {
 				doctype: this.doctype
 			}
-		}).then(resources => {
-			const resources = res.message.filter(r => !this.calendar_settings.excluded_resources.includes(r.id))
+		}).then(res => {
+			const resources = this.calendar_settings.hasOwnProperty('excluded_resources') ? res.message.filter(r => !this.calendar_settings.excluded_resources.includes(r.id)) : res.message;
 			if (!this.resource) {
 				if (this.calendar_settings.default_resource && resources.map(r => r.id).includes(this.calendar_settings.default_resource)) {
 					this.resource = this.calendar_settings.default_resource;
@@ -81,6 +91,13 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		this.sort_selector.wrapper.hide();
 	}
 
+	before_render() {
+		super.before_render();
+		this.save_view_user_settings({
+			last_calendar: this.calendar_name,
+		});
+	}
+
 	render() {
 		if (this.calendar) {
 			this.calendar.refresh();
@@ -101,12 +118,46 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 			page: this.page,
 			list_view: this,
 		};
-		const calendar_name = this.planning_name;
+		const calendar_name = this.calendar_name;
 
 		return new Promise((resolve) => {
 			if (calendar_name.toLowerCase() === "default") {
 				Object.assign(options, frappe.views.calendar[this.doctype]);
 				resolve(options);
+			} else {
+				frappe.model.with_doc("Calendar View", calendar_name, () => {
+					const doc = frappe.get_doc("Calendar View", calendar_name);
+					if (!doc) {
+						frappe.show_alert(
+							__("{0} is not a valid Calendar. Redirecting to default Planning.", [
+								calendar_name.bold(),
+							])
+						);
+						frappe.set_route("List", this.doctype, "Planning", "default");
+						return;
+					}
+					Object.assign(options, {
+						field_map: {
+							id: "name",
+							start: doc.start_date_field,
+							end: doc.end_date_field,
+							title: doc.subject_field,
+							allDay: doc.all_day_field,
+							status: doc.status_field,
+							color: doc.color_field,
+							rrule: doc.recurrence_rule_field,
+						},
+						calendar_defaults: {
+							slots_start_time: doc.daily_minimum_time,
+							slots_end_time: doc.daily_maximum_time,
+							first_day: doc.first_day ? day_map[doc.first_day] : null,
+							display_event_time: doc.display_event_time == 1 ? true : false,
+							display_event_end: doc.display_event_end == 1 ? true : false,
+						},
+					});
+
+					resolve(options);
+				});
 			}
 		});
 	}
@@ -169,7 +220,10 @@ frappe.views.Planning = class frappePlanning {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
-		this.calendar_defaults = {};
+		this.calendar_defaults =
+			this.calendar_defaults && Object.keys(this.calendar_defaults)
+				? this.calendar_defaults
+				: {};
 		this.sidebar_menu = this.list_view.list_sidebar?.sidebar.find(".sidebar-menu");
 
 		this.field_map = this.field_map || {
@@ -387,6 +441,8 @@ frappe.views.Planning = class frappePlanning {
 				$(info.el).tooltip("dispose");
 			},
 			firstDay: defaults.first_day ?? frappe.datetime.get_first_day_of_the_week_index(),
+			slotMinTime: defaults.slots_start_time || "06:00:00",
+			slotMaxTime: defaults.slots_end_time || "22:00:00",
 			expandRows: true,
 			refetchResourcesOnNavigate: true,
 			resourceAreaWidth: "30%",
