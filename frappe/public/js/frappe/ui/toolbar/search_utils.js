@@ -64,7 +64,12 @@ frappe.search.utils = {
 			};
 			if (match[1][0] === "Form") {
 				if (match[1].length > 2 && match[1][1] !== match[1][2]) {
-					out.label = __(match[1][1]) + " " + match[1][2].bold();
+					out.label =
+						__(match[1][1]) +
+						" " +
+						(frappe.boot.translated_doctypes.includes(match[1][1])
+							? __(match[1][2]).bold()
+							: match[1][2].bold());
 					out.value = __(match[1][1]) + " " + match[1][2];
 				} else {
 					out.label = __(match[1][1]).bold();

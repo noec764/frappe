@@ -940,7 +940,6 @@ Object.assign(frappe.utils, {
 	},
 	get_route_label(route_str) {
 		let route = route_str.split("/");
-
 		if (route[2] === "Report" || route[0] === "query-report") {
 			return __("{0} Report", [__(route[3]) || __(route[1])]);
 		}
@@ -960,6 +959,9 @@ Object.assign(frappe.utils, {
 					return __("{0} Kanban", [__(route[1])]);
 			}
 			return __("{0} List", [__(route[1])]);
+		}
+		if (route[0] === "Tree") {
+			return __("{0} Tree", [__(route[1])]);
 		}
 		if (route[0] === "modules") {
 			return __("{0} Modules", [__(route[1])]);
