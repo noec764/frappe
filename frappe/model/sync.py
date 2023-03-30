@@ -110,6 +110,7 @@ def get_doc_files(files, start_path):
 		"report",
 		"dashboard_chart_source",
 		"dashboard_card_source",
+		"summary_card",
 		"print_format",
 		"web_page",
 		"website_theme",
