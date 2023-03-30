@@ -52,11 +52,17 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 				doctype: this.doctype
 			}
 		}).then(resources => {
+			const resources = res.message.filter(r => !this.calendar_settings.excluded_resources.includes(r.id))
 			if (!this.resource) {
-				this.resource = resources.message[0].id;
-				this.resource_label = resources.message[0].title;
+				if (this.calendar_settings.default_resource && resources.map(r => r.id).includes(this.calendar_settings.default_resource)) {
+					this.resource = this.calendar_settings.default_resource;
+					this.resource_label = resources.filter(r => r.id == this.calendar_settings.default_resource)[0].title;
+				} else {
+					this.resource = resources[0].id;
+					this.resource_label = resources[0].title;
+				}
 			}
-			this.setup_dropdown_for_resources(resources.message);
+			this.setup_dropdown_for_resources(resources);
 		})
 	}
 

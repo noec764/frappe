@@ -207,6 +207,9 @@ def get_week_number(dt):
 
 @frappe.whitelist()
 def get_resource_ids(doctype, resource):
+	if not resource:
+		return []
+
 	source_meta = frappe.get_meta(doctype)
 	field = source_meta.get_field(resource)
 	title_field = None
