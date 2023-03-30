@@ -6,8 +6,8 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 		return "Map";
 	}
 
-	setup_defaults() {
-		super.setup_defaults();
+	async setup_defaults() {
+		await super.setup_defaults();
 		this.page_title = __("{0} Map", [this.page_title]);
 	}
 

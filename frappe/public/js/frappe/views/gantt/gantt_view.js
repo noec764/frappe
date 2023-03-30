@@ -6,9 +6,9 @@ frappe.views.GanttView = class GanttView extends frappe.views.ListView {
 		return "Gantt";
 	}
 
-	setup_defaults() {
-		super.setup_defaults();
-		this.page_title = this.page_title + " " + __("Gantt");
+	async setup_defaults() {
+		await super.setup_defaults();
+		this.page_title = __("{0} Gantt", [this.page_title]);
 		this.calendar_settings = frappe.views.calendar[this.doctype] || {};
 
 		if (typeof this.calendar_settings.gantt == "object") {

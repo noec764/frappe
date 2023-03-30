@@ -9,6 +9,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 		this.ace_editor_target = $('<div class="ace-editor-target"></div>').appendTo(
 			this.input_area
 		);
+		this.$input = this.ace_editor_target;
 
 		// styling
 		this.ace_editor_target.addClass("border rounded");
@@ -30,7 +31,7 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 			this.$expand_button = $(
 				`<button class="btn btn-xs btn-default">${this.get_button_label()}</button>`
 			)
-				.click(() => {
+				.on("click", () => {
 					this.expanded = !this.expanded;
 					this.refresh_height();
 					this.toggle_label();
@@ -61,22 +62,24 @@ frappe.ui.form.ControlCode = class ControlCode extends frappe.ui.form.ControlTex
 		}, 300);
 
 		// setup autocompletion when it is set the first time
-		Object.defineProperty(this.df, "autocompletions", {
-			get() {
-				return this._autocompletions || [];
-			},
-			set: (value) => {
-				let getter = value;
-				if (typeof getter !== "function") {
-					getter = () => value;
-				}
-				if (!this._autocompletions) {
-					this._autocompletions = [];
-				}
-				this._autocompletions.push(getter);
-				this.setup_autocompletion();
-			},
-		});
+		if (!("autocompletions" in this.df)) {
+			Object.defineProperty(this.df, "autocompletions", {
+				get() {
+					return this._autocompletions || [];
+				},
+				set: (value) => {
+					let getter = value;
+					if (typeof getter !== "function") {
+						getter = () => value;
+					}
+					if (!this._autocompletions) {
+						this._autocompletions = [];
+					}
+					this._autocompletions.push(getter);
+					this.setup_autocompletion();
+				},
+			});
+		}
 	}
 
 	setup_autocompletion(customGetCompletions) {
