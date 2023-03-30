@@ -9,7 +9,7 @@ const assert = (condition, message) => {
 /**
  * @typedef {Object} Data
  * @property {string} error
- * @property {string} title
+ * @property {string} label
  * @property {string} dt
  * @property {string} icon
  * @property {Object[]} sections
@@ -87,7 +87,7 @@ export default class SummaryCardRenderer {
 
 	// Main render
 	get_view() {
-		return this.data.primary_button.view || "List";
+		return this.data.primary_button?.view || "List";
 	}
 
 	set_route({ filters = null, name = this.data.dt, view = this.get_view(), ...extra } = {}) {
@@ -141,6 +141,9 @@ export default class SummaryCardRenderer {
 	}
 
 	get_primary_route() {
+		if (!this.data.primary_button) {
+			return null;
+		}
 		return frappe.utils.generate_route({
 			name: this.data.dt,
 			type: "doctype",
@@ -200,7 +203,7 @@ export default class SummaryCardRenderer {
 			// pass
 		}
 		this.$freeze.html(
-			`<div style="user-select:all;white-space:pre-line;font-size:var(--text-xs);"></div>`
+			`<div style="user-select:text;white-space:pre-wrap;font-size:var(--text-xs);"></div>`
 		);
 		this.$freeze.find("div").text(error?.message || JSON.stringify(error, null, 2));
 	}
@@ -236,6 +239,7 @@ export default class SummaryCardRenderer {
 		this.render_loading_state();
 
 		this.data = await this.fetch_data();
+		this.wrapper.sc_data = this.data;
 		if (!this.data) {
 			this.render_no_data_state();
 			return;
