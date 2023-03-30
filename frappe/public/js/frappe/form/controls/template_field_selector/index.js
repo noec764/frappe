@@ -35,6 +35,8 @@ export default class TemplateFieldSelector {
 						this.default_doctype = value;
 						if (value) {
 							frappe.field_selector_updates.trigger("reference_update", value);
+						} else {
+							frappe.field_selector_updates.trigger("clear");
 						}
 					},
 				},
