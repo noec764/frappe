@@ -490,7 +490,6 @@ input.list-check-all {
 
 	.list-row-head {
 		position: sticky;
-		z-index: 1;
 		top: var(--list-gap-size);
 		background-color: var(--list-header-bg);
 		box-shadow: 0px 1px 3px -2px var(--list-header-shadow-color),
@@ -508,7 +507,6 @@ input.list-check-all {
 	}
 	.list-paging-area {
 		position: sticky;
-		z-index: 1;
 		bottom: var(--list-gap-size);
 		margin-bottom: var(--list-gap-size);
 		padding: var(--padding-sm);
