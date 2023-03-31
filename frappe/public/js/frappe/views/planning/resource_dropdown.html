@@ -1,0 +1,14 @@
+{% if (!resources.length) { %}
+<li class="resource-no-records text-muted">{{ __("No resource available.") }}</li>
+{% } else {
+	for (var i=0, l=resources.length; i < l; i++) {
+		var resource_label = resources[i].title;
+		var resource_value = resources[i].id;
+%}
+<li>
+	<a class="resources-link dropdown-item" data-label="{{ resource_label }}" data-value="{{ resource_value }}" href="#" onclick="return false;">
+		<span class="resources-label">{{ __(resource_label) }}</span>
+	</a>
+</li>
+	{% }
+} %}

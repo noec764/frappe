@@ -203,3 +203,61 @@ def get_week_number(dt):
 	adjusted_dom = dom + first_day.weekday()
 
 	return int(ceil(adjusted_dom / 7.0))
+
+
+@frappe.whitelist()
+def get_resource_ids(doctype, resource):
+	if not resource:
+		return []
+
+	source_meta = frappe.get_meta(doctype)
+	field = source_meta.get_field(resource)
+	title_field = None
+
+	if field.fieldtype=="Select":
+		return [{
+			"id": option,
+			"title": _(option) or _("No value")
+		} for option in field.options.split("\n")]
+
+	if field.fieldtype == "Link":
+		title_field = frappe.get_meta(field.options).get_title_field()
+
+	resources = frappe.get_all(doctype, fields=[resource], distinct=True, pluck=resource)
+
+	dt = frappe.qb.DocType(doctype)
+	query = (
+		frappe.qb.from_(dt)
+		.select(
+			dt[resource].as_('resource')
+		)
+		.distinct()
+	)
+	if title_field:
+		link_dt = frappe.qb.DocType(field.options)
+		query = query.from_(link_dt).select(link_dt[title_field].as_("title")).where(link_dt.name==dt[resource])
+
+	resources = query.run(as_dict=True)
+	output = []
+
+	for res in resources:
+		label = res.get("title") or res.resource
+		output.append({
+			"id": res.resource,
+			"title": label or _("No value")
+		})
+
+	return output
+
+@frappe.whitelist()
+def get_resources_for_doctype(doctype):
+	meta = frappe.get_meta(doctype)
+
+	excluded_fields = ["amended_from"]
+
+	select_and_link_fields = [
+		{"id": f.fieldname, "title": f.label}
+		for f in meta.fields if f.fieldtype in ["Select", "Link"] and not f.hidden and f.fieldname not in excluded_fields
+	]
+
+	return select_and_link_fields

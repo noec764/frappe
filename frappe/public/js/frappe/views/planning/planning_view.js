@@ -1,9 +1,10 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
-import { Calendar } from "@fullcalendar/core";
-import timeGridPlugin from "@fullcalendar/timegrid";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
+import { Calendar } from '@fullcalendar/core';
+import interactionPlugin, { Draggable } from '@fullcalendar/interaction';
+import adaptivePlugin from '@fullcalendar/adaptive';
+import resourceTimelinePlugin from '@fullcalendar/resource-timeline';
+import resourceTimeGridPlugin from '@fullcalendar/resource-timegrid';
 
 frappe.provide("frappe.views.calendar");
 
@@ -17,13 +18,13 @@ const day_map = {
 	Saturday: 6,
 };
 
-frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
+frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 	static load_last_view() {
 		const route = frappe.get_route();
 		if (route.length === 3) {
 			const doctype = route[1];
 			const user_settings = frappe.get_user_settings(doctype)["Calendar"] || {};
-			route.push(user_settings.last_calendar || "default");
+			route.push(user_settings.calendar || "default");
 			frappe.set_route(route);
 			return true;
 		} else {
@@ -31,11 +32,11 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		}
 	}
 
-	toggle_result_area() {}
+	toggle_result_area() { }
 
 	get view_name() {
-		// __("Calendar")
-		return "Calendar";
+		// __("Planning")
+		return "Planning";
 	}
 
 	setup_page() {
@@ -43,11 +44,36 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		super.setup_page();
 	}
 
-	async setup_defaults() {
-		await super.setup_defaults();
-		this.page_title = __("{0} Calendar", [this.page_title]);
+	setup_defaults() {
+		super.setup_defaults();
+		this.page_title = __("{0} Planning", [this.page_title]);
 		this.calendar_settings = frappe.views.calendar[this.doctype] || {};
 		this.calendar_name = frappe.get_route()[3];
+		this.resource_section = null;
+		this.resource = null;
+		this.resource_label = null;
+		this.setup_resources()
+	}
+
+	setup_resources() {
+		frappe.call({
+			method: "frappe.desk.calendar.get_resources_for_doctype",
+			args: {
+				doctype: this.doctype
+			}
+		}).then(res => {
+			const resources = this.calendar_settings.hasOwnProperty('excluded_resources') ? res.message.filter(r => !this.calendar_settings.excluded_resources.includes(r.id)) : res.message;
+			if (!this.resource) {
+				if (this.calendar_settings.default_resource && resources.map(r => r.id).includes(this.calendar_settings.default_resource)) {
+					this.resource = this.calendar_settings.default_resource;
+					this.resource_label = resources.filter(r => r.id == this.calendar_settings.default_resource)[0].title;
+				} else {
+					this.resource = resources[0].id;
+					this.resource_label = resources[0].title;
+				}
+			}
+			this.setup_dropdown_for_resources(resources);
+		})
 	}
 
 	before_refresh() {
@@ -81,7 +107,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		this.load_lib
 			.then(() => this.get_calendar_preferences())
 			.then((options) => {
-				this.calendar = new frappe.views.Calendar(options);
+				this.calendar = new frappe.views.Planning(options);
 			});
 	}
 
@@ -103,11 +129,11 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 					const doc = frappe.get_doc("Calendar View", calendar_name);
 					if (!doc) {
 						frappe.show_alert(
-							__("{0} is not a valid Calendar. Redirecting to default Calendar.", [
+							__("{0} is not a valid Calendar. Redirecting to default Planning.", [
 								calendar_name.bold(),
 							])
 						);
-						frappe.set_route("List", this.doctype, "Calendar", "default");
+						frappe.set_route("List", this.doctype, "Planning", "default");
 						return;
 					}
 					Object.assign(options, {
@@ -120,12 +146,7 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 							status: doc.status_field,
 							color: doc.color_field,
 							rrule: doc.recurrence_rule_field,
-							secondary_status: doc.secondary_status_field,
 						},
-						secondary_status_color: doc.secondary_status.reduce(
-							(obj, f) => Object.assign(obj, { [f.value]: f.color }),
-							{}
-						),
 						calendar_defaults: {
 							slots_start_time: doc.daily_minimum_time,
 							slots_end_time: doc.daily_maximum_time,
@@ -141,20 +162,68 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		});
 	}
 
-	get required_libs() {}
+	get required_libs() { }
+
+	setup_dropdown_for_resources(resources) {
+		if (!this.list_sidebar || this.resource_section) return;
+
+		const views_wrapper = this.list_sidebar.sidebar.find(".views-section");
+
+		this.resource_section = $(`<div class="sidebar-section resource-section">
+			<li class="sidebar-label">${__("Group Planning By")}</li>
+			<div class="current-resources">
+				<li class="list-link">
+					<a class="btn btn-default btn-sm list-sidebar-button"
+						data-toggle="dropdown"
+						aria-haspopup="true"
+						aria-expanded="false"
+						href="#"
+					>
+						<span class="selected-resource ellipsis">${__("Select a Resource")}</span>
+						<span>
+							<svg class="icon icon-xs">
+								<use href="#icon-select"></use>
+							</svg>
+						</span>
+					</a>
+					<ul class="dropdown-menu list-resources-dropdown" role="menu">
+						<div class="dropdown-search">
+							<input type="text" placeholder=${__("Search")} data-element="search" class="form-control input-xs">
+						</div>
+						<div class="resources-result">
+						</div>
+					</ul>
+				</li>
+			</div>
+		</div>`).insertAfter(views_wrapper)
+
+		const resources_list = $(frappe.render_template("resource_dropdown", { resources: resources })).on(
+			"click",
+			".resources-link",
+			(e) => {
+				const value = $(e.currentTarget).attr("data-value");
+				const label = $(e.currentTarget).attr("data-label");
+				this.resource_section.find(".selected-resource").html(__(label));
+				this.resource = value;
+				this.resource_label = label;
+				this.calendar.fullcalendar.setOption("resourceAreaColumns", this.calendar.get_resource_area_columns());
+				this.calendar.refresh()
+			}
+		);
+
+		this.resource_section.find(".list-resources-dropdown .resources-result").html(resources_list);
+		frappe.utils.setup_search(this.resource_section.find(".list-resources-dropdown"), ".resources-link", ".resources-label");
+	}
 };
 
-frappe.views.Calendar = class frappeCalendar {
+frappe.views.Planning = class frappePlanning {
 	constructor(options) {
 		$.extend(this, options);
 		this.fullcalendar = null;
 		this.calendar_defaults =
 			this.calendar_defaults && Object.keys(this.calendar_defaults)
 				? this.calendar_defaults
-				: {
-						display_event_time: true,
-						display_event_end: true,
-				  };
+				: {};
 		this.sidebar_menu = this.list_view.list_sidebar?.sidebar.find(".sidebar-menu");
 
 		this.field_map = this.field_map || {
@@ -174,9 +243,9 @@ frappe.views.Calendar = class frappeCalendar {
 			let defaults = {
 				initialView:
 					initialView &&
-					["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
-						? initialView
-						: "dayGridMonth",
+						["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
+						? initialView.replace("timeGrid", "resourceTimeline")
+						: "resourceTimelineMonth",
 				weekends: weekends ? weekends : true,
 			};
 			resolve(defaults);
@@ -198,7 +267,7 @@ frappe.views.Calendar = class frappeCalendar {
 		$.each(frappe.boot.calendars, function (i, doctype) {
 			if (frappe.model.can_read(doctype)) {
 				me.page.add_menu_item(__(doctype), function () {
-					frappe.set_route("List", doctype, "Calendar");
+					frappe.set_route("List", doctype, "Planning");
 				});
 			}
 		});
@@ -209,7 +278,6 @@ frappe.views.Calendar = class frappeCalendar {
 	}
 
 	make() {
-		const me = this;
 		this.$wrapper = this.parent;
 		this.$cal = $("<div>").appendTo(this.$wrapper);
 		this.footnote_area = frappe.utils.set_footnote(
@@ -223,10 +291,6 @@ frappe.views.Calendar = class frappeCalendar {
 		this.fullcalendar.render();
 
 		this.$wrapper.find(".fc-today-button").prepend(frappe.utils.icon("today"));
-
-		if (this.secondary_status_color) {
-			this.show_secondary_status_legend();
-		}
 	}
 
 	setup_view_mode_button(defaults) {
@@ -244,48 +308,21 @@ frappe.views.Calendar = class frappeCalendar {
 
 	bind() {
 		const me = this;
-		const btn_group = me.$wrapper.find(".fc-button-group");
-		btn_group.on("click", ".fc-button", function () {
-			const value = $(this).hasClass("fc-timeGridWeek-button")
-				? "timeGridWeek"
-				: $(this).hasClass("fc-timeGridDay-button")
-				? "timeGridDay"
-				: "dayGridMonth";
-			me.set_localStorage_option("cal_initialView", value);
-		});
+		// const btn_group = me.$wrapper.find(".fc-button-group");
+		// btn_group.on("click", ".fc-button", function () {
+		// 	const value = $(this).hasClass("fc-timeGridWeek-button")
+		// 		? "timeGridWeek"
+		// 		: $(this).hasClass("fc-timeGridDay-button")
+		// 			? "timeGridDay"
+		// 			: "dayGridMonth";
+		// 	me.set_localStorage_option("cal_initialView", value);
+		// });
 
 		me.$wrapper.on("click", ".btn-weekend", function () {
 			me.cal_options.weekends = !me.cal_options.weekends;
 			me.fullcalendar.setOption("weekends", me.cal_options.weekends);
 			me.set_localStorage_option("cal_weekends", me.cal_options.weekends);
 			me.setup_view_mode_button(me.cal_options);
-		});
-	}
-
-	show_secondary_status_legend() {
-		if (!this.sidebar_menu) return;
-		frappe.model.with_doctype(this.doctype, () => {
-			const meta = frappe.get_meta(this.doctype);
-			const status_colors = Object.keys(this.secondary_status_color)
-				.map((f) => {
-					return `
-					<div><span class="flex align-items-center status-color ${this.secondary_status_color[f]}">${__(
-						f
-					)}</span></div>
-				`;
-				})
-				.join("");
-			this.sidebar_menu.find(".calendar-status-section").remove();
-			this.sidebar_menu.append(`
-				<div class="calendar-status-section">
-					<li class="sidebar-label">${__(
-						meta.fields.filter(
-							(f) => f.fieldname == this.field_map.secondary_status
-						)[0].label
-					)}</li>
-					<div>${status_colors}</div>
-				</div>
-			`);
 		});
 	}
 
@@ -299,22 +336,35 @@ frappe.views.Calendar = class frappeCalendar {
 
 		this.cal_options = {
 			locale: frappe.get_cookie("preferred_language") || frappe.boot.lang || "en",
-			plugins: [interactionPlugin, timeGridPlugin, dayGridPlugin],
+			plugins: [resourceTimelinePlugin, interactionPlugin, adaptivePlugin, resourceTimeGridPlugin],
+			schedulerLicenseKey: frappe.boot.fullcalendar_scheduler_licence_key,
+			initialView: 'resourceTimelineWeek',
 			headerToolbar: {
-				left: "dayGridMonth,timeGridWeek,timeGridDay",
-				center: "prev,title,next",
-				right: "today",
+				left: 'resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth resourceTimeGridDay',
+				center: 'prev,title,next',
+				right: 'today'
 			},
 			height: "auto",
 			editable: true,
 			selectable: true,
 			selectMirror: true,
 			forceEventDuration: true,
-			displayEventTime: defaults.display_event_time,
-			displayEventEnd: defaults.display_event_end,
-			initialView: defaults.initialView,
 			weekends: defaults.weekends,
 			nowIndicator: true,
+			resourceAreaColumns: this.get_resource_area_columns(),
+			resources: function (parameters, callback) {
+				return frappe
+					.xcall(
+						me.get_resources_method || "frappe.desk.calendar.get_resource_ids",
+						{
+							doctype: me.doctype,
+							resource: me.list_view.resource
+						}
+					)
+					.then((r) => {
+						callback(r)
+					});
+			},
 			events: function (parameters, callback) {
 				return frappe
 					.xcall(
@@ -344,13 +394,6 @@ frappe.views.Calendar = class frappeCalendar {
 				$(info.el).tooltip("dispose");
 			},
 			select: function (selectionInfo) {
-				if (
-					selectionInfo.view.type === "dayGridMonth" &&
-					selectionInfo.end - selectionInfo.start === 86400000
-				) {
-					// detect single day click in month view
-					return;
-				}
 				const event = frappe.model.get_new_doc(me.doctype);
 
 				event[me.field_map.start] = me.get_system_datetime(selectionInfo.start);
@@ -371,8 +414,8 @@ frappe.views.Calendar = class frappeCalendar {
 				frappe.set_route("Form", me.doctype, event.name);
 			},
 			dateClick: function (info) {
-				if (info.view.type === "dayGridMonth") {
-					me.fullcalendar.changeView("timeGridDay");
+				if (info.view.type === "resourceTimelineMonth") {
+					me.fullcalendar.changeView("resourceTimelineDay");
 					me.fullcalendar.gotoDate(info.date);
 
 					// update "active view" btn
@@ -386,9 +429,7 @@ frappe.views.Calendar = class frappeCalendar {
 				month: __("Month"),
 				week: __("Week"),
 				day: __("Day"),
-			},
-			allDayContent: function () {
-				return __("All Day");
+				resourceTimeGridDay: __("Vertical")
 			},
 			eventDidMount: function (info) {
 				$(info.el).tooltip({
@@ -399,9 +440,13 @@ frappe.views.Calendar = class frappeCalendar {
 			eventWillUnmount: function (info) {
 				$(info.el).tooltip("dispose");
 			},
+			firstDay: defaults.first_day ?? frappe.datetime.get_first_day_of_the_week_index(),
 			slotMinTime: defaults.slots_start_time || "06:00:00",
 			slotMaxTime: defaults.slots_end_time || "22:00:00",
-			firstDay: defaults.first_day ?? frappe.datetime.get_first_day_of_the_week_index(),
+			expandRows: true,
+			refetchResourcesOnNavigate: true,
+			resourceAreaWidth: "30%",
+			slotMinWidth: 50,
 		};
 
 		if (this.options) {
@@ -416,10 +461,12 @@ frappe.views.Calendar = class frappeCalendar {
 			end: this.get_system_datetime(end),
 			filters: this.list_view.filter_area.get(),
 			field_map: this.field_map,
+			fields: [this.list_view.resource]
 		};
 	}
 
 	refresh() {
+		this.fullcalendar.refetchResources();
 		this.fullcalendar.refetchEvents();
 	}
 
@@ -429,6 +476,7 @@ frappe.views.Calendar = class frappeCalendar {
 			d.id = d.name;
 			d.editable = frappe.model.can_write(d.doctype || me.doctype);
 			d.classNames = d.classNames || [];
+			d.resourceId = d[me.list_view.resource];
 
 			// do not allow submitted/cancelled events to be moved / extended
 			if (d.docstatus && d.docstatus > 0) {
@@ -459,9 +507,6 @@ frappe.views.Calendar = class frappeCalendar {
 				d.end = frappe.datetime.add_days(d.start, 1);
 			}
 
-			if ((d.secondary_status || d.status) && me.secondary_status_color) {
-				d.classNames.push(me.secondary_status_color[d.secondary_status || d.status] || "");
-			}
 
 			me.fix_end_date_for_event_render(d);
 			me.prepare_colors(d);
@@ -561,5 +606,13 @@ frappe.views.Calendar = class frappeCalendar {
 				? this.get_system_datetime(moment(event.end).add(1, "day"))
 				: null;
 		}
+	}
+
+	get_resource_area_columns() {
+		return [
+			{
+				headerContent: __(this.list_view.resource_label),
+			}
+		]
 	}
 };
