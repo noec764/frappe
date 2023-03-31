@@ -82,15 +82,27 @@ const Embed = Quill.import("blots/embed");
 
 class TemplateBlot extends Embed {
 	static create(value) {
-		let node = super.create(value);
-		node.setAttribute("class", "badge");
+		const node = super.create(value);
+		node.setAttribute("class", "indicator-pill no-indicator-dot");
 		node.setAttribute(ATTRS.PARENT, value.parent);
 		node.setAttribute(ATTRS.FIELDNAME, value.fieldname);
 		node.setAttribute(ATTRS.REFERENCE, value.reference);
 		node.setAttribute(ATTRS.LABEL, value.label);
 		node.setAttribute(ATTRS.FUNCTION, value.function);
 		node.setAttribute(ATTRS.FIELDTYPE, value.fieldtype);
-		node.innerHTML = value.label;
+
+		let label = value.label;
+		let icon = "";
+		if (value.function && value.function !== "null") {
+			icon = frappe.utils.icon("uil uil-cog", "xs") + " ";
+			node.classList.add("yellow");
+		} else {
+			const dt_icon = frappe.model.doctype_icons?.[value.parent] || "fa fa-file";
+			icon = frappe.utils.icon(dt_icon, "xs") + " ";
+			node.classList.add("purple");
+		}
+		node.innerHTML = icon;
+		node.appendChild(document.createTextNode(label));
 		return node;
 	}
 
@@ -187,17 +199,25 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 	}
 
 	make_template_editor() {
-		const me = this;
-		if (["Email Template"].includes(this.doctype)) {
-			const toolbar = this.quill.getModule("toolbar");
-			toolbar.addHandler("template-blot", function () {
-				if (!me.field_selector) {
-					me.field_selector = new TemplateFieldSelector(me);
-				} else {
-					me.field_selector.make_dialog();
-				}
-			});
-		}
+		// race condition exists with rendering the icons in the blots
+		frappe.model.get_doctype_icons?.();
+
+		const toolbar = this.quill.getModule("toolbar");
+		toolbar.addHandler("template-blot", () => {
+			const inferred_doctype =
+				this.frm?.doc?.ref_doctype ||
+				this.frm?.doc?.reference_doctype ||
+				this.frm?.doc?.ref_dt ||
+				this.frm?.doc?.reference_dt;
+			if (!this.field_selector) {
+				this.field_selector = new TemplateFieldSelector({
+					default_doctype: inferred_doctype,
+					editor: this,
+				});
+			} else {
+				this.field_selector.make_dialog();
+			}
+		});
 	}
 
 	bind_events() {

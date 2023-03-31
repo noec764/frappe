@@ -202,13 +202,6 @@
 		background: var(--gray-500);
 	}
 
-	$indicator-colors: green, cyan, blue, orange, yellow, gray, grey, red, pink, darkgrey, purple, light-blue, darkgray;
-	@each $color in $indicator-colors {
-		.indicator {
-			--indicator-dot-#{"" + $color}: var(--bg-#{$color});
-		}
-	}
-
 	--list-body-bg: var(--card-bg);
 	--list-header-fg: var(--heading-color);
 	--list-header-bg: var(--modal-bg);

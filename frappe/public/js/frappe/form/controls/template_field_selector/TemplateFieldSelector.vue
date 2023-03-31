@@ -62,6 +62,11 @@ export default {
 			this.get_fields(reference)
 		})
 
+		frappe.field_selector_updates.on('clear', () => {
+			this.selectedPills = []
+			this.fields = {}
+		})
+
 		frappe.field_selector_updates.on('submit', () => {
 			this.add_field_to_text();
 			frappe.field_selector_updates.trigger('done');
