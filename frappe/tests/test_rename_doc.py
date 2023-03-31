@@ -218,7 +218,7 @@ class TestRenameDoc(FrappeTestCase):
 		new_name = f"{dn}-new"
 
 		# pass invalid types to API
-		with self.assertRaises(frappe.ValidationError):
+		with self.assertRaises((frappe.ValidationError, frappe.exceptions.FrappeTypeError)):
 			update_document_title(doctype=dt, docname=dn, title={}, name={"hack": "this"})
 
 		doc_before = frappe.get_doc(test_doctype, dn)
