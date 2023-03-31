@@ -1,3 +1,4 @@
+import { createApp } from "vue";
 import TemplateFieldSelectorDialog from "./TemplateFieldSelector.vue";
 import EventEmitterMixin from "../../../event_emitter";
 
@@ -54,17 +55,13 @@ export default class TemplateFieldSelector {
 
 		this.wrapper = this.dialog.fields_dict.upload_area.$wrapper[0];
 
-		this.selector_area = new Vue({
-			el: this.wrapper,
-			render: (h) =>
-				h(TemplateFieldSelectorDialog, {
-					props: {
-						quill: this.editor.quill,
-						Quill: this.editor.Quill,
-						doctype: this.default_doctype,
-					},
-				}),
+		const app = createApp(TemplateFieldSelectorDialog, {
+			quill: this.editor.quill,
+			Quill: this.editor.Quill,
+			doctype: this.default_doctype,
 		});
+		app.mount(this.wrapper);
+		this.selector_area = app;
 
 		this.dialog.show();
 	}
