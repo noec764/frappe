@@ -412,8 +412,10 @@ frappe.Application = class Application {
 		if (frappe.boot && frappe.boot.home_page !== "setup-wizard") {
 			frappe.frappe_toolbar = new frappe.ui.toolbar.Toolbar();
 
-			if (frappe.boot.desk_settings.search_bar && frappe.ui.quick_access) {
-				frappe.quick_access_menu = new frappe.ui.quick_access.QuickAccessMenu();
+			if (frappe.boot.desk_settings.search_bar) {
+				frappe.require("quick_access.bundle.js").then(() => {
+					frappe.ui.quick_access_menu = new frappe.ui.QuickAccessMenu();
+				});
 			}
 		}
 	}
