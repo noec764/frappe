@@ -50,7 +50,7 @@ class FormBuilder {
 			this.store.reset_changes();
 		});
 
-		this.go_to_doctype_list_btn = this.page.add_button(
+		this.go_to_doctype_list_btn = this.page.add_menu_item(
 			__("Go to {0} List", [__(this.doctype)]),
 			() => {
 				window.open(`/app/${frappe.router.slug(this.doctype)}`);
@@ -106,9 +106,17 @@ class FormBuilder {
 				this.reset_changes_btn.hide();
 			}
 
+			// Prevent data loss because of unsaved changes
+			this.customize_form_btn.toggleClass("disabled", this.store.dirty);
+			this.doctype_form_btn.toggleClass("disabled", this.store.dirty);
+			this.go_to_doctype_btn.toggleClass("disabled", this.store.dirty);
+			this.go_to_customize_form_btn.toggleClass("disabled", this.store.dirty);
+
 			// toggle doctype / customize form btn based on url
 			this.customize_form_btn.toggle(!this.store.is_customize_form);
+			this.go_to_doctype_btn.toggle(!this.store.is_customize_form);
 			this.doctype_form_btn.toggle(this.store.is_customize_form);
+			this.go_to_customize_form_btn.toggle(this.store.is_customize_form);
 
 			// hide customize form & Go to customize form btn
 			if (
