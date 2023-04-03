@@ -10,12 +10,21 @@ let search_text = ref("");
 
 let fields = computed(() => {
 	let fields = frappe.model.all_fieldtypes
-		.filter(df => {
-			if (in_list(frappe.model.layout_fields, df)) {
+		.map(fieldtype => {
+			const df = store.get_df(fieldtype);
+			df.label = __(fieldtype, null, "DocField");
+			return {
+				df: df,
+				table_columns: [],
+			};
+		})
+		.sort((a, b) => a.df.label.localeCompare(b.df.label))
+		.filter(({ df }) => {
+			if (in_list(frappe.model.layout_fields, df.fieldtype)) {
 				return false;
 			}
 			if (search_text.value) {
-				if (df.toLowerCase().includes(search_text.value.toLowerCase())) {
+				if (df.label.toLowerCase().includes(search_text.value.toLowerCase())) {
 					return true;
 				}
 				return false;
@@ -23,13 +32,6 @@ let fields = computed(() => {
 				return true;
 			}
 		})
-		.map(df => {
-			let out = {
-				df: store.get_df(df),
-				table_columns: [],
-			};
-			return out;
-		});
 
 	return [...fields];
 });
@@ -58,8 +60,8 @@ function on_drag_end(evt) {
 		@end="on_drag_end"
 	>
 		<template #item="{ element }">
-			<div class="field" :title="element.df.fieldtype">
-				{{ element.df.fieldtype }}
+			<div class="field" :title="element.df.label">
+				{{ element.df.label }}
 			</div>
 		</template>
 	</draggable>
