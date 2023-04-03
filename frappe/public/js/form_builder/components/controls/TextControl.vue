@@ -99,13 +99,13 @@ watch([() => doctype.value, () => fieldname.value], ([doctype_value, fieldname_v
 			:no_label="true"
 		/>
 	</div>
-	<div v-else class="control" :class="{ editable: slots.label }">
+	<div v-else class="control frappe-control" :class="{ editable: slots.label }">
 		<!-- label -->
 		<div v-if="slots.label" class="field-controls">
 			<slot name="label" />
 			<slot name="actions" />
 		</div>
-		<div v-else class="label">{{ df.label }}</div>
+		<div v-else class="control-label label">{{ df.label }}</div>
 
 		<!-- textarea input -->
 		<textarea
