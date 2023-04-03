@@ -8,7 +8,7 @@ let store = useStore();
 
 let tab_titles = [__("Field Types"), __("Field Properties")];
 let active_tab = ref(tab_titles[0]);
-let sidebar_width = ref(272);
+let sidebar_width = ref(320);
 let sidebar_resizing = ref(false);
 
 function start_resize() {
@@ -99,7 +99,6 @@ watch(
 		align-items: center;
 		width: 100%;
 		height: 32px;
-		background-color: var(--bg-gray);
 		border-radius: var(--border-radius-md);
 		border: 1px solid var(--dark-border-color);
 		cursor: pointer;
@@ -116,7 +115,12 @@ watch(
 		}
 
 		&.active {
+			background-color: var(--bg-gray);
+			font-weight: 500;
+		}
+		&:not(.active) {
 			background-color: var(--fg-color);
+			color: var(--text-muted);
 		}
 	}
 }
