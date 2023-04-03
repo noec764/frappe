@@ -90,6 +90,11 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			return this.clear_icon(); // clear icon
 		}
 
+		// do not show icon on website
+		if (!frappe.user?.name) {
+			return this.clear_icon();
+		}
+
 		// do not show icon for TableMultiSelect and other subclasses
 		const is_link = this.df.fieldtype.match(/(Dynamic )?Link/);
 		if (!is_link) {
