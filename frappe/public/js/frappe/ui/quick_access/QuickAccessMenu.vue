@@ -364,7 +364,7 @@ export default {
 	bottom: 0;
 	width: 100%;
 	height: 16px;
-	background: linear-gradient(0deg, white, rgba(255,255,255,0));
+	background: linear-gradient(0deg, var(--modal-bg, white), transparent);
 }
 
 .QAM-results {
