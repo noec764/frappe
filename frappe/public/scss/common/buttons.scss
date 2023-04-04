@@ -142,3 +142,30 @@
 	font-size: inherit;
 	background-color: inherit;
 }
+
+@mixin button-text-variant($fg, $bg) {
+	box-shadow: none;
+	border: none;
+	text-decoration: underline;
+
+	background-color: transparent;
+	color: $bg;
+	--icon-stroke: currentColor;
+	font-weight: 600;
+
+	&:hover:not(:active) {
+		background-color: $bg;
+		color: $fg;
+	}
+
+	.icon:first-child {
+		margin-right: 2px;
+	}
+}
+
+.btn.btn-text-primary {
+	@include button-text-variant(var(--white), var(--primary));
+}
+.btn.btn-text-danger {
+	@include button-text-variant(var(--alert-bg-danger), var(--alert-text-danger));
+}
