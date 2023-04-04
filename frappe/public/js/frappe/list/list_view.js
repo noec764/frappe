@@ -355,20 +355,33 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_selection_buttons() {
 		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete"];
+		const selection_actions = ["Cancel", "Delete", "Duplicate"];
 		const labels_to_find = selection_actions.map((txt) => __(txt));
+		const style_map = {
+			Cancel: ["close-alt", "btn-text-danger"],
+			Delete: ["delete", "btn-text-danger"],
+			Duplicate: ["duplicate", "btn-text-primary"],
+		};
 		for (const menu_item of this.actions_menu_items) {
-			if (labels_to_find.includes(menu_item.label)) {
-				actions.push(menu_item);
+			const i = labels_to_find.indexOf(menu_item.label);
+			if (i >= 0) {
+				const name = selection_actions[i];
+				const [icon, btn_class] = style_map[name] ?? ["", "btn-default"];
+				actions.push({
+					name: name,
+					icon,
+					btn_class,
+					menu_item,
+				});
 			}
 		}
 
 		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show();
-		for (const action of actions) {
-			const btn_class = "btn-danger";
+		for (const { menu_item, btn_class, icon } of actions) {
 			const btn = $(`<button class="btn btn-xs ${btn_class}">`)
-				.text(action.label)
-				.on("click", action.action)
+				.html(icon ? frappe.utils.icon(icon, "xs") : "")
+				.append(menu_item.label)
+				.on("click", menu_item.action)
 				.appendTo(container);
 		}
 	}
