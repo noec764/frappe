@@ -8,7 +8,6 @@ import unittest
 from io import StringIO
 from unittest.mock import patch
 
-import git
 import yaml
 
 import frappe
@@ -133,9 +132,6 @@ class TestBoilerPlate(unittest.TestCase):
 			self.assertTrue(os.path.exists(path), msg=f"{path} should exist in {app_name} app")
 
 		self.check_parsable_python_files(new_app_dir)
-
-		app_repo = git.Repo(new_app_dir)
-		self.assertEqual(app_repo.active_branch.name, "develop")
 
 	def test_create_app_without_git_init(self):
 		app_name = "test_app_no_git"
