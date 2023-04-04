@@ -146,8 +146,8 @@
 		color: var(--blue-400);
 	}
 
-	.btn-new > .icon {
-		stroke: var(--yellow-200);
+	.btn-new {
+		--icon-stroke: var(--yellow-400);
 	}
 
 	.section-head {
@@ -262,6 +262,9 @@
 		}
 		.btn-new {
 			box-shadow: none;
+			&:hover {
+				background-color: var(--yellow-50);
+			}
 		}
 	}
 }

@@ -356,20 +356,33 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_selection_buttons() {
 		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete"];
+		const selection_actions = ["Cancel", "Delete", "Duplicate"];
 		const labels_to_find = selection_actions.map((txt) => __(txt));
+		const style_map = {
+			Cancel: ["close-alt", "btn-text-danger"],
+			Delete: ["delete", "btn-text-danger"],
+			Duplicate: ["duplicate", "btn-text-primary"],
+		};
 		for (const menu_item of this.actions_menu_items) {
-			if (labels_to_find.includes(menu_item.label)) {
-				actions.push(menu_item);
+			const i = labels_to_find.indexOf(menu_item.label);
+			if (i >= 0) {
+				const name = selection_actions[i];
+				const [icon, btn_class] = style_map[name] ?? ["", "btn-default"];
+				actions.push({
+					name: name,
+					icon,
+					btn_class,
+					menu_item,
+				});
 			}
 		}
 
 		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show();
-		for (const action of actions) {
-			const btn_class = "btn-danger";
+		for (const { menu_item, btn_class, icon } of actions) {
 			const btn = $(`<button class="btn btn-xs ${btn_class}">`)
-				.text(action.label)
-				.on("click", action.action)
+				.html(icon ? frappe.utils.icon(icon, "xs") : "")
+				.append(menu_item.label)
+				.on("click", menu_item.action)
 				.appendTo(container);
 		}
 	}
@@ -1116,6 +1129,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_events() {
 		this.setup_filterable();
 		this.setup_list_click();
+		this.setup_drag_click();
 		this.setup_tag_event();
 		this.setup_new_doc_event();
 		this.setup_check_events();
@@ -1290,6 +1304,34 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				return false;
 			}
 		});
+	}
+
+	setup_drag_click() {
+		/*
+			Click on the check box in the list view and
+			drag through the rows to select.
+			Do it again to unselect.
+			If the first click is on checked checkbox, then it will unselect rows on drag,
+			else if it is unchecked checkbox, it will select rows on drag.
+		*/
+		this.dragClick = false;
+		this.$result.on("mousedown", ".list-row-checkbox", (e) => {
+			this.dragClick = true;
+			this.check = !e.target.checked;
+		});
+		$(document).on("mouseup", () => {
+			this.dragClick = false;
+		});
+		this.$result.on("mousemove", ".level.list-row", (e) => {
+			if (this.dragClick) {
+				this.check_row_on_drag(e, this.check);
+			}
+		});
+	}
+
+	check_row_on_drag(event, check = true) {
+		$(event.target).find(".list-row-checkbox").prop("checked", check);
+		this.on_row_checked();
 	}
 
 	setup_action_handler() {
