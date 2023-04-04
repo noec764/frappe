@@ -3,9 +3,7 @@ import { bus } from "./bus";
 
 import QuickAccessMenu from "./QuickAccessMenu.vue";
 
-frappe.provide("frappe.ui.quick_access");
-
-frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
+export class QuickAccessMenuSetup {
 	constructor(opts = {}) {
 		this.setup_menu();
 		// this.setup_button()
@@ -20,6 +18,13 @@ frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
 	bind_events() {
 		frappe.ui.keys.add_shortcut({
 			shortcut: "ctrl+g",
+			description: __("Open Awesomebar"),
+			action: () => {
+				bus.$emit("quick-access-showAt", { anchor: "center" });
+			},
+		});
+		frappe.ui.keys.add_shortcut({
+			shortcut: "ctrl+k",
 			description: __("Open Awesomebar"),
 			action: () => {
 				bus.$emit("quick-access-showAt", { anchor: "center" });
@@ -49,6 +54,7 @@ frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
 
 	setup_menu() {
 		this.menu = createApp(QuickAccessMenu);
+		SetVueGlobals(this.menu);
 		this.menu.mount("#modules-menu");
 
 		bus.$emit("quick-access-setItems", [
@@ -59,8 +65,10 @@ frappe.ui.quick_access.QuickAccessMenu = class QuickAccessMenuSetup {
 					icon: w.icon,
 					route: (w.public ? "/app/" : "/app/private/") + frappe.router.slug(w.name),
 					color: w.color,
+					public: w.public,
 				}))
-				.sort((a, b) => a.label.localeCompare(b.label)),
+				.sort((a, b) => a.label.localeCompare(b.label))
+				.sort((a, b) => (a.public ? 1 : -1) - (b.public ? 1 : -1)),
 		]);
 	}
-};
+}
