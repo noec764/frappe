@@ -104,7 +104,12 @@
 	}
 }
 
+.row-index {
+	max-width: 54px;
+}
+
 .row-check {
+	max-width: 34px;
 	height: 34px;
 	padding: 8px 3px !important;
 	text-align: center;
@@ -210,13 +215,13 @@
 		.form-control {
 			border-radius: 0px;
 			border: 0px;
-			padding-top: 8px;
-			padding-bottom: 9px;
+			padding: 8px;
+			padding-bottom: 7px;
 			height: 34px;
 		}
 
 		.link-btn {
-			top: 2px;
+			top: 5px;
 		}
 
 		.form-control:focus {
