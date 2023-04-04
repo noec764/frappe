@@ -60,7 +60,7 @@ unittests:
     - rm -rf /var/lib/apt/lists/*
     - rm -rf /etc/apt/sources.list.d/*
     - curl -sL https://deb.nodesource.com/setup_16.x | bash
-    - apt-get install -y nodejs
+    - apt-get install -y nodejs git
     - npm install --global yarn
     - export PATH=$PATH:/home/dokotest/.local/bin
     - adduser --disabled-password --gecos "" dokotest
