@@ -23,6 +23,7 @@
 </template>
 
 <script setup>
+import { defineProps, computed } from 'vue'
 import { bus } from './bus'
 
 const props = defineProps({
