@@ -18,7 +18,7 @@ frappe.ui.FloatingButton = class FloatingButton {
 				`
 			<button class="btn btn-primary btn-lg btn-fab shadow-sm ${this.className}" id="${this.id}"></button>
 			<style>
-				.btn-fab {
+				.btn.btn-fab {
 					position: fixed;
 					bottom: 1rem;
 					left: 1rem;
@@ -29,7 +29,7 @@ frappe.ui.FloatingButton = class FloatingButton {
 					justify-content: center;
 					gap: 0.5rem;
 				}
-				.btn-fab .icon {
+				.btn.btn-fab .icon {
 					margin-left: -0.5rem;
 				}
 			</style>
