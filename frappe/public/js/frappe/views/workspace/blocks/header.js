@@ -104,12 +104,23 @@ export default class Header extends Block {
 		this._data = this.normalizeData(data);
 
 		if (data.text !== undefined) {
-			let text = __(this._data.text) || "";
+			let html = "" + this._data.text;
 
-			const contains_html_tag = /<[a-z][\s\S]*>/i.test(text);
-			this._element.innerHTML = contains_html_tag
-				? text
-				: `<span class="h${this._settings.default_size}">${text}</span>`;
+			const contains_html_tag = /<[a-z][\s\S]*>/i.test(html);
+			if (!contains_html_tag) {
+				html = `<span class="h${this._settings.default_size}">${html}</span>`;
+			}
+
+			// Translate text by first retrieving the text from the html
+			const node = document.createElement("div");
+			node.innerHTML = html;
+			node.textContent = node.textContent; // To remove html tags
+			const text = node.innerHTML; // To get the source text (with &amp;)
+			// Replacing the text won't work if some parts of the text are bold, italic, etc.
+			html = html.replace(text, __(text));
+
+			// Then applying the translation
+			this._element.innerHTML = html;
 		}
 
 		if (!this.readOnly && this.wrapper) {
