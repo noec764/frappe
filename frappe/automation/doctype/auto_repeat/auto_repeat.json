@@ -87,11 +87,12 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "Monthly",
    "fieldname": "frequency",
    "fieldtype": "Select",
    "in_list_view": 1,
    "label": "Frequency",
-   "options": "\nDaily\nWeekly\nMonthly\nQuarterly\nHalf-yearly\nYearly",
+   "options": "Daily\nWeekly\nMonthly\nQuarterly\nHalf-yearly\nYearly",
    "reqd": 1
   },
   {
@@ -210,7 +211,7 @@
   }
  ],
  "links": [],
- "modified": "2020-04-02 18:05:21.879454",
+ "modified": "2023-03-29 16:45:21.437883",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Auto Repeat",

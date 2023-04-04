@@ -18,7 +18,8 @@
   "style_settings_column",
   "collapsible",
   "color",
-  "icon"
+  "icon",
+  "icon_first"
  ],
  "fields": [
   {
@@ -54,7 +55,7 @@
   },
   {
    "default": "#",
-   "depends_on": "eval:doc.type==\"Counter\"",
+   "depends_on": "eval:doc.type==\"Count\"",
    "description": "A string containing a \"#\" character which will be replaced with the number of documents found. Example: \"# unpaid invoices\". Leave empty to not include a counter. ",
    "fieldname": "counter_format",
    "fieldtype": "Data",
@@ -72,6 +73,12 @@
    "fieldname": "icon",
    "fieldtype": "Icon",
    "label": "Icon"
+  },
+  {
+   "depends_on": "eval:doc.type!==\"Section Break\" || (!doc.collapsible)",
+   "fieldname": "icon_first",
+   "fieldtype": "Check",
+   "label": "Place Icon First"
   },
   {
    "fieldname": "column_break_3",
@@ -97,7 +104,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-03-09 15:52:33.935830",
+ "modified": "2023-03-29 13:33:38.292119",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Summary Card Row",

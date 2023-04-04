@@ -1,7 +1,7 @@
 .navbar {
 	height: $navbar-height;
 	background: var(--navbar-bg);
-	box-shadow: inset 0px -1px 0px var(--shadow-inset);
+	box-shadow: var(--shadow-inset);
 	border-color: rgba(237,242,247,var(--border-opacity))!important;
 	--border-opacity: 1;
 	border: 0 solid #e2e8f0 /* 2;; */;

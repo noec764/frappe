@@ -221,6 +221,7 @@ class UserPermissions:
 				"language",
 				"last_name",
 				"mute_sounds",
+				"expanded_desk_search",
 				"send_me_a_copy",
 				"user_type",
 			],

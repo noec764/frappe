@@ -178,7 +178,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 				__("Discard?"),
 				__("Are you sure you want to discard the changes?"),
 				() => (window.location.href = path),
-				__("Discard")
+				__("Discard", null, "Button in web form")
 			);
 		} else {
 			window.location.href = path;
@@ -224,13 +224,13 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			error_sections.push({
 				title: __("Missing values for fields", null, "Web Form"),
 				message: "<ul><li>" + errors.join("<li>") + "</ul>",
-			})
+			});
 		}
 		if (invalid_values.length) {
 			error_sections.push({
 				title: __("Invalid values for fields", null, "Web Form"),
 				message: "<ul><li>" + invalid_values.join("<li>") + "</ul>",
-			})
+			});
 		}
 
 		if (error_sections.length) {
@@ -239,10 +239,12 @@ export default class WebForm extends frappe.ui.FieldGroup {
 				title = error_sections[0].title;
 				message = error_sections[0].message;
 			} else {
-				title = __("Error", null, "Web Form")
-				message = error_sections.map(section => {
-					return `<b>${section.title}</b><br/>${section.message}`;
-				}).join("<br>");
+				title = __("Error", null, "Web Form");
+				message = error_sections
+					.map((section) => {
+						return `<b>${section.title}</b><br/>${section.message}`;
+					})
+					.join("<br>");
 			}
 			frappe.msgprint({
 				title: title,
@@ -251,7 +253,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			});
 		}
 
-		return !(error_sections.length);
+		return !error_sections.length;
 	}
 
 	toggle_section() {
@@ -423,7 +425,7 @@ export default class WebForm extends frappe.ui.FieldGroup {
 			window.location.href = data; // old style redirect
 			return;
 		}
-		if (data && (!data.doctype) && data.redirect) {
+		if (data && !data.doctype && data.redirect) {
 			window.location.href = data.redirect;
 			return;
 		}

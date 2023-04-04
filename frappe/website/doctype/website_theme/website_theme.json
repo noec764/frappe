@@ -24,6 +24,7 @@
   "light_color",
   "dark_color",
   "background_color",
+  "sidebar_color",
   "stylesheet_section",
   "custom_overrides",
   "custom_scss",
@@ -123,6 +124,12 @@
    "options": "Color"
   },
   {
+   "fieldname": "sidebar_color",
+   "fieldtype": "Link",
+   "label": "Sidebar Color",
+   "options": "Color"
+  },
+  {
    "fieldname": "stylesheet_section",
    "fieldtype": "Tab Break",
    "label": "Stylesheet"
@@ -186,7 +193,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-10-25 22:15:53.601571",
+ "modified": "2023-03-27 13:59:48.431065",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Theme",

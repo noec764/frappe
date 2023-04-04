@@ -22,6 +22,7 @@
 @import 'page_builder';
 @import 'blog';
 @import 'markdown';
+@import 'web_sidebar';
 @import 'sidebar';
 @import 'portal';
 @import 'search';
@@ -241,10 +242,6 @@ h5.modal-title {
 }
 .col-xs-12 {
 	@extend .col-12;
-}
-
-.btn-default {
-	@extend .btn-light;
 }
 
 .btn-xs {

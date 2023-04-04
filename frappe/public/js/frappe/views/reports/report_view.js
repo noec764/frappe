@@ -18,7 +18,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	setup_defaults() {
 		super.setup_defaults();
-		this.page_title = __("Report:") + " " + this.page_title;
+		this.page_title = __("Report: {0}", [this.page_title]);
 		this.view = "Report";
 
 		const route = frappe.get_route();

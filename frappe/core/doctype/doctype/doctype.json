@@ -212,6 +212,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:!doc.istable",
    "fieldname": "beta",
    "fieldtype": "Check",
    "label": "Beta"
@@ -571,6 +572,7 @@
   },
   {
    "default": "0",
+   "depends_on": "eval:!doc.istable",
    "fieldname": "is_virtual",
    "fieldtype": "Check",
    "label": "Is Virtual"
@@ -646,6 +648,7 @@
 },
 {
  "default": "0",
+ "depends_on": "eval:!doc.istable",
  "description": "Enables Calendar and Gantt views.",
  "fieldname": "is_calendar_and_gantt",
  "fieldtype": "Check",
@@ -731,7 +734,7 @@
    "link_fieldname": "reference_doctype"
   }
  ],
- "modified": "2022-12-13 15:50:27.315351",
+ "modified": "2023-03-23 16:15:51.067267",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocType",

@@ -31,7 +31,11 @@ export class SCSection {
 				title: row.label,
 				icon: row.icon,
 				color: row.color,
-				href: card_renderer.get_route({ filters: row.filters, view: "List" }),
+				href: card_renderer.get_route({
+					filters: row.filters,
+					name: row.dt,
+					view: "List",
+				}),
 				className: "sc-foryou-" + type,
 				dataset: row.data,
 			});
@@ -80,7 +84,7 @@ export class SCSection {
 		const $header = $(`<button class="sc-row sc-section__header">`).appendTo($section);
 
 		if (section.icon) {
-			SCIcon.render({ icon: section.icon }).appendTo($header);
+			SCIcon.render({ icon: section.icon, size: "sm" }).appendTo($header);
 		}
 		SCLabel.render({ label: section.label }).appendTo($header);
 
@@ -134,11 +138,10 @@ export class SCSection {
 			icon = "arrow-right";
 		}
 
-		if (row.dt !== card_renderer.data.dt) {
-			$row.addClass("sc-icon-left");
-		}
-
 		if (icon) {
+			if (row.iconFirst) {
+				$row.addClass("sc-icon-first");
+			}
 			SCIcon.render({ icon }).appendTo($row);
 		}
 

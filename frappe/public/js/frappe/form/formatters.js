@@ -45,7 +45,7 @@ frappe.form.formatters = {
 		return __(frappe.form.formatters["Data"](value, df));
 	},
 	Select: function (value, df) {
-		const txt = frappe.form.formatters["Data"](value, df)
+		const txt = frappe.form.formatters["Data"](value, df);
 		if (df.fieldname === "fieldtype") {
 			return __(txt, null, "DocField");
 		}
@@ -196,7 +196,7 @@ frappe.form.formatters = {
 			return value;
 		}
 		if (value) {
-			value = frappe.datetime.str_to_user(value);
+			value = frappe.datetime.str_to_user(value, false, true);
 			// handle invalid date
 			if (value === "Invalid date") {
 				value = null;

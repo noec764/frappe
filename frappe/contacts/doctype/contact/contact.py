@@ -261,7 +261,7 @@ def contact_query(doctype, txt, searchfield, start, page_len, filters):
 		order by
 			if(locate(%(_txt)s, `tabContact`.name), locate(%(_txt)s, `tabContact`.name), 99999),
 			`tabContact`.idx desc, `tabContact`.name
-		limit %(start)s, %(page_len)s """.format(
+		limit %(page_len)s offset %(start)s""".format(
 			mcond=get_match_cond(doctype), key=searchfield
 		),
 		{

@@ -940,15 +940,35 @@ Object.assign(frappe.utils, {
 	},
 	get_route_label(route_str) {
 		let route = route_str.split("/");
-
 		if (route[2] === "Report" || route[0] === "query-report") {
 			return __("{0} Report", [__(route[3]) || __(route[1])]);
 		}
 		if (route[0] === "List") {
+			switch (route[2]) {
+				case "Tree":
+					return __("{0} Tree", [__(route[1])]);
+				case "Dashboard":
+					return __("{0} Dashboard", [__(route[1])]);
+				case "New":
+					return __("New {0}", [__(route[1])]);
+				case "Calendar":
+					return __("{0} Calendar", [__(route[1])]);
+				case "Map":
+					return __("{0} Map", [__(route[1])]);
+				case "Kanban":
+					return __("{0} Kanban", [__(route[1])]);
+			}
 			return __("{0} List", [__(route[1])]);
+		}
+		if (route[0] === "Tree") {
+			return __("{0} Tree", [__(route[1])]);
 		}
 		if (route[0] === "modules") {
 			return __("{0} Modules", [__(route[1])]);
+		}
+		if (route[0] === "Workspaces") {
+			const name = route[1] === "private" ? __(route[2]) : __(route[1]);
+			return __("{0} Workspace", [name]);
 		}
 		if (route[0] === "dashboard") {
 			return __("{0} Dashboard", [__(route[1])]);
@@ -1239,6 +1259,9 @@ Object.assign(frappe.utils, {
 						case "Kanban":
 							route = `${doctype_slug}/view/kanban`;
 							break;
+						case "Planning":
+							route = `${doctype_slug}/view/planning`;
+							break;
 						default:
 							route = doctype_slug;
 					}
@@ -1379,7 +1402,12 @@ Object.assign(frappe.utils, {
 	},
 
 	font_icon(icon_name, size = "sm", icon_class = "", icon_style = "") {
-		return `<span class="${icon_name} ${icon_class}" style="font-size: var(--text-${size}); ${icon_style}"></span>`;
+		if (typeof size == "object") {
+			icon_style = `width: ${size.width}; height: ${size.height}; font-size: ${size.height}; ${icon_style}`;
+		} else {
+			icon_class += ` icon-${size}`;
+		}
+		return `<span class="icon ${icon_class} fonticon ${icon_name}" style="${icon_style}"></span>`;
 	},
 
 	flag(country_code) {

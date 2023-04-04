@@ -142,7 +142,7 @@
 	.inner-group-button {
 		display: inline-flex;
 		.icon {
-			margin-right: -var(--margin-xs);
+			margin-right: calc(-1 * var(--margin-xs));
 		}
 	}
 	button {

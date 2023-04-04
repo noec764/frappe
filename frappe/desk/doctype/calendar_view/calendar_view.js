@@ -11,6 +11,7 @@ frappe.ui.form.on("Calendar View", {
 				frappe.set_route("List", frm.doc.reference_doctype, "Calendar", frm.doc.name)
 			);
 		}
+		frm.trigger("secondary_status_field");
 	},
 	reference_doctype: function (frm) {
 		const { reference_doctype } = frm.doc;
@@ -47,7 +48,6 @@ frappe.ui.form.on("Calendar View", {
 			frm.set_df_property("color_field", "options", color_options);
 			frm.set_df_property("recurrence_rule_field", "options", value_field_options);
 			frm.set_df_property("secondary_status_field", "options", select_options);
-			frm.trigger("secondary_status_field");
 			frm.refresh();
 		});
 	},
@@ -55,15 +55,18 @@ frappe.ui.form.on("Calendar View", {
 		if (frm.doc.secondary_status_field) {
 			frappe.model.with_doctype(frm.doc.reference_doctype, () => {
 				const meta = frappe.get_meta(frm.doc.reference_doctype);
-				console.log(meta);
-				frm.set_df_property(
-					"secondary_status",
-					"options",
-					meta.fields.filter((f) => f.fieldname == frm.doc.secondary_status_field)[0]
-						.options,
-					frm.doc.name,
-					"value"
-				);
+				const df = meta.fields.find((f) => f.fieldname == frm.doc.secondary_status_field);
+				const options = df.options.split("\n");
+				for (const row of frm.doc.secondary_status) {
+					frm.set_df_property(
+						"secondary_status",
+						"options",
+						options,
+						frm.doc.name,
+						"value",
+						row.name
+					);
+				}
 			});
 		}
 	},

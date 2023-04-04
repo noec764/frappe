@@ -546,10 +546,6 @@ button.data-pill {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-
-		.uil {
-			transform: scale(1.2); // Adjust optical size
-		}
 	}
 	.link-field:focus-within, .link-field:active {
 		.link-icon {

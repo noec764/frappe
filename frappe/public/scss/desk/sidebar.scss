@@ -190,6 +190,12 @@ body[data-route^="Module"] .main-menu {
 		}
 	}
 
+	.sidebar-item-icon[item-color]:not([item-color=""]) {
+		.fonticon {
+			--icon-stroke: var(--icon-fill);
+		}
+	}
+
 	.form-sidebar {
 		.modified-by,
 		.created-by,

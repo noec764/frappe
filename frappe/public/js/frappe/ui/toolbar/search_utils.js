@@ -1,5 +1,5 @@
 frappe.provide("frappe.search");
-import { fuzzy_match } from "./fuzzy_match.js";
+import { fuzzy_match, character_compare_i18n } from "./fuzzy_match.js";
 
 frappe.search.utils = {
 	setup_recent: function () {
@@ -64,7 +64,12 @@ frappe.search.utils = {
 			};
 			if (match[1][0] === "Form") {
 				if (match[1].length > 2 && match[1][1] !== match[1][2]) {
-					out.label = __(match[1][1]) + " " + match[1][2].bold();
+					out.label =
+						__(match[1][1]) +
+						" " +
+						(frappe.boot.translated_doctypes.includes(match[1][1])
+							? __(match[1][2]).bold()
+							: match[1][2].bold());
 					out.value = __(match[1][1]) + " " + match[1][2];
 				} else {
 					out.label = __(match[1][1]).bold();
@@ -140,16 +145,21 @@ frappe.search.utils = {
 	},
 
 	get_creatables: function (keywords) {
-		var me = this;
-		var out = [];
-		var firstKeyword = keywords.split(" ")[0];
-		if (firstKeyword.toLowerCase() === __("new")) {
+		const me = this;
+		const out = [];
+		const firstKeyword = keywords.split(" ")[0]?.trim().toLowerCase() || "";
+		const validKeywords = __("new")
+			.split(",")
+			.map((k) => k.trim());
+		validKeywords.push("+");
+		if (validKeywords.includes(firstKeyword)) {
 			frappe.boot.user.can_create.forEach(function (item) {
-				var level = me.fuzzy_search(keywords.substr(4), item);
+				const search = keywords.substring(firstKeyword.length).trim();
+				const level = me.fuzzy_search(search, item);
 				if (level) {
 					out.push({
 						type: "New",
-						label: __("New {0}", [me.bolden_match_part(__(item), keywords.substr(4))]),
+						label: __("New {0}", [me.bolden_match_part(__(item), search)]),
 						value: __("New {0}", [__(item)]),
 						index: 1 + level,
 						match: item,
@@ -163,31 +173,57 @@ frappe.search.utils = {
 		return out;
 	},
 
-	get_doctypes: function (keywords) {
-		var me = this;
-		var out = [];
+	make_option(keywords, opts = {}) {
+		const missing = "type,route,match".split(",").filter((k) => !(k in opts));
+		if (missing.length) {
+			throw new Error(`Missing required fields: ${missing.join(", ")}`);
+		}
 
-		var level, target;
-		var option = function (type, route, order) {
-			// check to skip extra list in the text
-			// eg. Price List List should be only Price List
-			let skip_list = type === "List" && target.endsWith("List");
-			let label_without_type = me.bolden_match_part(__(target), keywords);
-			if (skip_list) {
-				var label = label_without_type;
-			} else {
-				label = !type ? label_without_type : __(`{0} : ${__(type)}`, [label_without_type]);
-			}
+		const { type, route, match, level = 0, order = 0 } = opts;
 
-			return {
-				type: type,
-				label: label,
-				value: __(`{0} ${type}`, [target]),
-				index: level + order,
-				match: target,
-				route: route,
-			};
+		// check to skip extra list in the text
+		// eg. Price List List should be only Price List
+		const skip_list = type === "List" && match.endsWith("List");
+
+		const add_type = opts.add_type ?? !skip_list;
+		let label_format = "{0} <span class='text-muted'>&middot; {1}</span>";
+		if (typeof opts.label_format === "string") {
+			label_format = opts.label_format;
+		} else if (opts.label_format === false) {
+			label_format = "";
+		}
+
+		let label = this.bolden_match_part(__(match), keywords);
+		if (add_type && type && label_format) {
+			label = __(label_format, [label, __(type)]);
+		}
+
+		return {
+			type: type,
+			label: label,
+			value: match,
+			index: level + order,
+			match: match,
+			route: route,
 		};
+	},
+
+	get_doctypes: function (keywords) {
+		const me = this;
+		const out = [];
+
+		let level, target;
+		const option = (type, route, order, opts = {}) => {
+			return me.make_option(keywords, {
+				type: type,
+				route: route,
+				match: target,
+				level: level,
+				order: order,
+				...opts,
+			});
+		};
+
 		frappe.boot.user.can_read.forEach(function (item) {
 			level = me.fuzzy_search(keywords, item);
 			if (level) {
@@ -195,24 +231,43 @@ frappe.search.utils = {
 				if (in_list(frappe.boot.single_types, item)) {
 					out.push(option("", ["Form", item, item], 0.05));
 				} else if (frappe.boot.user.can_search.includes(item)) {
-					// include 'making new' option
-					if (in_list(frappe.boot.user.can_create, item)) {
-						var match = item;
-						out.push({
-							type: "New",
-							label: __("New {0}", [me.bolden_match_part(__(item), keywords)]),
-							value: __("New {0}", [__(item)]),
-							index: level + 0.015,
-							match: item,
-							onclick: function () {
-								frappe.new_doc(match, true);
-							},
-						});
+					const expanded_results = !!frappe.boot.user.expanded_desk_search;
+
+					if (frappe.boot.calendars?.includes(item)) {
+						out.push(
+							option("Calendar", ["List", item, "Calendar"], 0.05, {
+								add_type: true,
+							})
+						);
+					} else {
+						out.push(
+							option("List", ["List", item], 0.05, { add_type: expanded_results })
+						);
 					}
 
-					out.push(option("List", ["List", item], 0.05));
-					if (frappe.model.can_get_report(item)) {
-						out.push(option("Report", ["List", item, "Report"], 0.04));
+					if (expanded_results) {
+						// include 'making new' option
+						if (in_list(frappe.boot.user.can_create, item)) {
+							const match = item;
+							out.push({
+								type: "New",
+								label: __("New {0}", [me.bolden_match_part(__(item), keywords)]),
+								value: __("New {0}", [__(item)]),
+								index: level + 0.015,
+								match: item,
+								onclick: function () {
+									frappe.new_doc(match, true);
+								},
+							});
+						}
+
+						if (frappe.model.can_get_report(item)) {
+							out.push(
+								option("Report", ["List", item, "Report"], 0.04, {
+									add_type: true,
+								})
+							);
+						}
 					}
 				}
 			}
@@ -231,13 +286,15 @@ frappe.search.utils = {
 				if (report.report_type == "Report Builder")
 					route = ["List", report.ref_doctype, "Report", item];
 				else route = ["query-report", item];
-				out.push({
-					type: "Report",
-					label: __("Report {0}", [me.bolden_match_part(__(item), keywords)]),
-					value: __("Report {0}", [__(item)]),
-					index: level,
-					route: route,
-				});
+				out.push(
+					me.make_option(keywords, {
+						type: "Report",
+						level: level,
+						route: route,
+						match: item,
+						format: !__(item).includes(__("Report")),
+					})
+				);
 			}
 		});
 		return out;
@@ -468,16 +525,16 @@ frappe.search.utils = {
 				routes = [];
 			options.forEach(function (option) {
 				if (option.route) {
+					let str_route =
+						typeof option.route === "string" ? option.route : option.route.join("/");
 					if (
 						option.route[0] === "List" &&
 						option.route[2] !== "Report" &&
 						option.route[2] !== "Inbox"
 					) {
-						option.route = option.route.slice(0, 2);
+						str_route = option.route.slice(0, 2).join("/");
 					}
 
-					var str_route =
-						typeof option.route === "string" ? option.route : option.route.join("/");
 					if (routes.indexOf(str_route) === -1) {
 						out.push(option);
 						routes.push(str_route);
@@ -563,41 +620,37 @@ frappe.search.utils = {
 		return match[1];
 	},
 
-	bolden_match_part: function (str, subseq) {
+	bolden_match_part(str, subseq) {
 		if (fuzzy_match(subseq, str)[0] === false) {
 			return str;
 		}
 		if (str.indexOf(subseq) == 0) {
-			var tail = str.split(subseq)[1];
+			const tail = str.split(subseq)[1];
 			return "<mark>" + subseq + "</mark>" + tail;
 		}
-		var rendered = "";
-		var str_orig = str;
-		var str_len = str.length;
-		str = str.toLowerCase();
-		subseq = subseq.toLowerCase();
+		let rendered = "";
+		const str_len = str.length;
 
-		outer: for (var i = 0, j = 0; i < subseq.length; i++) {
-			var sub_ch = subseq.charCodeAt(i);
+		let j = 0;
+		outer: for (let i = 0; i < subseq.length; i++) {
+			const sub_ch = subseq[i];
 			while (j < str_len) {
-				if (str.charCodeAt(j) === sub_ch) {
-					var str_char = str_orig.charAt(j);
-					if (str_char.match(/\s/)) {
+				const ch = str[j];
+				if (character_compare_i18n(sub_ch, ch)) {
+					if (ch.match(/\s/)) {
 						rendered += "<mark>&nbsp;</mark>";
-					} else if (str_char === str_char.toLowerCase()) {
-						rendered += "<mark>" + subseq.charAt(i) + "</mark>";
 					} else {
-						rendered += "<mark>" + subseq.charAt(i).toUpperCase() + "</mark>";
+						rendered += "<mark>" + ch + "</mark>";
 					}
 					j++;
 					continue outer;
 				}
-				rendered += str_orig.charAt(j);
+				rendered += ch;
 				j++;
 			}
-			return str_orig;
+			return str;
 		}
-		rendered += str_orig.slice(j);
+		rendered += str.slice(j);
 		return rendered;
 	},
 

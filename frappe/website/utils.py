@@ -169,6 +169,7 @@ def get_boot_data():
 			"float_precision": cint(frappe.get_system_settings("float_precision")) or 3,
 			"date_format": frappe.get_system_settings("date_format") or "yyyy-mm-dd",
 			"time_format": frappe.get_system_settings("time_format") or "HH:mm:ss",
+			"first_day_of_the_week": frappe.get_system_settings("first_day_of_the_week") or "Sunday",
 		},
 		"time_zone": {
 			"system": get_system_timezone(),

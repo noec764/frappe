@@ -61,7 +61,7 @@ frappe.events.EventsPortalView = class EventsPortalView {
 				return __("All Day");
 			},
 			slotMinTime: "08:00:00",
-			slotMaxTime: "20:00:00",
+			slotMaxTime: "20:00:00"
 		};
 	}
 
@@ -109,7 +109,7 @@ frappe.events.EventsPortalView = class EventsPortalView {
 
 		event.event.extendedProps.route &&
 			dialog.set_primary_action(__("See details"), () => {
-				window.location.href = event.event.extendedProps.route;
+				window.location.href = "/" + event.event.extendedProps.route;
 			});
 		dialog.fields_dict.event_description.$wrapper.html(event_details(event));
 		dialog.show();
