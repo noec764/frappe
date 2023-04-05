@@ -832,7 +832,7 @@ $.extend(frappe.model, {
 
 		const views = ["List", "Report", "Dashboard", "Kanban"];
 		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
-			views.push("Calendar", "Gantt");
+			views.push("Calendar", "Gantt", "Planning");
 		}
 		if (meta.is_tree) {
 			views.push("Tree");
