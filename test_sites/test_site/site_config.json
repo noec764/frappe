@@ -17,5 +17,6 @@
  "redis_queue": "redis://redis_queue:6379",
  "redis_socketio": "redis://redis_socketio:6379",
  "socketio_port": 9000,
- "mute_emails": 0
+ "mute_emails": 0,
+ "throttle_user_limit": 500
 }
