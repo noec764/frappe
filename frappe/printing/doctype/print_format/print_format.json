@@ -217,55 +217,55 @@
    "fieldtype": "Link",
    "label": "Cover Page",
    "options": "Cover Page"
-},
-{
- "default": "0",
- "fieldname": "print_format_builder_beta",
- "fieldtype": "Check",
- "label": "Print Format Builder Beta"
-},
-{
- "default": "15",
- "fieldname": "margin_top",
- "fieldtype": "Float",
- "label": "Margin Top"
-},
-{
- "default": "15",
- "fieldname": "margin_bottom",
- "fieldtype": "Float",
- "label": "Margin Bottom"
-},
-{
- "default": "15",
- "fieldname": "margin_left",
- "fieldtype": "Float",
- "label": "Margin Left"
-},
-{
- "default": "15",
- "fieldname": "margin_right",
- "fieldtype": "Float",
- "label": "Margin Right"
-},
-{
- "default": "14",
- "fieldname": "font_size",
- "fieldtype": "Int",
- "label": "Font Size"
-},
-{
- "default": "Hide",
- "fieldname": "page_number",
- "fieldtype": "Select",
- "label": "Page Number",
- "options": "Hide\nTop Left\nTop Center\nTop Right\nBottom Left\nBottom Center\nBottom Right"
+  },
+  {
+   "default": "0",
+   "fieldname": "print_format_builder_beta",
+   "fieldtype": "Check",
+   "label": "Print Format Builder Beta"
+  },
+  {
+   "default": "15",
+   "fieldname": "margin_top",
+   "fieldtype": "Float",
+   "label": "Margin Top"
+  },
+  {
+   "default": "15",
+   "fieldname": "margin_bottom",
+   "fieldtype": "Float",
+   "label": "Margin Bottom"
+  },
+  {
+   "default": "15",
+   "fieldname": "margin_left",
+   "fieldtype": "Float",
+   "label": "Margin Left"
+  },
+  {
+   "default": "15",
+   "fieldname": "margin_right",
+   "fieldtype": "Float",
+   "label": "Margin Right"
+  },
+  {
+   "default": "14",
+   "fieldname": "font_size",
+   "fieldtype": "Int",
+   "label": "Font Size"
+  },
+  {
+   "default": "Hide",
+   "fieldname": "page_number",
+   "fieldtype": "Select",
+   "label": "Page Number",
+   "options": "Hide\nTop Left\nTop Center\nTop Right\nBottom Left\nBottom Center\nBottom Right"
   }
  ],
  "icon": "fa fa-print",
  "idx": 1,
  "links": [],
- "modified": "2022-11-09 15:29:46.709305",
+ "modified": "2023-04-05 12:04:16.608280",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Print Format",
@@ -291,5 +291,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }
