@@ -66,6 +66,8 @@ frappe.search.AwesomeBar = class AwesomeBar {
 					me.add_defaults(txt);
 					me.options = me.options.concat(me.build_options(txt));
 					me.options = me.options.concat(me.global_results);
+				} else if (txt === "#") {
+					me.options = me.options.concat(frappe.tags.utils.get_tags(txt));
 				} else {
 					me.options = me.options.concat(
 						me.deduplicate(frappe.search.utils.get_recent_pages(txt || ""))
@@ -216,16 +218,16 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			routes = [];
 		options.forEach(function (option) {
 			if (option.route) {
+				let str_route =
+					typeof option.route === "string" ? option.route : option.route.join("/");
 				if (
 					option.route[0] === "List" &&
 					option.route[2] !== "Report" &&
 					option.route[2] !== "Inbox"
 				) {
-					option.route = option.route.slice(0, 2);
+					str_route = option.route.slice(0, 2).join("/");
 				}
 
-				var str_route =
-					typeof option.route === "string" ? option.route : option.route.join("/");
 				if (routes.indexOf(str_route) === -1) {
 					out.push(option);
 					routes.push(str_route);
@@ -288,7 +290,7 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			`,
 			value: __("Search for {0}", [txt]),
 			match: txt,
-			index: 100,
+			index: Number.POSITIVE_INFINITY,
 			default: "Search",
 			onclick: function () {
 				frappe.searchdialog.search.init_search(txt, "global_search");

@@ -12,10 +12,6 @@ a,
 	transition: 0.2s;
 }
 
-.btn {
-	transition: background-color 0.2s, background 0.2s;
-}
-
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -120,8 +116,6 @@ pre {
 .col-xs-10 { @extend .col-10; }
 .col-xs-11 { @extend .col-11; }
 .col-xs-12 { @extend .col-12; }
-
-.btn-default { @extend .btn-light; }
 
 .hidden-xs {
 	@include media-breakpoint-down(xs) {
@@ -371,22 +365,6 @@ select.input-xs {
 	@include card();
 }
 
-.frappe-control[data-fieldtype="Select"].frappe-control[data-fieldname="color"] {
-	.color-select {
-		padding-left: 40px;
-	}
-
-	.color-box {
-		position: absolute;
-		top: calc(50% - 11px);
-		left: 8px;
-		width: 22px;
-		height: 22px;
-		border-radius: 5px;
-		z-index: 1;
-	}
-}
-
 .frappe-control[data-fieldtype="Select"] .control-input,
 .frappe-control[data-fieldtype="Select"].form-group {
 	position: relative;
@@ -509,7 +487,7 @@ kbd {
 			text-decoration: none;
 		}
 
-		svg {
+		svg, .icon {
 			margin-right: var(--margin-sm);
 		}
 	}

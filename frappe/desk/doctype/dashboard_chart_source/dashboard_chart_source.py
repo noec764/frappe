@@ -5,7 +5,7 @@ import os
 
 import frappe
 from frappe.model.document import Document
-from frappe.modules import get_module_path, scrub
+from frappe.modules import get_module_path, make_boilerplate, scrub
 from frappe.modules.export_file import export_to_files
 
 
@@ -25,6 +25,9 @@ def get_config(name):
 
 class DashboardChartSource(Document):
 	def on_update(self):
-		export_to_files(
-			record_list=[[self.doctype, self.name]], record_module=self.module, create_init=True
-		)
+		if frappe.flags.developer_mode and not frappe.flags.in_migrate:
+			export_to_files(
+				record_list=[[self.doctype, self.name]], record_module=self.module, create_init=True
+			)
+			make_boilerplate("controller.js", self, {"name": self.name}, "desk")
+			make_boilerplate("controller.py", self, {"name": self.name}, "desk")

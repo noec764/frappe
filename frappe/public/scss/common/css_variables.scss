@@ -171,6 +171,7 @@ $input-height: 28px !default;
 	--modal-shadow: var(--shadow-md);
 	--card-shadow: var(--shadow-md);
 	--btn-shadow: var(--shadow-sm);
+	--btn-shadow-hover: var(--shadow-sm), var(--shadow-md);
 
 	// Type Colors
 	--text-muted: var(--gray-700);
@@ -257,7 +258,7 @@ $input-height: 28px !default;
 	--toast-bg: var(--modal-bg);
 	--popover-bg: white;
 
-	--awesomplete-hover-bg: var(--control-bg);
+	--awesomplete-hover-bg: var(--blue-50);
 
 	// Button Colors
 	--btn-default-bg: var(--gray-100);
@@ -270,7 +271,7 @@ $input-height: 28px !default;
 	--scrollbar-track-color: var(--gray-200);
 
 	--shadow-inset: inset 0px -1px 0px var(--gray-300);
-	--border-color: var(--gray-100);
+	--border-color: var(--gray-200);
 	--dark-border-color: var(--gray-300);
 	--table-border-color: var(--gray-200);
 	--highlight-color: var(--gray-50);
@@ -310,4 +311,11 @@ $input-height: 28px !default;
 
 	--right-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1.25 7.5L4.75 4L1.25 0.5' stroke='%231F272E' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 	--left-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M7.5 9.5L4 6l3.5-3.5' stroke='%231F272E' stroke-linecap='round' stroke-linejoin='round'></path></svg>");
+
+	// List
+	--list-body-bg: var(--card-bg);
+	--list-header-fg: inherit;
+	--list-header-bg: var(--light);
+	--list-header-shadow-color: var(--dark);
+	--list-header-contrast: white;
 }

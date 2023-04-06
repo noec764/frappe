@@ -10,6 +10,7 @@ $font-family-sans-serif: "{{ google_font }}", -apple-system, BlinkMacSystemFont,
 {% if dark_color %}$dark: {{ frappe.db.get_value('Color', dark_color, 'color') }};{% endif -%}
 {% if text_color %}$body-text-color: {{ frappe.db.get_value('Color', text_color, 'color') }};{% endif -%}
 {% if background_color %}$body-bg: {{ frappe.db.get_value('Color', background_color, 'color') }};{% endif -%}
+{% if sidebar_color %}$sidebar-bg: {{ frappe.db.get_value('Color', sidebar_color, 'color') }};{% endif -%}
 
 $enable-shadows: {{ button_shadows and "true" or "false" }};
 $enable-gradients: {{ button_gradients and "true" or "false" }};
@@ -43,6 +44,10 @@ body {
 	{% if text_color %}
 	--text-color: #{$body-text-color};
 	--text-light: #{$body-text-color};
+	{% endif -%}
+	{% if sidebar_color %}
+	--web-sidebar-bg: #{$sidebar-bg};
+	--web-sidebar-bg-alpha: 1;
 	{% endif -%}
 	{% if not button_rounded_corners %}
 	--border-radius-sm: 0px;

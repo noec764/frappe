@@ -4,6 +4,45 @@
 	align-items: center;
 }
 
+@mixin button-with-highlight($highlightColor, $opacityBase: 0, $opacityHover: 1) {
+	& {
+		--btn-highlight-color: #{$highlightColor};
+		position: relative;
+		overflow: visible;
+	}
+
+	&::after {
+		content: "";
+		display: block;
+		position: absolute;
+
+		pointer-events: none;
+
+		top: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+
+		border-radius: inherit;
+		background: none;
+
+		transition: all 50ms ease;
+		transition-property: opacity, outline-width;
+
+		opacity: $opacityBase;
+		outline: 1px solid var(--btn-highlight-color);
+		outline-offset: -1px;
+		transform: translateZ(0);
+	}
+
+	&:hover:not(:active), &:focus-visible {
+		&::after {
+			opacity: $opacityHover;
+			outline-width: 2px;
+		}
+	}
+}
+
 .btn {
 	&:not(.btn-outline-secondary) {
 		border: none;
@@ -11,6 +50,10 @@
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
 	font-size: var(--text-md);
+
+	font-weight: 500;
+	// --icon-stroke: currentColor;
+
 	&.icon-btn {
 		height: var(--btn-height);
 		padding: 0px;
@@ -19,6 +62,12 @@
 			min-width: 28px;
 		}
 	}
+
+	transition: all 0.2s ease;
+	transition-property: color, background-color, border, opacity, box-shadow;
+}
+.btn:hover:not(:active), .btn:focus-visible {
+	--btn-shadow: var(--btn-shadow-hover);
 }
 
 .btn-secondary-dark {
@@ -40,23 +89,15 @@
 	}
 }
 
-.btn-primary-light {
-	@include button-variant(
-		$background: $primary-light,
-		$border: $primary-light,
-		$hover-background: lighten($primary-light, 1%),
-		$hover-border: $primary-light,
-		$active-background: lighten($primary-light, 1%),
-		$active-border: darken($primary-light, 12.5%)
-	);
-
+.btn.btn-primary-light {
 	color: var(--primary);
-	&:hover, &:active {
-		color: var(--primary);
-	}
+	background-color: $primary-light;
+	--icon-stroke: currentColor;
+	@include button-with-highlight(var(--primary), 1);
 
-	&:focus {
-		box-shadow: 0 0 0 0.2rem var(--primary-light);
+	[data-theme="dark"] & {
+		color: var(--text-color);
+		background-color: var(--bg-dark-blue);
 	}
 }
 
@@ -72,7 +113,7 @@
 .btn.btn-default {
 	background-color: var(--fg-color);
 	color: var(--text-color);
-	&:hover, &:active {
+	&:hover:not(:active), &:focus-visible {
 		background: var(--fg-hover-color);
 		color: var(--text-color);
 	}
@@ -84,12 +125,14 @@
 	white-space: nowrap;
 	--icon-stroke: currentColor;
 	--icon-fill-bg: var(--primary);
+	@include button-with-highlight(var(--primary));
 }
 
 .btn.btn-danger {
 	background-color: var(--red-400);
 	color: var(--white);
-	--icon-stroke: var(--white);
+	--icon-stroke: currentColor;
+	@include button-with-highlight(var(--red-400));
 }
 
 .btn-reset {
@@ -100,9 +143,29 @@
 	background-color: inherit;
 }
 
-[data-theme="dark"] {
-	.btn-primary-light {
-		background-color: var(--bg-dark-blue);
-		box-shadow: none;
+@mixin button-text-variant($fg, $bg) {
+	box-shadow: none;
+	border: none;
+	text-decoration: underline;
+
+	background-color: transparent;
+	color: $bg;
+	--icon-stroke: currentColor;
+	font-weight: 600;
+
+	&:hover:not(:active) {
+		background-color: $bg;
+		color: $fg;
 	}
+
+	.icon:first-child {
+		margin-right: 2px;
+	}
+}
+
+.btn.btn-text-primary {
+	@include button-text-variant(var(--white), var(--primary));
+}
+.btn.btn-text-danger {
+	@include button-text-variant(var(--alert-bg-danger), var(--alert-text-danger));
 }

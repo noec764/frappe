@@ -7,12 +7,12 @@ export class SCHeader {
 		const $header = $(`<div class="sc-row sc-header">`);
 
 		if (children) {
-			$header.append(...children);
+			$header.append(...children.filter(Boolean));
 		}
 
 		if (actions) {
 			const $actions = $(`<div class="sc-header__actions">`);
-			$actions.append(...actions);
+			$actions.append(...actions.filter(Boolean));
 			$header.append($actions);
 		}
 
@@ -24,16 +24,17 @@ export class SCHeader {
 		const primary_route = summary_card_renderer.get_primary_route();
 		return SCHeader.render({
 			children: [
-				SCIcon.render({ icon: sc.icon || "file" }),
+				SCIcon.render({ icon: sc.icon || "file", size: "md" }),
 				SCLabel.render({ label: sc.title, href: primary_route }),
 			],
 			actions: [
-				SCButton.render({
-					icon: sc.primary_button.icon || "view",
-					label: sc.primary_button.label,
-					className: "summary-card__primary-button",
-					href: primary_route,
-				}),
+				sc.primary_button &&
+					SCButton.render({
+						icon: sc.primary_button.icon || "view",
+						label: sc.primary_button.label,
+						className: "summary-card__primary-button",
+						href: primary_route,
+					}),
 			],
 		});
 	}
@@ -41,7 +42,7 @@ export class SCHeader {
 	static render_skeleton() {
 		return SCHeader.render({
 			children: [
-				SCIcon.render({ icon: "file" }), // icon
+				SCIcon.render({ icon: "file", size: "md" }), // icon
 				SCLabel.render({ label: "Lorem ipsum" }),
 			],
 			actions: [

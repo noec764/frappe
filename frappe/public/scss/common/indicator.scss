@@ -4,6 +4,8 @@
 .indicator-pill-round {
 	display: inline-flex;
 	align-items: center;
+	--icon-stroke: currentColor;
+	--indicator-color: transparent;
 }
 
 .indicator::before {
@@ -12,6 +14,7 @@
 	width: 6px;
 	border-radius: var(--border-radius);
 	margin: 0px 8px 0px 0px;
+	background: var(--indicator-color, transparent);
 }
 
 .indicator-pill,
@@ -40,6 +43,7 @@
 	width: 4px;
 	border-radius: 50%;
 	margin-right: 6px;
+	background: var(--indicator-color, transparent);
 }
 
 .indicator-pill.no-margin::before,
@@ -53,25 +57,12 @@
 
 $indicator-colors: green, cyan, blue, orange, yellow, gray, grey, red, pink, darkgrey, purple, light-blue, darkgray;
 @each $color in $indicator-colors {
-	.indicator.#{"" + $color} {
-		&::before,
-		&::after {
-			background: var(--indicator-dot-#{$color});
-		}
-	}
-
 	.indicator-pill.#{"" + $color},
 	.indicator-pill-right.#{"" + $color},
 	.indicator-pill-round.#{"" + $color} {
 		background: var(--bg-#{$color});
 		color: var(--text-on-#{$color});
-		&::before,
-		&::after {
-			background: var(--text-on-#{$color});
-		}
-	}
-	.indicator {
-		--indicator-dot-#{"" + $color}: var(--text-on-#{$color});
+		--indicator-color: var(--text-on-#{$color});
 	}
 }
 

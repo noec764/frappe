@@ -1,9 +1,10 @@
-.form-control {
+// Specificity hack to override bootstrap
+:root .form-control {
 	border-width: 1px;
 	border-color: var(--gray-400);
 	border-style: none none solid;
-	background-color: $control-bg;
-	color: $text-color;
+	background-color: var(--control-bg);
+	color: var(--text-color);
 	box-shadow: none;
 	border-radius: $border-radius;
 	font-size: var(--text-md);

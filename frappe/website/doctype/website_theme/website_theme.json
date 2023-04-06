@@ -24,6 +24,7 @@
   "light_color",
   "dark_color",
   "background_color",
+  "sidebar_color",
   "stylesheet_section",
   "custom_overrides",
   "custom_scss",
@@ -123,6 +124,12 @@
    "options": "Color"
   },
   {
+   "fieldname": "sidebar_color",
+   "fieldtype": "Link",
+   "label": "Sidebar Color",
+   "options": "Color"
+  },
+  {
    "fieldname": "stylesheet_section",
    "fieldtype": "Tab Break",
    "label": "Stylesheet"
@@ -178,15 +185,15 @@
    "fieldtype": "Section Break"
   },
   {
-    "fieldname": "ignored_apps",
-    "fieldtype": "Table",
-    "label": "Ignored Apps",
-    "options": "Website Theme Ignore App"
+   "fieldname": "ignored_apps",
+   "fieldtype": "Table",
+   "label": "Ignored Apps",
+   "options": "Website Theme Ignore App"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-10-25 22:15:53.601571",
+ "modified": "2023-04-05 12:04:42.889172",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website Theme",
@@ -213,5 +220,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

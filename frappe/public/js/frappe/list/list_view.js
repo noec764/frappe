@@ -353,23 +353,36 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	setup_selection_buttons() {
-		const actions = []
+		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete"]
-		const labels_to_find = selection_actions.map((txt) => __(txt))
+		const selection_actions = ["Cancel", "Delete", "Duplicate"];
+		const labels_to_find = selection_actions.map((txt) => __(txt));
+		const style_map = {
+			Cancel: ["close-alt", "btn-text-danger"],
+			Delete: ["delete", "btn-text-danger"],
+			Duplicate: ["duplicate", "btn-text-primary"],
+		};
 		for (const menu_item of this.actions_menu_items) {
-			if (labels_to_find.includes(menu_item.label)) {
-				actions.push(menu_item)
+			const i = labels_to_find.indexOf(menu_item.label);
+			if (i >= 0) {
+				const name = selection_actions[i];
+				const [icon, btn_class] = style_map[name] ?? ["", "btn-default"];
+				actions.push({
+					name: name,
+					icon,
+					btn_class,
+					menu_item,
+				});
 			}
 		}
 
-		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show()
-		for (const action of actions) {
-			const btn_class = "btn-danger"
+		const container = this.$checkbox_actions.find(".list-selection-buttons").empty().show();
+		for (const { menu_item, btn_class, icon } of actions) {
 			const btn = $(`<button class="btn btn-xs ${btn_class}">`)
-				.text(action.label)
-				.on("click", action.action)
-				.appendTo(container)
+				.html(icon ? frappe.utils.icon(icon, "xs") : "")
+				.append(menu_item.label)
+				.on("click", menu_item.action)
+				.appendTo(container);
 		}
 	}
 
@@ -1115,6 +1128,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_events() {
 		this.setup_filterable();
 		this.setup_list_click();
+		this.setup_drag_click();
 		this.setup_tag_event();
 		this.setup_new_doc_event();
 		this.setup_check_events();
@@ -1291,6 +1305,34 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		});
 	}
 
+	setup_drag_click() {
+		/*
+			Click on the check box in the list view and
+			drag through the rows to select.
+			Do it again to unselect.
+			If the first click is on checked checkbox, then it will unselect rows on drag,
+			else if it is unchecked checkbox, it will select rows on drag.
+		*/
+		this.dragClick = false;
+		this.$result.on("mousedown", ".list-row-checkbox", (e) => {
+			this.dragClick = true;
+			this.check = !e.target.checked;
+		});
+		$(document).on("mouseup", () => {
+			this.dragClick = false;
+		});
+		this.$result.on("mousemove", ".level.list-row", (e) => {
+			if (this.dragClick) {
+				this.check_row_on_drag(e, this.check);
+			}
+		});
+	}
+
+	check_row_on_drag(event, check = true) {
+		$(event.target).find(".list-row-checkbox").prop("checked", check);
+		this.on_row_checked();
+	}
+
 	setup_action_handler() {
 		this.$result.on("click", ".btn-action", (e) => {
 			const $button = $(e.currentTarget);
@@ -1397,13 +1439,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			return;
 		}
 		frappe.socketio.doctype_subscribe(this.doctype);
+		frappe.realtime.off("list_update");
 		frappe.realtime.on("list_update", (data) => {
 			if (data?.doctype !== this.doctype) {
 				return;
 			}
 
-			if (!frappe.get_doc(data?.doctype, data?.name)?.__unsaved) {
-				frappe.model.remove_from_locals(data.doctype, data.name);
+			// if some bulk operation is happening by selecting list items, don't refresh
+			if (this.$checks && this.$checks.length) {
+				return;
 			}
 
 			if (this.avoid_realtime_update()) {
@@ -1417,6 +1461,13 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	process_document_refreshes() {
 		if (!this.pending_document_refreshes.length) return;
+
+		const route = frappe.get_route() || [];
+		if (!cur_list || route[0] != "List" || cur_list.doctype != route[1]) {
+			// wait till user is back on list view before refreshing
+			this.pending_document_refreshes = [];
+			return;
+		}
 
 		const names = this.pending_document_refreshes.map((d) => d.name);
 		this.pending_document_refreshes = this.pending_document_refreshes.filter(

@@ -10,6 +10,7 @@ frappe.views.BaseList = class BaseList {
 		Kanban: "kanban",
 		Dashboard: "dashboard",
 		Map: "map",
+		Planning: "table",
 	};
 
 	constructor(opts) {
@@ -207,7 +208,7 @@ frappe.views.BaseList = class BaseList {
 			for translation, don't remove
 			__("List View") __("Report View") __("Dashboard View") __("Gantt View"),
 			__("Kanban View") __("Calendar View") __("Image View") __("Inbox View"),
-			__("Tree View") __("Map View") */
+			__("Tree View") __("Map View") __("Planning View") */
 			this.views_menu = this.page.add_custom_button_group(
 				__("{0} View", [__(this.view_name)]),
 				BaseList.icon_map[this.view_name] || "list"
@@ -893,5 +894,6 @@ frappe.views.view_modes = [
 	"Inbox",
 	"Tree",
 	"Map",
+	"Planning"
 ];
 frappe.views.is_valid = (view_mode) => frappe.views.view_modes.includes(view_mode);

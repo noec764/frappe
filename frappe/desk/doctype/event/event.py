@@ -89,6 +89,7 @@ class Event(WebsiteGenerator):
 	def set_route(self):
 		if not self.route:
 			self.route = f"events/{self.name}-{self.scrub(self.subject)[:30]}"
+		self.route = self.route.lstrip("/")
 
 	def before_save(self):
 		if self.google_calendar and not self.google_calendar_id:

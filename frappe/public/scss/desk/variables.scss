@@ -81,7 +81,7 @@ $btn-border-radius: 0.375rem !default;
 $btn-padding-x: 1rem !default;
 $btn-padding-y: 0.5rem !default;
 $btn-font-weight: 400 !default;
-$btn-active-box-shadow: var(--shadow-inset);
+$btn-active-box-shadow: none !default;
 
 // mark
 $mark-bg: #FDF9AF;

@@ -10,7 +10,7 @@ frappe.tags.utils = {
 
 		for (let i in frappe.tags.tags) {
 			let tag = frappe.tags.tags[i];
-			let level = frappe.search.utils.fuzzy_search(txt, tag);
+			let level = txt ? frappe.search.utils.fuzzy_search(txt, tag) : 1;
 			if (level) {
 				out.push({
 					type: "Tag",

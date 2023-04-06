@@ -314,7 +314,10 @@ def get_app_publisher(module: str) -> str:
 
 
 def make_boilerplate(
-	template: str, doc: Union["Document", "frappe._dict"], opts: Union[dict, "frappe._dict"] = None
+	template: str,
+	doc: Union["Document", "frappe._dict"],
+	opts: Union[dict, "frappe._dict"] = None,
+	module: str = "core",
 ):
 	target_path = get_doc_path(doc.module, doc.doctype, doc.name)
 	template_name = template.replace("controller", scrub(doc.name))
@@ -322,7 +325,7 @@ def make_boilerplate(
 		template_name = template_name[:-4] + ".py"
 	target_file_path = os.path.join(target_path, template_name)
 	template_file_path = os.path.join(
-		get_module_path("core"), "doctype", scrub(doc.doctype), "boilerplate", template
+		get_module_path(module), "doctype", scrub(doc.doctype), "boilerplate", template
 	)
 
 	if os.path.exists(target_file_path):

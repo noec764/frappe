@@ -9,10 +9,9 @@ frappe.views.ImageView = class ImageView extends frappe.views.ListView {
 		return "Image";
 	}
 
-	setup_defaults() {
-		return super.setup_defaults().then(() => {
-			this.page_title = this.page_title + " " + __("Images");
-		});
+	async setup_defaults() {
+		await super.setup_defaults();
+		this.page_title = __("{0} Images", [this.page_title]);
 	}
 
 	setup_view() {

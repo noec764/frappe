@@ -96,6 +96,10 @@ def get_bootinfo():
 
 	bootinfo.error_report_email = frappe.conf.error_report_email
 	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
+	bootinfo.fullcalendar_scheduler_licence_key = ""
+	for license_key in frappe.get_hooks("fullcalendar_scheduler_licence_key"):
+		if license_key:
+			bootinfo.fullcalendar_scheduler_licence_key = license_key
 	bootinfo.treeviews = frappe.get_hooks("treeviews") or []
 	bootinfo.lang_dict = get_lang_dict()
 	bootinfo.success_action = get_success_action()
