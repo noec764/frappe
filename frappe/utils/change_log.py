@@ -166,6 +166,9 @@ def get_app_last_commit_ref(app):
 
 
 def check_for_update():
+	if frappe.conf.disable_system_update_notification:
+		return
+
 	updates = frappe._dict(major=[], minor=[], patch=[])
 	apps = get_versions()
 
@@ -248,18 +251,20 @@ def check_release_on_github(app: str):
 		# Invalid URL
 		return
 
-	if parsed_url.resource != "github.com":
+	if parsed_url.resource != "gitlab.com":
 		return
 
 	owner = parsed_url.owner
 	repo = parsed_url.name
 
-	# Get latest version from GitHub
-	r = requests.get(f"https://api.github.com/repos/{owner}/{repo}/releases")
-	if r.ok:
-		latest_non_beta_release = parse_latest_non_beta_release(r.json())
-		if latest_non_beta_release:
-			return Version(latest_non_beta_release), owner
+	# Get latest version from Gitlab
+	project_req = requests.get(f"https://gitlab.com/api/v4/projects/{owner}%2F{repo}")
+	if project_req.ok:
+		r = requests.get(f"https://gitlab.com/api/v4/projects/{project_req.json().get('id')}/releases")
+		if r.ok:
+			latest_non_beta_release = parse_latest_non_beta_release(r.json())
+			if latest_non_beta_release:
+				return Version(latest_non_beta_release), owner
 
 
 def add_message_to_redis(update_json):

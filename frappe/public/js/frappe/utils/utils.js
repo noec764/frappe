@@ -1419,7 +1419,7 @@ Object.assign(frappe.utils, {
 	make_chart(wrapper, custom_options = {}) {
 		let chart_args = {
 			type: "bar",
-			colors: ["light-blue"],
+			colors: ["light-blue", "orange", "green", "red"],
 			axisOptions: {
 				xIsSeries: 1,
 				shortenYAxisNumbers: 1,

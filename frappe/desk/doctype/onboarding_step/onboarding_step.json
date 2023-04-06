@@ -228,7 +228,7 @@
   }
  ],
  "links": [],
- "modified": "2022-11-29 18:59:04.001740",
+ "modified": "2023-04-05 12:05:44.959008",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Onboarding Step",
@@ -262,5 +262,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

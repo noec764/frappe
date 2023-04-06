@@ -49,10 +49,11 @@
  ],
  "image_field": "preview",
  "links": [],
- "modified": "2022-08-03 15:51:07.371162",
+ "modified": "2023-04-05 12:05:25.627467",
  "modified_by": "Administrator",
  "module": "Printing",
  "name": "Print Style",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -71,5 +72,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

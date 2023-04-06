@@ -102,10 +102,11 @@
  "icon": "fa fa-file",
  "idx": 1,
  "links": [],
- "modified": "2022-08-03 15:51:06.940178",
+ "modified": "2023-04-05 12:03:39.928359",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Page",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -129,5 +130,6 @@
  "sort_field": "modified",
  "sort_order": "ASC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

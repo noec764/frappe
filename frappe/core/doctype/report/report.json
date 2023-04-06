@@ -182,7 +182,7 @@
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-20 14:56:36.578412",
+ "modified": "2023-03-31 18:12:33.601639",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Report",
@@ -234,5 +234,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

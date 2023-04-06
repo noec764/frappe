@@ -215,9 +215,9 @@
    "description": "List as [{\"label\": _(\"Jobs\"), \"route\":\"jobs\"}]",
    "fieldname": "breadcrumbs",
    "fieldtype": "Code",
+   "hidden": 1,
    "label": "Breadcrumbs",
-   "max_height": "140px",
-   "hidden": 1
+   "max_height": "140px"
   },
   {
    "fieldname": "custom_css",
@@ -376,7 +376,7 @@
  "icon": "uil uil-file-landscape-alt",
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-20 16:33:50.446725",
+ "modified": "2023-04-05 12:04:56.064459",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Web Form",
@@ -396,5 +396,6 @@
  "sort_order": "DESC",
  "states": [],
  "title_field": "title",
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

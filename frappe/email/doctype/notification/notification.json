@@ -291,10 +291,11 @@
  ],
  "icon": "fa fa-envelope",
  "links": [],
- "modified": "2021-10-04 10:21:35.230895",
+ "modified": "2023-04-05 12:05:12.802490",
  "modified_by": "Administrator",
  "module": "Email",
  "name": "Notification",
+ "naming_rule": "Set by user",
  "owner": "Administrator",
  "permissions": [
   {
@@ -310,6 +311,8 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "title_field": "subject",
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

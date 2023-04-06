@@ -95,7 +95,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-11-10 09:14:55.514089",
+ "modified": "2023-04-05 12:05:56.795077",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Form Tour",
@@ -129,5 +129,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }
