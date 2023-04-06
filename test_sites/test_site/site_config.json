@@ -18,5 +18,5 @@
  "redis_socketio": "redis://redis_socketio:6379",
  "socketio_port": 9000,
  "mute_emails": 0,
- "throttle_user_limit": 500
+ "throttle_user_limit": 100
 }
