@@ -55,6 +55,11 @@ let docfield_df = computed(() => {
 		}
 		return true;
 	});
+	fields = fields.map(df => {
+		df.label = __(df.label, null, "DocField");
+		df.description = __(df.description, null, "DocField");
+		return df;
+	});
 
 	return [...fields];
 });

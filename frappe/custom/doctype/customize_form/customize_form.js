@@ -121,7 +121,9 @@ frappe.ui.form.on("Customize Form", {
 						() => {
 							frappe.set_route("form-builder", frm.doc.doc_type, "customize");
 						}
-					);
+					)
+						.removeClass("btn-primary")
+						.addClass("btn-primary-light");
 				}
 
 				frm.add_custom_button(

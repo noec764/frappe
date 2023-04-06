@@ -33,12 +33,12 @@ let doctype_df = computed(() => {
 		}));
 
 	let options = [{ label: __("Select DocType"), value: "" }, ...doctypes.value];
-	return { fieldtype: "Select", label: __("Fetch Form"), options };
+	return { fieldtype: "Select", label: __("Fetch From"), options };
 });
 
 let field_df = computedAsync(async () => {
 	let options = [{ label: __("Select Field"), value: "" }];
-	let df = { fieldtype: "Select", label: __("Fetch Form"), options };
+	let df = { fieldtype: "Select", label: __("Fetch From"), options };
 	if (!doctype.value) return df;
 	let doctype_name = doctypes.value?.find(df => df.value == doctype.value).doctype_name;
 	if (!doctype_name) return df;
@@ -99,13 +99,13 @@ watch([() => doctype.value, () => fieldname.value], ([doctype_value, fieldname_v
 			:no_label="true"
 		/>
 	</div>
-	<div v-else class="control" :class="{ editable: slots.label }">
+	<div v-else class="control frappe-control" :class="{ editable: slots.label }">
 		<!-- label -->
 		<div v-if="slots.label" class="field-controls">
 			<slot name="label" />
 			<slot name="actions" />
 		</div>
-		<div v-else class="label">{{ df.label }}</div>
+		<div v-else class="control-label label">{{ df.label }}</div>
 
 		<!-- textarea input -->
 		<textarea

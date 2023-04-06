@@ -285,6 +285,7 @@ function delete_tab(with_children) {
 
 .tab-contents {
 	max-height: calc(100vh - 210px);
+	overflow-x: hidden;
 	overflow-y: auto;
 	border-radius: var(--border-radius);
 	min-height: 70px;

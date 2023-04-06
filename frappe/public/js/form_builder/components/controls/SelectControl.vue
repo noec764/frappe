@@ -13,6 +13,14 @@ let update_control = ref(true);
 function get_options() {
 	let options = props.df.options;
 
+	if (props.df.fieldname == "fieldtype" && typeof options == "string") {
+		options = options.split("\n")
+			.map((fieldtype) => {
+				return { value: fieldtype, label: __(fieldtype, null, "DocField") }
+			})
+			.sort((a, b) => a.label.localeCompare(b.label));
+	}
+
 	if (typeof options == "string") {
 		options = options.split("\n") || "";
 		options = options.map(opt => {
@@ -85,7 +93,7 @@ watch(() => props.df.options, () => {
 </script>
 
 <template>
-	<div v-if="slots.label" class="control" :class="{ editable: slots.label }">
+	<div v-if="slots.label" class="control frappe-control" :class="{ editable: slots.label }">
 		<!-- label -->
 		<div class="field-controls">
 			<slot name="label" />
