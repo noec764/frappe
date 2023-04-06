@@ -26,7 +26,7 @@ stages:
   - Docker Dodock
 
 unittests:
-  image: "python:3.10-buster"
+  image: "python:3.10-bullseye"
 
   stage: Unit Tests
 
@@ -60,7 +60,7 @@ unittests:
     - rm -rf /var/lib/apt/lists/*
     - rm -rf /etc/apt/sources.list.d/*
     - curl -sL https://deb.nodesource.com/setup_16.x | bash
-    - apt-get install -y nodejs git
+    - apt-get install -y nodejs
     - npm install --global yarn
     - export PATH=$PATH:/home/dokotest/.local/bin
     - adduser --disabled-password --gecos "" dokotest
