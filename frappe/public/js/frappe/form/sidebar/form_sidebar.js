@@ -213,7 +213,10 @@ frappe.ui.form.Sidebar = class {
 					doc_name: this.frm.doc.name,
 					following: !is_followed,
 				})
-				.then(() => {
+				.then((r) => {
+					if (r?._server_messages) {
+						return;
+					}
 					frappe.model.set_docinfo(
 						this.frm.doctype,
 						this.frm.doc.name,
