@@ -44,14 +44,14 @@ def submit_cancel_or_update_docs(doctype, docnames, action="submit", data=None):
 			message = ""
 			if action == "submit" and doc.docstatus.is_draft():
 				doc.submit()
-				message = _("Submitting {0}").format(doctype)
+				message = _("Submitting {0}").format(_(doctype))
 			elif action == "cancel" and doc.docstatus.is_submitted():
 				doc.cancel()
-				message = _("Cancelling {0}").format(doctype)
+				message = _("Cancelling {0}").format(_(doctype))
 			elif action == "update" and not doc.docstatus.is_cancelled():
 				doc.update(data)
 				doc.save()
-				message = _("Updating {0}").format(doctype)
+				message = _("Updating {0}").format(_(doctype))
 			else:
 				failed.append(d)
 			frappe.db.commit()
