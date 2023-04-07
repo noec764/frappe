@@ -6,14 +6,15 @@
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
- "hidden": 0,
  "hide_custom": 0,
  "icon": "setting-gear",
  "idx": 0,
+ "is_hidden": 0,
  "is_standard": 1,
  "label": "Build",
  "links": [
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Models",
@@ -24,6 +25,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "DocType",
@@ -35,6 +37,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Workflow",
@@ -46,6 +49,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Scripting",
@@ -56,6 +60,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Server Script",
@@ -67,6 +72,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Scheduled Jobs Logs",
@@ -78,6 +84,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Error Logs",
@@ -89,6 +96,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Error Snapshot",
@@ -99,6 +107,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Communication Logs",
@@ -110,6 +119,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Activity Log",
@@ -120,6 +130,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Modules",
@@ -128,6 +139,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Module Def",
@@ -139,6 +151,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Module Onboarding",
@@ -150,6 +163,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Module Profile",
@@ -160,6 +174,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Views",
@@ -168,6 +183,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Report",
@@ -179,6 +195,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Print Format",
@@ -190,6 +207,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Dashboard",
@@ -201,6 +219,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Workspace",
@@ -212,6 +231,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "System Logs",
@@ -220,6 +240,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Background Jobs",
@@ -230,6 +251,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Client Script",
@@ -241,6 +263,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Scheduled Job Type",
@@ -252,6 +275,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Packages",
@@ -260,6 +284,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Package",
@@ -270,6 +295,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Package Import",
@@ -280,31 +306,35 @@
    "type": "Link"
   }
  ],
- "modified": "2022-09-02 01:48:28.029135",
+ "modified": "2023-04-07 23:29:54.299613",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Build",
+ "number_cards": [],
  "owner": "Administrator",
- "parent_page": "",
+ "parent_page": "Administration",
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 5.0,
+ "sequence_id": 39.0,
  "shortcuts": [
   {
+   "columns": 0,
    "doc_view": "",
    "label": "DocType",
    "link_to": "DocType",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "doc_view": "",
    "label": "Workspace",
    "link_to": "Workspace",
    "type": "DocType"
   },
   {
+   "columns": 0,
    "doc_view": "",
    "label": "Report",
    "link_to": "Report",
