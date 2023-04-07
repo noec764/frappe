@@ -6692,9 +6692,9 @@ UNSEEN,NON LUS,
 UPPER CASE,MAJUSCULE,
 UPPERCASE,MAJUSCULE,
 "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.
-<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook","URIs pour recevoir un code d'autorisation une fois que l'utilisateur a autorisé l'accès, de même que les retours en cas d'échec. Généralement un point d'arrivée REST exposée par l'application cliente.
-<br>ex: http://hostname//api/method/frappe.www.login.login_via_facebook",
-"URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.<br>e.g. http://hostname//api/method/frappe.www.login.login_via_facebook","URIs pour recevoir le code d'autorisation ainsi que les réponses d'échec une fois que l'utilisateur autorise l'accès. Typiquement, un point de terminaison REST exposé par l'application cliente.<br>Par exemple, http: //hostname//api/method/frappe.www.login.login_via_facebook",
+<br>e.g. http://hostname/api/method/frappe.www.login.login_via_facebook","URIs pour recevoir un code d'autorisation une fois que l'utilisateur a autorisé l'accès, de même que les retours en cas d'échec. Généralement un point d'arrivée REST exposée par l'application cliente.
+<br>ex: http://hostname/api/method/frappe.www.login.login_via_facebook",
+"URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.<br>e.g. http://hostname/api/method/frappe.www.login.login_via_facebook","URIs pour recevoir le code d'autorisation ainsi que les réponses d'échec une fois que l'utilisateur autorise l'accès. Typiquement, un point de terminaison REST exposé par l'application cliente.<br>Par exemple, http://hostname/api/method/frappe.www.login.login_via_facebook",
 URL for documentation or help,URL de documentation ou d'aide,
 URL must start with 'http://' or 'https://',L'URL doit commencer par 'http://' ou 'https://',
 URL must start with http:// or https://,L'URL doit commencer avec http:// ou https://,
