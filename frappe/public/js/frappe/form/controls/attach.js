@@ -80,6 +80,21 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 		this.file_uploader = new frappe.ui.FileUploader(this.upload_options);
 	}
 
+	parse_df_options() {
+		if (!this.df.options) {
+			return {};
+		} else if (this.df.options === "Public" || this.df.options === "Private") {
+			return {
+				make_attachments_public: this.df.options === "Public",
+				forced_file_visibility: this.df.options,
+			};
+		} else if (typeof this.df.options === "object") {
+			// Note: df.options will be overridden in WebForm's setup_fields()
+			return this.df.options;
+		}
+		return {};
+	}
+
 	set_upload_options() {
 		let options = {
 			allow_multiple: false,
@@ -97,9 +112,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 			options.make_attachments_public = this.frm.meta.make_attachments_public;
 		}
 
-		if (this.df.options) {
-			Object.assign(options, this.df.options);
-		}
+		Object.assign(options, this.parse_df_options());
 
 		this.upload_options = options;
 	}
