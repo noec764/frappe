@@ -873,8 +873,16 @@ $.extend(frappe.model, {
 		}
 
 		const views = ["List", "Report", "Dashboard", "Kanban"];
-		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
-			views.push("Calendar", "Gantt", "Planning");
+
+		if (frappe.views.calendar[doctype] || meta.is_calendar_and_gantt) {
+			// Allow Calendar view if there is a standard calendar view defined,
+			// or if the checkbox "Is Calendar and Gantt" is checked with customizations.
+			views.push("Calendar", "Planning");
+		}
+		// TODO: Gantt view is not working properly if no default calendar view is defined.
+		// This means it is NOT possible to have a Gantt view for custom doctypes.
+		if (frappe.views.calendar[doctype]) {
+			views.push("Gantt");
 		}
 		if (meta.is_tree) {
 			views.push("Tree");
