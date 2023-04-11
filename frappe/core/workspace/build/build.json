@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#6195ff",
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DocType\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workspace\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Report\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Elements</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Scripting\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"System Logs\",\"col\":4}}]",
+ "content": "[{\"id\":\"dA4Np-VcAh\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Doctypes\",\"col\":4}},{\"id\":\"bk5RPVTOIS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Reports\",\"col\":4}},{\"id\":\"RYHdXVtYlq\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"zADB7T5kGL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"DocType\",\"col\":3}},{\"id\":\"NQMrxi-HAY\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Workspace\",\"col\":3}},{\"id\":\"vC0u6uhmZe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Report\",\"col\":3}},{\"id\":\"G2wqN_rc71\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mZ9haAbTou\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Elements</b></span>\",\"col\":12}},{\"id\":\"y2kl-eCoUN\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"g6pIYLnEk3\",\"type\":\"card\",\"data\":{\"card_name\":\"Models\",\"col\":4}},{\"id\":\"8kfq07Se1o\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"npvSVnP9ZB\",\"type\":\"card\",\"data\":{\"card_name\":\"Scripting\",\"col\":4}},{\"id\":\"_l9l5P7Fyn\",\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}},{\"id\":\"pI_cSo0TxE\",\"type\":\"card\",\"data\":{\"card_name\":\"System Logs\",\"col\":4}}]",
  "creation": "2021-01-02 10:51:16.579957",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -306,11 +306,20 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-07 23:29:54.299613",
+ "modified": "2023-04-08 11:53:53.561066",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Build",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Total Doctypes",
+   "number_card_name": "Total Doctypes"
+  },
+  {
+   "label": "Active Reports",
+   "number_card_name": "Active Reports"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Administration",
  "public": 1,

@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#F8A787",
- "content": "[{\"type\":\"onboarding\",\"data\":{\"onboarding_name\":\"Customization\",\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Custom Role\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Form Customization\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"BwEhhw-C1K\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Custom Role\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Form Customization\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2020-03-02 15:15:03.839594",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -148,11 +148,24 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-07 23:29:54.100363",
+ "modified": "2023-04-08 11:47:17.112200",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Active Client Scripts",
+   "number_card_name": "Active Client Scripts"
+  },
+  {
+   "label": "Custom Fields",
+   "number_card_name": "Custom Fields"
+  },
+  {
+   "label": "Active Server Scripts",
+   "number_card_name": "Active Server Scripts"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Administration",
  "public": 1,

@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#e8525b",
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Role\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Permission Manager\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Profile\",\"col\":3}},{\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Type\",\"col\":3}},{\"type\":\"spacer\",\"data\":{\"col\":12}},{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports & Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Logs\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Permissions\",\"col\":4}}]",
+ "content": "[{\"id\":\"58Sld7GBbD\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active System Users\",\"col\":4}},{\"id\":\"gSzUDlSAVg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Website Users\",\"col\":4}},{\"id\":\"nZpBF_0fbz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"Ql9wIE7pbq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User\",\"col\":3}},{\"id\":\"T0I_6CA0wr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Role\",\"col\":3}},{\"id\":\"xQgmHC1FRw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Permission Manager\",\"col\":3}},{\"id\":\"yPQrt-MIMW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Profile\",\"col\":3}},{\"id\":\"U6IGupitPb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Type\",\"col\":3}},{\"id\":\"5_EGzV8-8y\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"RDn-0MpQ5V\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"w2oS2CxcZM\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"id\":\"hvOvO4VRbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs\",\"col\":4}},{\"id\":\"uh2jsCk-g1\",\"type\":\"card\",\"data\":{\"card_name\":\"Permissions\",\"col\":4}}]",
  "creation": "2020-03-02 15:12:16.754449",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -161,11 +161,20 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-07 23:29:53.894410",
+ "modified": "2023-04-08 11:11:25.614252",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Users",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Active System Users",
+   "number_card_name": "Active System Users"
+  },
+  {
+   "label": "Active Website Users",
+   "number_card_name": "Active Website Users"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Administration",
  "public": 1,

@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#aec8ff",
- "content": "[{\"id\":\"XBf792HRWR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings</b></span>\",\"col\":12}},{\"id\":\"jl5AVVRU_o\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Settings\",\"col\":3}},{\"id\":\"R2Lh-Ol30q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Print Settings\",\"col\":3}},{\"id\":\"PMXMZUyvk6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"id\":\"D9Jkba7yty\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Document Naming Settings\",\"col\":3}},{\"id\":\"bVDxxxe_81\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ZFKjOn3dMz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"S5noCgPlpg\",\"type\":\"card\",\"data\":{\"card_name\":\"Data\",\"col\":4}},{\"id\":\"Vj7kZsZMgC\",\"type\":\"card\",\"data\":{\"card_name\":\"Email / Notifications\",\"col\":4}},{\"id\":\"O3KpcE1o2y\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"pKq7Zc7OrY\",\"type\":\"card\",\"data\":{\"card_name\":\"Core\",\"col\":4}},{\"id\":\"lep26xOJX2\",\"type\":\"card\",\"data\":{\"card_name\":\"Printing\",\"col\":4}},{\"id\":\"bpdh3uPFf-\",\"type\":\"card\",\"data\":{\"card_name\":\"Workflow\",\"col\":4}}]",
+ "content": "[{\"id\":\"y0yzwMgs_r\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Workflows\",\"col\":4}},{\"id\":\"ZYfVsAMiJF\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Incoming Email Accounts\",\"col\":4}},{\"id\":\"_ccW9WCO1-\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Outgoing Email Accounts\",\"col\":4}},{\"id\":\"XBf792HRWR\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Settings</b></span>\",\"col\":12}},{\"id\":\"jl5AVVRU_o\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Settings\",\"col\":3}},{\"id\":\"R2Lh-Ol30q\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Print Settings\",\"col\":3}},{\"id\":\"PMXMZUyvk6\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"id\":\"D9Jkba7yty\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Document Naming Settings\",\"col\":3}},{\"id\":\"bVDxxxe_81\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"ZFKjOn3dMz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"S5noCgPlpg\",\"type\":\"card\",\"data\":{\"card_name\":\"Data\",\"col\":4}},{\"id\":\"Vj7kZsZMgC\",\"type\":\"card\",\"data\":{\"card_name\":\"Email / Notifications\",\"col\":4}},{\"id\":\"O3KpcE1o2y\",\"type\":\"card\",\"data\":{\"card_name\":\"Website\",\"col\":4}},{\"id\":\"pKq7Zc7OrY\",\"type\":\"card\",\"data\":{\"card_name\":\"Core\",\"col\":4}},{\"id\":\"lep26xOJX2\",\"type\":\"card\",\"data\":{\"card_name\":\"Printing\",\"col\":4}},{\"id\":\"bpdh3uPFf-\",\"type\":\"card\",\"data\":{\"card_name\":\"Workflow\",\"col\":4}}]",
  "creation": "2020-03-02 15:09:40.527211",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -413,11 +413,24 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-07 23:29:54.395346",
+ "modified": "2023-04-08 11:56:35.794584",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Active Workflows",
+   "number_card_name": "Active Workflows"
+  },
+  {
+   "label": "Incoming Email Accounts",
+   "number_card_name": "Incoming Email Accounts"
+  },
+  {
+   "label": "Outgoing Email Accounts",
+   "number_card_name": "Outgoing Email Accounts"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "Administration",
  "public": 1,

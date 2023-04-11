@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#29CD42",
- "content": "[{\"id\":\"-1ToNvKtPt\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Administration</span>\",\"col\":12}}]",
+ "content": "[{\"id\":\"-1ToNvKtPt\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Administration</span>\",\"col\":12}},{\"id\":\"ZttYudRrbU\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Enabled Users\",\"col\":4}},{\"id\":\"lznW170H4R\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Failed Login over 30 days\",\"col\":4}},{\"id\":\"KPwdH-4ztr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PBgLGi2IPe\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Error Log\",\"col\":4}},{\"id\":\"JlMdZQJOlB\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Queued and Failed Integration Requests\",\"col\":4}},{\"id\":\"Y4ie_hMdq5\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Latest Failed Login\",\"col\":4}}]",
  "creation": "2023-04-07 23:21:57.230511",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -13,15 +13,39 @@
  "is_standard": 1,
  "label": "Administration",
  "links": [],
- "modified": "2023-04-07 23:36:35.074783",
+ "modified": "2023-04-08 11:44:47.395536",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Administration",
- "number_cards": [],
+ "number_cards": [
+  {
+   "label": "Total Enabled Users",
+   "number_card_name": "Total Enabled Users"
+  },
+  {
+   "label": "Failed Login over 30 days",
+   "number_card_name": "Failed Login over 30 days"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
- "quick_lists": [],
+ "quick_lists": [
+  {
+   "document_type": "Activity Log",
+   "label": "Latest Failed Login",
+   "quick_list_filter": "{\"operation\":[\"=\",\"Login\"],\"status\":[\"=\",\"Failed\"]}"
+  },
+  {
+   "document_type": "Error Log",
+   "label": "Error Log"
+  },
+  {
+   "document_type": "Integration Request",
+   "label": "Queued and Failed Integration Requests",
+   "quick_list_filter": "{\"status\":[\"in\",[\"Queued\",\"Failed\",null]]}"
+  }
+ ],
  "roles": [],
  "sequence_id": 33.0,
  "shortcuts": [],
