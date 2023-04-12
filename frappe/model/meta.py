@@ -829,7 +829,7 @@ def _update_field_order_based_on_insert_after(field_order, insert_after_map):
 
 
 def get_views_of_doctype(doctype):
-	"""List, Report, Dashboard, Kanban, Calendar, Gantt, Tree, Image, Inbox, Map"""
+	"""List, Report, Dashboard, Kanban, Calendar, Gantt, Tree, Image, Inbox, Map, Planning"""
 
 	meta = frappe.get_meta(doctype)
 
@@ -839,7 +839,7 @@ def get_views_of_doctype(doctype):
 	views = ["List", "Report", "Dashboard", "Kanban"]
 
 	if meta.is_calendar_and_gantt and frappe.views.calendar[doctype]:
-		views.extend(["Calendar", "Gantt"])
+		views.extend(["Calendar", "Gantt", "Planning"])
 
 	if meta.is_tree:
 		views.append("Tree")

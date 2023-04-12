@@ -96,6 +96,7 @@ def get_bootinfo():
 
 	bootinfo.error_report_email = frappe.conf.error_report_email
 	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
+	bootinfo.default_doctype_views = get_default_doctype_views()
 	bootinfo.fullcalendar_scheduler_licence_key = ""
 	for license_key in frappe.get_hooks("fullcalendar_scheduler_licence_key"):
 		if license_key:
@@ -141,7 +142,7 @@ def load_desktop_data(bootinfo):
 	from frappe.desk.desktop import get_workspace_sidebar_items
 
 	bootinfo.allowed_workspaces = get_workspace_sidebar_items().get("pages")
-	bootinfo.module_page_map = get_controller("Workspace").get_module_page_map()
+	bootinfo.module_wise_workspaces = get_controller("Workspace").get_module_wise_workspaces()
 	bootinfo.dashboards = frappe.get_all("Dashboard")
 
 
@@ -461,3 +462,13 @@ def add_subscription_conf():
 		return frappe.conf.subscription
 	except Exception:
 		return ""
+
+
+def get_default_doctype_views() -> dict[str, str]:
+	"""Returns a mapping from a DocType to its default view, if it is not List.
+	Note: Uses frappe.get_list() so returns partial results if some DocTypes are not accessible."""
+	filters = [("default_view", "not in", (None, "List", ""))]
+	results: list = frappe.get_list(
+		"DocType", fields=["name", "default_view"], filters=filters, as_list=True
+	)
+	return dict(results)

@@ -112,10 +112,10 @@ def sync_customizations(app=None):
 						with open(os.path.join(folder, fname)) as f:
 							data = json.loads(f.read())
 						if data.get("sync_on_migrate"):
-							sync_customizations_for_doctype(data, folder)
+							sync_customizations_for_doctype(data, folder, fname)
 
 
-def sync_customizations_for_doctype(data: dict, folder: str):
+def sync_customizations_for_doctype(data: dict, folder: str, filename: str = ""):
 	"""Sync doctype customzations for a particular data set"""
 	from frappe.core.doctype.doctype.doctype import validate_fields_for_doctype
 
@@ -205,6 +205,11 @@ def sync_customizations_for_doctype(data: dict, folder: str):
 			# only sync the parent doctype and child doctype if there isn't any other child table json file
 			if doc_type == doctype or not os.path.exists(os.path.join(folder, scrub(doc_type) + ".json")):
 				sync_single_doctype(doc_type)
+
+	if not frappe.db.exists("DocType", doctype):
+		print(_("DocType {0} does not exist.").format(doctype))
+		print(_("Skipping fixture syncing for doctyoe {0} from file {1} ").format(doctype, filename))
+		return
 
 	print(f"Updating customizations for {doctype}")
 
@@ -314,7 +319,10 @@ def get_app_publisher(module: str) -> str:
 
 
 def make_boilerplate(
-	template: str, doc: Union["Document", "frappe._dict"], opts: Union[dict, "frappe._dict"] = None
+	template: str,
+	doc: Union["Document", "frappe._dict"],
+	opts: Union[dict, "frappe._dict"] = None,
+	module: str = "core",
 ):
 	target_path = get_doc_path(doc.module, doc.doctype, doc.name)
 	template_name = template.replace("controller", scrub(doc.name))
@@ -322,7 +330,7 @@ def make_boilerplate(
 		template_name = template_name[:-4] + ".py"
 	target_file_path = os.path.join(target_path, template_name)
 	template_file_path = os.path.join(
-		get_module_path("core"), "doctype", scrub(doc.doctype), "boilerplate", template
+		get_module_path(module), "doctype", scrub(doc.doctype), "boilerplate", template
 	)
 
 	if os.path.exists(target_file_path):

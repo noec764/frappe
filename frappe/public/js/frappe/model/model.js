@@ -762,6 +762,9 @@ $.extend(frappe.model, {
 		const valid_keys = frappe.meta.get_table_fields(doc.doctype).map((df) => df.fieldname);
 		for (const table_name of valid_keys) {
 			const children = doc[table_name];
+			if (!children) {
+				continue;
+			}
 			if (!Array.isArray(children)) {
 				console.error(`Property '${table_name}' should be an array:`, doc);
 				continue;
@@ -832,7 +835,7 @@ $.extend(frappe.model, {
 
 		const views = ["List", "Report", "Dashboard", "Kanban"];
 		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
-			views.push("Calendar", "Gantt");
+			views.push("Calendar", "Gantt", "Planning");
 		}
 		if (meta.is_tree) {
 			views.push("Tree");

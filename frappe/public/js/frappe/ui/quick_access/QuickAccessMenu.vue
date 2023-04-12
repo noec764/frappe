@@ -364,7 +364,7 @@ export default {
 	bottom: 0;
 	width: 100%;
 	height: 16px;
-	background: linear-gradient(0deg, white, rgba(255,255,255,0));
+	background: linear-gradient(0deg, var(--modal-bg, white), transparent);
 }
 
 .QAM-results {
@@ -388,20 +388,26 @@ export default {
 .QAM-filter-container {
 	display: block;
 	margin: 0;
-	padding: 1em;
+	padding: 1rem;
 	position: relative
 }
 .QAM-filter-container input {
-	padding: 1em;
-	padding-left: 1.8em;
-	font-size: 1.4rem;
+	padding: 1rem;
+	padding-left: 3rem;
+	line-height: 1;
+	font-size: 1.4rem !important;
 	width: 100%;
+	height: auto;
 }
 .QAM-filter-container .search-icon {
 	position: absolute;
 	top: 0;
-	left: 0;
-	margin: 1.6em;
+	left: 1rem;
+	width: 3rem;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 

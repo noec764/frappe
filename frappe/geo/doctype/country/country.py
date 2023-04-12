@@ -52,6 +52,7 @@ def get_countries_and_currencies():
 					fraction=country.currency_fraction,
 					symbol=country.currency_symbol,
 					fraction_units=country.currency_fraction_units,
+					symbol_on_right=country.symbol_on_right,
 					smallest_currency_fraction_value=country.smallest_currency_fraction_value,
 					number_format=country.number_format,
 				)

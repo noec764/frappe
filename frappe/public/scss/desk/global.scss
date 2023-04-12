@@ -12,10 +12,6 @@ a,
 	transition: 0.2s;
 }
 
-.btn {
-	transition: background-color 0.2s, background 0.2s;
-}
-
 body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -120,8 +116,6 @@ pre {
 .col-xs-10 { @extend .col-10; }
 .col-xs-11 { @extend .col-11; }
 .col-xs-12 { @extend .col-12; }
-
-.btn-default { @extend .btn-light; }
 
 .hidden-xs {
 	@include media-breakpoint-down(xs) {
@@ -501,7 +495,7 @@ kbd {
 
 // freeze backdrop text
 #freeze {
-	z-index: 1020;
+	z-index: 1050;
 	bottom: 0;
 	opacity: 0;
 	background-color: var(--bg-color);

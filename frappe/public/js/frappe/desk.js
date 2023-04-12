@@ -87,6 +87,7 @@ frappe.Application = class Application {
 			// delayed following requests to make boot faster
 			setTimeout(() => {
 				this.show_change_log();
+				this.show_update_available();
 			}, 1000);
 		}
 

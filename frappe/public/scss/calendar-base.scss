@@ -51,12 +51,8 @@
 		padding: 0;
 	}
 
-	.fc-timegrid-slot-label:after {
-		content: "";
-		width: 3rem;
-		height: 2rem;
-		background-color:white;
-		position: absolute;
+	.fc-timegrid-slot-label-cushion {
+		background-color: var(--fg-color);
 	}
 
 	tbody>tr:first-child>td .fc-timegrid-slot-label-cushion {
@@ -239,11 +235,13 @@
 }
 
 :root {
+	--fc-page-bg-color: var(--bg-color);
+	--fc-neutral-text-color: var(--text-muted);
 	--fc-button-bg-color: var(--fg-color);
-	--fc-button-border-color: var(--gray-300);
-	--fc-button-text-color: var(--gray-900);
-	--fc-button-active-bg-color: var(--gray-300);
-	--fc-button-active-border-color: var(--gray-300);
-	--fc-button-hover-bg-color: #ffff;
-	--fc-button-hover-border-color: #4C5A67;
+	--fc-button-text-color: var(--text-color);
+	--fc-button-border-color: var(--gray-500);
+	--fc-button-active-bg-color: var(--bg-blue);
+	--fc-button-active-border-color: var(--text-on-blue);
+	--fc-button-hover-bg-color: var(--bg-color);
+	--fc-button-hover-border-color: var(--text-color);
 }

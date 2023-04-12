@@ -215,7 +215,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2023-03-31 16:08:36.083745",
+ "modified": "2023-04-11 14:34:24.829366",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Workspace",
@@ -238,5 +238,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "translated_doctype": 1
+ "translated_doctype": 1,
+ "track_changes": 1
 }

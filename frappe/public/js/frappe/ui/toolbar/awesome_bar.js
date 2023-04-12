@@ -218,16 +218,16 @@ frappe.search.AwesomeBar = class AwesomeBar {
 			routes = [];
 		options.forEach(function (option) {
 			if (option.route) {
+				let str_route =
+					typeof option.route === "string" ? option.route : option.route.join("/");
 				if (
 					option.route[0] === "List" &&
 					option.route[2] !== "Report" &&
 					option.route[2] !== "Inbox"
 				) {
-					option.route = option.route.slice(0, 2);
+					str_route = option.route.slice(0, 2).join("/");
 				}
 
-				var str_route =
-					typeof option.route === "string" ? option.route : option.route.join("/");
 				if (routes.indexOf(str_route) === -1) {
 					out.push(option);
 					routes.push(str_route);
@@ -300,7 +300,11 @@ frappe.search.AwesomeBar = class AwesomeBar {
 
 	make_search_in_current(txt) {
 		var route = frappe.get_route();
-		if (route[0] === "List" && txt.indexOf(" in") === -1) {
+		if (
+			route[0] === "List" &&
+			txt.indexOf(" in") === -1 &&
+			frappe.container.page.list_view?.doctype
+		) {
 			// search in title field
 			var meta = frappe.get_meta(frappe.container.page.list_view.doctype);
 			var search_field = meta.title_field || "name";

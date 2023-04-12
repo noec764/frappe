@@ -40,6 +40,10 @@ def update_event(args, field_map):
 	w = frappe.get_doc(args.doctype, args.name)
 	w.set(field_map.start, get_datetime(args[field_map.start]))
 	w.set(field_map.end, get_datetime(args.get(field_map.end)))
+
+	if field_map.get("resourceId"):
+		w.set(field_map.resourceId, args[field_map.resourceId])
+
 	w.save()
 
 
@@ -214,11 +218,10 @@ def get_resource_ids(doctype, resource):
 	field = source_meta.get_field(resource)
 	title_field = None
 
-	if field.fieldtype=="Select":
-		return [{
-			"id": option,
-			"title": _(option) or _("No value")
-		} for option in field.options.split("\n")]
+	if field.fieldtype == "Select":
+		return [
+			{"id": option, "title": _(option) or _("No value")} for option in field.options.split("\n")
+		]
 
 	if field.fieldtype == "Link":
 		title_field = frappe.get_meta(field.options).get_title_field()
@@ -226,28 +229,24 @@ def get_resource_ids(doctype, resource):
 	resources = frappe.get_all(doctype, fields=[resource], distinct=True, pluck=resource)
 
 	dt = frappe.qb.DocType(doctype)
-	query = (
-		frappe.qb.from_(dt)
-		.select(
-			dt[resource].as_('resource')
-		)
-		.distinct()
-	)
+	query = frappe.qb.from_(dt).select(dt[resource].as_("resource")).distinct()
 	if title_field:
 		link_dt = frappe.qb.DocType(field.options)
-		query = query.from_(link_dt).select(link_dt[title_field].as_("title")).where(link_dt.name==dt[resource])
+		query = (
+			query.from_(link_dt)
+			.select(link_dt[title_field].as_("title"))
+			.where(link_dt.name == dt[resource])
+		)
 
 	resources = query.run(as_dict=True)
 	output = []
 
 	for res in resources:
 		label = res.get("title") or res.resource
-		output.append({
-			"id": res.resource,
-			"title": label or _("No value")
-		})
+		output.append({"id": res.resource, "title": label or _("No value")})
 
 	return output
+
 
 @frappe.whitelist()
 def get_resources_for_doctype(doctype):
@@ -257,7 +256,8 @@ def get_resources_for_doctype(doctype):
 
 	select_and_link_fields = [
 		{"id": f.fieldname, "title": f.label}
-		for f in meta.fields if f.fieldtype in ["Select", "Link"] and not f.hidden and f.fieldname not in excluded_fields
+		for f in meta.fields
+		if f.fieldtype in ["Select", "Link"] and not f.hidden and f.fieldname not in excluded_fields
 	]
 
 	return select_and_link_fields

@@ -64,8 +64,14 @@ $indicator-colors: green, cyan, blue, orange, yellow, gray, grey, red, pink, dar
 		color: var(--text-on-#{$color});
 		--indicator-color: var(--text-on-#{$color});
 	}
-}
 
+	.indicator.#{"" + $color} {
+		--indicator-color: var(--text-on-#{$color});
+	}
+	[data-theme="dark"] .indicator.#{"" + $color} {
+		--indicator-color: var(--bg-#{$color});
+	}
+}
 
 .indicator.blink {
 	animation: blink 1s linear infinite;

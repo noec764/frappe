@@ -198,12 +198,10 @@ frappe.search.utils = {
 			label = __(label_format, [label, __(type)]);
 		}
 
-		const value = `${__(match)} ${__(type)}`;
-
 		return {
 			type: type,
 			label: label,
-			value: value,
+			value: match,
 			index: level + order,
 			match: match,
 			route: route,
@@ -235,9 +233,10 @@ frappe.search.utils = {
 				} else if (frappe.boot.user.can_search.includes(item)) {
 					const expanded_results = !!frappe.boot.user.expanded_desk_search;
 
-					if (frappe.boot.calendars?.includes(item)) {
+					const default_view = frappe.boot.default_doctype_views?.[item] ?? "List";
+					if (default_view !== "List") {
 						out.push(
-							option("Calendar", ["List", item, "Calendar"], 0.05, {
+							option(default_view, ["List", item, default_view], 0.05, {
 								add_type: true,
 							})
 						);
@@ -527,16 +526,16 @@ frappe.search.utils = {
 				routes = [];
 			options.forEach(function (option) {
 				if (option.route) {
+					let str_route =
+						typeof option.route === "string" ? option.route : option.route.join("/");
 					if (
 						option.route[0] === "List" &&
 						option.route[2] !== "Report" &&
 						option.route[2] !== "Inbox"
 					) {
-						option.route = option.route.slice(0, 2);
+						str_route = option.route.slice(0, 2).join("/");
 					}
 
-					var str_route =
-						typeof option.route === "string" ? option.route : option.route.join("/");
 					if (routes.indexOf(str_route) === -1) {
 						out.push(option);
 						routes.push(str_route);
