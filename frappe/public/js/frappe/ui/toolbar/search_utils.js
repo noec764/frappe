@@ -233,9 +233,10 @@ frappe.search.utils = {
 				} else if (frappe.boot.user.can_search.includes(item)) {
 					const expanded_results = !!frappe.boot.user.expanded_desk_search;
 
-					if (frappe.boot.calendars?.includes(item)) {
+					const default_view = frappe.boot.default_doctype_views?.[item] ?? "List";
+					if (default_view !== "List") {
 						out.push(
-							option("Calendar", ["List", item, "Calendar"], 0.05, {
+							option(default_view, ["List", item, default_view], 0.05, {
 								add_type: true,
 							})
 						);

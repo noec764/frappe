@@ -300,7 +300,11 @@ frappe.search.AwesomeBar = class AwesomeBar {
 
 	make_search_in_current(txt) {
 		var route = frappe.get_route();
-		if (route[0] === "List" && txt.indexOf(" in") === -1) {
+		if (
+			route[0] === "List" &&
+			txt.indexOf(" in") === -1 &&
+			frappe.container.page.list_view?.doctype
+		) {
 			// search in title field
 			var meta = frappe.get_meta(frappe.container.page.list_view.doctype);
 			var search_field = meta.title_field || "name";
