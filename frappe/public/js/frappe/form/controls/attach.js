@@ -13,7 +13,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 				},
 			});
 		this.$value = $(
-			`<div class="attached-file flex justify-between align-center">
+			`<div class="attached-file flex" style="flex-direction: column; gap: 0.5rem;">
 				<div class="ellipsis">
 					<i class="uil uil-paperclip"></i>
 					<a class="attached-file-link" target="_blank"></a>
