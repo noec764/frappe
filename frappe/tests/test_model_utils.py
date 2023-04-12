@@ -1,3 +1,5 @@
+from contextlib import contextmanager
+
 import frappe
 from frappe.model.utils import get_fetch_values
 from frappe.tests.utils import FrappeTestCase
@@ -25,3 +27,11 @@ class TestModelUtils(FrappeTestCase):
 		self.assertEqual(
 			get_fetch_values(doctype, "assigned_by", user), {"assigned_by_full_name": full_name}
 		)
+
+
+@contextmanager
+def set_user(user: str):
+	past_user = frappe.session.user or "Administrator"
+	frappe.set_user(user)
+	yield
+	frappe.set_user(past_user)
