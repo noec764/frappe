@@ -44,7 +44,8 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		frappe.set_route(route);
 	}
 
-	setup_views() {
+	async setup_views() {
+		const available_views = (await frappe.model.get_views_of_doctype(this.doctype)) || [];
 		const views = {
 			List: {
 				condition: true,
@@ -71,7 +72,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				action: () => this.set_route("dashboard"),
 			},
 			Calendar: {
-				condition: frappe.views.calendar[this.doctype],
+				condition: available_views.includes("Calendar"),
 				action: () => this.set_route("calendar"),
 				current_view_handler: () => {
 					this.get_calendars("calendar").then((calendars) => {
@@ -80,7 +81,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				},
 			},
 			Gantt: {
-				condition: frappe.views.calendar[this.doctype],
+				condition: available_views.includes("Gantt"),
 				action: () => this.set_route("gantt"),
 			},
 			Inbox: {
@@ -123,7 +124,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				action: () => this.set_route("map"),
 			},
 			Planning: {
-				condition: frappe.views.calendar[this.doctype],
+				condition: available_views.includes("Planning"),
 				action: () => this.set_route("planning"),
 				current_view_handler: () => {
 					this.get_calendars("planning").then((calendars) => {
