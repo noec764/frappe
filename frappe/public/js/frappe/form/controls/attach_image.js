@@ -18,6 +18,14 @@ frappe.ui.form.ControlAttachImage = class ControlAttachImage extends frappe.ui.f
 		});
 	}
 
+	get_preview_section() {
+		return `<div class="file-preview">
+			<div class="file-icon border rounded">
+				<img class="attached-file-preview" style="object-fit: cover;"></img>
+			</div>
+		</div>`;
+	}
+
 	set_upload_options() {
 		super.set_upload_options();
 		this.upload_options.restrictions.allowed_file_types = ["image/*"];

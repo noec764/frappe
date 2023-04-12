@@ -36,11 +36,18 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 	}
 
 	get_preview_section() {
-		return `<div class="file-preview">
-			<div class="file-icon border rounded">
-				<img class="attached-file-preview" style="object-fit: cover;"></img>
-			</div>
-		</div>`;
+		const is_image =
+			this.df.fieldname &&
+			String(this.df.fieldname).match(/image|photo|picture|logo|icon|scan|cover/gi);
+		if (is_image) {
+			return `<div class="file-preview">
+				<div class="file-icon border rounded">
+					<img class="attached-file-preview" style="object-fit: cover;"></img>
+				</div>
+			</div>`;
+		} else {
+			return "";
+		}
 	}
 
 	clear_attachment() {
