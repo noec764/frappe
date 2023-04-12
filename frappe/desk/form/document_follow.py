@@ -43,13 +43,13 @@ def follow_document(doctype, doc_name, user):
 		)
 		or doctype in log_types
 	):
-		return frappe.throw(_("This document type cannot be followed"))
+		return frappe.msgprint(_("This document type cannot be followed"))
 
 	if (not frappe.get_meta(doctype).track_changes) or user == "Administrator":
-		return frappe.throw(_("This document type cannot be followed"))
+		return frappe.msgprint(_("This document type cannot be followed"))
 
 	if not frappe.db.get_value("User", user, "document_follow_notify", ignore=True, cache=True):
-		return frappe.throw(
+		return frappe.msgprint(
 			_("Please enable notifications for followed documents in your user settings")
 		)
 

@@ -46,21 +46,22 @@ class Workspace(Document):
 			delete_folder(self.module, "Workspace", self.name)
 
 	@staticmethod
-	def get_module_page_map():
-		pages = frappe.get_all(
-			"Workspace", fields=["name", "module", "parent_page"], filters={"for_user": ""}, as_list=1
+	def get_module_wise_workspaces():
+		workspaces = frappe.get_all(
+			"Workspace",
+			fields=["name", "module"],
+			filters={"for_user": "", "public": 1},
+			order_by="creation",
 		)
 
-		mapping = dict()
-		for page in pages:
-			if page[0] not in mapping:
-				mapping[page[0]] = page[1]
-			if page[1] not in mapping:
-				mapping[page[1]] = page[0]
-			if page[1] in mapping and not page[2]:
-				mapping[page[1]] = page[0]
+		module_workspaces = defaultdict(list)
 
-		return mapping
+		for workspace in workspaces:
+			if not workspace.module:
+				continue
+			module_workspaces[workspace.module].append(workspace.name)
+
+		return module_workspaces
 
 	def get_link_groups(self):
 		cards = []
