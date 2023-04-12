@@ -829,37 +829,7 @@ $.extend(frappe.model, {
 	},
 
 	set_default_views_for_doctype(doctype, frm) {
-		frappe.model.with_doctype(doctype, () => {
-			let meta = frappe.get_meta(doctype);
-			let default_views = ["List", "Report", "Dashboard", "Kanban"];
-
-			if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
-				let views = ["Calendar", "Gantt"];
-				default_views.push(...views);
-			}
-
-			if (meta.is_tree) {
-				default_views.push("Tree");
-			}
-
-			if (frm.doc.image_field) {
-				default_views.push("Image");
-			}
-
-			if (doctype === "Communication" && frappe.boot.email_accounts.length) {
-				default_views.push("Inbox");
-			}
-
-			if (
-				(frm.doc.fields.find((i) => i.fieldname === "latitude") &&
-					frm.doc.fields.find((i) => i.fieldname === "longitude")) ||
-				frm.doc.fields.find(
-					(i) => i.fieldname === "location" && i.fieldtype == "Geolocation"
-				)
-			) {
-				default_views.push("Map");
-			}
-
+		this.get_views_of_doctype(doctype).then((default_views) => {
 			frm.set_df_property("default_view", "options", default_views);
 		});
 	},
@@ -873,8 +843,16 @@ $.extend(frappe.model, {
 		}
 
 		const views = ["List", "Report", "Dashboard", "Kanban"];
-		if (meta.is_calendar_and_gantt && frappe.views.calendar[doctype]) {
-			views.push("Calendar", "Gantt", "Planning");
+
+		if (frappe.views.calendar[doctype] || meta.is_calendar_and_gantt) {
+			// Allow Calendar view if there is a standard calendar view defined,
+			// or if the checkbox "Is Calendar and Gantt" is checked with customizations.
+			views.push("Calendar", "Planning");
+		}
+		// TODO: Gantt view is not working properly if no default calendar view is defined.
+		// This means it is NOT possible to have a Gantt view for custom doctypes.
+		if (frappe.views.calendar[doctype]) {
+			views.push("Gantt");
 		}
 		if (meta.is_tree) {
 			views.push("Tree");
