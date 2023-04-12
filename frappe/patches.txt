@@ -253,3 +253,4 @@ frappe.patches.v14_0.remove_manage_subscriptions_from_navbar
 
 frappe.patches.dokos.v3_0.currency_symbol_location
 frappe.patches.dokos.v3_0.set_language_for_onboarding_modules #2023-01-20
+frappe.patches.dokos.v3_0.fix_symbol_on_right_for_euro_currency

@@ -1392,9 +1392,10 @@ def money_in_words(
 	if not main_currency:
 		main_currency = d.get("currency", "EUR")
 	if not fraction_currency:
-		fraction_currency = frappe.db.get_value("Currency", main_currency, "fraction", cache=True) or _(
-			"Cent"
+		fraction_currency = (
+			frappe.db.get_value("Currency", main_currency, "fraction", cache=True) or "Cent"
 		)
+		fraction_currency = _(fraction_currency, context="money_in_words")
 
 	number_format = (
 		frappe.db.get_value("Currency", main_currency, "number_format", cache=True)
