@@ -5,7 +5,7 @@ frappe.ui.form.ControlAttachImage = class ControlAttachImage extends frappe.ui.f
 		let $file_link = this.$value.find(".attached-file-link");
 		$file_link.popover({
 			trigger: "hover",
-			placement: "top",
+			placement: "left",
 			content: () => {
 				return `<div>
 					<img src="${this.get_value()}"
@@ -16,6 +16,14 @@ frappe.ui.form.ControlAttachImage = class ControlAttachImage extends frappe.ui.f
 			},
 			html: true,
 		});
+	}
+
+	get_preview_section() {
+		return `<div class="file-preview">
+			<div class="file-icon border rounded">
+				<img class="attached-file-preview" style="object-fit: cover;"></img>
+			</div>
+		</div>`;
 	}
 
 	set_upload_options() {
