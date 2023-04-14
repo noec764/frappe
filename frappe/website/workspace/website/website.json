@@ -6,7 +6,7 @@
   }
  ],
  "color": "#84b7c5",
- "content": "[{\"id\":\"tWe9nrbQVc\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Website Analytics\",\"col\":12}},{\"id\":\"0eGx7wOhEK\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"i0TgAE1rKF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blog Post\",\"col\":3}},{\"id\":\"wmGitZ-HXd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blogger\",\"col\":3}},{\"id\":\"xCXdYeiKQN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Page\",\"col\":3}},{\"id\":\"zDc-rBaZRS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Form\",\"col\":3}},{\"id\":\"6Q55bw5xOd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"id\":\"zNfUOJyVnh\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jQf1MzgmRi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"zsCAahmxgA\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"6SWylc_k1c\",\"type\":\"card\",\"data\":{\"card_name\":\"Blog\",\"col\":4}},{\"id\":\"EUpU2ayxwE\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Site\",\"col\":4}},{\"id\":\"bn8BYu2z1A\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Forms\",\"col\":4}},{\"id\":\"n5tnA29gRY\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal\",\"col\":4}},{\"id\":\"H7CNM7M7vX\",\"type\":\"card\",\"data\":{\"card_name\":\"Knowledge Base\",\"col\":4}}]",
+ "content": "[{\"id\":\"OX5LAmgvhp\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Website Analytics\",\"col\":12}},{\"id\":\"0eGx7wOhEK\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"i0TgAE1rKF\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blog Post\",\"col\":3}},{\"id\":\"wmGitZ-HXd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Blogger\",\"col\":3}},{\"id\":\"xCXdYeiKQN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Page\",\"col\":3}},{\"id\":\"zDc-rBaZRS\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Web Form\",\"col\":3}},{\"id\":\"6Q55bw5xOd\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Website Settings\",\"col\":3}},{\"id\":\"zNfUOJyVnh\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jQf1MzgmRi\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"zsCAahmxgA\",\"type\":\"card\",\"data\":{\"card_name\":\"Setup\",\"col\":4}},{\"id\":\"6SWylc_k1c\",\"type\":\"card\",\"data\":{\"card_name\":\"Blog\",\"col\":4}},{\"id\":\"EUpU2ayxwE\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Site\",\"col\":4}},{\"id\":\"bn8BYu2z1A\",\"type\":\"card\",\"data\":{\"card_name\":\"Web Forms\",\"col\":4}},{\"id\":\"n5tnA29gRY\",\"type\":\"card\",\"data\":{\"card_name\":\"Portal\",\"col\":4}},{\"id\":\"H7CNM7M7vX\",\"type\":\"card\",\"data\":{\"card_name\":\"Knowledge Base\",\"col\":4}}]",
  "creation": "2020-03-02 14:13:51.089373",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -311,7 +311,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-14 11:55:24.531677",
+ "modified": "2023-04-14 18:27:13.989262",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
