@@ -38,7 +38,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	/**
 	 * @param {any} value
-	 * @returns {number | null} The parsed numeric value, rounded if needed, or null if invalid.
+	 * @returns {number | null} The parsed numeric value, rounded and clamped if needed, or null if invalid.
 	 */
 	parse(value) {
 		let parsed = this.eval_expression(value);
@@ -49,6 +49,8 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		}
 
 		// `parsed` is now a number.
+		parsed = this._clamp(parsed);
+
 		// Round to precision (0 for Int, ? for Float)
 		parsed = flt(parsed, this.get_precision());
 
@@ -59,6 +61,20 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	get_precision() {
 		// round based on field precision or system's float precision, else don't round
 		return this.df.precision || cint(frappe.boot.sysdefaults.float_precision, null);
+	}
+
+	_clamp(value) {
+		const { min, max, non_negative } = this.df ?? {};
+		if (non_negative && value < 0) {
+			return 0;
+		}
+		if (typeof min === "number" && value < min) {
+			return min;
+		}
+		if (typeof max === "number" && value > max) {
+			return max;
+		}
+		return value;
 	}
 
 	/** @param {number | null} value */
