@@ -56,7 +56,7 @@
   {
    "default": "#",
    "depends_on": "eval:doc.type==\"Count\"",
-   "description": "A string containing a \"#\" character which will be replaced with the number of documents found. Example: \"# unpaid invoices\". Leave empty to not include a counter. ",
+   "description": "A string containing a \"#\" character which will be replaced with the number of documents found. Example: \"# unpaid invoices\". Leave empty to not include a counter.",
    "fieldname": "counter_format",
    "fieldtype": "Data",
    "label": "Format",
