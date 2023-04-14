@@ -766,4 +766,4 @@ class TestFileOptimization(FrappeTestCase):
 		with open(file_path, "rb") as f:
 			file_content = f.read()
 
-		self.assertEqual(get_extension("", None, file_content), "jpeg")
+		self.assertEqual(get_extension("", None, file_content), "jpg")
