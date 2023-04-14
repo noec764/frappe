@@ -1,0 +1,136 @@
+{
+ "charts": [
+  {
+   "chart_name": "Connections by User Type",
+   "label": "Connections by User Type"
+  }
+ ],
+ "color": "",
+ "content": "[{\"id\":\"-1ToNvKtPt\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Administration</span>\",\"col\":12}},{\"id\":\"ZttYudRrbU\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Total Enabled Users\",\"col\":4}},{\"id\":\"lznW170H4R\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Failed Login over 30 days\",\"col\":4}},{\"id\":\"KPwdH-4ztr\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"7xaWzRQncz\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Connections by User Type\",\"col\":12}},{\"id\":\"Z3oc50l4DK\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"PBgLGi2IPe\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Error Log\",\"col\":4}},{\"id\":\"JlMdZQJOlB\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Queued and Failed Integration Requests\",\"col\":4}},{\"id\":\"Y4ie_hMdq5\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Latest Failed Login\",\"col\":4}},{\"id\":\"BfGbrNtwKX\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"leDm_4HG2V\",\"type\":\"card\",\"data\":{\"card_name\":\"Background Jobs\",\"col\":4}},{\"id\":\"WqAwJLcC3d\",\"type\":\"card\",\"data\":{\"card_name\":\"System Logs\",\"col\":4}}]",
+ "creation": "2023-04-07 23:21:57.230511",
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "setting-gear",
+ "idx": 0,
+ "is_hidden": 0,
+ "is_standard": 1,
+ "label": "Administration",
+ "links": [
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Background Jobs",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Background Jobs",
+   "link_count": 0,
+   "link_to": "background_jobs",
+   "link_type": "Page",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Scheduled Job Log",
+   "link_count": 0,
+   "link_to": "Scheduled Job Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Scheduled Job Type",
+   "link_count": 0,
+   "link_to": "Scheduled Job Type",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "System Logs",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Error Log",
+   "link_count": 0,
+   "link_to": "Error Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Error Snapshot",
+   "link_count": 0,
+   "link_to": "Error Snapshot",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2023-04-14 09:52:41.126233",
+ "modified_by": "Administrator",
+ "module": "Core",
+ "name": "Administration",
+ "number_cards": [
+  {
+   "label": "Total Enabled Users",
+   "number_card_name": "Total Enabled Users"
+  },
+  {
+   "label": "Failed Login over 30 days",
+   "number_card_name": "Failed Login over 30 days"
+  }
+ ],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [
+  {
+   "document_type": "Activity Log",
+   "label": "Latest Failed Login",
+   "quick_list_filter": "{\"operation\":[\"=\",\"Login\"],\"status\":[\"=\",\"Failed\"]}"
+  },
+  {
+   "document_type": "Error Log",
+   "label": "Error Log"
+  },
+  {
+   "document_type": "Integration Request",
+   "label": "Queued and Failed Integration Requests",
+   "quick_list_filter": "{\"status\":[\"in\",[\"Queued\",\"Failed\",null]]}"
+  }
+ ],
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 33.0,
+ "shortcuts": [],
+ "title": "Administration"
+}
