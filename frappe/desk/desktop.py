@@ -379,7 +379,7 @@ class Workspace:
 			for number_card in number_cards:
 				if frappe.has_permission("Number Card", doc=number_card.number_card_name):
 					# Translate label
-					number_card["original_label"] = number_card.number_card_name
+					number_card.original_label = number_card.number_card_name
 					number_card.label = (
 						_(number_card.label) if number_card.label else _(number_card.number_card_name)
 					)
