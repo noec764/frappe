@@ -35,7 +35,7 @@ def get_data(filters):
 	if filters.get("from_date"):
 		query = query.where(Date(activity_log.communication_date) >= filters.get("from_date"))
 
-	result = query.run(as_dict=True, debug=True)
+	result = query.run(as_dict=True)
 
 	user_types = set()
 	rows_by_date = defaultdict(dict)

@@ -200,7 +200,7 @@
   }
  ],
  "links": [],
- "modified": "2023-04-07 14:24:28.721731",
+ "modified": "2023-04-14 17:41:22.004851",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Number Card",
@@ -215,6 +215,7 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   },
@@ -227,16 +228,19 @@
    "read": 1,
    "report": 1,
    "role": "Dashboard Manager",
+   "select": 1,
    "share": 1,
    "write": 1
   },
   {
+   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
    "read": 1,
    "report": 1,
    "role": "All",
+   "select": 1,
    "share": 1
   }
  ],
