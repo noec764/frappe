@@ -100,6 +100,97 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		}
 		return value;
 	}
+
+	// Slider
+	set_input(value) {
+		super.set_input(value);
+		if (this.slider_input) {
+			this.slider_input.value = value;
+		}
+	}
+
+	refresh_input() {
+		super.refresh_input();
+		this.slider_refresh();
+	}
+
+	slider_setup() {
+		this.input.classList.add("input-xs");
+
+		this.slider_input = $(`<input type="range" />`).insertBefore(this.input)[0];
+
+		this.slider_input.value = this.value;
+
+		// Setup event listeners
+		this.input.addEventListener("input", () => {
+			this.slider_input.value = this.input.value;
+		});
+		this.slider_input.addEventListener("input", () => {
+			this.set_value(this.slider_input.value);
+		});
+
+		// Setup styles
+		this.input_area.style.display = "flex";
+		this.input_area.style.alignItems = "center";
+		this.input_area.style.gap = "0.5rem";
+		this.input.style.flex = "1";
+		this.slider_input.style.flex = "3";
+
+		// Setup attributes
+		this.slider_set_attributes();
+	}
+
+	slider_destroy() {
+		this.input.classList.remove("input-xs");
+		this.slider_input.remove();
+		this.slider_input = null;
+		this.input.style.flex = "";
+		this.input_area.style.display = "";
+	}
+
+	slider_set_attributes() {
+		if (typeof this.df.min === "number") {
+			this.slider_input.setAttribute("min", this.df.min);
+		} else {
+			this.slider_input.setAttribute("min", 0);
+		}
+
+		if (typeof this.df.max === "number") {
+			this.slider_input.setAttribute("max", this.df.max);
+		} else {
+			this.slider_input.setAttribute("max", 100);
+		}
+
+		let step = 0;
+		const precision = cint(this.get_precision(), null);
+		if (typeof precision === "number" && precision >= 0) {
+			// 1/10^x gives nicer values than 10^-x
+			step = 1 / Math.pow(10, precision);
+		}
+		if (this.df.fieldtype?.matches?.(/Int$/)) {
+			step = 1;
+		}
+		if (typeof this.df.step === "number") {
+			step = this.df.step;
+		}
+		if (step > 0) {
+			this.slider_input.setAttribute("step", step);
+		} else {
+			this.slider_input.removeAttribute("step");
+		}
+	}
+
+	slider_refresh() {
+		if (this.df.with_slider) {
+			if (this.slider_input) {
+				this.slider_set_attributes();
+			} else {
+				this.slider_setup();
+			}
+		} else if (this.slider_input) {
+			this.slider_destroy();
+		}
+	}
 };
 
 frappe.ui.form.ControlPercent = frappe.ui.form.ControlFloat;
