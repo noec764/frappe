@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#F8A787",
- "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"BwEhhw-C1K\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Custom Role\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Form Customization\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"mQNbPhdj1j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Console\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 17.99px;\\\"><b>Customization Options</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards & Workspaces\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Forms\",\"col\":4}},{\"id\":\"AyBI0l8stW\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"OuUqCNmwbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2020-03-02 15:15:03.839594",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -17,43 +17,18 @@
    "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Dashboards",
-   "link_count": 0,
+   "label": "Modules",
+   "link_count": 2,
    "onboard": 0,
    "type": "Card Break"
   },
   {
    "columns": 0,
-   "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Dashboard",
+   "label": "Module Def",
    "link_count": 0,
-   "link_to": "Dashboard",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dashboard Chart",
-   "link_count": 0,
-   "link_to": "Dashboard Chart",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Dashboard Chart Source",
-   "link_count": 0,
-   "link_to": "Dashboard Chart Source",
+   "link_to": "Module Def",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -62,55 +37,9 @@
    "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Form Customization",
+   "label": "Module Onboarding",
    "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Customize Form",
-   "link_count": 0,
-   "link_to": "Customize Form",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Custom Field",
-   "link_count": 0,
-   "link_to": "Custom Field",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Client Script",
-   "link_count": 0,
-   "link_to": "Client Script",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "DocType",
-   "link_count": 0,
-   "link_to": "DocType",
+   "link_to": "Module Onboarding",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -146,9 +75,174 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Forms",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Form Customization",
+   "link_count": 0,
+   "link_to": "Customize Form",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Document Types",
+   "link_count": 0,
+   "link_to": "DocType",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Client Scripts",
+   "link_count": 0,
+   "link_to": "Client Script",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Server Scripts",
+   "link_count": 0,
+   "link_to": "Server Script",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Form Tour",
+   "link_count": 0,
+   "link_to": "Form Tour",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboards & Workspaces",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboards",
+   "link_count": 0,
+   "link_to": "Dashboard",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Number Cards",
+   "link_count": 0,
+   "link_to": "Number Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboard Charts",
+   "link_count": 0,
+   "link_to": "Dashboard Chart",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Dashboard Chart Sources",
+   "link_count": 0,
+   "link_to": "Dashboard Chart Source",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Summary Card",
+   "link_count": 0,
+   "link_to": "Summary Card",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Views",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Calendar View",
+   "link_count": 0,
+   "link_to": "Calendar View",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "List View Settings",
+   "link_count": 0,
+   "link_to": "List View Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-04-08 11:47:17.112200",
+ "modified": "2023-04-14 11:47:57.602749",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",
@@ -171,19 +265,25 @@
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
- "roles": [],
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
  "sequence_id": 36.0,
  "shortcuts": [
   {
-   "columns": 0,
-   "label": "Customize Form",
-   "link_to": "Customize Form",
+   "color": "Gray",
+   "columns": 3,
+   "doc_view": "List",
+   "label": "System Console",
+   "link_to": "System Console",
    "type": "DocType"
   },
   {
    "columns": 0,
-   "label": "Custom Role",
-   "link_to": "Custom Role",
+   "label": "Customize Form",
+   "link_to": "Customize Form",
    "type": "DocType"
   },
   {
