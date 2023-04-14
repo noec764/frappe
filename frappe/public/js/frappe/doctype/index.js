@@ -15,14 +15,11 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 				"Section Break": "--blue-600",
 				"Column Break": "--yellow-600",
 			};
+			const label = __(value, null, "DocField");
 			if (prefix[value]) {
-				value = `<span class="bold" style="color: var(${prefix[value]})">${__(
-					value,
-					null,
-					"DocField"
-				)}</span>`;
+				return `<span class="bold" style="color: var(${prefix[value]})">${label}</span>`;
 			}
-			return value;
+			return label;
 		};
 	}
 
