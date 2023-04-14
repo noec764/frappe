@@ -346,7 +346,7 @@ frappe.views.Workspace = class Workspace {
 		} else if (Object.keys(this.all_pages).length !== 0) {
 			default_page = { name: this.all_pages[0].name, public: true };
 		} else {
-			default_page = { name: "Build", public: true };
+			default_page = { name: "Administration", public: true };
 		}
 
 		let page =
