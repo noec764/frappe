@@ -15,7 +15,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		$(`<div class="link-field ui-front" style="position: relative;">
 			<input type="text" class="input-with-feedback form-control">
 			<span class="link-btn">
-				<a class="btn-open no-decoration" title="${__("Open Link")}">
+				<a class="btn-open no-decoration" title="${__("Open Link")}" tabindex="-1">
 					${frappe.utils.icon("arrow-right", "xs")}
 				</a>
 			</span>
