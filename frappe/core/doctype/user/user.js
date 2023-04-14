@@ -1,4 +1,15 @@
 frappe.ui.form.on("User", {
+	setup: function (frm) {
+		frm.set_query("default_workspace", () => {
+			return {
+				filters: {
+					extends_page: ["is", "not set"],
+					parent_page: ["is", "not set"],
+					for_user: ["in", [null, frappe.session.user]],
+				},
+			};
+		});
+	},
 	before_load: function (frm) {
 		var update_tz_select = function (user_language) {
 			frm.set_df_property("time_zone", "options", [""].concat(frappe.all_timezones));
@@ -115,7 +126,7 @@ frappe.ui.form.on("User", {
 		}
 
 		function hasChanged(doc_attr, boot_attr) {
-			return (doc_attr || boot_attr) && doc_attr !== boot_attr;
+			return doc_attr !== undefined && (doc_attr || boot_attr) && doc_attr !== boot_attr;
 		}
 
 		if (

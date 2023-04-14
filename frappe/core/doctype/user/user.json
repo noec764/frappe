@@ -23,6 +23,8 @@
   "send_welcome_email",
   "unsubscribed",
   "user_image",
+  "workspaces_section",
+  "default_workspace",
   "roles_permissions_tab",
   "sb1",
   "role_profile_name",
@@ -705,6 +707,18 @@
    "fieldname": "desk_settings_section",
    "fieldtype": "Section Break",
    "label": "Desk Settings"
+  },
+  {
+   "fieldname": "workspaces_section",
+   "fieldtype": "Section Break",
+   "label": "Workspaces"
+  },
+  {
+   "description": "If left empty, the default workspace will be the last visited workspace",
+   "fieldname": "default_workspace",
+   "fieldtype": "Link",
+   "label": "Default Workspace",
+   "options": "Workspace"
   }
  ],
  "icon": "uil uil-user",
@@ -767,7 +781,7 @@
    "link_fieldname": "user"
   }
  ],
- "modified": "2023-03-28 12:04:59.309797",
+ "modified": "2023-03-31 16:38:10.766470",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
