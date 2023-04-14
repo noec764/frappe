@@ -757,6 +757,10 @@ def get_messages_from_workspace(name):
 		if card.get("label"):
 			messages.append(("Workspace Link: " + name, card.get("label")))
 
+	for qlist in desk_page.quick_lists:
+		if qlist.get("label"):
+			messages.append(("Workspace Quick List: " + name, qlist.get("label")))
+
 	return messages
 
 
