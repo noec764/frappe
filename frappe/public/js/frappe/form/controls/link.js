@@ -57,6 +57,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.setup_awesomeplete();
 		this.bind_change_event();
 		this.setup_icon();
+		this._setup_label_for_id();
 	}
 
 	get_options() {
