@@ -24,6 +24,12 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 				this.set_input(this.value);
 			}
 		});
+
+		// The `change` event is also triggered when the user presses Enter.
+		this.input.addEventListener("change", (e) => {
+			// Blur the input because the user is done editing it.
+			this.input.blur();
+		});
 	}
 
 	validate(value) {
