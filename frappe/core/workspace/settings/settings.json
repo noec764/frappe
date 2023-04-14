@@ -131,38 +131,6 @@
    "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Core",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "System Settings",
-   "link_count": 0,
-   "link_to": "System Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Document Naming Rule",
-   "link_count": 0,
-   "link_to": "Document Naming Rule",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Data",
    "link_count": 5,
    "onboard": 0,
@@ -427,7 +395,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Master Data",
-   "link_count": 2,
+   "link_count": 3,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -452,9 +420,62 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Language",
+   "link_count": 0,
+   "link_to": "Language",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Core",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Installed Applications",
+   "link_count": 0,
+   "link_to": "Installed Applications",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Session Default Settings",
+   "link_count": 0,
+   "link_to": "Session Default Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Log Settings",
+   "link_count": 0,
+   "link_to": "Log Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-04-14 11:50:05.703529",
+ "modified": "2023-04-14 12:24:54.961135",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Settings",

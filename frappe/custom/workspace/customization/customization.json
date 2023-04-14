@@ -48,38 +48,6 @@
    "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Other",
-   "link_count": 2,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "columns": 0,
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Custom Translations",
-   "link_count": 0,
-   "link_to": "Translation",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Navbar Settings",
-   "link_count": 0,
-   "link_to": "Navbar Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
    "label": "Forms",
    "link_count": 5,
    "onboard": 0,
@@ -215,9 +183,20 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Views",
-   "link_count": 2,
+   "link_count": 3,
    "onboard": 0,
    "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Report",
+   "link_count": 0,
+   "link_to": "Report",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   },
   {
    "columns": 0,
@@ -246,7 +225,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Packages",
-   "link_count": 2,
+   "link_count": 3,
    "onboard": 0,
    "type": "Card Break"
   },
@@ -271,9 +250,63 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Package Release",
+   "link_count": 0,
+   "link_to": "Package Release",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Other",
+   "link_count": 3,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Success Actions",
+   "link_count": 0,
+   "link_to": "Success Action",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Custom Translations",
+   "link_count": 0,
+   "link_to": "Translation",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Navbar Settings",
+   "link_count": 0,
+   "link_to": "Navbar Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-04-14 12:14:10.587255",
+ "modified": "2023-04-14 12:26:00.903390",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",
