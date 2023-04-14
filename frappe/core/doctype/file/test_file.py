@@ -19,6 +19,7 @@ from frappe.core.api.file import (
 	move_file,
 	unzip_file,
 )
+from frappe.core.doctype.file.utils import get_extension
 from frappe.exceptions import DoesNotExistError, ValidationError
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_files_path
@@ -759,3 +760,10 @@ class TestFileOptimization(FrappeTestCase):
 			size_after_rollback = os.stat(image_path).st_size
 
 			self.assertEqual(size_before_optimization, size_after_rollback)
+
+	def test_image_header_guessing(self):
+		file_path = frappe.get_app_path("frappe", "tests/data/sample_image_for_optimization.jpg")
+		with open(file_path, "rb") as f:
+			file_content = f.read()
+
+		self.assertEqual(get_extension("", None, file_content), "jpeg")
