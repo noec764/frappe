@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#F8A787",
- "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"mQNbPhdj1j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Console\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 17.99px;\\\"><b>Customization Options</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards & Workspaces\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Forms\",\"col\":4}},{\"id\":\"AyBI0l8stW\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"OuUqCNmwbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"mQNbPhdj1j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Console\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 17.99px;\\\"><b>Customization Options</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards & Workspaces\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Forms\",\"col\":4}},{\"id\":\"AyBI0l8stW\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"OuUqCNmwbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"P64gF7ely-\",\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2020-03-02 15:15:03.839594",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -240,9 +240,40 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Packages",
+   "link_count": 2,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Package",
+   "link_count": 0,
+   "link_to": "Package",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Package Import",
+   "link_count": 0,
+   "link_to": "Package Import",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2023-04-14 11:47:57.602749",
+ "modified": "2023-04-14 12:14:10.587255",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",
