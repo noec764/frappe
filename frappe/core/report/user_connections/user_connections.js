@@ -3,5 +3,13 @@
 /* eslint-disable */
 
 frappe.query_reports["User Connections"] = {
-	filters: [],
+	filters: [
+		{
+			fieldname: "from_date",
+			label: __("From Date"),
+			fieldtype: "Date",
+			default: frappe.datetime.add_months(frappe.datetime.get_today(), -1),
+			reqd: 1,
+		},
+	],
 };

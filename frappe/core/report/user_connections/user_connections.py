@@ -9,11 +9,11 @@ from frappe.query_builder.functions import Count, Date
 
 
 def execute(filters=None):
-	data, user_types = get_data()
+	data, user_types = get_data(filters)
 	return get_columns(user_types), data, None, get_chart(data, user_types)
 
 
-def get_data():
+def get_data(filters):
 	activity_log = frappe.qb.DocType("Activity Log")
 	user = frappe.qb.DocType("User")
 
@@ -31,6 +31,9 @@ def get_data():
 		.groupby(Date(activity_log.communication_date))
 		.orderby(Date(activity_log.communication_date), order=frappe.qb.desc)
 	)
+
+	if filters.get("from_date"):
+		query = query.where(Date(activity_log.communication_date) >= filters.get("from_date"))
 
 	result = query.run(as_dict=True, debug=True)
 
