@@ -217,7 +217,7 @@ frappe.dashboard_utils = {
 			return filters;
 		}
 
-		if ($.isArray(dynamic_filters)) {
+		if ($.isArray(dynamic_filters) && dynamic_filters.length) {
 			dynamic_filters.forEach((f) => {
 				try {
 					f[3] = eval(f[3]);

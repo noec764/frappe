@@ -171,7 +171,7 @@
  ],
  "in_create": 1,
  "links": [],
- "modified": "2023-01-26 09:43:56.592992",
+ "modified": "2023-04-07 23:10:33.977633",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integration Request",
@@ -185,7 +185,8 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
-   "share": 1
+   "share": 1,
+   "write": 1
   }
  ],
  "sort_field": "modified",

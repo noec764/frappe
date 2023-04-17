@@ -4,8 +4,9 @@
 from datetime import datetime
 
 import frappe
+from frappe import _
 from frappe.query_builder.functions import Coalesce, Count
-from frappe.utils import getdate
+from frappe.utils import getdate, global_date_format
 from frappe.utils.dateutils import get_dates_from_timegrain
 
 
@@ -152,7 +153,7 @@ class WebsiteAnalytics:
 			return {"count": 0, "unique_count": 0}
 
 		for date in date_range:
-			labels.append(date.strftime("%b %d %Y"))
+			labels.append(global_date_format(date))
 			match = get_data_for_date(date)
 			total_dataset.append(match.get("count", 0))
 			unique_dataset.append(match.get("unique_count", 0))
@@ -161,8 +162,8 @@ class WebsiteAnalytics:
 			"data": {
 				"labels": labels,
 				"datasets": [
-					{"name": "Total Views", "type": "line", "values": total_dataset},
-					{"name": "Unique Visits", "type": "line", "values": unique_dataset},
+					{"name": _("Total Views"), "type": "line", "values": total_dataset},
+					{"name": _("Unique Visits"), "type": "line", "values": unique_dataset},
 				],
 			},
 			"type": "axis-mixed",
@@ -185,12 +186,12 @@ class WebsiteAnalytics:
 		report_summary = [
 			{
 				"value": total_count,
-				"label": "Total Page Views",
+				"label": _("Total Page Views"),
 				"datatype": "Int",
 			},
 			{
 				"value": unique_count,
-				"label": "Unique Page Views",
+				"label": _("Unique Page Views"),
 				"datatype": "Int",
 			},
 		]

@@ -1,19 +1,20 @@
 {
  "charts": [],
  "color": "#35abb7",
- "content": "[{\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports & Masters</b></span>\",\"col\":12}},{\"type\":\"card\",\"data\":{\"card_name\":\"Backup\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}}]",
+ "content": "[{\"id\":\"lrOHPdRCE8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Social Login Connections\",\"col\":4}},{\"id\":\"93f3r8Mtzr\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"OAuth Connected Applications\",\"col\":4}},{\"id\":\"kTfsXC2Oti\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Google Calendar Connections\",\"col\":4}},{\"id\":\"uyG8WJnp5F\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"b5_8Rc7pt6\",\"type\":\"card\",\"data\":{\"card_name\":\"Backup\",\"col\":4}},{\"id\":\"u-TyVb1r-E\",\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"id\":\"jCu3sp_IK1\",\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"id\":\"OLELQVPEfg\",\"type\":\"card\",\"data\":{\"card_name\":\"Webhooks\",\"col\":4}},{\"id\":\"H1Kfy4adq-\",\"type\":\"card\",\"data\":{\"card_name\":\"Incoming Data\",\"col\":4}},{\"id\":\"sw3hMNI_A6\",\"type\":\"card\",\"data\":{\"card_name\":\"SMS\",\"col\":4}}]",
  "creation": "2020-03-02 15:16:18.714190",
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
- "hidden": 0,
  "hide_custom": 0,
  "icon": "integration",
  "idx": 0,
+ "is_hidden": 0,
  "is_standard": 1,
  "label": "Integrations",
  "links": [
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Backup",
@@ -22,6 +23,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -33,6 +35,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -44,6 +47,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -55,6 +59,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Google Services",
@@ -63,6 +68,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -74,6 +80,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -85,6 +92,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -96,6 +104,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -107,66 +116,16 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Authentication",
-   "link_count": 0,
+   "label": "Webhooks",
+   "link_count": 2,
    "onboard": 0,
    "type": "Card Break"
   },
   {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Social Login Key",
-   "link_count": 0,
-   "link_to": "Social Login Key",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "LDAP Settings",
-   "link_count": 0,
-   "link_to": "LDAP Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "OAuth Client",
-   "link_count": 0,
-   "link_to": "OAuth Client",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "dependencies": "",
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "OAuth Provider Settings",
-   "link_count": 0,
-   "link_to": "OAuth Provider Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Settings",
-   "link_count": 0,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
+   "columns": 0,
    "dependencies": "",
    "hidden": 0,
    "is_query_report": 0,
@@ -178,7 +137,28 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Webhook Request Log",
+   "link_count": 0,
+   "link_to": "Webhook Request Log",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "SMS",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "SMS Settings",
@@ -187,19 +167,125 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Incoming Data",
+   "link_count": 1,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Integration Request",
+   "link_count": 0,
+   "link_to": "Integration Request",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Authentication",
+   "link_count": 5,
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Social Login Key",
+   "link_count": 0,
+   "link_to": "Social Login Key",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "LDAP Settings",
+   "link_count": 0,
+   "link_to": "LDAP Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "OAuth Client",
+   "link_count": 0,
+   "link_to": "OAuth Client",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "dependencies": "",
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "OAuth Provider Settings",
+   "link_count": 0,
+   "link_to": "OAuth Provider Settings",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "columns": 0,
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Connected App",
+   "link_count": 0,
+   "link_to": "Connected App",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2022-10-23 18:00:28.805405",
+ "modified": "2023-04-14 11:43:42.308702",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integrations",
+ "number_cards": [
+  {
+   "label": "Active Social Login Connections",
+   "number_card_name": "Active Social Login Connections"
+  },
+  {
+   "label": "OAuth Connected Applications",
+   "number_card_name": "OAuth Connected Applications"
+  },
+  {
+   "label": "Active Google Calendar Connections",
+   "number_card_name": "Active Google Calendar Connections"
+  }
+ ],
  "owner": "Administrator",
- "parent_page": "",
+ "parent_page": "Administration",
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
- "roles": [],
- "sequence_id": 15.0,
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "sequence_id": 38.0,
  "shortcuts": [],
  "title": "Integrations"
 }

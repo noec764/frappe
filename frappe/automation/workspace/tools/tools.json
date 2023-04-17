@@ -1,7 +1,7 @@
 {
  "charts": [],
  "color": "#e9c46a",
- "content": "[{\"id\":\"3rMHTSuiL9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hOimooAl8S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ToDo\",\"col\":3}},{\"id\":\"a4ZGKPuaAr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Note\",\"col\":3}},{\"id\":\"TyIySFTOjN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"File\",\"col\":3}},{\"id\":\"-0NzGsKUkN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Assignment Rule\",\"col\":3}},{\"id\":\"iHkkwVsfA7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Repeat\",\"col\":3}},{\"id\":\"rynFvSlU3k\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"po7A35xbQK\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"gcpsr1xgKG\",\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}},{\"id\":\"x3osWbaGeX\",\"type\":\"card\",\"data\":{\"card_name\":\"Email\",\"col\":4}},{\"id\":\"upPk22MTw0\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}},{\"id\":\"sQTQ00b7z_\",\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"id\":\"bkdnpFSVBN\",\"type\":\"card\",\"data\":{\"card_name\":\"Event Streaming\",\"col\":4}}]",
+ "content": "[{\"id\":\"FdkOmG1V7Y\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Open ToDos\",\"col\":4}},{\"id\":\"FUc1qAR0ve\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"User Notes\",\"col\":4}},{\"id\":\"ZidMhGJpEZ\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Public Files\",\"col\":4}},{\"id\":\"3rMHTSuiL9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"JH7_qyvW5i\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Communication\",\"col\":3}},{\"id\":\"hOimooAl8S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"ToDo\",\"col\":3}},{\"id\":\"a4ZGKPuaAr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Note\",\"col\":3}},{\"id\":\"TyIySFTOjN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"File\",\"col\":3}},{\"id\":\"-0NzGsKUkN\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Assignment Rule\",\"col\":3}},{\"id\":\"iHkkwVsfA7\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Auto Repeat\",\"col\":3}},{\"id\":\"rynFvSlU3k\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"po7A35xbQK\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Tools</b></span>\",\"col\":12}},{\"id\":\"gcpsr1xgKG\",\"type\":\"card\",\"data\":{\"card_name\":\"Tools\",\"col\":4}},{\"id\":\"x3osWbaGeX\",\"type\":\"card\",\"data\":{\"card_name\":\"Email\",\"col\":4}},{\"id\":\"upPk22MTw0\",\"type\":\"card\",\"data\":{\"card_name\":\"Automation\",\"col\":4}},{\"id\":\"sQTQ00b7z_\",\"type\":\"card\",\"data\":{\"card_name\":\"Energy Points\",\"col\":4}},{\"id\":\"bkdnpFSVBN\",\"type\":\"card\",\"data\":{\"card_name\":\"Event Streaming\",\"col\":4}}]",
  "creation": "2020-03-02 14:53:24.980279",
  "docstatus": 0,
  "doctype": "Workspace",
@@ -272,46 +272,81 @@
    "type": "Link"
   }
  ],
- "modified": "2023-01-17 08:01:04.384818",
+ "modified": "2023-04-14 12:25:31.321897",
  "modified_by": "Administrator",
  "module": "Automation",
  "name": "Tools",
+ "number_cards": [
+  {
+   "label": "User Notes",
+   "number_card_name": "User Notes"
+  },
+  {
+   "label": "Open ToDos",
+   "number_card_name": "Open ToDos"
+  },
+  {
+   "label": "Public Files",
+   "number_card_name": "Public Files"
+  }
+ ],
  "owner": "Administrator",
  "parent_page": "",
  "public": 1,
  "quick_lists": [],
  "restrict_to_domain": "",
  "roles": [],
- "sequence_id": 26.0,
+ "sequence_id": 32.0,
  "shortcuts": [
   {
-   "columns": 0,
+   "color": "Orange",
+   "columns": 3,
+   "format": "{} open",
    "label": "ToDo",
    "link_to": "ToDo",
+   "stats_filter": "{\"status\":[\"=\",\"Open\"]}",
    "type": "DocType"
   },
   {
-   "columns": 0,
+   "color": "Blue",
+   "columns": 3,
+   "format": "{} enabled",
+   "label": "Assignment Rule",
+   "link_to": "Assignment Rule",
+   "stats_filter": "{\"disabled\":[\"=\",0]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Cyan",
+   "columns": 3,
+   "doc_view": "List",
+   "format": "{} open",
+   "label": "Communication",
+   "link_to": "Communication",
+   "stats_filter": "{\"status\":[\"=\",\"Open\"]}",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "columns": 3,
+   "format": "{} notes",
    "label": "Note",
    "link_to": "Note",
+   "type": "DocType"
+  },
+  {
+   "color": "Green",
+   "columns": 3,
+   "format": "{} enabled",
+   "label": "Auto Repeat",
+   "link_to": "Auto Repeat",
+   "stats_filter": "{\"disabled\":[\"=\",0]}",
    "type": "DocType"
   },
   {
    "columns": 0,
    "label": "File",
    "link_to": "File",
-   "type": "DocType"
-  },
-  {
-   "columns": 0,
-   "label": "Assignment Rule",
-   "link_to": "Assignment Rule",
-   "type": "DocType"
-  },
-  {
-   "columns": 0,
-   "label": "Auto Repeat",
-   "link_to": "Auto Repeat",
    "type": "DocType"
   }
  ],

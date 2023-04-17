@@ -829,7 +829,7 @@ def _update_field_order_based_on_insert_after(field_order, insert_after_map):
 
 
 def get_views_of_doctype(doctype):
-	"""List, Report, Dashboard, Kanban, Calendar, Gantt, Tree, Image, Inbox, Map"""
+	"""List, Report, Dashboard, Kanban, Calendar, Gantt, Tree, Image, Inbox, Map, Planning"""
 
 	meta = frappe.get_meta(doctype)
 
@@ -838,8 +838,16 @@ def get_views_of_doctype(doctype):
 
 	views = ["List", "Report", "Dashboard", "Kanban"]
 
-	if meta.is_calendar_and_gantt and frappe.views.calendar[doctype]:
-		views.extend(["Calendar", "Gantt"])
+	# NOTE: frappe.views.calendar is only available in JS
+	# So, we need to use this hacky heuristic to determine
+	# if the Calendar view is available.
+	# We would need to check whether Calendar View docs exist
+	# for this doctype but that would be a performance hit.
+	if meta.is_calendar_and_gantt or meta.get("__calendar_js"):
+		views.extend(["Calendar", "Planning"])
+
+	if meta.is_calendar_and_gantt:
+		views.append("Gantt")
 
 	if meta.is_tree:
 		views.append("Tree")

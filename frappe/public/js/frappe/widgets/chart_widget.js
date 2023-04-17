@@ -610,6 +610,11 @@ export default class ChartWidget extends Widget {
 			options = this.report_result.chart.options;
 		}
 
+		if (!fieldtype && this.chart_doc.chart_type == "Custom" && this.data?.fieldtype) {
+			fieldtype = this.data.fieldtype;
+			options = this.data?.options;
+		}
+
 		chart_args.tooltipOptions = {
 			formatTooltipY: (value) =>
 				frappe.format(

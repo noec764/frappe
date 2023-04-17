@@ -109,7 +109,7 @@ context("Workspace 2.0", () => {
 		cy.get("@sidebar-item").find(".standard-sidebar-item").first().click();
 		cy.get("@sidebar-item").find(".drag-handle").first().move({ deltaX: 0, deltaY: 100 });
 
-		cy.get('.sidebar-item-container[item-name="Build"]').as("sidebar-item");
+		cy.get('.sidebar-item-container[item-name="Administration"]').as("sidebar-item");
 
 		cy.get("@sidebar-item").find(".standard-sidebar-item").first().click();
 		cy.get("@sidebar-item").find(".drag-handle").first().move({ deltaX: 0, deltaY: 100 });
