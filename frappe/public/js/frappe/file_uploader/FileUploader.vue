@@ -84,6 +84,7 @@
 					v-for="(file, i) in files"
 					:key="file.name"
 					:file="file"
+					:hide_private_checkbox="forced_file_visibility"
 					@remove="remove_file(file)"
 					@toggle_private="file.private = !file.private"
 					@toggle_optimize="file.optimize = !file.optimize"
@@ -110,6 +111,7 @@
 		<ImageCropper
 			v-if="show_image_cropper && wrapper_ready"
 			:file="files[crop_image_with_index]"
+			:hide_private_checkbox="forced_file_visibility"
 			:fixed_aspect_ratio="restrictions.crop_image_aspect_ratio"
 			@toggle_image_cropper="toggle_image_cropper(-1)"
 			@upload_after_crop="trigger_upload=true"
@@ -169,6 +171,10 @@ const props = defineProps({
 	},
 	make_attachments_public: {
 		default: null,
+	},
+	forced_file_visibility: {
+		default: null,
+		validator: (value) => ['Public', 'Private', null].includes(value)
 	},
 	restrictions: {
 		default: () => ({
@@ -501,7 +507,12 @@ function upload_file(file, i) {
 		if (file.file_obj) {
 			form_data.append('file', file.file_obj, file.name);
 		}
-		form_data.append('is_private', +file.private);
+
+		let is_private = +file.private;
+		if (this.forced_file_visibility) {
+			is_private = this.forced_file_visibility === 'Private' ? 1 : 0;
+		}
+		form_data.append('is_private', is_private);
 		form_data.append('folder', props.folder);
 
 		if (file.file_url) {

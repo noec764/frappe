@@ -35,7 +35,7 @@
    "label": "Document Types and Permissions"
   },
   {
-    "depends_on": "eval: !doc.is_standard",
+   "depends_on": "eval: !doc.is_standard",
    "fieldname": "user_doctypes",
    "fieldtype": "Table",
    "label": "Document Types",
@@ -43,7 +43,7 @@
    "options": "User Document Type"
   },
   {
-    "depends_on": "eval: !doc.is_standard",
+   "depends_on": "eval: !doc.is_standard",
    "fieldname": "role",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -64,7 +64,7 @@
    "fieldtype": "Column Break"
   },
   {
-    "depends_on": "eval: !doc.is_standard",
+   "depends_on": "eval: !doc.is_standard",
    "description": "Can only list down the document types which has been linked to the User document type.",
    "fieldname": "apply_user_permission_on",
    "fieldtype": "Link",
@@ -109,7 +109,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2022-06-09 14:00:36.820306",
+ "modified": "2023-04-14 15:09:42.469416",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User Type",
@@ -141,5 +141,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
- "track_changes": 1
+ "track_changes": 1,
+ "translated_doctype": 1
 }

@@ -200,17 +200,17 @@
    "fieldtype": "Link",
    "label": "Extends Page",
    "options": "Workspace"
-},
-{
- "fieldname": "number_cards_tab",
- "fieldtype": "Tab Break",
- "label": "Number Cards"
-},
-{
- "fieldname": "number_cards",
- "fieldtype": "Table",
- "label": "Number Cards",
- "options": "Workspace Number Card"
+  },
+  {
+   "fieldname": "number_cards_tab",
+   "fieldtype": "Tab Break",
+   "label": "Number Cards"
+  },
+  {
+   "fieldname": "number_cards",
+   "fieldtype": "Table",
+   "label": "Number Cards",
+   "options": "Workspace Number Card"
   }
  ],
  "in_create": 1,
@@ -238,5 +238,6 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
+ "translated_doctype": 1,
  "track_changes": 1
 }

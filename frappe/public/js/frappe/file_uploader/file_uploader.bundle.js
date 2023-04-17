@@ -20,6 +20,7 @@ class FileUploader {
 		attach_doc_image,
 		frm,
 		make_attachments_public,
+		forced_file_visibility,
 	} = {}) {
 		frm && frm.attachments.max_reached(true);
 
@@ -44,6 +45,7 @@ class FileUploader {
 			disable_file_browser,
 			attach_doc_image,
 			make_attachments_public,
+			forced_file_visibility,
 		});
 		SetVueGlobals(app);
 		this.uploader = app.mount(this.wrapper);
@@ -52,18 +54,22 @@ class FileUploader {
 			this.uploader.wrapper_ready = true;
 		}
 
-		this.uploader.$watch(
-			"files",
-			(files) => {
-				let all_private = files.every((file) => file.private);
-				if (this.dialog) {
-					this.dialog.set_secondary_action_label(
-						all_private ? __("Set all public") : __("Set all private")
-					);
-				}
-			},
-			{ deep: true }
-		);
+		if (this.dialog) {
+			if (forced_file_visibility) {
+				this.dialog.get_secondary_btn().hide();
+			} else {
+				this.uploader.$watch(
+					"files",
+					(files) => {
+						let all_private = files.every((file) => file.private);
+						this.dialog.set_secondary_action_label(
+							all_private ? __("Set all public") : __("Set all private")
+						);
+					},
+					{ deep: true }
+				);
+			}
+		}
 
 		this.uploader.$watch("trigger_upload", (trigger_upload) => {
 			if (trigger_upload) {

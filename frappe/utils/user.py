@@ -224,12 +224,18 @@ class UserPermissions:
 				"expanded_desk_search",
 				"send_me_a_copy",
 				"user_type",
+				"default_workspace",
 			],
 			as_dict=True,
 		)
 
 		if not self.can_read:
 			self.build_permissions()
+
+		if d.get("default_workspace"):
+			d.default_workspace_is_public = frappe.get_cached_value(
+				"Workspace", d.default_workspace, "public"
+			)
 
 		d.name = self.name
 		d.roles = self.get_roles()

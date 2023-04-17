@@ -330,7 +330,12 @@ frappe.views.Workspace = class Workspace {
 	get_page_to_show() {
 		let default_page;
 
-		if (
+		if (frappe.boot.user.default_workspace) {
+			default_page = {
+				name: frappe.boot.user.default_workspace,
+				public: frappe.boot.user.default_workspace_is_public,
+			};
+		} else if (
 			localStorage.current_page &&
 			this.all_pages.filter((page) => page.name == localStorage.current_page).length != 0
 		) {
@@ -341,7 +346,7 @@ frappe.views.Workspace = class Workspace {
 		} else if (Object.keys(this.all_pages).length !== 0) {
 			default_page = { name: this.all_pages[0].name, public: true };
 		} else {
-			default_page = { name: "Build", public: true };
+			default_page = { name: "Administration", public: true };
 		}
 
 		let page =

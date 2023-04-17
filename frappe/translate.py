@@ -449,7 +449,7 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 		workspace = DocType("Workspace")
 		for name in (
 			frappe.qb.from_(workspace)
-			.where(Field("module").isin(modules))
+			.where(Field("module").isin(modules) & (workspace.is_standard == 1))
 			.select(workspace.name)
 			.run(pluck=True)
 		):
@@ -463,6 +463,15 @@ def get_messages_for_app(app, deduplicate=True, context=False):
 			.run(pluck=True)
 		):
 			messages.append(("Dashboard Chart: " + name, name))
+
+		number_card = DocType("Number Card")
+		for name in (
+			frappe.qb.from_(number_card)
+			.where(Field("module").isin(modules) & (number_card.is_standard == 1))
+			.select(number_card.name)
+			.run(pluck=True)
+		):
+			messages.append(("Number Card: " + name, name))
 
 	if app == "frappe":
 		# Web templates
@@ -747,6 +756,10 @@ def get_messages_from_workspace(name):
 	for card in desk_page.links:
 		if card.get("label"):
 			messages.append(("Workspace Link: " + name, card.get("label")))
+
+	for qlist in desk_page.quick_lists:
+		if qlist.get("label"):
+			messages.append(("Workspace Quick List: " + name, qlist.get("label")))
 
 	return messages
 
