@@ -6,6 +6,7 @@ from collections import defaultdict
 import frappe
 from frappe import _
 from frappe.query_builder.functions import Count, Date
+from frappe.utils import format_date
 
 
 def execute(filters=None):
@@ -67,7 +68,7 @@ def get_columns(user_types):
 
 
 def get_chart(data, user_types):
-	labels = [d.get("date") for d in data]
+	labels = [format_date(d.get("date")) for d in data]
 	chart = {
 		"data": {
 			"labels": labels,
