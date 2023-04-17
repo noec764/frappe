@@ -146,7 +146,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 			.filter((df) => df.options && df.fieldname != row.fieldname)
 			.sort((a, b) => a.options.localeCompare(b.options))
 			.map((df) => ({
-				label: `${df.options} (${df.fieldname})`,
+				label: `${__(df.options)} (${df.fieldname})`,
 				value: df.fieldname,
 			}));
 		$doctype_select.add_options([
@@ -174,7 +174,7 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 					})
 					.sort((a, b) => a.label.localeCompare(b.label))
 					.map((df) => ({
-						label: `${df.label} (${df.fieldtype})`,
+						label: `${__(df.label)} (${__(df.fieldtype)})`,
 						value: df.fieldname,
 					}));
 				$field_select.add_options([

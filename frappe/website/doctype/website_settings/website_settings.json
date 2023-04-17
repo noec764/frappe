@@ -139,7 +139,8 @@
      "description": "Select an image of approx width 150px with a transparent background for best results.",
      "fieldname": "banner_image",
      "fieldtype": "Attach Image",
-     "label": "Brand Image"
+     "label": "Brand Image",
+     "options": "Public"
     },
     {
      "description": "Brand is what appears on the top-left of the toolbar. If it is an image, make sure it\nhas a transparent background and use the &lt;img /&gt; tag. Keep size as 200px x 30px",
@@ -314,7 +315,8 @@
     {
      "fieldname": "footer_logo",
      "fieldtype": "Attach Image",
-     "label": "Footer Logo"
+     "label": "Footer Logo",
+     "options": "Public"
     },
     {
      "fieldname": "call_to_action",
@@ -398,7 +400,8 @@
     {
      "fieldname": "app_logo",
      "fieldtype": "Attach Image",
-     "label": "App Logo"
+     "label": "App Logo",
+     "options": "Public"
     },
     {
      "fieldname": "account_deletion_settings_section",
@@ -486,7 +489,7 @@
    "index_web_pages_for_search": 1,
    "issingle": 1,
    "links": [],
-   "modified": "2023-02-17 09:50:24.621839",
+   "modified": "2023-04-17 14:16:09.960163",
    "modified_by": "Administrator",
    "module": "Website",
    "name": "Website Settings",

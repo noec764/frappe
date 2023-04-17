@@ -5,6 +5,7 @@ frappe.ui.form.on("User", {
 				filters: {
 					extends_page: ["is", "not set"],
 					parent_page: ["is", "not set"],
+					is_hidden: 0,
 					for_user: ["in", [null, frappe.session.user]],
 				},
 			};
