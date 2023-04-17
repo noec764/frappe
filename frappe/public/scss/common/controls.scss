@@ -554,3 +554,11 @@ button.data-pill {
 		}
 	}
 }
+
+.frappe-control .form-control:focus-within {
+	box-shadow: var(--highlight-shadow);
+}
+
+.grid-row .frappe-control .form-control:focus-within {
+	box-shadow: var(--highlight-shadow-row);
+}

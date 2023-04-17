@@ -15,6 +15,8 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 			.addClass("input-with-feedback form-control")
 			.prependTo(this.input_area);
 
+		this._setup_label_for_id();
+
 		this.$input.on("paste", (e) => {
 			let pasted_data = frappe.utils.get_clipboard_data(e);
 			let maxlength = this.$input.attr("maxlength");
@@ -74,6 +76,12 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 		if (this.df.options == "Barcode") {
 			this.setup_barcode_field();
 		}
+	}
+
+	_setup_label_for_id() {
+		this.label_id = `aria:${this.df.fieldname}:${Math.random().toString(36).substring(2, 10)}`;
+		this.$input.attr("id", this.label_id);
+		this.$wrapper.find("label").attr("for", this.label_id);
 	}
 
 	setup_url_field() {

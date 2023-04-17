@@ -624,6 +624,9 @@ frappe.ui.form.Layout = class Layout {
 					// show grid row (if exists)
 					field.grid.grid_rows[0].show_form();
 					return true;
+				} else if (field.df.fieldtype === "Button") {
+					this.set_focus(field);
+					return true;
 				} else if (!in_list(frappe.model.no_value_type, field.df.fieldtype)) {
 					this.set_focus(field);
 					return true;
@@ -649,6 +652,8 @@ frappe.ui.form.Layout = class Layout {
 			} else {
 				field.grid.grid_rows[0].toggle_view(true);
 			}
+		} else if (field.set_focus) {
+			field.set_focus();
 		} else if (field.editor) {
 			field.editor.set_focus();
 		} else if (field.$input) {
