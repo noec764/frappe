@@ -194,7 +194,6 @@ execute:frappe.db.set_default('desktop:home_page', 'space')
 execute:frappe.delete_doc_if_exists('Page', 'workspace')
 execute:frappe.delete_doc_if_exists('Page', 'dashboard', force=1)
 frappe.core.doctype.page.patches.drop_unused_pages
-execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.patches.v13_0.remove_chat
 frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02
 frappe.patches.v13_0.set_route
@@ -233,6 +232,7 @@ frappe.core.doctype.role.patches.dokos_v3_26_fix_desk_properties
 execute:frappe.delete_doc_if_exists("Workspace", "build", force=1)
 
 [post_model_sync]
+execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.core.doctype.role.patches.v13_set_default_desk_properties
 frappe.patches.v14_0.drop_data_import_legacy
 frappe.patches.v14_0.copy_mail_data #08.03.21
