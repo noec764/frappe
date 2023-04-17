@@ -92,7 +92,7 @@ frappe.router = {
 		"image",
 		"inbox",
 		"map",
-		"planning"
+		"planning",
 	],
 	list_views_route: {
 		list: "List",
@@ -448,12 +448,15 @@ frappe.router = {
 				return encodeURIComponent(String(a));
 			}
 		}).join("/");
-		let private_home = frappe.workspaces[`home-${frappe.user.name.toLowerCase()}`];
-		let default_page = private_home
-			? `private/home-${frappe.user.name.toLowerCase()}`
-			: frappe.workspaces["home"]
-			? "home"
-			: Object.keys(frappe.workspaces)[0];
+
+		let default_page = null;
+		if (frappe.boot.user.default_workspace) {
+			default_page = frappe.router.slug(frappe.boot.user.default_workspace);
+		} else if (frappe.workspaces["administration"]) {
+			default_page = "administration";
+		} else {
+			default_page = Object.keys(frappe.workspaces)[0];
+		}
 		return "/app/" + (path_string || default_page);
 	},
 

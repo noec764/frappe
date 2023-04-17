@@ -383,3 +383,17 @@ def get_page_list(fields, filters):
 
 def is_workspace_manager():
 	return "Workspace Manager" in frappe.get_roles()
+
+
+def has_permission(doc, ptype, user):
+	print("has_permission", user)
+	user_roles = frappe.get_roles()
+	if (
+		frappe.session.user == "Administrator"
+		or "System Manager" in user_roles
+		or "Workspace Manager" in user_roles
+	):
+		return True
+
+	if ptype == "read" and not doc.is_hidden and doc.for_user in (None, user):
+		return True
