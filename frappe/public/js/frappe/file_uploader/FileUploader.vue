@@ -311,7 +311,7 @@ function add_files(file_array) {
 				request_succeeded: false,
 				error_message: null,
 				uploading: false,
-				private: !props.make_attachments_public,
+				private: !props.make_attachments_public && props.forced_file_visibility !== "Public",
 			};
 		});
 
@@ -509,8 +509,8 @@ function upload_file(file, i) {
 		}
 
 		let is_private = +file.private;
-		if (this.forced_file_visibility) {
-			is_private = this.forced_file_visibility === 'Private' ? 1 : 0;
+		if (props.forced_file_visibility) {
+			is_private = props.forced_file_visibility === 'Private' ? 1 : 0;
 		}
 		form_data.append('is_private', is_private);
 		form_data.append('folder', props.folder);

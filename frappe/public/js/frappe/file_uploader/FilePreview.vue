@@ -24,8 +24,8 @@
 			</div>
 
 			<div class="flex config-area">
-				<label v-if="is_optimizable" class="frappe-checkbox"><input type="checkbox" :checked="optimize" @change="$emit('toggle_optimize')">{{ __("Optimize") }}</label>
-				<label v-if="!hide_private_checkbox" class="frappe-checkbox"><input type="checkbox" :checked="file.private" @change="$emit('toggle_private')">{{ __("Private") }}</label>
+				<label v-if="is_optimizable" class="frappe-checkbox"><input type="checkbox" :checked="optimize" @change="emit('toggle_optimize')">{{ __("Optimize") }}</label>
+				<label v-if="!hide_private_checkbox" class="frappe-checkbox"><input type="checkbox" :checked="is_private" @change="emit('toggle_private')">{{ __("Private") }}</label>
 			</div>
 			<div>
 				<span v-if="file.error_message" class="file-error text-danger">
@@ -62,6 +62,7 @@ let emit = defineEmits(["toggle_optimize", "toggle_private", "toggle_image_cropp
 // props
 let props = defineProps({
 	file: Object,
+	hide_private_checkbox: Boolean,
 });
 
 // variables

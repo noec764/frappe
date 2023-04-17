@@ -54,21 +54,21 @@ class FileUploader {
 			this.uploader.wrapper_ready = true;
 		}
 
-		if (this.dialog) {
-			if (forced_file_visibility) {
-				this.dialog.get_secondary_btn().hide();
-			} else {
-				this.uploader.$watch(
-					"files",
-					(files) => {
-						let all_private = files.every((file) => file.private);
+		if (this.dialog && forced_file_visibility) {
+			this.dialog.get_secondary_btn().hide();
+		} else {
+			this.uploader.$watch(
+				"files",
+				(files) => {
+					let all_private = files.every((file) => file.private);
+					if (this.dialog) {
 						this.dialog.set_secondary_action_label(
 							all_private ? __("Set all public") : __("Set all private")
 						);
-					},
-					{ deep: true }
-				);
-			}
+					}
+				},
+				{ deep: true }
+			);
 		}
 
 		this.uploader.$watch("trigger_upload", (trigger_upload) => {
