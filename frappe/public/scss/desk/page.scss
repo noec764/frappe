@@ -56,6 +56,7 @@
 		height: var(--btn-height);
 		margin-left: var(--margin-sm, 8px);
 		border-radius: var(--border-radius);
+		flex-shrink: 0;
 	}
 	.btn:not(.icon-btn) {
 		padding: 4px 10px;

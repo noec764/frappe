@@ -75,7 +75,7 @@ def test_get_email_account(self):
 def create_email_account(email_id, password, enable_outgoing, default_outgoing=0, append_to=None):
 	email_dict = {
 		"email_id": email_id,
-		"passsword": password,
+		"password": password,
 		"enable_outgoing": enable_outgoing,
 		"default_outgoing": default_outgoing,
 		"enable_incoming": 1,

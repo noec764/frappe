@@ -6,15 +6,19 @@ frappe.ui.form.on("Web Form", {
 				"Section Break": "--blue-600",
 				"Column Break": "--yellow-600",
 			};
+			const label = __(value, null, "DocField");
 			if (prefix[value]) {
-				value = `<span class="bold" style="color: var(${prefix[value]})">${__(value, null, "DocField")}</span>`;
+				return `<span class="bold" style="color: var(${prefix[value]})">${label}</span>`;
 			}
-			return value;
+			return label;
 		};
 
 		frappe.meta.docfield_map["Web Form Field"].fieldname.formatter = (value) => {
 			if (!value) return;
-			return frappe.get_meta(frm.doc.doc_type)?.fields?.find(x => x.fieldname === value)?.label ?? value;
+			return (
+				frappe.get_meta(frm.doc.doc_type)?.fields?.find((x) => x.fieldname === value)
+					?.label ?? value
+			);
 		};
 
 		frappe.meta.docfield_map["Web Form List Column"].fieldname.formatter = (value) => {
@@ -70,10 +74,15 @@ frappe.ui.form.on("Web Form", {
 	},
 
 	add_publish_button(frm) {
-		frm.add_custom_button(frm.doc.published ? __("Unpublish", [], "Web Form") : __("Publish", [], "Web Form"), () => {
-			frm.set_value("published", !frm.doc.published);
-			frm.save();
-		}).removeClass("btn-default").addClass(frm.doc.published ? "btn-danger" : "btn-default");
+		frm.add_custom_button(
+			frm.doc.published ? __("Unpublish", [], "Web Form") : __("Publish", [], "Web Form"),
+			() => {
+				frm.set_value("published", !frm.doc.published);
+				frm.save();
+			}
+		)
+			.removeClass("btn-default")
+			.addClass(frm.doc.published ? "btn-danger" : "btn-default");
 	},
 
 	add_get_fields_button(frm) {
@@ -135,7 +144,7 @@ frappe.ui.form.on("Web Form", {
 				label: df.label,
 				value: df.fieldname,
 			});
-			fields.push({ label: "Name", fieldname: "name" })
+			fields.push({ label: "Name", fieldname: "name" });
 			update_options(fields.map(as_select_option));
 
 			const amount_fields = fields
@@ -146,7 +155,7 @@ frappe.ui.form.on("Web Form", {
 					label: __("No Currency/Float fields in {0}", [__(doc.doc_type)], "Web Form"),
 					value: "",
 					disabled: true,
-				})
+				});
 			}
 			frm.set_df_property("amount_field", "options", amount_fields);
 
@@ -159,7 +168,7 @@ frappe.ui.form.on("Web Form", {
 					label: __("No Link to Currency fields in {0}", [__(doc.doc_type)], "Web Form"),
 					value: "",
 					disabled: true,
-				})
+				});
 			}
 			frm.set_df_property("currency_field", "options", currency_fields);
 		});
@@ -250,11 +259,13 @@ function get_fields_for_doctype(doctype) {
 function render_list_settings_message(frm) {
 	// render list setting message
 	if (frm.fields_dict["list_setting_message"] && !frm.doc.login_required) {
-		const login_required_label = frappe.get_meta('Web Form').fields
-			.find(x => x.fieldname === "login_required")
-			.label;
+		const login_required_label = frappe
+			.get_meta("Web Form")
+			.fields.find((x) => x.fieldname === "login_required").label;
 		const go_to_login_required_field = `
-			<a class="pointer" title="${__("Go to Login Required field")}" href="#">${__(login_required_label)}</a>
+			<a class="pointer" title="${__("Go to Login Required field")}" href="#">${__(
+			login_required_label
+		)}</a>
 		`;
 		let message = __(
 			"Login is required to see web form list view. Enable {0} to see list settings",
