@@ -709,9 +709,13 @@ frappe.ui.form.Toolbar = class Toolbar {
 			);
 		} else if (status === "Cancel") {
 			let add_cancel_button = () => {
-				this.page.set_secondary_action(__(status), function () {
-					me.frm.savecancel(this);
-				});
+				this.page.set_secondary_action(
+					__(status),
+					function () {
+						me.frm.savecancel(this);
+					},
+					"close-alt"
+				);
 			};
 			if (this.has_workflow()) {
 				frappe

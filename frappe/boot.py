@@ -468,7 +468,7 @@ def get_default_doctype_views() -> dict[str, str]:
 	"""Returns a mapping from a DocType to its default view, if it is not List.
 	Note: Uses frappe.get_list() so returns partial results if some DocTypes are not accessible."""
 	filters = [("default_view", "not in", (None, "List", ""))]
-	results: list = frappe.get_list(
+	results: list = frappe.get_all(
 		"DocType", fields=["name", "default_view"], filters=filters, as_list=True
 	)
 	return dict(results)

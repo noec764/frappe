@@ -24,7 +24,7 @@
 		display: none;
 	}
 	&[data-state="error"] .summary-card__freeze {
-		color: var(--danger);
+		color: var(--alert-text-danger);
 	}
 
 	&[data-state="loading"] {
