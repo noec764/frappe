@@ -99,11 +99,6 @@ frappe.Application = class Application {
 
 		this.show_notes();
 
-		if (frappe.ui.startup_setup_dialog && !frappe.boot.setup_complete) {
-			frappe.ui.startup_setup_dialog.pre_show();
-			frappe.ui.startup_setup_dialog.show();
-		}
-
 		frappe.realtime.on("version-update", function () {
 			var dialog = frappe.msgprint({
 				message: __(

@@ -3954,7 +3954,6 @@ Maximum Attachment Limit of {0} has been reached for {1} {2}.,Le nombre limite d
 Maximum Number of Fields,Nombre de champs maximum,
 Maximum Points,Points maximum,
 Maximum attachment limit of {0} has been reached.,Le nombre limite de pièces jointes de {0} a été atteint.,
-Maximum number of registrations,Nombre maximum d'inscriptions,
 "Maximum points allowed after multiplying points with the multiplier value
 (Note: For no limit leave this field empty or set 0)","Nombre maximum de points accordés après avoir multiplié les points avec le multiplicateur
 (A noter: Laissez ce champ vide ou mettez 0 pour ne pas définir de limite)",
@@ -6927,7 +6926,6 @@ User can login using Email id or User Name,L'utilisateur peut se connecter en ut
 User does not exist,L'utilisateur n'existe pas,
 User does not have permission to create the new {0},L'utilisateur n'a pas l'autorisation de créer un nouveau {0},
 User editable form on Website.,Formulaire modifiable par l'utilisateur sur le Site.,
-User is already registered for this event.,Cet utilisateur est déjà enregistré pour cet événement,
 User is mandatory for Share,L'utilisateur est obligatoire pour Partager,
 User not allowed to delete {0}: {1},Utilisateur non autorisé à supprimer {0} : {1},
 User permission already exists,L'autorisation de l'utilisateur existe déjà,

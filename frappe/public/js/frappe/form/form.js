@@ -1539,6 +1539,20 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 	}
 
+	/**
+	 * @param {string} fieldname
+	 * @param {Record<string, any>} properties
+	 */
+	set_df_properties(fieldname, properties) {
+		const df = this.get_docfield(fieldname);
+		if (df) {
+			for (const property in properties) {
+				df[property] = properties[property];
+			}
+			this.refresh_field(fieldname);
+		}
+	}
+
 	toggle_enable(fnames, enable) {
 		this.field_map(fnames, function (field) {
 			field.read_only = enable ? 0 : 1;
