@@ -601,6 +601,7 @@ docfield_properties = {
 	"fieldtype": "Select",
 	"options": "Text",
 	"sort_options": "Check",
+	"configuration": "JSON",
 	"fetch_from": "Small Text",
 	"fetch_if_empty": "Check",
 	"show_dashboard": "Check",

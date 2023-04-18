@@ -22,6 +22,8 @@
   "column_break_18",
   "options",
   "sort_options",
+  "configuration",
+  "configuration_button",
   "show_dashboard",
   "defaults_section",
   "default",
@@ -106,6 +108,17 @@
    "search_index": 1,
    "sort_options": 1
   },
+  {
+    "fieldname": "configuration",
+    "fieldtype": "JSON",
+    "hidden": 1,
+    "label": "Configuration"
+},
+{
+    "fieldname": "configuration_button",
+    "fieldtype": "Button",
+    "label": "Edit Configuration"
+},
   {
    "bold": 1,
    "fieldname": "fieldname",
@@ -564,7 +577,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-06-08 19:05:10.778371",
+ "modified": "2023-06-14 18:18:18.276512",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocField",

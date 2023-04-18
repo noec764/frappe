@@ -6,6 +6,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	make_input() {
 		super.make_input();
+		this.apply_configuration();
 
 		this.input.setAttribute("inputmode", "numeric");
 
@@ -46,6 +47,14 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	set_formatted_input(value) {
 		super.set_formatted_input(value);
 		this.input.dataset.isFormatted = "true";
+	}
+
+	apply_configuration() {
+		const config = this.get_configuration();
+		this.df.min = config.min;
+		this.df.max = config.max;
+		this.df.step = config.step;
+		this.df.with_slider = config.with_slider;
 	}
 
 	validate(value) {
