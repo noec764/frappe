@@ -45,6 +45,9 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 		parsed = Number.parseFloat(parsed);
 		if (Number.isNaN(parsed)) {
+			if (typeof this.df.min === "number") {
+				return this.df.min;
+			}
 			return null; // `value` is not a valid number or expression
 		}
 
@@ -115,15 +118,11 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	}
 
 	slider_setup() {
-		this.input.classList.add("input-xs");
-
 		this.slider_input = $(`<input type="range" />`).insertBefore(this.input)[0];
-
-		this.slider_input.value = this.value;
 
 		// Setup event listeners
 		this.input.addEventListener("input", () => {
-			this.slider_input.value = this.input.value;
+			this.slider_input.value = this.parse(this.input.value) ?? this.value;
 		});
 		this.slider_input.addEventListener("input", () => {
 			this.set_value(this.slider_input.value);
@@ -138,6 +137,9 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 		// Setup attributes
 		this.slider_set_attributes();
+
+		// Set initial value AFTER setting min/max/step
+		this.slider_input.value = this.value;
 	}
 
 	slider_destroy() {
