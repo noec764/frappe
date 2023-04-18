@@ -12,16 +12,18 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		// On focus, convert the value to a valid JS float number, and select the input.
 		this.input.addEventListener("focus", (e) => {
 			this.input.value = this.value ?? "";
+			this.input.dataset.isFormatted = "false";
 			this.input.select();
 			return false; // NOTE: maybe useless, cancel bubbling
 		});
 
 		// On blur, format the number again.
-		this.input.addEventListener("blur", (e) => {
+		this.input.addEventListener("focusout", (e) => {
+			this.input.dataset.isFormatted = "true";
+			this.set_input(this.value);
+
 			if (this.change) {
 				this.change(e);
-			} else {
-				this.set_input(this.value);
 			}
 		});
 
@@ -30,6 +32,20 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 			// Blur the input because the user is done editing it.
 			this.input.blur();
 		});
+	}
+
+	get_input_value() {
+		// If the input is not formatted, return the raw value.
+		if (this.input.dataset.isFormatted === "false") {
+			return this.input.value;
+		}
+		// If the input is formatted, return the stored value.
+		return String(this.value);
+	}
+
+	set_formatted_input(value) {
+		super.set_formatted_input(value);
+		this.input.dataset.isFormatted = "true";
 	}
 
 	validate(value) {
