@@ -1,4 +1,4 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
 import datetime
@@ -75,15 +75,11 @@ class EmailServer:
 		try:
 			if cint(self.settings.use_ssl):
 				self.imap = Timed_IMAP4_SSL(
-					self.settings.host,
-					self.settings.incoming_port,
-					timeout=frappe.conf.get("pop_timeout"),
+					self.settings.host, self.settings.incoming_port, timeout=frappe.conf.get("pop_timeout")
 				)
 			else:
 				self.imap = Timed_IMAP4(
-					self.settings.host,
-					self.settings.incoming_port,
-					timeout=frappe.conf.get("pop_timeout"),
+					self.settings.host, self.settings.incoming_port, timeout=frappe.conf.get("pop_timeout")
 				)
 
 				if cint(self.settings.use_starttls):
@@ -113,15 +109,11 @@ class EmailServer:
 		try:
 			if cint(self.settings.use_ssl):
 				self.pop = Timed_POP3_SSL(
-					self.settings.host,
-					self.settings.incoming_port,
-					timeout=frappe.conf.get("pop_timeout"),
+					self.settings.host, self.settings.incoming_port, timeout=frappe.conf.get("pop_timeout")
 				)
 			else:
 				self.pop = Timed_POP3(
-					self.settings.host,
-					self.settings.incoming_port,
-					timeout=frappe.conf.get("pop_timeout"),
+					self.settings.host, self.settings.incoming_port, timeout=frappe.conf.get("pop_timeout")
 				)
 
 			if self.settings.use_oauth:
@@ -140,8 +132,7 @@ class EmailServer:
 			return True
 
 		except _socket.error:
-			# log performs rollback and logs error in Error Log
-			frappe.log_error(_("POP: Unable to connect"))
+			frappe.log_error("POP: Unable to connect")
 
 			# Invalid mail server -- due to refusing connection
 			frappe.msgprint(_("Invalid Mail Server. Please rectify and try again."))
@@ -168,9 +159,11 @@ class EmailServer:
 
 	def get_messages(self, folder="INBOX"):
 		"""Returns new email messages."""
+
 		self.latest_messages = []
 		self.seen_status = {}
 		self.uid_reindexed = False
+
 		email_list = self.get_new_mails(folder)
 
 		for i, uid in enumerate(email_list[:100]):
@@ -183,11 +176,7 @@ class EmailServer:
 		out = {"latest_messages": self.latest_messages}
 		if self.settings.use_imap:
 			out.update(
-				{
-					"uid_list": email_list,
-					"seen_status": self.seen_status,
-					"uid_reindexed": self.uid_reindexed,
-				}
+				{"uid_list": email_list, "seen_status": self.seen_status, "uid_reindexed": self.uid_reindexed}
 			)
 
 		return out
@@ -199,6 +188,7 @@ class EmailServer:
 			self.check_imap_uidvalidity(folder)
 
 			readonly = False if self.settings.email_sync_rule == "UNSEEN" else True
+
 			self.imap.select(folder, readonly=readonly)
 			response, message = self.imap.uid("search", None, self.settings.email_sync_rule)
 			if message[0]:
@@ -231,7 +221,7 @@ class EmailServer:
 				frappe.qb.update(IMAPFolder).set(IMAPFolder.uidvalidity, current_uid_validity).set(
 					IMAPFolder.uidnext, uidnext
 				).where(IMAPFolder.parent == self.settings.email_account_name).where(
-					IMAPFolder.folder_name == folder.replace('"', "")
+					IMAPFolder.folder_name == folder
 				).run()
 			else:
 				EmailAccount = frappe.qb.DocType("Email Account")
@@ -346,7 +336,6 @@ class EmailServer:
 
 	def update_flag(self, folder, uid_list=None):
 		"""set all uids mails the flag as seen"""
-
 		if not uid_list:
 			return
 
@@ -696,6 +685,7 @@ class InboundMail(Email):
 
 	def parent_email_queue(self):
 		"""Get parent record from `Email Queue`.
+
 		If it is a reply to already sent mail, then there will be a parent record in EMail Queue.
 		"""
 		from frappe.email.doctype.email_queue.email_queue import EmailQueue
@@ -712,10 +702,12 @@ class InboundMail(Email):
 
 	def parent_communication(self):
 		"""Find a related communication so that we can prepare a mail thread.
+
 		The way it happens is by using in-reply-to header, and we can't make thread if it does not exist.
+
 		Here are the cases to handle:
 		1. If mail is a reply to already sent mail, then we can get parent communicaion from
-		        Email Queue record.
+		        Email Queue record or message_id on communication.
 		2. Sometimes we send communication name in message-ID directly, use that to get parent communication.
 		3. Sender sent a reply but reply is on top of what (s)he sent before,
 		        then parent record exists directly in communication.
@@ -728,23 +720,22 @@ class InboundMail(Email):
 		if not self.is_reply():
 			return ""
 
-		if not self.is_reply_to_system_sent_mail():
-			communication = Communication.find_one_by_filters(
-				message_id=self.in_reply_to, creation=[">=", self.get_relative_dt(-30)]
-			)
-		elif self.parent_email_queue() and self.parent_email_queue().communication:
-			communication = Communication.find(self.parent_email_queue().communication, ignore_error=True)
-		else:
-			reference = self.in_reply_to
-			if "@" in self.in_reply_to:
-				reference, _ = self.in_reply_to.split("@", 1)
-			communication = Communication.find(reference, ignore_error=True)
+		communication = Communication.find_one_by_filters(message_id=self.in_reply_to)
+		if not communication:
+			if self.parent_email_queue() and self.parent_email_queue().communication:
+				communication = Communication.find(self.parent_email_queue().communication, ignore_error=True)
+			else:
+				reference = self.in_reply_to
+				if "@" in self.in_reply_to:
+					reference, _ = self.in_reply_to.split("@", 1)
+				communication = Communication.find(reference, ignore_error=True)
 
 		self._parent_communication = communication or ""
 		return self._parent_communication
 
 	def reference_document(self):
 		"""Reference document is a document to which mail relate to.
+
 		We can get reference document from Parent record(EmailQueue | Communication) if exists.
 		Otherwise we do subject match to find reference document if we know the reference(append_to) doctype.
 		"""
@@ -772,6 +763,7 @@ class InboundMail(Email):
 
 	def match_record_by_subject_and_sender(self, doctype):
 		"""Find a record in the given doctype that matches with email subject and sender.
+
 		Cases:
 		1. Sometimes record name is part of subject. We can get document by parsing name from subject
 		2. Find by matching sender and subject
@@ -782,6 +774,7 @@ class InboundMail(Email):
 		        the system user is replying to via the common email account in Frappe. This fix bypasses
 		        the sender match when the sender is a system user and subject is atleast 10 chars long
 		        (for additional safety)
+
 		NOTE: We consider not to match by subject if match record is very old.
 		"""
 		name = self.get_reference_name_from_subject()
@@ -911,10 +904,10 @@ class TimerMixin:
 			self.sock.settimeout(self.timeout / 5.0)
 
 	def _getline(self, *args, **kwargs):
-		start_time = time.time()
+		start_time = time.monotonic()
 		ret = self._super._getline(self, *args, **kwargs)
 
-		self.elapsed_time += time.time() - start_time
+		self.elapsed_time += time.monotonic() - start_time
 		if self.timeout and self.elapsed_time > self.timeout:
 			raise EmailTimeoutError
 
