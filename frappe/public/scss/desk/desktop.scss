@@ -1107,6 +1107,10 @@ body {
 	.codex-editor {
 		min-height: 630px;
 
+		path {
+			stroke: none;
+		}
+
 		.codex-editor__redactor{
 			display: flex;
 			flex-wrap: wrap;
