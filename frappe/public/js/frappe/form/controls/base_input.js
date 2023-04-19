@@ -171,8 +171,8 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 		if (!icon_html && !translated_label) {
 			this.label_span.innerHTML = "&nbsp;";
 		} else {
-			this.label_span.innerHTML = icon_html;
-			this.label_span.append(translated_label);
+			this.label_span.innerHTML =
+				icon_html + frappe.dom.remove_script_and_style(translated_label);
 		}
 
 		this._label = this.df.label;
