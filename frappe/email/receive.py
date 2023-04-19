@@ -68,10 +68,7 @@ class EmailServer:
 
 	def connect(self):
 		"""Connect to **Email Account**."""
-		if cint(self.settings.use_imap):
-			return self.connect_imap()
-		else:
-			return self.connect_pop()
+		return self.connect_imap() if cint(self.settings.use_imap) else self.connect_pop()
 
 	def connect_imap(self):
 		"""Connect to IMAP"""
@@ -163,7 +160,11 @@ class EmailServer:
 		return res[0] == "OK"  # The folder exsits TODO: handle other resoponses too
 
 	def logout(self):
-		return self.connect_imap() if cint(self.settings.use_imap) else self.connect_pop()
+		if cint(self.settings.use_imap):
+			self.imap.logout()
+		else:
+			self.pop.quit()
+		return
 
 	def get_messages(self, folder="INBOX"):
 		"""Returns new email messages."""
