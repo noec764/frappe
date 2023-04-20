@@ -950,7 +950,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			`;
 		}
 
-		const modified = comment_when(doc.modified, true);
+		const modified = frappe.datetime.comment_when(doc.modified, true);
 
 		let assigned_to = `<div class="list-assignments">
 			<span class="avatar avatar-small">
@@ -976,10 +976,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		} ${tooltip_text}"`;
 
 		let comment_count = "";
-		if (this.list_view_settings && !this.list_view_settings.disable_comment_count) {
-			comment_count = `<span class="${
-				unseen_communication.length ? "unseen" : ""
-			} comment-count" ${comments_tooltip}>
+		const show_comment_count =
+			this.list_view_settings && !this.list_view_settings.disable_comment_count;
+		const has_comments = doc._comment_count > 0 || unseen_communication.length > 0;
+		if (show_comment_count) {
+			const classes = [
+				unseen_communication.length ? "unseen" : "",
+				has_comments ? "" : "zero",
+			].join(" ");
+			comment_count = `<span class="${classes} comment-count" ${comments_tooltip}>
 					${frappe.utils.icon("small-message")}
 					${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
 				</span>`;
@@ -987,7 +992,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		html += `
 			<div class="level-item list-row-activity hidden-xs">
-				<div class="hidden-md hidden-xs">
+				<div class="hidden-md">
 					${settings_button || assigned_to}
 				</div>
 				${modified}
