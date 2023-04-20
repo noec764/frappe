@@ -1054,7 +1054,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get_seen_class(doc) {
-		return JSON.parse(doc._seen || "[]").includes(frappe.session.user) ? "" : "bold";
+		// return JSON.parse(doc._seen || "[]").includes(frappe.session.user) ? "" : "bold";
+		if (
+			typeof doc._seen === "string" &&
+			doc._seen.includes(JSON.stringify(frappe.session.user))
+		) {
+			return "";
+		} else {
+			return "bold";
+		}
 	}
 
 	get_like_html(doc) {
