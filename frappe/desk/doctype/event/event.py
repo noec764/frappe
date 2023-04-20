@@ -26,6 +26,7 @@ from frappe.utils import (
 	nowdate,
 )
 from frappe.utils.user import get_enabled_system_users
+from frappe.website.utils import get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
 from frappe.www.printview import get_html_and_style
 
@@ -239,7 +240,8 @@ class Event(WebsiteGenerator):
 
 		is_guest = frappe.session.user == "Guest"
 
-		context.no_cache = 0
+		context.no_cache = 1
+		context.sidebar_items = get_sidebar_items(context.website_sidebar)
 		context.show_sidebar = not is_guest
 		context.show_close_button = not is_guest
 
