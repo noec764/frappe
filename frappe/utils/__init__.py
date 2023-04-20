@@ -1087,3 +1087,15 @@ def is_git_url(url: str) -> bool:
 	# modified to allow without the tailing .git from https://github.com/jonschlinkert/is-git-url.git
 	pattern = r"(?:git|ssh|https?|\w*@[-\w.]+):(\/\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$"
 	return bool(re.match(pattern, url))
+
+
+def is_desk():
+	if hasattr(frappe.local, "request") and hasattr(frappe.local.request, "path"):
+		path = frappe.local.request.path
+		return (
+			path.startswith("/api/")
+			or path.startswith("/app/")
+			and not path.startswith("/api/method/frappe.realtime")
+		)
+	else:
+		return False
