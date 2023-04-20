@@ -77,7 +77,7 @@
    "set_only_once": 1
   },
   {
-   "depends_on": "eval: doc.timeseries && ['Count', 'Sum', 'Average'].includes(doc.chart_type)",
+   "depends_on": "eval: doc.timeseries && doc.chart_type !== 'Group By'",
    "fieldname": "based_on",
    "fieldtype": "Select",
    "label": "Time Series Based On"
