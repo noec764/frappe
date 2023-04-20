@@ -63,9 +63,7 @@ frappe.ui.form.on("DocType", {
 		}
 
 		// set label for "In List View" for child tables
-		frm.get_docfield("fields", "in_list_view").label = frm.doc.istable
-			? __("In Grid View")
-			: __("In List View");
+		frm.trigger("set_in_list_view_label");
 
 		frm.cscript.autoname(frm);
 		frm.cscript.set_naming_rule_description(frm);
@@ -78,6 +76,15 @@ frappe.ui.form.on("DocType", {
 		} else if (!frm.doc.istable && !frm.is_new()) {
 			frm.events.set_default_permission(frm);
 		}
+
+		frm.trigger("set_in_list_view_label");
+	},
+
+	set_in_list_view_label: (frm) => {
+		// set label for "In List View" for child tables
+		frm.get_docfield("fields", "in_list_view").label = frm.doc.istable
+			? __("In Grid View")
+			: __("In List View");
 	},
 
 	set_default_permission: (frm) => {
