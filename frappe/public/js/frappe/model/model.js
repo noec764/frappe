@@ -168,6 +168,9 @@ $.extend(frappe.model, {
 				}
 			}
 		});
+
+		// Refresh doctype icons once
+		this.get_doctype_icons();
 	},
 
 	is_value_type: function (fieldtype) {
