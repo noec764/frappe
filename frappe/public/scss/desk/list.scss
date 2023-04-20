@@ -63,6 +63,25 @@
 	&:last-child {
 		border-bottom: 0px;
 	}
+
+	&.list-row--unsaved {
+		--list-row-notch-color: var(--alert-text-danger);
+	}
+
+	&.list-row--unsaved {
+		position: relative;
+
+		& > ::after {
+			display: block;
+			content: "";
+			position: absolute;
+			top: 0;
+			left: -5px;
+			bottom: 0;
+			width: 5px;
+			background-color: var(--list-row-notch-color);
+		}
+	}
 }
 
 .list-row {

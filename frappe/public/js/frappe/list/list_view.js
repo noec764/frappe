@@ -662,6 +662,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		this.set_rows_as_checked();
 		this.on_row_checked();
 		this.render_count();
+		this.highlight_locals();
 	}
 
 	render_list() {
@@ -686,6 +687,18 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				this.$result.find(".list-count").html(`<span>${str}</span>`);
 			});
 		}
+	}
+
+	highlight_locals() {
+		window.requestIdleCallback(() => {
+			this.$result.find(".list-row-container").each((i, row) => {
+				const doc = this.data[i];
+				const local_doc = locals?.[this.doctype]?.[doc.name];
+				if (local_doc?.__unsaved) {
+					$(row).addClass("list-row--unsaved");
+				}
+			});
+		});
 	}
 
 	get_header_html() {
