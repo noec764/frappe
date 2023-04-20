@@ -225,7 +225,7 @@ frappe.ui.GroupBy = class {
 	}
 
 	make_group_by_button() {
-		this.page.wrapper.find(".sort-selector").before(
+		this.page.wrapper.find(".page-form .filter-section").prepend(
 			$(`<div class="group-by-selector">
 				<button class="btn btn-default btn-sm group-by-button ellipsis">
 					<span class="group-by-icon">
@@ -266,6 +266,7 @@ frappe.ui.GroupBy = class {
 
 	apply_group_by_and_refresh() {
 		if (this.apply_group_by()) {
+			this.update_group_by_button();
 			this.report_view.refresh();
 		}
 	}
@@ -397,15 +398,14 @@ frappe.ui.GroupBy = class {
 			.toggleClass("btn-default", !group_by_applied)
 			.toggleClass("btn-primary-light", group_by_applied);
 
-		this.group_by_button.find(".group-by-icon").toggleClass("active", group_by_applied);
-
-		this.group_by_button.find(".button-label").html(button_label);
+		this.group_by_button.find(".button-label").text(button_label);
 		this.group_by_button.attr("title", button_label);
 	}
 
 	get_group_by_field_label() {
-		return this.group_by_fields[this.group_by_doctype].find(
+		const label = this.group_by_fields[this.group_by_doctype].find(
 			(field) => field.fieldname == this.group_by_field
 		).label;
+		return __(label, null, this.group_by_doctype);
 	}
 };
