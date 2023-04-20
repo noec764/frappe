@@ -89,6 +89,10 @@
 	  "fieldtype": "Section Break",
 	  "label": "Help"
 	},
+  {
+   "fieldname": "help_html",
+   "fieldtype": "HTML"
+  },
 	{
 	 "depends_on": "eval:doc.script_type == \"Scheduler Event\"",
 	 "fieldname": "event_frequency",
@@ -137,7 +141,7 @@
 			"link_fieldname": "server_script"
 		}
 	],
-	"modified": "2023-05-16 11:03:58.282680",
+	"modified": "2023-05-16 14:50:02.135469",
 	"modified_by": "Administrator",
 	"module": "Core",
 	"name": "Server Script",
