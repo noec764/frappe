@@ -57,16 +57,12 @@ frappe.ui.form.on("Calendar View", {
 				const meta = frappe.get_meta(frm.doc.reference_doctype);
 				const df = meta.fields.find((f) => f.fieldname == frm.doc.secondary_status_field);
 				const options = df.options.split("\n");
-				for (const row of frm.doc.secondary_status) {
-					frm.set_df_property(
-						"secondary_status",
-						"options",
-						options,
-						frm.doc.name,
-						"value",
-						row.name
-					);
-				}
+
+				frm.fields_dict.secondary_status.grid.update_docfield_property(
+					"value",
+					"options",
+					options
+				);
 			});
 		}
 	},
