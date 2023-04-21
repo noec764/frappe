@@ -19,7 +19,7 @@ class Translation(Document):
 	def on_update(self):
 		clear_user_translation_cache(self.language)
 
-	def on_trash(self):
+	def after_delete(self):
 		clear_user_translation_cache(self.language)
 
 
