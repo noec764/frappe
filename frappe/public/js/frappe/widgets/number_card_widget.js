@@ -209,7 +209,7 @@ export default class NumberCardWidget extends Widget {
 		const symbol = number_parts[1] || "";
 		const formatted_number = $(frappe.format(number_parts[0], df)).text();
 
-		this.formatted_number = formatted_number + " " + __(symbol);
+		this.formatted_number = formatted_number + " " + __(symbol, null, "Number system");
 	}
 
 	render_number() {
@@ -244,10 +244,10 @@ export default class NumberCardWidget extends Widget {
 			}
 
 			const stats_qualifier_map = {
-				Daily: __("since yesterday"),
-				Weekly: __("since last week"),
-				Monthly: __("since last month"),
-				Yearly: __("since last year"),
+				Daily: __("since previous day"),
+				Weekly: __("since previous week"),
+				Monthly: __("since previous month"),
+				Yearly: __("since previous year"),
 			};
 			const stats_qualifier = stats_qualifier_map[this.card_doc.stats_time_interval];
 

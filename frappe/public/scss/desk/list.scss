@@ -63,10 +63,29 @@
 	&:last-child {
 		border-bottom: 0px;
 	}
+
+	&.list-row--unsaved {
+		--list-row-notch-color: var(--alert-text-danger);
+	}
+
+	&.list-row--unsaved {
+		position: relative;
+
+		& > ::after {
+			display: block;
+			content: "";
+			position: absolute;
+			top: 0;
+			left: -5px;
+			bottom: 0;
+			width: 5px;
+			background-color: var(--list-row-notch-color);
+		}
+	}
 }
 
 .list-row {
-	padding: 15px 15px 15px 0px;
+	padding: 15px 0px 15px 0px;
 	height: 45px;
 	cursor: pointer;
 	transition: color 0.2s;
@@ -86,8 +105,7 @@
 		min-width: 80%;
 	}
 	.level-right {
-		flex: 1.5;
-		overflow: visible;
+		flex: 0 1 150px;
 	}
 
 	.tag-col {
@@ -108,14 +126,10 @@
 
 	.list-row-activity {
 		justify-content: flex-end;
-		// min-width: 120px;
+		gap: var(--margin-sm);
 
-		&> span {
+		&>span {
 			display: inline-block;
-
-			&:not(:last-child) {
-				margin-right: 15px;
-			}
 		}
 
 		.comment-count {
@@ -126,16 +140,16 @@
 				--icon-stroke: var(--blue-600);
 				--icon-fill: var(--blue-50);
 			}
+			&.zero {
+				opacity: 0.25;
+			}
 		}
 
 		.frappe-timestamp {
+			text-align: center;
 			font-size: var(--text-xs);
 			white-space: nowrap;
 			min-width: 30px;
-		}
-
-		.list-assignments, .list-actions {
-			margin-right: var(--margin-md);
 		}
 	}
 

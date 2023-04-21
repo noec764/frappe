@@ -644,20 +644,27 @@ body {
 		.widget-body {
 			text-align: left;
 
+			flex-grow: 1;
+			display: flex;
+			flex-flow: column;
+			justify-content: flex-end;
+
 			.number-card-loading {
 				@include flex(flex, space-between, center, null);
 				height: 50px;
 			}
 
 			.widget-content {
-				@include flex(flex, space-between, null, null);
-				padding-top: var(--padding-xl);
+				@include flex(flex, space-between, center, row);
+				flex-wrap: wrap;
+				min-height: 36px;
 
 				.number {
 					font-weight: 600;
 					font-size: 22px;
-					line-height: 2.4em;
+					line-height: 1;
 					color: var(--text-color);
+					flex: 1 0 auto;
 				}
 
 				.number-text {
@@ -668,6 +675,7 @@ body {
 
 				.card-stats {
 					@include flex(flex, null, flex-end, column);
+					flex: 1 0 120px;
 				}
 
 				.percentage-stat-area {
@@ -691,7 +699,6 @@ body {
 				}
 
 				.stat-period {
-					margin-top: var(--margin-xs);
 					font-size: 11px;
 				}
 
@@ -1106,6 +1113,10 @@ body {
 
 	.codex-editor {
 		min-height: 630px;
+
+		path {
+			stroke: none;
+		}
 
 		.codex-editor__redactor{
 			display: flex;
