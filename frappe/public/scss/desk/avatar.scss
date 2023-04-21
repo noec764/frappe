@@ -97,6 +97,7 @@
 	}
 
 	.avatar-empty::after {
+		opacity: 0.25;
 		content: "\002D";
 		line-height: 28px;
 	}
@@ -202,6 +203,9 @@
 	&.overlap {
 		.avatar + .avatar {
 			margin-left: calc(-1 * var(--margin-sm));
+		}
+		.avatar-small + .avatar-small {
+			margin-left: -12px;
 		}
 	}
 }
