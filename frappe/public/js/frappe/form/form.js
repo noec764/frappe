@@ -2044,6 +2044,9 @@ frappe.ui.form.Form = class FrappeForm {
 			this.active_tab_map = {};
 		}
 		this.active_tab_map[this.docname] = tab;
+
+		const new_hash = (tab.df?.fieldname ?? "").replace("__details", "");
+		history.replaceState(null, null, `#${new_hash}`);
 	}
 
 	get_active_tab() {

@@ -93,7 +93,7 @@ export default class Tab {
 
 	setup_listeners() {
 		this.tab_link.find(".nav-link").on("shown.bs.tab", () => {
-			this?.frm.set_active_tab?.(this);
+			this.frm?.set_active_tab?.(this);
 		});
 	}
 
