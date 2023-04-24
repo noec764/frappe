@@ -1515,6 +1515,9 @@ frappe.ui.form.Form = class FrappeForm {
 		if (!docname || !table_field) {
 			df = this.get_docfield(fieldname);
 		} else {
+			console.warn(
+				"Do not use set_df_property for table fields, instead consider using frm.fields_dict[fieldname].grid.update_docfield_property"
+			);
 			const grid = this.fields_dict[fieldname].grid;
 			const filtered_fields = frappe.utils.filter_dict(grid.docfields, {
 				fieldname: table_field,
@@ -2044,6 +2047,9 @@ frappe.ui.form.Form = class FrappeForm {
 			this.active_tab_map = {};
 		}
 		this.active_tab_map[this.docname] = tab;
+
+		const new_hash = (tab.df?.fieldname ?? "").replace("__details", "");
+		history.replaceState(null, null, `#${new_hash}`);
 	}
 
 	get_active_tab() {

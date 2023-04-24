@@ -662,6 +662,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		this.set_rows_as_checked();
 		this.on_row_checked();
 		this.render_count();
+		this.highlight_locals();
 	}
 
 	render_list() {
@@ -686,6 +687,18 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				this.$result.find(".list-count").html(`<span>${str}</span>`);
 			});
 		}
+	}
+
+	highlight_locals() {
+		window.requestIdleCallback(() => {
+			this.$result.find(".list-row-container").each((i, row) => {
+				const doc = this.data[i];
+				const local_doc = locals?.[this.doctype]?.[doc.name];
+				if (local_doc?.__unsaved) {
+					$(row).addClass("list-row--unsaved");
+				}
+			});
+		});
 	}
 
 	get_header_html() {
@@ -950,7 +963,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			`;
 		}
 
-		const modified = comment_when(doc.modified, true);
+		const modified = frappe.datetime.comment_when(doc.modified, true);
 
 		let assigned_to = `<div class="list-assignments">
 			<span class="avatar avatar-small">
@@ -976,10 +989,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		} ${tooltip_text}"`;
 
 		let comment_count = "";
-		if (this.list_view_settings && !this.list_view_settings.disable_comment_count) {
-			comment_count = `<span class="${
-				unseen_communication.length ? "unseen" : ""
-			} comment-count" ${comments_tooltip}>
+		const show_comment_count =
+			this.list_view_settings && !this.list_view_settings.disable_comment_count;
+		const has_comments = doc._comment_count > 0 || unseen_communication.length > 0;
+		if (show_comment_count) {
+			const classes = [
+				unseen_communication.length ? "unseen" : "",
+				has_comments ? "" : "zero",
+			].join(" ");
+			comment_count = `<span class="${classes} comment-count" ${comments_tooltip}>
 					${frappe.utils.icon("small-message")}
 					${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
 				</span>`;
@@ -987,7 +1005,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		html += `
 			<div class="level-item list-row-activity hidden-xs">
-				<div class="hidden-md hidden-xs">
+				<div class="hidden-md">
 					${settings_button || assigned_to}
 				</div>
 				${modified}
@@ -1036,7 +1054,15 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get_seen_class(doc) {
-		return JSON.parse(doc._seen || "[]").includes(frappe.session.user) ? "" : "bold";
+		// return JSON.parse(doc._seen || "[]").includes(frappe.session.user) ? "" : "bold";
+		if (
+			typeof doc._seen === "string" &&
+			doc._seen.includes(JSON.stringify(frappe.session.user))
+		) {
+			return "";
+		} else {
+			return "bold";
+		}
 	}
 
 	get_like_html(doc) {

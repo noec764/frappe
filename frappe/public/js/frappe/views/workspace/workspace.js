@@ -110,12 +110,16 @@ frappe.views.Workspace = class Workspace {
 								? frappe.router.slug(item.name)
 								: "private/" + frappe.router.slug(item.name)
 						}"
-						class="item-anchor ${item.is_editable ? "" : "block-click"}" title="${__(item.title)}"
+						class="item-anchor ${item.is_editable ? "" : "block-click"}" title="${__(
+			item.title,
+			null,
+			"Workspace"
+		)}"
 					>
 						<span class="sidebar-item-icon" ${iconAttributes}>
 							${iconHtml}
 						</span>
-						<span class="sidebar-item-label">${__(item.title)}<span>
+						<span class="sidebar-item-label">${__(item.title, null, "Workspace")}<span>
 					</a>
 					<div class="sidebar-item-control"></div>
 				</div>
@@ -260,7 +264,9 @@ frappe.views.Workspace = class Workspace {
 		let page = this.get_page_to_show();
 
 		const page_details = this.all_pages.filter((p) => p.name == page.name);
-		this.page.set_title(page_details.length ? __(page_details[0].title) : __(page.name));
+		this.page.set_title(
+			page_details.length ? __(page_details[0].title, null, "Workspace") : __(page.name)
+		);
 
 		this.update_selected_sidebar(this.current_page, false); //remove selected from old page
 		this.update_selected_sidebar(page, true); //add selected on new page
