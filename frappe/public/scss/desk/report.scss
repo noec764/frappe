@@ -101,6 +101,12 @@
 
 .group-by-button {
 	margin: 5px;
+
+	.button-label {
+		display: inline-flex;
+		max-width: 175px;
+		overflow: hidden;
+	}
 }
 
 .comparison-message {
