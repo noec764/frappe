@@ -23,7 +23,8 @@ $icon-sizes: (
 /* like icon */
 use.like-icon {
 	cursor: pointer;
-	stroke: var(--gray-500);
+	--icon-stroke: var(--gray-500);
+	stroke-width: 1.1px;
 }
 
 #icon-file-large {
@@ -48,7 +49,7 @@ use.like-icon {
 
 .liked {
 	use.like-icon {
-		stroke: none;
+		--icon-stroke: none;
 		fill: var(--red-500);
 	}
 }
