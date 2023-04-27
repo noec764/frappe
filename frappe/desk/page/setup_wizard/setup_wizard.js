@@ -29,6 +29,18 @@ frappe.setup = {
 			fn();
 		});
 	},
+
+	setup_telemetry_events() {
+		let me = this;
+		this.fields.filter(frappe.model.is_value_type).forEach((field) => {
+			me.get_input(field.fieldname).on("change", function () {
+				frappe.telemetry.capture(`${field.fieldname}_set`, "setup");
+				if (field.fieldname == "enable_telemetry" && !me.get_value("enable_telemetry")) {
+					frappe.telemetry.disable();
+				}
+			});
+		});
+	},
 };
 
 // Frappe slides settings
@@ -75,6 +87,15 @@ frappe.setup.get_slides_settings = () => [
 				placeholder: __("Select Currency"),
 				fieldtype: "Select",
 				reqd: 1,
+			},
+			{
+				fieldtype: "Section Break",
+			},
+			{
+				fieldname: "enable_telemetry",
+				label: __("Allow Sending Usage Data for Improving applications"),
+				fieldtype: "Check",
+				default: 1,
 			},
 		],
 
@@ -241,6 +262,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		super.make();
 		this.$container.addClass("setup-wizard-slide with-form");
 		this.setup_keyboard_nav();
+		this.setup_telemetry_events();
 	}
 
 	show_slide(id) {
@@ -298,6 +320,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	on_complete() {
+		frappe.telemetry.capture("initated_client_side", "setup");
 		if (this.current_slide.has_errors()) return;
 		this.update_values();
 		this.show_working_state();

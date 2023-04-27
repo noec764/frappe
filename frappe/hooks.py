@@ -27,6 +27,7 @@ app_include_js = [
 	"form.bundle.js",
 	"controls.bundle.js",
 	"report.bundle.js",
+	"telemetry.bundle.js",
 ]
 app_include_css = [
 	"desk.bundle.css",
@@ -439,4 +440,8 @@ before_job = [
 after_job = [
 	"frappe.monitor.stop",
 	"frappe.utils.file_lock.release_document_locks",
+]
+
+extend_bootinfo = [
+	"frappe.utils.telemetry.add_bootinfo",
 ]
