@@ -1,8 +1,8 @@
 frappe.provide("frappe.ui");
 
 export default class ListFilter {
-	constructor({ wrapper, doctype }) {
-		Object.assign(this, arguments[0]);
+	constructor(opts) {
+		Object.assign(this, opts);
 		this.can_add_global = frappe.user.has_role(["System Manager", "Administrator"]);
 		this.filters = [];
 		this.make();
