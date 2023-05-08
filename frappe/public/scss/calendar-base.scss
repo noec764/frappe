@@ -18,9 +18,9 @@
 
 	th.fc-col-header-cell.fc-day {
 		text-align: right;
-		padding: 10px 12px 10px 0;
+		padding: 4px 12px 4px 0;
 		text-transform: uppercase;
-		font-size: 12px;
+		font-size: 0.8em;
 	}
 
 	.fc-button,
@@ -29,6 +29,10 @@
 		font-size: 0.8em;
 		outline: none;
 		line-height: inherit;
+	}
+
+	.fc-button-active {
+		text-decoration: underline !important;
 	}
 
 	.fc-event {
@@ -52,7 +56,7 @@
 	}
 
 	.fc-timegrid-slot-label-cushion {
-		background-color: var(--fg-color);
+		background-color: var(--fc-page-bg-color);
 	}
 
 	tbody>tr:first-child>td .fc-timegrid-slot-label-cushion {
@@ -64,20 +68,6 @@
 		display: block;
 		position: relative;
 		top: -12px;
-	}
-
-	.fc-scroller {
-		scrollbar-width: 5px;
-		scrollbar-color: #dfe8ff #fff;
-	}
-
-	.fc-scroller::-webkit-scrollbar {
-		width: 5px;
-		background-color: #fff;
-	}
-
-	.fc-scroller::-webkit-scrollbar-thumb {
-		background-color: #dfe8ff;
 	}
 
 	@media (max-width: 991px) {
@@ -100,6 +90,10 @@
 		.icon {
 			--icon-stroke: var(--text-color);
 		}
+	}
+
+	.fc-toolbar-chunk:empty {
+		display: none;
 	}
 }
 
