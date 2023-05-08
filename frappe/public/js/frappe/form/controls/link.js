@@ -179,6 +179,14 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				this.$input.trigger("focus");
 				this.$input.trigger("select");
 			});
+			icon_html.addEventListener("dblclick", () => {
+				// Open the document
+				const doctype = this.get_options();
+				const name = this.get_input_value();
+				if (doctype && name) {
+					frappe.set_route("Form", doctype, name);
+				}
+			});
 		}
 
 		this.$wrapper.find(".link-field").append(icon_html);
