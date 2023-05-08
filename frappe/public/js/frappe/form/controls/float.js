@@ -10,17 +10,19 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 		this.input.setAttribute("inputmode", "numeric");
 
+		this._set_placeholder();
+
 		// On focus, convert the value to a valid JS float number, and select the input.
 		this.input.addEventListener("focus", (e) => {
 			this.input.value = this.value ?? "";
-			this.input.dataset.isFormatted = "false";
+			this._set_is_formatted(false);
 			this.input.select();
 			return false; // NOTE: maybe useless, cancel bubbling
 		});
 
 		// On blur, format the number again.
 		this.input.addEventListener("focusout", (e) => {
-			this.input.dataset.isFormatted = "true";
+			this._set_is_formatted(true);
 			this.set_input(this.value);
 
 			if (this.change) {
@@ -35,6 +37,32 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		});
 	}
 
+	_set_placeholder() {
+		const placeholder = this._get_placeholder();
+		if (placeholder) {
+			this.input.setAttribute("placeholder", placeholder);
+		} else {
+			this.input.removeAttribute("placeholder");
+		}
+	}
+
+	_get_placeholder() {
+		if (this.df.placeholder) {
+			return this.df.placeholder;
+		}
+
+		if (typeof this.df?.min === "number") {
+			return __("{0}: {1}", [__("Minimum"), this.format_for_input(this.df.min)]);
+		} else if (typeof this.df?.max === "number") {
+			return __("{0}: {1}", [__("Maximum"), this.format_for_input(this.df.max)]);
+		}
+
+		const standard_types = ["Currency", "Int", "Float", "Percent"];
+		if (standard_types.some((type) => this.df.fieldtype.includes(type))) {
+			return __(this.df.fieldtype);
+		}
+	}
+
 	get_input_value() {
 		// If the input is not formatted, return the raw value.
 		if (this.input.dataset.isFormatted === "false") {
@@ -46,7 +74,17 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	set_formatted_input(value) {
 		super.set_formatted_input(value);
-		this.input.dataset.isFormatted = "true";
+		this._set_is_formatted(true);
+	}
+
+	/** @param {boolean} is_formatted */
+	_set_is_formatted(is_formatted) {
+		// if (is_formatted) {
+		// 	this.input.removeAttribute("pattern");
+		// } else {
+		// 	this.input.pattern = this.constructor.EXPR_REGEX.source.slice(1, -1);
+		// }
+		this.input.dataset.isFormatted = is_formatted ? "true" : "false";
 	}
 
 	apply_configuration() {
