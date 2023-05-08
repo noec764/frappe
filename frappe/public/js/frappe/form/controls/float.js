@@ -2,7 +2,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	static trigger_change_on_input_event = false;
 
 	/** NOTE: do not include the comma (,) as it is the sequence operator in JavaScript */
-	static EXPR_REGEX = /^[0-9+\-/*()_\. ]+$/;
+	static EXPR_REGEX = /^[\d+\-\/*\.\(\)\s_]+$/;
 
 	make_input() {
 		super.make_input();
@@ -118,6 +118,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		if (typeof value === "string" && value.match(this.constructor.EXPR_REGEX)) {
 			try {
 				// If it is a string containing operators
+				value = value.replace(/[ _]/g, ""); // remove underscores and spaces
 				return eval(value);
 			} catch (e) {
 				// When the expression is invalid, return null instead of
