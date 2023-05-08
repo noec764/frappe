@@ -176,6 +176,17 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		}
 	}
 
+	// refresh() {
+	// 	super.refresh?.();
+	// 	if (this.input) {
+	// 		if (this.df?.reqd) {
+	// 			this.input.setAttribute("required", true);
+	// 		} else {
+	// 			this.input.removeAttribute("required");
+	// 		}
+	// 	}
+	// }
+
 	refresh_input() {
 		super.refresh_input();
 		this.slider_refresh();
