@@ -26,6 +26,9 @@ def savedocs(doc, action):
 
 	if doc.docstatus.is_submitted():
 		doc.submit()
+		if getattr(doc.meta, "name_after_submit"):
+			if hasattr(doc, "_draft_name") and not hasattr(doc, "localname"):
+				doc.localname = doc._draft_name
 	else:
 		doc.save()
 
