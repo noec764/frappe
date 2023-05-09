@@ -678,6 +678,7 @@ frappe.views.Workspace = class Workspace {
 			],
 			primary_action_label: __("Update"),
 			primary_action: (values) => {
+				values.title = frappe.utils.escape_html(values.title);
 				let is_title_changed = values.title != old_item.title;
 				let is_section_changed = values.is_public != old_item.public;
 				if (
@@ -995,6 +996,7 @@ frappe.views.Workspace = class Workspace {
 			],
 			primary_action_label: __("Duplicate"),
 			primary_action: (values) => {
+				values.title = frappe.utils.escape_html(values.title);
 				if (!this.validate_page(values)) return;
 				d.hide();
 				frappe.call({
