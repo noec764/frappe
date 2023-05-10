@@ -801,19 +801,12 @@ $.extend(frappe.model, {
 
 	get_all_docs: function (doc) {
 		const all = [doc];
-		const valid_keys = frappe.meta.get_table_fields(doc.doctype).map((df) => df.fieldname);
-		for (const table_name of valid_keys) {
-			const children = doc[table_name];
-			if (!children) {
+		for (const fieldname in doc) {
+			const children = doc[fieldname];
+			if (fieldname.startsWith("_") || !Array.isArray(children)) {
 				continue;
 			}
-			if (!Array.isArray(children)) {
-				console.error(`Property '${table_name}' should be an array:`, doc);
-				continue;
-			}
-			for (const child of children) {
-				all.push(child);
-			}
+			all.push(...children);
 		}
 		return all;
 	},
