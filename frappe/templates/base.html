@@ -55,6 +55,12 @@
 		{% if banner_html -%}
 		{{ banner_html or "" }}
 		{%- endif %}
+
+		{% if read_only_mode %}
+		<div class="indicator-pill yellow no-indicator-dot align-self-center">
+			{{ _("This site is in read only mode, full functionality will be restored soon.") }}
+		</div>
+		{% endif %}
 	{%- endblock -%}
 
 	{%- block navbar -%}
