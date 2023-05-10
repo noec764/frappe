@@ -27,6 +27,9 @@ class WebsiteAnalytics:
 		if not self.filters.range:
 			self.filters.range = "Daily"
 
+		if not self.filters.group_by:
+			self.filters.group_by = "path"
+
 		self.filters.to_date = frappe.utils.add_days(self.filters.to_date, 1)
 		self.query_filters = {"creation": ["between", [self.filters.from_date, self.filters.to_date]]}
 		self.group_by = self.filters.group_by
