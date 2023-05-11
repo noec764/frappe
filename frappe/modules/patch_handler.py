@@ -65,9 +65,9 @@ def run_all(skip_failing: bool = False, patch_type: PatchType | None = None) -> 
 		except Exception:
 			if not skip_failing:
 				raise
-			else:
-				print("Failed to execute patch")
-				update_patch_log(patch, skipped=True)
+
+			print("Failed to execute patch")
+			update_patch_log(patch, skipped=True)
 
 	patches = get_all_patches(patch_type=patch_type)
 
@@ -174,7 +174,7 @@ def execute_patch(patchmodule: str, method=None, methodargs=None):
 		f"Executing {patchmodule or methodargs} in {frappe.local.site} ({frappe.db.cur_db_name}){docstring}"
 	)
 
-	start_time = time.time()
+	start_time = time.monotonic()
 	frappe.db.begin()
 	frappe.db.auto_commit_on_many_writes = 0
 	try:
@@ -197,7 +197,7 @@ def execute_patch(patchmodule: str, method=None, methodargs=None):
 
 	else:
 		frappe.db.commit()
-		end_time = time.time()
+		end_time = time.monotonic()
 		_patch_mode(False)
 		print(f"Success: Done in {round(end_time - start_time, 3)}s")
 
@@ -213,7 +213,8 @@ def update_patch_log(patchmodule, skipped=False):
 		traceback = frappe.get_traceback(with_context=True)
 		patch.skipped = 1
 		patch.traceback = traceback
-		print(traceback)
+		print(traceback, end="\n\n")
+
 	patch.insert(ignore_permissions=True)
 
 
