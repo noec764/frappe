@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 def get_filters_global_context():
 	today = frappe.utils.nowdate()
 	week_start = frappe.utils.get_first_day_of_week(today)
-	week_end = frappe.utils.add_days(week_start, 6)
+	week_end = frappe.utils.add_days(week_start, 7)
 	month_start = frappe.utils.get_first_day(today)
 	month_end = frappe.utils.get_last_day(today)
 	quarter_start = frappe.utils.get_quarter_start(today)
