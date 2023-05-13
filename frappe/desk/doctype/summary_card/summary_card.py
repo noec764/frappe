@@ -9,6 +9,7 @@ import frappe.utils
 from frappe import _
 from frappe.model.document import Document
 from frappe.modules.utils import export_module_json
+from frappe.utils.safe_block_eval import safe_block_eval
 
 if TYPE_CHECKING:
 	from frappe.desk.doctype.summary_card_row.summary_card_row import SummaryCardRow
@@ -142,7 +143,7 @@ class SummaryCard(Document):
 		from frappe.utils.data import get_filter, make_filter_tuple
 
 		ctx = self.get_filters_context_for_row(row, parent)
-		filters = frappe.safe_eval(code, None, ctx)
+		filters = safe_block_eval(code, _locals=ctx)
 		if not filters:
 			return []
 
