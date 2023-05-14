@@ -33,15 +33,16 @@ frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
 			$btn.css("pointer-events", "auto");
 
 			if (!r.exc) {
-				for (const likes of document.querySelectorAll(".like-action")) {
-					if (likes.dataset.name === name && likes.dataset.doctype === doctype) {
-						if (add === "Yes") {
-							likes.classList.remove("not-liked");
-							likes.classList.add("liked");
-						} else {
-							likes.classList.add("not-liked");
-							likes.classList.remove("liked");
-						}
+				let selector = ".like-action";
+				selector += `[data-doctype=${JSON.stringify(doctype)}]`;
+				selector += `[data-name=${JSON.stringify(docname)}]`;
+				for (const likes of document.querySelectorAll(selector)) {
+					if (add === "Yes") {
+						likes.classList.remove("not-liked");
+						likes.classList.add("liked");
+					} else {
+						likes.classList.add("not-liked");
+						likes.classList.remove("liked");
 					}
 				}
 
