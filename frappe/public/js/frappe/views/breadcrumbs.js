@@ -83,17 +83,21 @@ frappe.breadcrumbs = {
 	},
 
 	set_custom_breadcrumbs(breadcrumbs) {
-		const html = this.get_li_html(breadcrumbs.route, breadcrumbs.label);
-		this.$breadcrumbs.append(html);
+		const li_element = this.make_li_element(breadcrumbs.route, breadcrumbs.label);
+		this.$breadcrumbs.append(li_element);
 	},
 
-	get_li_html(route, label) {
+	make_li_element(route, label) {
 		const el = document.createElement("li");
 		const a = document.createElement("a");
 		a.href = route;
 		a.innerText = label;
 		el.appendChild(a);
 		return el.outerHTML;
+	},
+
+	get_li_html(route, label) {
+		return make_li_element(route, label).outerHTML;
 	},
 
 	get last_route() {
@@ -119,11 +123,11 @@ frappe.breadcrumbs = {
 			return;
 		}
 
-		const html = this.get_li_html(
+		const li_element = this.make_li_element(
 			`/app/${frappe.router.slug(breadcrumbs.workspace)}`,
 			__(breadcrumbs.workspace)
 		);
-		this.$breadcrumbs.append(html);
+		this.$breadcrumbs.append(li_element);
 	},
 
 	set_workspace(breadcrumbs) {
@@ -190,8 +194,8 @@ frappe.breadcrumbs = {
 			} else {
 				route = doctype_route;
 			}
-			const html = this.get_li_html(`/app/${route}`, __(doctype));
-			this.$breadcrumbs.append(html);
+			const li_element = this.make_li_element(`/app/${route}`, __(doctype));
+			this.$breadcrumbs.append(li_element);
 		}
 	},
 
@@ -199,8 +203,8 @@ frappe.breadcrumbs = {
 		const doctype = breadcrumbs.doctype;
 		const docname = frappe.get_route().slice(2).join("/");
 		let form_route = `/app/${frappe.router.slug(doctype)}/${docname}`;
-		const html = this.get_li_html(form_route, __(docname));
-		this.$breadcrumbs.append(html);
+		const li_element = this.make_li_element(form_route, __(docname));
+		this.$breadcrumbs.append(li_element);
 
 		if (view === "form") {
 			let last_crumb = this.$breadcrumbs.find("li").last();
