@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.32.0"
+__version__ = "3.33.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -829,7 +829,7 @@ def only_for(roles: list[str] | tuple[str] | str, message=False):
 	if isinstance(roles, str):
 		roles = (roles,)
 
-	if not set(roles).intersection(get_roles()):
+	if set(roles).isdisjoint(get_roles()):
 		if not message:
 			raise PermissionError
 

@@ -1509,15 +1509,15 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 	}
 
+	/**
+	 * @note Do not use `set_df_property` for table fields, instead consider using `frm.fields_dict[fieldname].grid.update_docfield_property`
+	 */
 	set_df_property(fieldname, property, value, docname, table_field, table_row_name = null) {
 		let df;
 
 		if (!docname || !table_field) {
 			df = this.get_docfield(fieldname);
 		} else {
-			console.warn(
-				"Do not use set_df_property for table fields, instead consider using frm.fields_dict[fieldname].grid.update_docfield_property"
-			);
 			const grid = this.fields_dict[fieldname].grid;
 			const filtered_fields = frappe.utils.filter_dict(grid.docfields, {
 				fieldname: table_field,

@@ -38,6 +38,10 @@ class ScheduledJobType(Document):
 						job_type=self.method,
 					)
 					return True
+				else:
+					frappe.logger("scheduler").error(
+						f"Skipped queueing {self.method} because it was found in queue for {frappe.local.site}"
+					)
 
 		return False
 

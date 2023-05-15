@@ -690,7 +690,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	highlight_locals() {
-		window.requestIdleCallback(() => {
+		const do_later = window.requestIdleCallback || window.setTimeout;
+		do_later(() => {
 			this.$result.find(".list-row-container").each((i, row) => {
 				const doc = this.data[i];
 				const local_doc = locals?.[this.doctype]?.[doc.name];
@@ -1109,7 +1110,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 					href="${this.get_form_link(doc)}"
 					title="${escaped_subject}"
 					data-doctype="${this.doctype}"
-					data-name="${doc.name}">
+					data-name="${escaped_subject}">
 					${subject}
 				</a>
 			</span>

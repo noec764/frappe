@@ -271,6 +271,12 @@ frappe.views.Workspace = class Workspace {
 		this.update_selected_sidebar(this.current_page, false); //remove selected from old page
 		this.update_selected_sidebar(page, true); //add selected on new page
 
+		if (!frappe.router.current_route[0]) {
+			frappe.router.current_route = !page.public
+				? ["Workspaces", "private", page.name]
+				: ["Workspaces", page.name];
+		}
+
 		this.show_page(page);
 	}
 
@@ -678,6 +684,7 @@ frappe.views.Workspace = class Workspace {
 			],
 			primary_action_label: __("Update"),
 			primary_action: (values) => {
+				values.title = frappe.utils.escape_html(values.title);
 				let is_title_changed = values.title != old_item.title;
 				let is_section_changed = values.is_public != old_item.public;
 				if (
@@ -995,6 +1002,7 @@ frappe.views.Workspace = class Workspace {
 			],
 			primary_action_label: __("Duplicate"),
 			primary_action: (values) => {
+				values.title = frappe.utils.escape_html(values.title);
 				if (!this.validate_page(values)) return;
 				d.hide();
 				frappe.call({

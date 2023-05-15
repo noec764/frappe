@@ -94,6 +94,7 @@ frappe.RoleEditor = class {
 		});
 
 		this.perm_dialog.$wrapper.find(".modal-dialog").css("max-width", "120vw");
+		this.perm_dialog.$wrapper.find(".modal-body").css("overflow", "overlay");
 	}
 	show() {
 		this.reset();
