@@ -162,7 +162,7 @@ frappe.ui.Slide = class Slide {
 
 	set_form_values(values) {
 		// bug fix: values were not correctly set
-		return this.form.set_values(values).then(async () => {
+		return this.form.set_values(values, true).then(async () => {
 			// await new Promise(f => setTimeout(f, 60));
 			await this.form.set_values(values);
 			this.refresh();
