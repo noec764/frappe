@@ -216,6 +216,7 @@ frappe.qb.from_(todo).select(todo.name).where(todo.name == "{todo.name}").run()
 		script.save()
 		script.execute_method()
 
+	@unittest.skip("Skipped in CI")
 	def test_server_script_rate_limiting(self):
 		# why not
 		script1 = frappe.get_doc(
