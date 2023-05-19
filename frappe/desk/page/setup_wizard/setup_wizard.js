@@ -29,18 +29,6 @@ frappe.setup = {
 			fn();
 		});
 	},
-
-	setup_telemetry_events() {
-		let me = this;
-		this.fields.filter(frappe.model.is_value_type).forEach((field) => {
-			me.get_input(field.fieldname).on("change", function () {
-				frappe.telemetry.capture(`${field.fieldname}_set`, "setup");
-				if (field.fieldname == "enable_telemetry" && !me.get_value("enable_telemetry")) {
-					frappe.telemetry.disable();
-				}
-			});
-		});
-	},
 };
 
 // Frappe slides settings
@@ -256,7 +244,6 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		super.make();
 		this.$container.addClass("setup-wizard-slide with-form");
 		this.setup_keyboard_nav();
-		this.setup_telemetry_events();
 	}
 
 	show_slide(id) {
@@ -464,7 +451,24 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 };
 
-frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {};
+frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
+	make() {
+		super.make();
+		this.setup_telemetry_events();
+	}
+
+	setup_telemetry_events() {
+		let me = this;
+		this.fields.filter(frappe.model.is_value_type).forEach((field) => {
+			me.get_input(field.fieldname).on("change", function () {
+				frappe.telemetry.capture(`${field.fieldname}_set`, "setup");
+				if (field.fieldname == "enable_telemetry" && !me.get_value("enable_telemetry")) {
+					frappe.telemetry.disable();
+				}
+			});
+		});
+	}
+};
 
 frappe.setup.utils = {
 	load_regional_data: function (slide, callback) {
