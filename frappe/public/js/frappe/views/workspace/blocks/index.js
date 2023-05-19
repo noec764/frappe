@@ -9,6 +9,7 @@ import Onboarding from "./onboarding";
 import QuickList from "./quick_list";
 import NumberCard from "./number_card";
 import SummaryCard from "./summary_card";
+import CustomBlock from "./custom_block";
 
 // import tunes
 import HeaderSize from "./header_size";
@@ -26,6 +27,7 @@ frappe.workspace_block.blocks = {
 	quick_list: QuickList,
 	number_card: NumberCard,
 	summary_card: SummaryCard,
+	custom_block: CustomBlock,
 };
 
 frappe.workspace_block.tunes = {
