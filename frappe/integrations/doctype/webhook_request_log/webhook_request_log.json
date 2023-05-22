@@ -6,10 +6,10 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "user",
   "headers",
   "data",
   "column_break_4",
+  "user",
   "url",
   "response"
  ],
@@ -56,7 +56,7 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-04-12 11:50:01.702862",
+ "modified": "2023-05-21 15:50:10.414002",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Webhook Request Log",
