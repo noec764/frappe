@@ -36,7 +36,7 @@
 {% set url = url if url.startswith('#') else url | abs_url %}
 {% if parent %}
 <li class="nav-item">
-	<a class="nav-link" href="{{ url }}"
+	<a class="nav-link" href="{{ url or '#' }}"
 		{% if item.open_in_new_tab %} target="_blank" {% endif %}>
 		{{ _(item.label) }}
 	</a>
@@ -77,7 +77,7 @@
 		{% for item in sidebar_items -%}
 		<li class="nav-item">
 			{% if item.type != 'input' %}
-				<a href="{{ item.route }}" class="nav-link {{ 'text-dark' if pathname==item.route else 'text-muted'}}"
+				<a href="{{ item.route or '#' }}" class="nav-link {{ 'text-dark' if pathname==item.route else 'text-muted'}}"
 					{% if item.target %}target="{{ item.target }}"{% endif %}>
 					{{ _(item.title or item.label) }}
 				</a>
