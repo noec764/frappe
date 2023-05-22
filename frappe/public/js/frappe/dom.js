@@ -32,35 +32,52 @@ frappe.dom = {
 		// execute the script globally
 		document.getElementsByTagName("head")[0].appendChild(el);
 	},
-	remove_script_and_style: function (txt) {
-		const evil_tags = ["script", "style", "noscript", "title", "meta", "base", "head"];
-		const regex = new RegExp(evil_tags.map((tag) => `<${tag}>.*<\\/${tag}>`).join("|"), "s");
-		if (!regex.test(txt)) {
+	/**
+	 * Remove script and style tags from HTML
+	 * @param {string} txt Unsafe HTML
+	 * @returns {string} Still unsafe HTML
+	 */
+	remove_script_and_style(txt, opts) {
+		if (!txt || !txt.includes("<")) {
 			// no evil tags found, skip the DOM method entirely!
 			return txt;
 		}
 
-		var div = document.createElement("div");
+		const div = document.createElement("div");
 		div.innerHTML = txt;
-		var found = false;
-		evil_tags.forEach(function (e) {
-			var elements = div.getElementsByTagName(e);
-			i = elements.length;
-			while (i--) {
-				found = true;
-				elements[i].parentNode.removeChild(elements[i]);
-			}
-		});
 
-		// remove links with rel="stylesheet"
-		var elements = div.getElementsByTagName("link");
-		var i = elements.length;
-		while (i--) {
-			if (elements[i].getAttribute("rel") == "stylesheet") {
-				found = true;
-				elements[i].parentNode.removeChild(elements[i]);
+		let found = false;
+
+		// remove script and style tags
+		const evil_tags = ["script", "style", "noscript", "title", "meta", "base", "head"];
+		const elements = div.querySelectorAll(evil_tags.join(","));
+		for (const element of elements) {
+			element.remove();
+			found = true;
+		}
+
+		// We would like to remove all attributes such as onclick but it's not possible because of DocField.link_onclick
+		const allElements = div.getElementsByTagName("*");
+		for (const element of allElements) {
+			for (const attribute of element.attributes) {
+				if (attribute.name.startsWith("on")) {
+					if (element.tagName === "A" && attribute.name === "onclick") {
+						// keep onclick on links
+						continue;
+					}
+					element.removeAttribute(attribute.name);
+					found = true;
+				}
 			}
 		}
+
+		// remove links with rel="stylesheet"
+		const matches = div.querySelectorAll("link[rel=stylesheet],link[rel^=pre]");
+		for (const element of matches) {
+			element.remove();
+			found = true;
+		}
+
 		if (found) {
 			return div.innerHTML;
 		} else {

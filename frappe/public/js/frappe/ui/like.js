@@ -33,19 +33,17 @@ frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
 			$btn.css("pointer-events", "auto");
 
 			if (!r.exc) {
-				// update in all local-buttons
-				var action_buttons = $(
-					'.like-action[data-name="' +
-						name.replace(/"/g, '"') +
-						'"][data-doctype="' +
-						doctype.replace(/"/g, '"') +
-						'"]'
-				);
-
-				if (add === "Yes") {
-					action_buttons.removeClass("not-liked").addClass("liked");
-				} else {
-					action_buttons.addClass("not-liked").removeClass("liked");
+				let selector = ".like-action";
+				selector += `[data-doctype=${JSON.stringify(doctype)}]`;
+				selector += `[data-name=${JSON.stringify(docname)}]`;
+				for (const likes of document.querySelectorAll(selector)) {
+					if (add === "Yes") {
+						likes.classList.remove("not-liked");
+						likes.classList.add("liked");
+					} else {
+						likes.classList.add("not-liked");
+						likes.classList.remove("liked");
+					}
 				}
 
 				// update in locals (form)
