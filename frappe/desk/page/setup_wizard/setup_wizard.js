@@ -385,6 +385,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			__("Starting Dodock ...")
 		).appendTo(this.parent);
 
+		this.set_setup_load_percent(0);
 		this.attach_abort_button();
 
 		if (this.current_slide) {
@@ -420,6 +421,31 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			<div class="progress">
 				<div class="progress-bar"></div>
 			</div>
+			<style>
+				@keyframes progress-bar-stripes {
+					50% { opacity: .3; }
+				}
+				.progress-chart--pending .progress {
+					--a: var(--primary);
+					background: var(--a);
+					animation: progress-bar-stripes 3s linear infinite;
+				}
+				@media not (prefers-reduced-motion: reduce) {
+					@keyframes progress-bar-stripes {
+						to { transform: translateX(37px); }
+					}
+					.progress-chart--pending {
+						overflow: hidden;
+						border-radius: var(--border-radius);
+					}
+					.progress-chart--pending .progress {
+						margin-left: -37px;
+						--b: rgba(255, 255, 255, 0.3);
+						background-image: repeating-linear-gradient(65deg, var(--a) 0px, var(--b) 1px, var(--b) 8px, var(--a) 9px, var(--a) 17px);
+						animation-duration: 0.8s;
+					}
+				}
+			</style>
 		</div>`;
 
 		return $(`<div class="mx-auto slides-default-style slides-wrapper setup-wizard-slide setup-in-progress">
@@ -434,9 +460,13 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	set_setup_complete_message(title, message) {
 		this.$working_state.find(".title").html(title);
 		this.$working_state.find(".setup-message").html(message);
+		this.set_setup_load_percent(100);
 	}
 
 	set_setup_load_percent(percent) {
+		this.$working_state
+			.find(".progress-chart")
+			.toggleClass("progress-chart--pending", percent <= 0);
 		this.$working_state.find(".progress-bar").css({ width: percent + "%" });
 	}
 };

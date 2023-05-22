@@ -61,7 +61,7 @@ $.extend(frappe, {
 					resolve(r.message);
 				},
 				error: (r) => {
-					reject(r.message);
+					reject(r);
 				},
 			});
 		});
@@ -177,12 +177,16 @@ $.extend(frappe, {
 			// }
 			try {
 				var err = JSON.parse(data.exc);
-				if ($.isArray(err)) {
+				if (Array.isArray(err)) {
 					err = err.join("\n");
 				}
-				console.error ? console.error(err) : console.log(err);
+				console.error(err);
 			} catch (e) {
 				console.log(data.exc);
+			}
+
+			if (typeof opts.error === "function") {
+				opts.error(data);
 			}
 		} else {
 			// if(opts.btn) {
