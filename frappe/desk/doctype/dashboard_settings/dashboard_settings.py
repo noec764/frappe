@@ -19,7 +19,7 @@ def create_dashboard_settings(user):
 	if not frappe.db.exists("Dashboard Settings", user):
 		doc = frappe.new_doc("Dashboard Settings")
 		doc.name = user
-		doc.insert(ignore_permissions=True)
+		doc.insert(ignore_permissions=True, ignore_if_duplicate=True)
 		frappe.db.commit()
 		return doc
 
