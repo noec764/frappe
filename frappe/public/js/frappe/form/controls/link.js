@@ -47,7 +47,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			// does not register, hence timeout
 			setTimeout(function () {
 				me.$link.toggle(false);
-			}, 150);
+			}, 250);
 		});
 		this.$input.attr("data-target", this.df.options);
 		this.input = this.$input.get(0);

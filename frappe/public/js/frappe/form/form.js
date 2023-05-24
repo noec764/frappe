@@ -1220,7 +1220,10 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe.re_route[frappe.router.get_sub_path()] = `${encodeURIComponent(
 			frappe.router.slug(this.doctype)
 		)}/${encodeURIComponent(name)}`;
-		!frappe._from_link && frappe.set_route("Form", this.doctype, name);
+		if (!frappe._from_link) {
+			frappe.route_flags.replace_route = true;
+			frappe.set_route("Form", this.doctype, name);
+		}
 	}
 
 	// ACTIONS
