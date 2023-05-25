@@ -225,6 +225,7 @@ class UserPermissions:
 				"send_me_a_copy",
 				"user_type",
 				"default_workspace",
+				"onboarding_status",
 			],
 			as_dict=True,
 		)
@@ -238,6 +239,7 @@ class UserPermissions:
 			)
 
 		d.name = self.name
+		d.onboarding_status = frappe.parse_json(d.onboarding_status)
 		d.roles = self.get_roles()
 		d.defaults = self.get_defaults()
 
