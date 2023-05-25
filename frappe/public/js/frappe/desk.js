@@ -36,7 +36,6 @@ frappe.Application = class Application {
 		this.load_user_permissions();
 		this.make_nav_bar();
 		this.set_favicon();
-		this.setup_analytics();
 		this.add_browser_class();
 		this.setup_energy_point_listeners();
 		this.setup_copy_doc_listener();
@@ -515,18 +514,6 @@ frappe.Application = class Application {
 		frappe.call({
 			method: "frappe.utils.change_log.show_update_popup",
 		});
-	}
-
-	setup_analytics() {
-		if (window.mixpanel) {
-			window.mixpanel.identify(frappe.session.user);
-			window.mixpanel.people.set({
-				$first_name: frappe.boot.user.first_name,
-				$last_name: frappe.boot.user.last_name,
-				$created: frappe.boot.user.creation,
-				$email: frappe.session.user,
-			});
-		}
 	}
 
 	add_browser_class() {
