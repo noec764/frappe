@@ -198,19 +198,14 @@ frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
 				frappe.wizard = new frappe.setup.SetupWizard(wizard_settings);
 				frappe.setup.run_event("after_load");
 				// frappe.wizard.values = test_values_edu;
-				let route = frappe.get_route();
-				if (route) {
-					frappe.wizard.show_slide(route[1]);
-				}
+				frappe.wizard.show_slide(cint(frappe.get_route()[1]));
 			},
 		});
 	});
 };
 
 frappe.pages["setup-wizard"].on_page_show = function () {
-	if (frappe.get_route()[1]) {
-		frappe.wizard && frappe.wizard.show_slide(frappe.get_route()[1]);
-	}
+	frappe.wizard && frappe.wizard.show_slide(cint(frappe.get_route()[1]));
 };
 
 frappe.setup.on("before_load", function () {
@@ -239,7 +234,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	show_slide(id) {
 		super.show_slide(id);
-		frappe.set_route(this.page_name, id + "");
+		frappe.set_route(this.page_name, cstr(id));
 	}
 
 	translate_buttons() {
