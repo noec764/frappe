@@ -15,7 +15,9 @@ frappe.ui.form.Control = class BaseControl {
 			.attr("data-fieldname", this.df.fieldname);
 		this.wrapper = this.$wrapper.get(0);
 		this.wrapper.fieldobj = this; // reference for event handlers
-		this.tooltip = $(`<span class="tooltip-content" style="display: none;">${this.df.fieldname}</span>`);
+		this.tooltip = $(
+			`<span class="tooltip-content" style="display: none;">${this.df.fieldname}</span>`
+		);
 		this.$wrapper.append(this.tooltip);
 
 		this.tooltip.on("click", (e) => {
@@ -126,7 +128,7 @@ frappe.ui.form.Control = class BaseControl {
 			status === "Read" &&
 			!this.only_input &&
 			is_null(value) &&
-			!in_list(["HTML", "Image", "Button"], this.df.fieldtype)
+			!in_list(["HTML", "Image", "Button", "Geolocation"], this.df.fieldtype)
 		) {
 			// eslint-disable-next-line
 			if (explain) console.log("By Hide Read-only, null fields: None"); // eslint-disable-line no-console
