@@ -6,6 +6,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	make_input() {
 		super.make_input();
+
 		this.apply_configuration();
 
 		this.input.setAttribute("inputmode", "numeric");
@@ -75,6 +76,15 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	set_formatted_input(value) {
 		super.set_formatted_input(value);
 		this._set_is_formatted(true);
+	}
+
+	set_disp_area(value) {
+		if (this.slider_disp_bar && this.slider_disp_val) {
+			this.slider_disp_bar.value = value;
+			this.slider_disp_val.innerText = this.format_for_input(value);
+		} else {
+			super.set_disp_area(value);
+		}
 	}
 
 	/** @param {boolean} is_formatted */
@@ -176,17 +186,6 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		}
 	}
 
-	// refresh() {
-	// 	super.refresh?.();
-	// 	if (this.input) {
-	// 		if (this.df?.reqd) {
-	// 			this.input.setAttribute("required", true);
-	// 		} else {
-	// 			this.input.removeAttribute("required");
-	// 		}
-	// 	}
-	// }
-
 	refresh_input() {
 		super.refresh_input();
 		this.slider_refresh();
@@ -194,6 +193,12 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	slider_setup() {
 		this.slider_input = $(`<input type="range" />`).insertBefore(this.input)[0];
+
+		// Setup styles
+		this.input_area.classList.add("control-with-slider");
+
+		// Setup attributes
+		this.slider_set_attributes();
 
 		// Setup event listeners
 		this.input.addEventListener("input", () => {
@@ -203,41 +208,64 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 			this.set_value(this.slider_input.value);
 		});
 
-		// Setup styles
-		this.input_area.style.display = "flex";
-		this.input_area.style.alignItems = "center";
-		this.input_area.style.gap = "0.5rem";
-		this.input.style.flex = "1";
-		this.slider_input.style.flex = "3";
-
-		// Setup attributes
-		this.slider_set_attributes();
-
 		// Set initial value AFTER setting min/max/step
 		this.slider_input.value = this.value;
 	}
 
-	slider_destroy() {
-		this.input.classList.remove("input-xs");
-		this.slider_input.remove();
-		this.slider_input = null;
-		this.input.style.flex = "";
-		this.input_area.style.display = "";
+	slider_readonly_setup() {
+		if (this.disp_area) {
+			this.disp_area.classList.remove("like-disabled-input");
+			this.disp_area.innerHTML = "<meter></meter><div></div>";
+			this.slider_disp_val = this.disp_area.querySelector("div");
+			this.slider_disp_val.classList.add("like-disabled-input");
+			this.slider_disp_bar = this.disp_area.querySelector("meter");
+		}
 	}
 
-	slider_set_attributes() {
+	slider_destroy() {
+		this.slider_input.remove();
+		this.slider_input = null;
+		this.input_area.classList.remove("control-with-slider");
+	}
+
+	slider_readonly_destroy() {
+		this.disp_area?.classList.remove("control-with-slider");
+		this.slider_disp_val?.remove();
+		this.slider_disp_val = null;
+		this.slider_disp_bar?.remove();
+		this.slider_disp_bar = null;
+	}
+
+	slider_set_attributes(slider_input = this.slider_input) {
 		if (typeof this.df.min === "number") {
-			this.slider_input.setAttribute("min", this.df.min);
+			slider_input.setAttribute("min", this.df.min);
 		} else {
-			this.slider_input.setAttribute("min", 0);
+			slider_input.setAttribute("min", 0);
 		}
 
 		if (typeof this.df.max === "number") {
-			this.slider_input.setAttribute("max", this.df.max);
+			slider_input.setAttribute("max", this.df.max);
 		} else {
-			this.slider_input.setAttribute("max", 100);
+			slider_input.setAttribute("max", 100);
 		}
 
+		const step = this._get_slider_step_size_from_precision();
+		if (step > 0) {
+			slider_input.setAttribute("step", step);
+		} else {
+			slider_input.removeAttribute("step");
+		}
+	}
+
+	slider_readonly_refresh() {
+		if (this.disp_area && this.slider_disp_val && this.slider_disp_bar) {
+			this.disp_area.classList.add("control-with-slider");
+			this.slider_set_attributes(this.slider_disp_bar);
+			this.slider_disp_bar.style.height = "1.41em";
+		}
+	}
+
+	_get_slider_step_size_from_precision() {
 		let step = 0;
 		const precision = cint(this.get_precision(), null);
 		if (typeof precision === "number" && precision >= 0) {
@@ -250,22 +278,25 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 		if (typeof this.df.step === "number") {
 			step = this.df.step;
 		}
-		if (step > 0) {
-			this.slider_input.setAttribute("step", step);
-		} else {
-			this.slider_input.removeAttribute("step");
-		}
+		return step;
 	}
 
 	slider_refresh() {
 		if (this.df.with_slider) {
 			if (this.slider_input) {
 				this.slider_set_attributes();
+				this.slider_readonly_refresh();
 			} else {
 				this.slider_setup();
+				this.slider_readonly_setup();
 			}
-		} else if (this.slider_input) {
-			this.slider_destroy();
+		} else {
+			if (this.slider_input) {
+				this.slider_destroy();
+			}
+			if (this.disp_area) {
+				this.slider_readonly_destroy();
+			}
 		}
 	}
 };
