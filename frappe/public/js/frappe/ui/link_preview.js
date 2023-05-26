@@ -190,7 +190,7 @@ frappe.ui.LinkPreview = class {
 		a.href = this.href;
 		a.innerText = __(preview_data.preview_title);
 
-		return popover_content;
+		return div.innerHTML;
 	}
 
 	get_id_html(preview_data) {
