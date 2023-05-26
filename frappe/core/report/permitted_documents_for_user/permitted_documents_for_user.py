@@ -54,6 +54,7 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	user_perms = frappe.utils.user.UserPermissions(user)
 	user_perms.build_permissions()
 	can_read = user_perms.can_read  # Does not include child tables
+	include_single_doctypes = filters.get("include_single_doctypes")
 
 	single_doctypes = []
 	if filters.get("no_single_doctypes"):
@@ -61,7 +62,9 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 
 	out = []
 	for dt in can_read:
-		if txt.lower().replace("%", "") in _(dt).lower() and dt not in single_doctypes:
+		if txt.lower().replace("%", "") in dt.lower() and (
+			include_single_doctypes or dt not in single_doctypes
+		):
 			out.append([dt])
 
 	return out
