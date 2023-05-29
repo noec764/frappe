@@ -1,6 +1,6 @@
 import frappe
 
-from ..role import desk_properties
+from ..role import desk_properties, STANDARD_ROLES
 
 
 def execute():
@@ -11,7 +11,7 @@ def execute():
 		if not role.desk_access:
 			continue
 
-		if role.name in ["All", "Guest", "Employee Self Service"]:
+		if role.name in STANDARD_ROLES:
 			continue
 
 		role_doc = frappe.get_doc("Role", role.name)
