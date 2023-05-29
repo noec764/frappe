@@ -50,17 +50,17 @@ class FormBuilder {
 			this.store.reset_changes();
 		});
 
-		this.go_to_doctype_list_btn = this.page.add_menu_item(
+		this.go_to_doctype_list_btn = this.page.add_button(
 			__("Go to {0} List", [__(this.doctype)]),
 			() => {
 				window.open(`/app/${frappe.router.slug(this.doctype)}`);
 			}
 		);
 
-		this.customize_form_btn = this.page.add_menu_item(__("Switch to Customize Form"), () => {
+		this.customize_form_btn = this.page.add_menu_item(__("Switch to Customize"), () => {
 			frappe.set_route("form-builder", this.doctype, "customize");
 		});
-		this.doctype_form_btn = this.page.add_menu_item(__("Switch to DocType Form"), () => {
+		this.doctype_form_btn = this.page.add_menu_item(__("Switch to DocType"), () => {
 			frappe.set_route("form-builder", this.doctype);
 		});
 
@@ -106,29 +106,39 @@ class FormBuilder {
 				this.reset_changes_btn.hide();
 			}
 
-			// Prevent data loss because of unsaved changes
-			this.customize_form_btn.toggleClass("disabled", this.store.dirty);
-			this.doctype_form_btn.toggleClass("disabled", this.store.dirty);
-			this.go_to_doctype_btn.toggleClass("disabled", this.store.dirty);
-			this.go_to_customize_form_btn.toggleClass("disabled", this.store.dirty);
+			// hide all buttons
+			this.go_to_doctype_list_btn.hide();
+			this.customize_form_btn.hide();
+			this.doctype_form_btn.hide();
+			this.go_to_doctype_btn.hide();
+			this.go_to_customize_form_btn.hide();
 
-			// toggle doctype / customize form btn based on url
-			this.customize_form_btn.toggle(!this.store.is_customize_form);
-			this.go_to_doctype_btn.toggle(!this.store.is_customize_form);
-			this.doctype_form_btn.toggle(this.store.is_customize_form);
-			this.go_to_customize_form_btn.toggle(this.store.is_customize_form);
+			this.page.menu_btn_group.show();
+			let hide_menu = true;
 
-			// hide customize form & Go to customize form btn
+			// show customize form & Go to customize form btn
 			if (
 				this.store.doc &&
-				(this.store.doc.custom ||
-					this.store.doc.issingle ||
-					in_list(frappe.model.core_doctypes_list, this.doctype))
+				!this.store.doc.custom &&
+				!this.store.doc.issingle &&
+				!this.store.is_customize_form &&
+				!in_list(frappe.model.core_doctypes_list, this.doctype)
 			) {
-				this.customize_form_btn.hide();
-				if (this.doctype != "Customize Form") {
-					this.go_to_customize_form_btn.hide();
-				}
+				this.customize_form_btn.show();
+				this.go_to_customize_form_btn.show();
+				hide_menu = false;
+			}
+
+			// show doctype form & Go to doctype form btn
+			if (
+				this.store.doc &&
+				!this.store.doc.custom &&
+				!this.store.doc.issingle &&
+				this.store.is_customize_form
+			) {
+				this.doctype_form_btn.show();
+				this.go_to_doctype_btn.show();
+				hide_menu = false;
 			}
 
 			// show Go to {0} List or Go to {0} button
@@ -137,7 +147,11 @@ class FormBuilder {
 					? __("Go to {0}", [__(this.doctype)])
 					: __("Go to {0} List", [__(this.doctype)]);
 
-				this.go_to_doctype_list_btn.text(label);
+				this.go_to_doctype_list_btn.text(label).show();
+			}
+
+			if (hide_menu && window.matchMedia("(min-device-width: 992px)").matches) {
+				this.page.menu_btn_group.hide();
 			}
 
 			// toggle preview btn text
