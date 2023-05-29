@@ -128,9 +128,26 @@ select.form-control {
 	}
 
 	.link-btn {
-		@extend .action-btn;
-		background-color: none;
-		display: none;
+		position: absolute;
+		z-index: 3;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		height: 100%;
+		min-width: 2.5em;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		.icon {
+			transition: transform 100ms ease;
+			transform-origin: center;
+		}
+
+		&:hover:not(:active) > .icon {
+			transform: scale(1.2);
+		}
 	}
 }
 
