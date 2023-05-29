@@ -119,7 +119,6 @@ has_permission = {
 	"Event": "frappe.desk.doctype.event.event.has_permission",
 	"ToDo": "frappe.desk.doctype.todo.todo.has_permission",
 	"User": "frappe.core.doctype.user.user.has_permission",
-	"Note": "frappe.desk.doctype.note.note.has_permission",
 	"Dashboard Chart": "frappe.desk.doctype.dashboard_chart.dashboard_chart.has_permission",
 	"Number Card": "frappe.desk.doctype.number_card.number_card.has_permission",
 	"Kanban Board": "frappe.desk.doctype.kanban_board.kanban_board.has_permission",
@@ -213,7 +212,15 @@ scheduler_events = {
 			"frappe.oauth.delete_oauth2_data",
 			"frappe.website.doctype.web_page.web_page.check_publish_status",
 			"frappe.twofactor.delete_all_barcodes_for_users",
-		]
+		],
+		# Hourly but offset by 30 minutes
+		# "30 * * * *": [
+		#
+		# ],
+		# Daily but offset by 45 minutes
+		"45 0 * * *": [
+			"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
+		],
 	},
 	"all": [
 		"frappe.email.queue.flush",
@@ -247,7 +254,6 @@ scheduler_events = {
 		"frappe.automation.doctype.auto_repeat.auto_repeat.set_auto_repeat_as_completed",
 		"frappe.email.doctype.unhandled_email.unhandled_email.remove_old_unhandled_emails",
 		"frappe.core.doctype.prepared_report.prepared_report.delete_expired_prepared_reports",
-		"frappe.core.doctype.log_settings.log_settings.run_log_clean_up",
 		"frappe.email.doctype.email_group.email_group.auto_update_email_groups",
 	],
 	"daily_long": [

@@ -255,15 +255,34 @@ h2 {
 
 .btn-group {
 	.btn {
-		box-shadow: none;
-		outline: 1px solid var(--btn-group-border-color);
+		box-shadow: 0 0 0 1px var(--btn-group-border-color);
 
 		&:not(:first-child) {
 			margin-left: 1px;
 		}
 
 		&:focus {
-			outline: 2px solid var(--dark-border-color);
+			box-shadow: 0 0 0 2px var(--dark-border-color);
+		}
+	}
+}
+
+.select-group-btn {
+	.dropdown-toggle-split::after {
+		display: none;
+	}
+
+	.dropdown-item {
+		.tick-icon {
+			visibility: hidden;
+
+			&.selected {
+				visibility: visible;
+			}
+		}
+
+		.item-label {
+			font-weight: 500;
 		}
 	}
 }

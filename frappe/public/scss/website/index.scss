@@ -146,8 +146,7 @@
 }
 
 .breadcrumb-item {
-	+ .breadcrumb-item
-		{
+	+ .breadcrumb-item {
 		font-size: $font-size-sm;
 		&::before {
 			content: #{"/*!rtl:var(--left-arrow-svg);*/"}var(--right-arrow-svg);
@@ -329,28 +328,7 @@ h5.modal-title {
 	font-size: $font-size-sm;
 }
 
-.frappe-control[data-fieldtype="Select"] .control-input {
-	position: relative;
 
-	select {
-		appearance: none;
-		/* for Firefox */
-		-moz-appearance: none;
-		/* for Chrome */
-		-webkit-appearance: none;
-	}
-
-	.icon {
-		position: absolute;
-		top: 0;
-		right: 8px;
-		height: 100%;
-		pointer-events: none;
-		use {
-			stroke: var(--text-muted);
-		}
-	}
-}
 
 .logged-in > .nav-link {
 	max-width: 200px;

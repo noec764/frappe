@@ -2,9 +2,7 @@ import frappe
 from frappe.utils.safe_exec import safe_exec
 
 
-def safe_block_eval(
-	script: str, _globals=None, _locals=None, output_var=None, restrict_commit_rollback=False
-):
+def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, **kwargs):
 	"""Evaluate a block of code and return the result.
 
 	Allows `return` statements and `yield` expressions in the code to make it easier to write code that should return a value.
@@ -23,7 +21,7 @@ def safe_block_eval(
 	output_var = output_var or "evaluated_code_output_" + frappe.generate_hash(length=5)
 	_locals = _locals or {}
 	script = _wrap_in_function(script, output_var=output_var, local_vars=_locals)
-	safe_exec(script, _globals, _locals)
+	safe_exec(script, _globals, _locals, **kwargs)
 	return _locals[output_var]
 
 

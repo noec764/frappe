@@ -112,7 +112,7 @@ frappe.setup.get_slides_settings = () => [
 	{
 		// Profile slide
 		name: "user",
-		title: __("Let's setup your account"),
+		title: __("Let's set up your account"),
 		icon: "far fa-user",
 		fields: [
 			{
@@ -164,12 +164,6 @@ frappe.setup.get_slides_settings = () => [
 			if (frappe.setup.data.email) {
 				let email = frappe.setup.data.email;
 				slide.form.fields_dict.email.set_input(email);
-				if (frappe.get_gravatar(email, 200)) {
-					let $attach_user_image = slide.form.fields_dict.attach_user_image.$wrapper;
-					$attach_user_image.find(".missing-image").toggle(false);
-					$attach_user_image.find("img").attr("src", frappe.get_gravatar(email, 200));
-					$attach_user_image.find(".img-container").toggle(true);
-				}
 			}
 		},
 	},
@@ -204,19 +198,14 @@ frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
 				frappe.wizard = new frappe.setup.SetupWizard(wizard_settings);
 				frappe.setup.run_event("after_load");
 				// frappe.wizard.values = test_values_edu;
-				let route = frappe.get_route();
-				if (route) {
-					frappe.wizard.show_slide(route[1]);
-				}
+				frappe.wizard.show_slide(cint(frappe.get_route()[1]));
 			},
 		});
 	});
 };
 
 frappe.pages["setup-wizard"].on_page_show = function () {
-	if (frappe.get_route()[1]) {
-		frappe.wizard && frappe.wizard.show_slide(frappe.get_route()[1]);
-	}
+	frappe.wizard && frappe.wizard.show_slide(cint(frappe.get_route()[1]));
 };
 
 frappe.setup.on("before_load", function () {
@@ -245,7 +234,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 
 	show_slide(id) {
 		super.show_slide(id);
-		frappe.set_route(this.page_name, id + "");
+		frappe.set_route(this.page_name, cstr(id));
 	}
 
 	translate_buttons() {
@@ -391,6 +380,7 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			__("Starting Dodock ...")
 		).appendTo(this.parent);
 
+		this.set_setup_load_percent(0);
 		this.attach_abort_button();
 
 		if (this.current_slide) {
@@ -426,6 +416,31 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 			<div class="progress">
 				<div class="progress-bar"></div>
 			</div>
+			<style>
+				@keyframes progress-bar-stripes {
+					50% { opacity: .3; }
+				}
+				.progress-chart--pending .progress {
+					--a: var(--primary);
+					background: var(--a);
+					animation: progress-bar-stripes 3s linear infinite;
+				}
+				@media not (prefers-reduced-motion: reduce) {
+					@keyframes progress-bar-stripes {
+						to { transform: translateX(37px); }
+					}
+					.progress-chart--pending {
+						overflow: hidden;
+						border-radius: var(--border-radius);
+					}
+					.progress-chart--pending .progress {
+						margin-left: -37px;
+						--b: rgba(255, 255, 255, 0.3);
+						background-image: repeating-linear-gradient(65deg, var(--a) 0px, var(--b) 1px, var(--b) 8px, var(--a) 9px, var(--a) 17px);
+						animation-duration: 0.8s;
+					}
+				}
+			</style>
 		</div>`;
 
 		return $(`<div class="mx-auto slides-default-style slides-wrapper setup-wizard-slide setup-in-progress">
@@ -440,9 +455,13 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	set_setup_complete_message(title, message) {
 		this.$working_state.find(".title").html(title);
 		this.$working_state.find(".setup-message").html(message);
+		this.set_setup_load_percent(100);
 	}
 
 	set_setup_load_percent(percent) {
+		this.$working_state
+			.find(".progress-chart")
+			.toggleClass("progress-chart--pending", percent <= 0);
 		this.$working_state.find(".progress-bar").css({ width: percent + "%" });
 	}
 };

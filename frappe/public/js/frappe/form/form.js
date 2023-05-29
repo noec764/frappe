@@ -1224,7 +1224,10 @@ frappe.ui.form.Form = class FrappeForm {
 		frappe.re_route[frappe.router.get_sub_path()] = `${encodeURIComponent(
 			frappe.router.slug(this.doctype)
 		)}/${encodeURIComponent(name)}`;
-		!frappe._from_link && frappe.set_route("Form", this.doctype, name);
+		if (!frappe._from_link) {
+			frappe.route_flags.replace_route = true;
+			frappe.set_route("Form", this.doctype, name);
+		}
 	}
 
 	// ACTIONS
@@ -2027,7 +2030,8 @@ frappe.ui.form.Form = class FrappeForm {
 		return new Promise((resolve) => {
 			frappe.model.with_doctype(reference_doctype, () => {
 				frappe.get_meta(reference_doctype).fields.map((df) => {
-					filter_function(df) && options.push({ label: df.label, value: df.fieldname });
+					filter_function(df) &&
+						options.push({ label: df.label || df.fieldname, value: df.fieldname });
 				});
 				options &&
 					this.set_df_property(

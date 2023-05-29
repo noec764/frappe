@@ -408,8 +408,9 @@ input.list-check-all {
 	}
 
 	.filter-button.btn-primary-light {
-		color: var(--text-on-blue);
-		outline: 1px solid var(--bg-dark-blue);
+		// color: var(--text-on-blue);
+		// box-shadow: 0 0 0 1px var(--bg-dark-blue);
+		--btn-shadow: 0 0 0 0px transparent !important;
 		z-index: 1;
 	}
 

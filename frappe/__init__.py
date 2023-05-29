@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional
+from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional, TypeAlias, overload
 
 import click
 from werkzeug.local import Local, release_local
@@ -35,7 +35,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.33.0"
+__version__ = "3.34.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -1153,7 +1153,42 @@ def get_cached_value(
 	return values
 
 
-def get_doc(*args, **kwargs) -> "Document":
+_SingleDocument: TypeAlias = "Document"
+_NewDocument: TypeAlias = "Document"
+
+
+@overload
+def get_doc(document: "Document", /) -> "Document":
+	pass
+
+
+@overload
+def get_doc(doctype: str, /) -> _SingleDocument:
+	"""Retrieve Single DocType from DB, doctype must be positional argument."""
+	pass
+
+
+@overload
+def get_doc(doctype: str, name: str, /, for_update: bool | None = None) -> "Document":
+	"""Retrieve DocType from DB, doctype and name must be positional argument."""
+	pass
+
+
+@overload
+def get_doc(**kwargs: dict) -> "_NewDocument":
+	"""Initialize document from kwargs.
+	Not recommended. Use `frappe.new_doc` instead."""
+	pass
+
+
+@overload
+def get_doc(documentdict: dict) -> "_NewDocument":
+	"""Create document from dict.
+	Not recommended. Use `frappe.new_doc` instead."""
+	pass
+
+
+def get_doc(*args, **kwargs):
 	"""Return a `frappe.model.document.Document` object of the given type and name.
 
 	:param arg1: DocType name as string **or** document JSON.

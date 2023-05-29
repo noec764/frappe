@@ -153,6 +153,7 @@ def get_safe_globals():
 			sendmail=frappe.sendmail,
 			get_print=frappe.get_print,
 			attach_print=frappe.attach_print,
+			is_desk=frappe.utils.is_desk,
 			user=user,
 			get_roles=frappe.get_roles,
 			get_fullname=frappe.utils.get_fullname,
