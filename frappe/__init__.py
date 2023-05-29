@@ -11,7 +11,7 @@ import json
 import os
 import re
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, Optional, TypeAlias, overload
+from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional, TypeAlias, overload
 
 import click
 from werkzeug.local import Local, release_local
