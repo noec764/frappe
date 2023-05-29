@@ -25,7 +25,7 @@ def get_config(name):
 
 class DashboardChartSource(Document):
 	def on_update(self):
-		if frappe.conf.developer_mode and not frappe.flags.in_migrate:
+		if frappe.conf.developer_mode and not frappe.flags.in_migrate and not frappe.flags.in_install:
 			export_to_files(
 				record_list=[[self.doctype, self.name]], record_module=self.module, create_init=True
 			)
