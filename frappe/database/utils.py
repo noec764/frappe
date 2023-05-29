@@ -23,7 +23,7 @@ NestedSetHierarchy = (
 	"descendants of",
 	"not ancestors of",
 	"not descendants of",
-	"equals or descendants of",
+	"descendants of (inclusive)",
 )
 
 
