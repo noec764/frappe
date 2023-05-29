@@ -133,7 +133,7 @@ frappe.ui.form.FormTour = class FormTour {
 			}
 		});
 
-		if (this.tour.save_on_complete) {
+		if (this.tour.save_on_complete && this.frm.is_dirty()) {
 			this.add_step_to_save();
 		}
 	}
