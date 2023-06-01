@@ -1556,7 +1556,6 @@ class Document(BaseDocument):
 			frappe.throw(
 				_("This document is currently queued for execution. Please try again"),
 				title=_("Document Queued"),
-				indicator="red",
 			)
 
 		return enqueue(
