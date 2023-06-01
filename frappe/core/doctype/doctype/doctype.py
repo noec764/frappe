@@ -1403,7 +1403,7 @@ def validate_fields(meta):
 			frappe.throw(
 				_(
 					"DocType <b>{0}</b> provided for the field <b>{1}</b> must have atleast one Link field"
-				).format(doctype, docfield.fieldname),
+				).format(_(doctype), docfield.fieldname),
 				frappe.ValidationError,
 			)
 

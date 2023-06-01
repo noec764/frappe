@@ -91,7 +91,7 @@ def export_customizations(
 		with open(path, "w") as f:
 			f.write(frappe.as_json(custom))
 
-		frappe.msgprint(_("Customizations for <b>{0}</b> exported to:<br>{1}").format(doctype, path))
+		frappe.msgprint(_("Customizations for <b>{0}</b> exported to:<br>{1}").format(_(doctype), path))
 		return path
 
 
@@ -207,8 +207,8 @@ def sync_customizations_for_doctype(data: dict, folder: str, filename: str = "")
 				sync_single_doctype(doc_type)
 
 	if not frappe.db.exists("DocType", doctype):
-		print(_("DocType {0} does not exist.").format(doctype))
-		print(_("Skipping fixture syncing for doctype {0} from file {1}").format(doctype, filename))
+		print(_("DocType {0} does not exist.").format(_(doctype)))
+		print(_("Skipping fixture syncing for doctype {0} from file {1}").format(_(doctype), filename))
 		return
 
 	print(f"Updating customizations for {doctype}")
@@ -271,7 +271,7 @@ def get_doctype_module(doctype: str) -> str:
 	if module_name := doctype_module_map.get(doctype):
 		return module_name
 	else:
-		frappe.throw(_("DocType {} not found").format(doctype), exc=frappe.DoesNotExistError)
+		frappe.throw(_("DocType {} not found").format(_(doctype)), exc=frappe.DoesNotExistError)
 
 
 def load_doctype_module(doctype, module=None, prefix="", suffix=""):

@@ -2423,7 +2423,7 @@ def get_version(doctype, name, limit=None, head=False, raise_err=True):
 		return versions
 	else:
 		if raise_err:
-			raise ValueError(_("{0} has no versions tracked.").format(doctype))
+			raise ValueError(_("{0} has no versions tracked.").format(_(doctype)))
 
 
 @whitelist(allow_guest=True)
