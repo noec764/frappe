@@ -24,10 +24,12 @@ frappe.ui.OnboardingTour = class OnboardingTour {
 							step.popover.node.offsetLeft + step.options.step_info.offset_x
 						}px`;
 					}
-					if (step.options.step_info?.offset_y) {
-						step.popover.node.style.top = `${
-							step.popover.node.offsetTop + step.options.step_info.offset_y
+					if (step.popover.node.offsetLeft < 0) {
+						step.popover.node.style.minWidth = "200px";
+						step.popover.node.style.maxWidth = `${
+							350 + step.popover.node.offsetLeft
 						}px`;
+						step.popover.node.style.left = "0px";
 					}
 					if (step.popover.closeBtnNode) {
 						step.popover.closeBtnNode.onclick = () => {
