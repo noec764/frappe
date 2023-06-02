@@ -166,8 +166,6 @@ class Engine:
 		elif not self.validate_filters and (
 			dynamic_field := DynamicTableField.parse(field, self.doctype)
 		):
-			pass
-		elif dynamic_field := DynamicTableField.parse(field, self.doctype):
 			# apply implicit join if link field's field is referenced
 			self.query = dynamic_field.apply_join(self.query)
 			_field = dynamic_field.field
