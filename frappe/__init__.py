@@ -10,6 +10,7 @@ import inspect
 import json
 import os
 import re
+import unicodedata
 import warnings
 from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional, TypeAlias, overload
 
@@ -2313,6 +2314,7 @@ def bold(text):
 def safe_eval(code, eval_globals=None, eval_locals=None):
 	"""A safer `eval`"""
 	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
+	code = unicodedata.normalize("NFKC", code)
 
 	UNSAFE_ATTRIBUTES = {
 		# Generator Attributes
