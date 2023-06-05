@@ -973,7 +973,6 @@ class Database:
 
 	def commit(self):
 		"""Commit current transaction. Calls SQL `COMMIT`."""
-		# Invalidated by a commit.
 		self.before_rollback.reset()
 		self.after_rollback.reset()
 
