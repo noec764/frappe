@@ -395,8 +395,6 @@ class User(Document):
 		from frappe.utils import get_url
 		from frappe.utils.user import get_user_fullname
 
-		content = None
-
 		created_by = get_user_fullname(frappe.session["user"])
 		if created_by == "Guest":
 			created_by = "Administrator"
@@ -411,13 +409,6 @@ class User(Document):
 		}
 
 		args.update(add_args)
-
-		if custom_template:
-			template = None
-			subject = frappe.render_template(subject, args)
-			content = frappe.render_template(
-				frappe.db.get_value("Email Template", custom_template, "response"), args
-			)
 
 		sender = (
 			frappe.session.user not in STANDARD_USERS and get_formatted_email(frappe.session.user) or None
@@ -437,7 +428,6 @@ class User(Document):
 			template=template if not custom_template else None,
 			content=content if custom_template else None,
 			args=args,
-			content=content,
 			header=[subject, "green"],
 			delayed=(not now) if now is not None else self.flags.delay_emails,
 			retry=3,
