@@ -17,6 +17,7 @@ from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.rate_limiter import rate_limit
 from frappe.translate import extract_messages_from_code, make_dict_from_messages
 from frappe.utils import cstr, dict_with_keys, strip_html
+from frappe.utils.caching import redis_cache
 from frappe.utils.jinja import render_template
 from frappe.website.utils import get_boot_data, get_comment_list, get_sidebar_items
 from frappe.website.website_generator import WebsiteGenerator
@@ -795,3 +796,8 @@ def get_link_options(web_form_name, doctype, allow_read_on_all_link_options=Fals
 		raise frappe.PermissionError(
 			_("You don't have permission to access the {0} DocType.").format(_(doctype))
 		)
+
+
+@redis_cache(ttl=60 * 60)
+def get_published_web_forms() -> dict[str, str]:
+	return frappe.get_all("Web Form", ["name", "route", "modified"], {"published": 1})
