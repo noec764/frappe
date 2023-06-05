@@ -17,7 +17,14 @@ from frappe.email.receive import EmailServer, InboundMail, SentEmailInInboxError
 from frappe.email.smtp import SMTPServer
 from frappe.email.utils import get_port
 from frappe.model.document import Document
-from frappe.utils import cint, comma_or, cstr, parse_addr, validate_email_address
+from frappe.utils import (
+	cint,
+	comma_or,
+	cstr,
+	is_a_noreply_email_address,
+	parse_addr,
+	validate_email_address,
+)
 from frappe.utils.background_jobs import enqueue, get_jobs
 from frappe.utils.jinja import render_template
 from frappe.utils.user import get_system_managers
@@ -544,6 +551,9 @@ class EmailAccount(Document):
 		from frappe.core.doctype.communication.email import set_incoming_outgoing_accounts
 
 		if self.enable_auto_reply:
+			if is_a_noreply_email_address(email.from_email):
+				return
+
 			set_incoming_outgoing_accounts(communication)
 
 			unsubscribe_message = (self.send_unsubscribe_message and _("Leave this conversation")) or ""
