@@ -7,6 +7,7 @@ from jinja2.exceptions import TemplateSyntaxError
 import frappe
 from frappe import _
 from frappe.utils import get_datetime, now, quoted, strip_html
+from frappe.utils.caching import redis_cache
 from frappe.utils.jinja import render_template
 from frappe.utils.safe_exec import safe_exec
 from frappe.website.doctype.website_slideshow.website_slideshow import get_slideshow
@@ -33,11 +34,9 @@ class WebPage(WebsiteGenerator):
 	def get_feed(self):
 		return self.title
 
-	def on_update(self):
-		super().on_update()
-
-	def on_trash(self):
-		super().on_trash()
+	def clear_cache(self):
+		super().clear_cache()
+		get_dynamic_web_pages.clear_cache()
 
 	def get_context(self, context):
 		context.main_section = get_html_content_based_on_type(self, "main_section", self.content_type)
@@ -255,3 +254,10 @@ def extract_script_and_style_tags(html):
 		style.extract()
 
 	return str(soup), scripts, styles
+
+
+@redis_cache(ttl=60 * 60)
+def get_dynamic_web_pages() -> dict[str, str]:
+	return frappe.get_all(
+		"Web Page", fields=["name", "route", "modified"], filters=dict(published=1, dynamic_route=1)
+	)
