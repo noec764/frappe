@@ -97,7 +97,7 @@ def update_document_title(
 		except Exception as e:
 			if frappe.db.is_duplicate_entry(e):
 				frappe.throw(
-					_("{0} {1} already exists").format(doctype, frappe.bold(docname)),
+					_("{0} {1} already exists").format(_(doctype), frappe.bold(docname)),
 					title=_("Duplicate Name"),
 					exc=frappe.DuplicateEntryError,
 				)
@@ -359,14 +359,14 @@ def validate_rename(
 		frappe.throw(_("No changes made because old and new name are the same.").format(old, new))
 
 	if merge and not exists:
-		frappe.throw(_("{0} {1} does not exist, select a new target to merge").format(doctype, new))
+		frappe.throw(_("{0} {1} does not exist, select a new target to merge").format(_(doctype), new))
 
 	if exists and exists != new:
 		# for fixing case, accents
 		exists = None
 
 	if not merge and exists and not ignore_if_exists:
-		frappe.throw(_("Another {0} with name {1} exists, select another name").format(doctype, new))
+		frappe.throw(_("Another {0} with name {1} exists, select another name").format(_(doctype), new))
 
 	if not (
 		ignore_permissions or frappe.permissions.has_permission(doctype, "write", raise_exception=False)

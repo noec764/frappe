@@ -516,7 +516,7 @@ class BaseDocument:
 
 				if not ignore_if_duplicate:
 					frappe.msgprint(
-						_("{0} {1} already exists").format(self.doctype, frappe.bold(self.name)),
+						_("{0} {1} already exists").format(_(self.doctype), frappe.bold(self.name)),
 						title=_("Duplicate Name"),
 						indicator="red",
 					)
@@ -936,6 +936,11 @@ class BaseDocument:
 
 			elif language == "PythonExpression":
 				frappe.utils.validate_python_code(code_string, fieldname=field.label)
+
+			elif language == "PythonBlock":
+				from frappe.utils.safe_block_eval import validate
+
+				validate(code_string, fieldname=field.label)
 
 	def _sync_autoname_field(self):
 		"""Keep autoname field in sync with `name`"""

@@ -57,7 +57,7 @@ def validate_controller(doctype: str) -> None:
 		controller = get_controller(doctype)
 	except ImportError:
 		frappe.msgprint(
-			_("Failed to import virtual doctype {}, is controller file present?").format(doctype)
+			_("Failed to import virtual doctype {}, is controller file present?").format(_(doctype))
 		)
 		return
 

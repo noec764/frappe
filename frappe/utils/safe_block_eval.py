@@ -28,9 +28,9 @@ def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, *
 def _wrap_in_function(
 	code: str,
 	*,
-	output_var: str,
+	output_var: str = "evaluated_code_output_var_",
 	local_vars: dict[str, None] | None = None,
-	function_name: str = "evaluated_code__",
+	function_name: str = "evaluated_code_wrapper_function_",
 ) -> str:
 	"""Wrap code in a function so that it can contain `return` statements."""
 	import textwrap
@@ -64,3 +64,11 @@ def _wrap_in_function(
 	)
 	code = f"def {function_name}({args}):\n{code}\n\n{output_var} = {function_name}({args})"
 	return code
+
+
+def validate(code_string: str, fieldname: str):
+	"""Validate a block of code by first wrapping it in a function and then compiling it."""
+	from frappe.utils import validate_python_code
+
+	code_string = _wrap_in_function(code_string)
+	return validate_python_code(code_string, fieldname=fieldname, is_expression=False)

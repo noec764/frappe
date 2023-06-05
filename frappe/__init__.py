@@ -10,6 +10,7 @@ import inspect
 import json
 import os
 import re
+import unicodedata
 import warnings
 from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional, TypeAlias, overload
 
@@ -35,7 +36,7 @@ from .utils.jinja import render_template  # noqa
 from .utils.jinja import get_email_from_template
 from .utils.lazy_loader import lazy_import  # noqa
 
-__version__ = "3.34.0"
+__version__ = "3.35.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
@@ -2313,6 +2314,7 @@ def bold(text):
 def safe_eval(code, eval_globals=None, eval_locals=None):
 	"""A safer `eval`"""
 	whitelisted_globals = {"int": int, "float": float, "long": int, "round": round}
+	code = unicodedata.normalize("NFKC", code)
 
 	UNSAFE_ATTRIBUTES = {
 		# Generator Attributes
@@ -2423,7 +2425,7 @@ def get_version(doctype, name, limit=None, head=False, raise_err=True):
 		return versions
 	else:
 		if raise_err:
-			raise ValueError(_("{0} has no versions tracked.").format(doctype))
+			raise ValueError(_("{0} has no versions tracked.").format(_(doctype)))
 
 
 @whitelist(allow_guest=True)

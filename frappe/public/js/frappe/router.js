@@ -17,7 +17,10 @@ frappe.route_hooks = {};
 
 $(window).on("hashchange", function (e) {
 	// v1 style routing, route is in hash
-	if (window.location.hash.includes("/") && !frappe.router.is_app_route(e.currentTarget.pathname)) {
+	if (
+		window.location.hash.includes("/") &&
+		!frappe.router.is_app_route(e.currentTarget.pathname)
+	) {
 		let sub_path = frappe.router.get_sub_path(window.location.hash);
 		frappe.router.push_state(sub_path);
 		return false;
@@ -142,6 +145,12 @@ frappe.router = {
 		if (!frappe.app) return;
 
 		let sub_path = this.get_sub_path();
+		if (frappe.boot.setup_complete) {
+			!frappe.re_route["setup-wizard"] && (frappe.re_route["setup-wizard"] = "app");
+		} else if (!sub_path.startsWith("setup-wizard")) {
+			frappe.re_route["setup-wizard"] && delete frappe.re_route["setup-wizard"];
+			frappe.set_route(["setup-wizard"]);
+		}
 		if (this.re_route(sub_path)) return;
 
 		this.current_sub_path = sub_path;

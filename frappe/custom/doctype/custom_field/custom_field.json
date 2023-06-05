@@ -177,7 +177,8 @@
       "depends_on": "eval:doc.fieldtype==\"Section Break\"",
       "fieldname": "collapsible_depends_on",
       "fieldtype": "Code",
-      "label": "Collapsible Depends On"
+      "label": "Collapsible Depends On",
+      "options": "JS"
     },
     {
       "fieldname": "default",
@@ -190,7 +191,8 @@
       "fieldname": "depends_on",
       "fieldtype": "Code",
       "label": "Depends On",
-      "length": 255
+      "length": 255,
+      "options": "JS"
     },
     {
       "fieldname": "description",
@@ -249,7 +251,7 @@
       "fieldname": "is_virtual",
       "fieldtype": "Check",
       "label": "Is Virtual"
-     },
+    },
     {
       "default": "0",
       "fieldname": "read_only",
@@ -374,13 +376,15 @@
       "fieldname": "mandatory_depends_on",
       "fieldtype": "Code",
       "label": "Mandatory Depends On",
-      "length": 255
+      "length": 255,
+      "options": "JS"
     },
     {
       "fieldname": "read_only_depends_on",
       "fieldtype": "Code",
       "label": "Read Only Depends On",
-      "length": 255
+      "length": 255,
+      "options": "JS"
     },
     {
       "default": "0",
@@ -430,18 +434,18 @@
       "options": "Module Def"
     },
     {
-     "default": "0",
-     "fieldname": "is_system_generated",
-     "fieldtype": "Check",
-     "label": "Is System Generated",
-     "read_only": 1
+      "default": "0",
+      "fieldname": "is_system_generated",
+      "fieldtype": "Check",
+      "label": "Is System Generated",
+      "read_only": 1
     }
   ],
   "icon": "fa fa-pencil-alt",
   "idx": 1,
   "index_web_pages_for_search": 1,
   "links": [],
-  "modified": "2023-02-20 16:33:50.446725",
+  "modified": "2023-05-30 14:52:46.209995",
   "modified_by": "Administrator",
   "module": "Custom",
   "name": "Custom Field",
@@ -473,5 +477,6 @@
   "search_fields": "dt,label,fieldtype,options",
   "sort_field": "modified",
   "sort_order": "ASC",
+  "states": [],
   "track_changes": 1
 }
