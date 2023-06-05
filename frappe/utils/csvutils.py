@@ -107,8 +107,12 @@ def send_csv_to_client(args):
 	frappe.response["type"] = "csv"
 
 
-def to_csv(data, quoting="QUOTE_NONNUMERIC", lineterminator="\r\n", delimiter=","):
-	writer = UnicodeWriter(quoting=quoting, lineterminator=lineterminator, delimiter=delimiter)
+def to_csv(
+	data, quoting="QUOTE_NONNUMERIC", lineterminator="\r\n", delimiter=",", escapechar=None
+):
+	writer = UnicodeWriter(
+		quoting=quoting, lineterminator=lineterminator, delimiter=delimiter, escapechar=escapechar
+	)
 	for row in data:
 		writer.writerow(row)
 
@@ -123,7 +127,12 @@ def build_csv_response(data, filename):
 
 class UnicodeWriter:
 	def __init__(
-		self, encoding="utf-8", quoting="QUOTE_NONNUMERIC", lineterminator="\r\n", delimiter=","
+		self,
+		encoding="utf-8",
+		quoting="QUOTE_NONNUMERIC",
+		lineterminator="\r\n",
+		delimiter=",",
+		escapechar=None,
 	):
 		self.encoding = encoding
 		self.quoting = QUOTE_MAP.get(quoting)
@@ -131,7 +140,11 @@ class UnicodeWriter:
 		self.delimiter = delimiter
 		self.queue = StringIO()
 		self.writer = csv.writer(
-			self.queue, quoting=self.quoting, lineterminator=self.lineterminator, delimiter=self.delimiter
+			self.queue,
+			quoting=self.quoting,
+			lineterminator=self.lineterminator,
+			delimiter=self.delimiter,
+			escapechar=escapechar,
 		)
 
 	def writerow(self, row):
