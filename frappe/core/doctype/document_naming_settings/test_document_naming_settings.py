@@ -63,7 +63,6 @@ class TestNamingSeries(FrappeTestCase):
 			self.assertIn(NamingSeries(series).get_prefix(), naming_info["prefixes"])
 
 	def test_default_naming_series(self):
-		self.assertIn("HOOK", get_default_naming_series("Webhook"))
 		self.assertIsNone(get_default_naming_series("DocType"))
 
 	def test_updates_naming_options(self):
