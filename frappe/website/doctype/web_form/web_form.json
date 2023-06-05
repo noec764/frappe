@@ -58,7 +58,8 @@
   "meta_image",
   "section_break_6",
   "client_script",
-  "custom_css"
+  "custom_css",
+  "column_break_1"
  ],
  "fields": [
   {
@@ -187,7 +188,8 @@
    "description": "For help see <a href=\"https://frappeframework.com/docs/user/en/guides/portal-development/web-forms\" target=\"_blank\">Client Script API and Examples</a>",
    "fieldname": "client_script",
    "fieldtype": "Code",
-   "label": "Client Script"
+   "label": "Client Script",
+   "options": "JS"
   },
   {
    "default": "Save",
@@ -375,24 +377,24 @@
    "fieldtype": "Text Editor",
    "ignore_xss_filter": 1,
    "label": "Footer"
-},
-{
- "fieldname": "column_break_vdhm",
- "fieldtype": "Column Break"
-},
-{
- "default": "0",
- "description": "Receive anonymous response",
- "fieldname": "anonymous",
- "fieldtype": "Check",
- "label": "Anonymous"
+  },
+  {
+   "fieldname": "column_break_vdhm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Receive anonymous response",
+   "fieldname": "anonymous",
+   "fieldtype": "Check",
+   "label": "Anonymous"
   }
  ],
  "has_web_view": 1,
  "icon": "uil uil-file-landscape-alt",
  "is_published_field": "published",
  "links": [],
- "modified": "2023-04-20 17:24:42.657731",
+ "modified": "2023-05-30 14:47:08.807343",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Web Form",

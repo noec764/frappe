@@ -2207,7 +2207,7 @@ def validate_python_code(
 		offset = se.offset - 1 or 0
 		error_line = string if is_expression else string.split("\n")[line_no]
 		msg = frappe._("{} Invalid python code on line {}").format(
-			fieldname + ":" if fieldname else "", line_no + 1
+			frappe._(fieldname or "") + "<br>", line_no + 1
 		)
 		msg += f"<br><pre>{error_line}</pre>"
 		msg += f"<pre>{' ' * offset}^</pre>"
@@ -2215,7 +2215,9 @@ def validate_python_code(
 		frappe.throw(msg, title=frappe._("Syntax Error"))
 	except Exception as e:
 		frappe.msgprint(
-			frappe._("{} Possibly invalid python code. <br>{}").format(fieldname + ": " or "", str(e)),
+			frappe._("{} Possibly invalid python code. <br>{}").format(
+				frappe._(fieldname or "") + "<br>", str(e)
+			),
 			indicator="orange",
 		)
 

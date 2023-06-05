@@ -443,7 +443,7 @@ def get_default_naming_series(doctype: str) -> str | None:
 def validate_name(doctype: str, name: int | str):
 
 	if not name:
-		frappe.throw(_("No Name Specified for {0}").format(doctype))
+		frappe.throw(_("No Name Specified for {0}").format(_(doctype)))
 
 	if isinstance(name, int):
 		if is_autoincremented(doctype):
@@ -462,7 +462,7 @@ def validate_name(doctype: str, name: int | str):
 	name = name.strip()
 
 	if not frappe.get_meta(doctype).get("issingle") and (doctype == name) and (name != "DocType"):
-		frappe.throw(_("Name of {0} cannot be {1}").format(doctype, name), frappe.NameError)
+		frappe.throw(_("Name of {0} cannot be {1}").format(_(doctype), name), frappe.NameError)
 
 	special_characters = "<>"
 	if re.findall(f"[{special_characters}]+", name):
