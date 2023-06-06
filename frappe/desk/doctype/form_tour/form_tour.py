@@ -75,6 +75,6 @@ def get_onboarding_ui_tours():
 	if not frappe.get_system_settings("enable_onboarding"):
 		return []
 
-	ui_tours = frappe.get_all("Form Tour", filters={"ui_tour": 1}, fields=["page_route", "name"])
+	ui_tours = frappe.get_all("Form Tour", filters={"ui_tour": 1, "language": frappe.local.lang}, fields=["page_route", "name"])
 
 	return [[tour.name, json.loads(tour.page_route)] for tour in ui_tours]
