@@ -17,6 +17,7 @@ IMPORTABLE_DOCTYPES = [
 	("core", "doctype"),
 	("core", "page"),
 	("core", "report"),
+	("desk", "summary_card"),
 	("desk", "dashboard_chart_source"),
 	("printing", "print_format"),
 	("website", "web_page"),
@@ -96,6 +97,7 @@ def sync_for(app_name, force=0, reset_permissions=False):
 			"workspace_number_card",
 			"workspace_custom_block",
 			"workspace",
+			"summary_card"
 		]:
 			files.append(os.path.join(FRAPPE_PATH, "desk", "doctype", desk_module, f"{desk_module}.json"))
 
