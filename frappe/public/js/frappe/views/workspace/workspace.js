@@ -632,11 +632,11 @@ frappe.views.Workspace = class Workspace {
 	edit_page(item) {
 		var me = this;
 		let old_item = item;
-		let new_page = { ...page };
+		let new_page = { ...item };
 		if (!this.has_access && new_page.public) {
 			new_page.public = 0;
 		}
-		let parent_pages = this.get_parent_pages({ public: new_page.public });
+		let parent_pages = this.get_parent_pages(item);
 		let idx = parent_pages.findIndex((x) => x == item.title);
 		if (idx !== -1) parent_pages.splice(idx, 1);
 		const d = new frappe.ui.Dialog({
