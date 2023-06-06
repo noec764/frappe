@@ -216,6 +216,7 @@
    "read_only": 1
   },
   {
+   "allow_in_quick_entry": 1,
    "fieldname": "role_profile_name",
    "fieldtype": "Link",
    "label": "Role Profile",
@@ -478,7 +479,6 @@
    "label": "Simultaneous Sessions"
   },
   {
-   "bold": 1,
    "default": "System User",
    "description": "If the user has any role checked, then the user becomes a \"System User\". \"System User\" has access to the desktop",
    "fieldname": "user_type",
@@ -710,11 +710,11 @@
    "label": "Desk Settings"
   },
   {
-    "default": "{}",
-    "fieldname": "onboarding_status",
-    "fieldtype": "Small Text",
-    "hidden": 1,
-    "label": "Onboarding Status"
+   "default": "{}",
+   "fieldname": "onboarding_status",
+   "fieldtype": "Small Text",
+   "hidden": 1,
+   "label": "Onboarding Status"
   },
   {
    "fieldname": "workspaces_section",
