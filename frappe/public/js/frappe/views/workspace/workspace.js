@@ -25,7 +25,6 @@ frappe.views.Workspace = class Workspace {
 		this.page = wrapper.page;
 		this.blocks = frappe.workspace_block.blocks;
 		this.is_read_only = true;
-		this.is_page_loaded = false;
 		this.pages = {};
 		this.sorted_public_items = [];
 		this.sorted_private_items = [];
@@ -273,14 +272,10 @@ frappe.views.Workspace = class Workspace {
 		this.update_selected_sidebar(page, true); //add selected on new page
 
 		if (!frappe.router.current_route[0]) {
-			this.is_page_loaded = true;
 			frappe.set_route(frappe.router.slug(page.public ? page.name : "private/" + page.name));
 		}
 
-		if (!this.is_page_loaded) {
-			this.show_page(page);
-			this.is_page_loaded = false;
-		}
+		this.show_page(page);
 	}
 
 	update_selected_sidebar(page, add) {
