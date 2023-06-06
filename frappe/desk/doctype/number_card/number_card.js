@@ -164,11 +164,6 @@ frappe.ui.form.on("Number Card", {
 			frappe.model.with_doctype(doctype, () => {
 				frappe.get_meta(doctype).fields.map((df) => {
 					if (frappe.model.numeric_fieldtypes.includes(df.fieldtype)) {
-						if (df.fieldtype == "Currency") {
-							if (!df.options || df.options !== "Company:company:default_currency") {
-								return;
-							}
-						}
 						aggregate_based_on_fields.push({ label: df.label, value: df.fieldname });
 					}
 				});
@@ -392,7 +387,6 @@ frappe.ui.form.on("Number Card", {
 		frm.trigger("set_dynamic_filters_in_table");
 
 		let filters = JSON.parse(frm.doc.filters_json || "[]");
-
 		let fields = frappe.dashboard_utils.get_fields_for_dynamic_filter_dialog(
 			is_document_type,
 			filters,
