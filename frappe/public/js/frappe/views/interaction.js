@@ -52,6 +52,14 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		let interaction_docs = Object.keys(get_doc_mappings());
 
 		let fields = [
+			{ label: __("Date"), fieldtype: "Datetime", fieldname: "due_date" },
+			{
+				label: __("Assigned To"),
+				fieldtype: "Link",
+				fieldname: "assigned_to",
+				options: "User",
+			},
+			{ fieldtype: "Column Break" },
 			{
 				label: __("Reference"),
 				fieldtype: "Select",
@@ -78,15 +86,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				hidden: 1,
 			},
 			{ label: __("Public"), fieldtype: "Check", fieldname: "public", default: "1" },
-			{ fieldtype: "Column Break" },
-			{ label: __("Date"), fieldtype: "Datetime", fieldname: "due_date" },
-			{
-				label: __("Assigned To"),
-				fieldtype: "Link",
-				fieldname: "assigned_to",
-				options: "User",
-			},
-			{ fieldtype: "Section Break" },
+			{ fieldtype: "Section Break", fieldname: "participants_section" },
 			{
 				label: __("Participants"),
 				fieldtype: "Table MultiSelect",
@@ -96,7 +96,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			{ fieldtype: "Section Break" },
 			{ label: __("Summary"), fieldtype: "Data", fieldname: "summary" },
 			{ fieldtype: "Section Break" },
-			{ fieldtype: "Text Editor", fieldname: "description" },
+			{ label: __("Description"), fieldtype: "Text Editor", fieldname: "description" },
 			{ fieldtype: "Section Break" },
 			{
 				label: __("Select Attachments"),
@@ -250,6 +250,12 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		}
 		if (interaction_values["doctype"] == "Event") {
 			interaction_values["event_participants"] = form_values.participants;
+			interaction_values["event_references"] = [
+				{
+					reference_doctype: form_values.reference_doctype,
+					reference_docname: form_values.reference_document
+				}
+			]
 		}
 		if (!("owner" in interaction_values)) {
 			interaction_values["owner"] = frappe.session.user;
@@ -365,7 +371,7 @@ function get_doc_mappings() {
 				assigned_to: "owner",
 			},
 			reqd_fields: ["description"],
-			hidden_fields: ["public", "category"],
+			hidden_fields: ["public", "category", "participants_section"],
 		},
 	};
 
