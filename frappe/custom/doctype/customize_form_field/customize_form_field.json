@@ -104,7 +104,7 @@
 {
     "fieldname": "configuration_button",
     "fieldtype": "Button",
-    "label": "Edit Configuration"
+    "label": "Edit field configuration"
 },
   {
    "fieldname": "fieldname",
@@ -493,7 +493,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-06-14 18:18:13.089380",
+ "modified": "2023-06-14 18:19:42.474304",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customize Form Field",

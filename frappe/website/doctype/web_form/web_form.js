@@ -24,6 +24,12 @@ frappe.ui.form.on("Web Form", {
 		frappe.meta.docfield_map["Web Form List Column"].fieldname.formatter = (value) => {
 			return frappe.meta.docfield_map["Web Form Field"].fieldname.formatter(value);
 		};
+
+		frappe.model.DocTypeController.setup_docfield_configuration(
+			frm,
+			"Web Form Field",
+			"web_form_fields"
+		);
 	},
 
 	refresh: function (frm) {

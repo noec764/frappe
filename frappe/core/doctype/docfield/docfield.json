@@ -117,7 +117,7 @@
 {
     "fieldname": "configuration_button",
     "fieldtype": "Button",
-    "label": "Edit Configuration"
+    "label": "Edit field configuration"
 },
   {
    "bold": 1,
@@ -577,7 +577,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2023-06-14 18:18:18.276512",
+ "modified": "2023-06-14 18:19:27.701221",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "DocField",

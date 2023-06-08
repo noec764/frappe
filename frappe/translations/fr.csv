@@ -2305,7 +2305,6 @@ ERPNext,ERPNext,
 ESC,ESC,
 Edit Auto Email Report Settings,Modifier les paramètres des rapports automatiques par email,
 Edit Chart,Modifier le graphique,
-Edit Configuration,Configurer le champ,DocField
 Edit Custom HTML,Modifier le HTML personnalisé,
 Edit Dashboard,Modifer le tableau de bord,
 Edit Desktop,Modifier le bureau,
@@ -2331,6 +2330,7 @@ Edit Shortcut,Modifier le raccourci,
 Edit Title,Modifier le Titre,
 Edit Values,Modifier les valeurs,
 Edit Workspace,Modifier l'espace de travail,
+Edit field configuration,Configurer le champ,
 Edit in Full Page,Editer en pleine page,
 Edit in full page,Modifier en pleine page,
 Edit mode,Mode Edition,
@@ -6622,7 +6622,7 @@ To User,Pour l'utilisateur,
 <div>
 <pre><code>{ ""id"": ""{{ doc.name }}"" }</code>
 </pre>
-</div>","Pour ajouter des valeurs dynamiques depuis le document, utilisez des balises Jinja comme 
+</div>","Pour ajouter des valeurs dynamiques depuis le document, utilisez des balises Jinja comme
 
 <div>
 <pre><code>{ ""id"": ""{{ doc.name }}"" }</code>
