@@ -173,9 +173,8 @@ def get_dict(fortype: str, name: str | None = None) -> dict[str, str]:
 		frappe.local.lang = get_user_lang()
 
 	fortype = fortype.lower()
-	cache = frappe.cache()
 	asset_key = fortype + ":" + (name or "-")
-	translation_assets = cache.hget("translation_assets", frappe.local.lang) or {}
+	translation_assets = frappe.cache.hget("translation_assets", frappe.local.lang) or {}
 
 	if asset_key not in translation_assets:
 		if fortype == "doctype":
@@ -235,7 +234,7 @@ def get_dict(fortype: str, name: str | None = None) -> dict[str, str]:
 
 		translation_assets[asset_key] = message_dict
 
-		cache.hset("translation_assets", frappe.local.lang, translation_assets)
+		frappe.cache.hset("translation_assets", frappe.local.lang, translation_assets)
 
 	translation_map: dict = translation_assets[asset_key]
 
@@ -394,14 +393,13 @@ def get_user_translations(lang):
 
 def clear_cache():
 	"""Clear all translation assets from :meth:`frappe.cache`"""
-	cache = frappe.cache()
-	cache.delete_key("langinfo")
+	frappe.cache.delete_key("langinfo")
 
 	# clear translations saved in boot cache
-	cache.delete_key("bootinfo")
-	cache.delete_key("translation_assets")
-	cache.delete_key(USER_TRANSLATION_KEY)
-	cache.delete_key(MERGED_TRANSLATION_KEY)
+	frappe.cache.delete_key("bootinfo")
+	frappe.cache.delete_key("translation_assets")
+	frappe.cache.delete_key(USER_TRANSLATION_KEY)
+	frappe.cache.delete_key(MERGED_TRANSLATION_KEY)
 
 
 def get_messages_for_app(app, deduplicate=True, context=False):
