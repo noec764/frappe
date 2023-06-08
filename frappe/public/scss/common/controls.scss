@@ -140,13 +140,27 @@ select.form-control {
 		justify-content: center;
 		align-items: center;
 
+		transition: visibility 150ms;
+
 		.icon {
-			transition: transform 100ms ease;
-			transform-origin: center;
+			transition: all 300ms ease;
+			transition-property: color, transform, opacity;
+			transform: none;
 		}
 
 		&:hover:not(:active) > .icon {
-			transform: scale(1.2);
+			color: var(--primary);
+		}
+
+		&[disabled] {
+			pointer-events: none;
+			visibility: hidden;
+
+			.icon {
+				transform: translateX(9px) !important;
+				opacity: 0;
+				transition-duration: 150ms !important;
+			}
 		}
 	}
 }

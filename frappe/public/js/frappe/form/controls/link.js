@@ -15,7 +15,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		$(`<div class="link-field ui-front" style="position: relative;">
 			<input type="text" class="input-with-feedback form-control">
 			<a class="link-btn btn-open no-decoration" style="display: none;" title="${__("Open Link")}">
-				${frappe.utils.icon("arrow-right", "xs")}
+				${frappe.utils.icon("uil uil-arrow-right", "sm")}
 			</a>
 		</div>`).prependTo(this.input_area);
 		this.$input_area = $(this.input_area);
@@ -89,9 +89,10 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			const doctype = this.get_options();
 			const name = this.get_input_value();
 			this.$link.toggle(true);
+			this.$link.removeAttr("disabled");
 			this.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
 		} else {
-			this.$link.toggle(false);
+			this.$link.attr("disabled", "disabled");
 			this.$link_open.attr("href", "#");
 		}
 	}
