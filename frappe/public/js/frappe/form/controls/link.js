@@ -24,24 +24,18 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.$link_open = this.$link;
 		this.set_input_attributes();
 		this.$input.on("focus", function () {
-			setTimeout(function () {
-				me.update_arrow();
+			me.update_arrow();
 
-				if (!me.$input.val()) {
-					// force show dropdown, maybe not needed
-					me.$input.val("").trigger("input");
-				}
-			}, 0);
+			if (!me.$input.val()) {
+				// force show dropdown, maybe not needed
+				me.$input.val("").trigger("input");
+			}
 		});
 		this.$input_area.on("focusout", function () {
-			// if this disappears immediately, the user's click
-			// does not register, hence timeout
-			setTimeout(function () {
-				// if user focuses it again, then do not hide
-				if (!me.input_area.matches(":focus-within")) {
-					me.update_arrow(false);
-				}
-			}, 250);
+			// if user focuses it again, then do not hide
+			if (!me.input_area.matches(":focus-within")) {
+				me.update_arrow(false);
+			}
 		});
 		this.$input.attr("data-target", this.df.options);
 		this.input = this.$input.get(0);
