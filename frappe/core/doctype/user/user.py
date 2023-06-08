@@ -67,8 +67,8 @@ class User(Document):
 
 	def after_insert(self):
 		create_notification_settings(self.name)
-		frappe.cache().delete_key("users_for_mentions")
-		frappe.cache().delete_key("enabled_users")
+		frappe.cache.delete_key("users_for_mentions")
+		frappe.cache.delete_key("enabled_users")
 		self.add_default_roles()
 		self.hide_modules()
 
@@ -156,10 +156,10 @@ class User(Document):
 			frappe.defaults.set_default("time_zone", self.time_zone, self.name)
 
 		if self.has_value_changed("enabled"):
-			frappe.cache().delete_key("users_for_mentions")
-			frappe.cache().delete_key("enabled_users")
+			frappe.cache.delete_key("users_for_mentions")
+			frappe.cache.delete_key("enabled_users")
 		elif self.has_value_changed("allow_in_mentions") or self.has_value_changed("user_type"):
-			frappe.cache().delete_key("users_for_mentions")
+			frappe.cache.delete_key("users_for_mentions")
 
 	def has_website_permission(self, ptype, user, verbose=False):
 		"""Returns true if current user is the session user"""
@@ -488,9 +488,9 @@ class User(Document):
 		frappe.delete_doc("Notification Settings", self.name, ignore_permissions=True)
 
 		if self.get("allow_in_mentions"):
-			frappe.cache().delete_key("users_for_mentions")
+			frappe.cache.delete_key("users_for_mentions")
 
-		frappe.cache().delete_key("enabled_users")
+		frappe.cache.delete_key("enabled_users")
 
 		# delete user permissions
 		frappe.db.delete("User Permission", {"user": self.name})
@@ -814,10 +814,10 @@ def update_password(
 	user_doc, redirect_url = reset_user_data(user)
 
 	# get redirect url from cache
-	redirect_to = frappe.cache().hget("redirect_after_login", user)
+	redirect_to = frappe.cache.hget("redirect_after_login", user)
 	if redirect_to:
 		redirect_url = redirect_to
-		frappe.cache().hdel("redirect_after_login", user)
+		frappe.cache.hdel("redirect_after_login", user)
 
 	frappe.local.login_manager.login_as(user)
 
@@ -976,7 +976,7 @@ def sign_up(email: str, first_name: str, last_name: str, redirect_to: str) -> tu
 		user.insert()
 
 		if redirect_to:
-			frappe.cache().hset("redirect_after_login", user.name, redirect_to)
+			frappe.cache.hset("redirect_after_login", user.name, redirect_to)
 
 		if user.flags.email_sent:
 			return 1, _("Please check your email for verification")
@@ -1297,4 +1297,4 @@ def get_enabled_users():
 		enabled_users = frappe.get_all("User", filters={"enabled": "1"}, pluck="name")
 		return enabled_users
 
-	return frappe.cache().get_value("enabled_users", _get_enabled_users)
+	return frappe.cache.get_value("enabled_users", _get_enabled_users)

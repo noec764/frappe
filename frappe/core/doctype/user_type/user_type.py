@@ -193,7 +193,7 @@ def get_non_standard_user_type_details():
 	if user_types:
 		user_type_details = {d.name: [d.apply_user_permission_on, d.user_id_field] for d in user_types}
 
-		frappe.cache().set_value("non_standard_user_types", user_type_details)
+		frappe.cache.set_value("non_standard_user_types", user_type_details)
 
 		return user_type_details
 
@@ -289,7 +289,7 @@ def apply_permissions_for_non_standard_user_type(doc, method=None):
 	if not frappe.db.table_exists("User Type") or frappe.flags.in_migrate:
 		return
 
-	user_types = frappe.cache().get_value("non_standard_user_types")
+	user_types = frappe.cache.get_value("non_standard_user_types")
 
 	if not user_types:
 		user_types = get_non_standard_user_type_details()

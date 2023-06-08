@@ -34,7 +34,7 @@ class TestWorkflow(FrappeTestCase):
 						"postgres": 'ALTER TABLE "tabWorkflow Action" ADD COLUMN "user" varchar(140)',
 					}
 				)
-				frappe.cache().delete_value("table_columns")
+				frappe.cache.delete_value("table_columns")
 
 	def tearDown(self):
 		frappe.delete_doc("Workflow", "Test ToDo")
@@ -50,7 +50,7 @@ class TestWorkflow(FrappeTestCase):
 						"postgres": 'ALTER TABLE "tabWorkflow Action" DROP COLUMN "user"',
 					}
 				)
-				frappe.cache().delete_value("table_columns")
+				frappe.cache.delete_value("table_columns")
 
 	def test_default_condition(self):
 		"""test default condition is set"""

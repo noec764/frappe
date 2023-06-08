@@ -182,7 +182,7 @@ class TestUserPermission(FrappeTestCase):
 			"hide_descendants",
 			1,
 		)
-		frappe.cache().delete_value("user_permissions")
+		frappe.cache.delete_value("user_permissions")
 
 		# check if adding perm on a group record with hide_descendants enabled,
 		# hides child records

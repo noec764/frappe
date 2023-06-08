@@ -370,7 +370,7 @@ def errprint(msg: str) -> None:
 
 
 def print_sql(enable: bool = True) -> None:
-	return cache().set_value("flag_print_sql", enable)
+	return cache.set_value("flag_print_sql", enable)
 
 
 def log(msg: str) -> None:
@@ -1008,7 +1008,7 @@ def is_table(doctype: str) -> bool:
 	def get_tables():
 		return db.get_values("DocType", filters={"istable": 1}, order_by=None, pluck=True)
 
-	tables = cache().get_value("is_table", get_tables)
+	tables = cache.get_value("is_table", get_tables)
 	return doctype in tables
 
 
@@ -1035,7 +1035,7 @@ def generate_hash(txt: str | None = None, length: int = 56) -> str:
 def reset_metadata_version():
 	"""Reset `metadata_version` (Client (Javascript) build ID) hash."""
 	v = generate_hash()
-	cache().set_value("metadata_version", v)
+	cache.set_value("metadata_version", v)
 	return v
 
 
@@ -1071,7 +1071,7 @@ def set_value(doctype, docname, fieldname, value=None):
 
 
 def get_cached_doc(*args, **kwargs) -> "Document":
-	if (key := can_cache_doc(args)) and (doc := cache().get_value(key)):
+	if (key := can_cache_doc(args)) and (doc := cache.get_value(key)):
 		return doc
 
 	# Not found in cache, fetch from DB
@@ -1087,7 +1087,7 @@ def get_cached_doc(*args, **kwargs) -> "Document":
 
 
 def _set_document_in_cache(key: str, doc: "Document") -> None:
-	cache().set_value(key, doc)
+	cache.set_value(key, doc)
 
 
 def can_cache_doc(args) -> str | None:
@@ -1114,9 +1114,9 @@ def get_document_cache_key(doctype: str, name: str):
 def clear_document_cache(doctype: str, name: str | None = None) -> None:
 	def clear_in_redis():
 		if name is not None:
-			cache().delete_value(get_document_cache_key(doctype, name))
+			cache.delete_value(get_document_cache_key(doctype, name))
 		else:
-			cache().delete_keys(get_document_cache_key(doctype, ""))
+			cache.delete_keys(get_document_cache_key(doctype, ""))
 
 	clear_in_redis()
 	if hasattr(db, "after_commit"):
@@ -1206,7 +1206,7 @@ def get_doc(*args, **kwargs):
 	doc = frappe.model.document.get_doc(*args, **kwargs)
 
 	# Replace cache if stale one exists
-	if (key := can_cache_doc(args)) and cache().exists(key):
+	if (key := can_cache_doc(args)) and cache.exists(key):
 		_set_document_in_cache(key, doc)
 
 	return doc
@@ -1438,13 +1438,13 @@ def get_installed_apps(sort=False, frappe_last=False, *, _ensure_on_bench=False)
 
 	if sort:
 		if not local.all_apps:
-			local.all_apps = cache().get_value("all_apps", get_all_apps)
+			local.all_apps = cache.get_value("all_apps", get_all_apps)
 
 		deprecation_warning("`sort` argument is deprecated and will be removed in v15.")
 		installed = [app for app in local.all_apps if app in installed]
 
 	if _ensure_on_bench:
-		all_apps = cache().get_value("all_apps", get_all_apps)
+		all_apps = cache.get_value("all_apps", get_all_apps)
 		installed = [app for app in installed if app in all_apps]
 
 	if frappe_last:
@@ -1522,7 +1522,7 @@ def get_hooks(
 		if conf.developer_mode:
 			hooks = _dict(_load_app_hooks())
 		else:
-			hooks = _dict(cache().get_value("app_hooks", _load_app_hooks))
+			hooks = _dict(cache.get_value("app_hooks", _load_app_hooks))
 
 	if hook:
 		return hooks.get(hook, ([] if default == "_KEEP_DEFAULT_LIST" else default))
@@ -1552,11 +1552,9 @@ def append_hook(target, key, value):
 
 def setup_module_map():
 	"""Rebuild map of all modules (internal)."""
-	_cache = cache()
-
 	if conf.db_name:
-		local.app_modules = _cache.get_value("app_modules")
-		local.module_app = _cache.get_value("module_app")
+		local.app_modules = cache.get_value("app_modules")
+		local.module_app = cache.get_value("module_app")
 
 	if not (local.app_modules and local.module_app):
 		local.module_app, local.app_modules = {}, {}
@@ -1568,8 +1566,8 @@ def setup_module_map():
 				local.app_modules[app].append(module)
 
 		if conf.db_name:
-			_cache.set_value("app_modules", local.app_modules)
-			_cache.set_value("module_app", local.module_app)
+			cache.set_value("app_modules", local.app_modules)
+			cache.set_value("module_app", local.module_app)
 
 
 def get_file_items(path, raise_not_found=False, ignore_empty_lines=True):
@@ -1853,7 +1851,7 @@ def redirect_to_message(title, html, http_status_code=None, context=None, indica
 	if indicator_color:
 		message["context"].update({"indicator_color": indicator_color})
 
-	cache().set_value(f"message_id:{message_id}", message, expires_in_sec=60)
+	cache.set_value(f"message_id:{message_id}", message, expires_in_sec=60)
 	location = f"/message?id={message_id}"
 
 	if not getattr(local, "is_ajax", False):
