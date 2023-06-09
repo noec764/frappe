@@ -147,8 +147,6 @@ function move_columns_to_section() {
 			class="column-container"
 			:style="{ backgroundColor: column.fields.length ? '' : 'var(--field-placeholder-color)' }"
 			v-model="column.fields"
-			group="fields"
-			filter="[data-is-custom='0']"
 			:prevent-on-filter="false"
 			:animation="200"
 			:easing="store.get_animation"
@@ -159,7 +157,7 @@ function move_columns_to_section() {
 				<Field
 					:column="column"
 					:field="element"
-					:data-is-custom="element.df.is_custom_field"
+					:data-is-user-generated="store.is_user_generated_field(element)"
 				/>
 			</template>
 		</draggable>
