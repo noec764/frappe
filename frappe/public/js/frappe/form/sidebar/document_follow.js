@@ -58,7 +58,7 @@ frappe.ui.form.DocumentFollow = class DocumentFollow {
 					doctype: this.frm.doctype,
 					doc_name: this.frm.doc.name,
 					user: frappe.session.user,
-					force: true,
+					throw: true,
 				},
 				callback: (r) => {
 					if (r.message) {
