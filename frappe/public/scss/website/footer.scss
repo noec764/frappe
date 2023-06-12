@@ -35,7 +35,8 @@
 
 	.footer-col-left, .footer-col-right {
 		padding-top: 0.8rem;
-		padding-bottom: 1rem;
+		// Adds a weird grey section at bottom
+		// padding-bottom: 1rem;
 		line-height: 2;
 
 		&:empty {

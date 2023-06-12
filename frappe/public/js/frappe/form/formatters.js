@@ -107,12 +107,18 @@ frappe.form.formatters = {
 	},
 	Currency: function (value, docfield, options, doc) {
 		var currency = frappe.meta.get_field_currency(docfield, doc);
-		var precision = cint(
-			docfield.precision ??
-				frappe.boot.sysdefaults.currency_precision ??
-				frappe.boot.sysdefaults.float_precision ??
-				2
-		);
+
+		let precision;
+		if (typeof docfield.precision == "number") {
+			precision = docfield.precision;
+		} else {
+			precision = cint(
+				docfield.precision ||
+					frappe.boot.sysdefaults.currency_precision ||
+					frappe.boot.sysdefaults.float_precision ||
+					2
+			);
+		}
 
 		// If you change anything below, it's going to hurt a company in UAE, a bit.
 		if (precision > 2) {

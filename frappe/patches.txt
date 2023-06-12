@@ -197,7 +197,6 @@ frappe.core.doctype.page.patches.drop_unused_pages
 frappe.patches.v13_0.remove_chat
 frappe.patches.v13_0.rename_desk_page_to_workspace #2021-02-02
 frappe.patches.v13_0.set_route
-frappe.patches.v14_0.update_workspace2 #2
 frappe.patches.v14_0.save_ratings_in_fraction #23-12-2021
 frappe.patches.v14_0.transform_todo_schema
 frappe.patches.v14_0.update_github_endpoints
@@ -233,6 +232,7 @@ frappe.core.doctype.role.patches.dokos_v3_26_fix_desk_properties
 [post_model_sync]
 execute:frappe.get_doc('Role', 'Guest').save() # remove desk access
 frappe.core.doctype.role.patches.v13_set_default_desk_properties
+frappe.patches.v14_0.update_workspace2 #2023-06-06
 frappe.patches.v14_0.drop_data_import_legacy
 frappe.patches.v14_0.copy_mail_data #08.03.21
 frappe.patches.v14_0.update_github_endpoints #08-11-2021
