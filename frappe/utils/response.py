@@ -67,7 +67,6 @@ def build_response(response_type=None):
 def as_csv():
 	response = Response()
 	response.mimetype = "text/csv"
-	response.charset = "utf-8"
 	response.headers["Content-Disposition"] = (
 		'attachment; filename="%s.csv"' % frappe.response["doctype"].replace(" ", "_")
 	).encode("utf-8")
@@ -78,7 +77,6 @@ def as_csv():
 def as_txt():
 	response = Response()
 	response.mimetype = "text"
-	response.charset = "utf-8"
 	response.headers["Content-Disposition"] = (
 		'attachment; filename="%s.txt"' % frappe.response["doctype"].replace(" ", "_")
 	).encode("utf-8")
@@ -108,7 +106,6 @@ def as_json():
 		del frappe.local.response["http_status_code"]
 
 	response.mimetype = "application/json"
-	response.charset = "utf-8"
 	response.data = json.dumps(frappe.local.response, default=json_handler, separators=(",", ":"))
 	return response
 
