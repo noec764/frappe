@@ -759,6 +759,10 @@ def get_messages_from_workspace(name):
 		if qlist.get("label"):
 			messages.append(("Workspace Quick List: " + name, qlist.get("label")))
 
+	for chart in desk_page.charts:
+		if chart.get("label"):
+			messages.append(("Workspace Dashboard Charts: " + name, chart.get("label")))
+
 	for number_card in desk_page.number_cards:
 		if number_card.get("label"):
 			messages.append(("Workspace Number Cards: " + name, number_card.get("label")))
