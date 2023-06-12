@@ -497,7 +497,19 @@ export default {
 						} else if (xhr.status === 403) {
 							file.failed = true;
 							let response = JSON.parse(xhr.responseText);
-							file.error_message = `Not permitted. ${response._error_message || ''}`;
+							file.error_message = `Not permitted. ${response._error_message || ''}.`;
+
+							try {
+								// Append server messages which are useful hint for perm issues
+								let server_messages = JSON.parse(response._server_messages);
+								server_messages.forEach((m) => {
+									m = JSON.parse(m);
+									file.error_message += `\n ${m.message} `
+								})
+							} catch (e) {
+								console.warning("Failed to parse server message", e)
+							}
+
 						} else if (xhr.status === 413) {
 							file.failed = true;
 							file.error_message = 'Size exceeds the maximum allowed file size.';
