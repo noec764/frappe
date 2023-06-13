@@ -257,7 +257,7 @@ def get_point_logs(doctype, docname):
 	)
 
 
-def _get_communications(doctype, name, start=0, limit=20):
+def _get_communications(doctype, name, start=0, limit=100):
 	from frappe.core.doctype.comment.comment import get_comments_from_parent
 
 	communications = get_communication_data(doctype, name, start, limit)
