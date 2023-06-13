@@ -1,5 +1,5 @@
 import TemplateFieldSelectorDialog from "./TemplateFieldSelector.vue";
-import EventEmitterMixin from "../../../event_emitter";
+import EventEmitterMixin from "frappe/public/js/frappe/event_emitter";
 
 frappe.provide("frappe.field_selector_updates");
 
