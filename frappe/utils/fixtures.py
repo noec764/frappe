@@ -5,6 +5,7 @@ import os
 
 import frappe
 from frappe.core.doctype.data_import.data_import import export_json, import_doc
+from frappe.utils.deprecations import deprecation_warning
 
 
 def sync_fixtures(app=None):
@@ -44,34 +45,22 @@ def import_fixtures(app):
 
 def import_custom_scripts(app):
 	"""Import custom scripts from `[app]/fixtures/custom_scripts`"""
-	scripts_folder = frappe.get_app_path(app, "fixtures", "custom_scripts")
-	if not os.path.exists(scripts_folder):
-		return
-
-	for fname in os.listdir(scripts_folder):
-		if not fname.endswith(".js"):
-			continue
-
-		doctype = fname.rsplit(".", 1)[0]
-		if not frappe.db.exists("DocType", doctype):
-			print(
-				f"Skipping custom script fixture syncing for the missing doctype {doctype} from the file {fname}"
+	if os.path.exists(frappe.get_app_path(app, "fixtures", "custom_scripts")):
+		for fname in os.listdir(frappe.get_app_path(app, "fixtures", "custom_scripts")):
+			scripts_folder = frappe.get_app_path(app, "fixtures", "custom_scripts")
+			deprecation_warning(
+				f"Importing client script {fname} from {scripts_folder} is deprecated and will be removed in version-15. Use client scripts as fixtures directly."
 			)
-			continue
-
-		# not using get_app_path here as it scrubs the fname (will not work for dt name with > 1 word)
-		file_path = scripts_folder + os.path.sep + fname
-
-		with open(file_path) as f:
-			script = f.read()
-			if frappe.db.exists("Client Script", {"dt": doctype}):
-				client_script = frappe.get_doc("Client Script", {"dt": doctype})
-				client_script.script = script
-				client_script.save()
-			else:
-				client_script = frappe.new_doc("Client Script")
-				client_script.update({"__newname": doctype, "dt": doctype, "script": script})
-				client_script.insert()
+			if fname.endswith(".js"):
+				with open(frappe.get_app_path(app, "fixtures", "custom_scripts") + os.path.sep + fname) as f:
+					doctype = fname.rsplit(".", 1)[0]
+					script = f.read()
+					if frappe.db.exists("Client Script", {"dt": doctype}):
+						custom_script = frappe.get_doc("Client Script", {"dt": doctype})
+						custom_script.script = script
+						custom_script.save()
+					else:
+						frappe.get_doc({"doctype": "Client Script", "dt": doctype, "script": script}).insert()
 
 
 def export_fixtures(app=None):
