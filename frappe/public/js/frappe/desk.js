@@ -2,6 +2,8 @@
 // MIT License. See license.txt
 /* eslint-disable no-console */
 
+// __('Modules') __('Domains') __('Places') __('Administration') # for translation, don't remove
+
 frappe.start_app = function () {
 	if (!frappe.Application) return;
 	frappe.assets.check();
@@ -135,17 +137,6 @@ frappe.Application = class Application {
 		}
 
 		if (!frappe.boot.developer_mode) {
-			setInterval(function () {
-				frappe.call({
-					method: "frappe.core.page.background_jobs.background_jobs.get_scheduler_status",
-					callback: function (r) {
-						if (r.message[0] == __("Inactive")) {
-							frappe.call("frappe.utils.scheduler.activate_scheduler");
-						}
-					},
-				});
-			}, 300000); // check every 5 minutes
-
 			if (frappe.user.has_role("System Manager")) {
 				setInterval(function () {
 					frappe.call({
@@ -221,8 +212,8 @@ frappe.Application = class Application {
 					reqd: 1,
 				},
 				{
-					fieldtype: "Button",
 					fieldname: "submit",
+					fieldtype: "Button",
 					label: __("Submit", null, "Submit password for Email Account"),
 				},
 			],
@@ -419,7 +410,6 @@ frappe.Application = class Application {
 			frappe.container = new frappe.views.Container();
 		}
 	}
-
 	make_nav_bar() {
 		// toolbar
 		if (frappe.boot && frappe.boot.home_page !== "setup-wizard") {
