@@ -5,6 +5,7 @@ import os
 
 import frappe
 from frappe.core.doctype.data_import.data_import import export_json, import_doc
+from frappe.utils.deprecations import deprecation_warning
 
 
 def sync_fixtures(app=None):
@@ -30,6 +31,10 @@ def import_custom_scripts(app):
 	"""Import custom scripts from `[app]/fixtures/custom_scripts`"""
 	if os.path.exists(frappe.get_app_path(app, "fixtures", "custom_scripts")):
 		for fname in os.listdir(frappe.get_app_path(app, "fixtures", "custom_scripts")):
+			scripts_folder = frappe.get_app_path(app, "fixtures", "custom_scripts")
+			deprecation_warning(
+				f"Importing client script {fname} from {scripts_folder} is deprecated and will be removed in version-15. Use client scripts as fixtures directly."
+			)
 			if fname.endswith(".js"):
 				with open(frappe.get_app_path(app, "fixtures", "custom_scripts") + os.path.sep + fname) as f:
 					doctype = fname.rsplit(".", 1)[0]
