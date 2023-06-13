@@ -1,0 +1,3 @@
+<div class="alert alert-{{ block.alert_type or "info" }}">
+	{{ nested(block.contents) | safe }}
+</div>

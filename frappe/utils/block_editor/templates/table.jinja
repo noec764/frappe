@@ -1,0 +1,31 @@
+{%- macro block_table_td(block, value, ctx) -%}
+{%- set el = "th" if ctx.is_header else "td" -%}
+{%- set attrs = "bgcolor=#fcfcfc" if ctx.is_header else "" -%}
+<{{ el }} {{ attrs }}>
+	{%- if block.withJinja -%}
+	{{ fmt(nested(value, ctx), value) | safe }}
+	{%- else -%}
+	{{ value |e }}
+	{%- endif -%}
+</{{ el }}>
+{%- endmacro -%}
+
+{%- macro block_table_tr(block, values, ctx) -%}
+<tr>
+	{%- for value in values -%}
+	{{ block_table_td(block, value, ctx) }}
+	{%- endfor -%}
+</tr>
+{%- endmacro -%}
+
+<table role="presentation" border="1" cellpadding="10" cellspacing="0" width="100%" style="border-collapse:collapse;" class="table table-bordered table-hover">
+	{%- for row in block.content -%}
+		{%- if is_jinja_row_template(row[0]) -%}
+			{%- for child in get_array_from_jinja_template(row[0], "i", doc) -%}
+				{{ block_table_tr(block, row, {"i": loop.index0, "doc": child}) }}
+			{%- endfor -%}
+		{%- else -%}
+			{{ block_table_tr(block, row, {"is_header": (loop.index0 == 0 and block.withHeadings)}) }}
+		{%- endif -%}
+	{%- endfor -%}
+</table>

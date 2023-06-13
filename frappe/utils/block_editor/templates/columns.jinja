@@ -1,0 +1,20 @@
+<table {{styles.table_colspacing("12px")}} class="block-editor--columns">
+	<tr>
+		{%- set n = block.n_cols -%}
+		{%- for i in range(0, n) -%}
+		{% set col = block['col' ~ i] -%}
+		{% set col_width = (100 / n) ~ "%" -%}
+		<td width="{{ col_width }}" valign="top">
+			{{ nested(col or "") | safe }}
+		</td>
+		{%- endfor -%}
+	</tr>
+</table>
+<style type="text/css">
+	@media only screen and (max-width: 480px) {
+		.block-editor--columns td {
+			display: block !important;
+			width: 100% !important;
+		}
+	}
+</style>

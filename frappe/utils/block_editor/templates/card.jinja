@@ -1,0 +1,16 @@
+<div class="card" {% if block.shadow %}style="box-shadow:var(--shadow-{{ block.shadow }});border:none!important;"{% endif %}>
+	<div class="card-body">
+		{%- if has_content(block.title) -%}
+		<h3 class="card-title mt-0">{{ block.title | safe }}</h3>
+		{%- endif -%}
+		{%- if has_content(block.subtitle) -%}
+		<i class="text-lg mt-0">{{ block.subtitle | safe }}</i>
+		{%- endif -%}
+		{%- if has_content(block.contents) -%}
+		<p class="card-text">{{ nested(block.contents) | safe }}</p>
+		{%- endif -%}
+	</div>
+	{%- if has_content(block.url) -%}
+	<a href="{{ block.url }}" class="stretched-link"></a>
+	{%- endif -%}
+</div>
