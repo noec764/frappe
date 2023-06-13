@@ -852,6 +852,16 @@ export default class GridRow {
 
 		let input_in_focus = false;
 
+		$(col)
+			.find("input[type='text']")
+			.each(function () {
+				if ($(this).is(":focus")) {
+					input_in_focus = true;
+				}
+			});
+
+		!input_in_focus && first_input_field.trigger("focus");
+
 		let vertical = false;
 		let horizontal = false;
 
