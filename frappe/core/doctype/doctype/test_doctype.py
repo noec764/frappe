@@ -675,7 +675,7 @@ class TestDocType(FrappeTestCase):
 		create_custom_fields({doctype: [{"fieldname": field, "fieldtype": "Table", "options": child}]})
 
 		frappe.delete_doc("DocType", child)
-		self.assertFalse(frappe.get_meta(doctype).get_field(field))
+		self.assertFalse(frappe.get_meta(doctype, cached=False).get_field(field))
 
 	@patch.dict(frappe.conf, {"developer_mode": 1})
 	def test_delete_doctype_with_customization(self):
