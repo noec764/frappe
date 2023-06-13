@@ -166,6 +166,7 @@ class MariaDBDatabase(MariaDBConnectionUtil, MariaDBExceptionUtil, Database):
 			"Code": ("longtext", ""),
 			"Text Editor": ("longtext", ""),
 			"Markdown Editor": ("longtext", ""),
+			"Block Editor": ("json", ""),
 			"HTML Editor": ("longtext", ""),
 			"Date": ("date", ""),
 			"Datetime": ("datetime", "6"),

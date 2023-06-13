@@ -130,6 +130,7 @@ class PostgresDatabase(PostgresExceptionUtil, Database):
 			"Code": ("text", ""),
 			"Text Editor": ("text", ""),
 			"Markdown Editor": ("text", ""),
+			"Block Editor": ("json", ""),
 			"HTML Editor": ("text", ""),
 			"Date": ("date", ""),
 			"Datetime": ("timestamp", None),
