@@ -263,6 +263,12 @@ frappe.views.Workspace = class Workspace {
 
 		let page = this.get_page_to_show();
 
+		if (!frappe.router.current_route[0]) {
+			frappe.route_flags.replace_route = true;
+			frappe.set_route(frappe.router.slug(page.public ? page.name : "private/" + page.name));
+			return;
+		}
+
 		const page_details = this.all_pages.filter((p) => p.name == page.name);
 		this.page.set_title(
 			page_details.length ? __(page_details[0].title, null, "Workspace") : __(page.name)
@@ -270,11 +276,6 @@ frappe.views.Workspace = class Workspace {
 
 		this.update_selected_sidebar(this.current_page, false); //remove selected from old page
 		this.update_selected_sidebar(page, true); //add selected on new page
-
-		if (!frappe.router.current_route[0]) {
-			frappe.set_route(frappe.router.slug(page.public ? page.name : "private/" + page.name));
-		}
-
 		this.show_page(page);
 	}
 
@@ -359,12 +360,9 @@ frappe.views.Workspace = class Workspace {
 			default_page = { name: "Administration", public: true };
 		}
 
-		let page =
-			(frappe.get_route()[1] == "private" ? frappe.get_route()[2] : frappe.get_route()[1]) ||
-			default_page.name;
-		let is_public = frappe.get_route()[1]
-			? frappe.get_route()[1] != "private"
-			: default_page.public;
+		const route = frappe.get_route();
+		const page = (route[1] == "private" ? route[2] : route[1]) || default_page.name;
+		const is_public = route[1] ? route[1] != "private" : default_page.public;
 
 		return { name: page, public: is_public };
 	}
