@@ -1204,9 +1204,6 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	for m in messages:
 		contextual_messages.append(m[1] + ":::" + m[2] if len(m) > 2 and m[2] else m[1])
 
-	def escape_newlines(s):
-		return s.replace("\\\n", "|µµµ|").replace("\\n", "|µµ|").replace("\n", "|µ|")
-
 	if get_all:
 		print(str(len(contextual_messages)) + " messages")
 		output = []
@@ -1214,7 +1211,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 			# replace \n with ||| so that internal linebreaks don't get split
 			split_key = m.split(":::")
 			context = split_key[1] if len(split_key) > 1 else ""
-			output.append([escape_newlines(split_key[0]), "", context])
+			output.append([split_key[0], "", context])
 
 		with open(untranslated_file, "w") as f:
 			f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator="\n"))
@@ -1232,7 +1229,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 				# replace \n with ||| so that internal linebreaks don't get split
 				split_key = m.split(":::")
 				context = split_key[1] if len(split_key) > 1 else ""
-				output.append([escape_newlines(split_key[0]), "", context])
+				output.append([split_key[0], "", context])
 			with open(untranslated_file, "w") as f:
 				f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator="\n"))
 		else:
