@@ -4,7 +4,6 @@ from typing import Callable, Iterable, Literal
 from bs4 import BeautifulSoup, Tag
 
 import frappe
-from frappe.utils.block_editor.block_editor_jinja_utils import make_base_context
 
 
 class block_t:

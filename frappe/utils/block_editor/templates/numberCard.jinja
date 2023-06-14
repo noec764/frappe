@@ -4,7 +4,7 @@
 		<td style="padding:0px 16px;"><b style="font-size: 32px; font-weight: 900; color: {{ color }};">{{ formatted_number }}</b></td>
 		{%- if evolution or evolution == 0 -%}
 		<td style="padding:0px 16px; line-height: 1;" align="right" valign="center">
-			<div style="color: {{ color_class }};">
+			<div style="color:rgb({{ caret_color }});">
 				{{ caret_html }} <small>{{ evolution }} %</small>
 			</div>
 			<small style="opacity:.6">
@@ -24,7 +24,7 @@
 	</h3>
 	{% if evolution or evolution == 0 %}
 	<div class="card-text">
-		<div class="card-stats {color_class}">
+		<div class="card-stats {caret_color}">
 			<span class="percentage-stat-area">
 				{{ caret_html }}
 				<span class="percentage-stat">
