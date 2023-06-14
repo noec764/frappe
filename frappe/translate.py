@@ -249,6 +249,9 @@ def get_messages_for_boot():
 	messages = get_all_translations(frappe.local.lang)
 	messages.update(get_dict_from_hooks("boot", None))
 
+	# Remove translations that are identical to the source text
+	messages = {k: v for k, v in messages.items() if k != v}
+
 	return messages
 
 
