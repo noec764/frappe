@@ -32,6 +32,7 @@
   "apply_strict_user_permissions",
   "column_break_21",
   "allow_guests_to_upload_files",
+  "force_web_capture_mode_for_uploads",
   "security",
   "session_expiry",
   "document_share_key_expiry",
@@ -133,6 +134,14 @@
    "fieldtype": "Select",
    "label": "Date Format",
    "options": "yyyy-mm-dd\ndd-mm-yyyy\ndd/mm/yyyy\ndd.mm.yyyy\nmm/dd/yyyy\nmm-dd-yyyy",
+   "reqd": 1
+  },
+  {
+   "default": "HH:mm",
+   "fieldname": "time_format",
+   "fieldtype": "Select",
+   "label": "Time Format",
+   "options": "HH:mm:ss\nHH:mm",
    "reqd": 1
   },
   {
@@ -393,14 +402,6 @@
    "label": "Run Jobs only Daily if Inactive For (Days)"
   },
   {
-   "default": "HH:mm",
-   "fieldname": "time_format",
-   "fieldtype": "Select",
-   "label": "Time Format",
-   "options": "HH:mm:ss\nHH:mm",
-   "reqd": 1
-  },
-  {
    "default": "3",
    "description": "Hourly rate limit for generating password reset links",
    "fieldname": "password_reset_limit",
@@ -577,12 +578,19 @@
    "fieldname": "use_tabulator",
    "fieldtype": "Check",
    "label": "Use Tabulator as Datatable"
+  },
+  {
+   "default": "0",
+   "description": "When uploading files, force the use of the web-based image capture. If this is unchecked, the default behavior is to use the mobile native camera when use from a mobile is detected.",
+   "fieldname": "force_web_capture_mode_for_uploads",
+   "fieldtype": "Check",
+   "label": "Force web capture mode for uploads"
   }
  ],
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2023-07-10 10:16:33.871385",
+ "modified": "2023-08-01 11:40:39.628420",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",
