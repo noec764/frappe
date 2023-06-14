@@ -1,4 +1,5 @@
 import EditorJS from "@editorjs/editorjs";
+import { messages } from "../messages";
 
 export class BlockEditorTool {
 	static get isReadOnlySupported() {
@@ -27,7 +28,7 @@ export class BlockEditorTool {
 	 * Default placeholder for sub-editors
 	 */
 	static get DEFAULT_SUB_EDITOR_PLACEHOLDER() {
-		return "Cliquez ici pour ajouter du contenu...";
+		return __("Click here to add content");
 	}
 
 	/**
@@ -96,21 +97,6 @@ export class BlockEditorTool {
 		return contents;
 	}
 
-	// get fields() {
-	// 	return {
-	// 		title: {
-	// 			type: "contenteditable",
-	// 			placeholder: __("Title..."),
-	// 			default: "",
-	// 		},
-	// 		contents: {
-	// 			type: "editor",
-	// 			placeholder: __("Contents..."),
-	// 			accepts: ["text", "layout", "control"],
-	// 		},
-	// 	};
-	// }
-
 	/**
 	 * @param {import("@editorjs/editorjs").BlockToolConstructorOptions} opts
 	 */
@@ -174,6 +160,14 @@ export class BlockEditorTool {
 			get writeableEditor() {
 				return writeableEditor;
 			},
+			destroy() {
+				dialog?.hide();
+				dialog = null;
+				readOnlyEditor?.destroy();
+				readOnlyEditor = null;
+				writeableEditor?.destroy();
+				writeableEditor = null;
+			},
 		};
 
 		return holder;
@@ -184,7 +178,7 @@ export class BlockEditorTool {
 					holder,
 					fieldname,
 					readOnly: true,
-					placeholder: "Click here to edit...",
+					placeholder: __("Click here to add content"),
 				});
 			}
 			return readOnlyEditor;
@@ -196,7 +190,7 @@ export class BlockEditorTool {
 					holder: dialog.body,
 					fieldname,
 					readOnly: false,
-					placeholder: "Click here to start writing...",
+					placeholder: __("Click here to add content"),
 					onChange: async (data) => {
 						// console.log("onChange", data);
 						await readOnlyEditor?.render(data);
@@ -313,6 +307,10 @@ export class BlockEditorTool {
 			holder,
 			tools: this.getToolsForSubEditor(),
 			tunes: this.getTunesForSubEditor(),
+			i18n: {
+				direction: document.dir || "ltr",
+				messages: messages,
+			},
 
 			// readOnly: readOnly || false,
 

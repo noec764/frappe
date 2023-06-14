@@ -3,7 +3,7 @@ import { BlockEditorTool } from "./tool";
 export default class Columns extends BlockEditorTool {
 	static get toolbox() {
 		return {
-			title: __("Columns"),
+			title: "Columns",
 			icon: `<span class="uil uil-columns"></span>`,
 		};
 	}
@@ -21,7 +21,7 @@ export default class Columns extends BlockEditorTool {
 
 	layout() {
 		this.elements.container = super.layout();
-		this.elements.container.classList.add("row", "be-block--columns");
+		this.elements.container.classList.add("be-block--columns");
 
 		for (let i = 0; i < this.data.n_cols; i++) {
 			const col = this.makeColumnElement(i);
@@ -31,12 +31,7 @@ export default class Columns extends BlockEditorTool {
 	}
 
 	setColumnProperties(index, col) {
-		const col_class = `col-${Math.round(12 / this.data.n_cols)}`;
-
-		// remove all classes starting with "col-"
-		col.className = col.className.replace(/\bcol-\S+/g, "");
-
-		col.classList.add(col_class, "be-block--column");
+		col.classList.add("be-block--column");
 	}
 
 	makeColumnElement(index) {
@@ -57,17 +52,25 @@ export default class Columns extends BlockEditorTool {
 		const wrapper = document.createElement("div");
 		wrapper.classList.add("be-settings");
 
-		const n_cols = document.createElement("input");
-		n_cols.type = "number";
-		n_cols.min = 2;
-		n_cols.max = 6;
-		n_cols.value = this.data.n_cols;
-		n_cols.addEventListener("change", () => {
-			this.data.n_cols = Math.max(+n_cols.value || 0, 2);
-			this.update();
+		const me = this;
+		const control = frappe.ui.form.make_control({
+			parent: wrapper,
+			df: {
+				fieldtype: "Int",
+				label: __("Columns"),
+				fieldname: "n_cols",
+				min: 2,
+				max: 6,
+				onchange() {
+					me.data.n_cols = Math.max(+this.value || 0, 2);
+					me.update();
+				},
+			},
+			render_input: true,
 		});
+		control.value = this.data.n_cols;
+		control.refresh_input();
 
-		wrapper.appendChild(n_cols);
 		return wrapper;
 	}
 

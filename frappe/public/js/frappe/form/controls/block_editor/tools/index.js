@@ -16,7 +16,14 @@ import Table from "./table";
 /** @type {import("@editorjs/editorjs").EditorConfig["tools"]} */
 export const tools = {
 	// Text
-	header: Header,
+	header: {
+		class: Header,
+		inlineToolbar: true,
+		config: {
+			levels: [1, 2, 3],
+			defaultLevel: 1,
+		},
+	},
 	paragraph: {
 		class: Paragraph,
 		inlineToolbar: true,

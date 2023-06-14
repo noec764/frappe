@@ -97,16 +97,18 @@
 }
 
 .dodock-block-editor .be-block--columns {
-	padding: 0.25rem;
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	gap: 3px;
 }
 .dodock-block-editor .be-block--columns > div {
-	background: hsla(0, 0%, 0%, 0.01);
+	border: 2px dashed var(--border-color);
+	border-radius: 5px;
+	min-height: 40px;
 }
 .dodock-block-editor .be-block--columns > div:nth-child(even) {
 	background: hsla(0, 0%, 0%, 0.02);
-}
-.dodock-block-editor .be-block--columns > div:not(:last-child) {
-	border-right: 1px solid hsla(0, 0%, 0%, 0.1);
 }
 
 .frappe-control[data-fieldtype="Block Editor"] {

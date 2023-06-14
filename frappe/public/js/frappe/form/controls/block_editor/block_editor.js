@@ -1,28 +1,14 @@
-import EditorJS from "@editorjs/editorjs";
-
-import { tools, tunes } from "./tools";
-
 frappe.ui.form.ControlBlockEditor = class ControlBlockEditor extends frappe.ui.form.ControlInput {
 	static horizontal = false;
 
-	/** @readonly */
-	static get tools() {
-		return tools;
-	}
-
-	/** @readonly */
-	static get tunes() {
-		return tunes;
-	}
-
-	make_input() {
+	async make_input() {
 		this._input_value = undefined;
 		this._make_dom();
 		this.input_area.appendChild(this.editorArea);
 		this.input_area.appendChild(this.previewArea);
 		this.has_input = true;
 
-		this._make_editor();
+		await this._make_editor();
 		this._make_preview();
 	}
 
@@ -39,34 +25,23 @@ frappe.ui.form.ControlBlockEditor = class ControlBlockEditor extends frappe.ui.f
 		this.editorArea.classList.add("dodock-block-editor", "dodock-block-editor--root");
 	}
 
-	_make_editor() {
+	async _make_editor() {
+		await Promise.all([
+			frappe.require("block_editor.bundle.js"),
+			frappe.require("block_editor.bundle.css"),
+		]);
 		this._input_value = this.unparse(this.value);
-		this.editor = new EditorJS({
-			holder: this.editorArea,
-			tools: this.constructor.tools,
-			tunes: this.constructor.tunes,
-
-			autofocus: false,
-			readOnly: false,
-			logLevel: "INFO",
-
-			data: this._input_value,
-
-			placeholder: "Cliquez ici pour ajouter du contenu...",
-			minHeight: 150,
-
+		this.editor = frappe.ui.form.ControlBlockEditor.make_editorjs({
+			editorArea: this.editorArea,
+			initialData: this._input_value,
 			onReady: () => {
 				this.ready = true;
 				this.refresh_input();
 			},
-
-			onChange: (api, event) => {
-				api.saver.save().then((outputData) => {
-					// if (this.compare_changes(this._input_value, outputData)) {
-					this._input_value = outputData;
-					this.parse_validate_and_set_in_model(outputData);
-					// }
-				});
+			onChange: (outputData) => {
+				// if (this.compare_changes(this._input_value, outputData)) {}
+				this._input_value = outputData;
+				this.parse_validate_and_set_in_model(outputData);
 			},
 		});
 	}
@@ -233,12 +208,10 @@ frappe.ui.form.ControlBlockEditor = class ControlBlockEditor extends frappe.ui.f
 	}
 
 	set_focus() {
-		// console.error("set_focus");
+		this.editor?.focus();
 	}
 
 	set_input(value) {
-		console.error("set_input", value?.blocks?.length ?? value?.substring?.(0, 30));
-
 		if (!this.ready) {
 			return;
 		}

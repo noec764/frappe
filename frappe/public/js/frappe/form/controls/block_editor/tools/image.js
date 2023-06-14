@@ -66,7 +66,7 @@ export default class DodockImage extends Image {
 		/**
 		 * Module for file uploading
 		 */
-		this.uploader = new MyImageUploader({
+		this.uploader = new DodockImageUploader({
 			config: this.config,
 			onUpload: (response) => this.onUpload(response),
 			onError: (error) => this.uploadingFailed(error),
