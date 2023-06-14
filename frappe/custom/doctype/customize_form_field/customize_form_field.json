@@ -96,16 +96,16 @@
    "sort_options": 1
   },
   {
-    "fieldname": "configuration",
-    "fieldtype": "JSON",
-    "hidden": 1,
-    "label": "Configuration"
-},
-{
-    "fieldname": "configuration_button",
-    "fieldtype": "Button",
-    "label": "Edit field configuration"
-},
+   "fieldname": "configuration",
+   "fieldtype": "JSON",
+   "hidden": 1,
+   "label": "Configuration"
+  },
+  {
+   "fieldname": "configuration_button",
+   "fieldtype": "Button",
+   "label": "Edit field configuration"
+  },
   {
    "fieldname": "fieldname",
    "fieldtype": "Data",
