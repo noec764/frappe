@@ -12,10 +12,16 @@ from frappe.website.utils import build_response, clear_website_cache, get_home_p
 class TestWebsite(FrappeTestCase):
 	def setUp(self):
 		frappe.set_user("Guest")
+		self._clearRequest()
 
 	def tearDown(self):
 		frappe.db.delete("Access Log")
 		frappe.set_user("Administrator")
+		self._clearRequest()
+
+	def _clearRequest(self):
+		if hasattr(frappe.local, "request"):
+			delattr(frappe.local, "request")
 
 	def test_home_page(self):
 		frappe.set_user("Administrator")
@@ -327,8 +333,6 @@ class TestWebsite(FrappeTestCase):
 
 		frappe.flags.force_website_cache = False
 
-	# TODO: Fix getting web page in Gitlab CI
-	@unittest.skip("Skipped in CI")
 	def test_safe_render(self):
 		content = get_response_content("/_test/_test_safe_render_on")
 		self.assertNotIn("Safe Render On", content)
