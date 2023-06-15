@@ -212,6 +212,17 @@ def validate_email_address(email_str, throw=False):
 	return ", ".join(out)
 
 
+def is_a_noreply_email_address(email_str: str) -> bool:
+	"""Check if the email is a noreply address."""
+	if not email_str:
+		return True
+
+	if re.match(r"^(.*[._-])?(do[._-]?not|no)[._-]?reply?([+._-].*)?@", email_str):
+		# https://stackoverflow.com/a/72472668
+		return True
+	return False
+
+
 def split_emails(txt):
 	email_list = []
 

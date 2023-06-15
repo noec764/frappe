@@ -14,40 +14,28 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		var me = this;
 		$(`<div class="link-field ui-front" style="position: relative;">
 			<input type="text" class="input-with-feedback form-control">
-			<span class="link-btn">
-				<a class="btn-open no-decoration" title="${__("Open Link")}" tabindex="-1">
-					${frappe.utils.icon("arrow-right", "xs")}
-				</a>
-			</span>
+			<a class="link-btn btn-open no-decoration" style="display: none;" title="${__("Open Link")}">
+				${frappe.utils.icon("uil uil-arrow-right", "sm")}
+			</a>
 		</div>`).prependTo(this.input_area);
 		this.$input_area = $(this.input_area);
 		this.$input = this.$input_area.find("input");
 		this.$link = this.$input_area.find(".link-btn");
-		this.$link_open = this.$link.find(".btn-open");
+		this.$link_open = this.$link;
 		this.set_input_attributes();
 		this.$input.on("focus", function () {
-			setTimeout(function () {
-				if (me.$input.val() && me.get_options()) {
-					let doctype = me.get_options();
-					let name = me.get_input_value();
-					me.$link.toggle(true);
-					me.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
-				}
+			me.update_arrow();
 
-				if (!me.$input.val()) {
-					me.$input.val("").trigger("input");
-
-					// hide link arrow to doctype if none is set
-					me.$link.toggle(false);
-				}
-			}, 150);
+			if (!me.$input.val()) {
+				// force show dropdown, maybe not needed
+				me.$input.val("").trigger("input");
+			}
 		});
-		this.$input.on("blur", function () {
-			// if this disappears immediately, the user's click
-			// does not register, hence timeout
-			setTimeout(function () {
-				me.$link.toggle(false);
-			}, 250);
+		this.$input_area.on("focusout", function () {
+			// if user focuses it again, then do not hide
+			if (!me.input_area.matches(":focus-within")) {
+				me.update_arrow(false);
+			}
 		});
 		this.$input.attr("data-target", this.df.options);
 		this.input = this.$input.get(0);
@@ -83,6 +71,25 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	refresh_input() {
 		super.refresh_input();
 		this.setup_icon(); // refresh icon for dynamic link
+	}
+
+	update_arrow(forced = null) {
+		if (!this.$link?.length) {
+			return;
+		}
+		const should_show =
+			forced ?? (this.input_area.matches(":focus-within") && this.input?.value);
+
+		if (should_show) {
+			const doctype = this.get_options();
+			const name = this.get_input_value();
+			this.$link.toggle(true);
+			this.$link.removeAttr("disabled");
+			this.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
+		} else {
+			this.$link.attr("disabled", "disabled");
+			this.$link_open.attr("href", "#");
+		}
 	}
 
 	async setup_icon() {
@@ -215,6 +222,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.title_value_map[translated_link_text] = value;
 
 		this.set_input_value(translated_link_text);
+		this.update_arrow();
 	}
 	parse_validate_and_set_in_model(value, e, label) {
 		if (this.parse) value = this.parse(value, label);
@@ -371,7 +379,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 			if (!me.get_label_value()) {
 				// hide link arrow to doctype if none is set
-				me.$link.toggle(false);
+				this.update_arrow(false);
 			}
 		});
 
@@ -380,7 +388,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 			if (!me.get_label_value()) {
 				// hide link arrow to doctype if none is set
-				me.$link.toggle(false);
+				this.update_arrow(false);
 			}
 		});
 
