@@ -349,7 +349,7 @@ class TestWebsite(FrappeTestCase):
 		for suffix in FILES_TO_SKIP:
 			path: str = suffix.relative_to(WWW).as_posix()
 			content = get_response_content(path)
-			self.assertIn("404", content)
+			self.assertIn("<title>Not Found</title>", content)
 
 	def test_metatags(self):
 		content = get_response_content("/_test/_test_metatags")
