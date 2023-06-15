@@ -5,6 +5,7 @@ from oauthlib.oauth2 import FatalClientError, OAuth2Error
 from oauthlib.openid.connect.core.endpoints.pre_configured import Server as WebApplicationServer
 
 import frappe
+from frappe import _
 from frappe.integrations.doctype.oauth_provider_settings.oauth_provider_settings import (
 	get_oauth_settings,
 )
@@ -113,7 +114,7 @@ def authorize(**kwargs):
 				resp_html = frappe.render_template(
 					"templates/includes/oauth_confirmation.html", response_html_params
 				)
-				frappe.respond_as_web_page("Confirm Access", resp_html)
+				frappe.respond_as_web_page(_("Confirm Access"), resp_html)
 		except (FatalClientError, OAuth2Error) as e:
 			return generate_json_error_response(e)
 
