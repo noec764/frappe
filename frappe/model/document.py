@@ -1175,7 +1175,7 @@ class Document(BaseDocument):
 
 	def reset_seen(self):
 		"""Clear _seen property and set current user as seen"""
-		if getattr(self.meta, "track_seen", False):
+		if getattr(self.meta, "track_seen", False) and not getattr(self.meta, "issingle", False):
 			frappe.db.set_value(
 				self.doctype,
 				self.name,
@@ -1245,15 +1245,25 @@ class Document(BaseDocument):
 		if self.name is None:
 			return
 
-		frappe.db.set_value(
-			self.doctype,
-			self.name,
-			fieldname,
-			value,
-			self.modified,
-			self.modified_by,
-			update_modified=update_modified,
-		)
+		if self.meta.issingle:
+			frappe.db.set_single_value(
+				self.doctype,
+				fieldname,
+				value,
+				modified=self.modified,
+				modified_by=self.modified_by,
+				update_modified=update_modified,
+			)
+		else:
+			frappe.db.set_value(
+				self.doctype,
+				self.name,
+				fieldname,
+				value,
+				self.modified,
+				self.modified_by,
+				update_modified=update_modified,
+			)
 
 		self.run_method("on_change")
 
@@ -1447,7 +1457,7 @@ class Document(BaseDocument):
 		if not user:
 			user = frappe.session.user
 
-		if self.meta.track_seen and not frappe.flags.read_only:
+		if self.meta.track_seen and not frappe.flags.read_only and not self.meta.issingle:
 			_seen = self.get("_seen") or []
 			_seen = frappe.parse_json(_seen)
 
