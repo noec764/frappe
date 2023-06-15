@@ -51,7 +51,7 @@ class PathResolver:
 			TemplatePage,
 			ListPage,
 			PrintPage,
-			NotFoundPage,
+			# NotFoundPage,
 		]
 
 		for renderer in renderers:
