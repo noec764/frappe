@@ -1438,13 +1438,6 @@ def get_installed_apps(*, _ensure_on_bench=False):
 	return installed
 
 
-def get_mapped_installed_apps(sort=False, frappe_last=False):
-	installed_apps = get_installed_apps(sort, frappe_last)
-	mapped_apps = {"frappe": "dodock", "erpnext": "dokos"}
-
-	return [mapped_apps.get(x, x) for x in installed_apps]
-
-
 def get_doc_hooks():
 	"""Returns hooked methods for given doc. It will expand the dict tuple if required."""
 	if not hasattr(local, "doc_events_hooks"):
