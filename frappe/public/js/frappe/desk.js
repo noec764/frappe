@@ -2,6 +2,8 @@
 // MIT License. See license.txt
 /* eslint-disable no-console */
 
+// __('Modules') __('Domains') __('Places') __('Administration') # for translation, don't remove
+
 frappe.start_app = function () {
 	if (!frappe.Application) return;
 	frappe.assets.check();
@@ -220,8 +222,8 @@ frappe.Application = class Application {
 					reqd: 1,
 				},
 				{
-					fieldtype: "Button",
 					fieldname: "submit",
+					fieldtype: "Button",
 					label: __("Submit", null, "Submit password for Email Account"),
 				},
 			],
@@ -366,7 +368,6 @@ frappe.Application = class Application {
 			frappe.container = new frappe.views.Container();
 		}
 	}
-
 	make_nav_bar() {
 		// toolbar
 		if (frappe.boot && frappe.boot.home_page !== "setup-wizard") {
@@ -461,7 +462,7 @@ frappe.Application = class Application {
 		// Iterate over changelog
 		var change_log_dialog = frappe.msgprint({
 			message: frappe.render_template("change_log", { change_log: change_log }),
-			title: __("New Version 🎉"),
+			title: __("Updated To A New Version 🎉"),
 		});
 		$(change_log_dialog.wrapper).addClass("modal-lg");
 		change_log_dialog.keep_open = true;

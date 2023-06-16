@@ -1675,11 +1675,11 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			})
 			.join("&");
 
-		let full_url = window.location.href.replace(window.location.search, "");
-		if (query_params) {
-			full_url += "?" + query_params;
-		}
-		return full_url;
+		// return updated URL with new query params
+		const url = new URL(window.location.href, window.location.origin);
+		url.search = query_params;
+		// url.hash = "";
+		return url.href;
 	}
 
 	get_menu_items() {

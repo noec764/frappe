@@ -433,9 +433,8 @@ frappe.show_alert = frappe.toast = function (message, seconds = 7, actions = {})
 		div.find(".alert-body").show().html(message.body);
 	}
 
-	div.find(".close, button").click(function () {
-		div.addClass("out");
-		setTimeout(() => div.remove(), 800);
+	div.find(".close, button").on("click", () => {
+		div.remove();
 		return false;
 	});
 
@@ -449,6 +448,7 @@ frappe.show_alert = frappe.toast = function (message, seconds = 7, actions = {})
 	}
 
 	setTimeout(() => {
+		if (!div.get(0).isConnected) return;
 		div.addClass("out");
 		setTimeout(() => div.remove(), 800);
 		return false;
