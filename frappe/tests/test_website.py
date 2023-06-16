@@ -12,10 +12,16 @@ from frappe.website.utils import build_response, clear_website_cache, get_home_p
 class TestWebsite(FrappeTestCase):
 	def setUp(self):
 		frappe.set_user("Guest")
+		self._clearRequest()
 
 	def tearDown(self):
 		frappe.db.delete("Access Log")
 		frappe.set_user("Administrator")
+		self._clearRequest()
+
+	def _clearRequest(self):
+		if hasattr(frappe.local, "request"):
+			delattr(frappe.local, "request")
 
 	def test_home_page(self):
 		frappe.set_user("Administrator")
@@ -327,8 +333,6 @@ class TestWebsite(FrappeTestCase):
 
 		frappe.flags.force_website_cache = False
 
-	# TODO: Fix getting web page in Gitlab CI
-	@unittest.skip("Skipped in CI")
 	def test_safe_render(self):
 		content = get_response_content("/_test/_test_safe_render_on")
 		self.assertNotIn("Safe Render On", content)
@@ -347,8 +351,9 @@ class TestWebsite(FrappeTestCase):
 		FILES_TO_SKIP = choices(list(WWW.glob("**/*.py*")), k=10)
 
 		for suffix in FILES_TO_SKIP:
-			content = get_response_content(suffix.relative_to(WWW))
-			self.assertIn("404", content)
+			path: str = suffix.relative_to(WWW).as_posix()
+			content = get_response_content(path)
+			self.assertIn("<title>Not Found</title>", content)
 
 	def test_metatags(self):
 		content = get_response_content("/_test/_test_metatags")
