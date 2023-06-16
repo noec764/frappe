@@ -73,7 +73,7 @@ def get_events(doctype, start, end, field_map, filters=None, fields=None):
 		fields = [field_map.start, field_map.end, field_map.title, "name"]
 
 	for f in field_map.values():
-		if doc_meta.has_field(f):
+		if f in frappe.model.default_fields or doc_meta.has_field(f):
 			fields.append(f)
 
 	start_date = "ifnull(%s, '0001-01-01 00:00:00')" % field_map.start
