@@ -494,6 +494,7 @@ frappe.views.Planning = class frappePlanning {
 	}
 
 	refresh() {
+		Object.assign(this.field_map, { resourceId: this.list_view.resource });
 		this.fullcalendar.refetchResources();
 		this.fullcalendar.refetchEvents();
 	}
