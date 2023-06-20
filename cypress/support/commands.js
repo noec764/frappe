@@ -33,7 +33,7 @@ Cypress.Commands.add("login", (email, password) => {
 	if (!password) {
 		password = Cypress.env("adminPassword");
 	}
-	cy.request({
+	return cy.request({
 		url: "/api/method/login",
 		method: "POST",
 		body: {
@@ -371,7 +371,9 @@ Cypress.Commands.add("update_doc", (doctype, docname, args) => {
 
 Cypress.Commands.add("switch_to_user", (user) => {
 	cy.call("logout");
+	cy.wait(200);
 	cy.login(user);
+	cy.reload();
 });
 
 Cypress.Commands.add("add_role", (user, role) => {
