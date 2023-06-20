@@ -251,6 +251,7 @@ def safe_enqueue(function, **kwargs):
 	Enqueue function to be executed using a background worker
 	Accepts frappe.enqueue params like job_name, queue, timeout, etc.
 	in addition to params to be passed to function
+
 	:param function: whitelised function or API Method set in Server Script
 	"""
 
@@ -285,12 +286,15 @@ def call_with_form_dict(function, kwargs):
 
 @contextmanager
 def patched_qb():
+	require_patching = isinstance(frappe.qb.terms, types.ModuleType)
 	try:
-		_terms = frappe.qb.terms
-		frappe.qb.terms = _flatten(frappe.qb.terms)
+		if require_patching:
+			_terms = frappe.qb.terms
+			frappe.qb.terms = _flatten(frappe.qb.terms)
 		yield
 	finally:
-		frappe.qb.terms = _terms
+		if require_patching:
+			frappe.qb.terms = _terms
 
 
 @lru_cache
@@ -338,6 +342,7 @@ def read_sql(query, *args, **kwargs):
 
 def check_safe_sql_query(query: str, throw: bool = True) -> bool:
 	"""Check if SQL query is safe for running in restricted context.
+
 	Safe queries:
 	        1. Read only 'select' or 'explain' queries
 	        2. CTE on mariadb where writes are not allowed.
@@ -454,6 +459,7 @@ VALID_UTILS = (
 	"nowtime",
 	"get_first_day",
 	"get_quarter_start",
+	"get_quarter_ending",
 	"get_first_day_of_week",
 	"get_year_start",
 	"get_last_day_of_week",
@@ -465,7 +471,6 @@ VALID_UTILS = (
 	"get_time_str",
 	"get_user_date_format",
 	"get_user_time_format",
-	"formatdate",
 	"format_date",
 	"format_time",
 	"format_datetime",
@@ -531,6 +536,7 @@ VALID_UTILS = (
 	"markdown",
 	"is_subset",
 	"generate_hash",
-	"get_abbr",
+	"formatdate",
 	"get_user_info_for_avatar",
+	"get_abbr",
 )
