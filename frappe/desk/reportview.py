@@ -511,6 +511,7 @@ def delete_items():
 
 
 def delete_bulk(doctype, items):
+	undeleted_items = []
 	for i, d in enumerate(items):
 		try:
 			frappe.delete_doc(doctype, d)
@@ -529,7 +530,11 @@ def delete_bulk(doctype, items):
 		except Exception:
 			# rollback if any record failed to delete
 			# if not rollbacked, queries get committed on after_request method in app.py
+			undeleted_items.append(d)
 			frappe.db.rollback()
+	if undeleted_items and len(items) != len(undeleted_items):
+		frappe.clear_messages()
+		delete_bulk(doctype, undeleted_items)
 
 
 @frappe.whitelist()
