@@ -72,6 +72,25 @@ class MattermostParameters:
 		return {}
 
 
+class DiscordParameters:
+	@staticmethod
+	def get_attachments(data, doc_url):
+		from frappe.utils.data import get_url
+
+		data["content"] = data.pop("text")[:2000]
+
+		data["username"] = frappe.get_website_settings("app_name")
+		data["avatar_url"] = get_url(
+			frappe.get_website_settings("app_logo") or "/assets/frappe/images/dokos-logo-round.png"
+		)
+
+		data["embeds"] = [{"title": _("Document link"), "url": doc_url}]
+
+	@staticmethod
+	def get_error_messages():
+		return {}
+
+
 class IncomingWebhookURL(Document):
 	def get_service_class(self):
 		try:
