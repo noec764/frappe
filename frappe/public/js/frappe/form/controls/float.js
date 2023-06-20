@@ -52,15 +52,16 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 			return this.df.placeholder;
 		}
 
-		if (typeof this.df?.min === "number") {
+		if (typeof this.df.min === "number") {
 			return __("{0}: {1}", [__("Minimum"), this.format_for_input(this.df.min)]);
-		} else if (typeof this.df?.max === "number") {
+		} else if (typeof this.df.max === "number") {
 			return __("{0}: {1}", [__("Maximum"), this.format_for_input(this.df.max)]);
 		}
 
 		const standard_types = ["Currency", "Int", "Float", "Percent"];
 		if (standard_types.some((type) => this.df.fieldtype.includes(type))) {
-			return __(this.df.fieldtype);
+			return this.format_for_input(0, { always_show_decimals: true });
+			// return __(this.df.fieldtype);
 		}
 	}
 
@@ -154,12 +155,12 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	}
 
 	/** @param {number | null} value */
-	format_for_input(value) {
+	format_for_input(value, opts = {}) {
 		if (value == null) {
 			return "";
 		}
 
-		return frappe.format(value, this.df, { inline: true }, this.get_doc());
+		return frappe.format(value, this.df, { inline: true, ...opts }, this.get_doc());
 	}
 
 	eval_expression(value) {
