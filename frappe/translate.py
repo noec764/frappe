@@ -14,6 +14,7 @@ import json
 import os
 import re
 from contextlib import contextmanager
+from csv import reader, writer
 
 from babel.messages.extract import extract_python
 from babel.messages.jslexer import Token, tokenize, unquote_string
@@ -1153,8 +1154,6 @@ def read_csv_file(path):
 	"""Read CSV file and return as list of list
 
 	:param path: File path"""
-	from csv import reader
-
 	with open(path, encoding="utf-8", newline="") as msgfile:
 		data = reader(msgfile)
 		newdata = [[val for val in row] for row in data]
@@ -1261,6 +1260,50 @@ def update_translations(lang, translated_file, app):
 
 		full_dict.update(newdict)
 		write_translations_file(app, lang, full_dict)
+
+
+def migrate_translations(source_app, target_app):
+	"""Migrate target-app-specific translations from source-app to target-app"""
+	clear_cache()
+	strings_in_source_app = [m[1] for m in frappe.translate.get_messages_for_app(source_app)]
+	strings_in_target_app = [m[1] for m in frappe.translate.get_messages_for_app(target_app)]
+
+	strings_in_target_app_but_not_in_source_app = list(
+		set(strings_in_target_app) - set(strings_in_source_app)
+	)
+
+	languages = frappe.translate.get_all_languages()
+
+	source_app_translations_dir = os.path.join(frappe.get_pymodule_path(source_app), "translations")
+	target_app_translations_dir = os.path.join(frappe.get_pymodule_path(target_app), "translations")
+
+	if not os.path.exists(target_app_translations_dir):
+		os.makedirs(target_app_translations_dir)
+
+	for lang in languages:
+		source_csv = os.path.join(source_app_translations_dir, lang + ".csv")
+
+		if not os.path.exists(source_csv):
+			continue
+
+		target_csv = os.path.join(target_app_translations_dir, lang + ".csv")
+		temp_csv = os.path.join(source_app_translations_dir, "_temp.csv")
+
+		with open(source_csv) as s, open(target_csv, "a+") as t, open(temp_csv, "a+") as temp:
+			source_reader = reader(s, lineterminator="\n")
+			target_writer = writer(t, lineterminator="\n")
+			temp_writer = writer(temp, lineterminator="\n")
+
+			for row in source_reader:
+				if row[0] in strings_in_target_app_but_not_in_source_app:
+					target_writer.writerow(row)
+				else:
+					temp_writer.writerow(row)
+
+		if not os.path.getsize(target_csv):
+			os.remove(target_csv)
+		os.remove(source_csv)
+		os.rename(temp_csv, source_csv)
 
 
 def rebuild_all_translation_files():
