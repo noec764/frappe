@@ -557,7 +557,7 @@ def update_permission_property(doctype, role, permlevel, ptype, value=None, vali
 
 	out = setup_custom_perms(doctype)
 
-	name = frappe.db.get_value("Custom DocPerm", dict(parent=doctype, role=role, permlevel=permlevel))
+	name = frappe.get_value("Custom DocPerm", dict(parent=doctype, role=role, permlevel=permlevel))
 	table = DocType("Custom DocPerm")
 	frappe.qb.update(table).set(ptype, value).where(table.name == name).run()
 
