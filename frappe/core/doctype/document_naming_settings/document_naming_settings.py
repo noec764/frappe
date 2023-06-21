@@ -20,7 +20,10 @@ class DocumentNamingSettings(Document):
 		transactions = self._get_transactions()
 		prefixes = self._get_prefixes(transactions)
 
-		return {"transactions": [{"label": _(t), "value": t} for t in transactions], "prefixes": prefixes}
+		return {
+			"transactions": [{"label": _(t), "value": t} for t in transactions],
+			"prefixes": prefixes,
+		}
 
 	def _get_transactions(self) -> list[str]:
 
@@ -163,6 +166,23 @@ class DocumentNamingSettings(Document):
 		if self.prefix is not None:
 			self.current_value = NamingSeries(self.prefix).get_current_value()
 		return self.current_value
+
+	@frappe.whitelist()
+	def update_amendment_rule(self):
+		self.db_set("default_amend_naming", self.default_amend_naming)
+
+		existing_overrides = frappe.db.get_all(
+			"Amended Document Naming Settings",
+			filters={"name": ["not in", [d.name for d in self.amend_naming_override]]},
+			pluck="name",
+		)
+		for override in existing_overrides:
+			frappe.delete_doc("Amended Document Naming Settings", override)
+
+		for row in self.amend_naming_override:
+			row.save()
+
+		frappe.msgprint(_("Amendment naming rules updated."), indicator="green", alert=True)
 
 	@frappe.whitelist()
 	def update_series_start(self):
