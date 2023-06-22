@@ -24,7 +24,6 @@
 	{%- endfor -%}
 </head>
 <body class="full-width">
-	{% include "public/icons/timeless/icons.svg" %}
 	{% include "templates/includes/splash_screen.html" %}
 	<div class="main-section">
 		<header></header>
@@ -60,4 +59,11 @@
 		<source src="{{ sound.src }}"></source>
 	</audio>
 	{% endfor %}
+
+	<script>
+		const xhr = new XMLHttpRequest()
+		xhr.open("GET", "/assets/frappe/icons/timeless/icons.svg")
+		xhr.onload = () => xhr.responseText && xhr.responseText.indexOf("<svg") === 0 && document.body.insertAdjacentHTML("beforeend", xhr.responseText)
+		xhr.send()
+	</script>
 </body>
