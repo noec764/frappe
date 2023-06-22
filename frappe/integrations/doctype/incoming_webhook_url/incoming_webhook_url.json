@@ -32,12 +32,12 @@
    "fieldtype": "Select",
    "in_global_search": 1,
    "label": "Service",
-   "options": "Google Chat\nMattermost\nRocket.Chat\nSlack",
+   "options": "Google Chat\nMattermost\nRocket.Chat\nSlack\nDiscord",
    "reqd": 1
   }
  ],
  "links": [],
- "modified": "2021-10-05 16:30:14.466560",
+ "modified": "2023-06-20 16:52:29.950262",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Incoming Webhook URL",
