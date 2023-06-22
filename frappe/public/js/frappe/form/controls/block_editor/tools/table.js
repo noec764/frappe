@@ -34,7 +34,9 @@ export default class DodockTable extends Table {
 				{
 					fieldtype: "HTML",
 					fieldname: "help",
-					options: `Use <pre><code>{{ doc.items[i].amount }}</pre></code>. If a row contains an array access (<pre><code>[i]</pre></code>), it is used as a template and automatically repeated for each element of the underlying table.`,
+					options: __(
+						`Use <code>{{ doc.items[i].amount }}</code>.<br> If a row contains an array access (<code>[i]</code>), it is used as a template and automatically repeated for each element of the underlying table.`
+					),
 				},
 			],
 		});
