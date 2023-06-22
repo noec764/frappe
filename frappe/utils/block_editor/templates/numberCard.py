@@ -60,7 +60,7 @@ dynamic_filter_evaluators = [
 		"eval": lambda m: frappe.defaults.get_user_default(m.group(1)),
 	},
 	{
-		"match": re.compile(r"^frappe\.session(.*)$"),
+		"match": re.compile(r"^frappe\.session\.(.*)$"),
 		"eval": lambda m: frappe.session.get(m.group(1)),
 	},
 ]
