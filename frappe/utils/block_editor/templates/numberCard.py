@@ -59,6 +59,10 @@ dynamic_filter_evaluators = [
 		"match": re.compile(r'^frappe\.defaults\.get_user_default\("(.*)"\)$'),
 		"eval": lambda m: frappe.defaults.get_user_default(m.group(1)),
 	},
+	{
+		"match": re.compile(r"^frappe\.session(.*)$"),
+		"eval": lambda m: frappe.session.get(m.group(1)),
+	},
 ]
 
 
@@ -79,8 +83,6 @@ def resolve_dynamic_filter(dynamic_filter: list, context: dict):
 def evaluate_dynamic_filters(filters: list, context: dict):
 	if not filters:
 		return []
-	if not isinstance(filters, list):
-		raise UnsupportedFilter("Dynamic filters not supported")
 	if not isinstance(filters, list):
 		raise UnsupportedFilter("Dynamic filters not supported")
 
