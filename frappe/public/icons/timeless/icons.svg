@@ -147,6 +147,10 @@
 		<path d="M4 12L12 4M4 4L12 12" stroke-width="1" stroke-linecap="round" stroke="var(--icon-stroke)"></path>
 	</symbol>
 
+	<symbol viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" id="icon-remove">
+		<path d="M4 12L12 4M4 4L12 12" stroke-width="1" stroke-linecap="round" stroke="var(--icon-stroke)"></path>
+	</symbol>
+
 	<symbol viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" id="icon-close">
 		<path d="M4 12L12 4M4 4L12 12" stroke-width="1" stroke-linecap="round" stroke="var(--icon-stroke)"></path>
 	</symbol>
