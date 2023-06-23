@@ -708,7 +708,7 @@ class Row:
 		elif df.fieldtype == "Link":
 			exists = self.link_exists(value, df)
 			if not exists:
-				msg = _("Value {0} missing for {1}").format(frappe.bold(value), frappe.bold(df.options))
+				msg = _("Value {0} missing for {1}").format(frappe.bold(value), frappe.bold(_(df.options)))
 				self.warnings.append(
 					{
 						"row": self.row_number,
@@ -1005,7 +1005,7 @@ class Column:
 				self.warnings.append(
 					{
 						"col": self.column_number,
-						"message": message.format(self.df.options, missing_values),
+						"message": message.format(_(self.df.options), missing_values),
 						"type": "warning",
 					}
 				)
