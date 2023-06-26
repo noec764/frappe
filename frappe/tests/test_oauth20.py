@@ -5,7 +5,6 @@ import unittest
 from typing import TYPE_CHECKING
 from urllib.parse import parse_qs, urljoin, urlparse
 
-import jwt
 import requests
 from werkzeug.test import TestResponse
 
@@ -363,6 +362,8 @@ class TestOAuth20(FrappeRequestTestCase):
 		self.assertTrue(payload.get("nonce") == nonce)
 
 	def decode_id_token(self, id_token):
+		import jwt
+
 		return jwt.decode(
 			id_token,
 			audience=self.client_id,
