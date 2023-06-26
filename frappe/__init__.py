@@ -5,6 +5,7 @@ globals attached to frappe module
 + some utility functions that should probably be moved
 """
 import functools
+import gc
 import importlib
 import inspect
 import json
@@ -49,6 +50,8 @@ _qb_patched = {}
 re._MAXCACHE = (
 	50  # reduced from default 512 given we are already maintaining this on parent worker
 )
+
+_tune_gc = bool(os.environ.get("FRAPPE_TUNE_GC", False))
 
 if _dev_server:
 	warnings.simplefilter("always", DeprecationWarning)
@@ -2448,3 +2451,13 @@ def validate_and_sanitize_search_inputs(fn):
 		return fn(**kwargs)
 
 	return wrapper
+
+
+if _tune_gc:
+	# generational GC gets triggered after certain allocs (g0) which is 700 by default.
+	# This number is quite small for frappe where a single query can potentially create 700+
+	# objects easily.
+	# Bump this number higher, this will make GC less aggressive but that improves performance of
+	# everything else.
+	g0, g1, g2 = gc.get_threshold()  # defaults are 700, 10, 10.
+	gc.set_threshold(g0 * 10, g1 * 2, g2 * 2)
