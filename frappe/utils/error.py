@@ -1,6 +1,5 @@
-# Copyright (c) 2021, Maxwell Morais and contributors
+# Copyright (c) 2015, Maxwell Morais and contributors
 # License: MIT. See LICENSE
-
 
 import datetime
 import functools
@@ -8,11 +7,8 @@ import inspect
 import json
 import linecache
 import os
-import pydoc
 import sys
 import traceback
-
-from ldap3.core.exceptions import LDAPException
 
 import frappe
 from frappe.utils import cstr, encode
@@ -21,16 +17,31 @@ EXCLUDE_EXCEPTIONS = (
 	frappe.AuthenticationError,
 	frappe.CSRFTokenError,  # CSRF covers OAuth too
 	frappe.SecurityException,
-	LDAPException,
 	frappe.InReadOnlyMode,
 )
+
+LDAP_BASE_EXCEPTION = "LDAPException"
+
+
+def _is_ldap_exception(e):
+	"""Check if exception is from LDAP library.
+
+	This is a hack but ensures that LDAP is not imported unless it's required. This is tested in
+	unittests in case the exception changes in future.
+	"""
+
+	for t in type(e).__mro__:
+		if t.__name__ == LDAP_BASE_EXCEPTION:
+			return True
+
+	return False
 
 
 def make_error_snapshot(exception):
 	if frappe.conf.disable_error_snapshot:
 		return
 
-	if isinstance(exception, EXCLUDE_EXCEPTIONS):
+	if isinstance(exception, EXCLUDE_EXCEPTIONS) or _is_ldap_exception(exception):
 		return
 
 	logger = frappe.logger(with_more_info=True)
@@ -57,6 +68,8 @@ def make_error_snapshot(exception):
 
 
 def get_snapshot(exception, context=10):
+	import pydoc
+
 	"""
 	Return a dict describing a given traceback (based on cgitb.text)
 	"""
@@ -90,11 +103,7 @@ def get_snapshot(exception, context=10):
 
 		if func != "?":
 			call = inspect.formatargvalues(
-				args,
-				varargs,
-				varkw,
-				locals,
-				formatvalue=lambda value: f"={pydoc.text.repr(value)}",
+				args, varargs, varkw, locals, formatvalue=lambda value: f"={pydoc.text.repr(value)}"
 			)
 
 		# basic frame information
@@ -141,11 +150,9 @@ def get_snapshot(exception, context=10):
 	# add exception type, value and attributes
 	if isinstance(evalue, BaseException):
 		for name in dir(evalue):
-			# prevent py26 DeprecationWarning
 			if name != "messages" and not name.startswith("__"):
 				value = pydoc.text.repr(getattr(evalue, name))
-
-				s["exception"][name] = frappe.safe_encode(value)
+				s["exception"][name] = encode(value)
 
 	# add all local values (of last frame) to the snapshot
 	for name, value in locals.items():
@@ -228,13 +235,16 @@ def get_default_args(func):
 
 def raise_error_on_no_output(error_message, error_type=None, keep_quiet=None):
 	"""Decorate any function to throw error incase of missing output.
+
 	TODO: Remove keep_quiet flag after testing and fixing sendmail flow.
+
 	:param error_message: error message to raise
 	:param error_type: type of error to raise
 	:param keep_quiet: control error raising with external factor.
 	:type error_message: str
 	:type error_type: Exception Class
 	:type keep_quiet: function
+
 	>>> @raise_error_on_no_output("Ingradients missing")
 	... def get_indradients(_raise_error=1): return
 	...
