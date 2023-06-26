@@ -617,7 +617,8 @@ defineExpose({
 	add_files,
 	upload_files,
 	toggle_all_private,
-	wrapper_ready
+	wrapper_ready,
+	close_dialog,
 });
 </script>
 

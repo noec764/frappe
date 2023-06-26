@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import FileUploaderComponent from "./FileUploader.vue";
+import { watch } from "vue";
 
 class FileUploader {
 	constructor({
@@ -57,8 +58,8 @@ class FileUploader {
 		if (this.dialog && forced_file_visibility) {
 			this.dialog.get_secondary_btn().hide();
 		} else {
-			this.uploader.$watch(
-				"files",
+			watch(
+				() => this.uploader.files,
 				(files) => {
 					let all_private = files.every((file) => file.private);
 					if (this.dialog) {
@@ -71,27 +72,36 @@ class FileUploader {
 			);
 		}
 
-		this.uploader.$watch("trigger_upload", (trigger_upload) => {
-			if (trigger_upload) {
-				this.upload_files();
+		watch(
+			() => this.uploader.trigger_upload,
+			(trigger_upload) => {
+				if (trigger_upload) {
+					this.upload_files();
+				}
 			}
-		});
+		);
 
-		this.uploader.$watch("close_dialog", (close_dialog) => {
-			if (close_dialog) {
-				this.dialog && this.dialog.hide();
+		watch(
+			() => this.uploader.close_dialog,
+			(close_dialog) => {
+				if (close_dialog) {
+					this.dialog && this.dialog.hide();
+				}
 			}
-		});
+		);
 
-		this.uploader.$watch("hide_dialog_footer", (hide_dialog_footer) => {
-			if (hide_dialog_footer) {
-				this.dialog && this.dialog.footer.addClass("hide");
-				this.dialog.$wrapper.data("bs.modal")._config.backdrop = "static";
-			} else {
-				this.dialog && this.dialog.footer.removeClass("hide");
-				this.dialog.$wrapper.data("bs.modal")._config.backdrop = true;
+		watch(
+			() => this.uploader.hide_dialog_footer,
+			(hide_dialog_footer) => {
+				if (hide_dialog_footer) {
+					this.dialog && this.dialog.footer.addClass("hide");
+					this.dialog.$wrapper.data("bs.modal")._config.backdrop = "static";
+				} else {
+					this.dialog && this.dialog.footer.removeClass("hide");
+					this.dialog.$wrapper.data("bs.modal")._config.backdrop = true;
+				}
 			}
-		});
+		);
 
 		if (files && files.length) {
 			this.uploader.add_files(files);
