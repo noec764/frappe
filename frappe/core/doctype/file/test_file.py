@@ -1,12 +1,10 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-
 import base64
 import json
 import os
 import shutil
 import tempfile
-import unittest
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
@@ -20,7 +18,7 @@ from frappe.core.api.file import (
 	unzip_file,
 )
 from frappe.core.doctype.file.utils import delete_file, get_extension
-from frappe.exceptions import DoesNotExistError, ValidationError
+from frappe.exceptions import ValidationError
 from frappe.tests.utils import FrappeTestCase
 from frappe.utils import get_files_path
 
@@ -366,24 +364,7 @@ class TestFile(FrappeTestCase):
 		_file.save()
 
 		folder = frappe.get_doc("File", "Home/Test Folder 1/Test Folder 3")
-		folder.delete()
-		self.assertRaises(DoesNotExistError, _file.reload)
-
-	def test_folder_delete(self):
-		folder = self.get_folder("Test Folder Delete")
-		file = frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "should_be_deleted.txt",
-				"attached_to_name": "",
-				"attached_to_doctype": "",
-				"folder": folder.name,
-				"content": "Testing folder recursive delete example",
-			}
-		)
-		file.save()
-		folder.delete()
-		self.assertRaises(frappe.DoesNotExistError, file.reload)
+		self.assertRaises(ValidationError, folder.delete)
 
 	def test_same_file_url_update(self):
 		attached_to_doctype1, attached_to_docname1 = make_test_doc()
@@ -468,8 +449,6 @@ class TestFile(FrappeTestCase):
 		test_file.file_name = "/private/files/_file"
 		self.assertRaisesRegex(ValidationError, "File name cannot have", test_file.validate)
 
-	# TODO: Fix accessing thumbnail in Gitlab CI
-	@unittest.skip("Skipped in CI")
 	def test_make_thumbnail(self):
 		# test web image
 		test_file: "File" = frappe.get_doc(
@@ -493,7 +472,7 @@ class TestFile(FrappeTestCase):
 		).insert(ignore_permissions=True)
 
 		test_file.make_thumbnail()
-		self.assertTrue(test_file.thumbnail_url.endswith("_small.jpeg"))
+		self.assertTrue(test_file.thumbnail_url.endswith("_small.jpg"))
 
 		# test local image
 		test_file.db_set("thumbnail_url", None)
@@ -587,6 +566,7 @@ class TestAttachment(FrappeTestCase):
 
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		frappe.get_doc(
 			doctype="DocType",
 			name=cls.test_doctype,
@@ -631,46 +611,42 @@ class TestAttachmentsAccess(FrappeTestCase):
 	def setUp(self) -> None:
 		frappe.db.delete("File", {"is_folder": 0})
 
-	def test_attachments_access(self):
+	def test_list_private_attachments(self):
 		frappe.set_user("test4@example.com")
 		self.attached_to_doctype, self.attached_to_docname = make_test_doc()
 
-		frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test_user.txt",
-				"attached_to_doctype": self.attached_to_doctype,
-				"attached_to_name": self.attached_to_docname,
-				"content": "Testing User",
-			}
+		frappe.new_doc(
+			"File",
+			file_name="test_user_attachment.txt",
+			attached_to_doctype=self.attached_to_doctype,
+			attached_to_name=self.attached_to_docname,
+			content="Testing User",
+			is_private=1,
 		).insert()
 
-		frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test_user_home.txt",
-				"content": "User Home",
-			}
+		frappe.new_doc(
+			"File",
+			file_name="test_user_standalone.txt",
+			content="User Home",
+			is_private=1,
 		).insert()
 
 		frappe.set_user("test@example.com")
 
-		frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test_system_manager.txt",
-				"attached_to_doctype": self.attached_to_doctype,
-				"attached_to_name": self.attached_to_docname,
-				"content": "Testing System Manager",
-			}
+		frappe.new_doc(
+			"File",
+			file_name="test_sm_attachment.txt",
+			attached_to_doctype=self.attached_to_doctype,
+			attached_to_name=self.attached_to_docname,
+			content="Testing System Manager",
+			is_private=1,
 		).insert()
 
-		frappe.get_doc(
-			{
-				"doctype": "File",
-				"file_name": "test_sm_home.txt",
-				"content": "System Manager Home",
-			}
+		frappe.new_doc(
+			"File",
+			file_name="test_sm_standalone.txt",
+			content="System Manager Home",
+			is_private=1,
 		).insert()
 
 		system_manager_files = [file.file_name for file in get_files_in_folder("Home")["files"]]
@@ -684,15 +660,47 @@ class TestAttachmentsAccess(FrappeTestCase):
 			file.file_name for file in get_files_in_folder("Home/Attachments")["files"]
 		]
 
-		self.assertIn("test_sm_home.txt", system_manager_files)
-		self.assertNotIn("test_sm_home.txt", user_files)
-		self.assertIn("test_user_home.txt", system_manager_files)
-		self.assertIn("test_user_home.txt", user_files)
+		self.assertIn("test_sm_standalone.txt", system_manager_files)
+		self.assertNotIn("test_sm_standalone.txt", user_files)
 
-		self.assertIn("test_system_manager.txt", system_manager_attachments_files)
-		self.assertNotIn("test_system_manager.txt", user_attachments_files)
-		self.assertIn("test_user.txt", system_manager_attachments_files)
-		self.assertIn("test_user.txt", user_attachments_files)
+		self.assertIn("test_user_standalone.txt", user_files)
+		self.assertNotIn("test_user_standalone.txt", system_manager_files)
+
+		self.assertIn("test_sm_attachment.txt", system_manager_attachments_files)
+		self.assertIn("test_sm_attachment.txt", user_attachments_files)
+		self.assertIn("test_user_attachment.txt", system_manager_attachments_files)
+		self.assertIn("test_user_attachment.txt", user_attachments_files)
+
+	def test_list_public_single_file(self):
+		"""Ensure that users are able to list public standalone files."""
+		frappe.set_user("test@example.com")
+		frappe.new_doc(
+			"File",
+			file_name="test_public_single.txt",
+			content="Public single File",
+			is_private=0,
+		).insert()
+
+		frappe.set_user("test4@example.com")
+		files = [file.file_name for file in get_files_in_folder("Home")["files"]]
+		self.assertIn("test_public_single.txt", files)
+
+	def test_list_public_attachment(self):
+		"""Ensure that users are able to list public attachments."""
+		frappe.set_user("test@example.com")
+		self.attached_to_doctype, self.attached_to_docname = make_test_doc()
+		frappe.new_doc(
+			"File",
+			file_name="test_public_attachment.txt",
+			attached_to_doctype=self.attached_to_doctype,
+			attached_to_name=self.attached_to_docname,
+			content="Public Attachment",
+			is_private=0,
+		).insert()
+
+		frappe.set_user("test4@example.com")
+		files = [file.file_name for file in get_files_in_folder("Home/Attachments")["files"]]
+		self.assertIn("test_public_attachment.txt", files)
 
 	def tearDown(self) -> None:
 		frappe.set_user("Administrator")
