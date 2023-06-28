@@ -1629,7 +1629,7 @@ Commit,Ecrire dans la base de données,
 Common names and surnames are easy to guess.,Noms et prénoms communs sont faciles à deviner.,
 Communicated via {0} on {1}: {2},Communiquée par {0} sur {1}: {2},
 Communication Link,Lien de communication,
-Communication Logs,Journal des communications,
+Communication Logs,Journal des emails,
 Communication Type,Type de communication,
 Communication,Communication,
 Compact Item Print,Impression des articles compacte,
@@ -2383,9 +2383,9 @@ Email Id,Adresse email,
 Email Inbox,Boîte de réception,
 Email Login ID,Identifiant de connexion à la boîte email,
 Email Name,Nom de l'email,
-Email Queue Recipient,Destinataire de la Liste d'Attente d'Emails,
-Email Queue records.,Registres de file d'attente Email.,
-Email Queue,Journal des emails,
+Email Queue Recipient,Destinataire de la file d'attente d'envoi d'emails,
+Email Queue records.,Registres de file d'attente d'envoi d'emails.,
+Email Queue,File d'attente d'envoi d'emails,
 Email Reply Help,Aide aux réponses par email,
 Email Retry Limit,Limite de tentative d'envoi des emails,
 Email Rule,Règle Email,
@@ -6288,7 +6288,7 @@ Syncing,Synchronisation en cours,
 Syntax Error,Erreur de syntaxe,
 Syntax error in template,Erreur de syntaxe dans le modèle,
 System Console,Console système,
-System Logs,Journal du système,
+System Logs,Journaux système,
 System Manager privileges required.,Les privilèges du Responsable Système sont requis.,
 System Manager,Responsable système,
 System Notification,Notification système,
@@ -6631,7 +6631,7 @@ To User,Pour l'utilisateur,
 <div>
 <pre><code>{ ""id"": ""{{ doc.name }}"" }</code>
 </pre>
-</div>","Pour ajouter des valeurs dynamiques depuis le document, utilisez des balises Jinja comme 
+</div>","Pour ajouter des valeurs dynamiques depuis le document, utilisez des balises Jinja comme
 
 <div>
 <pre><code>{ ""id"": ""{{ doc.name }}"" }</code>
