@@ -266,7 +266,9 @@ frappe.views.Planning = class frappePlanning {
 				initialView:
 					initialView &&
 					["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
-						? initialView.replace("timeGrid", "resourceTimeline")
+						? initialView
+								.replace("timeGrid", "resourceTimeline")
+								.replace("dayGrid", "resourceTimeline")
 						: "resourceTimelineMonth",
 				weekends: weekends ? weekends : true,
 			};
@@ -365,7 +367,7 @@ frappe.views.Planning = class frappePlanning {
 				resourceTimeGridPlugin,
 			],
 			schedulerLicenseKey: frappe.boot.fullcalendar_scheduler_licence_key,
-			initialView: "resourceTimelineWeek",
+			initialView: defaults.initialView,
 			headerToolbar: {
 				left: "resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth resourceTimeGridDay",
 				center: "prev,title,next",
