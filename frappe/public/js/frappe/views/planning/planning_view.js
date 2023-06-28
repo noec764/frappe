@@ -581,7 +581,8 @@ frappe.views.Planning = class frappePlanning {
 
 		const updated_args = me.get_update_args(firstEvent);
 		if (this.field_map.resourceId) {
-			updated_args.args[this.field_map.resourceId] = info.newResource.id;
+			updated_args.args[this.field_map.resourceId] =
+				info.newResource?.id || info.event.extendedProps[this.field_map.resourceId];
 		}
 
 		return frappe.call({
