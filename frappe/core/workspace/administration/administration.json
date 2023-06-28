@@ -79,20 +79,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Error Snapshot",
-   "link_count": 0,
-   "link_to": "Error Snapshot",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2023-04-14 09:52:41.126233",
+ "modified": "2023-06-28 09:52:41.126233",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Administration",
