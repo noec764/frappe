@@ -4,11 +4,6 @@ img {
 	position: relative;
 }
 
-@include broken-img(
-	$height: 175px,
-	$border-radius: 0,
-);
-
 .website-image-placeholder {
 	display: flex;
 	justify-content: center;
