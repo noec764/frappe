@@ -511,7 +511,7 @@ def insert_event_to_calendar(account, event, recurrence=None):
 
 	calendar_event = {
 		"doctype": "Event",
-		"subject": event.get("summary"),
+		"subject": event.get("summary") or _("No Subject"),
 		"description": event.get("description"),
 		"sync_with_google_calendar": 1,
 		"google_calendar": account.name,
