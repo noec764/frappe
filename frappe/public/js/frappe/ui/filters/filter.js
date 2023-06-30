@@ -270,6 +270,10 @@ frappe.ui.Filter = class {
 	}
 
 	make_field(df, old_fieldtype) {
+		if (["JSON", "Code", "Markdown Editor", "HTML Editor"].includes(df.fieldtype)) {
+			df = { ...df, fieldtype: "Data" };
+		}
+
 		let old_text = this.field ? this.field.get_value() : null;
 		this.hide_invalid_conditions(df.fieldtype, df.original_type);
 		this.toggle_nested_set_conditions(df);
