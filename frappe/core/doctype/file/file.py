@@ -116,8 +116,7 @@ class File(Document):
 	def on_trash(self):
 		if self.is_home_folder or self.is_attachments_folder:
 			frappe.throw(_("Cannot delete Home and Attachments folders"))
-		# self.validate_empty_folder()
-		self.folder_delete_children()
+		self.validate_empty_folder()
 		self._delete_file_on_disk()
 		if not self.is_folder:
 			self.add_comment_in_reference_doc("Attachment Removed", _("Removed {0}").format(self.file_name))
