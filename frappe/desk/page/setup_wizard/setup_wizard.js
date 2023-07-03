@@ -241,6 +241,37 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 		this.setup_keyboard_nav();
 	}
 
+	setup_keyboard_nav() {
+		$("body").on("keydown", this.handle_enter_press.bind(this));
+	}
+
+	disable_keyboard_nav() {
+		$("body").off("keydown", this.handle_enter_press.bind(this));
+	}
+
+	handle_enter_press(e) {
+		if (e.which === frappe.ui.keyCode.ENTER) {
+			let $target = $(e.target);
+			if ($target.hasClass("prev-btn") || $target.hasClass("next-btn")) {
+				$target.trigger("click");
+			} else {
+				// hitting enter on autocomplete field shouldn't trigger next slide.
+				if ($target.data().fieldtype == "Autocomplete") return;
+
+				this.container.find(".next-btn").trigger("click");
+				e.preventDefault();
+			}
+		}
+	}
+
+	before_show_slide() {
+		if (!this.welcomed) {
+			frappe.set_route(this.page_name);
+			return false;
+		}
+		return true;
+	}
+
 	show_slide(id) {
 		super.show_slide(id);
 		frappe.set_route(this.page_name, cstr(id));
