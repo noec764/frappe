@@ -397,15 +397,6 @@ class Session:
 		return updated_in_db
 
 
-def get_expired_threshold():
-	"""Get cutoff time before which all sessions are considered expired."""
-
-	now = frappe.utils.now()
-	expiry_in_seconds = get_expiry_in_seconds()
-
-	return add_to_date(now, seconds=-expiry_in_seconds, as_string=True)
-
-
 def get_expiry_period_for_query():
 	if frappe.db.db_type == "postgres":
 		return get_expiry_period()
@@ -419,6 +410,15 @@ def get_expiry_in_seconds(expiry=None):
 
 	parts = expiry.split(":")
 	return (cint(parts[0]) * 3600) + (cint(parts[1]) * 60) + cint(parts[2])
+
+
+def get_expired_threshold():
+	"""Get cutoff time before which all sessions are considered expired."""
+
+	now = frappe.utils.now()
+	expiry_in_seconds = get_expiry_in_seconds()
+
+	return add_to_date(now, seconds=-expiry_in_seconds, as_string=True)
 
 
 def get_expiry_period():

@@ -38,6 +38,7 @@ def add_user(email, password, username=None, mobile_no=None):
 class TestAuth(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		cls.HOST_NAME = frappe.get_site_config().host_name or get_site_url(frappe.local.site)
 		cls.test_user_email = "test_auth@test.com"
 		cls.test_user_name = "test_auth_user"
