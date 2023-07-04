@@ -2,7 +2,6 @@
 # License: MIT. See LICENSE
 import json
 import time
-import unittest
 from contextlib import contextmanager
 
 import frappe
@@ -43,7 +42,7 @@ class TestPreparedReport(FrappeTestCase):
 
 		return doc
 
-	def test_queueing_and_data(self):
+	def test_queueing(self):
 		doc = self.create_prepared_report()
 		self.assertEqual("Queued", doc.status)
 		self.assertTrue(doc.queued_at)

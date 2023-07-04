@@ -109,7 +109,7 @@ def generate_report(prepared_report):
 	)
 
 
-def update_job_id(prepared_report, job_id):
+def update_job_id(prepared_report):
 	job = get_current_job()
 
 	frappe.db.set_value(
