@@ -276,9 +276,6 @@ def install_app(name, verbose=False, set_as_patched=True, force=False):
 
 	print(f"\nInstalling {name}...")
 
-	for fn in frappe.get_hooks("before_app_install"):
-		frappe.get_attr(fn)(name)
-
 	if name != "frappe":
 		frappe.only_for("System Manager")
 
@@ -286,6 +283,9 @@ def install_app(name, verbose=False, set_as_patched=True, force=False):
 		out = frappe.get_attr(before_install)()
 		if out is False:
 			return
+
+	for fn in frappe.get_hooks("before_app_install"):
+		frappe.get_attr(fn)(name)
 
 	if name != "frappe":
 		add_module_defs(name, ignore_if_duplicate=force)
