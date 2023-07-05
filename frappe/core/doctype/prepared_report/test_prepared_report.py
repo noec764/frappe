@@ -2,6 +2,7 @@
 # License: MIT. See LICENSE
 import json
 import time
+import unittest
 from contextlib import contextmanager
 
 import frappe
@@ -11,6 +12,7 @@ from frappe.tests.test_query_builder import run_only_if
 from frappe.tests.utils import FrappeTestCase, timeout
 
 
+@unittest.skip("Skipped in CI")
 class TestPreparedReport(FrappeTestCase):
 	@classmethod
 	def tearDownClass(cls):

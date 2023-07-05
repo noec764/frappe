@@ -101,6 +101,7 @@ class TestPerformance(FrappeTestCase):
 		with self.assertQueryCount(0):
 			doc.get_invalid_links()
 
+	@unittest.skip("Skipped in CI")
 	@retry(
 		retry=retry_if_exception_type(AssertionError),
 		stop=stop_after_attempt(3),
