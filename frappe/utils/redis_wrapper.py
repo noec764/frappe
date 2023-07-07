@@ -35,7 +35,7 @@ class RedisWrapper(redis.Redis):
 			return False
 
 	def __call__(self):
-		"""WARNING: Added for backward compatibility to support frappe.cache.method(...)"""
+		"""WARNING: Added for backward compatibility to support frappe.cache().method(...)"""
 		return self
 
 	def make_key(self, key, user=None, shared=False):

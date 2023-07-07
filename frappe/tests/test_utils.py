@@ -460,6 +460,7 @@ class TestPythonExpressions(FrappeTestCase):
 class TestDiffUtils(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
+		super().setUpClass()
 		cls.doc = frappe.get_doc(doctype="Client Script", dt="Client Script", name="test_client_script")
 		cls.doc.insert()
 		cls.doc.script = "2;"

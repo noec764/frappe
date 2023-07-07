@@ -49,6 +49,13 @@ frappe.listview_settings["RQ Job"] = {
 			if (!listview.list_view_settings.disable_auto_refresh) {
 				listview.refresh();
 			}
+
+			const route = frappe.get_route() || [];
+			if (route[0] != "List" || "RQ Job" != route[1]) {
+				return;
+			}
+
+			listview.refresh();
 		}, 15000);
 	},
 };

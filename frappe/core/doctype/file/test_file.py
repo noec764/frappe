@@ -5,9 +5,9 @@ import json
 import os
 import shutil
 import tempfile
-import unittest
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
+import unittest
 
 import frappe
 from frappe import _

@@ -107,7 +107,7 @@ class TestRQJob(FrappeTestCase):
 		self.assertIn("quitting", cstr(stderr))
 
 	@timeout(20)
-	def test_job_id_dedup(self):
+	def test_job_id_manual_dedup(self):
 		job_id = "test_dedup"
 		job = frappe.enqueue(self.BG_JOB, sleep=5, job_id=job_id)
 		self.assertTrue(is_job_enqueued(job_id))
