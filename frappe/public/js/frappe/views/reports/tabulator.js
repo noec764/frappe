@@ -44,15 +44,23 @@ export default class TabulatorDataTable {
 				});
 			},
 		};
+
+		this.datamanager = {
+			getColumns: (bool) => {
+				return this.columns;
+			},
+		};
 		/* */
 	}
 
 	refresh(data, columns) {
 		this.create_data_sample(data);
+
 		this.map_columns(columns);
 		this.table.setColumns(this.columns);
+
 		this.get_data(data);
-		this.table.updateOrAddData(this.data);
+		this.table.replaceData(this.data);
 	}
 
 	create_data_sample(data) {
@@ -62,9 +70,10 @@ export default class TabulatorDataTable {
 	map_columns(columns) {
 		this.columns = columns.map((col) => {
 			const mapped_col = Object.assign({}, col, {
-				title: col.label,
-				field: col.fieldname,
+				title: "docfield" in col ? col.docfield.label : col.label,
+				field: "docfield" in col ? col.docfield.fieldname : col.fieldname,
 				width: null,
+				docfield: null,
 			});
 
 			const report_columns = Object.assign(mapped_col, this.get_formatter(col));
@@ -85,13 +94,12 @@ export default class TabulatorDataTable {
 				const cellValue = cell.getValue();
 				const row = cell.getRow();
 				const cellRowData = row.getData();
-				const cellRowCells = row.getCells();
 
 				if (!cellValue) {
 					return null;
 				}
 
-				return column.format(cellValue, cellRowCells, column, cellRowData);
+				return column.format(cellValue, cellRowData, column, cellRowData);
 			},
 		};
 
@@ -125,27 +133,46 @@ export default class TabulatorDataTable {
 		*/
 	}
 
-	get_data() {
-		if (!this.options.data.length) {
-			this.data = [];
+	get_data(data) {
+		this.data = [];
+		if (!data.length) {
+			return;
+		}
+
+		if (Array.isArray(data[0])) {
+			const fields = this.columns.map((c) => c.field);
+			data.forEach((dataList) => {
+				let row = {};
+				dataList.forEach((d, i) => {
+					row[fields[i]] = d[fields[i]] || d.content;
+				});
+
+				if (row.name && !row.id) {
+					row["id"] = row.name;
+				} else if (!row.id) {
+					row["id"] = Object.values(row).join("");
+				}
+
+				this.data.push(row);
+			});
 			return;
 		}
 
 		this.is_tree = Boolean(this.data_sample.filter((d) => d.indent).length);
 
 		if (this.is_tree) {
-			this.data = indentListToTree(this.options.data);
+			this.data = indentListToTree(data);
 			return;
-		} else if (!this.options.data[0].id) {
-			if (this.options.data[0].name) {
-				this.data = this.options.data.map((d) => {
+		} else if (!data[0].id) {
+			if (data[0].name) {
+				this.data = data.map((d) => {
 					return Object.assign({}, d, {
 						id: d.name,
 					});
 				});
 				return;
 			} else {
-				this.data = this.options.data.map((d) => {
+				this.data = data.map((d) => {
 					return Object.assign({}, d, {
 						id: Object.values(d).join(""),
 					});
@@ -153,7 +180,7 @@ export default class TabulatorDataTable {
 				return;
 			}
 		} else {
-			this.data = this.options.data;
+			this.data = data;
 			return;
 		}
 	}
