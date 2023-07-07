@@ -1,2 +1,11 @@
 @import "~frappe-datatable/dist/frappe-datatable";
 @import "frappe/public/css/tree_grid.css";
+@import "~tabulator-tables/dist/css/tabulator_bootstrap4";
+
+.fullscreen-report {
+	position: fixed;
+	top: 60px;
+	left: 0;
+	bottom: 0;
+	right: 0;
+}

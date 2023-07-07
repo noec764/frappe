@@ -6,3 +6,4 @@ import "./frappe/views/reports/print_tree.html";
 import "./frappe/ui/group_by/group_by.html";
 import "./frappe/ui/group_by/group_by.js";
 import "./frappe/views/reports/report_utils.js";
+import "./frappe/views/reports/tabulator.js";
