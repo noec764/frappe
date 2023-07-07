@@ -43,6 +43,9 @@ export default class TabulatorDataTable {
 					r.treeExpand();
 				});
 			},
+			setTreeDepth: (depth) => {
+				// TODO
+			},
 		};
 
 		this.datamanager = {
@@ -61,6 +64,10 @@ export default class TabulatorDataTable {
 
 		this.get_data(data);
 		this.table.replaceData(this.data);
+
+		this.table.getColumns().forEach((column) => {
+			column.setWidth(true);
+		});
 	}
 
 	create_data_sample(data) {
