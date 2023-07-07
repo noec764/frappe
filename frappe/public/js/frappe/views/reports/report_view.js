@@ -307,7 +307,7 @@ frappe.views.ReportView = class ReportView extends frappe.views.ListView {
 
 	setup_datatable(values) {
 		this.$datatable_wrapper.empty();
-		this.datatable = new DataTable(this.$datatable_wrapper[0], {
+		this.datatable = new window.DataTable(this.$datatable_wrapper[0], {
 			columns: this.columns,
 			data: this.get_data(values),
 			getEditor: this.get_editing_object.bind(this),
