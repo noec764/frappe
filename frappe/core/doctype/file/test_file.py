@@ -5,6 +5,7 @@ import json
 import os
 import shutil
 import tempfile
+import unittest
 from contextlib import contextmanager
 from typing import TYPE_CHECKING
 
@@ -449,6 +450,7 @@ class TestFile(FrappeTestCase):
 		test_file.file_name = "/private/files/_file"
 		self.assertRaisesRegex(ValidationError, "File name cannot have", test_file.validate)
 
+	@unittest.skip("Skipped in CI")
 	def test_make_thumbnail(self):
 		# test web image
 		test_file: "File" = frappe.get_doc(

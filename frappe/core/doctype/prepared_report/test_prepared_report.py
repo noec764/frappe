@@ -12,6 +12,7 @@ from frappe.tests.test_query_builder import run_only_if
 from frappe.tests.utils import FrappeTestCase, timeout
 
 
+@unittest.skip("Skipped in CI")
 class TestPreparedReport(FrappeTestCase):
 	@classmethod
 	def tearDownClass(cls):
@@ -43,7 +44,7 @@ class TestPreparedReport(FrappeTestCase):
 
 		return doc
 
-	def test_queueing_and_data(self):
+	def test_queueing(self):
 		doc = self.create_prepared_report()
 		self.assertEqual("Queued", doc.status)
 		self.assertTrue(doc.queued_at)

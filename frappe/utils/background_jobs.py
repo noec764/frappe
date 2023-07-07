@@ -29,6 +29,7 @@ from frappe.utils.redis_queue import RedisQueue
 RQ_JOB_FAILURE_TTL = 7 * 24 * 60 * 60  # 7 days instead of 1 year (default)
 RQ_RESULTS_TTL = 10 * 60
 
+
 _redis_queue_conn = None
 
 
@@ -121,6 +122,8 @@ def enqueue(
 			# If redis is not available during migration, execute the job directly
 			print(f"Redis queue is unreachable: Executing {method} synchronously")
 			return frappe.call(method, **kwargs)
+
+		raise
 
 	if not timeout:
 		timeout = get_queues_timeout().get(queue) or 300
@@ -285,6 +288,7 @@ def start_worker_pool(
 	burst: bool = False,
 ) -> NoReturn:
 	"""Start worker pool with specified number of workers.
+
 	WARNING: This feature is considered "EXPERIMENTAL".
 	"""
 

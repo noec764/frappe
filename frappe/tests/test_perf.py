@@ -1,19 +1,21 @@
-# This file contains multiple primitive tests for avoiding performance regressions.
+"""
+This file contains multiple primitive tests for avoiding performance regressions.
 
-# - Time bound tests: Benchmarks are done on GHA before adding numbers
-# - Query count tests: More than expected # of queries for any action is frequent source of
-#   performance issues. This guards against such problems.
+- Time bound tests: Benchmarks are done on GHA before adding numbers
+- Query count tests: More than expected # of queries for any action is frequent source of
+  performance issues. This guards against such problems.
 
 
-# E.g. We know get_controller is supposed to be cached and hence shouldn't make query post first
-# query. This test can be written like this.
+E.g. We know get_controller is supposed to be cached and hence shouldn't make query post first
+query. This test can be written like this.
 
-# >>> def test_controller_caching(self):
-# >>>
-# >>> 	get_controller("User")  # <- "warm up code"
-# >>> 	with self.assertQueryCount(0):
-# >>> 		get_controller("User")
+>>> def test_controller_caching(self):
+>>>
+>>> 	get_controller("User")  # <- "warm up code"
+>>> 	with self.assertQueryCount(0):
+>>> 		get_controller("User")
 
+"""
 import time
 import unittest
 
@@ -127,7 +129,7 @@ class TestPerformance(FrappeTestCase):
 		self.assertGreaterEqual(
 			rps,
 			EXPECTED_RPS * (1 - FAILURE_THREASHOLD),
-			"Possible performance regression in basic /api/Resource list  requests",
+			"Possible performance regression in basic /api/Resource list requests",
 		)
 
 	@unittest.skip("Not implemented")

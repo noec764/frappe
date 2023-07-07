@@ -40,7 +40,6 @@ def build(
 	hard_link=False,
 	production=False,
 	verbose=False,
-	force=False,
 	save_metafiles=False,
 ):
 	"Compile JS and CSS source files"
@@ -64,7 +63,7 @@ def build(
 			apps=apps,
 			hard_link=hard_link,
 			verbose=verbose,
-			skip_frappe=False,
+			skip_frappe=False,  # NOTE: never download assets
 			save_metafiles=save_metafiles,
 		)
 
@@ -265,6 +264,7 @@ def execute(context, method, args=None, kwargs=None, profile=False):
 			from frappe.utils.response import json_handler
 
 			print(json.dumps(ret, default=json_handler))
+
 	if not context.sites:
 		raise SiteNotSpecifiedError
 
@@ -484,6 +484,8 @@ def mariadb(context, extra_args):
 	Enter into mariadb console for a given site.
 	"""
 	site = get_site(context)
+	if not site:
+		raise SiteNotSpecifiedError
 	frappe.init(site=site)
 	_mariadb(extra_args=extra_args)
 
@@ -548,10 +550,13 @@ def jupyter(context):
 
 	if "jupyter" not in installed_packages:
 		subprocess.check_output([sys.executable, "-m", "pip", "install", "jupyter"])
+
 	site = get_site(context)
 	frappe.init(site=site)
+
 	jupyter_notebooks_path = os.path.abspath(frappe.get_site_path("jupyter_notebooks"))
 	sites_path = os.path.abspath(frappe.get_site_path(".."))
+
 	try:
 		os.stat(jupyter_notebooks_path)
 	except OSError:
@@ -594,7 +599,6 @@ def _console_cleanup():
 @pass_context
 def console(context, autoreload=False):
 	"Start ipython console for a site"
-
 	site = get_site(context)
 	frappe.init(site=site)
 	frappe.connect()
@@ -1081,7 +1085,6 @@ def get_version(output):
 	for app in sorted(frappe.get_all_apps()):
 		module = frappe.get_module(app)
 		app_hooks = frappe.get_module(app + ".hooks")
-		Repo(frappe.get_app_path(app, ".."))
 
 		app_info = frappe._dict()
 
