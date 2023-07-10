@@ -8,7 +8,7 @@ export default class TabulatorDataTable {
 		const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
 		this.options = options;
-		this.is_tree = false;
+		this.is_tree = options.treeView;
 
 		this.create_data_sample(this.options.data);
 		this.map_columns(this.options.columns);
@@ -23,6 +23,7 @@ export default class TabulatorDataTable {
 			dataTree: this.is_tree,
 			resizableRows: true,
 			textDirection: this.options.direction,
+			dataTreeStartExpanded: this.is_tree,
 		});
 
 		/* Frappe Datatable parameters */
@@ -164,8 +165,6 @@ export default class TabulatorDataTable {
 			});
 			return;
 		}
-
-		this.is_tree = Boolean(this.data_sample.filter((d) => d.indent).length);
 
 		if (this.is_tree) {
 			this.data = indentListToTree(data);
