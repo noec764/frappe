@@ -75,6 +75,8 @@
     "welcome_email_template",
     "reset_password_template",
     "update_document_timestamp_on_send",
+    "reports_section",
+    "use_tabulator",
     "prepared_report_section",
     "max_auto_email_report_per_user",
     "system_updates_section",
@@ -570,12 +572,25 @@
       "fieldtype": "Link",
       "label": "Reset Password Template",
       "options": "Email Template"
-    }
+    },
+    {
+      "collapsible": 1,
+      "fieldname": "reports_section",
+      "fieldtype": "Section Break",
+      "label": "Reports"
+     },
+     {
+      "default": "0",
+      "fieldname": "use_tabulator",
+      "fieldtype": "Check",
+      "label": "Use Tabulator as Datatable"
+     }
+   
   ],
   "icon": "fa fa-cog",
   "issingle": 1,
   "links": [],
-  "modified": "2023-05-25 13:02:54.808773",
+  "modified": "2023-07-10 10:16:33.871385",
   "modified_by": "Administrator",
   "module": "Core",
   "name": "System Settings",

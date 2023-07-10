@@ -82,6 +82,7 @@ export default class TabulatorDataTable {
 				field: "docfield" in col ? col.docfield.fieldname : col.fieldname,
 				width: null,
 				docfield: null,
+				headerFilter: "getEditor" in this.options,
 			});
 
 			const report_columns = Object.assign(mapped_col, this.get_formatter(col));
@@ -207,4 +208,8 @@ function indentListToTree(rows) {
 	return parents[0]._children;
 }
 
-window.DataTable = TabulatorDataTable;
+$(document).ready(function () {
+	if (frappe.sys_defaults.use_tabulator) {
+		window.DataTable = TabulatorDataTable;
+	}
+});
