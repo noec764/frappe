@@ -57,6 +57,10 @@ export default class TabulatorDataTable {
 		/* */
 	}
 
+	destroy() {
+		// Frappe parameter
+	}
+
 	refresh(data, columns) {
 		this.create_data_sample(data);
 
@@ -82,8 +86,22 @@ export default class TabulatorDataTable {
 				field: "docfield" in col ? col.docfield.fieldname : col.fieldname,
 				width: null,
 				docfield: null,
-				headerFilter: "getEditor" in this.options,
 			});
+
+			if ("getEditor" in this.options) {
+				let fieldtype =
+					col.docfield.fieldname != "name" ? col.docfield.fieldtype || "Data" : "Data";
+				const editor_type = this.get_editor_type(fieldtype);
+
+				Object.assign(mapped_col, {
+					headerFilter: true,
+					editor: editor_type,
+					editorParams: this.get_editor_params(col, fieldtype, editor_type),
+					cellEdited: function (cell) {
+						return cell_edited_func(cell, fieldtype);
+					},
+				});
+			}
 
 			const report_columns = Object.assign(mapped_col, this.get_formatter(col));
 
@@ -91,6 +109,124 @@ export default class TabulatorDataTable {
 				Object.entries(report_columns).filter(([_, v]) => v != null)
 			);
 		});
+	}
+
+	get_editor_type(fieldtype) {
+		switch (fieldtype) {
+			case "Text":
+				return "textarea";
+			case "Small Text":
+				return "textarea";
+			case "Int":
+				return "number";
+			case "Float":
+				return "number";
+			case "Currency":
+				return "number";
+			case "Percent":
+				return "number";
+			case "Duration":
+				return "number";
+			case "Check":
+				return "tickCross";
+			case "Rating":
+				return "star";
+			case "Date":
+				return "date";
+			case "Time":
+				return "time";
+			case "Datetime":
+				return "datetime";
+			case "Link":
+				return "list";
+			case "Select":
+				return "list";
+			default:
+				return "input";
+		}
+	}
+
+	get_editor_params(column, fieldtype, editor_type) {
+		const me = this;
+
+		switch (editor_type) {
+			case "list":
+				if (fieldtype == "Select") {
+					let options = column.docfield.options;
+					if (typeof column.docfield.options == "string") {
+						options = column.docfield.options.split("\n").map((v) => {
+							return { label: __(v), value: v };
+						});
+					}
+
+					return {
+						values: options,
+					};
+				} else {
+					return {
+						autocomplete: true,
+						placeholderLoading: __("Loading..."),
+						placeholderEmpty: __("No Result"),
+						valuesLookup: function (cell, filterTerm) {
+							const args = {
+								txt: filterTerm,
+								doctype: column.docfield.options,
+								ignore_user_permissions: false,
+								reference_doctype: me.get_reference_doctype() || "",
+							};
+							const values = new Promise((resolve, reject) => {
+								return frappe
+									.call({
+										type: "POST",
+										method: "frappe.desk.search.search_link",
+										no_spinner: true,
+										args: args,
+									})
+									.then((r) => {
+										resolve(
+											r.results.map((res) => {
+												return Object.assign(res, { label: res.value });
+											})
+										);
+									});
+							});
+							return values;
+						},
+						filterRemote: true,
+						listOnEmpty: true,
+						allowEmpty: true,
+						clearable: true,
+					};
+				}
+			default:
+				return null;
+		}
+	}
+
+	cell_edited_func(cell, fieldtype) {
+		// const doctype = fieldtype == "Link" ? column.docfield.options : column
+		// return new Promise((resolve, reject) => {
+		// 	frappe.db
+		// 		.set_value(doctype, docname, { [fieldname]: value })
+		// 		.then((r) => {
+		// 			if (r.message) {
+		// 				resolve(r.message);
+		// 			} else {
+		// 				reject();
+		// 			}
+		// 		})
+		// 		.fail(reject);
+		// });
+	}
+
+	get_reference_doctype() {
+		// this is used to get the context in which link field is loaded
+		if (this.doctype) return this.doctype;
+		else {
+			return frappe.get_route && frappe.get_route()[0] === "List"
+				? frappe.get_route()[1]
+				: null;
+		}
 	}
 
 	get_formatter(column) {
