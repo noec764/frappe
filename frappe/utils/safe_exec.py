@@ -76,7 +76,7 @@ def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=Fals
 		exec_globals.frappe.db.pop("rollback", None)
 		exec_globals.frappe.db.pop("add_index", None)
 
-	with safe_exec_flags(), patched_qb():
+	with prevent_recursion(script), patched_qb():
 		# execute script compiled by RestrictedPython
 		exec(
 			compile_restricted(script, filename="<serverscript>", policy=FrappeTransformer),
@@ -88,10 +88,31 @@ def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=Fals
 
 
 @contextmanager
-def safe_exec_flags():
+def prevent_recursion(script):
+	if not frappe.flags.in_safe_exec:
+		frappe.flags.safe_exec_stack = []
+
 	frappe.flags.in_safe_exec = True
-	yield
-	frappe.flags.in_safe_exec = False
+	frappe.flags.safe_exec_stack.append(script)
+
+	if len(frappe.flags.safe_exec_stack) >= 10:
+		message = "Recursive Server Script detected"
+		for i, s in enumerate(frappe.flags.safe_exec_stack, start=1):
+			title = f"Script #{i}"
+			line = "=" * len(title)
+			message += f"\n\n{title}\n{line}\n{s}\n"
+
+		frappe.flags.in_safe_exec = False
+		frappe.log_error(title="Recursive Server Script detected", message=message)
+		raise frappe.exceptions.ValidationError("Max recursion depth for safe_exec exceeded")
+
+	try:
+		yield
+	finally:
+		frappe.flags.safe_exec_stack.pop()
+
+		if not frappe.flags.safe_exec_stack:
+			frappe.flags.in_safe_exec = False
 
 
 def get_safe_globals():
