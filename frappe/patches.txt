@@ -266,3 +266,4 @@ frappe.patches.dokos.v3_0.fix_symbol_on_right_for_euro_currency
 execute:frappe.delete_doc_if_exists("Workspace", "build", force=1)
 
 execute:frappe.delete_doc_if_exists("DocType", "Error Snapshot")
+frappe.patches.v15_0.move_event_cancelled_to_status
