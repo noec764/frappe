@@ -44,7 +44,8 @@ class TestNotification(FrappeTestCase):
 			notification.name = "Contact Status Update"
 			notification.subject = "Contact Status Update"
 			notification.document_type = "Contact"
-			notification.event = "New"
+			notification.event = "Value Change"
+			notification.value_changed = "status"
 			notification.message = "Test Contact Update"
 			notification.append("recipients", {"receiver_by_document_field": "email_id,email_ids"})
 			notification.save()
@@ -72,7 +73,7 @@ class TestNotification(FrappeTestCase):
 		)
 		frappe.db.delete("Email Queue")
 
-		communication.load_from_db()
+		communication.reload()
 		communication.content = "test 2"
 		communication.save()
 
@@ -133,7 +134,7 @@ class TestNotification(FrappeTestCase):
 		notification = frappe.new_doc("Notification")
 		notification.subject = "test"
 		notification.document_type = "ToDo"
-		notification.send_alert_on = "New"
+		notification.event = "New"
 		notification.message = "test"
 
 		recipent = frappe.new_doc("Notification Recipient")
@@ -150,7 +151,7 @@ class TestNotification(FrappeTestCase):
 		notification = frappe.new_doc("Notification")
 		notification.subject = "test"
 		notification.document_type = "ToDo"
-		notification.send_alert_on = "New"
+		notification.event = "New"
 		notification.message = "test"
 
 		recipent = frappe.new_doc("Notification Recipient")
@@ -227,7 +228,6 @@ class TestNotification(FrappeTestCase):
 		event.delete()
 
 	def test_date_changed(self):
-
 		event = frappe.new_doc("Event")
 		event.subject = "test"
 		event.event_type = "Private"
@@ -296,11 +296,7 @@ class TestNotification(FrappeTestCase):
 		self.assertTrue(
 			frappe.db.get_value(
 				"Email Queue",
-				{
-					"reference_doctype": "User",
-					"reference_name": test_user.name,
-					"status": "Not Sent",
-				},
+				{"reference_doctype": "User", "reference_name": test_user.name, "status": "Not Sent"},
 			)
 		)
 
@@ -380,12 +376,16 @@ class TestNotification(FrappeTestCase):
 	def test_notification_by_child_table_field(self):
 		contact = frappe.new_doc("Contact")
 		contact.first_name = "John Doe"
+		contact.status = "Open"
 		contact.append("email_ids", {"email_id": "test2@example.com", "is_primary": 1})
 
 		contact.append("email_ids", {"email_id": "test1@example.com"})
 
-		contact.insert()
-		frappe.db.commit()
+		contact.save()
+
+		# change status of contact
+		contact.status = "Replied"
+		contact.save()
 
 		email_queue = frappe.get_doc(
 			"Email Queue", {"reference_doctype": "Contact", "reference_name": contact.name}
