@@ -19,6 +19,12 @@ def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, *
 	Returns:
 	        any: The result of the evaluation of the code.
 	"""
+	if not script:
+		return
+
+	if not isinstance(script, str):
+		raise TypeError(f"safe_block_eval: Code must be a string, got {script!r}")
+
 	if "server_script_enabled" in frappe.conf:
 		enabled = frappe.conf.server_script_enabled
 	else:
@@ -54,6 +60,11 @@ def _wrap_in_function(
 	if len(tree.body) == 1 and isinstance(tree.body[0], ast.Expr):
 		# If it is, wrap it in a return statement
 		tree.body[0] = ast.Return(tree.body[0].value)
+
+	# Check if the code is empty
+	if not tree.body:
+		# If it is, pass
+		tree.body = [ast.Pass()]
 
 	# Create a function definition
 	local_names = sorted(_locals.keys()) if _locals else []
