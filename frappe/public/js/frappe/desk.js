@@ -147,30 +147,7 @@ frappe.Application = class Application {
 		}
 
 		// REDESIGN-TODO: Fix preview popovers
-		if (!frappe.is_mobile()) {
-			this.link_preview = new frappe.ui.LinkPreview();
-		}
-
-		if (!frappe.boot.developer_mode) {
-			if (frappe.user.has_role("System Manager")) {
-				setInterval(function () {
-					frappe.call({
-						method: "frappe.core.doctype.log_settings.log_settings.has_unseen_error_log",
-						args: {
-							user: frappe.session.user,
-						},
-						callback: function (r) {
-							if (r.message && r.message.show_alert) {
-								frappe.show_alert({
-									indicator: "red",
-									message: r.message.message,
-								});
-							}
-						},
-					});
-				}, 600000); // check every 10 minutes
-			}
-		}
+		this.link_preview = new frappe.ui.LinkPreview();
 	}
 
 	set_route() {
