@@ -151,7 +151,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "options": "Open\nCompleted\nClosed\nCancelled"
+   "options": "Confirmed\nNot Confirmed\nOpen\nClosed\nCompleted\nCancelled"
   },
   {
    "collapsible": 1,
