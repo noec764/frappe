@@ -164,10 +164,17 @@ frappe.ui.form.ControlInput = class ControlInput extends frappe.ui.form.Control 
 
 		if (this.only_input || this.df.label == this._label) return;
 
-		var icon = "";
-		this.label_span.innerHTML =
-			(icon ? '<i class="' + icon + '"></i> ' : "") +
-				__(this.df.label, null, this.df.parent) || "&nbsp;";
+		const translated_label = __(this.df.label, null, this.df.parent);
+		const icon_html = this.df.icon ? frappe.utils.icon(this.df.icon) : "";
+
+		// Set icon as HTML but label as text
+		if (!icon_html && !translated_label) {
+			this.label_span.innerHTML = "&nbsp;";
+		} else {
+			this.label_span.innerHTML =
+				icon_html + frappe.dom.remove_script_and_style(translated_label);
+		}
+
 		this._label = this.df.label;
 	}
 

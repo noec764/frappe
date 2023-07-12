@@ -97,7 +97,8 @@ frappe.views.ListSidebar = class ListSidebar {
 				if (existing) {
 					existing.remove();
 				}
-				if (label == "No Tags") {
+
+				if (label == "No Tags" || label == __("No Tags")) {
 					label = "%,%";
 					condition = "not like";
 				}
