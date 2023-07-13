@@ -4,13 +4,13 @@ import frappe
 from frappe.utils.safe_exec import safe_exec
 
 
-def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, **kwargs):
+def safe_block_eval(code: str, _globals=None, _locals=None, output_var=None, **kwargs):
 	"""Evaluate a block of code and return the result.
 
 	Allows `return` statements and `yield` expressions in the code to make it easier to write code that should return a value.
 
 	Args:
-	        script (str): The code to evaluate. Will be wrapped in a function.
+	        code (str): The code to evaluate. Will be wrapped in a function.
 	        _globals (dict, optional): Globals
 	        _locals (dict, optional): Locals
 	        output_var (str, optional): The name of the variable to store the result in. Randomly generated if not provided.
@@ -19,11 +19,11 @@ def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, *
 	Returns:
 	        any: The result of the evaluation of the code.
 	"""
-	if not script:
+	if not code:
 		return
 
-	if not isinstance(script, str):
-		raise TypeError(f"safe_block_eval: Code must be a string, got {script!r}")
+	if not isinstance(code, str):
+		raise TypeError(f"Code must be a string, got: {code!r}")
 
 	if "server_script_enabled" in frappe.conf:
 		enabled = frappe.conf.server_script_enabled
@@ -35,12 +35,12 @@ def safe_block_eval(script: str, _globals=None, _locals=None, output_var=None, *
 		# Changing the value of "server_script_enabled" might break existing
 		# multi-line conditions/virtual fields, but that's okay because it
 		# is not a common use case.
-		return frappe.safe_eval(script, _globals, _locals)
+		return frappe.safe_eval(code, _globals, _locals)
 
 	output_var = output_var or "evaluated_code_output_" + frappe.generate_hash(length=5)
 	_locals = _locals or {}
-	script = _wrap_in_function(script, output_var=output_var, _locals=_locals)
-	safe_exec(script, _globals, _locals, **kwargs)
+	code = _wrap_in_function(code, output_var=output_var, _locals=_locals)
+	safe_exec(code, _globals, _locals, **kwargs)
 	return _locals[output_var]
 
 
@@ -54,7 +54,7 @@ def _wrap_in_function(
 	"""Wrap code in a function so that it can contain `return` statements."""
 
 	# Parse the code into an AST
-	tree: ast.Module = ast.parse(code)
+	tree: ast.Module = ast.parse(code, filename="<safe_block_eval>", mode="exec")
 
 	# Check if the code is a single expression
 	if len(tree.body) == 1 and isinstance(tree.body[0], ast.Expr):
@@ -111,13 +111,19 @@ def _wrap_in_function(
 	return ast.unparse(tree)
 
 
-def validate(code_string: str, fieldname: str = ""):
+def validate(code: str | None, fieldname: str = ""):
 	"""Validate a block of code by first wrapping it in a function and then compiling it."""
+	if not code:
+		return
+
+	if not isinstance(code, (bytes, str)):
+		raise TypeError(f"Code must be a string, got: {code!r}")
+
 	try:
-		code_string = _wrap_in_function(code_string)
+		code = _wrap_in_function(code)
 		# Because the code is parsed into an AST, it is already checked for syntax errors
 		# so we don't need to check again with:
-		#   compile(code_string, f"<{fieldname}>", "exec")
+		# >>> compile(code, f"<{fieldname}>", "exec")
 		# Moreover, any subsequent error would come from the function-wrapping mechanism;
 		# which is unlikely (and would be a bug in this code)
 	except SyntaxError as se:
