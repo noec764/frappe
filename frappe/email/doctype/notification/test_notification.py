@@ -44,8 +44,9 @@ class TestNotification(FrappeTestCase):
 			notification.name = "Contact Status Update"
 			notification.subject = "Contact Status Update"
 			notification.document_type = "Contact"
-			notification.event = "Value Change"
-			notification.value_changed = "status"
+			notification.event = "New"
+			# notification.event = "Value Change"
+			# notification.value_changed = "status"
 			notification.message = "Test Contact Update"
 			notification.append("recipients", {"receiver_by_document_field": "email_id,email_ids"})
 			notification.save()
