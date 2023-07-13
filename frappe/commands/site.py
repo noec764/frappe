@@ -417,7 +417,9 @@ def _reinstall(
 	from frappe.utils.synchronization import filelock
 
 	if not yes:
-		click.confirm("This will wipe your database. Are you sure you want to reinstall?", abort=True)
+		click.confirm(
+			f"This will wipe your database for site {site}. Are you sure you want to reinstall?", abort=True
+		)
 	try:
 		frappe.init(site=site)
 		frappe.connect()
