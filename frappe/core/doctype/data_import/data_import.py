@@ -34,7 +34,7 @@ class DataImport(Document):
 
 	def validate_doctype(self):
 		if self.reference_doctype in BLOCKED_DOCTYPES:
-			frappe.throw(_("Importing {0} is not allowed.").format(self.reference_doctype))
+			frappe.throw(_("Importing {0} is not allowed.").format(_(self.reference_doctype)))
 
 	def validate_import_file(self):
 		if self.import_file:
