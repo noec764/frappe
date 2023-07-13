@@ -147,7 +147,9 @@ frappe.Application = class Application {
 		}
 
 		// REDESIGN-TODO: Fix preview popovers
-		this.link_preview = new frappe.ui.LinkPreview();
+		if (!frappe.is_mobile()) {
+			this.link_preview = new frappe.ui.LinkPreview();
+		}
 	}
 
 	set_route() {
