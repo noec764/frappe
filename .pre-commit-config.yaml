@@ -23,7 +23,7 @@ repos:
         args: ['--no-sort-keys', '--no-ensure-ascii', '--autofix', '--indent=1']
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.34.0
+    rev: v3.9.0
     hooks:
       - id: pyupgrade
         args: ['--py310-plus']

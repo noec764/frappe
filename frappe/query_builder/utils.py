@@ -1,6 +1,7 @@
+from collections.abc import Callable
 from enum import Enum
 from importlib import import_module
-from typing import Any, Callable, get_type_hints  # noqa
+from typing import Any, get_type_hints
 
 from pypika.queries import Column, QueryBuilder  # noqa
 from pypika.terms import PseudoColumn  # noqa
