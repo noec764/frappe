@@ -15,6 +15,7 @@ import frappe
 from frappe.utils import get_sites
 
 default_log_level = logging.WARNING if frappe._dev_server else logging.ERROR
+stream_logging = os.environ.get("FRAPPE_STREAM_LOGGING")
 
 
 def get_logger(
@@ -24,7 +25,7 @@ def get_logger(
 	filter=None,
 	max_size=100_000,
 	file_count=20,
-	stream_only=False,
+	stream_only=stream_logging,
 ) -> "logging.Logger":
 	"""Application Logger for your given module
 
