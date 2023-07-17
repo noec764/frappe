@@ -477,7 +477,7 @@ def get_context(context):
 			frappe.throw(
 				_("Mandatory Information missing:")
 				+ "<br><br>"
-				+ "<br>".join(f"{d.label} ({d.fieldtype})" for d in missing)
+				+ "<br>".join(f"{_(d.label)} ({d.fieldtype})" for d in missing)
 			)
 
 	def allow_website_search_indexing(self):
