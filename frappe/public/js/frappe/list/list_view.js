@@ -791,9 +791,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 	get_column_html(col, doc) {
 		if (col.type === "Status" || col.df?.options == "Workflow State") {
+			let show_workflow_state = col.df?.options == "Workflow State";
 			return `
 				<div class="list-row-col hidden-xs ellipsis">
-					${this.get_indicator_html(doc)}
+					${this.get_indicator_html(doc, show_workflow_state)}
 				</div>
 			`;
 		}
@@ -1132,8 +1133,8 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		return div.innerHTML;
 	}
 
-	get_indicator_html(doc) {
-		const indicator = frappe.get_indicator(doc, this.doctype);
+	get_indicator_html(doc, show_workflow_state) {
+		const indicator = frappe.get_indicator(doc, this.doctype, show_workflow_state);
 		// sequence is important
 		const docstatus_description = [
 			__("Document is in draft state"),
@@ -1661,24 +1662,28 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	get_url_with_filters() {
-		const query_params = this.get_filters_for_args()
-			.map((filter) => {
-				if (filter[2] === "=") {
-					return `${filter[1]}=${encodeURIComponent(filter[3])}`;
-				}
-				return [
-					filter[1],
-					"=",
-					encodeURIComponent(JSON.stringify([filter[2], filter[3]])),
-				].join("");
-			})
-			.join("&");
+		let search_params = this.get_search_params();
 
-		// return updated URL with new query params
-		const url = new URL(window.location.href, window.location.origin);
-		url.search = query_params;
-		// url.hash = "";
-		return url.href;
+		// note: Use URL object instead of string manipulation
+		let full_url = new URL(window.location.href);
+		full_url.search = search_params;
+		return full_url.href;
+	}
+
+	get_search_params() {
+		let search_params = new URLSearchParams();
+
+		this.get_filters_for_args().forEach((filter) => {
+			if (filter[2] === "=") {
+				search_params.append(filter[1], encodeURIComponent(filter[3]));
+			} else {
+				search_params.append(
+					filter[1],
+					encodeURIComponent(JSON.stringify([filter[2], filter[3]]))
+				);
+			}
+		});
+		return search_params;
 	}
 
 	get_menu_items() {

@@ -433,6 +433,16 @@ frappe.ui.Slides = class Slides {
 		this.make();
 	}
 
+	get slides() {
+		console.warn("Use `slide_instances` or `slide_settings` instead");
+		return this.slide_instances;
+	}
+
+	get container() {
+		console.warn("Use `$container` instead");
+		return this.$container;
+	}
+
 	// Overridable lifecycle methods
 	before_load() {}
 	after_load() {}
@@ -701,6 +711,7 @@ frappe.ui.Slides = class Slides {
 		const no_active = true;
 		this.render_progress_dots(no_active);
 		this.on_complete && this.on_complete(this);
+		this.action_on_complete && this.action_on_complete(this);
 	}
 
 	set_in_progress() {
@@ -804,16 +815,20 @@ frappe.ui.Slides = class Slides {
 	/**
 	 * Function called before changing slide.
 	 * @returns {boolean} Block slide change
-	 *	- `true` if the slide should not change
-	 * 	- `false`/falsey to allow slide change (normal behavior)
+	 *	- falsy but not `false` to allow slide change (normal behavior)
+	 *	- `true` to allow slide change (normal behavior)
+	 * 	- `false` if the slide should not change
 	 */
 	before_show_slide(id) {
-		return false;
+		return true;
 	}
 
 	show_slide(id) {
 		id = cint(id);
-		if (this.before_show_slide(id) || (this.current_slide && this.current_id === id)) {
+		if (
+			this.before_show_slide(id) == false ||
+			(this.current_slide && this.current_id === id)
+		) {
 			return;
 		}
 
@@ -902,5 +917,16 @@ frappe.ui.Slides = class Slides {
 				slide.form.clear();
 			}
 		});
+	}
+
+	rewind_to_start() {
+		for (const s of this.slide_instances) {
+			s.seen = false;
+			s.done = false;
+		}
+		this.render_progress_dots();
+		this.show_slide(0);
+		this.$slide_progress.show();
+		this.$container.show();
 	}
 };

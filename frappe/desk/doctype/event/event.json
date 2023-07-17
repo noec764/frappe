@@ -75,7 +75,7 @@
    "label": "Event Type",
    "oldfieldname": "event_type",
    "oldfieldtype": "Select",
-   "options": "Private\nPublic\nCancelled",
+   "options": "Private\nPublic",
    "reqd": 1,
    "search_index": 1
   },
