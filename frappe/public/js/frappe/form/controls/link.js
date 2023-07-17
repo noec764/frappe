@@ -69,7 +69,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	}
 
 	refresh_input() {
-		super.refresh_input();
+		super.refresh_input?.();
 		this.setup_icon(); // refresh icon for dynamic link
 	}
 
@@ -92,7 +92,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		}
 	}
 
-	async setup_icon() {
+	async setup_icon(_doctype = null) {
 		// do not setup icon for child table or read-only
 		if (this.in_grid() || this.disp_status !== "Write") {
 			return this.clear_icon(); // clear icon
@@ -110,17 +110,25 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		}
 
 		// do not change if doctype did not change
-		const doctype = this.get_options();
+		const doctype = _doctype ?? this.get_options();
 		if (this._prev_doctype === doctype) {
 			return; // skip
 		}
 		this._prev_doctype = doctype;
 
+		// if (doctype) {
+		// 	this.input.setAttribute("placeholder", __("{0}...", [__(doctype, [], "DocType")]));
+		// } else {
+		// 	this.input.setAttribute("placeholder", __("Document Name"));
+		// }
+
 		const icon = await this.get_icon_for_doctype(doctype);
 		if (icon) {
 			return this.set_icon(icon, doctype);
+		} else {
+			// return this.set_icon("uil uil-arrow-up-right", doctype);
+			return this.clear_icon();
 		}
-		return this.clear_icon();
 	}
 	async get_icon_for_doctype(doctype) {
 		try {
@@ -179,6 +187,14 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 				// Focus and select all the text in the input field
 				this.$input.trigger("focus");
 				this.$input.trigger("select");
+			});
+			icon_html.addEventListener("dblclick", () => {
+				// Open the document
+				const doctype = this.get_options();
+				const name = this.get_input_value();
+				if (doctype && name) {
+					frappe.set_route("Form", doctype, name);
+				}
 			});
 		}
 
@@ -434,6 +450,9 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 	query_and_update_list(term, { onlyCache = false } = {}) {
 		const me = this;
 		const doctype = me.get_options();
+
+		this.setup_icon(doctype);
+
 		if (!doctype) return;
 		if (!me.$input.cache[doctype]) {
 			me.$input.cache[doctype] = {};

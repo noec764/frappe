@@ -76,7 +76,7 @@ def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=Fals
 		exec_globals.frappe.db.pop("rollback", None)
 		exec_globals.frappe.db.pop("add_index", None)
 
-	with safe_exec_flags(), patched_qb():
+	with prevent_recursion(script), patched_qb():
 		# execute script compiled by RestrictedPython
 		exec(
 			compile_restricted(script, filename="<serverscript>", policy=FrappeTransformer),
@@ -88,10 +88,31 @@ def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=Fals
 
 
 @contextmanager
-def safe_exec_flags():
+def prevent_recursion(script):
+	if not frappe.flags.in_safe_exec:
+		frappe.flags.safe_exec_stack = []
+
 	frappe.flags.in_safe_exec = True
-	yield
-	frappe.flags.in_safe_exec = False
+	frappe.flags.safe_exec_stack.append(script)
+
+	if len(frappe.flags.safe_exec_stack) >= 10:
+		message = "Recursive Server Script detected"
+		for i, s in enumerate(frappe.flags.safe_exec_stack, start=1):
+			title = f"Script #{i}"
+			line = "=" * len(title)
+			message += f"\n\n{title}\n{line}\n{s}\n"
+
+		frappe.flags.in_safe_exec = False
+		frappe.log_error(title="Recursive Server Script detected", message=message)
+		raise frappe.exceptions.ValidationError("Max recursion depth for safe_exec exceeded")
+
+	try:
+		yield
+	finally:
+		frappe.flags.safe_exec_stack.pop()
+
+		if not frappe.flags.safe_exec_stack:
+			frappe.flags.in_safe_exec = False
 
 
 def get_safe_globals():
@@ -250,6 +271,7 @@ def safe_enqueue(function, **kwargs):
 	Enqueue function to be executed using a background worker
 	Accepts frappe.enqueue params like job_name, queue, timeout, etc.
 	in addition to params to be passed to function
+
 	:param function: whitelised function or API Method set in Server Script
 	"""
 
@@ -284,12 +306,15 @@ def call_with_form_dict(function, kwargs):
 
 @contextmanager
 def patched_qb():
+	require_patching = isinstance(frappe.qb.terms, types.ModuleType)
 	try:
-		_terms = frappe.qb.terms
-		frappe.qb.terms = _flatten(frappe.qb.terms)
+		if require_patching:
+			_terms = frappe.qb.terms
+			frappe.qb.terms = _flatten(frappe.qb.terms)
 		yield
 	finally:
-		frappe.qb.terms = _terms
+		if require_patching:
+			frappe.qb.terms = _terms
 
 
 @lru_cache
@@ -337,6 +362,7 @@ def read_sql(query, *args, **kwargs):
 
 def check_safe_sql_query(query: str, throw: bool = True) -> bool:
 	"""Check if SQL query is safe for running in restricted context.
+
 	Safe queries:
 	        1. Read only 'select' or 'explain' queries
 	        2. CTE on mariadb where writes are not allowed.
@@ -463,7 +489,6 @@ VALID_UTILS = (
 	"get_time_str",
 	"get_user_date_format",
 	"get_user_time_format",
-	"formatdate",
 	"format_date",
 	"format_time",
 	"format_datetime",
@@ -529,6 +554,7 @@ VALID_UTILS = (
 	"markdown",
 	"is_subset",
 	"generate_hash",
-	"get_abbr",
+	"formatdate",
 	"get_user_info_for_avatar",
+	"get_abbr",
 )

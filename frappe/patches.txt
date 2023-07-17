@@ -228,6 +228,7 @@ execute:frappe.delete_doc_if_exists('DocType', 'Slack Webhook URL')
 frappe.patches.dokos.v3_0.rename_hidden_field_in_workspace
 frappe.core.doctype.role.patches.dokos_v3_26_fix_desk_properties
 frappe.patches.dokos.v4_0.rename_custom_email_column
+frappe.patches.dokos.v3_0.set_owner_for_google_calendar_events
 
 [post_model_sync]
 execute:frappe.get_doc('Role', 'Guest').save() # remove desk access

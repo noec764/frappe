@@ -1,8 +1,8 @@
 import "./base_control";
 import "./base_input";
 import "./data";
-import "./int";
 import "./float";
+import "./int";
 import "./currency";
 import "./date";
 import "./time";

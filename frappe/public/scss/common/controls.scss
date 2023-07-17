@@ -593,3 +593,19 @@ button.data-pill {
 .grid-row .frappe-control .form-control:focus-within {
 	box-shadow: var(--highlight-shadow-row);
 }
+
+.control-with-slider {
+	display: flex;
+	gap: 0.5em;
+	align-items: center;
+
+	& > * {
+		flex: 1;
+	}
+	meter, input[type="range" i] {
+		flex: 3;
+	}
+	.like-disabled-input {
+		margin-bottom: 0px;
+	}
+}
