@@ -215,6 +215,7 @@ forktool:
     - echo "remote_url=https://github.com/frappe/frappe.git" >> $C
     - echo "local_base=develop" >> $C
     - echo "local_url=upstream" >> $C
+    - echo "max_changes=30" >> $C
 
     - git remote add upstream "git@$CI_SERVER_HOST:$CI_PROJECT_PATH.git"
     - git checkout -B develop
