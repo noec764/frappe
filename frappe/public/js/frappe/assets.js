@@ -187,3 +187,15 @@ frappe.assets = {
 		return path;
 	},
 };
+
+function is_reload() {
+	try {
+		return window.performance
+			?.getEntriesByType("navigation")
+			.map((nav) => nav.type)
+			.includes("reload");
+	} catch (e) {
+		// Safari probably
+		return true;
+	}
+}
