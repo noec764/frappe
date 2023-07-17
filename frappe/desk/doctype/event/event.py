@@ -106,6 +106,14 @@ class Event(WebsiteGenerator):
 	def on_update(self):
 		self.sync_communication()
 
+	def after_insert(self):
+		if self.google_calendar:
+			calendar = frappe.db.get_value(
+				"Google Calendar", self.google_calendar, ["reference_document", "user"], as_dict=True
+			)
+			if calendar.reference_document == "Event" and calendar.user != self.owner:
+				self.db_set("owner", calendar.user)
+
 	def on_trash(self):
 		communications = frappe.get_all(
 			"Communication", dict(reference_doctype=self.doctype, reference_name=self.name)
