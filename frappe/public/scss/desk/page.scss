@@ -74,6 +74,18 @@
 	}
 }
 
+.view-actions .dropdown-menu {
+	margin-inline-start: -4px;
+
+	.menu-item-label {
+		font-weight: 500;
+	}
+
+	.menu-item-icon {
+		margin-inline-end: 1px;
+	}
+}
+
 .layout-main-section-wrapper {
 	margin-bottom: var(--page-bottom-margin);
 }

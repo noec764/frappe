@@ -209,9 +209,11 @@ frappe.views.BaseList = class BaseList {
 			__("List View") __("Report View") __("Dashboard View") __("Gantt View"),
 			__("Kanban View") __("Calendar View") __("Image View") __("Inbox View"),
 			__("Tree View") __("Map View") __("Planning View") */
+			const parent = $("<div class='view-actions'>").insertAfter(this.page.custom_actions);
 			this.views_menu = this.page.add_custom_button_group(
 				__("{0} View", [__(this.view_name)]),
-				BaseList.icon_map[this.view_name] || "list"
+				BaseList.icon_map[this.view_name] || "list",
+				parent
 			);
 			this.views_list = new frappe.views.ListViewSelect({
 				doctype: this.doctype,

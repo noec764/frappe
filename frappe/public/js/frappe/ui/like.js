@@ -35,7 +35,7 @@ frappe.ui.toggle_like = function ($btn, doctype, name, callback) {
 			if (!r.exc) {
 				let selector = ".like-action";
 				selector += `[data-doctype=${JSON.stringify(doctype)}]`;
-				selector += `[data-name=${JSON.stringify(docname)}]`;
+				selector += `[data-name=${JSON.stringify(name)}]`;
 				for (const likes of document.querySelectorAll(selector)) {
 					if (add === "Yes") {
 						likes.classList.remove("not-liked");
