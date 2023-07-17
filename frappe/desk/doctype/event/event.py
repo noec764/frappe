@@ -496,7 +496,7 @@ def get_events(
 			if recurring_events:
 				result.extend(recurring_events)
 
-			elif event.starts_on <= event_end and event.ends_on >= event_start:
+			elif event.starts_on <= event_end and (not event.ends_on or event.ends_on >= event_start):
 				result.append(event)
 
 		else:
