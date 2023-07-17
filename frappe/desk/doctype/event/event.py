@@ -1,6 +1,8 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+import datetime
 import json
+from typing import Union
 
 from googleapiclient.errors import HttpError
 
@@ -343,6 +345,7 @@ def delete_communication(event, reference_doctype, reference_docname):
 def get_permission_query_conditions(user):
 	if not user:
 		user = frappe.session.user
+
 	return """(`tabEvent`.`event_type`='Public' or `tabEvent`.`owner`={user})""".format(
 		user=frappe.db.escape(user),
 	)
@@ -388,8 +391,8 @@ def send_event_digest():
 
 @frappe.whitelist()
 def get_events(
-	start,
-	end,
+	start: str | datetime.date,
+	end: str | datetime.date,
 	user=None,
 	for_reminder=False,
 	filters=None,
@@ -483,16 +486,21 @@ def get_events(
 
 	result = []
 	for event in events:
-		result.append(event)
 		if event.get("repeat_this_event"):
-			start = (
-				get_datetime(start).replace(hour=0, minute=0, second=0) if event.get("all_day") else start
+			event_start = get_datetime(start).replace(hour=0, minute=0, second=0)
+			event_end = get_datetime(end).replace(hour=23, minute=59, second=59)
+
+			recurring_events = process_recurring_events(
+				event, event_start, event_end, "starts_on", "ends_on", "rrule"
 			)
-			end = get_datetime(end).replace(hour=23, minute=59, second=0) if event.get("all_day") else end
-			recurring_events = process_recurring_events(event, start, end, "starts_on", "ends_on", "rrule")
 			if recurring_events:
-				result = [x for x in result if x.get("name") != event.get("name")]
 				result.extend(recurring_events)
+
+			elif event.starts_on <= event_end and event.ends_on >= event_start:
+				result.append(event)
+
+		else:
+			result.append(event)
 
 	return sorted(result, key=lambda d: d["starts_on"])
 

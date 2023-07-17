@@ -98,6 +98,7 @@
   {
    "fieldname": "starts_on",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Starts on",
    "reqd": 1
   },
@@ -290,7 +291,7 @@
  "is_calendar_and_gantt": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-02-24 16:57:57.492921",
+ "modified": "2023-07-17 09:51:15.036261",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",

@@ -124,7 +124,7 @@ def process_recurring_events(event, start, end, starts_on_field, ends_on_field, 
 			)
 
 			for r in rrule_r:
-				new_e = dict(event)
+				new_e = frappe._dict(event)
 				new_e[starts_on_field] = new_e.get(starts_on_field).replace(
 					year=r.year, month=r.month, day=r.day
 				)
