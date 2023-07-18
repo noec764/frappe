@@ -67,7 +67,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	get_input_value() {
 		// If the input is not formatted, return the raw value.
-		if (this.input.dataset.isFormatted === "false") {
+		if (this.input?.dataset.isFormatted === "false") {
 			return this.input.value;
 		}
 		// If the input is formatted, return the stored value.
@@ -90,6 +90,7 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 
 	/** @param {boolean} is_formatted */
 	_set_is_formatted(is_formatted) {
+		if (!this.input) return;
 		// if (is_formatted) {
 		// 	this.input.removeAttribute("pattern");
 		// } else {
