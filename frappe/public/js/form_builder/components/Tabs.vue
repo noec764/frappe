@@ -20,7 +20,8 @@ function activate_tab(tab) {
 	nextTick(() => {
 		$(".tabs .tab.active")[0].scrollIntoView({
 			behavior: "smooth",
-			inline: "center"
+			inline: "center",
+			block: "nearest",
 		});
 	});
 }
@@ -281,6 +282,7 @@ function delete_tab(with_children) {
 	max-height: calc(100vh - 210px);
 	overflow-x: hidden;
 	overflow-y: auto;
+	overflow-x: hidden;
 	border-radius: var(--border-radius);
 	min-height: 70px;
 
