@@ -14,7 +14,7 @@ import re
 import unicodedata
 import warnings
 from collections.abc import Callable
-from typing import TYPE_CHECKING, Any, Literal, Optional, TypeAlias, overload
+from typing import TYPE_CHECKING, Any, Literal, Optional, TypeAlias, overload, NoReturn
 
 import click
 from werkzeug.local import Local, release_local
