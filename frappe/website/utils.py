@@ -395,6 +395,8 @@ def clear_cache(path=None):
 		"website_pages",
 		"website_full_index",
 		"sitemap_routes",
+		"languages_with_name",
+		"languages",
 	):
 		frappe.cache.delete_value(key)
 
