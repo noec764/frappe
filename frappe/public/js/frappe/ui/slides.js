@@ -860,6 +860,16 @@ frappe.ui.Slides = class Slides {
 
 	on_update(completed, total) {}
 
+	can_go_next(id) {
+		const next_id = this.find_next_nonskipped_slide(+1, id);
+		return next_id !== -1;
+	}
+
+	can_go_prev(id) {
+		const prev_id = this.find_next_nonskipped_slide(-1, id);
+		return prev_id !== -1;
+	}
+
 	show_hide_prev_next(id) {
 		if (this.can_go_prev(id) && this.allow_back) {
 			this.$prev_btn.show();
@@ -900,8 +910,6 @@ frappe.ui.Slides = class Slides {
 		const hasErrors = this.slide_instances.some((slide) => slide.has_errors());
 		return hasErrors;
 	}
-
-	on_update(completed, total) {}
 
 	reset() {
 		this.slide_instances.forEach((slide) => {
