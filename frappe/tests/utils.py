@@ -4,6 +4,7 @@ import signal
 import unittest
 from collections.abc import Sequence
 from contextlib import contextmanager
+from unittest.mock import patch
 
 import frappe
 from frappe.model.base_document import BaseDocument
