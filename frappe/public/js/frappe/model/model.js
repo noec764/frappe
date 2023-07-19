@@ -475,8 +475,9 @@ $.extend(frappe.model, {
 		var val = locals[dt] && locals[dt][dn] && locals[dt][dn][fn];
 		var df = frappe.meta.get_docfield(dt, fn, dn);
 
+		let ret;
 		if (frappe.model.table_fields.includes(df.fieldtype)) {
-			var ret = false;
+			ret = false;
 			$.each(locals[df.options] || {}, function (k, d) {
 				if (d.parent == dn && d.parenttype == dt && d.parentfield == df.fieldname) {
 					ret = true;
@@ -484,7 +485,7 @@ $.extend(frappe.model, {
 				}
 			});
 		} else {
-			var ret = !is_null(val);
+			ret = !is_null(val);
 		}
 		return ret ? true : false;
 	},
@@ -629,12 +630,13 @@ $.extend(frappe.model, {
 	},
 
 	get_children: function (doctype, parent, parentfield, filters) {
+		let doc;
 		if ($.isPlainObject(doctype)) {
-			var doc = doctype;
-			var filters = parentfield;
-			var parentfield = parent;
+			doc = doctype;
+			filters = parentfield;
+			parentfield = parent;
 		} else {
-			var doc = frappe.get_doc(doctype, parent);
+			doc = frappe.get_doc(doctype, parent);
 		}
 
 		var children = doc[parentfield] || [];
@@ -665,8 +667,8 @@ $.extend(frappe.model, {
 
 		var parent = null;
 		if (doc.parenttype) {
-			var parent = doc.parent,
-				parenttype = doc.parenttype,
+			parent = doc.parent;
+			var parenttype = doc.parenttype,
 				parentfield = doc.parentfield;
 		}
 		delete locals[doctype][name];

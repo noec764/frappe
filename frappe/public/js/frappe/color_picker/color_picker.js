@@ -194,9 +194,7 @@ class Picker {
 	}
 
 	get_pointer_coords() {
-		// eslint-disable-next-line no-unused-vars
 		let h, s, v;
-		// eslint-disable-next-line no-unused-vars
 		[h, s, v] = utils.get_hsv(this.get_color());
 		let width = this.color_map.offsetWidth;
 		let height = this.color_map.offsetHeight;

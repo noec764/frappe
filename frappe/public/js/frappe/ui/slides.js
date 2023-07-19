@@ -858,6 +858,8 @@ frappe.ui.Slides = class Slides {
 		}
 	}
 
+	on_update(completed, total) {}
+
 	can_go_next(id) {
 		const next_id = this.find_next_nonskipped_slide(+1, id);
 		return next_id !== -1;
@@ -908,8 +910,6 @@ frappe.ui.Slides = class Slides {
 		const hasErrors = this.slide_instances.some((slide) => slide.has_errors());
 		return hasErrors;
 	}
-
-	on_update(completed, total) {}
 
 	reset() {
 		this.slide_instances.forEach((slide) => {

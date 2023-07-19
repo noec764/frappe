@@ -1,8 +1,8 @@
 # Copyright (c) 2021, Dokos SAS and Contributors
 # License: MIT. See LICENSE
-
+from collections.abc import Sequence
 from datetime import timedelta
-from typing import Optional, Sequence
+from typing import Optional
 
 import frappe
 import frappe.defaults

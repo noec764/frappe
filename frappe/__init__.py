@@ -13,7 +13,8 @@ import os
 import re
 import unicodedata
 import warnings
-from typing import TYPE_CHECKING, Any, Callable, Literal, NoReturn, Optional, TypeAlias, overload
+from collections.abc import Callable
+from typing import TYPE_CHECKING, Any, Literal, Optional, TypeAlias, overload, NoReturn
 
 import click
 from werkzeug.local import Local, release_local

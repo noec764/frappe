@@ -2,8 +2,8 @@ import copy
 import datetime
 import signal
 import unittest
+from collections.abc import Sequence
 from contextlib import contextmanager
-from typing import Sequence
 from unittest.mock import patch
 
 import frappe
