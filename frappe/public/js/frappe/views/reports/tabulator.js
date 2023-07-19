@@ -12,7 +12,7 @@ export default class TabulatorDataTable {
 
 		this.create_data_sample(this.options.data);
 		this.map_columns(this.options.columns);
-		this.get_data(this.options.data);
+		this.data = this.get_data(this.options.data);
 
 		this.table = new Tabulator(this.wrapper[0], {
 			data: this.data,
@@ -23,7 +23,7 @@ export default class TabulatorDataTable {
 			dataTree: this.is_tree,
 			resizableRows: true,
 			textDirection: this.options.direction,
-			dataTreeStartExpanded: this.is_tree,
+			dataTreeStartExpanded: this.is_tree && !this.options.collapse_all_rows,
 		});
 
 		/* Frappe Datatable parameters */
@@ -33,6 +33,7 @@ export default class TabulatorDataTable {
 				height: null,
 			},
 		};
+
 		this.rowmanager = {
 			collapseAllNodes: () => {
 				this.table.getRows().forEach((r) => {
@@ -61,13 +62,19 @@ export default class TabulatorDataTable {
 		// Frappe parameter
 	}
 
+	refreshRow(new_row, rowIndex) {
+		const rowdata = this.get_data(new_row);
+		console.log(rowdata);
+		this.table.updateData(rowdata);
+	}
+
 	refresh(data, columns) {
 		this.create_data_sample(data);
 
 		this.map_columns(columns);
 		this.table.setColumns(this.columns);
 
-		this.get_data(data);
+		this.data = this.get_data(data);
 		this.table.replaceData(this.data);
 
 		this.table.getColumns().forEach((column) => {
@@ -80,12 +87,22 @@ export default class TabulatorDataTable {
 	}
 
 	map_columns(columns) {
+		const me = this;
+
 		this.columns = columns.map((col) => {
 			const mapped_col = Object.assign({}, col, {
-				title: "docfield" in col ? col.docfield.label : col.label,
+				title: "docfield" in col ? __(col.docfield.label) : col.label,
 				field: "docfield" in col ? col.docfield.fieldname : col.fieldname,
 				width: null,
 				docfield: null,
+				headerMenu: [
+					{
+						label: __("Hide Column"),
+						action: function (e, column) {
+							column.hide();
+						},
+					},
+				],
 			});
 
 			if ("getEditor" in this.options) {
@@ -98,7 +115,7 @@ export default class TabulatorDataTable {
 					editor: editor_type,
 					editorParams: this.get_editor_params(col, fieldtype, editor_type),
 					cellEdited: function (cell) {
-						return cell_edited_func(cell, fieldtype);
+						return me.cell_edited_func(cell, fieldtype);
 					},
 				});
 			}
@@ -204,19 +221,24 @@ export default class TabulatorDataTable {
 	}
 
 	cell_edited_func(cell, fieldtype) {
-		// const doctype = fieldtype == "Link" ? column.docfield.options : column
-		// return new Promise((resolve, reject) => {
-		// 	frappe.db
-		// 		.set_value(doctype, docname, { [fieldname]: value })
-		// 		.then((r) => {
-		// 			if (r.message) {
-		// 				resolve(r.message);
-		// 			} else {
-		// 				reject();
-		// 			}
-		// 		})
-		// 		.fail(reject);
-		// });
+		const cellData = cell.getData();
+		const fieldname = cell.getColumn()?.getDefinition()?.field;
+		const docname = cellData.id || cellData.name;
+		const doctype = cellData.doctype;
+		const value = cell.getValue();
+
+		return new Promise((resolve, reject) => {
+			frappe.db
+				.set_value(doctype, docname, { [fieldname]: value })
+				.then((r) => {
+					if (r.message) {
+						resolve(r.message);
+					} else {
+						reject();
+					}
+				})
+				.fail(reject);
+		});
 	}
 
 	get_reference_doctype() {
@@ -279,9 +301,9 @@ export default class TabulatorDataTable {
 	}
 
 	get_data(data) {
-		this.data = [];
+		let formatted_data = [];
 		if (!data.length) {
-			return;
+			return formatted_data;
 		}
 
 		if (Array.isArray(data[0])) {
@@ -292,39 +314,43 @@ export default class TabulatorDataTable {
 					row[fields[i]] = d[fields[i]] || d.content;
 				});
 
+				if (dataList[0].doctype) {
+					row["doctype"] = dataList[0].doctype;
+				}
+
 				if (row.name && !row.id) {
 					row["id"] = row.name;
 				} else if (!row.id) {
 					row["id"] = Object.values(row).join("");
 				}
 
-				this.data.push(row);
+				formatted_data.push(row);
 			});
-			return;
+			return formatted_data;
 		}
 
 		if (this.is_tree) {
-			this.data = indentListToTree(data);
-			return;
+			formatted_data = indentListToTree(data);
+			return formatted_data;
 		} else if (!data[0].id) {
 			if (data[0].name) {
-				this.data = data.map((d) => {
+				formatted_data = data.map((d) => {
 					return Object.assign({}, d, {
 						id: d.name,
 					});
 				});
-				return;
+				return formatted_data;
 			} else {
-				this.data = data.map((d) => {
+				formatted_data = data.map((d) => {
 					return Object.assign({}, d, {
 						id: Object.values(d).join(""),
 					});
 				});
-				return;
+				return formatted_data;
 			}
 		} else {
-			this.data = data;
-			return;
+			formatted_data = data;
+			return formatted_data;
 		}
 	}
 }
