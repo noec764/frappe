@@ -95,6 +95,11 @@
 	.fc-toolbar-chunk:empty {
 		display: none;
 	}
+
+	a:not([href]) {
+		color: inherit !important;
+		text-decoration: none !important;
+	}
 }
 
 .fc.resource-calendar {
