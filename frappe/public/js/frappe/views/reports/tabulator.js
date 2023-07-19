@@ -111,7 +111,7 @@ export default class TabulatorDataTable {
 				const editor_type = this.get_editor_type(fieldtype);
 
 				Object.assign(mapped_col, {
-					headerFilter: true,
+					headerFilter: "input",
 					editor: editor_type,
 					editorParams: this.get_editor_params(col, fieldtype, editor_type),
 					cellEdited: function (cell) {
