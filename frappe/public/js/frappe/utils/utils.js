@@ -1207,6 +1207,72 @@ Object.assign(frappe.utils, {
 		return duration_options;
 	},
 
+	get_number_system: function (country) {
+		if (["Bangladesh", "India", "Myanmar", "Pakistan"].includes(country)) {
+			return number_systems.indian;
+		} else {
+			return number_systems.default;
+		}
+	},
+
+	map_defaults: {
+		center: [19.08, 72.8961],
+		zoom: 13,
+		tiles: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+		options: {
+			attribution:
+				'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
+		},
+		image_path: "/assets/frappe/images/leaflet/",
+	},
+
+	icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
+		let size_class = "";
+
+		if (typeof size == "object") {
+			icon_style += ` width: ${size.width}; height: ${size.height}`;
+		} else {
+			size_class = `icon-${size}`;
+		}
+		return `<svg class="icon ${svg_class} ${size_class}" style="${icon_style}">
+			<use class="${icon_class}" href="#icon-${icon_name}"></use>
+		</svg>`;
+	},
+
+	flag(country_code) {
+		return `<img
+		src="https://flagcdn.com/${country_code}.svg"
+		width="20" height="15">`;
+	},
+
+	make_chart(wrapper, custom_options = {}) {
+		let chart_args = {
+			type: "bar",
+			colors: ["light-blue"],
+			axisOptions: {
+				xIsSeries: 1,
+				shortenYAxisNumbers: 1,
+				xAxisMode: "tick",
+				numberFormatter: frappe.utils.format_chart_axis_number,
+			},
+		};
+
+		for (let key in custom_options) {
+			if (typeof chart_args[key] === "object" && typeof custom_options[key] === "object") {
+				chart_args[key] = Object.assign(chart_args[key], custom_options[key]);
+			} else {
+				chart_args[key] = custom_options[key];
+			}
+		}
+
+		return new frappe.Chart(wrapper, chart_args);
+	},
+
+	format_chart_axis_number(label, country) {
+		const default_country = frappe.sys_defaults.country;
+		return frappe.utils.shorten_number(label, country || default_country, 3);
+	},
+
 	generate_route(item) {
 		const type = item.type.toLowerCase();
 		if (type === "doctype") {

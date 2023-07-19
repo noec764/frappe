@@ -87,8 +87,11 @@ frappe.views.MapView = class MapView extends frappe.views.ListView {
 			},
 		});
 
-		L.Icon.Default.imagePath = "/assets/frappe/images/leaflet/";
-		this.map = L.map(this.map_id).fitWorld();
+		L.Icon.Default.imagePath = frappe.utils.map_defaults.image_path;
+		this.map = L.map(this.map_id).setView(
+			frappe.utils.map_defaults.center,
+			frappe.utils.map_defaults.zoom
+		);
 
 		L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
 			attribution:
