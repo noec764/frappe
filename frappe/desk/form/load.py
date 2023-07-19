@@ -79,7 +79,8 @@ def get_meta_bundle(doctype):
 	bundle = [frappe.desk.form.meta.get_meta(doctype)]
 	for df in bundle[0].fields:
 		if df.fieldtype in frappe.model.table_fields:
-			bundle.append(frappe.desk.form.meta.get_meta(df.options, not frappe.conf.developer_mode))
+			bundle.append(frappe.desk.form.meta.get_meta(df.options))
+
 	return bundle
 
 
@@ -256,7 +257,7 @@ def get_point_logs(doctype, docname):
 	)
 
 
-def _get_communications(doctype, name, start=0, limit=20):
+def _get_communications(doctype, name, start=0, limit=100):
 	from frappe.core.doctype.comment.comment import get_comments_from_parent
 
 	communications = get_communication_data(doctype, name, start, limit)

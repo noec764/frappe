@@ -266,7 +266,9 @@ frappe.views.Planning = class frappePlanning {
 				initialView:
 					initialView &&
 					["timeGridDay", "timeGridWeek", "dayGridMonth"].includes(initialView)
-						? initialView.replace("timeGrid", "resourceTimeline")
+						? initialView
+								.replace("timeGrid", "resourceTimeline")
+								.replace("dayGrid", "resourceTimeline")
 						: "resourceTimelineMonth",
 				weekends: weekends ? weekends : true,
 			};
@@ -365,7 +367,7 @@ frappe.views.Planning = class frappePlanning {
 				resourceTimeGridPlugin,
 			],
 			schedulerLicenseKey: frappe.boot.fullcalendar_scheduler_licence_key,
-			initialView: "resourceTimelineWeek",
+			initialView: defaults.initialView,
 			headerToolbar: {
 				left: "resourceTimelineDay,resourceTimelineWeek,resourceTimelineMonth resourceTimeGridDay",
 				center: "prev,title,next",
@@ -494,6 +496,7 @@ frappe.views.Planning = class frappePlanning {
 	}
 
 	refresh() {
+		Object.assign(this.field_map, { resourceId: this.list_view.resource });
 		this.fullcalendar.refetchResources();
 		this.fullcalendar.refetchEvents();
 	}
@@ -578,7 +581,8 @@ frappe.views.Planning = class frappePlanning {
 
 		const updated_args = me.get_update_args(firstEvent);
 		if (this.field_map.resourceId) {
-			updated_args.args[this.field_map.resourceId] = info.newResource.id;
+			updated_args.args[this.field_map.resourceId] =
+				info.newResource?.id || info.event.extendedProps[this.field_map.resourceId];
 		}
 
 		return frappe.call({

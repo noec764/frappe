@@ -14,6 +14,7 @@ import json
 import os
 import re
 from contextlib import contextmanager
+from csv import reader, writer
 
 from babel.messages.extract import extract_python
 from babel.messages.jslexer import Token, tokenize, unquote_string
@@ -248,6 +249,9 @@ def get_messages_for_boot():
 	"""Return all message translations that are required on boot."""
 	messages = get_all_translations(frappe.local.lang)
 	messages.update(get_dict_from_hooks("boot", None))
+
+	# Remove translations that are identical to the source text
+	messages = {k: v for k, v in messages.items() if k != v}
 
 	return messages
 
@@ -761,6 +765,10 @@ def get_messages_from_workspace(name):
 		if qlist.get("label"):
 			messages.append(("Workspace Quick List: " + name, qlist.get("label")))
 
+	for chart in desk_page.charts:
+		if chart.get("label"):
+			messages.append(("Workspace Dashboard Charts: " + name, chart.get("label")))
+
 	for number_card in desk_page.number_cards:
 		if number_card.get("label"):
 			messages.append(("Workspace Number Cards: " + name, number_card.get("label")))
@@ -1146,8 +1154,6 @@ def read_csv_file(path):
 	"""Read CSV file and return as list of list
 
 	:param path: File path"""
-	from csv import reader
-
 	with open(path, encoding="utf-8", newline="") as msgfile:
 		data = reader(msgfile)
 		newdata = [[val for val in row] for row in data]
@@ -1200,9 +1206,6 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 	for m in messages:
 		contextual_messages.append(m[1] + ":::" + m[2] if len(m) > 2 and m[2] else m[1])
 
-	def escape_newlines(s):
-		return s.replace("\\\n", "|µµµ|").replace("\\n", "|µµ|").replace("\n", "|µ|")
-
 	if get_all:
 		print(str(len(contextual_messages)) + " messages")
 		output = []
@@ -1210,7 +1213,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 			# replace \n with ||| so that internal linebreaks don't get split
 			split_key = m.split(":::")
 			context = split_key[1] if len(split_key) > 1 else ""
-			output.append([escape_newlines(split_key[0]), "", context])
+			output.append([split_key[0], "", context])
 
 		with open(untranslated_file, "w") as f:
 			f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator="\n"))
@@ -1228,7 +1231,7 @@ def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, writ
 				# replace \n with ||| so that internal linebreaks don't get split
 				split_key = m.split(":::")
 				context = split_key[1] if len(split_key) > 1 else ""
-				output.append([escape_newlines(split_key[0]), "", context])
+				output.append([split_key[0], "", context])
 			with open(untranslated_file, "w") as f:
 				f.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator="\n"))
 		else:
@@ -1257,6 +1260,50 @@ def update_translations(lang, translated_file, app):
 
 		full_dict.update(newdict)
 		write_translations_file(app, lang, full_dict)
+
+
+def migrate_translations(source_app, target_app):
+	"""Migrate target-app-specific translations from source-app to target-app"""
+	clear_cache()
+	strings_in_source_app = [m[1] for m in frappe.translate.get_messages_for_app(source_app)]
+	strings_in_target_app = [m[1] for m in frappe.translate.get_messages_for_app(target_app)]
+
+	strings_in_target_app_but_not_in_source_app = list(
+		set(strings_in_target_app) - set(strings_in_source_app)
+	)
+
+	languages = frappe.translate.get_all_languages()
+
+	source_app_translations_dir = os.path.join(frappe.get_pymodule_path(source_app), "translations")
+	target_app_translations_dir = os.path.join(frappe.get_pymodule_path(target_app), "translations")
+
+	if not os.path.exists(target_app_translations_dir):
+		os.makedirs(target_app_translations_dir)
+
+	for lang in languages:
+		source_csv = os.path.join(source_app_translations_dir, lang + ".csv")
+
+		if not os.path.exists(source_csv):
+			continue
+
+		target_csv = os.path.join(target_app_translations_dir, lang + ".csv")
+		temp_csv = os.path.join(source_app_translations_dir, "_temp.csv")
+
+		with open(source_csv) as s, open(target_csv, "a+") as t, open(temp_csv, "a+") as temp:
+			source_reader = reader(s, lineterminator="\n")
+			target_writer = writer(t, lineterminator="\n")
+			temp_writer = writer(temp, lineterminator="\n")
+
+			for row in source_reader:
+				if row[0] in strings_in_target_app_but_not_in_source_app:
+					target_writer.writerow(row)
+				else:
+					temp_writer.writerow(row)
+
+		if not os.path.getsize(target_csv):
+			os.remove(target_csv)
+		os.remove(source_csv)
+		os.rename(temp_csv, source_csv)
 
 
 def rebuild_all_translation_files():

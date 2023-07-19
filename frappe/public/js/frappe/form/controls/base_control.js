@@ -8,6 +8,25 @@ frappe.ui.form.Control = class BaseControl {
 			this.refresh();
 		}
 	}
+
+	get_configuration(key = null) {
+		if (this.df.configuration && !this._parsed_configuration) {
+			try {
+				if (typeof this.df.configuration === "string") {
+					this._parsed_configuration = JSON.parse(this.df.configuration);
+				} else if (typeof this.df.configuration === "object") {
+					this._parsed_configuration = this.df.configuration;
+				}
+			} catch (e) {
+				// pass
+			}
+		}
+		if (key) {
+			return this._parsed_configuration?.[key];
+		}
+		return this._parsed_configuration ?? {};
+	}
+
 	make() {
 		this.make_wrapper();
 		this.$wrapper

@@ -26,6 +26,7 @@ context("Control Float", () => {
 				.its("frappe")
 				.then((frappe) => {
 					frappe.boot.sysdefaults.number_format = x.number_format;
+					frappe.boot.sysdefaults.float_precision = 3;
 				});
 			x.values.forEach((d) => {
 				cy.get_field("float_number", "Float").clear();

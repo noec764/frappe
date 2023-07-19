@@ -1,5 +1,7 @@
 frappe.provide("frappe.model");
 
+import { setup_docfield_configuration } from "./configuration";
+
 /*
 	Common class for handling client side interactions that
 	apply to both DocType form and customize form.
@@ -21,6 +23,8 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 			}
 			return label;
 		};
+
+		frappe.model.DocTypeController.setup_docfield_configuration(this.frm);
 	}
 
 	max_attachments() {
@@ -201,4 +205,6 @@ frappe.model.DocTypeController = class DocTypeController extends frappe.ui.form.
 			update_fieldname_options();
 		}
 	}
+
+	static setup_docfield_configuration = setup_docfield_configuration;
 };
