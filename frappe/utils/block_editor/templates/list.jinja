@@ -1,0 +1,6 @@
+{%- set el = "ol" if block.style == "ordered" else "ul" -%}
+<{{ el }}>
+{%- for item in block["items"] -%}
+	<li>{{ item }}</li>
+{%- endfor -%}
+</{{ el }}>

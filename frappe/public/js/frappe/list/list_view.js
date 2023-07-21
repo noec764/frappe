@@ -880,9 +880,14 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 					${_value}
 				</a>`;
 			} else if (
-				["Text Editor", "Text", "Small Text", "HTML Editor", "Markdown Editor"].includes(
-					df.fieldtype
-				)
+				[
+					"Text Editor",
+					"Text",
+					"Small Text",
+					"HTML Editor",
+					"Markdown Editor",
+					"Block Editor",
+				].includes(df.fieldtype)
 			) {
 				html = `<span class="ellipsis">
 					${_value}

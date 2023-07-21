@@ -50,6 +50,7 @@ frappe.ui.Filter = class {
 			Code: ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			"HTML Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			"Markdown Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
+			"Block Editor": ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			Password: ["Between", "Timespan", ">", "<", ">=", "<=", "in", "not in"],
 			Rating: ["like", "not like", "Between", "in", "not in", "Timespan"],
 		};
@@ -512,6 +513,7 @@ frappe.ui.filter_utils = {
 				"Attach",
 				"Attach Image",
 				"Markdown Editor",
+				"Block Editor",
 				"HTML Editor",
 				"Tag",
 				"Phone",

@@ -19,7 +19,7 @@ class Notification(Document):
 	def onload(self):
 		"""load message"""
 		if self.is_standard and self.enabled and not frappe.conf.developer_mode:
-			self.message = self.get_template()
+			self.load_standard_message_content()
 
 	def autoname(self):
 		if not self.name:
@@ -29,7 +29,7 @@ class Notification(Document):
 		if self.channel in ("Email", "External Collaboration Tool", "System Notification"):
 			validate_template(self.subject)
 
-		validate_template(self.message)
+		self.validate_message_content()
 
 		if self.event in ("Days Before", "Days After") and not self.date_changed:
 			frappe.throw(_("Please specify which date field must be checked"))
@@ -42,11 +42,26 @@ class Notification(Document):
 		self.validate_standard()
 		frappe.cache.hdel("notifications", self.document_type)
 
+	def validate_message_content(self):
+		if not self.message_editor_type:
+			self.message_editor_type = "HTML Editor"
+
+		if self.message_editor_type == "Block Editor":
+			return  # no validation for block editor
+
+		validate_template(self.message)
+
 	def on_update(self):
 		frappe.cache.hdel("notifications", self.document_type)
 		path = export_module_json(self, self.is_standard, self.module)
 		if path:
-			# js
+			# block editor
+			if self.message_editor_type == "Block Editor":
+				with open(path + ".block.json", "w") as f:
+					f.write(self.message_block_editor)
+				return  # don't write other files
+
+			# html/md
 			if not os.path.exists(path + ".md") and not os.path.exists(path + ".html"):
 				with open(path + ".md", "w") as f:
 					f.write(self.message)
@@ -196,7 +211,7 @@ def get_context(context):
 			"document_name": doc.name,
 			"subject": subject,
 			"from_user": doc.modified_by or doc.owner,
-			"email_content": frappe.render_template(self.message, context),
+			"email_content": self.render(context),
 			"attached_file": attachments and json.dumps(attachments[0]),
 		}
 		enqueue_create_notification(users, notification_doc)
@@ -216,7 +231,7 @@ def get_context(context):
 			return
 
 		sender = None
-		message = frappe.render_template(self.message, context)
+		message = self.render(context)
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
 
@@ -278,7 +293,7 @@ def get_context(context):
 
 	def send_an_external_collaboration_tool_msg(self, doc, context):
 		frappe.get_doc("Incoming Webhook URL", self.incoming_webhook_url).send(
-			message=frappe.render_template(self.message, context),
+			message=self.render(context),
 			reference_doctype=doc.doctype,
 			reference_name=doc.name,
 		)
@@ -286,7 +301,7 @@ def get_context(context):
 	def send_sms(self, doc, context):
 		send_sms(
 			receiver_list=self.get_receiver_list(doc, context),
-			msg=frappe.render_template(self.message, context),
+			msg=self.render(context),
 		)
 
 	def get_list_of_recipients(self, doc, context):
@@ -380,6 +395,14 @@ def get_context(context):
 				}
 			]
 
+	def render(self, context):
+		if self.message_editor_type == "Block Editor":
+			from frappe.utils.block_editor import block_editor_json_to_html
+
+			return block_editor_json_to_html(self.message_block_editor, context=context, wrap=True)
+
+		return frappe.render_template(self.message, context)
+
 	def get_template(self):
 		module = get_doc_module(self.module, self.doctype, self.name)
 
@@ -390,6 +413,9 @@ def get_context(context):
 				with open(template_path) as f:
 					template = f.read()
 			return template
+
+		if self.message_editor_type == "Block Editor":
+			return load_template(".block.json")
 
 		return load_template(".html") or load_template(".md")
 
@@ -402,10 +428,16 @@ def get_context(context):
 				if out:
 					context.update(out)
 
-		self.message = self.get_template()
+		self.load_standard_message_content()
 
-		if not is_html(self.message) and self.channel != "External Collaboration Tool":
-			self.message = frappe.utils.md_to_html(self.message)
+	def load_standard_message_content(self):
+		if self.message_editor_type == "Block Editor":
+			self.message_block_editor = self.get_template()
+		else:
+			self.message = self.get_template()
+
+			if not is_html(self.message) and self.channel != "External Collaboration Tool":
+				self.message = frappe.utils.md_to_html(self.message)
 
 	def on_trash(self):
 		frappe.cache.hdel("notifications", self.document_type)
@@ -514,7 +546,7 @@ def get_context(doc):
 
 @frappe.whitelist()
 def send_test_notification(notification, document):
-	alert = frappe.get_doc("Notification", notification)
+	alert: Notification = frappe.get_doc("Notification", notification)
 	doc = frappe.get_doc(alert.document_type, document)
 	alert.send(doc)
 

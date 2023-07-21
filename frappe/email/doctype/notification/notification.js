@@ -113,6 +113,14 @@ Last comment: {{ comments[-1].comment }} by {{ comments[-1].by }}
 		}
 		frm.set_df_property("message_examples", "options", template);
 	},
+	setup_editor_type_select: function (frm) {
+		if (in_list(["Email", "System Notification"], frm.doc.channel)) {
+			frm.set_df_property("message_editor_type", "read_only", 0);
+		} else if (in_list(["External Collaboration Tool", "SMS"], frm.doc.channel)) {
+			frm.set_value("message_editor_type", "HTML Editor");
+			frm.set_df_property("message_editor_type", "read_only", 1);
+		}
+	},
 };
 
 frappe.ui.form.on("Notification", {
@@ -133,8 +141,14 @@ frappe.ui.form.on("Notification", {
 		});
 	},
 	refresh: function (frm) {
+		if (frm.doc.__islocal) {
+			// because default value of message_editor_type is "HTML Editor" to maintain backward compatibility
+			frm.set_value("message_editor_type", "Block Editor");
+		}
+
 		frappe.notification.setup_fieldname_select(frm);
 		frappe.notification.setup_example_message(frm);
+		frappe.notification.setup_editor_type_select(frm);
 
 		frm.add_fetch("sender", "email_id", "sender_email");
 		frm.set_query("sender", () => {
@@ -220,6 +234,7 @@ frappe.ui.form.on("Notification", {
 		frm.toggle_reqd("recipients", frm.doc.channel == "Email");
 		frappe.notification.setup_fieldname_select(frm);
 		frappe.notification.setup_example_message(frm);
+		frappe.notification.setup_editor_type_select(frm);
 		if (frm.doc.channel === "SMS" && frm.doc.__islocal) {
 			frm.set_df_property(
 				"channel",

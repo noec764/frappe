@@ -1,0 +1,40 @@
+<table {{styles.table_card()}}>
+	<tr><td style="padding:16px 16px 0px;" colspan="2"><b>{{ label }}</b></td></tr>
+	<tr>
+		<td style="padding:0px 16px;"><b style="font-size: 32px; font-weight: 900; color: {{ color }};">{{ formatted_number }}</b></td>
+		{%- if evolution or evolution == 0 -%}
+		<td style="padding:0px 16px; line-height: 1;" align="right" valign="center">
+			<div style="color:rgb({{ caret_color }});">
+				{{ caret_html }} <small>{{ evolution }} %</small>
+			</div>
+			<small style="opacity:.6">
+				{{ stats_qualifier }}
+			</small>
+		</td>
+		{%- endif -%}
+	</tr>
+</table>
+
+{# <div class="card">
+	<div class="text-muted">
+		{{ label }}
+	</div>
+	<h3 class="card-title" style="color:{doc.color}">
+		{{ formatted_number }}
+	</h3>
+	{% if evolution or evolution == 0 %}
+	<div class="card-text">
+		<div class="card-stats {caret_color}">
+			<span class="percentage-stat-area">
+				{{ caret_html }}
+				<span class="percentage-stat">
+				{{ evolution }} %
+				</span>
+			</span>
+			<span class="stat-period text-muted">
+				{{ stats_qualifier }}
+			</span>
+		</div>
+	</div>
+	{% endif %}
+</div> #}

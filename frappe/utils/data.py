@@ -2051,6 +2051,12 @@ def markdown(markdown_text):
 	return md_to_html(markdown_text)
 
 
+def block_editor_json_to_html(json: str | dict | list, context: dict):
+	from frappe.utils.block_editor import block_editor_json_to_html
+
+	return block_editor_json_to_html(json, context)
+
+
 def is_subset(list_a: list, list_b: list) -> bool:
 	"""Returns whether list_a is a subset of list_b"""
 	return len(list(set(list_a) & set(list_b))) == len(list_a)

@@ -1,0 +1,50 @@
+{# withBackground, withBorder, stretched #}
+
+{% set classes = [] %}
+{% if block.withBackground %}
+	{% set _tmp = classes.append('be-image--with-background') %}
+{% endif %}
+{% if block.withBorder %}
+	{% set _tmp = classes.append('be-image--with-border') %}
+{% endif %}
+{% if block.stretched %}
+	{% set _tmp = classes.append('be-image--stretched') %}
+{% endif %}
+
+<div class="be-image__wrapper {{ classes | join(' ') }}">
+	{% if block.file and block.file.url %}
+	<img src="{{ block.file.url }}" alt="{{ block.caption | striptags }}" />
+	{% endif %}
+	{% if block.caption %}
+	<u>{{ nested(block.caption) | safe }}</u>
+	{% endif %}
+</div>
+<style>
+.be-image__wrapper {
+	display: block;
+	margin: 0 auto;
+	max-width: 600px;
+}
+.be-image__wrapper img {
+	display: block;
+	margin: 0 auto;
+	max-width: 100%;
+}
+.be-image__wrapper u {
+	display: block;
+	text-align: center;
+	font-size: 0.8em;
+	margin-top: 0.5em;
+}
+
+.be-image--with-background {
+	background-color: #f5f5f5;
+	padding: 1em;
+}
+.be-image--with-border {
+	border: 1px solid #ccc;
+}
+.be-image--stretched {
+	width: 100%;
+}
+</style>

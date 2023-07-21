@@ -105,6 +105,9 @@ def format_value(value, df=None, doc=None, currency=None, translated=False, form
 	elif df.get("fieldtype") == "Markdown Editor":
 		return frappe.utils.markdown(value)
 
+	elif df.get("fieldtype") == "Block Editor":
+		return value
+
 	elif df.get("fieldtype") == "Table MultiSelect":
 		values = []
 		meta = frappe.get_meta(df.options)

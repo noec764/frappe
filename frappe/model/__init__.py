@@ -17,6 +17,7 @@ data_fieldtypes = (
 	"Code",
 	"Text Editor",
 	"Markdown Editor",
+	"Block Editor",
 	"HTML Editor",
 	"Date",
 	"Datetime",

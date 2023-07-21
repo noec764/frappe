@@ -8,6 +8,11 @@ frappe.ui.form.on("Notification Log", {
 		} else {
 			frm.get_field("attachment_link").$wrapper.empty();
 		}
+
+		if (frm.doc.email_content?.includes?.("dodock-block-editor--readonly")) {
+			// Remove quill editor styles
+			frm.get_field("email_content")?.disp_area?.firstChild?.classList.remove("ql-editor");
+		}
 	},
 
 	open_reference_document: function (frm) {

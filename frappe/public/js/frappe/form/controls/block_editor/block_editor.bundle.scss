@@ -1,0 +1,173 @@
+.dodock-block-editor :is(h1, h2, h3, h4, h5, h6) {
+	margin: 0 !important;
+	font-size: revert !important;
+	font-weight: revert !important;
+}
+
+/* Editor */
+.dodock-block-editor {
+	overflow: visible;
+	font-size: 16px;
+}
+.dodock-block-editor > .codex-editor {
+	z-index: unset;
+}
+.dodock-block-editor [contenteditable] {
+	outline: none;
+}
+.dodock-block-editor [contenteditable][data-placeholder]:empty {
+	position: relative;
+}
+.dodock-block-editor [contenteditable][data-placeholder]:empty::before {
+	opacity: 0.7;
+	content: attr(data-placeholder);
+	font-style: italic;
+	left: 0px;
+	pointer-events: none;
+	position: absolute;
+	right: 0px;
+}
+
+/* Root editor */
+.dodock-block-editor--root {
+	padding: 1rem;
+	// padding-left: 64px;
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+}
+.dodock-block-editor--preview {
+	border: 1px solid var(--border-color);
+	border-radius: var(--border-radius);
+	font-size: 0px;
+	overflow: hidden;
+}
+.dodock-block-editor--root > .codex-editor > .codex-editor__loader {
+	min-height: 200px;
+	max-height: 600px;
+	height: 188px !important;
+}
+
+/* Sub-editor */
+/* .dodock-block-editor--sub > .codex-editor > .codex-editor__loader {
+	height: 24px !important;
+} */
+
+/* Fixes */
+/* .dodock-block-editor .ce-block--selected .card {
+	background: transparent;
+}
+.dodock-block-editor .ce-inline-toolbar, .dodock-block-editor .ce-toolbar {
+	z-index: 6;
+	color: var(--text-color);
+}
+.dodock-block-editor .ce-settings, .dodock-block-editor .ce-toolbox {
+	z-index: 7;
+}
+.dodock-block-editor:has(.dodock-block-editor > .codex-editor:hover) > .codex-editor > :is(.ce-inline-toolbar, .ce-toolbar),
+.dodock-block-editor--sub:not(:hover) > .codex-editor > :is(.ce-inline-toolbar, .ce-toolbar) {
+	opacity: 0.1;
+} */
+
+.dodock-block-editor .ce-inline-tool .icon {
+	width: 20px;
+	height: 20px;
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.dodock-block-editor .ce-inline-tool {
+	position: relative;
+}
+.dodock-block-editor .ce-inline-tool--active::after {
+	display: block;
+	content: "";
+	width: 3px;
+	height: 3px;
+	border-radius: 99px;
+	background: currentColor;
+	position: absolute;
+	bottom: 4px;
+	left: 50%;
+	transform: translateX(-50%);
+	transition: width 0.1s ease, height 0.1s ease;
+}
+.dodock-block-editor .ce-inline-tool--active:hover::after {
+	width: 5px;
+	height: 5px;
+}
+
+.dodock-block-editor .be-block--columns {
+	display: grid;
+	grid-auto-flow: column;
+	grid-auto-columns: 1fr;
+	gap: 3px;
+}
+.dodock-block-editor .be-block--columns > div {
+	border: 2px dashed var(--border-color);
+	border-radius: 5px;
+	min-height: 40px;
+}
+.dodock-block-editor .be-block--columns > div:nth-child(even) {
+	background: hsla(0, 0%, 0%, 0.02);
+}
+
+.frappe-control[data-fieldtype="Block Editor"] {
+	z-index: 1;
+}
+.frappe-control[data-fieldtype="Block Editor"] > .form-group > .control-input-wrapper > .control-input {
+	background: #fff;
+	color: #000;
+}
+
+.dodock-block-editor--portal * {
+	pointer-events: none;
+}
+.dodock-block-editor--portal .codex-editor {
+	z-index: 0 !important;
+}
+.dodock-block-editor--portal .codex-editor > .codex-editor__redactor {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+.dodock-block-editor--portal .codex-editor > :not(.codex-editor__redactor) {
+	display: none !important;
+}
+.dodock-block-editor--portal .dodock-block-editor--portal {
+	pointer-events: all !important;
+}
+.dodock-block-editor--portal {
+	border-radius: 2px;
+}
+.dodock-block-editor--portal:not(:has(.dodock-block-editor--portal:hover)):hover {
+	box-shadow: 0 0 0 1px var(--border-color);
+}
+
+.dodock-block-editor .ce-rawtool__textarea {
+	min-height: 3em;
+}
+
+.dodock-block-editor .widget {
+	box-shadow: var(--shadow-sm);
+}
+
+.with-jinja > .tc-wrap {
+	box-shadow: 0 0 0 2px var(--yellow);
+	border-radius: 9px;
+}
+.with-jinja > .tc-wrap > .tc-add-column {
+	border-top-right-radius: inherit;
+}
+.with-jinja > .tc-wrap > .tc-add-row {
+	border-bottom-left-radius: inherit;
+	border-bottom-right-radius: inherit;
+}
+.with-jinja > .tc-wrap > .tc-add-row::before {
+	border-bottom-right-radius: inherit;
+}
+.with-jinja .tc-table {
+	border-top: none;
+}
+
+.dodock-block-editor--readonly {
+	white-space: normal;
+}
