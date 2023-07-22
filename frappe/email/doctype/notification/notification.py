@@ -12,6 +12,7 @@ from frappe.model.document import Document
 from frappe.modules.utils import export_module_json, get_doc_module
 from frappe.utils import add_to_date, cast, is_html, nowdate, validate_email_address
 from frappe.utils.jinja import validate_template
+from frappe.utils.safe_block_eval import safe_block_eval
 from frappe.utils.safe_exec import get_safe_globals
 
 
@@ -94,7 +95,7 @@ def get_context(context):
 		temp_doc = frappe.new_doc(self.document_type)
 		if self.condition:
 			try:
-				frappe.safe_eval(self.condition, None, get_context(temp_doc.as_dict()))
+				safe_block_eval(self.condition, None, get_context(temp_doc.as_dict()))
 			except Exception:
 				frappe.throw(_("The Condition '{0}' is invalid").format(self.condition))
 
@@ -129,7 +130,7 @@ def get_context(context):
 		for d in doc_list:
 			doc = frappe.get_doc(self.document_type, d.name)
 
-			if self.condition and not frappe.safe_eval(self.condition, None, get_context(doc)):
+			if self.condition and not safe_block_eval(self.condition, None, get_context(doc)):
 				continue
 
 			docs.append(doc)
@@ -310,7 +311,7 @@ def get_context(context):
 		bcc = []
 		for recipient in self.recipients:
 			if recipient.condition:
-				if not frappe.safe_eval(recipient.condition, None, context):
+				if not safe_block_eval(recipient.condition, None, context):
 					continue
 			if recipient.receiver_by_document_field:
 				fields = recipient.receiver_by_document_field.split(",")
@@ -347,7 +348,7 @@ def get_context(context):
 		receiver_list = []
 		for recipient in self.recipients:
 			if recipient.condition:
-				if not frappe.safe_eval(recipient.condition, None, context):
+				if not safe_block_eval(recipient.condition, None, context):
 					continue
 
 			# For sending messages to the owner's mobile phone number
@@ -489,7 +490,7 @@ def evaluate_alert(doc: Document, alert, event):
 
 		context = get_context(doc)
 		if alert.condition:
-			if not frappe.safe_eval(alert.condition, None, context):
+			if not safe_block_eval(alert.condition, None, context):
 				return
 
 		if event == "Value Change" and not doc.is_new():

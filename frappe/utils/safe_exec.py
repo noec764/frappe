@@ -54,6 +54,12 @@ class FrappeTransformer(RestrictingNodeTransformer):
 		return super().check_name(node, name, *args, **kwargs)
 
 
+def _frozendict(**kwargs):
+	from collections import namedtuple
+
+	return namedtuple("frozendict", kwargs.keys())(**kwargs)
+
+
 def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=False):
 	# server scripts can be disabled via site_config.json
 	# they are enabled by default
@@ -183,7 +189,7 @@ def get_safe_globals():
 			if getattr(frappe.local, "session", None)
 			else "Guest",
 			request=getattr(frappe.local, "request", {}),
-			session=frappe._dict(
+			session=_frozendict(
 				user=user,
 				csrf_token=frappe.local.session.data.csrf_token
 				if getattr(frappe.local, "session", None)
