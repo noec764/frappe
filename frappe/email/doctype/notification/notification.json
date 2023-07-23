@@ -171,7 +171,7 @@
    "ignore_xss_filter": 1,
    "in_list_view": 1,
    "label": "Condition",
-   "options": "PythonExpression"
+   "options": "PythonBlock"
   },
   {
    "depends_on": "eval:doc.event",
