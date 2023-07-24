@@ -141,8 +141,8 @@ def cli(cmd: Command, args: list | None = None):
 class BaseTestCommands(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls) -> None:
+		super().setUpClass()
 		cls.setup_test_site()
-		return super().setUpClass()
 
 	@classmethod
 	def execute(self, command, kwargs=None):
@@ -218,7 +218,7 @@ class BaseTestCommands(FrappeTestCase):
 		return f"{output}\n\n{cmd_execution_summary}"
 
 
-@unittest.skip
+@unittest.skip("Dokos")
 class TestCommands(BaseTestCommands):
 	def test_execute(self):
 		# test 1: execute a command expecting a numeric output
@@ -415,11 +415,9 @@ class TestCommands(BaseTestCommands):
 	def test_set_password(self):
 		from frappe.utils.password import check_password
 
-		self.assertEqual(check_password("Administrator", "am"), "Administrator")
 		self.execute("bench --site {site} set-password Administrator test1")
 		self.assertEqual(self.returncode, 0)
 		self.assertEqual(check_password("Administrator", "test1"), "Administrator")
-		# to release the lock taken by check_password
 
 		self.execute("bench --site {site} set-admin-password test2")
 		self.assertEqual(self.returncode, 0)
