@@ -42,7 +42,7 @@ export const useStore = defineStore("form-builder-store", () => {
 		df.name = frappe.utils.get_random(8);
 		df.fieldtype = fieldtype;
 		df.fieldname = fieldname;
-		df.label = label;
+		df.label = __(label || fieldname, null, docfield); // @dokos
 		is_customize_form.value && (df.is_custom_field = 1);
 		return df;
 	}

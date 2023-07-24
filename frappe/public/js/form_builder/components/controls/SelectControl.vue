@@ -11,14 +11,6 @@ let update_control = ref(true);
 function get_options() {
 	let options = props.df.options;
 
-	if (props.df.fieldname == "fieldtype" && typeof options == "string") {
-		options = options.split("\n")
-			.map((fieldtype) => {
-				return { value: fieldtype, label: __(fieldtype, null, "DocField") }
-			})
-			.sort((a, b) => a.label.localeCompare(b.label));
-	}
-
 	if (typeof options == "string") {
 		options = options.split("\n") || "";
 		options = options.map(opt => {
@@ -34,10 +26,18 @@ function get_options() {
 
 	if (props.df.fieldname == "fieldtype") {
 		if (!in_list(frappe.model.layout_fields, props.modelValue)) {
-			options = options && options.filter(opt => !in_list(frappe.model.layout_fields, opt.label));
+			options = options && options.filter(opt => !in_list(frappe.model.layout_fields, opt.value));
 		} else {
 			options = [{ label: __(props.modelValue), value: props.modelValue }];
 		}
+
+		// @dokos
+		options = options.map(({ value }) => ({ value, label: __(value, null, "DocField") }))
+	}
+
+	// @dokos
+	if (props.df.sort_options) {
+		options.sort((a, b) => a.label.localeCompare(b.label));
 	}
 
 	return options;
