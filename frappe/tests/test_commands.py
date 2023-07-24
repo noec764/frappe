@@ -1,14 +1,13 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+# imports - standard imports
 import gzip
 import importlib
 import json
 import os
 import shlex
 import subprocess
-
-# imports - standard imports
 import unittest
 from contextlib import contextmanager
 from functools import wraps
