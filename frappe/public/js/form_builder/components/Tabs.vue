@@ -122,7 +122,7 @@ function delete_tab(with_children) {
 		>
 			<template #item="{ element }">
 				<div
-				:class="['tab', store.form.active_tab == element.df.name ? 'active' : '']"
+					:class="['tab', store.form.active_tab == element.df.name ? 'active' : '']"
 					:title="element.df.fieldname"
 					:data-is-user-generated="store.is_user_generated_field(element)"
 					@click.stop="activate_tab(element)"

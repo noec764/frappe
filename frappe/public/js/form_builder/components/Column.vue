@@ -147,7 +147,7 @@ function move_columns_to_section() {
 			class="column-container"
 			:style="{ backgroundColor: column.fields.length ? '' : 'var(--field-placeholder-color)' }"
 			v-model="column.fields"
-			:prevent-on-filter="false"
+			group="fields"
 			:animation="200"
 			:easing="store.get_animation"
 			item-key="id"

@@ -59,6 +59,8 @@ let docfield_df = computed(() => {
 		}
 		return true;
 	});
+
+	// @dokos
 	fields = fields.map(df => {
 		df.label = __(df.label, null, "DocField");
 		df.description = __(df.description, null, "DocField");
