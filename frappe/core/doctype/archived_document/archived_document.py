@@ -9,6 +9,23 @@ exclude_from_linked_with = True
 
 
 class ArchivedDocument(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		amended_from: DF.Link | None
+		data: DF.Code
+		hash: DF.Data
+		reference_docname: DF.DynamicLink
+		reference_doctype: DF.Link
+		timestamp: DF.Datetime
+		user: DF.Link
+	# end: auto-generated types
+
 	def before_insert(self):
 		sealed_doc = self.data
 		current_seal, chained_seal = get_chained_seal(sealed_doc)
