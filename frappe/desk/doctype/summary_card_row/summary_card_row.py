@@ -8,12 +8,24 @@ from frappe.model.document import Document
 
 
 class SummaryCardRow(Document):
-	type: Literal["Section Break", "Count"]
-	label: str
-	dt: str
-	counter_format: str
-	filters_code: str
-	collapsible: bool
-	color: str
-	icon: str
-	icon_first: bool
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		collapsible: DF.Check
+		color: DF.Color | None
+		counter_format: DF.Data | None
+		dt: DF.Link | None
+		filters_code: DF.Code | None
+		icon_first: DF.Check
+		label: DF.Data
+		parent: DF.Data
+		parentfield: DF.Data
+		parenttype: DF.Data
+		type: DF.Literal["Section Break", "Count"]
+	# end: auto-generated types
+	pass
