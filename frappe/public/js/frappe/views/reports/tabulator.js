@@ -14,17 +14,22 @@ export default class TabulatorDataTable {
 		this.map_columns(this.options.columns);
 		this.data = this.get_data(this.options.data);
 
-		this.table = new Tabulator(this.wrapper[0], {
-			data: this.data,
-			columns: this.columns,
-			minHeight: 100,
-			maxHeight: vh - 100,
-			debugInvalidOptions: false,
-			dataTree: this.is_tree,
-			resizableRows: true,
-			textDirection: this.options.direction,
-			dataTreeStartExpanded: this.is_tree && !this.options.collapse_all_rows,
-		});
+		const tabulator_options = Object.assign(
+			{
+				data: this.data,
+				columns: this.columns,
+				minHeight: 100,
+				maxHeight: vh - 100,
+				debugInvalidOptions: false,
+				dataTree: this.is_tree,
+				resizableRows: true,
+				textDirection: this.options.direction,
+				dataTreeStartExpanded: this.is_tree,
+			},
+			this.options.tabulator_options || {}
+		);
+
+		this.table = new Tabulator(this.wrapper[0], tabulator_options);
 
 		/* Frappe Datatable parameters */
 		this.bodyScrollable = {
@@ -64,7 +69,6 @@ export default class TabulatorDataTable {
 
 	refreshRow(new_row, rowIndex) {
 		const rowdata = this.get_data(new_row);
-		console.log(rowdata);
 		this.table.updateData(rowdata);
 	}
 
@@ -103,6 +107,8 @@ export default class TabulatorDataTable {
 						},
 					},
 				],
+				minWidth: col.width,
+				visible: !col.hidden || col.hidden === "0",
 			});
 
 			if ("getEditor" in this.options) {
