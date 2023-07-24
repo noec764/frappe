@@ -99,6 +99,7 @@ watch(
 		align-items: center;
 		width: 100%;
 		height: 32px;
+		// background-color: var(--bg-gray);
 		border-radius: var(--border-radius-md);
 		border: 1px solid var(--dark-border-color);
 		cursor: pointer;

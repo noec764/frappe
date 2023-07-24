@@ -11,6 +11,7 @@ let search_text = ref("");
 let fields = computed(() => {
 	let fields = frappe.model.all_fieldtypes
 		.map(fieldtype => {
+			// @dokos
 			const df = store.get_df(fieldtype);
 			df.label = __(fieldtype, null, "DocField");
 			return {
@@ -24,6 +25,7 @@ let fields = computed(() => {
 				return false;
 			}
 			if (search_text.value) {
+				// @dokos
 				if (df.label.toLowerCase().includes(search_text.value.toLowerCase())) {
 					return true;
 				}
@@ -48,17 +50,8 @@ function on_drag_end(evt) {
 
 <template>
 	<SearchBox v-model="search_text" />
-	<draggable
-		class="fields-container"
-		:list="fields"
-		:group="{ name: 'fields', pull: 'clone', put: false }"
-		:sort="false"
-		:clone="clone_field"
-		item-key="id"
-		:remove-clone-on-hide="false"
-		@start="on_drag_start"
-		@end="on_drag_end"
-	>
+	<draggable class="fields-container" :list="fields" :group="{ name: 'fields', pull: 'clone', put: false }" :sort="false"
+		:clone="clone_field" item-key="id" :remove-clone-on-hide="false" @start="on_drag_start" @end="on_drag_end">
 		<template #item="{ element }">
 			<div class="field" :title="element.df.label">
 				{{ element.df.label }}
