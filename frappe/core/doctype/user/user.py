@@ -52,13 +52,15 @@ class User(Document):
 			self.name = self.email
 
 	def onload(self):
-		workspaces = frappe.get_all(
+		# @dokos: Get modules from Workspaces
+		modules = frappe.get_all(
 			"Workspace",
 			pluck="module",
 			filters={"for_user": ("in", ("", self.name))},
 			distinct=1,
 		)
-		all_modules = [{"name": m, "label": _(m)} for m in workspaces if m is not None]
+
+		all_modules = [{"name": m, "label": _(m)} for m in modules if m]
 		all_modules.sort(key=lambda x: x["label"])
 		self.set_onload("all_modules", all_modules)
 
