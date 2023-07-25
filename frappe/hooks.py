@@ -454,3 +454,5 @@ extend_bootinfo = [
 naming_series_variables = {
 	"PM": "frappe.tests.test_naming.parse_naming_series_variable",
 }
+
+export_python_type_annotations = True

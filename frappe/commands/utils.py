@@ -363,6 +363,49 @@ def export_fixtures(context, app=None):
 		raise SiteNotSpecifiedError
 
 
+@click.command("export-python-types", help="Write type annotations on disk for all DocTypes")
+@click.option("--app", required=True)
+@pass_context
+def write_python_type_annotations(context, app=None):
+	"Write type annotations on disk for all DocTypes"
+	from frappe.types.exporter import TypeExporter
+
+	for site in context.sites:
+		try:
+			frappe.init(site=site)
+			frappe.connect()
+
+			if app not in frappe.get_all_apps():
+				print(f"App {app} not found")
+				return
+
+			if not any(frappe.get_hooks("export_python_type_annotations", app_name=app)):
+				print(f"App {app} has no hooks for export_python_type_annotations")
+				print(f"Add the following line to {app}/hooks.py")
+				print("export_python_type_annotations = True")
+				return
+
+			if not frappe.conf.developer_mode:
+				print("Developer mode is not enabled")
+				return
+
+			print(f"Updating controllers for {app}:")
+			for module_name in frappe.local.app_modules.get(app) or []:
+				for doctype in frappe.get_list("DocType", filters={"module": module_name, "custom": 0}):
+					print(f"* {doctype.name!r}")
+					try:
+						meta = frappe.get_doc("DocType", doctype.name)
+						TypeExporter(meta).export_types()
+					except (frappe.exceptions.ValidationError, ImportError) as e:
+						print(e)
+						print()
+
+		finally:
+			frappe.destroy()
+	if not context.sites:
+		raise SiteNotSpecifiedError
+
+
 @click.command("import-doc")
 @click.argument("path")
 @pass_context
@@ -1167,6 +1210,7 @@ commands = [
 	export_doc,
 	export_fixtures,
 	export_json,
+	write_python_type_annotations,
 	get_version,
 	data_import,
 	import_doc,
