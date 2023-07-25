@@ -47,10 +47,6 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 		/** Colors used in similar documents */
 		this.recent_colors = [];
 
-		this.refresh_swatches_debounced = frappe.utils.throttle(
-			this.refresh_swatches.bind(this),
-			50
-		);
 		this.fetch_recent_colors();
 		this.make_color_input();
 
@@ -133,6 +129,9 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 	refresh() {
 		super.refresh();
 		let color = this.get_color();
+		this.refresh_swatches_debounced =
+			this.refresh_swatches_debounced ||
+			frappe.utils.throttle(() => this.refresh_swatches(), 50);
 		this.refresh_swatches_debounced();
 		if (this.picker && this.picker.color !== color) {
 			this.picker.color = color;
