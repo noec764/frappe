@@ -8,11 +8,18 @@ export default class TabulatorDataTable {
 		const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0);
 
 		this.options = options;
+		this.original_data = this.options.data;
 		this.is_tree = options.treeView;
 
-		this.create_data_sample(this.options.data);
+		const route = frappe.get_route();
+		this.report_view = false;
+		if (route.length === 3 && route[2].toLowerCase() == "report") {
+			this.report_view = true;
+		}
+
+		this.create_data_sample(this.original_data);
 		this.map_columns(this.options.columns);
-		this.data = this.get_data(this.options.data);
+		this.data = this.get_data(this.original_data);
 
 		const tabulator_options = Object.assign(
 			{
@@ -25,6 +32,7 @@ export default class TabulatorDataTable {
 				resizableRows: true,
 				textDirection: this.options.direction,
 				dataTreeStartExpanded: this.is_tree,
+				selectable: this.report_view,
 			},
 			this.options.tabulator_options || {}
 		);
@@ -53,14 +61,69 @@ export default class TabulatorDataTable {
 			setTreeDepth: (depth) => {
 				// TODO
 			},
+			getCheckedRows: () => {
+				return this.table.getSelectedData();
+			},
 		};
 
 		this.datamanager = {
 			getColumns: (bool) => {
 				return this.columns;
 			},
+			rowViewOrder: [],
+		};
+
+		this.bodyRenderer = {
+			visibleRowIndices: [],
 		};
 		/* */
+
+		this.table.on("tableBuilt", () => {
+			Object.assign(this.datamanager, {
+				rowViewOrder: this.report_view
+					? this.table.getData().map((d, index) => index)
+					: this.original_data.map((d, index) => index),
+			});
+
+			this.set_data_idx_by_id();
+
+			Object.assign(this.bodyRenderer, {
+				visibleRowIndices: this.report_view
+					? this.table.getData().map((d, index) => index)
+					: this.original_data.map((d, index) => index),
+			});
+		});
+
+		this.table.on("rowClick", () => {
+			this.update_visible_row_indices();
+		});
+
+		this.table.on("dataChanged", () => {
+			this.update_visible_row_indices();
+		});
+	}
+
+	update_visible_row_indices() {
+		const selected_data = this.table.getSelectedData().length
+			? this.table.getSelectedData()
+			: this.table.getData("active");
+		Object.assign(this.bodyRenderer, {
+			visibleRowIndices: this.report_view
+				? selected_data.map((d) => this.data_idx_by_id[d.id])
+				: this.original_data.map((d, index) => index),
+		});
+	}
+
+	set_data_idx_by_id() {
+		const data = this.report_view ? this.table.getData() : this.original_data;
+		this.data_idx_by_id = Object.assign(
+			{},
+			...data.map((d, index) => {
+				return {
+					[d.id]: index,
+				};
+			})
+		);
 	}
 
 	destroy() {
@@ -69,17 +132,23 @@ export default class TabulatorDataTable {
 
 	refreshRow(new_row, rowIndex) {
 		const rowdata = this.get_data(new_row);
-		this.table.updateData(rowdata);
+		this.table.updateData(rowdata).then(() => {
+			this.set_data_idx_by_id();
+		});
 	}
 
 	refresh(data, columns) {
+		this.original_data = data;
+
 		this.create_data_sample(data);
 
 		this.map_columns(columns);
 		this.table.setColumns(this.columns);
 
 		this.data = this.get_data(data);
-		this.table.replaceData(this.data);
+		this.table.replaceData(this.data).then(() => {
+			this.set_data_idx_by_id();
+		});
 
 		this.table.getColumns().forEach((column) => {
 			column.setWidth(true);
@@ -111,7 +180,7 @@ export default class TabulatorDataTable {
 				visible: !col.hidden || col.hidden === "0",
 			});
 
-			if ("getEditor" in this.options) {
+			if (this.report_view) {
 				let fieldtype =
 					col.docfield.fieldname != "name" ? col.docfield.fieldtype || "Data" : "Data";
 				const editor_type = this.get_editor_type(fieldtype);
@@ -132,6 +201,18 @@ export default class TabulatorDataTable {
 				Object.entries(report_columns).filter(([_, v]) => v != null)
 			);
 		});
+
+		if (this.report_view) {
+			this.columns.unshift({
+				formatter: "rowSelection",
+				titleFormatter: "rowSelection",
+				hozAlign: "center",
+				headerSort: false,
+				cellClick: function (e, cell) {
+					cell.getRow().toggleSelect();
+				},
+			});
+		}
 	}
 
 	get_editor_type(fieldtype) {
@@ -258,7 +339,7 @@ export default class TabulatorDataTable {
 	}
 
 	get_formatter(column) {
-		if (!this.options.data.length || column.formatter) {
+		if (!this.original_data.length || column.formatter) {
 			return {};
 		}
 
