@@ -64,10 +64,11 @@ frappe.ui.form.ControlButton = class ControlButton extends frappe.ui.form.Contro
 	}
 
 	set_label(label) {
-		super.set_label(label);
-		if (this.label_span.innerHTML) {
-			this.input.innerHTML = this.label_span.innerHTML;
-			this.label_span.innerHTML = "";
+		if (label) {
+			this.df.label = label;
 		}
+		label = (this.df.icon ? frappe.utils.icon(this.df.icon) : "") + __(this.df.label);
+		$(this.label_span).html("&nbsp;");
+		this.$input && this.$input.html(label);
 	}
 };
