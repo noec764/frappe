@@ -100,7 +100,7 @@ onMounted(() => store.fetch());
 					justify-content: center;
 
 					&::after {
-						content: "Drop it here";
+						content: __("Drop it here");
 						top: 31%;
 						position: absolute;
 						padding: 2px 10px;
