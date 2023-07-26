@@ -24,6 +24,19 @@ def get_config(name):
 
 
 class DashboardChartSource(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		module: DF.Link
+		source_name: DF.Data
+		timeseries: DF.Check
+	# end: auto-generated types
+
 	def on_update(self):
 		if frappe.conf.developer_mode and not frappe.flags.in_migrate and not frappe.flags.in_install:
 			export_to_files(

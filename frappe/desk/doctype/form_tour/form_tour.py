@@ -9,6 +9,38 @@ from frappe.modules.export_file import export_to_files
 
 
 class FormTour(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.desk.doctype.form_tour_step.form_tour_step import FormTourStep
+		from frappe.types import DF
+
+		dashboard_name: DF.Link | None
+		first_document: DF.Check
+		include_name_field: DF.Check
+		is_standard: DF.Check
+		language: DF.Link
+		list_name: DF.Literal[
+			"List", "Report", "Dashboard", "Kanban", "Gantt", "Calendar", "File", "Image", "Inbox", "Map"
+		]
+		module: DF.Link | None
+		new_document_form: DF.Check
+		page_name: DF.Link | None
+		page_route: DF.SmallText | None
+		reference_doctype: DF.Link | None
+		report_name: DF.Link | None
+		save_on_complete: DF.Check
+		steps: DF.Table[FormTourStep]
+		title: DF.Data
+		track_steps: DF.Check
+		ui_tour: DF.Check
+		view_name: DF.Literal["Workspaces", "List", "Form", "Tree", "Page"]
+		workspace_name: DF.Link | None
+	# end: auto-generated types
+
 	def before_save(self):
 		if self.is_standard and not self.module:
 			if self.workspace_name:
@@ -75,6 +107,8 @@ def get_onboarding_ui_tours():
 	if not frappe.get_system_settings("enable_onboarding"):
 		return []
 
-	ui_tours = frappe.get_all("Form Tour", filters={"ui_tour": 1, "language": frappe.local.lang}, fields=["page_route", "name"])
+	ui_tours = frappe.get_all(
+		"Form Tour", filters={"ui_tour": 1, "language": frappe.local.lang}, fields=["page_route", "name"]
+	)
 
 	return [[tour.name, json.loads(tour.page_route)] for tour in ui_tours]

@@ -30,6 +30,34 @@ month_map = {"Monthly": 1, "Quarterly": 3, "Half-yearly": 6, "Yearly": 12}
 
 
 class AutoRepeat(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		disabled: DF.Check
+		document_title: DF.Data | None
+		end_date: DF.Date | None
+		frequency: DF.Literal["Daily", "Weekly", "Monthly", "Quarterly", "Half-yearly", "Yearly"]
+		message: DF.Text | None
+		next_schedule_date: DF.Date | None
+		notify_by_email: DF.Check
+		print_format: DF.Link | None
+		recipients: DF.SmallText | None
+		reference_doctype: DF.Link
+		reference_document: DF.DynamicLink
+		repeat_on_day: DF.Int
+		repeat_on_last_day: DF.Check
+		start_date: DF.Date
+		status: DF.Literal["", "Active", "Disabled", "Completed"]
+		subject: DF.Data | None
+		submit_after_creation: DF.Check
+		template: DF.Link | None
+	# end: auto-generated types
+
 	def validate(self):
 		self.update_status()
 		self.validate_reference_doctype()

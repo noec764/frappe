@@ -9,6 +9,20 @@ from frappe.utils import is_html, strip_html_tags
 
 
 class Translation(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		context: DF.Data | None
+		language: DF.Link
+		source_text: DF.Code
+		translated_text: DF.Code
+	# end: auto-generated types
+
 	def validate(self):
 		if is_html(self.source_text):
 			self.remove_html_from_source()

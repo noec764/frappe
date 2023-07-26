@@ -6,6 +6,22 @@ from frappe.model.document import Document, bulk_insert
 
 
 class Country(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		code: DF.Data | None
+		country_name: DF.Data
+		country_zone: DF.Link | None
+		date_format: DF.Data | None
+		time_format: DF.Data | None
+		time_zones: DF.Text | None
+	# end: auto-generated types
+
 	# NOTE: During installation country docs are bulk inserted.
 	pass
 
