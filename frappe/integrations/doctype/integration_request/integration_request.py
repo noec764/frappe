@@ -9,6 +9,32 @@ from frappe.utils.data import add_months, getdate
 
 
 class IntegrationRequest(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		data: DF.Code | None
+		error: DF.Code | None
+		integration_request_service: DF.Data | None
+		is_remote_request: DF.Check
+		output: DF.Code | None
+		payment_gateway_controller: DF.Data | None
+		reference_docname: DF.DynamicLink | None
+		reference_doctype: DF.Link | None
+		request_description: DF.Data | None
+		request_headers: DF.Code | None
+		request_id: DF.Data | None
+		service_document: DF.Data | None
+		service_id: DF.Data | None
+		service_status: DF.Data | None
+		status: DF.Literal["", "Queued", "Authorized", "Completed", "Cancelled", "Failed", "Not Handled"]
+		url: DF.Data | None
+	# end: auto-generated types
+
 	def autoname(self):
 		if self.flags._name:
 			self.name = self.flags._name

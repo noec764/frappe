@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 from functools import cache
-from typing import TYPE_CHECKING, Any, Literal
+from typing import Any, Literal
 
 import frappe
 import frappe.utils
@@ -10,9 +10,6 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.modules.utils import export_module_json
 from frappe.utils.safe_block_eval import safe_block_eval
-
-if TYPE_CHECKING:
-	from frappe.desk.doctype.summary_card_row.summary_card_row import SummaryCardRow
 
 
 @cache
@@ -44,13 +41,26 @@ def get_filters_global_context():
 
 
 class SummaryCard(Document):
-	is_standard: bool
-	module: str
-	dt: str
-	label: str
-	show_liked_by_me: bool
-	show_assigned_to_me: bool
-	rows: list["SummaryCardRow"]
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.desk.doctype.summary_card_row.summary_card_row import SummaryCardRow
+		from frappe.types import DF
+
+		button_label: DF.Data | None
+		button_view: DF.Literal
+		dt: DF.Link
+		is_standard: DF.Check
+		label: DF.Data
+		module: DF.Link | None
+		rows: DF.Table[SummaryCardRow]
+		show_assigned_to_me: DF.Check
+		show_liked_by_me: DF.Check
+	# end: auto-generated types
+
 	button_view: Literal[
 		"",
 		"List",
@@ -65,7 +75,6 @@ class SummaryCard(Document):
 		"Map",
 		"No button",
 	]
-	button_label: str
 
 	def autoname(self):
 		if frappe.session.user == "Administrator" or self.is_standard:

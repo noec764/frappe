@@ -44,9 +44,9 @@ class BackupGenerator:
 		backup_path_db=None,
 		backup_path_files=None,
 		backup_path_private_files=None,
-		db_host="localhost",
+		db_host=None,
 		db_port=None,
-		db_type="mariadb",
+		db_type=None,
 		backup_path_conf=None,
 		ignore_conf=False,
 		compress_files=False,
@@ -71,11 +71,6 @@ class BackupGenerator:
 		self.include_doctypes = include_doctypes
 		self.exclude_doctypes = exclude_doctypes
 		self.partial = False
-
-		if not self.db_type:
-			self.db_type = "mariadb"
-
-		self.db_port = self.db_port or frappe.db.default_port
 
 		site = frappe.local.site or frappe.generate_hash(length=8)
 		self.site_slug = site.replace(".", "_")
@@ -421,8 +416,9 @@ class BackupGenerator:
 				)
 
 			cmd_string = (
-				"{db_exc} postgres://{user}:{password}@{db_host}:{db_port}/{db_name}"
-				" {include} {exclude} | {gzip} >> {backup_path_db}"
+				"self=$$; "
+				"( {db_exc} postgres://{user}:{password}@{db_host}:{db_port}/{db_name}"
+				" {include} {exclude} || kill $self ) | {gzip} >> {backup_path_db}"
 			)
 
 		else:
@@ -430,12 +426,14 @@ class BackupGenerator:
 				args["include"] = " ".join([f"'{x}'" for x in self.backup_includes])
 			elif self.backup_excludes:
 				args["exclude"] = " ".join(
-					[f"--ignore-table='{frappe.conf.db_name}.{table}'" for table in self.backup_excludes]
+					[f"--ignore-table='{self.db_name}.{table}'" for table in self.backup_excludes]
 				)
 
 			cmd_string = (
-				"{db_exc} --single-transaction --quick --lock-tables=false -u {user}"
-				" -p{password} {db_name} -h {db_host} -P {db_port} {include} {exclude}"
+				# Remember process of this shell and kill it if mysqldump exits w/ non-zero code
+				"self=$$; "
+				" ( {db_exc} --single-transaction --quick --lock-tables=false -u {user}"
+				" -p{password} {db_name} -h {db_host} -P {db_port} {include} {exclude} || kill $self ) "
 				" | {gzip} >> {backup_path_db}"
 			)
 
@@ -455,7 +453,7 @@ class BackupGenerator:
 		if self.verbose:
 			print(command.replace(args.password, "*" * 10) + "\n")
 
-		frappe.utils.execute_in_shell(command, low_priority=True)
+		frappe.utils.execute_in_shell(command, low_priority=True, check_exit_code=True)
 
 	def send_email(self):
 		"""
@@ -500,9 +498,9 @@ def fetch_latest_backups(partial=False):
 		frappe.conf.db_name,
 		frappe.conf.db_name,
 		frappe.conf.db_password,
-		db_host=frappe.db.host,
-		db_type=frappe.conf.db_type,
+		db_host=frappe.conf.db_host,
 		db_port=frappe.conf.db_port,
+		db_type=frappe.conf.db_type,
 	)
 	database, public, private, config = odb.get_recent_backup(older_than=24 * 30, partial=partial)
 
@@ -565,8 +563,8 @@ def new_backup(
 		frappe.conf.db_name,
 		frappe.conf.db_name,
 		frappe.conf.db_password,
-		db_host=frappe.db.host,
-		db_port=frappe.db.port,
+		db_host=frappe.conf.db_host,
+		db_port=frappe.conf.db_port,
 		db_type=frappe.conf.db_type,
 		backup_path=backup_path,
 		backup_path_db=backup_path_db,

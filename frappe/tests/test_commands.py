@@ -1,14 +1,13 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+# imports - standard imports
 import gzip
 import importlib
 import json
 import os
 import shlex
 import subprocess
-
-# imports - standard imports
 import unittest
 from contextlib import contextmanager
 from functools import wraps
@@ -34,7 +33,7 @@ from frappe.query_builder.utils import db_type_is
 from frappe.tests.test_query_builder import run_only_if
 from frappe.tests.utils import FrappeTestCase, timeout
 from frappe.utils import add_to_date, get_bench_path, get_bench_relative_path, now
-from frappe.utils.backups import fetch_latest_backups
+from frappe.utils.backups import BackupGenerator, fetch_latest_backups
 from frappe.utils.jinja_globals import bundled_asset
 from frappe.utils.scheduler import enable_scheduler, is_scheduler_inactive
 
@@ -142,8 +141,8 @@ def cli(cmd: Command, args: list | None = None):
 class BaseTestCommands(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls) -> None:
+		super().setUpClass()
 		cls.setup_test_site()
-		return super().setUpClass()
 
 	@classmethod
 	def execute(self, command, kwargs=None):
@@ -219,7 +218,7 @@ class BaseTestCommands(FrappeTestCase):
 		return f"{output}\n\n{cmd_execution_summary}"
 
 
-@unittest.skip
+@unittest.skip("Dokos")
 class TestCommands(BaseTestCommands):
 	def test_execute(self):
 		# test 1: execute a command expecting a numeric output
@@ -416,11 +415,9 @@ class TestCommands(BaseTestCommands):
 	def test_set_password(self):
 		from frappe.utils.password import check_password
 
-		self.assertEqual(check_password("Administrator", "am"), "Administrator")
 		self.execute("bench --site {site} set-password Administrator test1")
 		self.assertEqual(self.returncode, 0)
 		self.assertEqual(check_password("Administrator", "test1"), "Administrator")
-		# to release the lock taken by check_password
 
 		self.execute("bench --site {site} set-admin-password test2")
 		self.assertEqual(self.returncode, 0)
@@ -532,6 +529,19 @@ class TestBackups(BaseTestCommands):
 		self.assertEqual(self.returncode, 0)
 		self.assertIn("successfully completed", self.stdout)
 		self.assertNotEqual(before_backup["database"], after_backup["database"])
+
+	def test_backup_fails_with_exit_code(self):
+		"""Provide incorrect options to check if exit code is 1"""
+		odb = BackupGenerator(
+			frappe.conf.db_name,
+			frappe.conf.db_name,
+			frappe.conf.db_password + "INCORRECT PASSWORD",
+			db_host=frappe.conf.db_host,
+			db_port=frappe.conf.db_port,
+			db_type=frappe.conf.db_type,
+		)
+		with self.assertRaises(Exception):
+			odb.take_dump()
 
 	def test_backup_with_files(self):
 		"""Take a backup with files (--with-files)"""

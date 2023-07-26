@@ -68,6 +68,11 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
 
 				var _label = me.translate_values ? __(d.label) : d.label;
 				var html = "<strong>" + _label + "</strong>";
+
+				if (d.label === "" && d.value === "") {
+					html = '<strong class="text-muted font-italic">' + __("Empty") + "</strong>";
+				}
+
 				if (d.description) {
 					html += '<br><span class="small">' + __(d.description) + "</span>";
 				}

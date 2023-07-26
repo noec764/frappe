@@ -92,6 +92,19 @@ class DiscordParameters:
 
 
 class IncomingWebhookURL(Document):
+	# begin: auto-generated types
+	# This code is auto-generated. Do not modify anything in this block.
+
+	from typing import TYPE_CHECKING
+
+	if TYPE_CHECKING:
+		from frappe.types import DF
+
+		service: DF.Literal["Google Chat", "Mattermost", "Rocket.Chat", "Slack", "Discord"]
+		webhook_name: DF.Data
+		webhook_url: DF.SmallText
+	# end: auto-generated types
+
 	def get_service_class(self):
 		try:
 			return globals()[f'{"".join(e for e in self.service if e.isalnum())}Parameters']()
