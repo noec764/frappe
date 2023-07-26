@@ -841,6 +841,10 @@ frappe.ui.Page = class Page {
 			df.placeholder = df.label;
 		}
 
+		if (["JSON", "Code", "Markdown Editor", "HTML Editor"].includes(df.fieldtype)) {
+			df = { ...df, fieldtype: "Data" };
+		}
+
 		df.input_class = "input-xs";
 
 		var f = frappe.ui.form.make_control({
