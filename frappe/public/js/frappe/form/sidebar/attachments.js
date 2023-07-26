@@ -12,7 +12,16 @@ frappe.ui.form.Attachments = class Attachments {
 		this.parent.find(".add-attachment-btn").click(function () {
 			me.new_attachment();
 		});
-		this.add_attachment_wrapper = this.parent.find(".add-attachment-btn");
+
+		this.parent.find(".explore-btn").click(() => {
+			frappe.open_in_new_tab = true;
+			frappe.set_route("List", "File", {
+				attached_to_doctype: this.frm.doctype,
+				attached_to_name: this.frm.docname,
+			});
+		});
+
+		this.add_attachment_wrapper = this.parent.find(".attachments-actions");
 		this.attachments_label = this.parent.find(".attachments-label");
 	}
 
@@ -45,6 +54,7 @@ frappe.ui.form.Attachments = class Attachments {
 
 		var max_reached = this.max_reached();
 		this.add_attachment_wrapper.toggle(!max_reached);
+		this.setup_expanded_explore_button(max_reached);
 
 		// add attachment objects
 		var attachments = this.get_attachments();
@@ -60,7 +70,23 @@ frappe.ui.form.Attachments = class Attachments {
 			});
 		} else {
 			this.attachments_label.removeClass("has-attachments");
+			this.parent.find(".explore-btn").toggle(false); // hide explore icon button
 		}
+	}
+
+	setup_expanded_explore_button(max_reached) {
+		if (!max_reached) {
+			this.parent.find(".explore-full-btn").addClass("hidden");
+			return;
+		}
+
+		this.parent.find(".explore-full-btn").removeClass("hidden");
+		this.parent.find(".explore-full-btn").click(() => {
+			frappe.set_route("List", "File", {
+				attached_to_doctype: this.frm.doctype,
+				attached_to_name: this.frm.docname,
+			});
+		});
 	}
 
 	get_attachments() {
@@ -105,15 +131,10 @@ frappe.ui.form.Attachments = class Attachments {
 		</a>`;
 
 		$(`<li class="attachment-row">`)
-			.append(
-				frappe.get_data_pill(
-					file_label,
-					fileid,
-					remove_action,
-					`<a href=${frappe.utils.get_form_link("File", fileid)}>${icon}</a>`
-				)
-			)
-			.insertAfter(this.attachments_label.addClass("has-attachments"));
+			.append(frappe.get_data_pill(file_label, fileid, remove_action, icon))
+			.insertAfter(this.add_attachment_wrapper);
+
+		this.parent.find(".explore-btn").toggle(true); // show explore icon button if hidden
 	}
 
 	get_file_url(attachment) {
