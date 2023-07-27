@@ -174,7 +174,7 @@ function change_letterhead() {
 };
 function upload_image() {
 	new frappe.ui.FileUploader({
-		folder: "Home/Attachments",
+		folder: frappe.boot.attachments_folder,
 		on_success: file_doc => {
 			get_image_dimensions(file_doc.file_url).then(
 				({ width, height }) => {
