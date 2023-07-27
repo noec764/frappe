@@ -431,24 +431,44 @@
 	background-color: var(--card-bg);
 	z-index: 5;
 	transition: 0.5s top;
-	padding-left: var(--padding-xs);
+	// padding-left: var(--padding-xs);
 	border-bottom: 2px solid var(--border-color);
 	border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
 
 	.form-tabs {
 		.nav-item {
 			.nav-link {
+				// @dokos: Updated tab styles
 				color: var(--text-muted);
-				padding: var(--padding-md) 0;
-				margin: 0 var(--margin-md);
+				padding: var(--padding-sm) var(--padding-md);
+				margin: 0 0;
+				font-weight: 500;
+				transition-property: background, color, margin, padding, border-color;
+				border-bottom: 2px solid transparent;
+				margin-bottom: -2px;
 
+				&:hover:not(.active) {
+					z-index: 1;
+					border-bottom-color: var(--text-muted);
+				}
 				&.active {
-					font-weight: 600;
-					border-bottom: 1px solid var(--primary);
+					border-bottom-color: var(--primary);
 					color: var(--text-color);
+					// background gradient color mixing hack to get lighter color
+					background: linear-gradient(0deg, var(--primary) -5000%, var(--fg-color) 1000%);
+					// text-shadow: -1px -1px 1px var(--fg-color), -1px 1px 1px var(--fg-color), 1px -1px 1px var(--fg-color), 1px 1px 1px var(--fg-color);
+				}
+
+				@media (max-width: map-get($grid-breakpoints, "md")) {
+					padding: var(--padding-xs) var(--padding-sm);
+					font-size: var(--text-md);
 				}
 			}
 		}
+	}
+
+	&.form-tabs-sticky-down .nav-item:first-child > .nav-link {
+		border-top-left-radius: var(--border-radius-md);
 	}
 }
 .form-tab-content {
