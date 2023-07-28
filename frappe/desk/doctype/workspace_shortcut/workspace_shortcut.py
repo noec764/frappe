@@ -17,9 +17,12 @@ class WorkspaceShortcut(Document):
 
 		color: DF.Color | None
 		columns: DF.Int
-		doc_view: DF.Literal["", "List", "Report Builder", "Dashboard", "Tree", "New", "Calendar", "Map"]
+		doc_view: DF.Literal[
+			"", "List", "Report Builder", "Dashboard", "Tree", "New", "Calendar", "Map", "Kanban"
+		]
 		format: DF.Data | None
 		icon: DF.Data | None
+		kanban_board: DF.Link | None
 		label: DF.Data
 		link_to: DF.DynamicLink | None
 		parent: DF.Data
