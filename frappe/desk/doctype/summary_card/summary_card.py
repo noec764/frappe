@@ -127,8 +127,8 @@ class SummaryCard(Document):
 		self, row: "SummaryCardRow", parent: "SummaryCardRow | SummaryCard"
 	):
 		local_ctx = {
-			"_row": row.as_dict(),
-			"_parent": parent.as_dict(),
+			"row": row.as_dict(),
+			"parent": parent.as_dict(),
 			"doctype": row._dt,
 			"parent_filters": parent.get("_filters") or [],
 		}
