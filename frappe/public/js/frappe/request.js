@@ -609,7 +609,7 @@ frappe.request.report_error = function (xhr, request_opts) {
 
 		if (data._exc_source) {
 			dialog_html += "<br>";
-			dialog_html += `Possible source of error: ${data._exc_source.bold()} `;
+			dialog_html += `${__("Possible source of error:")} ${data._exc_source.bold()} `;
 		}
 
 		frappe.error_dialog.$body.html(dialog_html);
