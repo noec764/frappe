@@ -349,7 +349,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
 			attached_to_name=doc.name,
 			attached_to_doctype=doc.doctype,
 			attached_to_field=df.fieldname,
-			folder="Home/Attachments",
+			folder=frappe.db.get_value("File", {"is_attachments_folder": 1}),
 		)
 		try:
 			file.insert(ignore_permissions=True)

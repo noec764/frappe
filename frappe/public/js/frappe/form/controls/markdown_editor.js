@@ -85,7 +85,7 @@ frappe.ui.form.ControlMarkdownEditor = class ControlMarkdownEditor extends (
 				docname: this.docname,
 				frm: this.frm,
 				files,
-				folder: "Home/Attachments",
+				folder: frappe.boot.attachments_folder,
 				allow_multiple: false,
 				restrictions: {
 					allowed_file_types: ["image/*"],

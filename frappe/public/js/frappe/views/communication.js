@@ -461,7 +461,7 @@ frappe.views.CommunicationComposer = class {
 		}
 
 		let args = {
-			folder: "Home/Attachments",
+			folder: frappe.boot.attachments_folder,
 			on_success: (attachment) => {
 				this.attachments.push(attachment);
 				this.render_attachment_rows(attachment);
@@ -472,7 +472,7 @@ frappe.views.CommunicationComposer = class {
 			args = {
 				doctype: this.frm.doctype,
 				docname: this.frm.docname,
-				folder: "Home/Attachments",
+				folder: frappe.boot.attachments_folder,
 				on_success: (attachment) => {
 					this.frm.attachments.attachment_uploaded(attachment);
 					this.render_attachment_rows(attachment);
