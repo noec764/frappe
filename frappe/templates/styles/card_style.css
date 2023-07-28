@@ -76,6 +76,14 @@ button#update {
 	margin-top: 30px;
 }
 
+.page-card p:empty {
+    display: none;
+}
+
+.page-card p:empty {
+    display: none;
+}
+
 .page-card p {
 	font-size: 14px;
 }
