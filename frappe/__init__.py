@@ -1452,10 +1452,11 @@ def get_all_apps(with_internal_apps=True, sites_path=None):
 
 
 @request_cache
-def get_installed_apps(*, _ensure_on_bench=False):
+def get_installed_apps(*, _ensure_on_bench=False) -> list[str]:
 	"""
 	Get list of installed apps in current site.
-	:param ensure_on_bench: Only return apps that are present on bench.
+
+	:param _ensure_on_bench: Only return apps that are present on bench.
 	"""
 
 	if getattr(flags, "in_install_db", True):

@@ -605,7 +605,14 @@ frappe.request.report_error = function (xhr, request_opts) {
 
 		let parts = strip(exc).split("\n");
 
-		frappe.error_dialog.$body.html(parts[parts.length - 1]);
+		let dialog_html = parts[parts.length - 1];
+
+		if (data._exc_source) {
+			dialog_html += "<br>";
+			dialog_html += `${__("Possible source of error:")} ${data._exc_source.bold()} `;
+		}
+
+		frappe.error_dialog.$body.html(dialog_html);
 		frappe.error_dialog.show();
 	}
 };
