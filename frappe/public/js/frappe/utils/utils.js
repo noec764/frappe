@@ -171,6 +171,7 @@ Object.assign(frappe.utils, {
 	is_html: function (txt) {
 		if (!txt) return false;
 
+		// @dokos
 		const doc = new DOMParser().parseFromString(txt, "text/html");
 		return Array.from(doc.body.childNodes).some((node) => node.nodeType === 1);
 	},
@@ -236,6 +237,7 @@ Object.assign(frappe.utils, {
 		});
 		return out.join(newline);
 	},
+
 	escape_html: function (txt) {
 		if (!txt) return "";
 		let escape_html_mapping = {
@@ -493,7 +495,15 @@ Object.assign(frappe.utils, {
 				colour = "orange";
 			} else if (
 				has_words(
-					["Open", "Urgent", "High", "Failed", "Rejected", "Error", "Cancelled"],
+					[
+						"Open",
+						"Urgent",
+						"High",
+						"Failed",
+						"Rejected",
+						"Error",
+						"Cancelled", // @dokos
+					],
 					text
 				)
 			) {
@@ -514,7 +524,7 @@ Object.assign(frappe.utils, {
 						"Available",
 						"Paid",
 						"Success",
-						"Validated",
+						"Validated", // @dokos
 					],
 					text
 				)
@@ -915,7 +925,7 @@ Object.assign(frappe.utils, {
 		query_params_obj = null
 	) {
 		if (!doctype || !name) {
-			return "";
+			return ""; // @dokos
 		}
 
 		display_text = display_text || name;
@@ -930,7 +940,9 @@ Object.assign(frappe.utils, {
 		return route;
 	},
 	get_route_label(route_str) {
+		// @dokos(function)
 		let route = route_str.split("/");
+
 		if (route[2] === "Report" || route[0] === "query-report") {
 			return __("{0} Report", [__(route[3]) || __(route[1])]);
 		}
@@ -1009,7 +1021,6 @@ Object.assign(frappe.utils, {
 			}
 		});
 	},
-
 	setup_timer(start, end, $element) {
 		const increment = end > start;
 		let counter = start;
@@ -1216,7 +1227,7 @@ Object.assign(frappe.utils, {
 	},
 
 	map_defaults: {
-		center: [19.08, 72.8961],
+		center: [48.864716, 2.349014],
 		zoom: 13,
 		tiles: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
 		options: {
@@ -1227,6 +1238,10 @@ Object.assign(frappe.utils, {
 	},
 
 	icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
+		if (String(icon_name).match(/fa-|uil-/)) {
+			return this.font_icon(icon_name, size, icon_class, icon_style);
+		}
+
 		let size_class = "";
 
 		if (typeof size == "object") {
@@ -1239,6 +1254,15 @@ Object.assign(frappe.utils, {
 		</svg>`;
 	},
 
+	font_icon(icon_name, size = "sm", icon_class = "", icon_style = "") {
+		if (typeof size == "object") {
+			icon_style = `width: ${size.width}; height: ${size.height}; font-size: ${size.height}; ${icon_style}`;
+		} else {
+			icon_class += ` icon-${size}`;
+		}
+		return `<i class="icon ${icon_class} fonticon ${icon_name}" style="${icon_style}"></i>`;
+	},
+
 	flag(country_code) {
 		return `<img
 		src="https://flagcdn.com/${country_code}.svg"
@@ -1248,17 +1272,23 @@ Object.assign(frappe.utils, {
 	make_chart(wrapper, custom_options = {}) {
 		let chart_args = {
 			type: "bar",
-			colors: ["light-blue"],
+			colors: ["light-blue", "orange", "green", "red"],
 			axisOptions: {
 				xIsSeries: 1,
 				shortenYAxisNumbers: 1,
 				xAxisMode: "tick",
 				numberFormatter: frappe.utils.format_chart_axis_number,
 			},
+			tooltipOptions: {},
 		};
 
 		for (let key in custom_options) {
-			if (typeof chart_args[key] === "object" && typeof custom_options[key] === "object") {
+			if (Array.isArray(chart_args[key]) && Array.isArray(custom_options[key])) {
+				chart_args[key] = [...custom_options[key], ...chart_args[key]];
+			} else if (
+				typeof chart_args[key] === "object" &&
+				typeof custom_options[key] === "object"
+			) {
 				chart_args[key] = Object.assign(chart_args[key], custom_options[key]);
 			} else {
 				chart_args[key] = custom_options[key];
@@ -1358,35 +1388,6 @@ Object.assign(frappe.utils, {
 		return `/app/${route}`;
 	},
 
-	build_summary_item(summary) {
-		if (summary.type == "separator") {
-			return $(`<div class="summary-separator">
-				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
-				summary.value
-			}</div>
-			</div>`);
-		}
-		let df = { fieldtype: summary.datatype };
-		let doc = null;
-
-		if (summary.datatype == "Currency") {
-			df.options = "currency";
-			doc = { currency: summary.currency };
-		}
-
-		let value = frappe.format(summary.value, df, { only_value: true }, doc);
-		let color = summary.indicator
-			? summary.indicator.toLowerCase()
-			: summary.color
-			? summary.color.toLowerCase()
-			: "";
-
-		return $(`<div class="summary-item">
-			<span class="summary-label">${__(summary.label)}</span>
-			<div class="summary-value ${color}">${value}</div>
-		</div>`);
-	},
-
 	shorten_number: function (number, country, min_length = 4, max_no_of_decimals = 2) {
 		/* returns the number as an abbreviated string
 		 * PARAMS
@@ -1426,88 +1427,33 @@ Object.assign(frappe.utils, {
 		return number.toString().split(".")[1].length || 0;
 	},
 
-	get_number_system: function (country) {
-		if (["Bangladesh", "India", "Myanmar", "Pakistan"].includes(country)) {
-			return number_systems.indian;
-		} else {
-			return number_systems.default;
+	build_summary_item(summary) {
+		if (summary.type == "separator") {
+			return $(`<div class="summary-separator">
+				<div class="summary-value ${summary.color ? summary.color.toLowerCase() : "text-muted"}">${
+				summary.value
+			}</div>
+			</div>`);
 		}
-	},
+		let df = { fieldtype: summary.datatype };
+		let doc = null;
 
-	map_defaults: {
-		center: [48.864716, 2.349014],
-		zoom: 13,
-		tiles: "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-		options: {
-			attribution:
-				'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
-		},
-	},
-
-	icon(icon_name, size = "sm", icon_class = "", icon_style = "", svg_class = "") {
-		if (String(icon_name).match(/fa-|uil-/)) {
-			return this.font_icon(icon_name, size, icon_class, icon_style);
+		if (summary.datatype == "Currency") {
+			df.options = "currency";
+			doc = { currency: summary.currency };
 		}
 
-		let size_class = "";
+		let value = frappe.format(summary.value, df, { only_value: true }, doc);
+		let color = summary.indicator
+			? summary.indicator.toLowerCase()
+			: summary.color
+			? summary.color.toLowerCase()
+			: "";
 
-		if (typeof size == "object") {
-			icon_style += ` width: ${size.width}; height: ${size.height}`;
-		} else {
-			size_class = `icon-${size}`;
-		}
-		return `<svg class="icon ${svg_class} ${size_class}" style="${icon_style}">
-			<use class="${icon_class}" href="#icon-${icon_name}"></use>
-		</svg>`;
-	},
-
-	font_icon(icon_name, size = "sm", icon_class = "", icon_style = "") {
-		if (typeof size == "object") {
-			icon_style = `width: ${size.width}; height: ${size.height}; font-size: ${size.height}; ${icon_style}`;
-		} else {
-			icon_class += ` icon-${size}`;
-		}
-		return `<i class="icon ${icon_class} fonticon ${icon_name}" style="${icon_style}"></i>`;
-	},
-
-	flag(country_code) {
-		return `<img
-		src="https://flagcdn.com/${country_code}.svg"
-		width="20" height="15">`;
-	},
-
-	make_chart(wrapper, custom_options = {}) {
-		let chart_args = {
-			type: "bar",
-			colors: ["light-blue", "orange", "green", "red"],
-			axisOptions: {
-				xIsSeries: 1,
-				shortenYAxisNumbers: 1,
-				xAxisMode: "tick",
-				numberFormatter: frappe.utils.format_chart_axis_number,
-			},
-			tooltipOptions: {},
-		};
-
-		for (let key in custom_options) {
-			if (Array.isArray(chart_args[key]) && Array.isArray(custom_options[key])) {
-				chart_args[key] = [...custom_options[key], ...chart_args[key]];
-			} else if (
-				typeof chart_args[key] === "object" &&
-				typeof custom_options[key] === "object"
-			) {
-				chart_args[key] = Object.assign(chart_args[key], custom_options[key]);
-			} else {
-				chart_args[key] = custom_options[key];
-			}
-		}
-
-		return new frappe.Chart(wrapper, chart_args);
-	},
-
-	format_chart_axis_number(label, country) {
-		const default_country = frappe.sys_defaults.country;
-		return frappe.utils.shorten_number(label, country || default_country, 3);
+		return $(`<div class="summary-item">
+			<span class="summary-label">${__(summary.label)}</span>
+			<div class="summary-value ${color}">${value}</div>
+		</div>`);
 	},
 
 	print(doctype, docname, print_format, letterhead, lang_code) {
@@ -1573,9 +1519,11 @@ Object.assign(frappe.utils, {
 					<span class="left-icon">${icon && frappe.utils.icon(icon, "xs")}</span>
 					<span class="label">${selected_action.label}</span>
 				</button>
+
 				<button type="button" class="btn ${btn_type} btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown">
 					${frappe.utils.icon("down", "xs")}
 				</button>
+
 				<ul class="dropdown-menu dropdown-menu-right" role="menu"></ul>
 			</div>
 		`);
@@ -1783,7 +1731,6 @@ Object.assign(frappe.utils, {
 			});
 		},
 	},
-
 	generate_tracking_url() {
 		frappe.prompt(
 			[
