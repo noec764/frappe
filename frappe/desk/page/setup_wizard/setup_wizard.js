@@ -687,9 +687,15 @@ function guess_language_code() {
 	return lang;
 }
 
+// https://github.com/eggert/tz/blob/main/backward add more if required.
+const TZ_BACKWARD_COMPATBILITY_MAP = {
+	"Asia/Calcutta": "Asia/Kolkata",
+};
+
 function guess_country(country_info) {
 	try {
-		const system_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		let system_timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+		system_timezone = TZ_BACKWARD_COMPATBILITY_MAP[system_timezone] || system_timezone;
 
 		for (let [country, info] of Object.entries(country_info)) {
 			let possible_timezones = (info.timezones || []).filter((t) => t == system_timezone);
