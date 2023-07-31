@@ -1207,7 +1207,7 @@ Object.assign(frappe.utils, {
 		return duration_options;
 	},
 
-	generate_route: function (item) {
+	generate_route(item) {
 		const type = item.type.toLowerCase();
 		if (type === "doctype") {
 			item.doctype = item.name;
@@ -1244,14 +1244,14 @@ Object.assign(frappe.utils, {
 						case "Calendar":
 							route = `${doctype_slug}/view/calendar`;
 							break;
-						case "Map":
-							route = `${doctype_slug}/view/map`;
-							break;
 						case "Kanban":
 							route = `${doctype_slug}/view/kanban`;
 							if (item.kanban_board) {
 								route += `/${item.kanban_board}`;
 							}
+							break;
+						case "Map":
+							route = `${doctype_slug}/view/map`;
 							break;
 						case "Planning":
 							route = `${doctype_slug}/view/planning`;
