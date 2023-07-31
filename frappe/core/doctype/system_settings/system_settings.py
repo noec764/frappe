@@ -92,6 +92,7 @@ class SystemSettings(Document):
 		time_zone: DF.Literal
 		two_factor_method: DF.Literal["OTP App", "SMS", "Email"]
 		update_document_timestamp_on_send: DF.Check
+		use_tabulator: DF.Check
 		welcome_email_template: DF.Link | None
 	# end: auto-generated types
 
