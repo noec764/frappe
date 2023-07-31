@@ -208,6 +208,7 @@ def get_address_list(doctype, txt, filters, limit_start, limit_page_length=20, o
 	if not filters:
 		filters = []
 	filters.append(("Address", "owner", "=", user))
+	filters.append(("Address", "disabled", "=", 0))
 
 	return get_list(
 		doctype,
