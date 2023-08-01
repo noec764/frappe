@@ -181,17 +181,16 @@ frappe.router = {
 
 		if (frappe.workspaces[route[0]]) {
 			// public workspace
-			route = [
-				"Workspaces",
-				frappe.workspaces[route[0]].name || frappe.workspaces[route[0]].title,
-			];
-		} else if (route[0] == "private" && frappe.workspaces[route[1]]) {
+			const workspace = frappe.workspaces[route[0]];
+			route = ["Workspaces", workspace.name || workspace.title]; // @dokos
+		} else if (route[0] == "private") {
 			// private workspace
-			route = [
-				"Workspaces",
-				"private",
-				frappe.workspaces[route[1]].name || frappe.workspaces[route[1]].title,
-			];
+			const workspace = frappe.workspaces[route[1]];
+			if (!workspace) {
+				frappe.msgprint(__("Workspace <b>{0}</b> does not exist", [route[1]]));
+				return ["Workspaces"];
+			}
+			route = ["Workspaces", "private", workspace.name || workspace.title]; // @dokos
 		} else if (this.routes[route[0]]) {
 			// route
 			route = await this.set_doctype_route(route);
@@ -449,6 +448,7 @@ frappe.router = {
 	},
 
 	make_url(params) {
+		// @dokos(function)
 		let path_string = $.map(params, function (a) {
 			if ($.isPlainObject(a)) {
 				frappe.route_options = a;
@@ -458,6 +458,11 @@ frappe.router = {
 			}
 		}).join("/");
 
+		if (path_string) {
+			return "/app/" + path_string;
+		}
+
+		// Workspace
 		let default_page = null;
 		if (frappe.boot.user.default_workspace) {
 			default_page = frappe.router.slug(frappe.boot.user.default_workspace);
@@ -466,7 +471,15 @@ frappe.router = {
 		} else {
 			default_page = Object.keys(frappe.workspaces)[0];
 		}
-		return "/app/" + (path_string || default_page);
+		if (frappe.workspaces[default_page]?.public == false) {
+			default_page = "private/" + default_page;
+		}
+
+		if (default_page) {
+			return "/app/" + default_page;
+		}
+
+		return "/app";
 	},
 
 	push_state(url) {

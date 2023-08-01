@@ -71,10 +71,7 @@ frappe.views.Workspace = class Workspace {
 		if (this.all_pages) {
 			frappe.workspaces = {};
 			for (let page of this.all_pages) {
-				frappe.workspaces[frappe.router.slug(page.name)] = {
-					title: page.title,
-					name: page.name,
-				};
+				frappe.workspaces[frappe.router.slug(page.name)] = { ...page };
 			}
 			this.make_sidebar();
 			reload && this.show();
@@ -269,7 +266,7 @@ frappe.views.Workspace = class Workspace {
 			return;
 		}
 
-		const page_details = this.all_pages.filter((p) => p.name == page.name);
+		const page_details = this.all_pages.filter((p) => p.name == page.name); // @dokos
 		this.page.set_title(
 			page_details.length ? __(page_details[0].title, null, "Workspace") : __(page.name)
 		);
@@ -288,7 +285,7 @@ frappe.views.Workspace = class Workspace {
 		) {
 			let $sidebar = this.sidebar_items[section][page.name];
 			let pages = page.public ? this.public_pages : this.private_pages;
-			let sidebar_page = pages.find((p) => p.title == page.name);
+			let sidebar_page = pages.find((p) => p.name == page.name); // @dokos
 
 			if (add) {
 				$sidebar[0].firstElementChild.classList.add("selected");
@@ -374,13 +371,12 @@ frappe.views.Workspace = class Workspace {
 			`).appendTo(this.body);
 		}
 
-		if (this.all_pages) {
+		if (this.all_pages.length) {
 			this.create_page_skeleton();
 
-			let pages = page.public ? this.public_pages : this.private_pages;
-			let current_page = pages.filter(
-				(p) => p.name == page.name || (!page.public && p.title == page.name)
-			)[0];
+			let pages =
+				page.public && this.public_pages.length ? this.public_pages : this.private_pages;
+			let current_page = pages.find((p) => p.name == page.name); // @dokos
 			this.content = current_page && JSON.parse(current_page.content);
 
 			this.content && this.add_custom_cards_in_content();
@@ -480,9 +476,7 @@ frappe.views.Workspace = class Workspace {
 
 	setup_actions(page) {
 		let pages = page.public ? this.public_pages : this.private_pages;
-		let current_page = pages.filter(
-			(p) => p.name == page.name || (!page.public && p.title == page.name)
-		)[0];
+		let current_page = pages.find((p) => p.name == page.name); // @dokos
 
 		if (!this.is_read_only) {
 			this.setup_customization_buttons(current_page);
@@ -796,10 +790,7 @@ frappe.views.Workspace = class Workspace {
 		if (frappe.workspaces[frappe.router.slug(old_item.name)] || new_page) {
 			!duplicate && delete frappe.workspaces[frappe.router.slug(old_item.name)];
 			if (new_item) {
-				frappe.workspaces[frappe.router.slug(new_item.name)] = {
-					title: new_item.title,
-					name: new_item.page,
-				};
+				frappe.workspaces[frappe.router.slug(new_item.name)] = { ...new_item };
 			}
 		}
 
