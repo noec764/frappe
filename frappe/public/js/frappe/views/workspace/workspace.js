@@ -675,7 +675,7 @@ frappe.views.Workspace = class Workspace {
 				},
 			],
 			primary_action_label: __("Update"),
-			primary_action: (values) => {
+			primary_action: async (values) => {
 				values.title = frappe.utils.escape_html(values.title);
 				let is_title_changed = values.title != old_item.title;
 				let is_section_changed = values.is_public != old_item.public;
@@ -686,7 +686,8 @@ frappe.views.Workspace = class Workspace {
 					return;
 				d.hide();
 
-				frappe.call({
+				// @dokos(function): handle workspace renaming
+				const res = await frappe.call({
 					method: "frappe.desk.doctype.workspace.workspace.update_page",
 					args: {
 						name: old_item.name,
@@ -695,21 +696,18 @@ frappe.views.Workspace = class Workspace {
 						parent: values.parent || "",
 						public: values.is_public || 0,
 					},
-					callback: function (res) {
-						if (res.message) {
-							let message = __("Workspace {0} Edited Successfully", [
-								old_item.title.bold(),
-							]);
-							frappe.show_alert({ message: message, indicator: "green" });
-						}
-					},
 				});
+				if (res.message) {
+					let message = __("Workspace {0} Edited Successfully", [old_item.title.bold()]);
+					frappe.show_alert({ message: message, indicator: "green" });
+				}
+				values.name = res.message.name;
 
 				this.update_sidebar(old_item, values);
 
 				if (this.make_page_selected) {
 					let pre_url = values.is_public ? "" : "private/";
-					let route = pre_url + frappe.router.slug(values.title);
+					let route = pre_url + frappe.router.slug(values.name);
 					frappe.set_route(route);
 
 					this.make_page_selected = false;

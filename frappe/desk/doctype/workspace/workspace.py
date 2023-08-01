@@ -291,7 +291,7 @@ def update_page(name, title, icon, parent, public):
 				if child.name != new_child_name:
 					rename_doc("Workspace", child.name, new_child_name, force=True, ignore_permissions=True)
 
-	return {"name": title, "public": public, "label": new_name}
+	return {"title": title, "public": public, "name": new_name}  # @dokos
 
 
 def hide_unhide_page(page_name: str, is_hidden: bool):
