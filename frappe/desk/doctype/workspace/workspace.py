@@ -68,6 +68,9 @@ class Workspace(Document):
 		except Exception:
 			frappe.throw(_("Content data shoud be a list"))
 
+	def after_insert(self):
+		frappe.cache.hdel("bootinfo", self.for_user or frappe.session.user)
+
 	def on_update(self):
 		if disable_saving_as_public():
 			return
