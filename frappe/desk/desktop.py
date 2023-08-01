@@ -502,6 +502,8 @@ def get_workspace_sidebar_items():
 		try:
 			workspace = Workspace(page, True)
 			if has_access or workspace.is_permitted():
+				if workspace.page_name == "Welcome Workspace":
+					continue
 				if page.public and (has_access or not page.is_hidden):
 					pages.append(page)
 				elif page.for_user == frappe.session.user:
@@ -512,6 +514,10 @@ def get_workspace_sidebar_items():
 
 	if private_pages:
 		pages.extend(private_pages)
+
+	if len(pages) == 0:
+		pages = [frappe.get_doc("Workspace", "Welcome Workspace").as_dict()]
+		pages[0]["label"] = _("Welcome Workspace")
 
 	return {"pages": pages, "has_access": has_access}
 
