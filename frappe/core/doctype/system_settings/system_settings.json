@@ -27,7 +27,6 @@
   "encrypt_backup",
   "background_workers",
   "enable_scheduler",
-  "restricted_jobs_logs",
   "dormant_days",
   "permissions",
   "apply_strict_user_permissions",
@@ -419,12 +418,6 @@
    "fieldname": "enable_onboarding",
    "fieldtype": "Check",
    "label": "Enable Onboarding"
-  },
-  {
-   "default": "1",
-   "fieldname": "restricted_jobs_logs",
-   "fieldtype": "Check",
-   "label": "Keep logs for the last 30 days only"
   },
   {
    "default": "1",
