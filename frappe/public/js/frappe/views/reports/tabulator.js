@@ -164,8 +164,8 @@ export default class TabulatorDataTable {
 
 		this.columns = columns.map((col) => {
 			const mapped_col = Object.assign({}, col, {
-				title: "docfield" in col ? __(col.docfield.label) : col.label,
-				field: "docfield" in col ? col.docfield.fieldname : col.fieldname,
+				title: __(col.docfield?.label) || col.label || col.name,
+				field: col.docfield?.fieldname || col.fieldname || col.name,
 				width: null,
 				docfield: null,
 				headerMenu: [
@@ -353,6 +353,9 @@ export default class TabulatorDataTable {
 					return null;
 				}
 
+				if (!column.format) {
+					return cellValue;
+				}
 				return column.format(cellValue, cellRowData, column, cellRowData);
 			},
 		};
@@ -398,7 +401,11 @@ export default class TabulatorDataTable {
 			data.forEach((dataList) => {
 				let row = {};
 				dataList.forEach((d, i) => {
-					row[fields[i]] = d[fields[i]] || d.content;
+					if (typeof d == "object" && d !== null) {
+						row[fields[i]] = d[fields[i]] || d.content;
+					} else {
+						row[fields[i]] = d;
+					}
 				});
 
 				if (dataList[0].doctype) {
@@ -439,6 +446,14 @@ export default class TabulatorDataTable {
 			formatted_data = data;
 			return formatted_data;
 		}
+	}
+
+	get style() {
+		return {
+			setStyle(selector, styleObject) {
+				// not implemented
+			},
+		};
 	}
 }
 
