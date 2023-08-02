@@ -42,6 +42,7 @@ frappe.ui.form.Form = class FrappeForm {
 		this.doctype_layout = frappe.get_doc("DocType Layout", doctype_layout_name);
 		this.undo_manager = new UndoManager({ frm: this });
 		this.setup_meta(doctype);
+		this.debounced_reload_doc = frappe.utils.debounce(this.reload_doc.bind(this), 1000);
 
 		this.beforeUnloadListener = (event) => {
 			event.preventDefault();
@@ -544,7 +545,7 @@ frappe.ui.form.Form = class FrappeForm {
 			this.doc.__last_sync_on &&
 			new Date() - this.doc.__last_sync_on > this.refresh_if_stale_for * 1000
 		) {
-			this.reload_doc();
+			this.debounced_reload_doc();
 			return true;
 		}
 	}
@@ -1135,7 +1136,7 @@ frappe.ui.form.Form = class FrappeForm {
 					"alert-warning"
 				);
 			} else {
-				this.reload_doc();
+				this.debounced_reload_doc();
 			}
 		}
 	}
