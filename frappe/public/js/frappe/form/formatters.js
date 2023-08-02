@@ -77,8 +77,12 @@ frappe.form.formatters = {
 		}
 	},
 	Int: function (value, docfield, options) {
+		// @dokos(function)
 		if (value == null || value === "") {
 			return "";
+		}
+		if (cstr(docfield.options).trim() === "File Size") {
+			return frappe.form.formatters.FileSize(value);
 		}
 		return frappe.form.formatters._right(format_number(cint(value), null, 0), options);
 	},
@@ -353,12 +357,23 @@ frappe.form.formatters = {
 		return $("<div></div>").text(value).html();
 	},
 	FileSize: function (value) {
-		if (value > 1048576) {
-			value = flt(flt(value) / 1048576, 1) + "M";
-		} else if (value > 1024) {
-			value = flt(flt(value) / 1024, 1) + "K";
+		// @dokos(function): Use builtin API + kilo = 1000
+		value = cint(value);
+		if (value < 1000) {
+			return "" + value;
 		}
-		return value;
+		if (!this._fileSizeFormatter) {
+			this._fileSizeFormatter = new Intl.NumberFormat(frappe.boot.lang || "en", {
+				style: "unit",
+				notation: "compact",
+				unitDisplay: "narrow",
+				maximumFractionDigits: 2,
+				unit: "byte",
+			});
+		}
+		const text = this._fileSizeFormatter.format(value);
+		const title = format_number(value, null, 0);
+		return `<span class="text-nowrap" title="${title}">${text}</span>`;
 	},
 	TableMultiSelect: function (rows, df, options) {
 		rows = rows || [];
