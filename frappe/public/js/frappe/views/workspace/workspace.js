@@ -71,10 +71,7 @@ frappe.views.Workspace = class Workspace {
 		if (this.all_pages) {
 			frappe.workspaces = {};
 			for (let page of this.all_pages) {
-				frappe.workspaces[frappe.router.slug(page.name)] = {
-					title: page.title,
-					name: page.name,
-				};
+				frappe.workspaces[frappe.router.slug(page.name)] = { ...page };
 			}
 			this.make_sidebar();
 			reload && this.show();
@@ -269,7 +266,7 @@ frappe.views.Workspace = class Workspace {
 			return;
 		}
 
-		const page_details = this.all_pages.filter((p) => p.name == page.name);
+		const page_details = this.all_pages.filter((p) => p.name == page.name); // @dokos
 		this.page.set_title(
 			page_details.length ? __(page_details[0].title, null, "Workspace") : __(page.name)
 		);
@@ -288,7 +285,7 @@ frappe.views.Workspace = class Workspace {
 		) {
 			let $sidebar = this.sidebar_items[section][page.name];
 			let pages = page.public ? this.public_pages : this.private_pages;
-			let sidebar_page = pages.find((p) => p.title == page.name);
+			let sidebar_page = pages.find((p) => p.name == page.name); // @dokos
 
 			if (add) {
 				$sidebar[0].firstElementChild.classList.add("selected");
@@ -374,13 +371,12 @@ frappe.views.Workspace = class Workspace {
 			`).appendTo(this.body);
 		}
 
-		if (this.all_pages) {
+		if (this.all_pages.length) {
 			this.create_page_skeleton();
 
-			let pages = page.public ? this.public_pages : this.private_pages;
-			let current_page = pages.filter(
-				(p) => p.name == page.name || (!page.public && p.title == page.name)
-			)[0];
+			let pages =
+				page.public && this.public_pages.length ? this.public_pages : this.private_pages;
+			let current_page = pages.find((p) => p.name == page.name); // @dokos
 			this.content = current_page && JSON.parse(current_page.content);
 
 			this.content && this.add_custom_cards_in_content();
@@ -445,7 +441,8 @@ frappe.views.Workspace = class Workspace {
 				.map((f) => f.data)
 				.map((f) => f[`${item_type}_name`]);
 			const last_index =
-				(this.content || []).map((f) => f.type).lastIndexOf(item_type) || content.length;
+				(this.content || []).map((f) => f.type).lastIndexOf(item_type) ||
+				this.content.length;
 			extended_shortcuts.map((s, i) => {
 				if (existing_cards.includes(s.original_label || s.label)) {
 					return;
@@ -480,9 +477,7 @@ frappe.views.Workspace = class Workspace {
 
 	setup_actions(page) {
 		let pages = page.public ? this.public_pages : this.private_pages;
-		let current_page = pages.filter(
-			(p) => p.name == page.name || (!page.public && p.title == page.name)
-		)[0];
+		let current_page = pages.find((p) => p.name == page.name); // @dokos
 
 		if (!this.is_read_only) {
 			this.setup_customization_buttons(current_page);
@@ -680,7 +675,7 @@ frappe.views.Workspace = class Workspace {
 				},
 			],
 			primary_action_label: __("Update"),
-			primary_action: (values) => {
+			primary_action: async (values) => {
 				values.title = frappe.utils.escape_html(values.title);
 				let is_title_changed = values.title != old_item.title;
 				let is_section_changed = values.is_public != old_item.public;
@@ -691,7 +686,8 @@ frappe.views.Workspace = class Workspace {
 					return;
 				d.hide();
 
-				frappe.call({
+				// @dokos(function): handle workspace renaming
+				const res = await frappe.call({
 					method: "frappe.desk.doctype.workspace.workspace.update_page",
 					args: {
 						name: old_item.name,
@@ -700,21 +696,18 @@ frappe.views.Workspace = class Workspace {
 						parent: values.parent || "",
 						public: values.is_public || 0,
 					},
-					callback: function (res) {
-						if (res.message) {
-							let message = __("Workspace {0} Edited Successfully", [
-								old_item.title.bold(),
-							]);
-							frappe.show_alert({ message: message, indicator: "green" });
-						}
-					},
 				});
+				if (res.message) {
+					let message = __("Workspace {0} Edited Successfully", [old_item.title.bold()]);
+					frappe.show_alert({ message: message, indicator: "green" });
+				}
+				values.name = res.message.name;
 
 				this.update_sidebar(old_item, values);
 
 				if (this.make_page_selected) {
 					let pre_url = values.is_public ? "" : "private/";
-					let route = pre_url + frappe.router.slug(values.title);
+					let route = pre_url + frappe.router.slug(values.name);
 					frappe.set_route(route);
 
 					this.make_page_selected = false;
@@ -796,10 +789,7 @@ frappe.views.Workspace = class Workspace {
 		if (frappe.workspaces[frappe.router.slug(old_item.name)] || new_page) {
 			!duplicate && delete frappe.workspaces[frappe.router.slug(old_item.name)];
 			if (new_item) {
-				frappe.workspaces[frappe.router.slug(new_item.name)] = {
-					title: new_item.title,
-					name: new_item.page,
-				};
+				frappe.workspaces[frappe.router.slug(new_item.name)] = { ...new_item };
 			}
 		}
 
