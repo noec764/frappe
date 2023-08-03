@@ -562,7 +562,6 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:!doc.istable",
    "fieldname": "is_virtual",
    "fieldtype": "Check",
    "label": "Is Virtual"
@@ -618,14 +617,14 @@
    "fieldname": "translated_doctype",
    "fieldtype": "Check",
    "label": "Translate Link Fields"
-},
-{
- "default": "0",
- "fieldname": "make_attachments_public",
- "fieldtype": "Check",
- "label": "Make Attachments Public by Default"
-},
-{
+  },
+  {
+   "default": "0",
+   "fieldname": "make_attachments_public",
+   "fieldtype": "Check",
+   "label": "Make Attachments Public by Default"
+  },
+  {
    "default": "0",
    "depends_on": "eval: doc.is_submittable",
    "description": "Enabling this will submit documents in background",
