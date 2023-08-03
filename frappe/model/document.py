@@ -424,6 +424,7 @@ class Document(BaseDocument):
 					"attached_to_name": self.name,
 					"attached_to_doctype": self.doctype,
 					"folder": frappe.db.get_value("File", {"is_attachments_folder": 1}),
+					"is_private": attach_item.is_private,
 				}
 			)
 			_file.save()
