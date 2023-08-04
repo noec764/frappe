@@ -212,7 +212,7 @@ class ParallelTestResult(unittest.TextTestResult):
 			click.echo(err)
 
 	def __str__(self):
-		return f"Tests: {self.testsRun}, Failing: {len(self.failures)}, Errors: {len(self.errors)}"
+		return f"Tests: {self.testsRun}, Skipped: {len(self.skipped)}, Failing: {len(self.failures)}, Errors: {len(self.errors)}"
 
 
 def get_all_tests(app):
