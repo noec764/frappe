@@ -146,6 +146,9 @@ def _restore_thread_locals(flags):
 	frappe.local.preload_assets = {"style": [], "script": []}
 	frappe.local.web_translations = {}
 
+	if hasattr(frappe.local, "request"):
+		delattr(frappe.local, "request")
+
 
 @contextmanager
 def change_settings(doctype, settings_dict):
