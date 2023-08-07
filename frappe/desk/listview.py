@@ -2,6 +2,7 @@
 # License: MIT. See LICENSE
 
 import frappe
+from frappe import _
 from frappe.model import is_default_field
 from frappe.query_builder import Order
 from frappe.query_builder.functions import Count
