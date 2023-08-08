@@ -143,7 +143,7 @@ frappe.report_utils = {
 	},
 
 	get_filter_values(filters) {
-		let filter_values = filters
+		return filters
 			.map((f) => {
 				var v = f.default;
 				return {
@@ -154,7 +154,6 @@ frappe.report_utils = {
 				Object.assign(acc, f);
 				return acc;
 			}, {});
-		return filter_values;
 	},
 
 	get_result_of_fn(fn, values) {

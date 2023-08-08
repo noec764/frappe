@@ -92,7 +92,7 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 	}
 
 	file_menu_items() {
-		const items = [
+		return [
 			{
 				label: __("Home"),
 				action: () => {
@@ -146,8 +146,6 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 				},
 			},
 		];
-
-		return items;
 	}
 
 	add_file_action_buttons() {

@@ -268,11 +268,10 @@ def get_heatmap_chart_config(chart, filters, heatmap_year):
 		)
 	)
 
-	chart_config = {
+	return {
 		"labels": [],
 		"dataPoints": data,
 	}
-	return chart_config
 
 
 def get_group_by_chart_config(chart, filters):
@@ -299,12 +298,10 @@ def get_group_by_chart_config(chart, filters):
 		data = get_assigned_by_data(data)
 
 	if data:
-		chart_config = {
-			"labels": [item["name"] if item["name"] else _("Not Specified") for item in data],
+		return {
+			"labels": [item["name"] if item["name"] else "Not Specified" for item in data],
 			"datasets": [{"name": chart.name, "values": [item["count"] for item in data]}],
 		}
-
-		return chart_config
 	else:
 		return None
 

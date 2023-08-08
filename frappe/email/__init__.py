@@ -114,7 +114,7 @@ def get_cached_contacts(txt):
 	if not txt:
 		return contacts
 
-	match = [
+	return [
 		d
 		for d in contacts
 		if (
@@ -125,7 +125,6 @@ def get_cached_contacts(txt):
 			)
 		)
 	]
-	return match
 
 
 def update_contact_cache(contacts):

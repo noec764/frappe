@@ -1456,7 +1456,7 @@ class Document(BaseDocument):
 
 		:param comment_type: e.g. `Comment`. See Communication for more info."""
 
-		out = frappe.get_doc(
+		return frappe.get_doc(
 			{
 				"doctype": "Comment",
 				"comment_type": comment_type,
@@ -1467,7 +1467,6 @@ class Document(BaseDocument):
 				"content": text or comment_type,
 			}
 		).insert(ignore_permissions=True)
-		return out
 
 	def add_seen(self, user=None):
 		"""add the given/current user to list of users who have seen this document (_seen)"""
@@ -1643,8 +1642,7 @@ class Document(BaseDocument):
 			pluck="allocated_to",
 		)
 
-		users = set(assigned_users)
-		return users
+		return set(assigned_users)
 
 	def add_tag(self, tag):
 		"""Add a Tag to this document"""
