@@ -112,6 +112,22 @@ class AutoEmailReport(Document):
 				)
 			)
 
+	def validate_mandatory_fields(self):
+		# Check if all Mandatory Report Filters are filled by the User
+		filters = frappe.parse_json(self.filters) if self.filters else {}
+		filter_meta = frappe.parse_json(self.filter_meta) if self.filter_meta else {}
+		throw_list = [
+			meta["label"] for meta in filter_meta if meta.get("reqd") and not filters.get(meta["fieldname"])
+		]
+		if throw_list:
+			frappe.throw(
+				title=_("Missing Filters Required"),
+				msg=_("Following Report Filters have missing values:")
+				+ "<br><br><ul><li>"
+				+ " <li>".join(throw_list)
+				+ "</ul>",
+			)
+
 	def get_report_content(self):
 		"""Returns file in for the report in given format"""
 		report = frappe.get_doc("Report", self.report)

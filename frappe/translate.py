@@ -536,10 +536,7 @@ def get_messages_from_doctype(name, context=True):
 		messages.extend([d.group])
 
 	# translations of roles
-	for d in meta.get("permissions"):
-		if d.role:
-			messages.append(d.role)
-
+	messages.extend(d.role for d in meta.get("permissions") if d.role)
 	messages = [message for message in messages if message]
 	if context:
 		messages = [
@@ -677,10 +674,11 @@ def get_messages_from_custom_fields(app_name):
 				continue
 			messages.append(("Custom Field - {}: {}".format(prop, cf["name"]), cf[prop]))
 		if cf["fieldtype"] == "Selection" and cf.get("options"):
-			for option in cf["options"].split("\n"):
-				if option and "icon" not in option and is_translatable(option):
-					messages.append(("Custom Field - Description: " + cf["name"], option))
-
+			messages.extend(
+				("Custom Field - Description: " + cf["name"], option)
+				for option in cf["options"].split("\n")
+				if option and "icon" not in option and is_translatable(option)
+			)
 	return messages
 
 
@@ -1340,18 +1338,9 @@ def send_translations(translation_dict):
 
 
 def deduplicate_messages(messages):
-	ret = []
-
-	def sort_key(x):
-		if len(x) > 2:
-			return (x[1], x[2] or "")
-		return (x[1], "")
-
-	messages = sorted(messages, key=sort_key)
-	for k, g in itertools.groupby(messages, key=sort_key):
-		ret.append(next(g))
-
-	return ret
+	op = operator.itemgetter(1)
+	messages = sorted(messages, key=op)
+	return [next(g) for k, g in itertools.groupby(messages, op)]
 
 
 def rename_language(old_name, new_name):
