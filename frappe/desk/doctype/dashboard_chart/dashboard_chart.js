@@ -102,6 +102,17 @@ frappe.ui.form.on("Dashboard Chart", {
 		}
 	},
 
+	set_time_series: function (frm) {
+		// set timeseries based on chart type
+		if (["Count", "Average", "Sum"].includes(frm.doc.chart_type)) {
+			frm.set_value("timeseries", 1);
+		} else if (frm.doc.chart_type == "Custom") {
+			return;
+		} else {
+			frm.set_value("timeseries", 0);
+		}
+	},
+
 	document_type: function (frm) {
 		// update `based_on` options based on date / datetime fields
 		frm.set_value("source", "");
