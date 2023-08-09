@@ -295,7 +295,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			modules: {
 				toolbar: Object.keys(this.df).includes("get_toolbar_options")
 					? this.df.get_toolbar_options()
-					: this.get_toolbar_options(),
+					: this.quill_container[0], // @dokos
 				table: true,
 				imageResize: {},
 				magicUrl: true,
