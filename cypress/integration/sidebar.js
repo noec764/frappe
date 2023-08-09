@@ -20,7 +20,10 @@ const attach_file = (file, no_of_files = 1) => {
 	} else if (no_of_files > 1) {
 		// attach n files
 		files = [...Array(no_of_files)].map(
-			(el, idx) => "cypress/fixtures/sample_images/image-" + (idx + 1) + ".jpg"
+			(el, idx) =>
+				"cypress/fixtures/sample_attachments/attachment-" +
+				(idx + 1) +
+				(idx == 0 ? ".jpg" : ".txt")
 		);
 	}
 
@@ -71,7 +74,7 @@ context("Sidebar", () => {
 			cy.get(".show-all-btn").should("be.visible");
 
 			// attach 1 more image to reach attachment limit
-			attach_file("cypress/fixtures/sample_images/image-11.jpg");
+			attach_file("cypress/fixtures/sample_attachments/attachment-11.txt");
 			cy.get(".explore-full-btn").should("be.visible");
 			cy.get(".attachments-actions").should("be.hidden");
 			cy.get(".explore-btn").should("be.hidden");
