@@ -794,6 +794,7 @@ def new_doctype(
 	unique: bool = False,
 	depends_on: str = "",
 	fields: list[dict] | None = None,
+	custom: bool = True,
 	**kwargs,
 ):
 	if not name:
@@ -804,7 +805,7 @@ def new_doctype(
 		{
 			"doctype": "DocType",
 			"module": "Core",
-			"custom": 1,
+			"custom": custom,
 			"fields": [
 				{
 					"label": "Some Field",
