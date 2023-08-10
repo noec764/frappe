@@ -5,6 +5,7 @@
 import re
 
 import frappe
+from frappe import _
 
 
 def sendmail_to_system_managers(subject, content):
@@ -94,9 +95,13 @@ def get_communication_doctype(doctype, txt, searchfield, start, page_len, filter
 			d[0] for d in frappe.db.get_values("DocType", {"issingle": 0, "istable": 0, "hide_toolbar": 0})
 		]
 
-	return [
-		[dt] for dt in com_doctypes if txt.lower().replace("%", "") in dt.lower() and dt in can_read
-	]
+	filtered_doctypes = tuple(v for v in com_doctypes if re.search(txt + ".*", _(v), re.IGNORECASE))
+	allowed_doctypes = frappe.permissions.get_doctypes_with_read()
+
+	valid_doctypes = sorted(set(filtered_doctypes).intersection(set(allowed_doctypes)))
+	valid_doctypes = [[doctype] for doctype in valid_doctypes]
+
+	return valid_doctypes
 
 
 def get_cached_contacts(txt):
