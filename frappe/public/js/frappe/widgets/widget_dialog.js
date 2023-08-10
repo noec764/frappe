@@ -588,7 +588,7 @@ class NumberCardDialog extends WidgetDialog {
 				{
 					fieldtype: "Link",
 					fieldname: "number_card_name",
-					label: __("Number Cards"),
+					label: __("Number Card"),
 					options: "Number Card",
 					reqd: 1,
 					get_query: () => {
