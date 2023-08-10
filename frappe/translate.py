@@ -527,14 +527,6 @@ def get_messages_from_doctype(name, context=True):
 		if d.fieldtype == "HTML" and d.options:
 			messages.append(d.options)
 
-	# translations of actions
-	for d in meta.get("actions"):
-		messages.extend([d.label])
-
-	# translations of links
-	for d in meta.get("links"):
-		messages.extend([d.group])
-
 	# translations of roles
 	messages.extend(d.role for d in meta.get("permissions") if d.role)
 	messages = [message for message in messages if message]
@@ -1341,20 +1333,6 @@ def deduplicate_messages(messages):
 	op = operator.itemgetter(1)
 	messages = sorted(messages, key=op)
 	return [next(g) for k, g in itertools.groupby(messages, op)]
-
-
-def rename_language(old_name, new_name):
-	if not frappe.db.exists("Language", new_name):
-		return
-
-	language_in_system_settings = frappe.db.get_single_value("System Settings", "language")
-	if language_in_system_settings == old_name:
-		frappe.db.set_single_value("System Settings", "language", new_name)
-
-	frappe.db.sql(
-		"""update `tabUser` set language=%(new_name)s where language=%(old_name)s""",
-		{"old_name": old_name, "new_name": new_name},
-	)
 
 
 @frappe.whitelist()
