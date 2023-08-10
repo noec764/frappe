@@ -983,7 +983,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 
 		const unseen_communication = JSON.parse(doc._comments || "[]").filter(
-			(c) => c.hasOwnProperty("seen") && !c.seen
+			(c) => Object.prototype.hasOwnProperty.call(c, "seen") && !c.seen
 		);
 		const tooltip_text =
 			unseen_communication.length > 1
