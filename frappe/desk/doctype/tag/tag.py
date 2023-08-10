@@ -191,7 +191,6 @@ def get_documents_for_tag(tag):
 	"""
 	# remove hastag `#` from tag
 	tag = tag[1:]
-	results = []
 
 	result = frappe.get_list(
 		"Tag Link",
@@ -199,10 +198,14 @@ def get_documents_for_tag(tag):
 		fields=["document_type", "document_name", "title", "tag"],
 	)
 
-	for res in result:
-		results.append({"doctype": res.document_type, "name": res.document_name, "content": res.title})
-
-	return results
+	return [
+		{
+			"doctype": res.document_type,
+			"name": res.document_name,
+			"content": res.title,
+		}
+		for res in result
+	]
 
 
 @frappe.whitelist()

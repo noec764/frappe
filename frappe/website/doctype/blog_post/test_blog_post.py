@@ -191,7 +191,7 @@ def make_test_blog(category_title="Test Blog Category"):
 			dict(doctype="Blogger", short_name="test-blogger", full_name="Test Blogger")
 		).insert()
 
-	test_blog = frappe.get_doc(
+	return frappe.get_doc(
 		dict(
 			doctype="Blog Post",
 			blog_category=category_name,
@@ -202,5 +202,3 @@ def make_test_blog(category_title="Test Blog Category"):
 			published=1,
 		)
 	).insert()
-
-	return test_blog

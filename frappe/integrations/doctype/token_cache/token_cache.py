@@ -35,9 +35,7 @@ class TokenCache(Document):
 
 	def get_auth_header(self):
 		if self.access_token:
-			headers = {"Authorization": "Bearer " + self.get_password("access_token")}
-			return headers
-
+			return {"Authorization": "Bearer " + self.get_password("access_token")}
 		raise frappe.exceptions.DoesNotExistError
 
 	def update_data(self, data):

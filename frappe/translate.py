@@ -528,18 +528,14 @@ def get_messages_from_doctype(name, context=True):
 			messages.append(d.options)
 
 	# translations of actions
-	for d in meta.get("actions"):
-		messages.extend([d.label])
+	messages.extend(d.label for d in meta.get("actions") if d.label)
 
 	# translations of links
-	for d in meta.get("links"):
-		messages.extend([d.group])
+	messages.extend(d.group for d in meta.get("links") if d.group)
+
 
 	# translations of roles
-	for d in meta.get("permissions"):
-		if d.role:
-			messages.append(d.role)
-
+	messages.extend(d.role for d in meta.get("permissions") if d.role)
 	messages = [message for message in messages if message]
 	if context:
 		messages = [
@@ -677,10 +673,11 @@ def get_messages_from_custom_fields(app_name):
 				continue
 			messages.append(("Custom Field - {}: {}".format(prop, cf["name"]), cf[prop]))
 		if cf["fieldtype"] == "Selection" and cf.get("options"):
-			for option in cf["options"].split("\n"):
-				if option and "icon" not in option and is_translatable(option):
-					messages.append(("Custom Field - Description: " + cf["name"], option))
-
+			messages.extend(
+				("Custom Field - Description: " + cf["name"], option)
+				for option in cf["options"].split("\n")
+				if option and "icon" not in option and is_translatable(option)
+			)
 	return messages
 
 

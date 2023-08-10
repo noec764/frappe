@@ -51,7 +51,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		let me = this;
 		let interaction_docs = Object.keys(get_doc_mappings());
 
-		let fields = [
+		return [
 			{ label: __("Date"), fieldtype: "Datetime", fieldname: "due_date" },
 			{
 				label: __("Assigned To"),
@@ -104,8 +104,6 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				fieldname: "select_attachments",
 			},
 		];
-
-		return fields;
 	}
 
 	get_event_categories() {
@@ -253,9 +251,9 @@ frappe.views.InteractionComposer = class InteractionComposer {
 			interaction_values["event_references"] = [
 				{
 					reference_doctype: form_values.reference_doctype,
-					reference_docname: form_values.reference_document
-				}
-			]
+					reference_docname: form_values.reference_document,
+				},
+			];
 		}
 		if (!("owner" in interaction_values)) {
 			interaction_values["owner"] = frappe.session.user;
@@ -348,7 +346,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 };
 
 function get_doc_mappings() {
-	const doc_map = {
+	return {
 		Event: {
 			field_map: {
 				interaction_type: "doctype",
@@ -374,6 +372,4 @@ function get_doc_mappings() {
 			hidden_fields: ["public", "category", "participants_section"],
 		},
 	};
-
-	return doc_map;
 }

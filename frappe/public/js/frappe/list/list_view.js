@@ -31,8 +31,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	}
 
 	has_permissions() {
-		const can_read = frappe.perm.has_perm(this.doctype, 0, "read");
-		return can_read;
+		return frappe.perm.has_perm(this.doctype, 0, "read");
 	}
 
 	show() {
@@ -984,7 +983,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		}
 
 		const unseen_communication = JSON.parse(doc._comments || "[]").filter(
-			(c) => c.hasOwnProperty("seen") && !c.seen
+			(c) => Object.prototype.hasOwnProperty.call(c, "seen") && !c.seen
 		);
 		const tooltip_text =
 			unseen_communication.length > 1

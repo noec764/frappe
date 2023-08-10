@@ -4,7 +4,7 @@ from frappe.utils import get_fullname
 
 
 def get_leaderboards():
-	leaderboards = {
+	return {
 		"User": {
 			"fields": [{"fieldname": "points", "label": _("Points")}],
 			"method": "frappe.desk.leaderboard.get_energy_point_leaderboard",
@@ -12,7 +12,6 @@ def get_leaderboards():
 			"icon": "users",
 		}
 	}
-	return leaderboards
 
 
 @frappe.whitelist()

@@ -837,10 +837,9 @@ def global_date_format(date, format="long", lang=None):
 		lang = frappe.local.lang
 	"""returns localized date in the form of January 1, 2012"""
 	date = getdate(date)
-	formatted_date = babel.dates.format_date(
-		date, locale=(lang or "en").replace("-", "_"), format=format
+	return babel.dates.format_date(
+		date, locale=(frappe.local.lang or "en").replace("-", "_"), format=format
 	)
-	return formatted_date
 
 
 def has_common(l1: typing.Hashable, l2: typing.Hashable) -> bool:
@@ -1507,8 +1506,7 @@ def image_to_base64(image, extn: str) -> bytes:
 	if extn.lower() in ("jpg", "jpeg"):
 		extn = "JPEG"
 	image.save(buffered, extn)
-	img_str = base64.b64encode(buffered.getvalue())
-	return img_str
+	return base64.b64encode(buffered.getvalue())
 
 
 def pdf_to_base64(filename: str) -> bytes | None:
@@ -1665,9 +1663,7 @@ def get_url(uri: str | None = None, full_address: bool = False) -> str:
 	):
 		host_name = host_name + ":" + str(port)
 
-	url = urljoin(host_name, uri) if uri else host_name
-
-	return url
+	return urljoin(host_name, uri) if uri else host_name
 
 
 def get_host_name_from_request() -> str:
@@ -1710,10 +1706,9 @@ def get_link_to_report(
 		conditions = []
 		for k, v in filters.items():
 			if isinstance(v, list):
-				for value in v:
-					conditions.append(
-						str(k) + "=" + '["' + str(value[0] + '"' + "," + '"' + str(value[1]) + '"]')
-					)
+				conditions.extend(
+					str(k) + "=" + '["' + str(value[0] + '"' + "," + '"' + str(value[1]) + '"]') for value in v
+				)
 			else:
 				conditions.append(str(k) + "=" + str(v))
 
@@ -1855,9 +1850,7 @@ def get_filter(doctype: str, f: dict | list | tuple, filters_config=None) -> "fr
 	) + NestedSetHierarchy
 
 	if filters_config:
-		additional_operators = []
-		for key in filters_config:
-			additional_operators.append(key.lower())
+		additional_operators = [key.lower() for key in filters_config]
 		valid_operators = tuple(set(valid_operators + tuple(additional_operators)))
 
 	if f.operator.lower() not in valid_operators:
@@ -1944,10 +1937,7 @@ def sanitize_column(column_name: str) -> None:
 
 
 def scrub_urls(html: str) -> str:
-	html = expand_relative_urls(html)
-	# encoding should be responsibility of the composer
-	# html = quote_urls(html)
-	return html
+	return expand_relative_urls(html)
 
 
 def expand_relative_urls(html: str) -> str:

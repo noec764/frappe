@@ -41,7 +41,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 		if (
 			this.df.options &&
 			this.df.options.length &&
-			this.df.options[0].hasOwnProperty("label")
+			Object.prototype.hasOwnProperty.call(this.df.options[0], "label")
 		) {
 			data = data.split(",").map((op) => op.trim());
 			data = data
@@ -75,9 +75,7 @@ frappe.ui.form.ControlMultiSelect = class ControlMultiSelect extends (
 
 	get_values() {
 		const value = this.get_value() || "";
-		const values = value.split(/\s*,\s*/).filter((d) => d);
-
-		return values;
+		return value.split(/\s*,\s*/).filter((d) => d);
 	}
 
 	get_data() {
