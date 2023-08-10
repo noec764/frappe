@@ -10,7 +10,8 @@
  "documentation_url": "https://doc.dokos.io/dokos/website/",
  "idx": 0,
  "is_complete": 0,
- "modified": "2020-07-10 12:32:35.269025",
+ "language": "en",
+ "modified": "2023-08-10 16:05:01.668881",
  "modified_by": "Administrator",
  "module": "Website",
  "name": "Website",
@@ -26,7 +27,7 @@
    "step": "Enable Website Tracking"
   },
   {
-    "step": "Web Page Tour"
+   "step": "Web Page Tour"
   }
  ],
  "subtitle": "Corporate website, blog, shopping cart and portals.",

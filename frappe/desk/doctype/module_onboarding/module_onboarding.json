@@ -36,6 +36,8 @@
   {
    "fieldname": "module",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Module",
    "options": "Module Def",
    "reqd": 1
@@ -64,6 +66,7 @@
    "default": "0",
    "fieldname": "is_complete",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Is Complete"
   },
   {
@@ -85,6 +88,8 @@
    "default": "en",
    "fieldname": "language",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Language",
    "options": "Language",
    "reqd": 1
@@ -99,7 +104,7 @@
   }
  ],
  "links": [],
- "modified": "2022-05-19 19:40:41.304228",
+ "modified": "2023-08-10 16:04:39.842835",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Module Onboarding",
