@@ -52,6 +52,14 @@ frappe.views.InteractionComposer = class InteractionComposer {
 		let interaction_docs = Object.keys(get_doc_mappings());
 
 		return [
+			{ label: __("Date"), fieldtype: "Datetime", fieldname: "due_date" },
+			{
+				label: __("Assigned To"),
+				fieldtype: "Link",
+				fieldname: "assigned_to",
+				options: "User",
+			},
+			{ fieldtype: "Column Break" },
 			{
 				label: __("Reference"),
 				fieldtype: "Select",
