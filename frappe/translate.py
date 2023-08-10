@@ -527,6 +527,13 @@ def get_messages_from_doctype(name, context=True):
 		if d.fieldtype == "HTML" and d.options:
 			messages.append(d.options)
 
+	# translations of actions
+	messages.extend(d.label for d in meta.get("actions") if d.label)
+
+	# translations of links
+	messages.extend(d.group for d in meta.get("links") if d.group)
+
+
 	# translations of roles
 	messages.extend(d.role for d in meta.get("permissions") if d.role)
 	messages = [message for message in messages if message]
@@ -1330,9 +1337,32 @@ def send_translations(translation_dict):
 
 
 def deduplicate_messages(messages):
-	op = operator.itemgetter(1)
-	messages = sorted(messages, key=op)
-	return [next(g) for k, g in itertools.groupby(messages, op)]
+	ret = []
+
+	def sort_key(x):
+		if len(x) > 2:
+			return (x[1], x[2] or "")
+		return (x[1], "")
+
+	messages = sorted(messages, key=sort_key)
+	for k, g in itertools.groupby(messages, key=sort_key):
+		ret.append(next(g))
+
+	return ret
+
+
+def rename_language(old_name, new_name):
+	if not frappe.db.exists("Language", new_name):
+		return
+
+	language_in_system_settings = frappe.db.get_single_value("System Settings", "language")
+	if language_in_system_settings == old_name:
+		frappe.db.set_single_value("System Settings", "language", new_name)
+
+	frappe.db.sql(
+		"""update `tabUser` set language=%(new_name)s where language=%(old_name)s""",
+		{"old_name": old_name, "new_name": new_name},
+	)
 
 
 @frappe.whitelist()
@@ -1380,49 +1410,6 @@ def get_translations(source_text):
 		fields=["name", "language", "translated_text as translation"],
 		filters={"source_text": source_text},
 	)
-
-
-@frappe.whitelist()
-def get_messages(language, start=0, page_length=100, search_text=""):
-	from frappe.frappeclient import FrappeClient
-
-	translator = FrappeClient(get_translator_url())
-	return translator.post_api("translator.api.get_strings_for_translation", params=locals())
-
-
-@frappe.whitelist()
-def get_source_additional_info(source, language=""):
-	from frappe.frappeclient import FrappeClient
-
-	translator = FrappeClient(get_translator_url())
-	return translator.post_api("translator.api.get_source_additional_info", params=locals())
-
-
-@frappe.whitelist()
-def get_contributions(language):
-	return frappe.get_all(
-		"Translation",
-		fields=["*"],
-		filters={
-			"contributed": 1,
-		},
-	)
-
-
-@frappe.whitelist()
-def get_contribution_status(message_id):
-	from frappe.frappeclient import FrappeClient
-
-	doc = frappe.get_doc("Translation", message_id)
-	translator = FrappeClient(get_translator_url())
-	return translator.get_api(
-		"translator.api.get_contribution_status",
-		params={"translation_id": doc.contribution_docname},
-	)
-
-
-def get_translator_url():
-	return frappe.get_hooks()["translator_url"][0]
 
 
 @frappe.whitelist(allow_guest=True)
