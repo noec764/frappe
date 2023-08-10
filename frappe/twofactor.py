@@ -275,7 +275,7 @@ def get_email_body_for_2fa(kwargs_dict):
 		+ """
 		<br><br>
 		<b style="font-size: 18px;">{{ otp }}</b>
-	"""
+	""")
 	return frappe.render_template(body_template, kwargs_dict)
 
 
