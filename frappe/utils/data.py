@@ -1762,6 +1762,8 @@ operator_map = {
 	"<=": operator.le,
 	"not None": lambda a, b: a is not None,
 	"None": lambda a, b: a is None,
+	"like": lambda a, b: operator.contains(a.strip("%"), b.strip("%")),
+	"not like": lambda a, b: not operator.contains(a.strip("%"), b.strip("%")),
 }
 
 
