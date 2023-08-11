@@ -1761,6 +1761,20 @@ def sql_like(value: str, pattern: str) -> bool:
 		return pattern in value
 
 
+def sql_like(value: str, pattern: str) -> bool:
+	if not isinstance(pattern, str) and isinstance(value, str):
+		return False
+	if pattern.startswith("%") and pattern.endswith("%"):
+		return pattern.strip("%") in value
+	elif pattern.startswith("%"):
+		return value.endswith(pattern.lstrip("%"))
+	elif pattern.endswith("%"):
+		return value.startswith(pattern.rstrip("%"))
+	else:
+		# assume default as wrapped in '%'
+		return pattern in value
+
+
 operator_map = {
 	# startswith
 	"^": lambda a, b: (a or "").startswith(b),
