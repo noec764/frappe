@@ -12,6 +12,7 @@ Events:
 
 # imports - standard imports
 import os
+import random
 import time
 from typing import NoReturn
 
@@ -53,6 +54,9 @@ def enqueue_events_for_all_sites() -> None:
 
 	with frappe.init_site():
 		sites = get_sites()
+
+	# Sites are sorted in alphabetical order, shuffle to randomize priorities
+	random.shuffle(sites)
 
 	for site in sites:
 		try:
