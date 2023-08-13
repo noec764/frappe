@@ -99,14 +99,6 @@ def safe_exec(script, _globals=None, _locals=None, restrict_commit_rollback=Fals
 def safe_eval(code, eval_globals=None, eval_locals=None):
 	import unicodedata
 
-	whitelisted_globals = {
-		"int": int,
-		"float": float,
-		"long": int,
-		"round": round,
-		# RestrictedPython specific overrides
-		"_getattr_": _get_attr_for_eval,
-	}
 	code = unicodedata.normalize("NFKC", code)
 
 	for attribute in UNSAFE_ATTRIBUTES:
@@ -120,7 +112,7 @@ def safe_eval(code, eval_globals=None, eval_locals=None):
 		eval_globals = {}
 
 	eval_globals["__builtins__"] = {}
-	eval_globals.update(whitelisted_globals)
+	eval_globals.update(WHITELISTED_SAFE_EVAL_GLOBALS)
 
 	return eval(
 		compile_restricted(code, filename="<safe_eval>", policy=FrappeTransformer, mode="eval"),
@@ -626,3 +618,16 @@ VALID_UTILS = (
 	"get_user_info_for_avatar",
 	"get_abbr",
 )
+
+
+WHITELISTED_SAFE_EVAL_GLOBALS = {
+	"int": int,
+	"float": float,
+	"long": int,
+	"round": round,
+	# RestrictedPython specific overrides
+	"_getattr_": _get_attr_for_eval,
+	"_getitem_": _getitem,
+	"_getiter_": iter,
+	"_iter_unpack_sequence_": RestrictedPython.Guards.guarded_iter_unpack_sequence,
+}
