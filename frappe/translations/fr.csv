@@ -1666,6 +1666,15 @@ Configure Columns,Configurer les colonnes,
 Configure Theme,Configurer le thème,
 Configure accounts for google calendar,Configurer des comptes pour Google Agenda,
 Configure columns for {0},Configurer les colonnes pour {0},
+"Configure how amended documents will be named.<br>
+
+Default behaviour is to follow an amend counter which adds a number to the end of the original name indicating the amended version. <br>
+
+Default Naming will make the amended document to behave same as new documents.","Configurez la règle de nommage des documents modifiés.<br>
+
+La règle 'Règle par défaut' suit un compteur de modifications permettant d'ajouter un incrément à la fin du nom original pour indiquer le numéro de révision. <br>
+
+Avec la règle 'Nommage par défaut' les documents modifiés suivent la même règle de nommage que le nouveaux documents.",
 "Configure notifications for mentions, assignments, energy points and more.","Configurer les notifications pour les mentions, attributions, points d'énergie et plus.",
 "Configure various aspects of how document naming works like naming series, current counter.","Configurez différents aspects de la manière dont est nommé un document, comme les noms de série ou le décompte actuel.",
 Configure your google calendar integration,Configurez votre intégration avec Google Agenda,
