@@ -27,12 +27,12 @@
     "encrypt_backup",
     "background_workers",
     "enable_scheduler",
-    "restricted_jobs_logs",
     "dormant_days",
     "permissions",
     "apply_strict_user_permissions",
     "column_break_21",
     "allow_guests_to_upload_files",
+    "force_web_capture_mode_for_uploads",
     "security",
     "session_expiry",
     "document_share_key_expiry",
@@ -420,12 +420,6 @@
     },
     {
       "default": "1",
-      "fieldname": "restricted_jobs_logs",
-      "fieldtype": "Check",
-      "label": "Keep logs for the last 30 days only"
-    },
-    {
-      "default": "1",
       "fieldname": "attach_view_link",
       "fieldtype": "Check",
       "label": "Send document Web View link in email"
@@ -570,8 +564,14 @@
       "fieldname": "use_tabulator",
       "fieldtype": "Check",
       "label": "Use Tabulator as Datatable"
+     },
+     {
+      "default": "0",
+      "description": "When uploading files, force the use of the web-based image capture. If this is unchecked, the default behavior is to use the mobile native camera when use from a mobile is detected.",
+      "fieldname": "force_web_capture_mode_for_uploads",
+      "fieldtype": "Check",
+      "label": "Force Web Capture Mode for Uploads"
      }
-   
   ],
   "icon": "fa fa-cog",
   "issingle": 1,
