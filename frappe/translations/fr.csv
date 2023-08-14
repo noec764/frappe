@@ -555,6 +555,12 @@ Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
 </pre>","<p><strong>Exemples de conditions:</strong></p>
 <pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
 </pre>",
+"<p>Multiple webforms can be created for a single doctype. Write a condition specific to this webform to display correct record after submission.</p><p>For Example:</p>
+<p>If you create a separate webform every year to capture feedback from employees add a 
+ field named year in doctype and add a condition <b>doc.year==""2023""</b></p>
+","<p>Plusieurs formulaires web peuvent être créé pour un type de document donné. Renseignez une condition spécifique à ce formulaire web pour afficher le bon document après validation.</p><p>Par exemple:</p>
+<p>Si vous créez un formulaire web différent chaque année pour récupérer des feedbacks de vos employés, ajoutez un champ 
+ appelé 'year' dans le type de document et ajoutez la condition <b>doc.year==""2023""</b></p>",
 <p>No results found for ',<p>Aucun résultat trouvé pour ',
 "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>","<p>Définissez le contexte de publication du modèle. Exemple:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>",
 "<p>Set context before rendering a template. Example:</p><p>
@@ -564,6 +570,13 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 </p><div><pre><code>
 context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 </code></pre></div>",
+"<p>To interact with above HTML you will have to use `root_element` as a parent selector.</p><p>For example:</p><pre class=""p-3 bg-gray-100 border-radius rounded-sm mb-0"" style=""width: fit-content;""><code>// here root_element is provided by default
+let some_class_element = root_element.querySelector('.some-class');
+some_class_element.textContent = ""New content"";
+</code></pre>","<p>Pour interagir avec le HTML ci-dessus vous devez utilisez le sélecteur parent `root_element`.</p><p>Par exemple:</p><pre class=""p-3 bg-gray-100 border-radius rounded-sm mb-0"" style=""width: fit-content;""><code>// ici l'élément root est fourni par défaut
+let some_class_element = root_element.querySelector('.some-class');
+some_class_element.textContent = ""Nouveau contenu"";
+</code></pre>",
 "<p>Your OTP secret on {0} has been reset. If you did not perform this reset and did not request it, please contact your System Administrator immediately.</p>","<p>Votre secret OTP sur {0} a été réinitialisé. Si vous n'avez pas effectué cette réinitialisation et que vous ne l'avez pas demandée, veuillez contacter immédiatement votre administrateur système.</p>",
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
@@ -582,6 +595,33 @@ context.project = frappe.get_doc(""Project"", frappe.form_dict.name)
 
 <p>Les conditions doivent être écrites en Python simple. Veuillez seulement utiliser les propriétés disponibles dans le formulaire.</p>
 <p>Fonctions autorisées:
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
+"<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
+<p>Allowed functions: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Les conditions doivent être rédigées en Python simple. Veuillez utiliser des des propriétés disponibles dans le formulaire seulement.</p>
+<p>Fonctions autorisées: 
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -664,6 +704,8 @@ Action Label,Libellé de l'action,
 Action Settings,Paramètres d'action,
 Action Timeout (Seconds),Délai d'attente de l'action (secondes),
 Action Type,Type d'action,
+Action {0} completed successfully on {1} {2}. View it {3},L'action {0} a été éxécutée avec succès pour le·la {0} {2}. Le voir {3},
+Action {0} failed on {1} {2}. View it {3},L'action {0} a échoué pour {1} {2},
 Action,Action,
 "Actions for workflow (e.g. Approve, Cancel).","Actions pour le flux de travail (par exemple Approuver, Annuler).",
 Actions,Actions,
@@ -6562,6 +6604,13 @@ eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini i
 myfield
 eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+myfield
+eval:doc.myfield=='My Value'
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a une valeur OU si les règles sont vraies (exemples): 
+myfield
+eval:doc.myfield=='Ma Valeur'
+eval:doc.age&gt;18",
 This form does not have any input,Ce formulaire n'a aucune entrée,
 This form has been modified after you have loaded it,Ce formulaire a été modifié après que vous l'ayez chargé,
 This form is not editable due to a Workflow.,Ce formulaire n'est pas éditable car un flux de travail (workflow) est en cours.,
@@ -6814,6 +6863,9 @@ UNSEEN,NON LUS,
 UPPER CASE,MAJUSCULE,
 UPPERCASE,MAJUSCULE,
 "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.
+<br>e.g. http://hostname/api/method/frappe.integrations.oauth2_logins.login_via_facebook","URIs pour recevoir un code d'autorisation une fois que l'utilisateur a autorisé l'accès, de même que les réponses d'échec. Généralement un endpoint REST endpoint exposé par l'application cliente.
+<br>e.g. http://hostname/api/method/frappe.integrations.oauth2_logins.login_via_facebook",
+"URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.
 <br>e.g. http://hostname/api/method/frappe.www.login.login_via_facebook","URIs pour recevoir un code d'autorisation une fois que l'utilisateur a autorisé l'accès, de même que les retours en cas d'échec. Généralement un point d'arrivée REST exposée par l'application cliente.
 <br>ex: http://hostname/api/method/frappe.www.login.login_via_facebook",
 "URIs for receiving authorization code once the user allows access, as well as failure responses. Typically a REST endpoint exposed by the Client App.<br>e.g. http://hostname/api/method/frappe.www.login.login_via_facebook","URIs pour recevoir le code d'autorisation ainsi que les réponses d'échec une fois que l'utilisateur autorise l'accès. Typiquement, un point de terminaison REST exposé par l'application cliente.<br>Par exemple, http://hostname/api/method/frappe.www.login.login_via_facebook",
@@ -6924,6 +6976,7 @@ Uploading {0} of {1},Chargement de {0} sur {1},
 Uploading,Chargement,
 Usage Info,Informations d'usage,
 Use % for any non empty value.,Utiliser % pour toutes les valeurs non nulles,
+"Use <code>{{ doc.items[i].amount }}</code>.<br> If a row contains an array access (<code>[i]</code>), it is used as a template and automatically repeated for each element of the underlying table.","Utilisez <code>{{ doc.items[i].amount }}</code>.<br> Si une variable donne accès à une liste (<code>[i]</code>), elle sera utilisée comme modèle et automatiquement répétée pour chaque ligne de la table sous-jacente.",
 Use ASCII encoding for password,Encoder le mot de passe en ASCII,
 Use Different Email Login ID,Utiliser un email d'identification différent,
 Use HTML,Utiliser le HTML,
