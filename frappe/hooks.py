@@ -442,8 +442,7 @@ before_job = [
 ]
 after_job = [
 	"frappe.monitor.stop",
-	"frappe.utils.file_lock.release_document_locks",
-	"frappe.utils.telemetry.flush",
+	"frappe.utils.file_lock.release_document_locks"
 ]
 
 extend_bootinfo = [
