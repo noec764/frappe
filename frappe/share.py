@@ -1,6 +1,7 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
+from typing import TYPE_CHECKING
 
 import frappe
 from frappe import _
@@ -11,6 +12,9 @@ from frappe.desk.doctype.notification_log.notification_log import (
 )
 from frappe.desk.form.document_follow import follow_document
 from frappe.utils import cint
+
+if TYPE_CHECKING:
+	from frappe.model.document import Document
 
 
 @frappe.whitelist()
@@ -136,8 +140,18 @@ def set_docshare_permission(doctype, name, user, permission_to, value=1, everyon
 
 
 @frappe.whitelist()
-def get_users(doctype, name):
+def get_users(doctype: str, name: str) -> list:
 	"""Get list of users with which this document is shared"""
+	doc = frappe.get_doc(doctype, name)
+	return _get_users(doc)
+
+
+def _get_users(doc: "Document") -> list:
+	from frappe.permissions import has_permission
+
+	if not has_permission(doc.doctype, "read", doc, raise_exception=False):
+		return []
+
 	return frappe.get_all(
 		"DocShare",
 		fields=[
@@ -151,7 +165,7 @@ def get_users(doctype, name):
 			"owner",
 			"creation",
 		],
-		filters=dict(share_doctype=doctype, share_name=name),
+		filters=dict(share_doctype=doc.doctype, share_name=doc.name),
 	)
 
 
