@@ -190,7 +190,6 @@ frappe.setup.SetupWizard = class SetupWizard extends frappe.ui.Slides {
 	}
 
 	on_complete() {
-		frappe.telemetry.capture("initated_client_side", "setup");
 		if (this.current_slide.has_errors()) return;
 		this.update_values();
 		this.show_working_state();
@@ -366,7 +365,6 @@ frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
 	make() {
 		super.make();
 		this.set_init_values();
-		// this.setup_telemetry_events();
 	}
 
 	set_init_values() {
@@ -381,18 +379,6 @@ frappe.setup.SetupWizardSlide = class SetupWizardSlide extends frappe.ui.Slide {
 			});
 		}
 	}
-
-	// setup_telemetry_events() {
-	// 	let me = this;
-	// 	this.fields.filter(frappe.model.is_value_type).forEach((field) => {
-	// 		me.get_input(field.fieldname).on("change", function () {
-	// 			frappe.telemetry.capture(`${field.fieldname}_set`, "setup");
-	// 			if (field.fieldname == "enable_telemetry" && !me.get_value("enable_telemetry")) {
-	// 				frappe.telemetry.disable();
-	// 			}
-	// 		});
-	// 	});
-	// }
 };
 
 // Frappe slides settings
@@ -437,15 +423,6 @@ frappe.setup.get_slide_settings = () => [
 				fieldtype: "Select",
 				reqd: 1,
 			},
-			// {
-			// 	fieldtype: "Section Break",
-			// },
-			// {
-			// 	fieldname: "enable_telemetry",
-			// 	label: __("Allow Sending Usage Data for Improving Applications"),
-			// 	fieldtype: "Check",
-			// 	default: 1,
-			// },
 		],
 
 		onload: function (slide) {

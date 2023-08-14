@@ -72,9 +72,6 @@ def setup_complete(args):
 
 @frappe.task()
 def process_setup_stages(stages, user_input, is_background_task=False):
-	from frappe.utils.telemetry import capture
-
-	capture("initated_server_side", "setup")
 	try:
 		frappe.flags.in_setup_wizard = True
 		current_task = None
@@ -185,7 +182,6 @@ def update_system_settings(args):
 			"number_format": number_format,
 			"enable_scheduler": 1 if not frappe.flags.in_test else 0,
 			"backup_limit": 3,  # Default for downloadable backups
-			"enable_telemetry": cint(args.get("enable_telemetry")),
 		}
 	)
 	system_settings.save()

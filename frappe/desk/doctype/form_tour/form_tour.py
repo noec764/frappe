@@ -86,16 +86,6 @@ def reset_tour(tour_name):
 
 @frappe.whitelist()
 def update_user_status(value, step):
-	from frappe.utils.telemetry import capture
-
-	step = frappe.parse_json(step)
-	tour = frappe.parse_json(value)
-
-	capture(
-		frappe.scrub(f"{step.parent}_{step.title}"),
-		app="frappe_ui_tours",
-		properties={"is_completed": tour.is_completed},
-	)
 	frappe.db.set_value(
 		"User", frappe.session.user, "onboarding_status", value, update_modified=False
 	)

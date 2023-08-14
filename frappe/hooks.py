@@ -27,7 +27,6 @@ app_include_js = [
 	"form.bundle.js",
 	"controls.bundle.js",
 	"report.bundle.js",
-	"telemetry.bundle.js",
 ]
 app_include_css = [
 	"desk.bundle.css",
@@ -448,7 +447,6 @@ after_job = [
 ]
 
 extend_bootinfo = [
-	"frappe.utils.telemetry.add_bootinfo",
 	"frappe.core.doctype.user_permission.user_permission.send_user_permissions",
 ]
 
