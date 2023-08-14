@@ -287,7 +287,7 @@
   }
  ],
  "links": [],
- "modified": "2023-03-31 17:38:09.682958",
+ "modified": "2023-08-14 16:33:30.172798",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",
@@ -319,7 +319,6 @@
    "write": 1
   },
   {
-   "create": 1,
    "email": 1,
    "export": 1,
    "print": 1,
