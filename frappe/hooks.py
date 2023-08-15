@@ -165,9 +165,7 @@ doc_events = {
 		"on_update": [
 			"frappe.desk.notifications.clear_doctype_notifications",
 			"frappe.workflow.doctype.workflow_action.workflow_action.process_workflow_actions",
-			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
 			"frappe.core.doctype.file.utils.attach_files_to_document",
-			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
 			"frappe.core.doctype.user_type.user_type.apply_permissions_for_non_standard_user_type",
 		],
 		"after_rename": "frappe.desk.notifications.clear_doctype_notifications",
@@ -185,6 +183,8 @@ doc_events = {
 		"on_change": [
 			"frappe.social.doctype.energy_point_rule.energy_point_rule.process_energy_points",
 			"frappe.automation.doctype.milestone_tracker.milestone_tracker.evaluate_milestone",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.apply",
+			"frappe.automation.doctype.assignment_rule.assignment_rule.update_due_date",
 		],
 	},
 	"Event": {
@@ -440,10 +440,7 @@ after_request = ["frappe.rate_limiter.update", "frappe.monitor.stop", "frappe.re
 before_job = [
 	"frappe.monitor.start",
 ]
-after_job = [
-	"frappe.monitor.stop",
-	"frappe.utils.file_lock.release_document_locks"
-]
+after_job = ["frappe.monitor.stop", "frappe.utils.file_lock.release_document_locks"]
 
 extend_bootinfo = [
 	"frappe.core.doctype.user_permission.user_permission.send_user_permissions",
