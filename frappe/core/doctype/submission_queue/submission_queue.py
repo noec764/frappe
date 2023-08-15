@@ -120,8 +120,8 @@ class SubmissionQueue(Document):
 			message = _("Action {0} completed successfully on {1} {2}. View it {3}")
 
 		message_replacements = (
-			frappe.bold(action),
-			frappe.bold(str(self.ref_doctype)),
+			frappe.bold(_(action)),
+			frappe.bold(str(_(self.ref_doctype))),
 			frappe.bold(str(self.ref_docname)),
 		)
 
@@ -132,7 +132,7 @@ class SubmissionQueue(Document):
 				{
 					"message": message.format(
 						*message_replacements,
-						f"<a href='/app/{quote(doctype.lower().replace(' ', '-'))}/{quote(docname)}'><b>here</b></a>",
+						f"<a href='/app/{quote(doctype.lower().replace(' ', '-'))}/{quote(docname)}'><b>{_('here')}</b></a>",
 					),
 					"alert": True,
 					"indicator": "red" if submission_status == "Failed" else "green",

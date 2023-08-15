@@ -49,7 +49,6 @@ class SystemSettings(Document):
 		enable_onboarding: DF.Check
 		enable_password_policy: DF.Check
 		enable_scheduler: DF.Check
-		enable_telemetry: DF.Check
 		enable_two_factor_auth: DF.Check
 		encrypt_backup: DF.Check
 		first_day_of_the_week: DF.Literal[
