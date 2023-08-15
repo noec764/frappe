@@ -96,7 +96,6 @@ def process_setup_stages(stages, user_input, is_background_task=False):
 		)
 	else:
 		run_setup_success(user_input)
-		capture("completed_server_side", "setup")
 		if not is_background_task:
 			return {"status": "ok"}
 		frappe.publish_realtime("setup_task", {"status": "ok"}, user=frappe.session.user)
