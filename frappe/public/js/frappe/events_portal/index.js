@@ -15,19 +15,7 @@ frappe.events.EventsPortalView = class EventsPortalView extends frappe.ui.BaseWe
 		return Object.assign(super.calendar_options(), {
 			eventClassNames: "events-calendar",
 			initialView: frappe.is_mobile() ? "listDay" : "dayGridMonth",
-			headerToolbar: {
-				left: frappe.is_mobile() ? "today" : "dayGridMonth,timeGridWeek",
-				center: "prev,title,next",
-				right: frappe.is_mobile() ? "" : "today",
-			},
-			selectable: true,
-			slotMinTime: "09:00:00",
-			slotMaxTime: "17:00:00",
 		});
-	}
-
-	onEventsUpdated() {
-		this.set_min_max_times({ min: "09:00:00", max: "17:00:00" });
 	}
 
 	async getEvents(parameters) {

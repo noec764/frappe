@@ -14,7 +14,7 @@ const typecheck = (check, msg) => {
 };
 
 // You need to import the CSS for each plugin, thus simply import this whole file and use frappe.ui.BaseWebCalendar
-class BaseWebCalendar {
+/* noexport */ class BaseWebCalendar {
 	/**
 	 * @param {object} options
 	 * @param {HTMLElement} options.wrapper
@@ -49,7 +49,9 @@ class BaseWebCalendar {
 	 */
 	getEvents(info, callback) {}
 
-	onEventsUpdated(events) {}
+	onEventsUpdated(events) {
+		this.set_min_max_times({ min: "09:00:00", max: "17:00:00" });
+	}
 
 	onEventClick(info) {}
 
@@ -78,9 +80,9 @@ class BaseWebCalendar {
 
 	get_header_toolbar() {
 		return {
-			left: frappe.is_mobile() ? "today" : "dayGridMonth,timeGridWeek,listDay",
-			center: "prev,title,next",
-			right: frappe.is_mobile() ? "" : "today",
+			left: frappe.is_mobile() ? "listWeek,listDay" : "dayGridMonth,timeGridWeek,listDay",
+			center: frappe.is_mobile() ? "" : "prev,title,next",
+			right: frappe.is_mobile() ? "prev,title,next" : "today",
 		};
 	}
 
@@ -138,36 +140,35 @@ class BaseWebCalendar {
 		this.fullCalendar = null;
 	}
 
-	getSelectAllow(selectInfo) {
-		return momentjs().diff(selectInfo.start) <= 0;
-	}
-
 	format_ymd(date) {
-		return momentjs(date).format("YYYY-MM-DD");
+		return moment(date).format("YYYY-MM-DD");
 	}
 
 	format_hms(date) {
-		return momentjs(date).format("HH:mm:ss");
+		return moment(date).format("HH:mm:ss");
 	}
 
-	getValidRange() {
-		return { start: this.format_ymd(new Date()) };
-	}
-
+	/**
+	 * @param {"loading" | "longloading" | "done"} type
+	 */
 	set_loading_state(state) {
-		if (state) {
-			frappe.freeze(__("Please wait...", null, "Web calendar"));
-		} else {
-			frappe.unfreeze();
+		if (state === "loading") {
+			this.calendar_element.setAttribute("loading", "loading");
+			// frappe.show_progress(__('Loading...'), 0);
+			// frappe.freeze(__("Please wait...", null, "Web calendar"));
+		} else if (state === "done") {
+			this.calendar_element.removeAttribute("loading");
+			// frappe.show_progress(__('Loading...'), 100, 100, undefined, true);
+			// frappe.unfreeze()
 		}
 	}
 
 	get_initial_date() {
-		return momentjs().add(1, "d").format("YYYY-MM-DD");
+		return moment().format("YYYY-MM-DD");
 	}
 
 	get_initial_display_view() {
-		return "dayGridMonth";
+		return frappe.is_mobile() ? "listDay" : "timeGridWeek";
 	}
 
 	get_plugins() {
@@ -203,11 +204,12 @@ class BaseWebCalendar {
 
 			// Display
 			weekends: true,
-			showNonCurrentDates: false,
+			showNonCurrentDates: true,
 			displayEventTime: false,
 			editable: false,
+			selectable: false,
 
-			locale: this.locale,
+			locale: this.get_locale(),
 			firstDay: this.get_first_day(),
 			timeZone: this.get_time_zone(),
 			initialDate: this.get_initial_date(),
@@ -215,8 +217,8 @@ class BaseWebCalendar {
 			allDayContent: __("All Day"),
 			noEventsContent: __("No events to display"),
 
-			selectAllow: this.getSelectAllow.bind(this),
-			validRange: this.getValidRange.bind(this),
+			selectAllow: this.getSelectAllow?.bind(this),
+			validRange: this.getValidRange?.bind(this),
 
 			// Loading and interaction
 			dateClick: (info) => {
@@ -229,16 +231,13 @@ class BaseWebCalendar {
 				this.onDatesSet(info);
 			},
 			events: async (info, callback) => {
-				const msg_timeout = setTimeout(() => {
-					this.set_loading_state(true);
-				}, 500);
+				this.set_loading_state("loading");
 
 				const apply = (events) => {
 					this.all_events = events;
 					this.onEventsUpdated(events);
 					callback(events);
-					clearTimeout(msg_timeout);
-					this.set_loading_state(false);
+					this.set_loading_state("done");
 				};
 
 				const result = await this.getEvents(info, apply);
