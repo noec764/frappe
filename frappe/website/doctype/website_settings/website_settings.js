@@ -107,7 +107,7 @@ frappe.ui.form.on("Website Settings", {
 			return;
 		}
 		let values = JSON.parse(frm.doc[values_field] || "{}");
-		open_web_template_values_editor(template, values).then((new_values) => {
+		frappe.website.open_web_template_values_editor(template, values).then((new_values) => {
 			frm.set_value(values_field, JSON.stringify(new_values));
 		});
 	},

@@ -59,7 +59,7 @@ frappe.ui.form.on("Web Page Block", {
 	edit_values(frm, cdt, cdn) {
 		let row = frm.selected_doc;
 		let values = JSON.parse(row.web_template_values || "{}");
-		open_web_template_values_editor(row.web_template, values).then((new_values) => {
+		frappe.website.open_web_template_values_editor(row.web_template, values).then((new_values) => {
 			frappe.model.set_value(cdt, cdn, "web_template_values", JSON.stringify(new_values));
 		});
 	},
