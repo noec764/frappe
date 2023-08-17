@@ -44,7 +44,6 @@ frappe.ui.form.Attachments = class Attachments {
 		}
 		return false;
 	}
-
 	refresh() {
 		if (this.frm.doc.__islocal) {
 			this.parent.toggle(false);
