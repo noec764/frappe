@@ -346,16 +346,6 @@ class File(Document):
 		file_extension = mimetypes.guess_extension(file_type)
 		self.file_type = file_extension.lstrip(".").upper() if file_extension else None
 
-	def set_file_type(self):
-		if self.is_folder:
-			return
-
-		file_type = mimetypes.guess_type(self.file_name)[0]
-		if not file_type:
-			return
-
-		file_extension = mimetypes.guess_extension(file_type)
-		self.file_type = file_extension.lstrip(".").upper() if file_extension else None
 
 	def validate_file_on_disk(self):
 		"""Validates existence file"""
