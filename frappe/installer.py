@@ -420,7 +420,7 @@ def _delete_modules(modules: list[str], dry_run: bool) -> list[str]:
 		if not dry_run:
 			frappe.delete_doc("Module Def", module_name, ignore_on_trash=True, force=True)
 
-		return drop_doctypes
+	return drop_doctypes
 
 
 def _delete_linked_documents(
