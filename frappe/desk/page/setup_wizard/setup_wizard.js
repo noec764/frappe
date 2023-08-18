@@ -32,14 +32,9 @@ frappe.setup = {
 };
 
 frappe.pages["setup-wizard"].on_page_load = function (wrapper) {
-	const $wrapper = $(wrapper);
-	$wrapper.css({
-		height: "80vh",
-		display: "flex",
-		flexDirection: "column",
-		justifyContent: "center",
-	});
-
+	if (frappe.boot.setup_complete) {
+		window.location.href = "/app";
+	}
 	let requires = frappe.boot.setup_wizard_requires || [];
 	frappe.require(requires, function () {
 		frappe.call({
