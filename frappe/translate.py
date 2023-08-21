@@ -336,7 +336,7 @@ def get_translations_from_apps(lang, apps=None):
 
 	translations = {}
 	for app in apps or frappe.get_installed_apps(_ensure_on_bench=True):
-		path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".csv")
+		path = frappe.get_app_path(app, "translations", lang + ".csv")
 		translations.update(get_translation_dict_from_file(path, lang, app) or {})
 	if "-" in lang:
 		parent = lang.split("-", 1)[0]
@@ -532,7 +532,6 @@ def get_messages_from_doctype(name, context=True):
 
 	# translations of links
 	messages.extend(d.group for d in meta.get("links") if d.group)
-
 
 	# translations of roles
 	messages.extend(d.role for d in meta.get("permissions") if d.role)
@@ -790,7 +789,7 @@ def get_server_messages(app):
 	inside an app"""
 	messages = []
 	file_extensions = (".py", ".html", ".js", ".vue")
-	app_walk = os.walk(frappe.get_pymodule_path(app))
+	app_walk = os.walk(frappe.get_app_path(app))
 
 	for basepath, folders, files in app_walk:
 		folders[:] = [folder for folder in folders if folder not in {".git", "__pycache__"}]
@@ -1270,8 +1269,8 @@ def migrate_translations(source_app, target_app):
 
 	languages = frappe.translate.get_all_languages()
 
-	source_app_translations_dir = os.path.join(frappe.get_pymodule_path(source_app), "translations")
-	target_app_translations_dir = os.path.join(frappe.get_pymodule_path(target_app), "translations")
+	source_app_translations_dir = frappe.get_app_path(source_app, "translations")
+	target_app_translations_dir = frappe.get_app_path(target_app, "translations")
 
 	if not os.path.exists(target_app_translations_dir):
 		os.makedirs(target_app_translations_dir)
@@ -1316,7 +1315,13 @@ def write_translations_file(app, lang, full_dict=None):
 	:param lang: Language code.
 	:param full_dict: Full translated language dict (optional).
 	"""
-	tpath = frappe.get_pymodule_path(app, "translations")
+	if not app_messages:
+		app_messages = get_messages_for_app(app)
+
+	if not app_messages:
+		return
+
+	tpath = frappe.get_app_path(app, "translations")
 	frappe.create_folder(tpath)
 	write_csv_file(os.path.join(tpath, lang + ".csv"), full_dict or get_all_translations(lang))
 
