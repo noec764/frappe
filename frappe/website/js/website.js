@@ -91,7 +91,7 @@ $.extend(frappe, {
 		}
 		return $.ajax({
 			type: opts.type || "POST",
-			url: "/login",
+			url: "/",
 			data: opts.args,
 			dataType: "json",
 			headers: {
