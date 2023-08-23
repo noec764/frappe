@@ -86,7 +86,7 @@ select.form-control {
 }
 
 .frappe-control {
-	font-size: var(--text-xs);
+	font-size: var(--text-base);
 	.control-label.reqd:after {
 		content: ' *';
 		color: var(--red-400);
@@ -122,7 +122,7 @@ select.form-control {
 
 	.action-btn {
 		position: absolute;
-		top: 4px;
+		top: 0px;
 		right: 4px;
 		padding: 3px;
 		z-index: 3;
@@ -174,9 +174,10 @@ select.form-control {
 .frappe-control:not([data-fieldtype='MultiSelectPills']):not([data-fieldtype='Table MultiSelect']) {
 	&.has-error {
 		input {
-			border-width: 1px;
+			// border-width: 1px;
 			border-color: var(--error-border);
-			border-style: none none solid;
+			// border-style: none none solid;
+			// border: 1px solid var(--error-border);
 
 			&:focus {
 				box-shadow: 0 0 0 $input-btn-focus-width var(--error-bg);
@@ -189,9 +190,10 @@ select.form-control {
 .frappe-control[data-fieldtype='Table MultiSelect'] {
 	&.has-error {
 		.control-input {
-			border-width: 1px;
+			// border-width: 1px;
 			border-color: var(--error-border);
-			border-style: none none solid;
+			// border-style: none none solid;
+			// border: 1px solid var(--error-border);
 			border-radius: var(--border-radius);
 		}
 	}
@@ -275,7 +277,7 @@ select.form-control {
 		padding: 6px 10px;
 		background: var(--control-bg);
 		border-radius: var(--border-radius);
-		font-size: var(--text-md);
+		font-size: var(--text-base);
 	}
 }
 
@@ -544,10 +546,13 @@ button.data-pill {
 	height: var(--btn-height);
 	background-color: var(--fg-color);
 	border-radius: var(--border-radius);
-	padding: calc(var(--padding-xs) - 2px) var(--padding-sm);
 	color: var(--text-color);
+	background-color: var(--gray-100);
 	justify-content: space-between;
 	align-items: center;
+	.pill-label {
+		color: var(--text-color);
+	}
 }
 
 .capture-remove-btn {

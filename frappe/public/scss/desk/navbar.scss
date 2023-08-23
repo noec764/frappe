@@ -10,6 +10,11 @@
 
 	.navbar-nav {
 		// margin: auto 0;
+
+		.dropdown-item {
+			padding: 6px 8px !important;
+		}
+
 		.nav-link {
 			padding: 0;
 		}
