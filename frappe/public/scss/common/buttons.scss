@@ -18,13 +18,15 @@
 }
 
 .btn {
-	background-color: var(--white);
+	background-color: var(--neutral-white);
+	border: none;
+	padding: 4px 8px;
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
 	font-size: var(--text-base);
 
-	font-weight: 500;
-	// --icon-stroke: currentColor;
+	font-weight: var(--weight-medium);
+	--icon-stroke: currentColor;
 
 	&.icon-btn {
 		height: var(--btn-height);
