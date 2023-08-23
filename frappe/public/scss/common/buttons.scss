@@ -18,12 +18,10 @@
 }
 
 .btn {
-	&:not(.btn-outline-secondary) {
-		border: none;
-	}
+	background-color: var(--white);
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
-	font-size: var(--text-md);
+	font-size: var(--text-base);
 
 	font-weight: 500;
 	// --icon-stroke: currentColor;
@@ -39,9 +37,10 @@
 
 	transition: all 0.2s ease;
 	transition-property: color, background-color, border, opacity, box-shadow;
-}
-.btn:hover:not(:active), .btn:focus-visible {
-	--btn-shadow: var(--btn-shadow-hover);
+
+	&:hover:not(:active), &:focus-visible {
+		--btn-shadow: var(--btn-shadow-hover);
+	}
 }
 
 .btn-secondary-dark {
@@ -79,17 +78,16 @@
 	background-color: var(--control-bg);
 	color: var(--text-color);
 	&:hover:not([disabled]), &:active {
-		background-color: var(--gray-400);
+		background-color: var(--gray-300);
 		color: var(--text-color);
 	}
 }
 
 .btn.btn-default {
-	background-color: var(--fg-color);
+	background-color: var(--control-bg);
 	color: var(--text-color);
 	&:hover:not(:active), &:focus-visible {
-		background: var(--fg-hover-color);
-		color: var(--text-color);
+		background: var(--gray-300);
 	}
 }
 
@@ -103,10 +101,10 @@
 }
 
 .btn.btn-danger {
-	background-color: var(--red-400);
+	background-color: var(--danger);
 	color: var(--white);
 	--icon-stroke: currentColor;
-	@include button-with-outline(var(--red-400));
+	@include button-with-outline(var(--danger));
 }
 
 .btn-reset {
