@@ -337,10 +337,10 @@ const make_comment_editor = (element) => {
 				fieldname: "comment_editor",
 				fieldtype: "Text Editor",
 				enable_mentions: true,
-				theme: "bubble",
+				theme: "snow",
 				placeholder: __("Type your reply here..."),
 				default: element.siblings(".comment-content").html(),
-				get_toolbar_options() {
+				/* get_toolbar_options() {
 					return [
 						["bold", "italic", "underline", "strike"],
 						["blockquote", "code-block"],
@@ -350,7 +350,7 @@ const make_comment_editor = (element) => {
 						[{ align: [] }],
 						["clean"],
 					];
-				},
+				}, */
 			},
 		],
 		body: element,
