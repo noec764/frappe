@@ -18,8 +18,7 @@
 			</div>
 
 			<div>
-				<span class="file-size">
-					{{ file_size }}
+				<span class="file-size" v-html="file_size">
 				</span>
 			</div>
 
