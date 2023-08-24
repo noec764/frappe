@@ -8,7 +8,7 @@ from typing import Literal
 import frappe
 from frappe import _, scrub
 from frappe.core.api.file import get_max_file_size
-from frappe.core.doctype.file import remove_file_by_url
+from frappe.core.doctype.file.utils import remove_file_by_url
 from frappe.custom.doctype.customize_form.customize_form import docfield_properties
 from frappe.desk.form.meta import get_code_files_via_hooks
 from frappe.model.document import Document
