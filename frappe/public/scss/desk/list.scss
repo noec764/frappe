@@ -184,6 +184,11 @@
 	a {
 		color: var(--text-light);
 	}
+
+	& > [data-sort-by]:hover {
+		cursor: pointer;
+		text-decoration: underline;
+	}
 }
 
 $level-margin-right: 8px;
