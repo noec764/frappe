@@ -1,7 +1,7 @@
 import ast
 
 import frappe
-from frappe.utils.safe_exec import safe_exec
+from frappe.utils.safe_exec import is_safe_exec_enabled, safe_exec
 
 
 def safe_block_eval(code: str, _globals=None, _locals=None, output_var=None, **kwargs):
@@ -25,12 +25,7 @@ def safe_block_eval(code: str, _globals=None, _locals=None, output_var=None, **k
 	if not isinstance(code, str):
 		raise TypeError(f"Code must be a string, got: {code!r}")
 
-	if "server_script_enabled" in frappe.conf:
-		enabled = frappe.conf.server_script_enabled
-	else:
-		enabled = True
-
-	if not enabled:
+	if not is_safe_exec_enabled():
 		# If server scripts are disabled, just evaluate the expression normally.
 		# Changing the value of "server_script_enabled" might break existing
 		# multi-line conditions/virtual fields, but that's okay because it
