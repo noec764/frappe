@@ -35,12 +35,14 @@
 .ql-toolbar.ql-snow {
 	border-top-left-radius: var(--border-radius);
 	border-top-right-radius: var(--border-radius);
-	background-color: var(--fg-color);
-	box-shadow: var(--shadow-inset);
-	padding-bottom: 0;
+	background-color: var(--gray-50);
+	border-bottom: 1px solid var(--gray-200);
+	padding: 0;
+	padding-top: 4px;
 }
 
 .ql-container.ql-snow {
+	background-color: var(--gray-100);
 	border-bottom-left-radius: var(--border-radius);
 	border-bottom-right-radius: var(--border-radius);
 }
