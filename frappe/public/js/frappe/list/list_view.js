@@ -1012,9 +1012,9 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				has_comments ? "" : "zero",
 			].join(" ");
 			comment_count = `<span class="${classes} comment-count" ${comments_tooltip}>
-					${frappe.utils.icon("small-message")}
-					${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
-				</span>`;
+				${frappe.utils.icon("es-line-chat-alt")}
+				${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
+			</span>`;
 		}
 
 		html += `
@@ -1155,8 +1155,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		];
 		const title = docstatus_description[doc.docstatus || 0];
 		if (indicator) {
-			return `<span class="indicator-pill ${indicator[1]} filterable ellipsis"
-				data-filter='${indicator[2] || ""}' title='${title}'>
+			return `<span
+				class="indicator-pill ${indicator[1]} filterable no-indicator-dot ellipsis"
+				data-filter='${indicator[2] || ""}' title='${title}'
+			>
 				<span class="ellipsis"> ${__(indicator[0])}</span>
 			</span>`;
 		}
