@@ -22,7 +22,16 @@ from frappe.utils.file_manager import is_safe_path
 from frappe.utils.image import optimize_image, strip_exif_data
 
 from .exceptions import AttachmentLimitReached, FolderNotEmpty, MaxFileSizeReachedError
-from .utils import *
+from .utils import (
+	decode_file_content,
+	delete_file,
+	generate_file_name,
+	get_content_hash,
+	get_local_image,
+	get_web_image,
+	setup_folder_path,
+	update_existing_file_docs,
+)
 
 exclude_from_linked_with = True
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -345,7 +354,6 @@ class File(Document):
 
 		file_extension = mimetypes.guess_extension(file_type)
 		self.file_type = file_extension.lstrip(".").upper() if file_extension else None
-
 
 	def validate_file_on_disk(self):
 		"""Validates existence file"""

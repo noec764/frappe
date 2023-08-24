@@ -51,6 +51,7 @@ TRANSLATE_PATTERN = re.compile(
 )
 
 REPORT_TRANSLATE_PATTERN = re.compile('"([^:,^"]*):')
+CSV_STRIP_WHITESPACE_PATTERN = re.compile(r"{\s?([0-9]+)\s?}")
 
 # Cache keys
 MERGED_TRANSLATION_KEY = "merged_translations"
@@ -336,7 +337,7 @@ def get_translations_from_apps(lang, apps=None):
 
 	translations = {}
 	for app in apps or frappe.get_installed_apps(_ensure_on_bench=True):
-		path = os.path.join(frappe.get_pymodule_path(app), "translations", lang + ".csv")
+		path = frappe.get_app_path(app, "translations", lang + ".csv")
 		translations.update(get_translation_dict_from_file(path, lang, app) or {})
 	if "-" in lang:
 		parent = lang.split("-", 1)[0]
@@ -532,7 +533,6 @@ def get_messages_from_doctype(name, context=True):
 
 	# translations of links
 	messages.extend(d.group for d in meta.get("links") if d.group)
-
 
 	# translations of roles
 	messages.extend(d.role for d in meta.get("permissions") if d.role)
@@ -790,7 +790,7 @@ def get_server_messages(app):
 	inside an app"""
 	messages = []
 	file_extensions = (".py", ".html", ".js", ".vue")
-	app_walk = os.walk(frappe.get_pymodule_path(app))
+	app_walk = os.walk(frappe.get_app_path(app))
 
 	for basepath, folders, files in app_walk:
 		folders[:] = [folder for folder in folders if folder not in {".git", "__pycache__"}]
@@ -1157,7 +1157,7 @@ def read_csv_file(path):
 	return newdata
 
 
-def write_csv_file(path, lang_dict):
+def write_csv_file(path, app_messages, lang_dict):
 	"""Write translation CSV file.
 
 	:param path: File path, usually `[app]/translations`.
@@ -1175,6 +1175,32 @@ def write_csv_file(path, lang_dict):
 
 	with open(path, "w") as msgfile:
 		msgfile.write(to_csv(output, quoting="QUOTE_MINIMAL", lineterminator="\n"))
+
+	"""
+	app_messages.sort(key=lambda x: x[1:2])
+
+	with open(path, "w", newline="") as msgfile:
+		w = writer(msgfile, lineterminator="\n")
+
+		for app_message in app_messages:
+			context = None
+			if len(app_message) == 2:
+				path, message = app_message
+			elif len(app_message) == 3:
+				path, message, lineno = app_message
+			elif len(app_message) == 4:
+				path, message, context, lineno = app_message
+			else:
+				continue
+
+			key = ":::".join(filter(None, [message, context or None]))
+			t = lang_dict.get(key, "")
+			translated_string = t
+			if translated_string:
+				w.writerow([message, translated_string, context])
+			else:
+				print(f"warn: Untranslated key {key!r}")
+	"""
 
 
 def get_untranslated(lang, untranslated_file=None, get_all=False, app=None, write=True):
@@ -1270,8 +1296,8 @@ def migrate_translations(source_app, target_app):
 
 	languages = frappe.translate.get_all_languages()
 
-	source_app_translations_dir = os.path.join(frappe.get_pymodule_path(source_app), "translations")
-	target_app_translations_dir = os.path.join(frappe.get_pymodule_path(target_app), "translations")
+	source_app_translations_dir = frappe.get_app_path(source_app, "translations")
+	target_app_translations_dir = frappe.get_app_path(target_app, "translations")
 
 	if not os.path.exists(target_app_translations_dir):
 		os.makedirs(target_app_translations_dir)
@@ -1309,16 +1335,25 @@ def rebuild_all_translation_files():
 			write_translations_file(app, lang)
 
 
-def write_translations_file(app, lang, full_dict=None):
+def write_translations_file(app, lang, full_dict=None, app_messages=None):
 	"""Write a translation file for a given language.
 
 	:param app: `app` for which translations are to be written.
 	:param lang: Language code.
 	:param full_dict: Full translated language dict (optional).
+	:param app_messages: Source strings (optional).
 	"""
-	tpath = frappe.get_pymodule_path(app, "translations")
+	if not app_messages:
+		app_messages = get_messages_for_app(app)
+
+	if not app_messages:
+		return
+
+	tpath = frappe.get_app_path(app, "translations")
 	frappe.create_folder(tpath)
-	write_csv_file(os.path.join(tpath, lang + ".csv"), full_dict or get_all_translations(lang))
+	write_csv_file(
+		os.path.join(tpath, lang + ".csv"), app_messages, full_dict or get_all_translations(lang)
+	)
 
 
 @frappe.whitelist(allow_guest=True)
