@@ -1715,6 +1715,7 @@ def bulk_insert(
 	"""
 
 	doctype_meta = frappe.get_meta(doctype)
+	documents = list(documents)
 
 	valid_column_map = {
 		doctype: doctype_meta.get_valid_columns(),
