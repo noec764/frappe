@@ -11,7 +11,8 @@ from frappe.utils.dashboard import sync_dashboards
 
 
 def install():
-	update_genders_and_salutations()
+	update_genders()
+	update_salutations()
 	update_global_search_doctypes()
 	setup_email_linking()
 	sync_dashboards()
