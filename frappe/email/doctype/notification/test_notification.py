@@ -148,6 +148,7 @@ class TestNotification(FrappeTestCase):
 		notification.delete()
 
 	def test_multiline_condition(self):
+		self.enable_safe_exec()
 		frappe.set_user("Administrator")
 		notification = frappe.new_doc("Notification")
 		notification.subject = "test"
