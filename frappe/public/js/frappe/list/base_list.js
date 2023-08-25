@@ -243,7 +243,7 @@ frappe.views.BaseList = class BaseList {
 				"es-line-reload",
 				this.refresh.bind(this),
 				null,
-				__("Reload")
+				__("Reload List")
 			);
 		}
 	}

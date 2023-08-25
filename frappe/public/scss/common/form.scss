@@ -31,7 +31,7 @@
 		font-size: var(--text-sm);
 	}
 	min-height: var(--input-height);
-	margin-bottom: 7px;
+	// margin-bottom: 7px;
 	// color: var(--disabled-text-color);
 	font-weight: var(--weight-regular);
 	border-radius: var(--border-radius-sm);
@@ -41,7 +41,7 @@
 }
 
 .head-title {
-	font-size: var(--text-lg);
+	font-size: var(--text-xl);
 	font-weight: 700;
 	color: var(--heading-color);
 }

@@ -211,9 +211,7 @@ frappe.ui.Page = class Page {
 		let is_sidebar_visible = $(sidebar_wrapper).is(":visible");
 		sidebar_toggle_icon.html(
 			frappe.utils.icon(
-				is_sidebar_visible
-					? "es-line-sidebar-collapse"
-					: "es-line-sidebar-expand",
+				is_sidebar_visible ? "es-line-sidebar-collapse" : "es-line-sidebar-expand",
 				"md"
 			)
 		);
@@ -229,14 +227,18 @@ frappe.ui.Page = class Page {
 				${frappe.utils.icon(icon)}
 			</button>
 		`);
+		// ideally, we should pass tooltip_label this is just safe gaurd.
+		if (!tooltip_label) {
+			icon = icon.replace(/^es-(line|solid|small)-*/g, "");
+			tooltip_label = frappe.unscrub(icon);
+		}
 
 		button.appendTo(this.icon_group.removeClass("hide"));
 		button.on("click", click);
-		button.attr("aria-label", __(tooltip_label || frappe.unscrub(icon))).tooltip({
-			title: __(tooltip_label || frappe.unscrub(icon)),
-			delay: { show: 600, hide: 100 },
-			trigger: "hover",
-		});
+		button
+			.attr("aria-label", __(tooltip_label))
+			.attr("title", __(tooltip_label))
+			.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
 
 		return button;
 	}
