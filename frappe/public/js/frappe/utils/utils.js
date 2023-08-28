@@ -1249,7 +1249,10 @@ Object.assign(frappe.utils, {
 		}
 
 		if (String(icon_name).startsWith("es-")) {
-			return `<svg class="es-icon ${svg_class} ${size_class}" style="${icon_style}">
+			const prefix = icon_name.startsWith("es-solid")
+				? "es-icon es-solid"
+				: "es-icon es-line";
+			return `<svg class="${prefix} ${svg_class} ${size_class}" style="${icon_style}">
 				<use class="${icon_class}" href="#${icon_name}"></use>
 			</svg>`;
 		}
