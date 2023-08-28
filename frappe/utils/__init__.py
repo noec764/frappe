@@ -1149,6 +1149,9 @@ class CallbackManager:
 		"""Add a function to queue, functions are executed in order of addition."""
 		self._functions.append(func)
 
+	def __call__(self, func: Callable) -> None:
+		self.add(func)
+
 	def run(self):
 		"""Run all functions in queue"""
 		while self._functions:
