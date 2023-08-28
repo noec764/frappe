@@ -178,9 +178,11 @@ def upload_file():
 
 	files = frappe.request.files
 	is_private = frappe.form_dict.is_private
-	doctype = frappe.form_dict.doctype
-	docname = frappe.form_dict.docname
-	fieldname = frappe.form_dict.fieldname
+	_doctype = frappe.form_dict.doctype
+	_doc_is_new = frappe.form_dict.docname.startswith(f"new-{_doctype.lower().replace(' ', '-')}-")
+	doctype = not _doc_is_new and _doctype
+	docname = not _doc_is_new and frappe.form_dict.docname
+	fieldname = not _doc_is_new and frappe.form_dict.fieldname
 	file_url = frappe.form_dict.file_url
 	folder = (
 		home_folder

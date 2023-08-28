@@ -13,7 +13,7 @@ from PIL import Image
 
 import frappe
 from frappe import _, safe_decode
-from frappe.utils import cstr, encode, get_files_path, random_string, strip
+from frappe.utils import cstr, encode, get_files_path, random_string, strip, cint
 from frappe.utils.file_manager import safe_b64decode
 from frappe.utils.image import optimize_image
 
@@ -300,7 +300,6 @@ def attach_files_to_document(doc: "Document", event) -> None:
 	the file to the document if not already attached. If no file is found, a new file
 	is created.
 	"""
-
 	attach_fields = doc.meta.get("fields", {"fieldtype": ["in", ["Attach", "Attach Image"]]})
 
 	for df in attach_fields:
@@ -325,9 +324,9 @@ def attach_files_to_document(doc: "Document", event) -> None:
 			"File",
 			{
 				"file_url": value,
-				"attached_to_name": None,
-				"attached_to_doctype": None,
-				"attached_to_field": None,
+				"attached_to_name": "",
+				"attached_to_doctype": "",
+				"attached_to_field": "",
 			},
 		)
 
@@ -350,6 +349,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
 			attached_to_doctype=doc.doctype,
 			attached_to_field=df.fieldname,
 			folder=frappe.db.get_value("File", {"is_attachments_folder": 1}),
+			is_private=cint(value.startswith("/private"))
 		)
 		try:
 			file.insert(ignore_permissions=True)
