@@ -1,6 +1,5 @@
 {
  "actions": [],
- "allow_rename": 1,
  "autoname": "field:calendar_name",
  "creation": "2019-07-06 17:54:09.450100",
  "doctype": "DocType",
@@ -117,10 +116,11 @@
   }
  ],
  "links": [],
- "modified": "2020-07-01 11:22:28.303903",
+ "modified": "2023-08-28 22:21:44.238862",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Google Calendar",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -144,12 +144,13 @@
    "print": 1,
    "read": 1,
    "report": 1,
-   "role": "All",
+   "role": "Desk User",
    "share": 1,
    "write": 1
   }
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
+ "states": [],
  "track_changes": 1
 }
