@@ -377,7 +377,8 @@ body[data-route^="Module"] .main-menu {
 	max-width: 100%;
 
 	.data-pill {
-		background-color: var(--control-bg-on-gray);
+		justify-content: space-between;
+		background-color: var(--gray-100);
 		box-shadow: none;
 	}
 }
@@ -403,7 +404,14 @@ body[data-route^="Module"] .main-menu {
 	text-align: center;
 }
 
-.add-assignment-btn, .add-attachment-btn,
+.form-assignments, .form-shared {
+	.assignments, .shares {
+		margin-bottom: var(--margin-xs);
+	}
+}
+
+.add-assignment-btn,
+.add-attachment-btn,
 .shares,
 .followed-by {
 	max-width: 100%;
