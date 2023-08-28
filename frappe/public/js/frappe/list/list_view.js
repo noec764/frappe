@@ -359,7 +359,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_selection_buttons() {
 		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete", "Duplicate"];
+		const selection_actions = ["Delete", "Duplicate"];
 		const labels_to_find = selection_actions.map((txt) => __(txt));
 		const style_map = {
 			Cancel: ["close-alt", "btn-text-danger"],
@@ -710,7 +710,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			<input class="level-item list-check-all" type="checkbox"
 				title="${__("Select All")}">
 			<span class="level-item list-liked-by-me hidden-xs">
-				<span title="${__("Likes")}">${frappe.utils.icon("heart", "sm", "like-icon")}</span>
+				<span title="${__("Likes")}">${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}</span>
 			</span>
 			<span class="level-item" data-sort-by="${subject_field.fieldname}"
 				title="${__("Click to sort by {0}", [subject_field.label])}">
@@ -1089,7 +1089,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const div = document.createElement("div");
 		div.innerHTML = `
 			<span class="like-action ${heart_class}">
-				${frappe.utils.icon("heart", "sm", "like-icon")}
+				${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}
 			</span>
 			<span class="likes-count">
 				${liked_by.length > 99 ? __("99") + "+" : __(liked_by.length || "")}
