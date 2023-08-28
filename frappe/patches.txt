@@ -1,6 +1,8 @@
 [pre_model_sync]
 frappe.patches.v15_0.remove_implicit_primary_key
-frappe.patches.v12_0.remove_deprecated_fields_from_doctype #3
+frappe.patches.dokos.v3_0.force_reload_doctype_model
+execute:frappe.reload_doc('core', 'doctype', 'doctype_state', force=True) #2021-12-15
+frappe.patches.v12_0.remove_deprecated_fields_from_doctype #2022-04-29
 execute:frappe.utils.global_search.setup_global_search_table()
 execute:frappe.reload_doc('core', 'doctype', 'doctype_action', force=True)
 execute:frappe.reload_doc('core', 'doctype', 'doctype_link', force=True) #2020-10-17
