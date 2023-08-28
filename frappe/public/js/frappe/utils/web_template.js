@@ -1,4 +1,4 @@
-frappe.provide("frappe.website")
+frappe.provide("frappe.website");
 
 frappe.website.open_web_template_values_editor = (template, current_values = {}) => {
 	return new Promise((resolve) => {
@@ -69,4 +69,4 @@ frappe.website.open_web_template_values_editor = (template, current_values = {})
 			}),
 		];
 	}
-}
+};

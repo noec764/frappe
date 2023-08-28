@@ -1,9 +1,6 @@
 from frappe.website.page_renderers.document_page import DocumentPage
 from frappe.website.router import get_page_info_from_web_form
-
-from frappe.website.utils import (
-	get_sidebar_items,
-)
+from frappe.website.utils import get_sidebar_items
 
 
 class WebFormPage(DocumentPage):

@@ -1,6 +1,6 @@
 import frappe
 
-from ..role import desk_properties, STANDARD_ROLES
+from ..role import STANDARD_ROLES, desk_properties
 
 
 def execute():

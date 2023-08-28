@@ -42,7 +42,8 @@ frappe.ui.form.on("Integration Request", {
 					pre.innerText = error.message;
 					frm.set_intro(pre.outerHTML, "red");
 				}
-			} catch (ignored) {
+			} catch (e) {
+				console.error(e);
 			}
 		}
 	},
