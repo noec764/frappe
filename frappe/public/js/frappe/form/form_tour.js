@@ -39,11 +39,11 @@ frappe.ui.form.FormTour = class FormTour {
 		} else {
 			const doctype_tour_exists = await frappe.db.get_value(
 				"Form Tour",
-				{ name: this.frm.doctype, language: frappe.boot.lang },
+				{ reference_doctype: this.frm.doctype, language: frappe.boot.lang },
 				"name"
 			);
 			if (Object.keys(doctype_tour_exists.message).length) {
-				this.tour = await frappe.db.get_doc("Form Tour", this.frm.doctype);
+				this.tour = await frappe.db.get_doc("Form Tour", doctype_tour_exists.message.name);
 			} else if (Object.keys(frappe.tour[this.frm.doctype]).length) {
 				this.tour = {
 					steps:

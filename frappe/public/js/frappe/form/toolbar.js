@@ -484,7 +484,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 	async tour_exists_for_doctype() {
 		const tour_exists = await frappe.db.get_value(
 			"Form Tour",
-			{ name: this.frm.doctype, language: frappe.boot.lang },
+			{ reference_doctype: this.frm.doctype, language: frappe.boot.lang },
 			"name"
 		);
 
