@@ -125,6 +125,13 @@ class FrappeTestCase(unittest.TestCase):
 			)
 		)
 
+	@contextmanager
+	def set_user(user: str):
+		old_user = frappe.session.user
+		frappe.set_user(user)
+		yield
+		frappe.set_user(old_user)
+
 
 class MockedRequestTestCase(FrappeTestCase):
 	def setUp(self):
