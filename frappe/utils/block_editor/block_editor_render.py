@@ -1,5 +1,6 @@
 import os
-from typing import Callable, Iterable, Literal
+from collections.abc import Callable, Iterable
+from typing import Literal
 
 from bs4 import BeautifulSoup, Tag
 

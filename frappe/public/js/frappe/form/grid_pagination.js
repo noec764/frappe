@@ -13,7 +13,7 @@ export default class GridPagination {
 	}
 
 	render_pagination() {
-		const pagination = this.wrapper.find(".grid-pagination")
+		const pagination = this.wrapper.find(".grid-pagination");
 		pagination.empty();
 		if (this.grid.data.length > this.page_length) {
 			pagination.append(this.get_pagination_elements());
