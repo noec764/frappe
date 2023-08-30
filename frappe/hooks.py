@@ -134,6 +134,7 @@ has_permission = {
 	"Workflow Action": "frappe.workflow.doctype.workflow_action.workflow_action.has_permission",
 	"File": "frappe.core.doctype.file.file.has_permission",
 	"Prepared Report": "frappe.core.doctype.prepared_report.prepared_report.has_permission",
+	"Notification Settings": "frappe.desk.doctype.notification_settings.notification_settings.has_permission",
 }
 
 standard_portal_menu_items = [

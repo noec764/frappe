@@ -191,7 +191,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-08-10 16:10:38.648248",
+ "modified": "2023-08-28 20:24:42.594360",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Form Tour",
@@ -212,8 +212,7 @@
   },
   {
    "read": 1,
-   "role": "All",
-   "select": 1
+   "role": "Desk User"
   }
  ],
  "route": "form-tour",
