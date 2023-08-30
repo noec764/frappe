@@ -11,6 +11,7 @@
   "default_print_language",
   "column_break_3",
   "standard",
+  "cover_page",
   "custom_format",
   "disabled",
   "section_break_6",
@@ -210,6 +211,12 @@
    "fieldname": "absolute_value",
    "fieldtype": "Check",
    "label": "Show Absolute Values"
+  },
+  {
+   "fieldname": "cover_page",
+   "fieldtype": "Link",
+   "label": "Cover Page",
+   "options": "Cover Page"
   },
   {
    "default": "0",
