@@ -1747,7 +1747,7 @@ La règle 'Règle par défaut' suit un compteur de modifications permettant d'aj
 
 Avec la règle 'Nommage par défaut' les documents modifiés suivent la même règle de nommage que le nouveaux documents.",
 "Configure notifications for mentions, assignments, energy points and more.","Configurer les notifications pour les mentions, attributions, points d'énergie et plus.",
-"Configure various aspects of how document naming works like naming series, current counter.","Configurez différents aspects de la manière dont est nommé un document, comme les noms de série ou le décompte actuel.",
+"Configure various aspects of how document naming works like naming series, current counter.","Configurez différents aspects de la manière dont est nommé un document, comme les masques de numérotation ou le décompte actuel.",
 Configure your google calendar integration,Configurez votre intégration avec Google Agenda,
 Confirm Access,Confirmer l'accès,
 Confirm Deletion of Account,Confirmer la suppression du compte,
@@ -1922,7 +1922,7 @@ Custom Document Types Limit Exceeded,Limite de types de documents personnalisés
 Custom Document Types,Types de documents personnalisés,
 Custom Documents,Documents personnalisés,
 Custom Field {0} is created by the Administrator and can only be deleted through the Administrator account.,Le champ personnalisé {0} a été créé par l'administrateur et ne peut être supprimé que via le compte Administrateur,
-"Custom Field, Custom Doctype, Naming Series, Role Permission, Workflow, Print Formats, Reports","Champ personnalisé, Doctype personnalisé, Série de nommage, Permission de rôle, Workflow, Formats d'impression, Rapports",
+"Custom Field, Custom Doctype, Naming Series, Role Permission, Workflow, Print Formats, Reports","Champ personnalisé, Doctype personnalisé, Masque de numérotation, Permission de rôle, Workflow, Formats d'impression, Rapports",
 Custom Field,Champ personnalisé,
 Custom Fields can only be added to a standard DocType.,Les champs personnalisés ne peuvent être ajoutés qu'aux types de document standards,
 Custom Fields cannot be added to core DocTypes.,Les champs personnalisés ne peuvent pas être ajoutés aux types de document centraux,
@@ -3405,7 +3405,7 @@ If this is checked the documents will have the same name as they have on the Eve
 If user is the owner,Si l'utilisateur est le créateur,
 "If you are updating, please select ""Overwrite"" else existing rows will not be deleted.","Si vous mettez à jour, veuillez sélectionner ""Écraser"" sinon les lignes déjà existantes ne seront pas supprimées.",
 If you are updating/overwriting already created records.,Si vous mettez à jour / écrasez des enregistrements déjà créés.,
-"If you are uploading new records, ""Naming Series"" becomes mandatory, if present.","Si vous téléchargez de nouveaux rapports, ""Nommer Séries"" devient obligatoire, si présent.",
+"If you are uploading new records, ""Naming Series"" becomes mandatory, if present.","Si vous téléchargez de nouveaux rapports, ""Masque de numérotation"" devient obligatoire, si présent.",
 "If you are uploading new records, leave the ""name"" (ID) column blank.","Si vous chargez de nouveaux enregistrements, laissez la colonne ""nom"" (ID) vide.",
 If you aren't using own publish Google Apps Script webapp you can use the default https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec ,"Si vous n'utiliser pas vos propres webapp Google Apps Script, vous pouvez utiliser l'application par défaut suivante :  https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec",
 If you don't want to create any new records while updating the older records.,Si vous ne souhaitez pas créer de nouveaux enregistrements lors de la mise à jour des anciens enregistrements.,
@@ -4303,16 +4303,8 @@ Names and surnames by themselves are easy to guess.,Les noms et prénoms par eux
 "Naming Options:
 <ol><li><b>field:[fieldname]</b> - By Field</li><li><b>autoincrement</b> - Uses Databases' Auto Increment feature</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage :
-<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>auto-incrémentation</b> - Utilise la fonction d'incrémentation automatique des bases de données</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
-<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplacer tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
-"Naming Options:
-<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
-<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage:
-<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>naming_series:</b> - Par série de noms (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
-<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplacer tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
-"Naming Options:
-<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
-<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage: <ol><li> <b>field: [fieldname]</b> - Par champ </li><li> <b>naming_series:</b> - En nommant les séries (le champ appelé naming_series doit être présent </li><li> <b>Prompt</b> - Demander un nom à l'utilisateur </li><li> <b>[série]</b> - Série par préfixe (séparé par un point); par exemple PRE. ##### </li><li> <b>format: EXEMPLE- {MM} morewords {fieldname1} - {fieldname2} - {#####}</b> - Remplace tous les mots accolés (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. Des accolades extérieures, des caractères peuvent être utilisés. </li></ol>",
+<ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>auto-incrément</b> - Utilise la fonction d'incrémentation automatique des bases de données</li><li><b>naming_series:</b> - Par masque de numérotation (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
+<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplace tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
 Naming Rule,Règle de nommage,
 Naming Series mandatory,Masque de numérotation obligatoire,
 Naming Series,Masque de numérotation,
@@ -7022,8 +7014,8 @@ Trigger Primary Action,Lancer l'action principale,
 Trigger this repetition,Lancer cette répétition automatique,
 Trigger,Événement déclencheur,
 Try Again,Réessayer,
-Try a Naming Series,Essayer une série,
-Try a naming Series,Essayez une série,
+Try a Naming Series,Essayer un masque,
+Try a naming Series,Essayez un masque,
 Try new form builder,Éditeur visuel,
 Try the new Data Import,Essayer le nouvel outil d'import de données,
 Try the new Print Format Builder,Essayez le nouveau générateur de formats d'impression,
@@ -8376,3 +8368,4 @@ zoom-out,Réduire,
 {} notes,{} notes,
 {} open,{} ouverts,
 ← Back to upload files,← Retour au chargement de fichier,
+Series List for this Transaction,Liste des masques pour cette transaction,
