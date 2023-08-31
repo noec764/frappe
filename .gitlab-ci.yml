@@ -9,8 +9,8 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
 
-    # Don't run for forks, unless approved
-    - if: $CI_MERGE_REQUEST_SOURCE_PROJECT_ID && $CI_MERGE_REQUEST_SOURCE_PROJECT_ID != $CI_PROJECT_ID && $CI_MERGE_REQUEST_APPROVED
+    # Don't run for forks, unless either triggered by a maintainer, or the MR is approved
+    - if: ($CI_MERGE_REQUEST_SOURCE_PROJECT_ID && $CI_MERGE_REQUEST_SOURCE_PROJECT_ID != $CI_PROJECT_ID) && ($GITLAB_USER_EMAIL !~ /@dokos\.io$/ && $CI_MERGE_REQUEST_APPROVED != "true")
       when: never
 
     # Don't run when MR is tagged "Skip CI"
