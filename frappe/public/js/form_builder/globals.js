@@ -13,6 +13,7 @@ import TableControl from "./components/controls/TableControl.vue";
 import TextControl from "./components/controls/TextControl.vue";
 import TextEditorControl from "./components/controls/TextEditorControl.vue";
 import FetchFromControl from "./components/controls/FetchFromControl.vue";
+import NumberControl from "./components/controls/NumberControl.vue";
 
 export function registerGlobalComponents(app) {
 	app.component("AttachControl", AttachControl)
@@ -23,26 +24,26 @@ export function registerGlobalComponents(app) {
 		.component("CheckControl", CheckControl)
 		.component("CodeControl", CodeControl)
 		.component("ColorControl", DataControl)
-		.component("CurrencyControl", DataControl)
+		.component("CurrencyControl", NumberControl)
 		.component("DataControl", DataControl)
 		.component("DateControl", DataControl)
 		.component("DatetimeControl", DataControl)
 		.component("DurationControl", DataControl)
 		.component("DynamicLinkControl", DataControl)
-		.component("FloatControl", DataControl)
+		.component("FloatControl", NumberControl)
 		.component("GeolocationControl", GeolocationControl)
 		.component("HeadingControl", ButtonControl)
 		.component("HTMLControl", DataControl)
 		.component("HTMLEditorControl", CodeControl)
 		.component("IconControl", DataControl)
 		.component("ImageControl", ImageControl)
-		.component("IntControl", DataControl)
+		.component("IntControl", NumberControl)
 		.component("JSONControl", CodeControl)
 		.component("LinkControl", LinkControl)
 		.component("LongTextControl", TextControl)
 		.component("MarkdownEditorControl", CodeControl)
 		.component("PasswordControl", DataControl)
-		.component("PercentControl", DataControl)
+		.component("PercentControl", NumberControl)
 		.component("PhoneControl", DataControl)
 		.component("ReadOnlyControl", DataControl)
 		.component("RatingControl", RatingControl)
