@@ -3,8 +3,8 @@ from enum import Enum
 from importlib import import_module
 from typing import Any, get_type_hints
 
-from pypika.queries import Column, QueryBuilder  # noqa
-from pypika.terms import PseudoColumn  # noqa
+from pypika.queries import Column, QueryBuilder
+from pypika.terms import PseudoColumn
 
 import frappe
 from frappe.query_builder.terms import NamedParameterWrapper

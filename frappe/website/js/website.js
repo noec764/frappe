@@ -415,18 +415,6 @@ $.extend(frappe, {
 				});
 		}
 	},
-	get_user_lang: function () {
-		console.warn("frappe.get_user_lang() is deprecated");
-		return frappe
-			.call({
-				method: "frappe.get_user_lang",
-			})
-			.then((r) => {
-				if (r && r.message) {
-					frappe.boot.lang = r.message || "en";
-				}
-			});
-	},
 	setup_videos: () => {
 		// converts video images into youtube embeds (via Page Builder)
 		$(".section-video-wrapper").on("click", (e) => {

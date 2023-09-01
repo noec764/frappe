@@ -14,13 +14,11 @@ from frappe.utils.redis_queue import RedisQueue
 	help="Set new Redis admin(default user) password",
 )
 @click.option(
-	"--use-rq-auth",
-	is_flag=True,
-	default=False,
-	help="Enable Redis authentication for sites",
+	"--use-rq-auth", is_flag=True, default=False, help="Enable Redis authentication for sites"
 )
 def create_rq_users(set_admin_password=False, use_rq_auth=False):
 	"""Create Redis Queue users and add to acl and app configs.
+
 	acl config file will be used by redis server while starting the server
 	and app config is used by app while connecting to redis server.
 	"""

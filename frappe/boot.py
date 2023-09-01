@@ -68,7 +68,7 @@ def get_bootinfo():
 	load_print(bootinfo, doclist)
 	doclist.extend(get_meta_bundle("Page"))
 	bootinfo.home_folder = frappe.db.get_value("File", {"is_home_folder": 1})
-	bootinfo.attachments_folder = frappe.db.get_value("File", {"is_attachments_folder": 1})
+	bootinfo.attachments_folder = frappe.db.get_value("File", {"is_attachments_folder": 1})  # @dokos
 	bootinfo.navbar_settings = get_navbar_settings()
 	bootinfo.notification_settings = get_notification_settings()
 	bootinfo.onboarding_tours = get_onboarding_ui_tours()
@@ -92,10 +92,10 @@ def get_bootinfo():
 
 	bootinfo.error_report_email = frappe.conf.error_report_email
 	bootinfo.calendars = sorted(frappe.get_hooks("calendars"))
-	bootinfo.default_doctype_views = get_default_doctype_views()
+	bootinfo.default_doctype_views = get_default_doctype_views()  # @dokos
 	bootinfo.fullcalendar_scheduler_licence_key = ""
 	for license_key in frappe.get_hooks("fullcalendar_scheduler_licence_key"):
-		if license_key:
+		if license_key:  # @dokos
 			bootinfo.fullcalendar_scheduler_licence_key = license_key
 	bootinfo.treeviews = frappe.get_hooks("treeviews") or []
 	bootinfo.lang_dict = get_lang_dict()
@@ -111,6 +111,7 @@ def get_bootinfo():
 	bootinfo.app_logo_url = get_app_logo()
 	bootinfo.link_title_doctypes = get_link_title_doctypes()
 	bootinfo.translated_doctypes = get_translated_doctypes()
+	# bootinfo.subscription_conf = add_subscription_conf()
 
 	return bootinfo
 
@@ -192,11 +193,7 @@ def get_user_pages_or_reports(parent, cache=False):
 	).run(as_dict=True)
 
 	for p in pages_with_custom_roles:
-		has_role[p.name] = {
-			"modified": p.modified,
-			"title": p.title,
-			"ref_doctype": p.ref_doctype,
-		}
+		has_role[p.name] = {"modified": p.modified, "title": p.title, "ref_doctype": p.ref_doctype}
 
 	subq = (
 		frappe.qb.from_(customRole)
@@ -269,7 +266,6 @@ def load_translations(bootinfo):
 	from frappe.translate import get_messages_for_boot
 
 	bootinfo["lang"] = frappe.lang
-
 	bootinfo["__messages"] = get_messages_for_boot()
 
 
@@ -359,9 +355,7 @@ def get_link_preview_doctypes():
 
 	link_preview_doctypes = [d.name for d in frappe.get_all("DocType", {"show_preview_popup": 1})]
 	customizations = frappe.get_all(
-		"Property Setter",
-		fields=["doc_type", "value"],
-		filters={"property": "show_preview_popup"},
+		"Property Setter", fields=["doc_type", "value"], filters={"property": "show_preview_popup"}
 	)
 
 	for custom in customizations:
@@ -453,14 +447,14 @@ def load_currency_docs(bootinfo):
 	bootinfo.docs += currency_docs
 
 
-def add_subscription_conf():
-	try:
-		return frappe.conf.subscription
-	except Exception:
-		return ""
+# def add_subscription_conf():
+# 	try:
+# 		return frappe.conf.subscription
+# 	except Exception:
+# 		return ""
 
 
-def get_default_doctype_views() -> dict[str, str]:
+def get_default_doctype_views() -> dict[str, str]:  # @dokos
 	"""Returns a mapping from a DocType to its default view, if it is not List.
 	Note: Uses frappe.get_list() so returns partial results if some DocTypes are not accessible."""
 	filters = [("default_view", "not in", (None, "List", ""))]

@@ -30,9 +30,7 @@ from frappe.exceptions import SiteNotSpecifiedError
 	help='Root username for MariaDB or PostgreSQL, Default is "root"',
 )
 @click.option(
-	"--db-root-password",
-	"--mariadb-root-password",
-	help="Root password for MariaDB or PostgreSQL",
+	"--db-root-password", "--mariadb-root-password", help="Root password for MariaDB or PostgreSQL"
 )
 @click.option(
 	"--no-mariadb-socket",
@@ -43,10 +41,7 @@ from frappe.exceptions import SiteNotSpecifiedError
 @click.option("--admin-password", help="Administrator password for new site", default=None)
 @click.option("--verbose", is_flag=True, default=False, help="Verbose")
 @click.option(
-	"--force",
-	help="Force restore if site/database already exists",
-	is_flag=True,
-	default=False,
+	"--force", help="Force restore if site/database already exists", is_flag=True, default=False
 )
 @click.option("--source-sql", "--source_sql", help="Initiate database with a SQL file")
 @click.option("--install-app", multiple=True, help="Install app after installation")
@@ -107,16 +102,13 @@ def new_site(
 	help='Root username for MariaDB or PostgreSQL, Default is "root"',
 )
 @click.option(
-	"--db-root-password",
-	"--mariadb-root-password",
-	help="Root password for MariaDB or PostgreSQL",
+	"--db-root-password", "--mariadb-root-password", help="Root password for MariaDB or PostgreSQL"
 )
 @click.option("--db-name", help="Database name for site in case it is a new one")
 @click.option("--admin-password", help="Administrator password for new site")
 @click.option("--install-app", multiple=True, help="Install app after installation")
 @click.option(
-	"--with-public-files",
-	help="Restores the public files of the site, given path to its tar file",
+	"--with-public-files", help="Restores the public files of the site, given path to its tar file"
 )
 @click.option(
 	"--with-private-files",
@@ -309,8 +301,8 @@ def _restore(
 
 @click.command("partial-restore")
 @click.argument("sql-file-path")
-@click.option("--encryption-key", help="Backup encryption key")
 @click.option("--verbose", "-v", is_flag=True)
+@click.option("--encryption-key", help="Backup encryption key")
 @pass_context
 def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 	from frappe.installer import extract_sql_from_archive, partial_restore
@@ -337,7 +329,8 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 			# Check for full backup file
 			if "Partial Backup" not in header:
 				click.secho(
-					"Full backup file detected.Use `bench restore` to restore a Frappe Site.", fg="red"
+					"Full backup file detected.Use `bench restore` to restore a Frappe Site.",
+					fg="red",
 				)
 				_backup.decryption_rollback()
 				sys.exit(1)
@@ -368,7 +361,8 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 			# Check for Full backup file.
 			if "Partial Backup" not in header:
 				click.secho(
-					"Full Backup file detected.Use `bench restore` to restore a Frappe Site.", fg="red"
+					"Full Backup file detected.Use `bench restore` to restore a Frappe Site.",
+					fg="red",
 				)
 				_backup.decryption_rollback()
 				sys.exit(1)
@@ -391,9 +385,7 @@ def partial_restore(context, sql_file_path, verbose, encryption_key=None):
 	help='Root username for MariaDB or PostgreSQL, Default is "root"',
 )
 @click.option(
-	"--db-root-password",
-	"--mariadb-root-password",
-	help="Root password for MariaDB or PostgreSQL",
+	"--db-root-password", "--mariadb-root-password", help="Root password for MariaDB or PostgreSQL"
 )
 @click.option("--yes", is_flag=True, default=False, help="Pass --yes to skip confirmation")
 @pass_context
@@ -418,7 +410,7 @@ def _reinstall(
 
 	if not yes:
 		click.confirm(
-			f"This will wipe your database for site {site}. Are you sure you want to reinstall?", abort=True
+			"This will wipe your database for site {site}. Are you sure you want to reinstall?", abort=True
 		)
 	try:
 		frappe.init(site=site)
@@ -682,6 +674,8 @@ def add_to_hosts(context):
 	"Add site to hosts"
 	for site in context.sites:
 		frappe.commands.popen(f"echo 127.0.0.1\t{site} | sudo tee -a /etc/hosts")
+	if not context.sites:
+		raise SiteNotSpecifiedError
 
 
 @click.command("use")
@@ -721,9 +715,7 @@ def use(site, sites_path="."):
 	help="Specify the DocTypes to not backup seperated by commas",
 )
 @click.option(
-	"--backup-path",
-	default=None,
-	help="Set path for saving all the files in this operation",
+	"--backup-path", default=None, help="Set path for saving all the files in this operation"
 )
 @click.option("--backup-path-db", default=None, help="Set path for saving database file")
 @click.option("--backup-path-files", default=None, help="Set path for saving public file")
@@ -875,10 +867,7 @@ def uninstall(context, app, dry_run, yes, no_backup, force):
 @click.option("--archived-sites-path")
 @click.option("--no-backup", is_flag=True, default=False)
 @click.option(
-	"--force",
-	help="Force drop-site even if an error is encountered",
-	is_flag=True,
-	default=False,
+	"--force", help="Force drop-site even if an error is encountered", is_flag=True, default=False
 )
 def drop_site(
 	site,
@@ -934,7 +923,6 @@ def _drop_site(
 	archived_sites_path = os.path.realpath(archived_sites_path)
 
 	click.secho(f"Moving site to archive under {archived_sites_path}", fg="green")
-
 	os.makedirs(archived_sites_path, exist_ok=True)
 	move(archived_sites_path, site)
 
@@ -1018,7 +1006,6 @@ def set_user_password(site, user, password, logout_all_sessions=False):
 @pass_context
 def set_last_active_for_user(context, user=None):
 	"Set users last active date to current datetime"
-
 	from frappe.core.doctype.user.user import get_system_users
 	from frappe.utils import now_datetime
 
@@ -1139,10 +1126,7 @@ def stop_recording(context):
 
 @click.command("ngrok")
 @click.option(
-	"--bind-tls",
-	is_flag=True,
-	default=False,
-	help="Returns a reference to the https tunnel.",
+	"--bind-tls", is_flag=True, default=False, help="Returns a reference to the https tunnel."
 )
 @click.option(
 	"--use-default-authtoken",
@@ -1213,6 +1197,7 @@ def clear_log_table(context, doctype, days, no_backup):
 	"""If any logtype table grows too large then clearing it with DELETE query
 	is not feasible in reasonable time. This command copies recent data to new
 	table and replaces current table with new smaller table.
+
 	ref: https://mariadb.com/kb/en/big-deletes/#deleting-more-than-half-a-table
 	"""
 	from frappe.core.doctype.log_settings.log_settings import LOG_DOCTYPES
@@ -1251,11 +1236,7 @@ def clear_log_table(context, doctype, days, no_backup):
 @click.command("trim-database")
 @click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
-	"--format",
-	"-f",
-	default="text",
-	type=click.Choice(["json", "text"]),
-	help="Output format",
+	"--format", "-f", default="text", type=click.Choice(["json", "text"]), help="Output format"
 )
 @click.option("--no-backup", is_flag=True, default=False, help="Do not backup the site")
 @click.option(
@@ -1367,11 +1348,7 @@ def get_standard_tables():
 @click.command("trim-tables")
 @click.option("--dry-run", is_flag=True, default=False, help="Show what would be deleted")
 @click.option(
-	"--format",
-	"-f",
-	default="table",
-	type=click.Choice(["json", "table"]),
-	help="Output format",
+	"--format", "-f", default="table", type=click.Choice(["json", "table"]), help="Output format"
 )
 @click.option("--no-backup", is_flag=True, default=False, help="Do not backup the site")
 @pass_context

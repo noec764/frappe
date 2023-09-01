@@ -108,19 +108,19 @@ class FormMeta(Meta):
 
 		self._add_code(_get_path(self.name + "_calendar.js"), "__calendar_js")
 		self._add_code(_get_path(self.name + "_tree.js"), "__tree_js")
-		self._add_code(_get_path(self.name + "_tour.js"), "__tour_js")
+		self._add_code(_get_path(self.name + "_tour.js"), "__tour_js")  # @dokos
 
 		listview_template = _get_path(self.name + "_list.html")
 		if os.path.exists(listview_template):
 			self.set("__listview_template", get_html_format(listview_template))
 
 		self.add_code_via_hook("doctype_js", "__js")
-		self.add_code_via_hook("doctype_css", "__css")
+		self.add_code_via_hook("doctype_css", "__css")  # @dokos
 		self.add_code_via_hook("doctype_list_js", "__list_js")
 		self.add_code_via_hook("doctype_tree_js", "__tree_js")
 		self.add_code_via_hook("doctype_calendar_js", "__calendar_js")
 		self.add_html_templates(path)
-		if system_country:
+		if system_country:  # @dokos
 			self.add_code_via_hook("doctype_regional_js", "__js", system_country)
 
 	def _add_code(self, path, fieldname):
@@ -141,7 +141,7 @@ class FormMeta(Meta):
 
 		self.set("__templates", templates or None)
 
-	def add_code_via_hook(self, hook, fieldname, country=None):
+	def add_code_via_hook(self, hook, fieldname, country=None):  # @dokos
 		for path in get_code_files_via_hooks(hook, self.name, country):
 			self._add_code(path, fieldname)
 
@@ -168,12 +168,14 @@ class FormMeta(Meta):
 				list_script += f"""
 // {script.name}
 {script.script}
+
 """
 
 			elif script.view == "Form":
 				form_script += f"""
 // {script.name}
 {script.script}
+
 """
 
 		file = scrub(self.name)
@@ -288,7 +290,7 @@ class FormMeta(Meta):
 			pass
 
 
-def get_code_files_via_hooks(hook, name, country=None):
+def get_code_files_via_hooks(hook, name, country=None):  # @dokos
 	code_files = []
 	for app_name in frappe.get_installed_apps():
 		code_hook = frappe.get_hooks(hook, default={}, app_name=app_name)

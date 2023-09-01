@@ -138,6 +138,7 @@ def download_frappe_assets(verbose=True):
 	commit HEAD.
 	Returns True if correctly setup else returns False.
 	"""
+	return False  # @dokos: We're not providing assets (yet?)
 	frappe_head = getoutput("cd ../apps/frappe && git rev-parse HEAD")
 
 	if not frappe_head:
@@ -232,8 +233,6 @@ def bundle(
 	save_metafiles=False,
 ):
 	"""concat / minify js files"""
-	import frappe.commands  # Keep for CI
-
 	setup()
 	make_asset_dirs(hard_link=hard_link)
 
@@ -261,8 +260,6 @@ def bundle(
 
 def watch(apps=None):
 	"""watch and rebuild if necessary"""
-	import frappe.commands  # Keep for CI
-
 	setup()
 
 	command = "yarn run watch"
