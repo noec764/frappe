@@ -590,7 +590,7 @@ class Database:
 					fields, filters, doctype, as_dict, debug, update, run=run, pluck=pluck, distinct=distinct
 				)
 
-		if out and cache and isinstance(filters, str):
+		if cache and isinstance(filters, str):
 			self.value_cache[(doctype, filters, fieldname)] = out
 
 		return out
