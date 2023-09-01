@@ -144,44 +144,6 @@ E.g. 1 USD = 100 centimes",
         <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
     </ul>
 </div>
-<br>
-""<div class=""well"">
-    Modifiez la liste de séries dans le champ. Règles:
-    <ul>
-        <li>Chaque série doit être sur une ligne différente.</li>
-        <li>Les caractères spéciaux autorisés sont ""/"" et ""-""</li>
-        <li>
-            De manière optionnelle, vous pouvez définir le nombre de chiffres dans la série en utilisant un point (.)
-            suivi par des mots-dièse (#). Par exemple, "".####"" indique que la série
-            aura quatre chiffres. La valeur par défaut est cinq.
-        </li>
-        <li>
-            Vous pouvez aussi utiliser des variables dans les masques de numérotation en les encadrant par
-            des points (.)
-            <br>
-            Variables autorisées:
-            <ul>
-                <li><code>.YYYY.</code> - Années en 4 chiffres</li>
-                <li><code>.YY.</code> - Année en 2 chiffres</li>
-                <li><code>.MM.</code> - Mois</li>
-                <li><code>.DD.</code> - Jour du mois</li>
-                <li><code>.WW.</code> - Semaine de l'année</li>
-                <li><code>.FY.</code> - Année fiscale</li>
-                <li>
-                    <code>.{fieldname}.</code> - nom d'un champ du document ex.
-                    <code>branch</code>
-                </li>
-            </ul>
-        </li>
-    </ul>
-    Exemples:
-    <ul>
-        <li>INV-</li>
-        <li>INV-10-</li>
-        <li>INVK-</li>
-        <li>INV-.YYYY.-.{branch}.-.MM.-.####</li>
-    </ul>
-</div>
 <br>",
 "<h3>Client Script Help</h3>
 <p>Client Scripts are executed only on the client-side (i.e. in Forms). Here are some examples to get you started</p>

@@ -456,12 +456,8 @@ def get_sidebar_items(parent_sidebar, basepath=None):
 		sidebar_items = get_sidebar_items_from_sidebar_file(basepath, look_for_sidebar_json)
 
 	if not sidebar_items and parent_sidebar:
-		sidebar_items = frappe.get_all(
-			"Website Sidebar Item",
-			filters=dict(parent=parent_sidebar),
-			fields=["title", "route", "`group`"],
-			order_by="idx asc",
-		)
+		sidebar = frappe.get_cached_doc("Website Sidebar", parent_sidebar)
+		sidebar_items = sidebar.get_items()
 
 	if not sidebar_items:
 		sidebar_items = get_portal_sidebar_items()

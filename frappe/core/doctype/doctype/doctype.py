@@ -1857,6 +1857,13 @@ def make_module_and_roles(doc, perm_fieldname="permissions"):
 			raise
 
 
+def is_a_property(x) -> bool:
+	"""Get properties (@property, @cached_property) in a controller class"""
+	from functools import cached_property
+
+	return isinstance(x, (property, cached_property))
+
+
 def check_fieldname_conflicts(docfield):
 	"""Checks if fieldname conflicts with methods or properties"""
 	doc = frappe.get_doc({"doctype": docfield.dt})
