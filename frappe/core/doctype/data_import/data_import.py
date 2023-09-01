@@ -218,6 +218,8 @@ def import_doc(path, pre_process=None):
 			)
 			frappe.flags.mute_emails = False
 			frappe.db.commit()
+		elif f.endswith("/__pycache__"):
+			pass
 		else:
 			raise NotImplementedError("Only .json files can be imported")
 
