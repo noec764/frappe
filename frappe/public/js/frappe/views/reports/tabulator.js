@@ -473,7 +473,7 @@ function indentListToTree(rows) {
 }
 
 $(document).ready(function () {
-	if (frappe.sys_defaults.use_tabulator) {
+	if (cint(frappe.sys_defaults.use_tabulator)) {
 		window.DataTable = TabulatorDataTable;
 	}
 });
