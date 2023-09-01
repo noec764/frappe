@@ -2,8 +2,6 @@
 # For license information, please see license.txt
 
 
-import requests
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
@@ -121,6 +119,7 @@ class IncomingWebhookURL(Document):
 		return service.get_attachments(data, doc_url)
 
 	def send(self, message, reference_doctype, reference_name):
+		import requests
 
 		data = {"text": message}
 
