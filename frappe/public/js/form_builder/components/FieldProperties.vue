@@ -36,6 +36,7 @@ let docfield_df = computed(() => {
 		if (df.fieldname === "options") {
 			df.fieldtype = "Small Text";
 			df.options = "";
+			df.max_height = "";
 			args.value = {};
 
 			if (in_list(["Table", "Link"], store.form.selected_field.fieldtype)) {
@@ -45,6 +46,10 @@ let docfield_df = computed(() => {
 				if (store.form.selected_field.fieldtype === "Table") {
 					args.value.is_table_field = 1;
 				}
+			}
+
+			if (String(store.form.selected_field.fieldtype).match(/^(Button|Check|Currency|Int|Float|Fold|Percentage)$/)) {
+				df.max_height = "36px";
 			}
 		}
 
