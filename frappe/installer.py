@@ -250,7 +250,7 @@ def install_app(name, verbose=False, set_as_patched=True, force=False):
 	from frappe.modules.utils import sync_customizations
 	from frappe.utils.fixtures import sync_fixtures
 
-	name = APP_MAP.get(name, name)
+	name = APP_MAP.get(name, name).replace("-", "_")  # @dokos
 	frappe.flags.in_install = name
 	frappe.flags.ignore_in_install = False
 
