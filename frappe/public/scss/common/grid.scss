@@ -14,7 +14,7 @@
 
 .grid-heading-row {
 	border-bottom: 1px solid var(--table-border-color);
-	color: var(--gray-600);
+	color: var(--text-light);
 	background-color: var(--gray-100);
 	font-size: var(--text-sm);
 	height: 32px;
@@ -29,7 +29,6 @@
 	.grid-static-col {
 		padding: 6px 8px !important;
 		.static-area{
-			line-height: normal;
 			&.reqd:after {
 				content: ' *';
 				color: var(--red-400);
