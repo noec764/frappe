@@ -5,6 +5,7 @@ from unittest.mock import patch
 
 import frappe
 from frappe.tests.utils import FrappeTestCase
+from frappe.utils import get_site_url
 
 
 class TestClient(FrappeTestCase):
@@ -142,9 +143,9 @@ class TestClient(FrappeTestCase):
 			"accept": "application/json",
 			"content-type": "application/json",
 		}
-		url = (
-			f"http://{frappe.local.site}:{frappe.conf.webserver_port}/api/method/frappe.client.get_list"
-		)
+		url = get_site_url(frappe.local.site)
+		url += "/api/method/frappe.client.get_list"
+
 		res = requests.post(url, json=params, headers=headers)
 		self.assertEqual(res.status_code, 200)
 		data = res.json()
