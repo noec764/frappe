@@ -1,6 +1,7 @@
 # Copyright (c) 2022, Frappe Technologies and Contributors
 
 # See license.txt
+
 import time
 import unittest
 
@@ -27,12 +28,14 @@ class TestRQJob(FrappeTestCase):
 			if not (job.is_queued or job.is_started):
 				break
 			time.sleep(0.2)
+
 		self.assertEqual(frappe.get_doc("RQ Job", job.id).status, status)
 
 	def test_serialization(self):
 
-		job = frappe.enqueue(method=self.BG_JOB, queue="short", sleep=10)
+		job = frappe.enqueue(method=self.BG_JOB, queue="short")
 		rq_job = frappe.get_doc("RQ Job", job.id)
+
 		self.assertEqual(job, rq_job.job)
 		self.assertDocumentEqual(
 			{
@@ -75,7 +78,7 @@ class TestRQJob(FrappeTestCase):
 		self.assertGreaterEqual(len(non_failed_jobs), 1)
 
 		# Create a slow job and check if it's stuck in "Started"
-		job = frappe.enqueue(method=self.BG_JOB, queue="short", sleep=1000)
+		job = frappe.enqueue(method=self.BG_JOB, queue="short", sleep=10)
 		time.sleep(3)
 		self.check_status(job, "started", wait=False)
 		stop_job(job_id=job.id)

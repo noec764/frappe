@@ -25,8 +25,10 @@ from frappe.desk.utils import slug
 DateTimeLikeObject = Union[str, datetime.date, datetime.datetime]
 NumericType = Union[int, float]
 
+
 if typing.TYPE_CHECKING:
 	T = TypeVar("T")
+
 
 DATE_FORMAT = "%Y-%m-%d"
 TIME_FORMAT = "%H:%M:%S.%f"
@@ -130,11 +132,13 @@ def get_datetime(
 def get_timedelta(time: str | None = None) -> datetime.timedelta | None:
 	"""Return `datetime.timedelta` object from string value of a
 	valid time format. Returns None if `time` is not a valid format
+
 	Args:
 	        time (str): A valid time representation. This string is parsed
 	        using `dateutil.parser.parse`. Examples of valid inputs are:
 	        '0:0:0', '17:21:00', '2012-01-19 17:21:00'. Checkout
 	        https://dateutil.readthedocs.io/en/stable/parser.html#dateutil.parser.parse
+
 	Returns:
 	        datetime.timedelta: Timedelta object equivalent of the passed `time` string
 	"""
@@ -229,6 +233,7 @@ def add_to_date(
 	as_datetime=False,
 ) -> DateTimeLikeObject:
 	"""Adds `days` to the given date"""
+
 	if date is None:
 		date = now_datetime()
 
@@ -245,13 +250,7 @@ def add_to_date(
 			frappe.throw(frappe._("Please select a valid date filter"), title=frappe._("Invalid Date"))
 
 	date = date + relativedelta(
-		years=years,
-		months=months,
-		weeks=weeks,
-		days=days,
-		hours=hours,
-		minutes=minutes,
-		seconds=seconds,
+		years=years, months=months, weeks=weeks, days=days, hours=hours, minutes=minutes, seconds=seconds
 	)
 
 	if as_string:
@@ -293,7 +292,7 @@ def time_diff_in_seconds(string_ed_date, string_st_date):
 	return time_diff(string_ed_date, string_st_date).total_seconds()
 
 
-def time_diff_in_minutes(string_ed_date, string_st_date):
+def time_diff_in_minutes(string_ed_date, string_st_date):  # @dokos
 	return round(float(time_diff(string_ed_date, string_st_date).total_seconds()) / 60, 2)
 
 
@@ -547,7 +546,7 @@ def get_user_date_format() -> str:
 get_user_format = get_user_date_format  # for backwards compatibility
 
 
-def get_user_time_format():
+def get_user_time_format() -> str:
 	"""Get the current user time format. The result will be cached."""
 	if getattr(frappe.local, "user_time_format", None) is None:
 		frappe.local.user_time_format = frappe.db.get_default("time_format")
@@ -665,6 +664,7 @@ def format_datetime(
 
 def format_duration(seconds, hide_days=False, hide_seconds=False):
 	"""Converts the given duration value in float(seconds) to duration format
+
 	example: converts 12885 to '3h 34m 45s' where 12885 = seconds in float
 	"""
 
@@ -700,6 +700,7 @@ def format_duration(seconds, hide_days=False, hide_seconds=False):
 
 def duration_to_seconds(duration):
 	"""Converts the given duration formatted value to duration value in seconds
+
 	example: converts '3h 34m 45s' to 12885 (value in seconds)
 	"""
 	validate_duration_format(duration)
@@ -745,17 +746,6 @@ def get_weekday(datetime: datetime.datetime | None = None) -> str:
 		datetime = now_datetime()
 	weekdays = get_weekdays()
 	return weekdays[datetime.weekday()]
-
-
-def get_business_days(string_ed_date, string_st_date):
-	return list(
-		date
-		for date in (
-			getdate(string_st_date) + datetime.timedelta(idx)
-			for idx in range(date_diff(string_ed_date, string_st_date) + 1)
-		)
-		if date.weekday() < 5
-	)
 
 
 def get_timespan_date_range(timespan: str) -> tuple[datetime.datetime, datetime.datetime] | None:
@@ -831,11 +821,12 @@ def get_timespan_date_range(timespan: str) -> tuple[datetime.datetime, datetime.
 
 
 def global_date_format(date, format="long", lang=None):
+	"""returns localized date in the form of January 1, 2012"""
 	import babel.dates
 
 	if not lang:
 		lang = frappe.local.lang
-	"""returns localized date in the form of January 1, 2012"""
+
 	date = getdate(date)
 	return babel.dates.format_date(
 		date, locale=(frappe.local.lang or "en").replace("-", "_"), format=format
@@ -889,6 +880,7 @@ def cast(fieldtype, value=None):
 	"""Cast the value to the Python native object of the Frappe fieldtype provided.
 	If value is None, the first/lowest value of the `fieldtype` will be returned.
 	If value can't be cast as fieldtype due to an invalid input, None will be returned.
+
 	Mapping of Python types => Frappe types:
 	        * str => ("Data", "Text", "Small Text", "Long Text", "Text Editor", "Select", "Link", "Dynamic Link")
 	        * float => ("Currency", "Float", "Percent")
@@ -901,7 +893,7 @@ def cast(fieldtype, value=None):
 		value = flt(value)
 
 	elif fieldtype in ("Int", "Check"):
-		value = cint(value)
+		value = cint(sbool(value))
 
 	elif fieldtype in (
 		"Data",
@@ -947,11 +939,15 @@ def flt(
 	s: NumericType | str, precision: int | None = None, rounding_method: str | None = None
 ) -> float:
 	"""Convert to float (ignoring commas in string)
+
 	:param s: Number in string or other numeric format.
 	:param precision: optional argument to specify precision for rounding.
 	:returns: Converted number in python float type.
+
 	Returns 0 if input can not be converted to float.
+
 	Examples:
+
 	>>> flt("43.5", precision=0)
 	44
 	>>> flt("42.5", precision=0)
@@ -978,6 +974,7 @@ def flt(
 
 def cint(s: NumericType | str, default: int = 0) -> int:
 	"""Convert to integer
+
 	:param s: Number in string or other numeric format.
 	:returns: Converted number in python integer type.
 
@@ -988,6 +985,7 @@ def cint(s: NumericType | str, default: int = 0) -> int:
 	100
 	>>> cint("a")
 	0
+
 	"""
 	try:
 		return int(float(s))
@@ -1049,8 +1047,10 @@ def sbool(x: str) -> bool | Any:
 	        "true" becomes True
 	        "1" becomes True
 	        "{}" remains "{}"
+
 	Args:
 	        x (str): String to be converted to Bool
+
 	Returns:
 	        object: Returns Boolean or x
 	"""
@@ -1105,25 +1105,6 @@ def _bankers_rounding_legacy(num, precision):
 	return (num / multiplier) if precision else num
 
 
-def _bankers_rounding(num, precision):
-	multiplier = 10**precision
-	num = round(num * multiplier, 12)
-
-	if num == 0:
-		return 0.0
-
-	floor_num = math.floor(num)
-	decimal_part = num - floor_num
-
-	epsilon = 2.0 ** (math.log(abs(num), 2) - 52.0)
-	if abs(decimal_part - 0.5) < epsilon:
-		num = floor_num if (floor_num % 2 == 0) else floor_num + 1
-	else:
-		num = round(num)
-
-	return num / multiplier
-
-
 def _round_away_from_zero(num, precision):
 	if num == 0:
 		return 0.0
@@ -1148,6 +1129,25 @@ def _round_away_from_zero(num, precision):
 	epsilon = 2.0 ** (math.log(abs(num), 2) - 52.0)
 
 	return round(num + math.copysign(epsilon, num), precision)
+
+
+def _bankers_rounding(num, precision):
+	multiplier = 10**precision
+	num = round(num * multiplier, 12)
+
+	if num == 0:
+		return 0.0
+
+	floor_num = math.floor(num)
+	decimal_part = num - floor_num
+
+	epsilon = 2.0 ** (math.log(abs(num), 2) - 52.0)
+	if abs(decimal_part - 0.5) < epsilon:
+		num = floor_num if (floor_num % 2 == 0) else floor_num + 1
+	else:
+		num = round(num)
+
+	return num / multiplier
 
 
 def remainder(numerator: NumericType, denominator: NumericType, precision: int = 2) -> NumericType:
@@ -1177,6 +1177,7 @@ def safe_div(numerator: NumericType, denominator: NumericType, precision: int = 
 
 
 def round_based_on_smallest_currency_fraction(value, currency, precision=2):
+	# @dokos
 	smallest_currency_fraction_value = flt(
 		frappe.db.get_value("Currency", currency, "smallest_currency_fraction_value", cache=True)
 	)
@@ -1303,7 +1304,6 @@ def fmt_money(
 
 	if currency and frappe.defaults.get_global_default("hide_currency_symbol") != "Yes":
 		symbol = frappe.db.get_value("Currency", currency, "symbol", cache=True) or currency
-
 		symbol_on_right = frappe.db.get_value("Currency", currency, "symbol_on_right", cache=True)
 
 		if symbol_on_right:
@@ -1496,7 +1496,7 @@ def get_thumbnail_base64_for_image(src):
 			"height": original_size[1],
 		}
 
-	return cache.hget("thumbnail_base64", src, generator=_get_base64)
+	return cache().hget("thumbnail_base64", src, generator=_get_base64)
 
 
 def image_to_base64(image, extn: str) -> bytes:
@@ -1552,10 +1552,9 @@ def escape_html(text: str) -> str:
 def pretty_date(iso_datetime: datetime.datetime | str) -> str:
 	"""
 	Return a localized string representation of the delta to the current system time.
+
 	For example, "1 hour ago", "2 days ago", "in 5 seconds", etc.
 	"""
-	from frappe import _
-
 	if not iso_datetime:
 		return ""
 
@@ -1978,7 +1977,6 @@ def expand_relative_urls(html: str) -> str:
 
 	html = URLS_NOT_HTTP_TAG_PATTERN.sub(_expand_relative_urls, html)
 	html = URL_NOTATION_PATTERN.sub(_expand_relative_urls, html)
-
 	return html
 
 
@@ -2189,6 +2187,7 @@ def validate_python_code(
 	string: str, fieldname: str | None = None, is_expression: bool = True
 ) -> None:
 	"""Validate python code fields by using compile_command to ensure that expression is valid python.
+
 	args:
 	        fieldname: name of field being validated.
 	        is_expression: true for validating simple single line python expression, else validated as script.
@@ -2305,3 +2304,15 @@ def _get_rss_memory_usage():
 
 	rss = psutil.Process().memory_info().rss // (1024 * 1024)
 	return rss
+
+
+def get_business_days(string_ed_date, string_st_date):
+	print("Warning: get_business_days is deprecated.")
+	return list(
+		date
+		for date in (
+			getdate(string_st_date) + datetime.timedelta(idx)
+			for idx in range(date_diff(string_ed_date, string_st_date) + 1)
+		)
+		if date.weekday() < 5
+	)

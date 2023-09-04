@@ -1,7 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-
 import frappe
 from frappe.cache_manager import clear_defaults_cache, common_default_keys
 from frappe.query_builder import DocType
@@ -25,7 +24,6 @@ def get_user_default(key, user=None):
 		if d and isinstance(d, (list, tuple)) and len(d) == 1:
 			# Use User Permission value when only when it has a single value
 			d = d[0]
-
 		else:
 			d = user_defaults.get(frappe.scrub(key), None)
 			user_permission_default = get_user_permission_default(key, user_defaults)
@@ -165,7 +163,6 @@ def set_default(key, value, parent, parenttype="__default"):
 	)
 	if key_exists:
 		frappe.db.delete("DefaultValue", {"defkey": key, "parent": parent})
-
 	if value is not None:
 		add_default(key, value, parent)
 	else:

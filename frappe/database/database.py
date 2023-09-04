@@ -1,10 +1,8 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import datetime
 import itertools
 import json
-import logging
 import random
 import re
 import string
@@ -592,7 +590,7 @@ class Database:
 					fields, filters, doctype, as_dict, debug, update, run=run, pluck=pluck, distinct=distinct
 				)
 
-		if out and cache and isinstance(filters, str):
+		if cache and isinstance(filters, str):
 			self.value_cache[(doctype, filters, fieldname)] = out
 
 		return out
@@ -781,7 +779,9 @@ class Database:
 
 		if not df:
 			frappe.throw(
-				_("Invalid field name: {0}").format(frappe.bold(fieldname)), self.InvalidColumnName
+				_("Field {0} does not exist on {1}").format(
+					frappe.bold(fieldname), frappe.bold(doctype), self.InvalidColumnName
+				)
 			)
 
 		val = cast_fieldtype(df.fieldtype, val)
@@ -864,7 +864,9 @@ class Database:
 	):
 		"""Set a single value in the database, do not call the ORM triggers
 		but update the modified timestamp (unless specified not to).
+
 		**Warning:** this function will not call Document events and should be avoided in normal cases.
+
 		:param dt: DocType name.
 		:param dn: Document name for updating single record or filters for updating many records.
 		:param field: Property / field name or dictionary of values to be updated
@@ -1076,8 +1078,6 @@ class Database:
 			return FallBackDateTimeStr
 
 		return get_datetime(datetime).strftime("%Y-%m-%d %H:%M:%S.%f")
-
-		return datetime
 
 	def get_creation_count(self, doctype, minutes):
 		"""Get count of records created in the last x minutes"""

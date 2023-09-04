@@ -1,6 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
-import functools
+
 import json
 import re
 
@@ -225,6 +225,7 @@ def search_widget(
 			)
 
 			if meta.translated_doctype:
+				# Filtering the values array so that query is included in very element
 				values = (
 					result
 					for result in values
@@ -237,7 +238,6 @@ def search_widget(
 			# Sorting the values array so that relevant results always come first
 			# This will first bring elements on top in which query is a prefix of element
 			# Then it will bring the rest of the elements and sort them in lexicographical order
-			# => 2022-12-02: Rule removed in order to keep order_by rule
 			values = sorted(values, key=lambda x: relevance_sorter(x, txt, as_dict))
 
 			# remove _relevance from results
@@ -286,7 +286,6 @@ def build_for_autosuggest(res: list[tuple], doctype: str) -> list[dict]:
 				# remove redundant title ("label") value
 				del item[2]
 			results.append({"value": item[0], "label": label, "description": to_string(item[1:])})
-
 	else:
 		results.extend({"value": item[0], "description": to_string(item[1:])} for item in res)
 
@@ -303,7 +302,7 @@ def scrub_custom_query(query, key, txt):
 
 def relevance_sorter(key, query, as_dict):
 	value = _(key.name if as_dict else key[0])
-	return cstr(value).casefold().startswith(query.casefold()) is not True
+	return (cstr(value).casefold().startswith(query.casefold()) is not True, value)
 
 
 @frappe.whitelist()

@@ -24,7 +24,7 @@ from email.utils import formataddr, parseaddr
 from typing import Any, Literal
 from urllib.parse import quote, urlparse
 
-from redis.exceptions import ConnectionError  # noqa
+from redis.exceptions import ConnectionError
 from werkzeug.test import Client
 
 import frappe
@@ -88,12 +88,12 @@ def get_formatted_email(user, mail=None):
 	if not mail:
 		return ""
 	else:
-		return cstr(make_header(decode_header(formataddr((fullname, mail)))))  # noqa
+		return cstr(make_header(decode_header(formataddr((fullname, mail)))))
 
 
 def extract_email_id(email):
 	"""fetch only the email part of the Email Address"""
-	return cstr(parse_addr(email)[1])  # noqa
+	return cstr(parse_addr(email)[1])
 
 
 def validate_phone_number_with_country_code(phone_number: str, fieldname: str) -> None:
@@ -227,9 +227,9 @@ def split_emails(txt):
 	email_list = []
 
 	# emails can be separated by comma or newline
-	s = WHITESPACE_PATTERN.sub(" ", cstr(txt))  # noqa
+	s = WHITESPACE_PATTERN.sub(" ", cstr(txt))
 	for email in MULTI_EMAIL_STRING_PATTERN.split(s):
-		email = strip(cstr(email))  # noqa
+		email = strip(cstr(email))
 		if email:
 			email_list.append(email)
 
@@ -321,7 +321,7 @@ def get_traceback(with_context=False) -> str:
 		tb = "\n".join(trace_list)
 	else:
 		trace_list = traceback.format_exception(exc_type, exc_value, exc_tb)
-		tb = "".join(cstr(t) for t in trace_list)  # noqa
+		tb = "".join(cstr(t) for t in trace_list)
 
 	bench_path = get_bench_path() + "/"
 	return tb.replace(bench_path, "")
@@ -536,7 +536,7 @@ def get_backups_path():
 
 
 def get_request_site_address(full_address=False):
-	return get_url(full_address=full_address)  # noqa
+	return get_url(full_address=full_address)
 
 
 def get_site_url(site):
@@ -572,7 +572,7 @@ def get_disk_usage():
 	if not os.path.exists(files_path):
 		return 0
 	err, out = execute_in_shell(f"du -hsm {files_path}")
-	return cint(out.split("\n")[-2].split("\t")[0])  # noqa
+	return cint(out.split("\n")[-2].split("\t")[0])
 
 
 def touch_file(path):
@@ -707,7 +707,7 @@ def get_request_session(max_retries=5):
 
 
 def markdown(text, sanitize=True, linkify=True):
-	html = text if is_html(text) else frappe.utils.md_to_html(text)  # noqa
+	html = text if is_html(text) else frappe.utils.md_to_html(text)
 
 	if sanitize:
 		html = html.replace("<!-- markdown -->", "")
@@ -819,11 +819,11 @@ def get_site_info():
 		"country": system_settings.country,
 		"language": system_settings.language or "english",
 		"time_zone": system_settings.time_zone,
-		"setup_complete": cint(system_settings.setup_complete),  # noqa
+		"setup_complete": cint(system_settings.setup_complete),
 		"scheduler_enabled": system_settings.enable_scheduler,
 		# usage
 		"emails_sent": get_emails_sent_this_month(),
-		"space_used": flt((space_usage.total or 0) / 1024.0, 2),  # noqa
+		"space_used": flt((space_usage.total or 0) / 1024.0, 2),
 		"database_size": space_usage.database_size,
 		"backup_size": space_usage.backup_size,
 		"files_size": space_usage.files_size,
@@ -1130,16 +1130,21 @@ def is_desk():
 
 class CallbackManager:
 	"""Manage callbacks.
+
 	```
 	# Capture callacks
 	callbacks = CallbackManager()
+
 	# Put a function call in queue
 	callbacks.add(func)
+
 	# Run all pending functions in queue
 	callbacks.run()
+
 	# Reset queue
 	callbacks.reset()
 	```
+
 	Example usage: frappe.db.after_commit
 	"""
 

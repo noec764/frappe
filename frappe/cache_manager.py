@@ -142,9 +142,7 @@ def _clear_doctype_cache_from_redis(doctype: str | None = None):
 
 		# clear all parent doctypes
 		for dt in frappe.get_all(
-			"DocField",
-			"parent",
-			dict(fieldtype=["in", frappe.model.table_fields], options=doctype),
+			"DocField", "parent", dict(fieldtype=["in", frappe.model.table_fields], options=doctype)
 		):
 			clear_single(dt.parent)
 
@@ -203,7 +201,6 @@ def build_table_count_cache():
 	data = (frappe.qb.from_(information_schema.tables).select(table_name, table_rows)).run(
 		as_dict=True
 	)
-
 	counts = {d.get("name").replace("tab", "", 1): d.get("count", None) for d in data}
 	frappe.cache.set_value("information_schema:counts", counts)
 
@@ -237,7 +234,6 @@ def build_domain_restricted_page_cache(*args, **kwargs):
 		or frappe.flags.in_setup_wizard
 	):
 		return []
-
 	active_domains = frappe.get_active_domains()
 	pages = frappe.get_all("Page", filters={"restrict_to_domain": ("IN", active_domains)})
 	pages = [page.name for page in pages]

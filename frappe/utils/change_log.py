@@ -1,5 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import json
 import os
 import subprocess  # nosec
@@ -54,6 +55,7 @@ def get_change_log(user=None):
 
 
 def get_change_log_for_app(app, from_version, to_version):
+	# @dokos: Translated change logs
 	change_log_folder = os.path.join(frappe.get_app_path(app), "change_log", frappe.local.lang)
 	if not os.path.exists(change_log_folder):
 		change_log_folder = os.path.join(frappe.get_app_path(app), "change_log")
@@ -166,7 +168,7 @@ def get_app_last_commit_ref(app):
 
 def check_for_update():
 	if frappe.conf.disable_system_update_notification:
-		return
+		return  # @dokos: don't show update popup
 
 	updates = frappe._dict(major=[], minor=[], patch=[])
 	apps = get_versions()
@@ -218,14 +220,17 @@ def parse_latest_non_beta_release(response):
 
 	if version_list:
 		return sorted(version_list, key=Version, reverse=True)[0]
+
 	return None
 
 
 def check_release_on_github(app: str):
 	"""
 	Check the latest release for a given Frappe application hosted on Github.
+
 	Args:
 	        app (str): The name of the Frappe application.
+
 	Returns:
 	        tuple(Version, str): The semantic version object of the latest release and the
 	                organization name, if the application exists, otherwise None.
@@ -257,7 +262,7 @@ def check_release_on_github(app: str):
 	owner = parsed_url.owner
 	repo = parsed_url.name
 
-	# Get latest version from Gitlab
+	# Get latest version from Gitlab @dokos
 	project_req = requests.get(f"https://gitlab.com/api/v4/projects/{owner}%2F{repo}")
 	if project_req.ok:
 		r = requests.get(f"https://gitlab.com/api/v4/projects/{project_req.json().get('id')}/releases")
@@ -298,7 +303,7 @@ def show_update_popup():
 					org_name=app.org_name,
 					app_name=app.app_name,
 					title=app.title,
-				)
+				)  # @dokos
 			if release_links:
 				message = _("New {} releases for the following apps are available").format(_(update_type))
 				update_message += (
