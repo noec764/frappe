@@ -76,8 +76,6 @@
   "welcome_email_template",
   "reset_password_template",
   "update_document_timestamp_on_send",
-  "reports_section",
-  "use_tabulator",
   "prepared_report_section",
   "max_auto_email_report_per_user",
   "system_updates_section",
@@ -471,10 +469,10 @@
    "options": "Sunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
   },
   {
-    "default": "0",
-    "fieldname": "update_document_timestamp_on_send",
-    "fieldtype": "Check",
-    "label": "Update document timestamp when sending emails"
+   "default": "0",
+   "fieldname": "update_document_timestamp_on_send",
+   "fieldtype": "Check",
+   "label": "Update document timestamp when sending emails"
   },
   {
    "default": "30",
@@ -563,18 +561,6 @@
    "options": "Email Template"
   },
   {
-    "collapsible": 1,
-    "fieldname": "reports_section",
-    "fieldtype": "Section Break",
-    "label": "Reports"
-  },
-  {
-    "default": "0",
-    "fieldname": "use_tabulator",
-    "fieldtype": "Check",
-    "label": "Use Tabulator as Datatable"
-  },
-  {
    "default": "0",
    "description": "When uploading files, force the use of the web-based image capture. If this is unchecked, the default behavior is to use the mobile native camera when use from a mobile is detected.",
    "fieldname": "force_web_capture_mode_for_uploads",
@@ -585,7 +571,7 @@
  "icon": "fa fa-cog",
  "issingle": 1,
  "links": [],
- "modified": "2023-08-31 20:19:07.181041",
+ "modified": "2023-09-04 17:18:29.288255",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "System Settings",

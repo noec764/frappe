@@ -17,6 +17,7 @@
   "add_total_row",
   "disabled",
   "prepared_report",
+  "use_tabulator",
   "filters_section",
   "filters",
   "columns_section",
@@ -186,12 +187,19 @@
    "fieldname": "client_code_section",
    "fieldtype": "Section Break",
    "label": "Client Code"
+  },
+  {
+   "default": "0",
+   "description": "With this option, the report will be rendered with the Tabulator library. For more information: https://tabulator.info/",
+   "fieldname": "use_tabulator",
+   "fieldtype": "Check",
+   "label": "Use Tabulator to render the table"
   }
  ],
  "idx": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2023-05-30 14:46:54.037084",
+ "modified": "2023-09-04 17:30:52.511334",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Report",

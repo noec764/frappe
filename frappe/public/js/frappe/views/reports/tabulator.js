@@ -471,9 +471,3 @@ function indentListToTree(rows) {
 
 	return parents[0]._children;
 }
-
-$(document).ready(function () {
-	if (cint(frappe.sys_defaults.use_tabulator)) {
-		window.DataTable = TabulatorDataTable;
-	}
-});

@@ -1,6 +1,7 @@
 // Copyright (c) 2018, Frappe Technologies Pvt. Ltd. and Contributors
 // MIT License. See license.txt
 import DataTable from "frappe-datatable";
+import TabulatorDataTable from "frappe/public/js/frappe/views/reports/tabulator";
 
 // Expose DataTable globally to allow customizations.
 window.DataTable = DataTable;
@@ -969,7 +970,12 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			if (this.report_settings.get_datatable_options) {
 				datatable_options = this.report_settings.get_datatable_options(datatable_options);
 			}
-			this.datatable = new window.DataTable(this.$report[0], datatable_options);
+
+			if (this.report_doc.use_tabulator) {
+				this.datatable = new TabulatorDataTable(this.$report[0], datatable_options);
+			} else {
+				this.datatable = new window.DataTable(this.$report[0], datatable_options);
+			}
 		}
 
 		if (typeof this.report_settings.initial_depth == "number") {
