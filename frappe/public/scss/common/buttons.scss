@@ -28,6 +28,8 @@
 	font-weight: var(--weight-medium);
 	--icon-stroke: currentColor;
 
+	@include get_textstyle("base", "regular");
+
 	&.icon-btn {
 		height: var(--btn-height);
 		padding: 0px;

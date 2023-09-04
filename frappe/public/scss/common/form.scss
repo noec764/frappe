@@ -27,8 +27,7 @@
 
 .like-disabled-input {
 	.for-description {
-		font-weight: normal;
-		font-size: var(--text-sm);
+		@include get_textstyle("sm", "regular");
 	}
 	min-height: var(--input-height);
 	// margin-bottom: 7px;

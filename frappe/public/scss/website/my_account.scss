@@ -59,7 +59,7 @@
 
 	.my-account-item-desc {
 		color: var(--gray-700);
-		font-size: var(--text-base);
+		@include get_textstyle("base", "regular");
 
 		button {
 			background: none;
@@ -69,7 +69,7 @@
 	}
 
 	.my-account-item-link {
-		font-size: var(--text-base);
+		@include get_textstyle("base", "regular");
 
 		button {
 			background: none;

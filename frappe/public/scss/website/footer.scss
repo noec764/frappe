@@ -89,6 +89,10 @@
 	}
 }
 
+.form-control {
+	@include get_textstyle("base", "regular");
+}
+
 .footer-logo-extension {
 	.input-group {
 		justify-content: flex-end;

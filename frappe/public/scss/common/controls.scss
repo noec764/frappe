@@ -86,8 +86,57 @@ select.form-control {
 	color: var(--text-color);
 }
 
+/* multiselect list */
+.multiselect-list {
+	.status-text {
+		line-height: 1.2;
+		vertical-align: top;
+	}
+
+	.dropdown-menu {
+		width: 100%;
+	}
+
+	li {
+		padding: var(--padding-sm);
+	}
+
+	.selectable-item {
+		cursor: pointer;
+		@include flex(flex, space-between, center, null);
+		.icon {
+			display: none;
+		}
+	}
+
+	.selectable-item.selected {
+		background-color: var(--yellow-highlight-color);
+
+		.icon {
+			display: block;
+		}
+	}
+
+	.selectable-item:hover, .selectable-item.highlighted {
+		background-color: var(--fg-hover-color);
+	}
+
+	.selectable-items {
+		max-height: 200px;
+		overflow: auto;
+
+		.multiselect-check {
+			margin-left: var(--margin-sm);
+		}
+	}
+
+	.dropdown-toggle::after {
+		float: right;
+	}
+}
+
 .frappe-control {
-	font-size: var(--text-base);
+	@include get_textstyle("base", "regular");
 	.control-label.reqd:after {
 		content: ' *';
 		color: var(--red-400);
@@ -104,7 +153,7 @@ select.form-control {
 		margin-bottom: var(--margin-sm);
 		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius);
-		font-size: var(--text-sm);
+		@include get_textstyle("sm", "regular");
 		word-wrap: break-word;
 		position: relative;
 		p:last-child {
@@ -135,6 +184,7 @@ select.form-control {
 	}
 
 	.link-btn {
+		// @dokos
 		position: absolute;
 		z-index: 3;
 		top: 0px;
@@ -200,55 +250,6 @@ select.form-control {
 	}
 }
 
-/* multiselect list */
-.multiselect-list {
-	.status-text {
-		line-height: 1.2;
-		vertical-align: top;
-	}
-
-	.dropdown-menu {
-		width: 100%;
-	}
-
-	li {
-		padding: var(--padding-sm);
-	}
-
-	.selectable-item {
-		cursor: pointer;
-		@include flex(flex, space-between, center, null);
-		.icon {
-			display: none;
-		}
-	}
-
-	.selectable-item.selected {
-		background-color: var(--yellow-highlight-color);
-
-		.icon {
-			display: block;
-		}
-	}
-
-	.selectable-item:hover, .selectable-item.highlighted {
-		background-color: var(--fg-hover-color);
-	}
-
-	.selectable-items {
-		max-height: 200px;
-		overflow: auto;
-
-		.multiselect-check {
-			margin-left: var(--margin-sm);
-		}
-	}
-
-	.dropdown-toggle::after {
-		float: right;
-	}
-}
-
 .ace_editor {
 	min-height: 48px;
 	background-color: var(--control-bg);
@@ -279,7 +280,7 @@ select.form-control {
 		padding: 6px 10px;
 		background: var(--control-bg);
 		border-radius: var(--border-radius);
-		font-size: var(--text-base);
+		@include get_textstyle("base", "regular");
 	}
 }
 

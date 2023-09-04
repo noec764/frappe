@@ -36,22 +36,28 @@
 
 		&> li {
 			cursor: pointer;
-			font-size: var(--text-md);
+			@include get_textstyle("sm", "regular");
 			padding: var(--padding-sm);
 			color: var(--text-color);
 			border-radius: var(--border-radius);
 			white-space: unset;
 			@extend .ellipsis;
+
+			transition-duration: 100ms;
+
 			&:not(:last-child) {
 				margin-bottom: var(--margin-xs);
 			}
+
 			p {
 				margin-bottom: 0;
 				overflow-y: clip;
 				text-overflow: ellipsis;
 			}
 
-			transition-duration: 100ms;
+			strong {
+				@include get_textstyle("sm", "bold");
+			}
 		}
 
 		&> li .link-option {
