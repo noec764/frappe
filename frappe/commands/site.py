@@ -410,7 +410,7 @@ def _reinstall(
 
 	if not yes:
 		click.confirm(
-			"This will wipe your database for site {site}. Are you sure you want to reinstall?", abort=True
+			f"This will wipe your database for site {site}. Are you sure you want to reinstall?", abort=True
 		)
 	try:
 		frappe.init(site=site)
