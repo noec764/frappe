@@ -186,7 +186,7 @@ frappe.ui.LinkPreview = class {
 			</div>
 		`;
 
-		const a = div.querySelector(".preview-name a");
+		const a = div.querySelector(".preview-name > a");
 		a.href = this.href;
 		a.innerText = __(preview_data.preview_title);
 

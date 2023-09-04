@@ -82,21 +82,16 @@ frappe.breadcrumbs = {
 	},
 
 	set_custom_breadcrumbs(breadcrumbs) {
-		const li_element = this.make_li_element(breadcrumbs.route, breadcrumbs.label);
-		this.$breadcrumbs.append(li_element);
+		this.append_breadcrumb_element(breadcrumbs.route, breadcrumbs.label);
 	},
 
-	make_li_element(route, label) {
+	append_breadcrumb_element(route, label) {
 		const el = document.createElement("li");
 		const a = document.createElement("a");
 		a.href = route;
 		a.innerText = label;
 		el.appendChild(a);
-		return el.outerHTML;
-	},
-
-	get_li_html(route, label) {
-		return make_li_element(route, label).outerHTML;
+		this.$breadcrumbs.append(el);
 	},
 
 	get last_route() {
@@ -122,11 +117,10 @@ frappe.breadcrumbs = {
 			return;
 		}
 
-		const li_element = this.make_li_element(
+		this.append_breadcrumb_element(
 			`/app/${frappe.router.slug(breadcrumbs.workspace)}`,
 			__(breadcrumbs.workspace)
 		);
-		this.$breadcrumbs.append(li_element);
 	},
 
 	set_workspace(breadcrumbs) {
@@ -193,8 +187,7 @@ frappe.breadcrumbs = {
 			} else {
 				route = doctype_route;
 			}
-			const li_element = this.make_li_element(`/app/${route}`, __(doctype));
-			this.$breadcrumbs.append(li_element);
+			this.append_breadcrumb_element(`/app/${route}`, __(doctype));
 		}
 	},
 
@@ -202,8 +195,7 @@ frappe.breadcrumbs = {
 		const doctype = breadcrumbs.doctype;
 		const docname = frappe.get_route().slice(2).join("/");
 		let form_route = `/app/${frappe.router.slug(doctype)}/${docname}`;
-		const li_element = this.make_li_element(form_route, __(docname));
-		this.$breadcrumbs.append(li_element);
+		this.append_breadcrumb_element(form_route, __(docname));
 
 		if (view === "form") {
 			let last_crumb = this.$breadcrumbs.find("li").last();
