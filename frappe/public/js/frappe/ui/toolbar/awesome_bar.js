@@ -111,6 +111,10 @@ frappe.search.AwesomeBar = class AwesomeBar {
 				if (event.ctrlKey || event.metaKey) {
 					frappe.open_in_new_tab = true;
 				}
+				if (item.route[0].startsWith("https://")) {
+					window.open(item.route[0], "_blank");
+					return;
+				}
 				frappe.set_route(item.route);
 			}
 			$input.val("");
