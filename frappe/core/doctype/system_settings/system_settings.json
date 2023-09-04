@@ -82,9 +82,7 @@
   "max_auto_email_report_per_user",
   "system_updates_section",
   "disable_system_update_notification",
-  "disable_change_log_notification",
-  "telemetry_section",
-  "enable_telemetry"
+  "disable_change_log_notification"
  ],
  "fields": [
   {
