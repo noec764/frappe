@@ -92,7 +92,6 @@ export default {
 			return {
 				"--x": this.dx + 'px',
 				"--y": this.dy + 'px',
-				display: this.isVisible ? undefined : 'none',
 			}
 		},
 		filteredItems() {
@@ -275,6 +274,15 @@ export default {
 	margin: 0px;
 	padding: 0px;
 	border: none;
+
+	transition: all 200ms ease;
+	transition-property: opacity, visibility;
+}
+
+.QuickAccessMenu:not([open]) {
+	opacity: 0;
+	pointer-events: none;
+	visibility: hidden;
 }
 
 .QuickAccessMenu--anchor-fixed {

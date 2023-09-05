@@ -64,10 +64,3 @@ watch(() => props.df.configuration, refreshInput);
 		<div v-if="df.description" class="mt-2 description" v-html="df.description" />
 	</div>
 </template>
-
-<style lang="scss" scoped>
-.frappe-control :deep(*) {
-	background-color: red !important;
-	// background-color: var(--fg-color);
-}
-</style>
