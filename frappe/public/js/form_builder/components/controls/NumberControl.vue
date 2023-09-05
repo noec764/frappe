@@ -66,7 +66,7 @@ watch(() => props.df.configuration, refreshInput);
 </template>
 
 <style lang="scss" scoped>
-.frappe-control >>> * {
+.frappe-control :deep(*) {
 	background-color: red !important;
 	// background-color: var(--fg-color);
 }
