@@ -1027,11 +1027,21 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					),
 			};
 		}
+
 		options.axisOptions = {
 			shortenYAxisNumbers: 1,
 			numberFormatter: frappe.utils.format_chart_axis_number,
 		};
 		options.height = 280;
+
+		if (!options.colors || !options.colors.length) {
+			options.colors = ["green", "light-blue", "orange", "red", "yellow"]
+		}
+
+		if (this.report_settings.update_chart_data) {
+			options = this.report_settings.update_chart_data(options)
+		}
+
 		return options;
 	}
 
