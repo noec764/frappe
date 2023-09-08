@@ -780,7 +780,7 @@ class Database:
 		if not df:
 			frappe.throw(
 				_("Field {0} does not exist on {1}").format(
-					frappe.bold(fieldname), frappe.bold(doctype), self.InvalidColumnName
+					frappe.bold(fieldname), frappe.bold(_(doctype)), self.InvalidColumnName
 				)
 			)
 
