@@ -36,6 +36,7 @@ from frappe.query_builder import (
 )
 from frappe.utils.caching import request_cache
 from frappe.utils.data import cint, cstr, sbool
+from frappe.utils.deprecations import deprecated
 
 # Local application imports
 from .exceptions import *
@@ -537,6 +538,11 @@ def msgprint(
 		local.response["exc_type"] = raise_exception.__name__
 
 	_raise_exception()
+
+
+@deprecated
+def get_site_url(site):
+	return frappe.utils.get_url()
 
 
 def clear_messages():
