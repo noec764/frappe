@@ -208,4 +208,16 @@
 			margin-left: -12px;
 		}
 	}
+
+	&:hover.overlap {
+		.avatar:not(:first-child) {
+			margin-left: var(--margin-xs);
+		}
+	}
+
+	&:hover.overlap {
+		.avatar:not(:first-child) {
+			margin-left: var(--margin-xs);
+		}
+	}
 }
