@@ -153,7 +153,8 @@ class TestResourceAPI(FrappeAPITestCase):
 
 	@classmethod
 	def setUpClass(cls):
-		for _ in range(10):
+		super().setUpClass()
+		for _ in range(20):
 			doc = frappe.get_doc({"doctype": "ToDo", "description": frappe.mock("paragraph")}).insert()
 			cls.GENERATED_DOCUMENTS.append(doc.name)
 		frappe.db.commit()
