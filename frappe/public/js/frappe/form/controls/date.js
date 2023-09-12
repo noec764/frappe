@@ -119,7 +119,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 			if (this.timepicker_only) this.datepicker.opts["offset"] = -30;
 		}
 
-		this.datepicker.update("position", position);
+		this.datepicker.setPosition(position);
 	}
 
 	get_now_date() {
