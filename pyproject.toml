@@ -83,6 +83,9 @@ dependencies = [
 
     # Dodock specific libraries
     "pandas>=1.1.5,<2.0.0",
+
+    # Keep for compatibility with Frappeverse
+    "posthog~=3.0.1",
 ]
 
 [build-system]
