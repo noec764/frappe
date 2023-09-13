@@ -8,6 +8,8 @@ frappe.defaultTimeFormat = "HH:mm:ss";
 frappe.defaultDatetimeFormat = frappe.defaultDateFormat + " " + frappe.defaultTimeFormat;
 moment.defaultFormat = frappe.defaultDateFormat;
 
+frappe.provide("frappe.datetime");
+
 $.extend(frappe.datetime, {
 	convert_to_user_tz: function (date, format) {
 		// format defaults to true
@@ -89,6 +91,7 @@ $.extend(frappe.datetime, {
 	},
 
 	add_minutes: function (d, minutes) {
+		// @dokos
 		return moment(d).add(minutes, "minutes").format(frappe.defaultDatetimeFormat);
 	},
 
@@ -264,6 +267,7 @@ $.extend(frappe.datetime, {
 	},
 
 	get_date: (timestamp) => {
+		// @dokos
 		return moment(timestamp).format("LL");
 	},
 
@@ -277,15 +281,6 @@ $.extend(frappe.datetime, {
 
 	get_first_day_of_the_week_index() {
 		const first_day_of_the_week = frappe.sys_defaults.first_day_of_the_week || "Sunday";
-		const weekdays = [
-			"Sunday",
-			"Monday",
-			"Tuesday",
-			"Wednesday",
-			"Thursday",
-			"Friday",
-			"Saturday",
-		];
-		return weekdays.indexOf(first_day_of_the_week);
+		return moment.weekdays().indexOf(first_day_of_the_week);
 	},
 });

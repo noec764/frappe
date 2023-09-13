@@ -93,6 +93,7 @@
 		"$": true,
 		"jQuery": true,
 		"moment": true,
+		"momentjs": true,
 		"hljs": true,
 		"Awesomplete": true,
 		"Sortable": true,
