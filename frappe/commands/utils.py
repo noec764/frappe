@@ -908,6 +908,7 @@ def run_ui_tests(
 ):
 	"Run UI tests"
 	site = get_site(context)
+	frappe.init(site)
 	app_base_path = frappe.get_app_source_path(app)
 	site_url = frappe.utils.get_site_url(site)
 	admin_password = frappe.get_conf(site).admin_password
