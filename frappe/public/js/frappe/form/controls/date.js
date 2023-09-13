@@ -11,37 +11,42 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 		this.set_t_for_today();
 	}
 
+	/**
+	 * @param {string} value
+	 * @returns {Date}
+	 */
+	value_to_date(value) {
+		return frappe.datetime.str_to_obj(value);
+	}
+
 	set_formatted_input(value) {
-		if (value === "Today") {
-			value = this.get_now_date();
+		if (!value) {
+			super.set_formatted_input("");
+			this.datepicker?.clear();
+			return;
 		}
 
 		super.set_formatted_input(value);
 		if (this.timepicker_only) return;
-		if (!this.datepicker) return;
-		if (!value) {
-			this.datepicker.clear();
+		if (!this.datepicker) {
+			// There is no datepicker, so we cannot set the selected date
 			return;
 		}
 
-		let should_refresh = this.last_value && this.last_value !== value;
+		let should_refresh = false;
 
-		if (!should_refresh) {
-			if (this.datepicker.selectedDates.length > 0) {
-				// if date is selected but different from value, refresh
-				const selected_date = moment(this.datepicker.selectedDates[0]).format(
-					this.date_format
-				);
-
-				should_refresh = selected_date !== value;
-			} else {
-				// if datepicker has no selected date, refresh
-				should_refresh = true;
+		if (this.datepicker.selectedDates.length > 0) {
+			const selected_date = this.datepicker.selectedDates[0];
+			const deltaTime = selected_date - this.value_to_date(value);
+			if (Math.abs(deltaTime) > 0) {
+				should_refresh = true; // date is different from value, refresh
 			}
+		} else {
+			should_refresh = true; // no selected date, refresh
 		}
 
 		if (should_refresh) {
-			this.datepicker.selectDate(frappe.datetime.str_to_obj(value));
+			this.datepicker.selectDate(this.value_to_date(value));
 		}
 	}
 
@@ -147,13 +152,21 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 		});
 	}
 
+	/** @param {string | null} value */
 	parse(value) {
-		if (value) {
-			if (value == "Invalid date") {
-				return "";
-			}
-			return frappe.datetime.user_to_str(value, false, true);
+		value = typeof value === "string" ? value : "";
+
+		if (["today", "now"].includes(value.toLowerCase())) {
+			value = frappe.datetime.now_date(false);
+		} else {
+			value = frappe.datetime.user_to_str(value, false, true);
 		}
+
+		if (value === "Invalid date") {
+			value = "";
+		}
+
+		return value.substring(0, 10);
 	}
 
 	format_for_input(value) {

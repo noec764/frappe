@@ -1,24 +1,7 @@
 frappe.ui.form.ControlDatetime = class ControlDatetime extends frappe.ui.form.ControlDate {
-	set_formatted_input(value) {
-		if (this.timepicker_only) return;
-		if (!this.datepicker) return;
-		if (!value) {
-			this.datepicker.clear();
-			return;
-		} else if (value.toLowerCase() === "today") {
-			value = this.get_now_date();
-		} else if (value.toLowerCase() === "now") {
-			value = frappe.datetime.now_datetime();
-		}
-		value = this.format_for_input(value);
-		this.$input && this.$input.val(value);
-		this.datepicker.selectDate(frappe.datetime.user_to_obj(value));
-	}
-
-	get_start_date() {
-		this.value = !this.value || this.value == null ? undefined : this.value;
-		let value = frappe.datetime.convert_to_user_tz(this.value);
-		return frappe.datetime.str_to_obj(value);
+	value_to_date(value) {
+		const str = frappe.datetime.convert_to_user_tz(value, true);
+		return frappe.datetime.str_to_obj(str);
 	}
 
 	set_date_options() {
@@ -38,20 +21,25 @@ frappe.ui.form.ControlDatetime = class ControlDatetime extends frappe.ui.form.Co
 		return frappe.datetime.now_datetime(true);
 	}
 
+	/** @param {string | null} value */
 	parse(value) {
-		if (value) {
-			value = frappe.datetime.user_to_str(value, false);
+		let parsed = typeof value === "string" ? value.trim() : "";
 
-			if (!frappe.datetime.is_system_time_zone()) {
-				value = frappe.datetime.convert_to_system_tz(value, true);
-			}
-
-			if (value == "Invalid date") {
-				value = "";
-			}
+		if (["today", "now"].includes(parsed.toLowerCase())) {
+			parsed = frappe.datetime.now_datetime(false);
+		} else if (parsed) {
+			parsed = frappe.datetime.user_to_str(parsed, false);
+			parsed = frappe.datetime.convert_to_system_tz(parsed, true);
 		}
-		return value;
+
+		if (parsed === "Invalid date") {
+			console.warn("Invalid datetime", value); // eslint-disable-line
+			parsed = "";
+		}
+
+		return parsed;
 	}
+
 	format_for_input(value) {
 		if (!value) return "";
 
