@@ -46,9 +46,7 @@ frappe.ui.form.ControlMultiSelectList = class ControlMultiSelectList extends (
 							Awesomplete.FILTER_CONTAINS(opt.label, txt) ||
 							Awesomplete.FILTER_CONTAINS(opt.value, txt) ||
 							Awesomplete.FILTER_CONTAINS(opt.description, txt);
-						if (!match) {
-							match = Awesomplete.FILTER_CONTAINS(opt.value, txt);
-						}
+
 						return match;
 					});
 					let options = this._selected_values

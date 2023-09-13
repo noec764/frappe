@@ -162,7 +162,7 @@ frappe.ui.form.Review = class Review {
 			delay: 500,
 			placement: "top",
 			template: `
-				<div class="popover" role="tooltip">
+				<div class="review-popover popover" role="tooltip">
 					<div class="arrow"></div>
 					<h3 class="popover-header"></h3>
 					<div class="popover-body">

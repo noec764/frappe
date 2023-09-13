@@ -10,6 +10,14 @@ export default class Section {
 
 		this.make();
 
+		if (
+			this.df.label &&
+			this.df.collapsible &&
+			localStorage.getItem(this.get_section_localstorage_key()) == "1"
+		) {
+			this.collapse();
+		}
+
 		this.row = {
 			wrapper: this.wrapper,
 		};
@@ -23,7 +31,6 @@ export default class Section {
 				${this.df.is_dashboard_section ? "form-dashboard-section" : "form-section"}
 				${make_card ? "card-section" : ""}" data-fieldname="${this.df.fieldname}">
 			`).appendTo(this.parent);
-		this.layout && this.layout.sections.push(this);
 
 		if (this.df) {
 			if (this.df.label) {

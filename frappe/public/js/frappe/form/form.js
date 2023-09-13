@@ -2164,7 +2164,7 @@ frappe.ui.form.Form = class FrappeForm {
 					}
 
 					let html = `
-						<div class="row">
+					<div class="row">
 						<div class="${div_class}">
 							<a href='/app/submission-queue/${r.message.latest_submission}'>${submission_label} (${r.message.status})</a>${secondary}
 						</div>

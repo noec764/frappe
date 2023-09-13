@@ -19,6 +19,7 @@ frappe.ui.form.ControlAttachImage = class ControlAttachImage extends frappe.ui.f
 	}
 
 	get_preview_section() {
+		// @dokos
 		return `<div class="file-preview">
 			<div class="file-icon border rounded">
 				<img class="attached-file-preview" style="object-fit: cover;"></img>

@@ -208,7 +208,7 @@ frappe.ui.form.ControlData = class ControlData extends frappe.ui.form.ControlInp
 							this.$input.val(),
 							"name",
 							(val) => {
-								if (Object.keys(val).length && val.name) {
+								if (val?.name) {
 									this.set_description(
 										__("{0} already exists. Select another name", [val.name])
 									);

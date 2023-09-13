@@ -36,6 +36,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 	}
 
 	get_preview_section() {
+		// @dokos
 		const is_image =
 			this.df.fieldname &&
 			String(this.df.fieldname).match(/image|photo|picture|logo|icon|scan|cover/gi);
@@ -83,11 +84,13 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 	on_attach_doc_image() {
 		this.set_upload_options();
 		this.upload_options.restrictions.allowed_file_types = ["image/*"];
+		// @dokos: Allow any aspect ratio
 		this.upload_options.restrictions.crop_image_aspect_ratio = NaN;
 		this.file_uploader = new frappe.ui.FileUploader(this.upload_options);
 	}
 
 	parse_df_options() {
+		// @dokos
 		if (!this.df.options) {
 			return {};
 		} else if (this.df.options === "Public" || this.df.options === "Private") {
@@ -127,7 +130,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 	set_input(value, dataurl) {
 		this.last_value = this.value;
 		this.value = value;
-		let filename;
+		let filename; // @dokos
 		if (this.value) {
 			this.$input && this.$input.toggle(false);
 			// value can also be using this format: FILENAME,DATA_URL
@@ -149,6 +152,7 @@ frappe.ui.form.ControlAttach = class ControlAttach extends frappe.ui.form.Contro
 		}
 
 		if (this.value) {
+			// @dokos
 			if (this.$value) {
 				this.$value
 					.find(".attached-file-preview")

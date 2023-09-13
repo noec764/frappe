@@ -7,9 +7,9 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 	make_wrapper() {
 		this.comment_wrapper = !this.no_wrapper
 			? $(`
-				<div class="comment-input-wrapper">
-					<div class="comment-input-header">
-						<span>${__("Add a comment")}</span>
+			<div class="comment-input-wrapper">
+				<div class="comment-input-header">
+					<span>${__("Add a comment")}</span>
 				</div>
 				<div class="comment-input-container">
 					<div class="frappe-control"></div>
@@ -65,7 +65,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 
 	update_state() {
 		const value = this.get_value();
-		if (strip_html(value).trim() != "") {
+		if (strip_html(value).trim() != "" || value.includes("img")) {
 			this.button.removeClass("btn-default").addClass("btn-primary");
 		} else {
 			this.button.addClass("btn-default").removeClass("btn-primary");

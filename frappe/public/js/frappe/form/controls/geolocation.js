@@ -61,7 +61,11 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 		this.clear_editable_layers();
 
 		const data_layers = new L.FeatureGroup().addLayer(
-			L.geoJson(JSON.parse(value), { pointToLayer: this.point_to_layer })
+			L.geoJson(JSON.parse(value), {
+				pointToLayer: this.point_to_layer,
+				style: this.set_style,
+				onEachFeature: this.on_each_feature,
+			})
 		);
 		this.add_non_group_layers(data_layers, this.editableLayers);
 		this.editableLayers.addTo(this.map);
@@ -70,6 +74,8 @@ frappe.ui.form.ControlGeolocation = class ControlGeolocation extends frappe.ui.f
 
 	/**
 	 * Defines custom rules for how geoJSON data is rendered on the map.
+	 *
+	 * Can be inherited in custom map controllers.
 	 *
 	 * @param {Object} geoJsonPoint - The geoJSON object to be rendered on the map.
 	 * @param {Object} latlng - The latitude and longitude where the geoJSON data should be rendered on the map.
