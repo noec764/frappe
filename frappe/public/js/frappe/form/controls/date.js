@@ -55,7 +55,7 @@ frappe.ui.form.ControlDate = class ControlDate extends frappe.ui.form.ControlDat
 		let sysdefaults = frappe.boot.sysdefaults;
 
 		let lang = "en";
-		frappe.boot.user && (lang = frappe.boot.lang);
+		frappe.boot.user && (lang = frappe.boot.user.language);
 		if (!$.fn.datepicker.language[lang]) {
 			lang = "en";
 		}

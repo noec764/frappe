@@ -10,6 +10,7 @@ frappe.ui.form.Control = class BaseControl {
 	}
 
 	get_configuration(key = null) {
+		// @dokos
 		if (this.df.configuration && !this._parsed_configuration) {
 			try {
 				if (typeof this.df.configuration === "string") {

@@ -27,6 +27,7 @@ frappe.ui.form.ControlBarcode = class ControlBarcode extends frappe.ui.form.Cont
 		let svg = value;
 		let barcode_value = "";
 
+		this.set_empty_description();
 		if (value && value.startsWith("<svg")) {
 			barcode_value = $(svg).attr("data-barcode-value");
 		}

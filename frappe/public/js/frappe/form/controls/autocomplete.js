@@ -70,6 +70,7 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
 				var html = "<strong>" + _label + "</strong>";
 
 				if (d.label === "" && d.value === "") {
+					// @dokos
 					html = '<strong class="text-muted font-italic">' + __("Empty") + "</strong>";
 				}
 
@@ -158,8 +159,8 @@ frappe.ui.form.ControlAutocomplete = class ControlAutoComplete extends frappe.ui
 		if (this.df.ignore_validation) {
 			return value || "";
 		}
-		let valid_values = this.awesomplete && this.awesomplete._list.map((d) => d.value);
-		if (!valid_values || !valid_values.length) {
+		let valid_values = this.awesomplete?._list.map((d) => d.value);
+		if (!valid_values?.length) {
 			return value;
 		}
 		if (valid_values.includes(value)) {
