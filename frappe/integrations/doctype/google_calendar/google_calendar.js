@@ -43,7 +43,17 @@ frappe.ui.form.on("Google Calendar", {
 						frappe.hide_progress();
 						frappe.msgprint(r.message);
 					});
-			});
+			}, __("Actions"));
+		}
+
+		if (frm.doc.next_sync_token) {
+			frm.add_custom_button(__("Reset the synchronization settings"), function () {
+				frm.set_value("next_sync_token", null)
+				frappe.show_alert({
+					indicator: "green",
+					message: __("Please save this document to reset the synchronization token"),
+				});
+			}, __("Actions"));
 		}
 	},
 	authorize_google_calendar_access: function (frm) {

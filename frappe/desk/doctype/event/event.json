@@ -175,7 +175,7 @@
   },
   {
    "fieldname": "google_calendar_event_id",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Google Calendar Event ID",
    "no_copy": 1,
    "read_only": 1
@@ -201,7 +201,7 @@
   },
   {
    "fieldname": "rrule",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "hidden": 1,
    "label": "RRULE"
   },
@@ -291,7 +291,7 @@
  "is_calendar_and_gantt": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-07-17 09:51:15.036261",
+ "modified": "2023-09-14 18:24:34.235002",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",

@@ -236,7 +236,7 @@ def check_google_calendar(account, google_calendar):
 		)
 
 
-def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
+def sync_events_from_google_calendar(g_calendar, method=None, page_length=500):
 	"""
 	Syncs Events from Google Calendar in Framework Calendar.
 	Google Calendar returns nextSyncToken when all the events in Google Calendar are fetched.
@@ -282,8 +282,7 @@ def sync_events_from_google_calendar(g_calendar, method=None, page_length=2000):
 		results.extend(event for event in events.get("items", []))
 		if not events.get("nextPageToken"):
 			if events.get("nextSyncToken"):
-				account.next_sync_token = events.get("nextSyncToken")
-				account.save()
+				account.db_set("next_sync_token", events.get("nextSyncToken"))
 			break
 
 	for idx, event in enumerate(results):

@@ -557,7 +557,7 @@ def update_event_in_calendar(account, event, recurrence=None):
 	end = event.get("end")
 
 	calendar_event = frappe.get_doc("Event", {"google_calendar_event_id": event.get("id")})
-	calendar_event.subject = event.get("summary")
+	calendar_event.subject = event.get("summary") or _("No Subject")
 	calendar_event.description = event.get("description")
 	calendar_event.rrule = recurrence
 	calendar_event.starts_on = (
