@@ -581,7 +581,7 @@ def close_event_in_calendar(account, event):
 			"google_calendar_event_id": event.get("id"),
 		},
 		"status",
-		"Closed",
+		"Cancelled",
 	)
 	frappe.get_doc(
 		{

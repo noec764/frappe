@@ -77,7 +77,7 @@ gcalendar_integrations = {
 	"Event": {
 		"pull_insert": "frappe.desk.doctype.event.event.insert_event_to_calendar",
 		"pull_update": "frappe.desk.doctype.event.event.update_event_in_calendar",
-		"pull_delete": "frappe.desk.doctype.event.event.insert_event_to_calendar",
+		"pull_delete": "frappe.desk.doctype.event.event.close_event_in_calendar",
 	}
 }
 

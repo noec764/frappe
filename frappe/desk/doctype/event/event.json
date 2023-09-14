@@ -291,7 +291,7 @@
  "is_calendar_and_gantt": 1,
  "is_published_field": "published",
  "links": [],
- "modified": "2023-09-14 18:24:34.235002",
+ "modified": "2023-09-14 18:47:56.382380",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Event",
@@ -330,6 +330,5 @@
  "subject_field": "subject",
  "title_field": "subject",
  "track_changes": 1,
- "track_seen": 1,
- "track_views": 1
+ "track_seen": 1
 }
