@@ -5,8 +5,23 @@
 import frappe
 from frappe.tests.utils import FrappeTestCase
 
+from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+
 
 class TestViewLog(FrappeTestCase):
+	@classmethod
+	def setUpClass(cls):
+		super().setUpClass()
+		make_property_setter(
+			"Event",
+			None,
+			"track_views",
+			1,
+			"Check",
+			for_doctype=True,
+			validate_fields_for_doctype=False,
+		)
+
 	def tearDown(self):
 		frappe.set_user("Administrator")
 
