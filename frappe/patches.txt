@@ -265,12 +265,5 @@ frappe.patches.v14_0.remove_manage_subscriptions_from_navbar
 frappe.patches.v15_0.remove_background_jobs_from_dropdown
 frappe.desk.doctype.form_tour.patches.introduce_ui_tours
 execute:frappe.db.set_single_value("Document Naming Settings", "default_amend_naming", "Amend Counter")
-
-frappe.patches.dokos.v3_0.currency_symbol_location
-frappe.patches.dokos.v3_0.set_language_for_onboarding_modules #2023-01-20
-frappe.patches.dokos.v3_0.fix_symbol_on_right_for_euro_currency
-execute:frappe.delete_doc_if_exists("Workspace", "build", force=1)
-
-execute:frappe.delete_doc_if_exists("DocType", "Error Snapshot")
 frappe.patches.v15_0.move_event_cancelled_to_status
 frappe.patches.v15_0.set_file_type
