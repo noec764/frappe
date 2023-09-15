@@ -44,11 +44,17 @@ frappe.PermissionEngine = class PermissionEngine {
 	}
 
 	setup_page() {
+		const authorized_doctypes = this.options.doctypes.map(d => d.value)
 		this.doctype_select = this.wrapper.page.add_field({
 			fieldname: "doctype_select",
 			label: __("Document Type"),
 			fieldtype: "Link",
 			options: "DocType",
+			get_query: () => ({
+				filters: {
+					name: ["in", authorized_doctypes]
+				}
+			}),
 			change: function () {
 				frappe.set_route("permission-manager", this.get_value());
 			},
