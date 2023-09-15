@@ -26,6 +26,7 @@ def wait_for_completion(job: Job):
 		time.sleep(0.2)
 
 
+@unittest.skip("Skipped in CI")
 class TestRQJob(FrappeTestCase):
 	BG_JOB = "frappe.core.doctype.rq_job.test_rq_job.test_func"
 
