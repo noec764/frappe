@@ -126,4 +126,8 @@ frappe.views.ListSidebar = class ListSidebar {
 		this.sidebar.find(".stat-no-records").remove();
 		this.get_stats();
 	}
+
+	add_insights_banner() {
+		// noop
+	}
 };

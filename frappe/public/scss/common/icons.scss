@@ -54,11 +54,19 @@ use.like-icon {
 	stroke: none;
 }
 
-// .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
-@each $size, $value in $icon-sizes {
-	.icon-#{$size} {
-		width: $value;
-		height: $value;
+#icon-close {
+	fill: var(--invert-neutral);
+}
+
+.icon > .close-alt {
+	fill: var(--gray-500);
+}
+
+.liked {
+	use.like-icon {
+		--icon-stroke: var(--red-500);
+		stroke: var(--icon-stroke);
+		fill: var(--icon-stroke);
 	}
 }
 
@@ -88,4 +96,12 @@ use.like-icon {
 
 i.icon {
 	font-style: normal !important;
+}
+
+// .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
+@each $size, $value in $icon-sizes {
+	.icon-#{$size} {
+		width: $value;
+		height: $value;
+	}
 }

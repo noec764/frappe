@@ -1,11 +1,8 @@
 .navbar {
 	height: $navbar-height;
 	background: var(--navbar-bg);
-	box-shadow: var(--shadow-inset);
-	border-color: rgba(237,242,247,var(--border-opacity))!important;
-	--border-opacity: 1;
-	border: 0 solid #e2e8f0 /* 2;; */;
-	border-bottom-width: 1px;
+	box-shadow: var(--shadow-sm);
+	border-bottom: 1px solid var(--border-color);
 	padding: 0;
 
 	.navbar-nav {
