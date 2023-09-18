@@ -179,7 +179,7 @@ def upload_file():
 	files = frappe.request.files
 	is_private = frappe.form_dict.is_private
 	_doctype = frappe.form_dict.doctype
-	_doc_is_new = frappe.form_dict.docname.startswith(f"new-{_doctype.lower().replace(' ', '-')}-")
+	_doc_is_new = frappe.form_dict.docname and frappe.form_dict.docname.startswith(f"new-{_doctype.lower().replace(' ', '-')}-")
 	doctype = not _doc_is_new and _doctype
 	docname = not _doc_is_new and frappe.form_dict.docname
 	fieldname = not _doc_is_new and frappe.form_dict.fieldname

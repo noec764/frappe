@@ -253,7 +253,13 @@ class TemplatePage(BaseTemplatePage):
 		js_path = self.basename + ".js"
 		if os.path.exists(js_path) and "{% block script %}" not in self.source:
 			js = self.get_colocated_file(js_path)
-			js = frappe.render_template(js, self.context, safe_render=True)
+
+			try:
+				js = frappe.render_template(js, self.context, safe_render=True)
+			except frappe.ValidationError as e:
+				if not (e.args and "jinja2.exceptions" in str(e.args[0])):
+					raise
+
 			self.context.colocated_js = js
 
 		css_path = self.basename + ".css"
