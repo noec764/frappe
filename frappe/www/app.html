@@ -58,10 +58,10 @@
 	</audio>
 	{% endfor %}
 
-	<script>
-		const xhr = new XMLHttpRequest()
-		xhr.open("GET", "/assets/frappe/icons/timeless/icons.svg")
-		xhr.onload = () => xhr.responseText && xhr.responseText.indexOf("<svg") === 0 && document.body.insertAdjacentHTML("beforeend", xhr.responseText)
-		xhr.send()
-	</script>
+	<div id="all-symbols">
+		{%- for path in include_icons -%}
+		<!-- {{ path }} -->
+		{%- include path ignore missing -%}
+		{%- endfor -%}
+	</div>
 </body>
