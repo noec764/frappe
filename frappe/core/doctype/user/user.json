@@ -195,8 +195,8 @@
   },
   {
    "fieldname": "time_zone",
-   "fieldtype": "Select",
-   "label": "Time zone"
+   "fieldtype": "Autocomplete",
+   "label": "Time Zone"
   },
   {
    "description": "Get your globally recognized avatar from Gravatar.com",
@@ -789,7 +789,7 @@
    "link_fieldname": "user"
   }
  ],
- "modified": "2023-05-24 15:20:06.434506",
+ "modified": "2023-09-18 22:19:49.933972",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "User",
