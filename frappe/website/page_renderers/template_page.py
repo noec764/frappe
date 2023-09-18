@@ -256,8 +256,9 @@ class TemplatePage(BaseTemplatePage):
 
 			try:
 				js = frappe.render_template(js, self.context, safe_render=True)
-			except frappe.ValidationError:
-				pass
+			except frappe.ValidationError as e:
+				if not (e.args and "jinja2.exceptions" in str(e.args[0])):
+					raise
 
 			self.context.colocated_js = js
 
