@@ -1967,7 +1967,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 							"Title of confirmation dialog"
 						);
 					}
-					frappe.confirm(message, () => {
+					frappe.confirm_danger(message, () => {
 						this.disable_list_update = true;
 						bulk_operations.delete(docnames, () => {
 							this.disable_list_update = false;
