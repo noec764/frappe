@@ -6,6 +6,7 @@
 
 html {
 	scrollbar-width: auto;
+	scrollbar-gutter: stable;
 }
 
 /* Works on Chrome, Edge, and Safari */
@@ -19,12 +20,12 @@ html {
 // 	background: var(--scrollbar-track-color);
 // }
 
-*:not(#page-form-builder *)::-webkit-scrollbar {
+*::-webkit-scrollbar {
 	width: 6px;
 	height: 6px;
 }
 
 body::-webkit-scrollbar {
-	width: 12px !important;
-	height: 12px !important;
+	width: 8px !important;
+	height: 8px !important;
 }

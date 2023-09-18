@@ -21,7 +21,7 @@ body {
 	&.full-width {
 	@include media-breakpoint-up(md) {
 			.container {
-				width: 90%;
+				width: calc(100vw - 16px); // @dokos
 				max-width: 100%;
 			}
 		}

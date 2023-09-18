@@ -27,7 +27,7 @@ export default class Tab {
 			</li>
 		`).appendTo(this.tab_link_container);
 
-		this.wrapper = $(`<div class="tab-pane fade show ${this.df.active ? "active" : ""}"
+		this.wrapper = $(`<div class="tab-pane show ${this.df.active ? "active" : ""}"
 			id="${id}" role="tabpanel" aria-labelledby="${id}-tab">`).appendTo(this.tabs_content);
 	}
 
@@ -74,9 +74,6 @@ export default class Tab {
 	}
 
 	add_field(fieldobj) {
-		fieldobj.tab = this;
-	}
-	replace_field(fieldobj) {
 		fieldobj.tab = this;
 	}
 
