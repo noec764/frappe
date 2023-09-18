@@ -136,7 +136,8 @@
 }
 
 .recent-item.notification-item {
-	padding: 10px 10px 10px 4px;
+	padding: 10px 10px 10px 0px;
+	margin:  10px 10px 10px 10px;
 	justify-content: space-between;
 	transition: background 0.1s ease;
 
@@ -155,7 +156,7 @@
 		}
 
 		.notification-body::before {
-			background: var(--primary);
+			background: var(--invert-neutral);
 		}
 	}
 
@@ -183,6 +184,7 @@
 
 	.notification-body {
 		display: flex;
+		gap: 10px;
 
 		&::before {
 			// @dokos
