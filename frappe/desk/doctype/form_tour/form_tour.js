@@ -109,7 +109,9 @@ let add_custom_button = (frm) => {
 						},
 					});
 				},
-				delete frappe.boot.user.onboarding_status[frm.doc.name]
+				function () {
+					delete frappe.boot.user.onboarding_status[frm.doc.name];
+				}
 			);
 		});
 	} else {
