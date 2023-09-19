@@ -15,6 +15,7 @@ class ConsoleLog(Document):
 	if TYPE_CHECKING:
 		from frappe.types import DF
 
+		committed: DF.Check
 		script: DF.Code | None
 		type: DF.Data | None
 	# end: auto-generated types
