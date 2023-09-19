@@ -32,7 +32,7 @@ class Report(Document):
 		columns: DF.Table[ReportColumn]
 		disabled: DF.Check
 		filters: DF.Table[ReportFilter]
-		is_standard: DF.Literal["No", "Yes"]
+		is_standard: DF.Literal['No', 'Yes']
 		javascript: DF.Code | None
 		json: DF.Code | None
 		letter_head: DF.Link | None
@@ -43,7 +43,7 @@ class Report(Document):
 		reference_report: DF.Data | None
 		report_name: DF.Data
 		report_script: DF.Code | None
-		report_type: DF.Literal["Report Builder", "Query Report", "Script Report", "Custom Report"]
+		report_type: DF.Literal['Report Builder', 'Query Report', 'Script Report', 'Custom Report']
 		roles: DF.Table[HasRole]
 		use_tabulator: DF.Check
 	# end: auto-generated types
