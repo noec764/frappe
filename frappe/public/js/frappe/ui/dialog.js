@@ -229,6 +229,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 				.find(".indicator")
 				.removeClass()
 				.addClass("indicator " + this.indicator);
+			this.$wrapper.attr("data-tinted", this.indicator);
 		}
 	}
 

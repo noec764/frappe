@@ -26,7 +26,7 @@ frappe.throw = function (msg) {
 	throw new Error(msg.message);
 };
 
-frappe.confirm = function (message, confirm_action, reject_action) {
+frappe.confirm = function (message, confirm_action, reject_action, opts = {}) {
 	var d = new frappe.ui.Dialog({
 		title: __("Confirm", null, "Title of confirmation dialog"),
 		primary_action_label: __("Yes", null, "Approve confirmation dialog"),
@@ -36,6 +36,7 @@ frappe.confirm = function (message, confirm_action, reject_action) {
 		},
 		secondary_action_label: __("No", null, "Dismiss confirmation dialog"),
 		secondary_action: () => d.hide(),
+		...opts,
 	});
 
 	d.$body.append(`<p class="frappe-confirm-message">${message}</p>`);
@@ -54,6 +55,8 @@ frappe.confirm = function (message, confirm_action, reject_action) {
 	}
 	return d;
 };
+
+frappe.confirm_danger = (m, a, r = null) => frappe.confirm(m, a, r, { indicator: "red" });
 
 frappe.warn = function (title, message_html, proceed_action, primary_label, is_minimizable) {
 	const d = new frappe.ui.Dialog({

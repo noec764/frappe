@@ -1,0 +1,32 @@
+[data-tinted="red"] {
+	--tinted-1: var(--alert-text-danger);
+	--tinted-2: var(--alert-bg-danger);
+}
+
+[data-tinted~="red"] {
+	--tinted-fg: var(--tinted-1);
+	--tinted-bg: var(--tinted-2);
+
+	[data-theme="dark"] & {
+		--tinted-fg: var(--tinted-2);
+		--tinted-bg: var(--tinted-1);
+	}
+
+	--primary: var(--tinted-fg);
+	--primary-color: var(--tinted-fg);
+	--text-secondary-color: var(--tinted-fg);
+	--heading-color: var(--tinted-fg);
+
+	// --modal-bg: var(--tinted-bg);
+	--awesomplete-hover-bg: var(--tinted-bg);
+
+	// Button Colors
+	--control-bg: var(--tinted-bg);
+	--btn-default-bg: var(--tinted-bg);
+	// --btn-default-hover-bg: var(--gray-300);
+
+	// --shadow-inset: inset 0px -1px 0px var(--tinted-fg);
+	// --border-color: var(--tinted-bg);
+	// --dark-border-color: var(--tinted-fg);
+	// --table-border-color: var(--tinted-bg);
+}

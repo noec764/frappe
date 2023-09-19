@@ -1011,7 +1011,7 @@ frappe.ui.form.Form = class FrappeForm {
 		if (skip_confirm) {
 			cancel_doc();
 		} else {
-			frappe.confirm(
+			frappe.confirm_danger(
 				__("Permanently Cancel {0}?", [this.docname]),
 				cancel_doc,
 				me.handle_save_fail(btn, on_error)
