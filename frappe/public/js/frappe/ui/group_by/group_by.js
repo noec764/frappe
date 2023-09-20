@@ -370,7 +370,7 @@ frappe.ui.GroupBy = class {
 		const tag_field = { fieldname: "_user_tags", fieldtype: "Data", label: __("Tags") };
 		this.group_by_fields[this.doctype] = fields
 			.concat(tag_field)
-			.sort((a, b) => __(a.label).localeCompare(__(b.label)));
+			.sort((a, b) => __(cstr(a.label)).localeCompare(cstr(__(b.label))));
 		this.all_fields[this.doctype] = this.report_view.meta.fields;
 
 		const standard_fields_filter = (df) =>
@@ -406,9 +406,9 @@ frappe.ui.GroupBy = class {
 	}
 
 	get_group_by_field_label() {
-		const label = this.group_by_fields[this.group_by_doctype].find(
+		let field = this.group_by_fields[this.group_by_doctype].find(
 			(field) => field.fieldname == this.group_by_field
-		).label;
-		return __(label, null, this.group_by_doctype);
+		);
+		return field.label || field.fieldname;
 	}
 };
