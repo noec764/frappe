@@ -108,8 +108,6 @@ let add_custom_button = (frm) => {
 							tour_name: frm.doc.name,
 						},
 					});
-				},
-				function () {
 					delete frappe.boot.user.onboarding_status[frm.doc.name];
 				}
 			);
