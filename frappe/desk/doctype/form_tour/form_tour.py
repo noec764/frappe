@@ -76,12 +76,13 @@ class FormTour(Document):
 
 @frappe.whitelist()
 def reset_tour(tour_name):
+	frappe.only_for("System Manager")
 	for user in frappe.get_all("User"):
 		user_doc = frappe.get_doc("User", user.name)
 		onboarding_status = frappe.parse_json(user_doc.onboarding_status)
 		onboarding_status.pop(tour_name, None)
 		user_doc.onboarding_status = frappe.as_json(onboarding_status)
-		user_doc.save()
+		user_doc.save(ignore_permissions=True)
 
 
 @frappe.whitelist()
