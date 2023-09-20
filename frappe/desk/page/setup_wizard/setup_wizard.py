@@ -111,7 +111,8 @@ def update_global_settings(args):
 	frappe.clear_cache()
 
 	update_system_settings(args)
-	update_user_name(args)
+	if (frappe.conf.get("developer_mode") or 0) != 1 or frappe.flags.in_demo: #@dokos
+		update_user_name(args)
 	set_timezone(args)
 
 
