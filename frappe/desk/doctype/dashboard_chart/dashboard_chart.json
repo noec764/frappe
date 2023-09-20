@@ -57,6 +57,8 @@
   {
    "fieldname": "chart_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Chart Type",
    "options": "Count\nSum\nAverage\nGroup By\nCustom\nReport",
    "set_only_once": 1
@@ -230,6 +232,8 @@
    "description": "This chart will be available to all users if this is set",
    "fieldname": "is_public",
    "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Is Public"
   },
   {
@@ -242,6 +246,8 @@
    "default": "0",
    "fieldname": "is_standard",
    "fieldtype": "Check",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Is Standard",
    "read_only_depends_on": "eval: !frappe.boot.developer_mode"
   },
@@ -249,6 +255,8 @@
    "depends_on": "eval: doc.is_standard",
    "fieldname": "module",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Module",
    "mandatory_depends_on": "eval: doc.is_standard",
    "options": "Module Def"
@@ -287,7 +295,7 @@
   }
  ],
  "links": [],
- "modified": "2023-08-28 20:20:54.186299",
+ "modified": "2023-09-20 09:02:55.343655",
  "modified_by": "Administrator",
  "module": "Desk",
  "name": "Dashboard Chart",

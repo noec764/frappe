@@ -388,7 +388,7 @@ class DashboardChart(Document):
 		aggregate_function_based_on: DF.Literal
 		based_on: DF.Literal
 		chart_name: DF.Data
-		chart_type: DF.Literal["Count", "Sum", "Average", "Group By", "Custom", "Report"]
+		chart_type: DF.Literal['Count', 'Sum', 'Average', 'Group By', 'Custom', 'Report']
 		color: DF.Color | None
 		custom_options: DF.Code | None
 		document_type: DF.Link | None
@@ -396,7 +396,7 @@ class DashboardChart(Document):
 		filters_json: DF.Code
 		from_date: DF.Date | None
 		group_by_based_on: DF.Literal
-		group_by_type: DF.Literal["Count", "Sum", "Average"]
+		group_by_type: DF.Literal['Count', 'Sum', 'Average']
 		heatmap_year: DF.Literal
 		is_public: DF.Check
 		is_standard: DF.Check
@@ -407,11 +407,11 @@ class DashboardChart(Document):
 		report_name: DF.Link | None
 		roles: DF.Table[HasRole]
 		source: DF.Link | None
-		time_interval: DF.Literal["Yearly", "Quarterly", "Monthly", "Weekly", "Daily"]
+		time_interval: DF.Literal['Yearly', 'Quarterly', 'Monthly', 'Weekly', 'Daily']
 		timeseries: DF.Check
-		timespan: DF.Literal["Last Year", "Last Quarter", "Last Month", "Last Week", "Select Date Range"]
+		timespan: DF.Literal['Last Year', 'Last Quarter', 'Last Month', 'Last Week', 'Select Date Range']
 		to_date: DF.Date | None
-		type: DF.Literal["Line", "Bar", "Percentage", "Pie", "Donut", "Heatmap"]
+		type: DF.Literal['Line', 'Bar', 'Percentage', 'Pie', 'Donut', 'Heatmap']
 		use_report_chart: DF.Check
 		value_based_on: DF.Literal
 		x_field: DF.Literal

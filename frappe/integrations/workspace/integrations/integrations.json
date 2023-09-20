@@ -1,8 +1,9 @@
 {
  "charts": [],
  "color": "#35abb7",
- "content": "[{\"id\":\"lrOHPdRCE8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Social Login Connections\",\"col\":4}},{\"id\":\"93f3r8Mtzr\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"OAuth Connected Applications\",\"col\":4}},{\"id\":\"kTfsXC2Oti\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Google Calendar Connections\",\"col\":4}},{\"id\":\"uyG8WJnp5F\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"b5_8Rc7pt6\",\"type\":\"card\",\"data\":{\"card_name\":\"Backup\",\"col\":4}},{\"id\":\"u-TyVb1r-E\",\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"id\":\"jCu3sp_IK1\",\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"id\":\"OLELQVPEfg\",\"type\":\"card\",\"data\":{\"card_name\":\"Webhooks\",\"col\":4}},{\"id\":\"H1Kfy4adq-\",\"type\":\"card\",\"data\":{\"card_name\":\"Incoming Data\",\"col\":4}},{\"id\":\"sw3hMNI_A6\",\"type\":\"card\",\"data\":{\"card_name\":\"SMS\",\"col\":4}}]",
+ "content": "[{\"id\":\"lrOHPdRCE8\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Social Login Connections\",\"col\":4}},{\"id\":\"93f3r8Mtzr\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"OAuth Connected Applications\",\"col\":4}},{\"id\":\"kTfsXC2Oti\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Google Calendar Connections\",\"col\":4}},{\"id\":\"uyG8WJnp5F\",\"type\":\"header\",\"data\":{\"text\":\"\ud83d\uddc3\ufe0f <span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"b5_8Rc7pt6\",\"type\":\"card\",\"data\":{\"card_name\":\"Backup\",\"col\":4}},{\"id\":\"u-TyVb1r-E\",\"type\":\"card\",\"data\":{\"card_name\":\"Google Services\",\"col\":4}},{\"id\":\"jCu3sp_IK1\",\"type\":\"card\",\"data\":{\"card_name\":\"Authentication\",\"col\":4}},{\"id\":\"OLELQVPEfg\",\"type\":\"card\",\"data\":{\"card_name\":\"Webhooks\",\"col\":4}},{\"id\":\"H1Kfy4adq-\",\"type\":\"card\",\"data\":{\"card_name\":\"Incoming Data\",\"col\":4}},{\"id\":\"sw3hMNI_A6\",\"type\":\"card\",\"data\":{\"card_name\":\"SMS\",\"col\":4}}]",
  "creation": "2020-03-02 15:16:18.714190",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -257,7 +258,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-14 11:43:42.308702",
+ "modified": "2023-09-20 09:14:37.968835",
  "modified_by": "Administrator",
  "module": "Integrations",
  "name": "Integrations",

@@ -1,8 +1,9 @@
 {
  "charts": [],
  "color": "#F8A787",
- "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"mQNbPhdj1j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Console\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"<span style=\\\"font-size: 17.99px;\\\"><b>Customization Options</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards & Workspaces\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Forms\",\"col\":4}},{\"id\":\"AyBI0l8stW\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"OuUqCNmwbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"P64gF7ely-\",\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
+ "content": "[{\"id\":\"FDQW3OTspk\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Custom Fields\",\"col\":4}},{\"id\":\"TY2MJch6yS\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Client Scripts\",\"col\":4}},{\"id\":\"7SmwsfxuEC\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Server Scripts\",\"col\":4}},{\"id\":\"ClI2Zq5Bf9\",\"type\":\"header\",\"data\":{\"text\":\"\ud83c\udfc3 <span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"hdI4JemZH9\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Customize Form\",\"col\":3}},{\"id\":\"v4W-0mkSy-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Client Script\",\"col\":3}},{\"id\":\"o-b56R8lAB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Server Script\",\"col\":3}},{\"id\":\"mQNbPhdj1j\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"System Console\",\"col\":3}},{\"id\":\"TVjMMSS8El\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"xiNylEclHC\",\"type\":\"header\",\"data\":{\"text\":\"\ud83e\ude9b <span style=\\\"font-size: 17.99px;\\\"><b>Customization Options</b></span>\",\"col\":12}},{\"id\":\"AVjuN6wAiO\",\"type\":\"card\",\"data\":{\"card_name\":\"Dashboards & Workspaces\",\"col\":4}},{\"id\":\"dTe7IIFxhK\",\"type\":\"card\",\"data\":{\"card_name\":\"Forms\",\"col\":4}},{\"id\":\"AyBI0l8stW\",\"type\":\"card\",\"data\":{\"card_name\":\"Modules\",\"col\":4}},{\"id\":\"OuUqCNmwbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Views\",\"col\":4}},{\"id\":\"P64gF7ely-\",\"type\":\"card\",\"data\":{\"card_name\":\"Packages\",\"col\":4}},{\"id\":\"BmaW_X5UAF\",\"type\":\"card\",\"data\":{\"card_name\":\"Other\",\"col\":4}}]",
  "creation": "2020-03-02 15:15:03.839594",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -305,6 +306,7 @@
    "type": "Card Break"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Report",
@@ -316,6 +318,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Print Format",
@@ -327,6 +330,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Workspace",
@@ -337,6 +341,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Dashboard",
@@ -348,6 +353,7 @@
    "type": "Link"
   },
   {
+   "columns": 0,
    "hidden": 0,
    "is_query_report": 0,
    "label": "Dashboard Chart",
@@ -356,48 +362,9 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Customization",
-   "link_count": 4,
-   "onboard": 0,
-   "type": "Card Break"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Customize Form",
-   "link_count": 0,
-   "link_to": "Customize Form",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Custom Field",
-   "link_count": 0,
-   "link_to": "Custom Field",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
-  },
-  {
-   "columns": 0,
-   "hidden": 0,
-   "is_query_report": 0,
-   "label": "Navbar Settings",
-   "link_count": 0,
-   "link_to": "Navbar Settings",
-   "link_type": "DocType",
-   "onboard": 0,
-   "type": "Link"
   }
  ],
- "modified": "2023-06-28 10:30:17.228167",
+ "modified": "2023-09-20 09:14:27.119500",
  "modified_by": "Administrator",
  "module": "Custom",
  "name": "Customization",

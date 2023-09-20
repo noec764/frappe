@@ -1,8 +1,9 @@
 {
  "charts": [],
  "color": "#e8525b",
- "content": "[{\"id\":\"58Sld7GBbD\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active System Users\",\"col\":4}},{\"id\":\"gSzUDlSAVg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Website Users\",\"col\":4}},{\"id\":\"nZpBF_0fbz\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"Ql9wIE7pbq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User\",\"col\":3}},{\"id\":\"T0I_6CA0wr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Role\",\"col\":3}},{\"id\":\"xQgmHC1FRw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Permission Manager\",\"col\":3}},{\"id\":\"yPQrt-MIMW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Profile\",\"col\":3}},{\"id\":\"8VaQYEy3a5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Group\",\"col\":3}},{\"id\":\"U6IGupitPb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Type\",\"col\":3}},{\"id\":\"5_EGzV8-8y\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"RDn-0MpQ5V\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"w2oS2CxcZM\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"id\":\"hvOvO4VRbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs\",\"col\":4}},{\"id\":\"uh2jsCk-g1\",\"type\":\"card\",\"data\":{\"card_name\":\"Permissions\",\"col\":4}}]",
+ "content": "[{\"id\":\"58Sld7GBbD\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active System Users\",\"col\":4}},{\"id\":\"gSzUDlSAVg\",\"type\":\"number_card\",\"data\":{\"number_card_name\":\"Active Website Users\",\"col\":4}},{\"id\":\"nZpBF_0fbz\",\"type\":\"header\",\"data\":{\"text\":\"\ud83c\udfc3 <span class=\\\"h4\\\"><b>Your Shortcuts</b></span>\",\"col\":12}},{\"id\":\"Ql9wIE7pbq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User\",\"col\":3}},{\"id\":\"T0I_6CA0wr\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Role\",\"col\":3}},{\"id\":\"xQgmHC1FRw\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Permission Manager\",\"col\":3}},{\"id\":\"yPQrt-MIMW\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Profile\",\"col\":3}},{\"id\":\"8VaQYEy3a5\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Group\",\"col\":3}},{\"id\":\"U6IGupitPb\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"User Type\",\"col\":3}},{\"id\":\"5_EGzV8-8y\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"RDn-0MpQ5V\",\"type\":\"header\",\"data\":{\"text\":\"\ud83d\uddc3\ufe0f <span class=\\\"h4\\\"><b>Reports &amp; Masters</b></span>\",\"col\":12}},{\"id\":\"w2oS2CxcZM\",\"type\":\"card\",\"data\":{\"card_name\":\"Users\",\"col\":4}},{\"id\":\"hvOvO4VRbY\",\"type\":\"card\",\"data\":{\"card_name\":\"Logs\",\"col\":4}},{\"id\":\"uh2jsCk-g1\",\"type\":\"card\",\"data\":{\"card_name\":\"Permissions\",\"col\":4}}]",
  "creation": "2020-03-02 15:12:16.754449",
+ "custom_blocks": [],
  "docstatus": 0,
  "doctype": "Workspace",
  "for_user": "",
@@ -172,7 +173,7 @@
    "type": "Link"
   }
  ],
- "modified": "2023-04-14 11:10:52.521118",
+ "modified": "2023-09-20 09:13:53.102108",
  "modified_by": "Administrator",
  "module": "Core",
  "name": "Users",
