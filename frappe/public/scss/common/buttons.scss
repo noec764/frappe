@@ -32,7 +32,9 @@
 
 	&:active {
 		// override #dadada that comes from bootstrap (probably) to support dark theme.
-		background-color: var(--bg-color) !important;
+		color: var(--text-color) !important;
+		background-color: var(--control-bg) !important;
+		box-shadow: var(--focus-default) !important;
 	}
 
 	&.icon-btn {
@@ -142,6 +144,10 @@
 
 	.icon:first-child {
 		margin-right: 2px;
+	}
+	.btn-primary:active {
+			color: var(--gray-900) !important;
+			background-color: var(--invert-neutral) !important;
 	}
 }
 
