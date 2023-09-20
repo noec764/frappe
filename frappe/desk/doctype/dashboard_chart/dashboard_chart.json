@@ -288,6 +288,7 @@
    "options": "DocType"
   },
   {
+   "description": "If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.",
    "fieldname": "roles",
    "fieldtype": "Table",
    "label": "Roles",
