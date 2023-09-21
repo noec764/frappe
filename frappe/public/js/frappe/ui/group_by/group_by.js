@@ -365,7 +365,16 @@ frappe.ui.GroupBy = class {
 		this.all_fields = {};
 
 		const fields = this.report_view.meta.fields.filter((f) =>
-			["Select", "Link", "Data", "Int", "Check"].includes(f.fieldtype)
+			[
+				"Select",
+				"Link",
+				"Data",
+				"Int",
+				"Check",
+				"Dynamic Link",
+				"Autocomplete",
+				"Date",
+			].includes(f.fieldtype)
 		);
 		const tag_field = { fieldname: "_user_tags", fieldtype: "Data", label: __("Tags") };
 		this.group_by_fields[this.doctype] = fields
@@ -409,6 +418,6 @@ frappe.ui.GroupBy = class {
 		let field = this.group_by_fields[this.group_by_doctype].find(
 			(field) => field.fieldname == this.group_by_field
 		);
-		return field.label ? __(field.label, null, this.group_by_doctype): field.fieldname;
+		return field.label ? __(field.label, null, this.group_by_doctype) : field.fieldname;
 	}
 };
