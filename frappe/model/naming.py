@@ -1,4 +1,4 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
 import datetime
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
 
 NAMING_SERIES_PATTERN = re.compile(r"^[\w\- \/.#{}]+$", re.UNICODE)
 BRACED_PARAMS_PATTERN = re.compile(r"(\{[\w | #]+\})")
+
 
 # Types that can be using in naming series fields
 NAMING_SERIES_PART_TYPES = (
@@ -69,6 +70,7 @@ class NamingSeries:
 
 	def get_prefix(self) -> str:
 		"""Naming series stores prefix to maintain a counter in DB. This prefix can be used to update counter or validations.
+
 		e.g. `SINV-.YY.-.####` has prefix of `SINV-22-` in database for year 2022.
 		"""
 
@@ -86,7 +88,12 @@ class NamingSeries:
 		parse_naming_series(self.series, number_generator=fake_counter_backend)
 
 		if prefix is None:
-			frappe.throw(_("Invalid Naming Series"))
+			frappe.throw(
+				_("{1}: {2}").format(
+					_("Invalid Naming Series"),
+					self.series,
+				)
+			)
 
 		return prefix
 
@@ -167,6 +174,7 @@ def set_new_name(doc, draft_name=False):
 		if not doc.name and autoname:
 			set_name_from_naming_options(autoname, doc)
 
+		# at this point, we fall back to name generation with the hash option
 		if not doc.name:
 			doc.name = make_autoname("hash", doc.doctype)
 
@@ -279,6 +287,7 @@ def parse_naming_series(
 ) -> str:
 
 	"""Parse the naming series and get next name.
+
 	args:
 	        parts: naming series parts (split by `.`)
 	        doc: document to use for series that have parts using fieldnames
@@ -378,9 +387,11 @@ def revert_series_if_last(key, name, doc=None):
 	1. This function split the key into two parts prefix (SINV-YYYY) & hashes (####).
 	2. Use prefix to get the current index of that naming series from Series table
 	3. Then revert the current index.
+
 	*For custom naming series:*
 	1. hash can exist anywhere, if it exist in hashes then it take normal flow.
 	2. If hash doesn't exit in hashes, we get the hash from prefix, then update name and prefix accordingly.
+
 	*Example:*
 	        1. key = SINV-.YYYY.-
 	                * If key doesn't have hash it will add hash at the end
@@ -444,8 +455,7 @@ def validate_name(doctype: str, name: int | str):
 
 	if name.startswith("New " + doctype):
 		frappe.throw(
-			_("There were some errors setting the name, please contact the administrator"),
-			frappe.NameError,
+			_("There were some errors setting the name, please contact the administrator"), frappe.NameError
 		)
 	name = name.strip()
 
@@ -456,8 +466,7 @@ def validate_name(doctype: str, name: int | str):
 	if re.findall(f"[{special_characters}]+", name):
 		message = ", ".join(f"'{c}'" for c in special_characters)
 		frappe.throw(
-			_("Name cannot contain special characters like {0}").format(message),
-			frappe.NameError,
+			_("Name cannot contain special characters like {0}").format(message), frappe.NameError
 		)
 
 	return name
