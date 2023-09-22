@@ -6,8 +6,13 @@
 	background-color: var(--control-bg);
 	color: var(--text-color);
 	box-shadow: none;
-	border-radius: $border-radius;
-	font-size: var(--text-md);
+
+	height: var(--input-height);
+	font: inherit;
+	@include get_textstyle("base", "regular");
+	border-radius: var(--border-radius);
+	padding: var(--input-padding);
+
 	position: relative;
 
 	&::placeholder {

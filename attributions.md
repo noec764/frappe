@@ -17,7 +17,7 @@ The following 3rd-party software packages may be used by or distributed with <ht
 - Leaflet.EasyButton - MIT License, (C) 2014 Daniel Montague
 - Identicons - MIT License, (C) 2015, <https://github.com/evuez/identicons>
 
-### Icon Fonts
+### Fonts
 
 - Font Awesome - <http://fontawesome.io/>
   - Font License: SIL OFL 1.1 (<http://scripts.sil.org/OFL>)
@@ -26,7 +26,6 @@ The following 3rd-party software packages may be used by or distributed with <ht
   - Font License: SIL OFL 1.1 (<http://scripts.sil.org/OFL>)
   - Code License: MIT (<http://choosealicense.com/licenses/mit/>)
 - Inter - SIL Open Font License, 1.1 (c) 2020 Rasmus Andersson (<https://github.com/rsms/inter>)
-- Poppings - SIL Open Font License, Indian Type Foundry / Jonny Pinhorn
 
 ### IP Address Database
 
