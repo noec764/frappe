@@ -90,7 +90,7 @@
 	cursor: pointer;
 	transition: color 0.2s;
 	-webkit-transition: color 0.2s;
-	font-size: var(--text-md);
+	font-size: var(--text-base);
 
 	&:hover:not(.list-row-head) {
 		background-color: var(--highlight-color);
@@ -167,6 +167,25 @@
 .list-row-head {
 	@extend .list-row;
 	cursor: default;
+	// background-color: var(--gray-100);
+	// height: 30px;
+	padding: 8px 10px 8px 0px;
+	// margin: 8px 5px;
+
+	--list-gap-size: var(--padding-xs);
+	position: sticky;
+	top: var(--list-gap-size);
+	background-color: var(--list-header-bg);
+	box-shadow: 0px 1px 3px -2px var(--list-header-shadow-color),
+		0px 0px 0px 2px var(--list-body-bg);
+	border-bottom: none;
+	border-radius: var(--border-radius-sm);
+	height: 30px;
+	margin-top: var(--list-gap-size);
+
+	.list-check-all {
+		margin-left: 11px;
+	}
 
 	.list-subject {
 		font-weight: normal;
@@ -175,6 +194,27 @@
 	.checkbox-actions {
 		display: none;
 	}
+
+	& .list-row-col > span {
+		color: var(--list-header-fg) !important;
+		text-shadow: 0px 0px 2px var(--list-header-contrast);
+		font-weight: 600;
+	}
+}
+
+.list-paging-area {
+	// Doesn't need to be sticky
+	// position: sticky;
+	// bottom: var(--list-gap-size);
+	margin-bottom: var(--list-gap-size);
+	padding: var(--padding-sm);
+
+	// color: var(--list-header-fg) !important;
+	// background-color: var(--list-header-bg) !important;
+	// box-shadow: 0px -4px 4px 0px var(--list-body-bg);
+	// border-top: none;
+	// border-radius: 5px; // to work well with the frappe-card md radius
+	// margin-top: var(--list-gap-size);
 }
 
 .list-row-col {
@@ -212,13 +252,6 @@ $level-margin-right: 8px;
 
 .list-paging-area, .footnote-area {
 	border-top: 1px solid var(--border-color);
-
-	.btn-group .btn-paging.btn-info {
-		background-color: var(--gray-600);
-		border-color: var(--gray-600);
-		color: var(--white);
-		font-weight: var(--text-bold);
-	}
 }
 
 .frappe-card {
@@ -294,7 +327,7 @@ input.list-check-all {
 	height: 40px;
 	padding-left: 15px;
 
-	font-size: var(--text-md);
+	font-size: var(--text-base);
 
 	&:hover {
 		background-color: var(--highlight-color);
@@ -485,74 +518,3 @@ input.list-check-all {
 	display: flex;
 	gap: 0.5em;
 }
-
-.frappe-list {
-	--list-gap-size: var(--padding-xs);
-
-	.list-row-head {
-		position: sticky;
-		top: var(--list-gap-size);
-		background-color: var(--list-header-bg);
-		box-shadow: 0px 1px 3px -2px var(--list-header-shadow-color),
-			0px 0px 0px 2px var(--list-body-bg);
-		border-bottom: none;
-		border-radius: var(--border-radius-sm);
-		height: 30px;
-		margin-top: var(--list-gap-size);
-
-		& .list-row-col > span {
-			color: var(--list-header-fg) !important;
-			text-shadow: 0px 0px 2px var(--list-header-contrast);
-			font-weight: 600;
-		}
-	}
-	.list-paging-area {
-		// Doesn't need to be sticky
-		// position: sticky;
-		// bottom: var(--list-gap-size);
-		margin-bottom: var(--list-gap-size);
-		padding: var(--padding-sm);
-
-		// color: var(--list-header-fg) !important;
-		// background-color: var(--list-header-bg) !important;
-		// box-shadow: 0px -4px 4px 0px var(--list-body-bg);
-		// border-top: none;
-		// border-radius: 5px; // to work well with the frappe-card md radius
-		// margin-top: var(--list-gap-size);
-	}
-}
-
-/*
-.frappe-list {
-	top: 100px;
-	bottom: 0px;
-	position: absolute;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	max-height: 70vh;
-
-	.list-row-head::before {
-		// Hide content visible through the gap above the header
-		display: block;
-		content: '';
-		background: var(--list-body-bg);
-		position: absolute;
-		top: calc(-1 * var(--list-gap-size));
-		left: 0px;
-		width: 100%;
-		height: var(--list-gap-size);
-	}
-
-	.list-paging-area::after {
-		// Hide content visible through the gap below the table footer
-		display: block;
-		content: '';
-		background: var(--list-body-bg);
-		position: absolute;
-		bottom: calc(-1 * var(--list-gap-size));
-		left: 0px;
-		width: 100%;
-		height: var(--list-gap-size);
-	}
-}
-*/
