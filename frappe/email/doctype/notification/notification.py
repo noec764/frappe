@@ -284,24 +284,11 @@ def get_context(context):
 		if self.sender and self.sender_email:
 			sender = formataddr((self.sender, self.sender_email))
 
-		frappe.sendmail(
-			recipients=recipients,
-			subject=subject,
-			sender=sender,
-			cc=cc,
-			bcc=bcc,
-			message=message,
-			reference_doctype=doc.doctype,
-			reference_name=doc.name,
-			attachments=attachments,
-			expose_recipients="header",
-			print_letterhead=((attachments and attachments[0].get("print_letterhead")) or False),
-		)
-
+		communication = None
 		# Add mail notification to communication list
 		# No need to add if it is already a communication.
 		if doc.doctype != "Communication":
-			make_communication(
+			communication = make_communication(
 				doctype=doc.doctype,
 				name=doc.name,
 				content=message,
@@ -314,7 +301,22 @@ def get_context(context):
 				cc=cc,
 				bcc=bcc,
 				communication_type="Automated Message",
-			)
+			).get("name")
+
+		frappe.sendmail(
+			recipients=recipients,
+			subject=subject,
+			sender=sender,
+			cc=cc,
+			bcc=bcc,
+			message=message,
+			reference_doctype=doc.doctype,
+			reference_name=doc.name,
+			attachments=attachments,
+			expose_recipients="header",
+			print_letterhead=((attachments and attachments[0].get("print_letterhead")) or False),
+			communication=communication,
+		)
 
 	def make_communication_entry(self, **kwargs):
 		"""Make communication entry"""
