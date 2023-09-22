@@ -1240,12 +1240,6 @@ Object.assign(frappe.utils, {
 			return this.font_icon(icon_name, size, icon_class, icon_style);
 		}
 
-		if (String(icon_name).startsWith("es-")) {
-			return `<svg class="es-icon ${svg_class} ${size_class}" style="${icon_style}">
-				<use class="${icon_class}" href="#${icon_name}"></use>
-			</svg>`;
-		}
-
 		let size_class = "";
 
 		if (typeof size == "object") {
@@ -1253,6 +1247,13 @@ Object.assign(frappe.utils, {
 		} else {
 			size_class = `icon-${size}`;
 		}
+
+		if (String(icon_name).startsWith("es-")) {
+			return `<svg class="es-icon ${svg_class} ${size_class}" style="${icon_style}">
+				<use class="${icon_class}" href="#${icon_name}"></use>
+			</svg>`;
+		}
+
 		return `<svg class="icon ${svg_class} ${size_class}" style="${icon_style}">
 			<use class="${icon_class}" href="#icon-${icon_name}"></use>
 		</svg>`;
