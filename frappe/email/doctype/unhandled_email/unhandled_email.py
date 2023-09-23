@@ -22,11 +22,11 @@ class UnhandledEmail(Document):
 		uid: DF.Data | None
 	# end: auto-generated types
 
-	pass
-
-
-def remove_old_unhandled_emails():
-	frappe.db.delete(
-		"Unhandled Email",
-		{"creation": ("<", frappe.utils.add_days(frappe.utils.nowdate(), -30))},
-	)
+	@staticmethod
+	def clear_old_logs(days=30):
+		frappe.db.delete(
+			"Unhandled Email",
+			{
+				"modified": ("<", frappe.utils.add_days(frappe.utils.nowdate(), -1 * days)),
+			},
+		)
