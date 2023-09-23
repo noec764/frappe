@@ -12,21 +12,13 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="white">
 	<meta name="mobile-web-app-capable" content="yes">
 	<title>{{ app_name }}</title>
-	<link rel="shortcut icon"
-		href="{{ favicon or "/assets/frappe/images/favicon.png" }}" type="image/x-icon">
-	<link rel="icon"
-		href="{{ favicon or "/assets/frappe/images/favicon.png" }}" type="image/x-icon">
+	<link rel="shortcut icon" href="{{ favicon or "/assets/frappe/images/favicon.png" }}" type="image/x-icon">
+	<link rel="icon" href="{{ favicon or "/assets/frappe/images/favicon.png" }}" type="image/x-icon">
 	{% for include in include_css -%}
 	{{ include_style(include) }}
 	{%- endfor -%}
 </head>
 <body class="full-width">
-	<div id="all-symbols" style="display:none!important;">
-		{%- for path in include_icons -%}
-			<!-- {{ path }} -->{%- include path ignore missing -%}
-		{%- endfor -%}
-	</div>
-
 	{% include "templates/includes/splash_screen.html" %}
 	<div class="main-section">
 		<header></header>
@@ -34,6 +26,7 @@
 		<div id="body"></div>
 		<footer></footer>
 	</div>
+	<div id="all-symbols" style="display:none"></div>
 	<div id="build-events-overlay"></div>
 
 	<script type="text/javascript">
@@ -47,6 +40,15 @@
 		frappe.boot = JSON.parse({{ boot }});
 		frappe._messages = frappe.boot["__messages"];
 		frappe.csrf_token = "{{ csrf_token }}";
+
+		{%- for path in include_icons -%}
+		fetch(`/assets/{{ path }}?v=${window._version_number}`, { credentials: "same-origin" })
+			.then((r) => r.text())
+			.then((svg) => {
+				let svg_container = document.getElementById("all-symbols");
+				svg_container.insertAdjacentHTML("beforeend", svg);
+			});
+		{%- endfor -%}
 	</script>
 
 	{% for include in include_js %}
