@@ -113,6 +113,11 @@
 		height: var(--page-head-height);
 		padding: 8px 0px;
 	}
+
+	&.drop-shadow {
+		box-shadow: var(--shadow-sm);
+		background-color: var(--fg-color) !important;
+	}
 }
 
 .page-form {
