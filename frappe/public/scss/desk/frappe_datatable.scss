@@ -16,14 +16,14 @@
 	--dt-header-cell-bg: var(--subtle-fg);
 	--dt-selection-highlight-color: var(--highlight-color);
 
-	background-color: var(--bg-color);
+	background-color: var(--fg-color);
 	margin-left: -5px;
 	margin-top: 0px;
 	@include get_textstyle("base", "regular");
 
 	.dt-cell {
 		color: var(--text-color) !important;
-		background-color: var(--bg-color) !important;
+		background-color: var(--fg-color) !important;
 	}
 
 	.frappe-control, .form-control {
