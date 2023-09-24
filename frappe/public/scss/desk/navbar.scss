@@ -91,10 +91,12 @@
 }
 
 .navbar-brand {
+	margin: 0px;
 	img {
 		display: inline-block;
+		height: 32px;
 		max-width: 150px;
-		max-height: 25px;
+		max-height: 32px;
 	}
 }
 
