@@ -25,6 +25,10 @@ $icon-sizes: (
 	// reverse fill and stroke because of the way es icon is drawn
 	fill: var(--icon-stroke);
 	stroke: var(--icon-fill);
+
+	&.es-line {
+		stroke-width: 0;
+	}
 }
 
 /* like icon */
