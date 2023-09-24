@@ -38,7 +38,7 @@
 	--timeline-item-icon-size: 30px;
 	--timeline-item-left-margin: var(--margin-lg);
 	--timeline-item-bottom-margin: var(--margin-sm);
-	--timeline-content-max-width: 700px;
+	--timeline-content-max-width: unset;
 	--timeline-left-padding: calc(var(--padding-xl) + var(--timeline-item-icon-size) / 2);
 	--timeline-badge-color: var(--pacific-blue-400);
 	--timeline-badge-bg: var(--gray-100);

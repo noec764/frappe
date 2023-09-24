@@ -65,13 +65,13 @@ class FormTimeline extends BaseTimeline {
 				.find(".timeline-item.activity-title")
 				.append(
 					`
-					<div class="d-flex align-items-center show-all-activity">
+					<label class="d-flex align-items-center show-all-activity">
 						<span style="color: var(--text-light); margin:0px 6px;">Show all activity</span>
-						<label class="switch">
+						<div class="switch">
 							<input type="checkbox">
 							<span class="slider round"></span>
-						</label>
-					</div>
+						</div>
+					</label>
 				`
 				)
 				.find("input[type=checkbox]")
@@ -104,7 +104,7 @@ class FormTimeline extends BaseTimeline {
 					</div>
 				</div>
 			`);
-			this.timeline_items_wrapper.before(this.document_email_link_wrapper);
+			this.timeline_items_wrapper.after(this.document_email_link_wrapper);
 
 			this.document_email_link_wrapper.find(".document-email-link").on("click", (e) => {
 				let text = $(e.target).text();
@@ -223,9 +223,9 @@ class FormTimeline extends BaseTimeline {
 	get_email_communication_timeline_contents(more_items) {
 		let communication_timeline_contents = [];
 		let icon_set = {
-			Email: "mail",
-			Phone: "call",
-			Meeting: "calendar",
+			Email: "es-line-email",
+			Phone: "es-line-call",
+			Meeting: "es-line-calendar",
 			Other: "dot-horizontal",
 		};
 		let items = more_items ? more_items : this.doc_info.communications || [];

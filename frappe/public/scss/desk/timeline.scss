@@ -96,8 +96,8 @@ $threshold: 34;
 			padding: var(--padding-sm);
 			margin-left: var(--margin-md);
 			&.frappe-card {
-				color: var(--gray-900);
-				background-color: var(--bg-color);
+				color: var(--text-color);
+				background-color: var(--fg-color);
 				box-shadow: none;
 				border: 1px solid var(--border-color);
 				margin: calc(var(--timeline-item-bottom-margin) + var(--padding-md)) 0;
