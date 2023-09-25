@@ -15,6 +15,10 @@
 	&:hover:not(:active), &:focus-visible {
 		--btn-outline-width: #{$outlineWidthHover};
 	}
+	&:focus-visible {
+		text-decoration: underline;
+		text-underline-position: below;
+	}
 }
 
 .btn {
@@ -23,18 +27,11 @@
 	padding: 4px 8px;
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
-	font-size: var(--text-base);
-
-	font-weight: var(--weight-medium);
 	--icon-stroke: currentColor;
-
-	@include get_textstyle("base", "regular");
+	@include get_textstyle("base", "medium");
 
 	&:active {
-		// override #dadada that comes from bootstrap (probably) to support dark theme.
-		color: var(--text-color) !important;
-		background-color: var(--control-bg) !important;
-		box-shadow: var(--focus-default) !important;
+		--btn-shadow: var(--focus-default);
 	}
 
 	&.icon-btn {
@@ -75,7 +72,7 @@
 
 .btn.btn-primary-light {
 	color: var(--primary);
-	background-color: $primary-light;
+	background-color: var(--neutral-white);
 	--icon-stroke: currentColor;
 	@include button-with-outline(var(--primary), 1px);
 
@@ -95,7 +92,7 @@
 }
 
 .btn.btn-default {
-	background-color: var(--control-bg);
+	background-color: var(--fg-color);
 	color: var(--text-color);
 	&:hover:not(:active), &:focus-visible {
 		background: var(--btn-default-hover-bg);
@@ -104,8 +101,8 @@
 }
 
 .btn.btn-primary {
-	background-color: var(--btn-primary);
-	color: var(--neutral);
+	background-color: var(--btn-primary) !important;
+	color: var(--neutral-white);
 	white-space: nowrap;
 	--icon-stroke: currentColor;
 	--icon-fill-bg: var(--btn-primary);
