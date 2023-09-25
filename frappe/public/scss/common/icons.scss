@@ -11,15 +11,6 @@
 	stroke: var(--icon-stroke);
 }
 
-$icon-sizes: (
-	"xs": 12px,
-	"sm": 16px,
-	"base": 20px,
-	"md": 20px,
-	"lg": 24px,
-	"xl": 75px
-);
-
 .es-icon {
 	@extend .icon;
 	// reverse fill and stroke because of the way es icon is drawn
@@ -74,8 +65,22 @@ use.like-icon {
 	}
 }
 
-.no-stroke {
-	stroke: none;
+
+$icon-sizes: (
+	"xs": 12px,
+	"sm": 16px,
+	"base": 20px,
+	"md": 20px,
+	"lg": 24px,
+	"xl": 75px
+);
+
+// .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
+@each $size, $value in $icon-sizes {
+	.icon-#{$size} {
+		width: $value !important;
+		height: $value !important;
+	}
 }
 
 .fonticon {
@@ -102,10 +107,6 @@ i.icon {
 	font-style: normal !important;
 }
 
-// .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
-@each $size, $value in $icon-sizes {
-	.icon-#{$size} {
-		width: $value;
-		height: $value;
-	}
+.no-stroke {
+	stroke: none;
 }
