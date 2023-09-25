@@ -80,7 +80,8 @@
 
 			.field-icon {
 				left: 9px;
-				top: 5px;
+				top: 50%;
+				transform: translateY(-50%);
 				position: absolute;
 				z-index: 2;
 			}
@@ -102,7 +103,8 @@
 
 				.toggle-password {
 					right: 9px;
-					top: 5px;
+					top: 50%;
+					transform: translateY(-50%);
 					position: absolute;
 					z-index: 2;
 					cursor: pointer;
@@ -112,9 +114,7 @@
 
 			.btn-login-option {
 				@include get_textstyle("base", "medium");
-				color: var(--text-gray-700);
-				background: var(--gray-100);
-				box-shadow: none;
+				--btn-shadow: none;
 				border: none;
 				display: flex;
 				place-content: center;
