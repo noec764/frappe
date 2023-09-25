@@ -127,6 +127,7 @@ def web_logout():
 @frappe.whitelist()
 def uploadfile():
 	ret = None
+	check_write_permission(frappe.form_dict.doctype, frappe.form_dict.docname)
 
 	try:
 		if frappe.form_dict.get("from_form"):
@@ -179,7 +180,9 @@ def upload_file():
 	files = frappe.request.files
 	is_private = frappe.form_dict.is_private
 	_doctype = frappe.form_dict.doctype
-	_doc_is_new = frappe.form_dict.docname and frappe.form_dict.docname.startswith(f"new-{_doctype.lower().replace(' ', '-')}-")
+	_doc_is_new = frappe.form_dict.docname and frappe.form_dict.docname.startswith(
+		f"new-{_doctype.lower().replace(' ', '-')}-"
+	)
 	doctype = not _doc_is_new and _doctype
 	docname = not _doc_is_new and frappe.form_dict.docname
 	fieldname = not _doc_is_new and frappe.form_dict.fieldname
@@ -193,6 +196,9 @@ def upload_file():
 	filename = frappe.form_dict.file_name
 	optimize = frappe.form_dict.optimize
 	content = None
+
+	if not ignore_permissions:
+		check_write_permission(doctype, docname)
 
 	if "file" in files:
 		file = files["file"]
@@ -236,6 +242,20 @@ def upload_file():
 				"content": content,
 			}
 		).save(ignore_permissions=ignore_permissions)
+
+
+def check_write_permission(doctype: str = None, name: str = None):
+	check_doctype = doctype and not name
+	if doctype and name:
+		try:
+			doc = frappe.get_doc(doctype, name)
+			doc.has_permission("write")
+		except frappe.DoesNotExistError:
+			# doc has not been inserted yet, name is set to "new-some-doctype"
+			check_doctype = True
+
+	if check_doctype:
+		frappe.has_permission(doctype, "write", throw=True)
 
 
 @frappe.whitelist(allow_guest=True)
