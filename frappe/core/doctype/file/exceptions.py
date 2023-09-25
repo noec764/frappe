@@ -9,4 +9,8 @@ class FolderNotEmpty(frappe.ValidationError):
 	pass
 
 
-from frappe.exceptions import *  # noqa
+class FileTypeNotAllowed(frappe.ValidationError):
+	pass
+
+
+from frappe.exceptions import *
