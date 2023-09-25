@@ -575,16 +575,16 @@ button.data-pill {
 .frappe-control[data-fieldtype="Link"][data-link-icon],
 .frappe-control[data-fieldtype="Dynamic Link"][data-link-icon] {
 	.form-control {
-		padding-left: 2em;
+		padding-left: 1.75em;
 	}
 	.link-icon {
 		position: absolute;
 
-		left: 0.5em;
-		width: calc(2em - 0.5em);
+		left: 0.25em;
+		width: calc(1.75em - 0.25em);
 
-		top: 0;
-		bottom: 0;
+		top: 1px;
+		bottom: 1px;
 		height: 100%;
 
 		user-select: none;
