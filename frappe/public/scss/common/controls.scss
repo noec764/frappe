@@ -551,15 +551,14 @@ textarea.form-control {
 
 button.data-pill {
 	.icon {
-		margin-left: var(--margin-xs);
+		margin-left: 0;
 		margin-right: 0;
 	}
 	display: flex;
 	height: var(--btn-height);
-	background-color: var(--fg-color);
 	border-radius: var(--border-radius);
 	color: var(--text-color);
-	background-color: var(--subtle-fg);
+	background-color: var(--fg-color);
 	justify-content: space-between;
 	align-items: center;
 	.pill-label {
