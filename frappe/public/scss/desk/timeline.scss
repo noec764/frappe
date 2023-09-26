@@ -11,11 +11,11 @@ $threshold: 34;
 	--zero-px: 0px;
 	top: unquote("clamp(var(--zero-px), 50% - #{$badge-size}/2, max(var(--zero-px), (#{$threshold}px - (50% - #{$badge-size}/2)) * #{$threshold}))");
 	left: calc(-0.5 * (#{$badge-size}));
-	background-color: white;
-	border: 1px solid var(--pacific-blue-400);
+	background-color: var(--timeline-badge-bg);
+	// border: 1px solid var(--timeline-badge-color);
 	@extend .center-content;
-	--icon-stroke: var(--pacific-blue-400);
-	--icon-fill: var(--pacific-blue-400);
+	--icon-stroke: var(--timeline-badge-color);
+	--icon-fill: var(--timeline-badge-color);
 }
 
 .new-timeline {
@@ -36,7 +36,7 @@ $threshold: 34;
 	.timeline-dot {
 		@include timeline-badge(16px);
 		left: calc(-1.25 * var(--timeline-item-left-margin) / 2);
-		background: var(--bg-color);
+		// background: var(--bg-color);
 		&:before {
 			content: ' ';
 			background: var(--timeline-badge-color);
