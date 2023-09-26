@@ -45,10 +45,8 @@ body {
 	--text-color: #{$body-text-color};
 	--text-light: #{$body-text-color};
 	{% endif -%}
-	{% if sidebar_color %}
 	--web-sidebar-bg: #{$sidebar-bg};
 	--web-sidebar-bg-alpha: 1;
-	{% endif -%}
 	{% if not button_rounded_corners %}
 	--border-radius-sm: 0px;
 	--border-radius: 0px;

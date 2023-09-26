@@ -1,6 +1,6 @@
 <div class="web-list-item transaction-list-item" id="{{ doc.name }}">
 	<a class="w-100" href="{{ "/" + doc.route }}">
-		<div class="flex">
+		<div class="flex {% if doc.event_status == 'past' %}past-event{% endif %}">
 			<div
 				{% if doc.image -%}
 				style="background: url('{{ frappe.utils.quoted(doc.image) | abs_url }}') center/contain no-repeat;min-width: 10%;"
@@ -9,9 +9,15 @@
 			<div class="event-row-content {% if doc.image %}pl-2{% endif %}">
 				<div>
 					<div>{{ doc.title or doc.name }}
+						{% if doc.event_status == 'past' %}
+						<span class="indicator-pill small darkgray">
+							{{ _("Past Event") }}
+						</span>
+						{% else %}
 						<span class="indicator-pill small {{ "red" if doc.status == "Cancelled" else ("darkgray" if doc.status == "Closed" else "green") }}">
 							{{ _(doc.status) }}
 						</span>
+						{% endif %}
 					</div>
 					<div class="small text-muted transaction-time"
 						title="{{ frappe.utils.format_datetime(doc.starts_on, "medium") }}">
@@ -48,3 +54,10 @@
 	</div>
 	{% endif %}
 </div>
+
+
+<style>
+	.past-event {
+		color: var(--gray-700);
+	}
+</style>

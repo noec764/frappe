@@ -117,6 +117,11 @@ def get_list_data(
 	if not list_context.get_list and (list_context.allow_guest or meta.allow_guest_to_view):
 		kwargs["ignore_permissions"] = True
 
+	if not list_context.get_list and web_form_name:
+		if not frappe.get_cached_value("Web Form", web_form_name, "apply_document_permissions"):
+			kwargs["ignore_permissions"] = True
+			kwargs["filters"].update({"owner": frappe.session.user})
+
 	raw_result = _get_list(**kwargs)
 
 	# list context to be used if called as rendered list

@@ -34,10 +34,11 @@ $red-500: #E24C4C;
 $red-50: #FFF5F5;
 
 $black: #000 !default;
-$primary: #6195ff !default;
+$primary: #002061 !default;
 $primary-light: lighten($primary, 42%) !default;
 $light: $gray-50 !default;
 $light-yellow: #FEF4E2;
+$sidebar-bg: #192734 !default;
 
 $body-color: $gray-700 !default;
 $text-muted: $gray-600 !default;
@@ -116,7 +117,7 @@ $input-focus-border-color: $gray-200;
 $input-border-radius: 0.375rem;
 $custom-control-indicator-bg: white;
 
-$body-bg: #f5f7fa !default;
+$body-bg: var(--gray-200) !default;
 $body-color: white !default;
 
 $border-radius-xs: 4px !default;

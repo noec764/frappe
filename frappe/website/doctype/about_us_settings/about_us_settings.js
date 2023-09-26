@@ -3,6 +3,7 @@
 
 frappe.ui.form.on("About Us Settings", {
 	refresh: function (frm) {
+		frm.dashboard.clear_headline();
 		frm.set_intro(__('Link for About Us Page is "/about".'));
 	},
 });

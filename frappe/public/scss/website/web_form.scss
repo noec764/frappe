@@ -416,6 +416,7 @@
 				}
 
 				.web-list-container {
+					@include card();
 					min-height: 470px;
 					border: 1px solid var(--dark-border-color);
 					border-radius: var(--border-radius-md);

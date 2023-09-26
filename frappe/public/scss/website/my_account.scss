@@ -19,7 +19,7 @@
 
 .my-account-header {
 	color: var(--gray-900);
-	margin-bottom: var(--margin-lg);
+	margin: 1rem 0;
 	font-weight: bold;
 
 	@include media-breakpoint-down(sm) {

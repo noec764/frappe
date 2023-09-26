@@ -1,11 +1,5 @@
 @import "./desk/variables";
 
-body {
-	@include media-breakpoint-up(sm) {
-		background-color: var(--bg-light-gray);
-	}
-}
-
 .for-forgot,
 .for-login-with-email-link,
 .for-signup,

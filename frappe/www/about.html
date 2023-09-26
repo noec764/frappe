@@ -9,10 +9,6 @@
 	list of key team members in Website > About Us Settings</p>""" %}
 
 {% set title = doc.page_title or _("About Us") %}
-{% block header %}<h1>{{ _("About Us") }}</h1>{% endblock %}
-{% block page_sidebar %}
-{% include "templates/includes/web_sidebar.html" %}
-{% endblock %}
 {% block page_content %}
 
 <article class="about-content">
@@ -26,6 +22,7 @@
 		add_top_padding=1,
 		add_bottom_padding=1,
 	) }}
+
 
 	{% if doc.get({"doctype":"Company History"}) %}
 	<section class="section section-padding-bottom">
