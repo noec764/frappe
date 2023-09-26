@@ -524,3 +524,7 @@ input.list-check-all {
 	display: flex;
 	gap: 0.5em;
 }
+
+.list-row-like :is(.icon, .es-icon) {
+	margin-top: -2px;
+}

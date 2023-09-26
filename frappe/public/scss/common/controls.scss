@@ -554,6 +554,10 @@ button.data-pill {
 		margin-left: 0;
 		margin-right: 0;
 	}
+	.btn-remove {
+		margin-left: 2px;
+		margin-right: -2px;
+	}
 	display: flex;
 	height: var(--btn-height);
 	border-radius: var(--border-radius);
@@ -561,6 +565,7 @@ button.data-pill {
 	background-color: var(--fg-color);
 	justify-content: space-between;
 	align-items: center;
+	line-height: 1;
 	padding: 0px 8px;
 	.pill-label {
 		color: var(--text-color);
@@ -577,7 +582,7 @@ button.data-pill {
 .frappe-control[data-fieldtype="Link"][data-link-icon],
 .frappe-control[data-fieldtype="Dynamic Link"][data-link-icon] {
 	.form-control {
-		padding-left: 1.75em;
+		padding-left: 1.85em;
 	}
 	.link-icon {
 		position: absolute;

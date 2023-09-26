@@ -10,7 +10,7 @@
 	margin-left: var(--margin-md);
 	@include get_textstyle("base", "regular");
 	a {
-		margin-right: 10px;
+		margin-right: 5px;
 		&:before {
 			content: #{"/*!rtl:var(--left-arrow-svg);*/"}var(--right-arrow-svg);
 			display: inline-block;
@@ -20,7 +20,7 @@
 
 	li.disabled {
 		a {
-			color: var(--gray-600);
+			color: var(--text-muted);
 			pointer-events: none;
 		}
 	}

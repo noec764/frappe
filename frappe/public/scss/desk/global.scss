@@ -414,12 +414,11 @@ select.input-xs {
 		padding-right: inherit;
 		position: absolute;
 		pointer-events: none;
-		top: 7px;
-		right: 12px;
+		top: 5px;
+		right: 7px;
 
 		&.xs {
-			top: 3px;
-			right: 10px;
+			top: 2px;
 		}
 
 		.icon {
@@ -434,12 +433,12 @@ select.input-xs {
 		padding-right: inherit;
 		position: absolute;
 		pointer-events: none;
-		top: 7px;
-		left: 12px;
+		top: 5px;
+		right: 7px;
 		max-width: 80%;
 
 		&.xs {
-			top: 3px;
+			top: 2px;
 		}
 	}
 }
