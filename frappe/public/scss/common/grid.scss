@@ -14,7 +14,7 @@
 
 .grid-heading-row {
 	border-bottom: 1px solid var(--table-border-color);
-	color: var(--text-light);
+	color: var(--text-color);
 	background-color: var(--subtle-fg);
 	@include get_textstyle("sm", "regular");
 	// height: 32px;
@@ -237,8 +237,8 @@
 
 	.editable-row {
 		// TODO: Dark and Light Mode
-		--control-bg: var(--neutral);
-		--input-disabled-bg: var(--gray-50);
+		--control-bg: transparent;
+		--input-disabled-bg: var(--subtle-fg);
 		.grid-static-col {
 			padding: 0px !important;
 		}
@@ -260,8 +260,7 @@
 		.form-control {
 			border-radius: 0px;
 			border: 0px;
-			padding: 8px;
-			padding-bottom: 7px;
+			padding: var(--grid-padding);
 			height: var(--grid-row-height);
 		}
 
@@ -490,7 +489,7 @@
 }
 .grid-footer, .grid-custom-buttons {
 	padding: var(--padding-sm) 0px;
-	background-color: var(--fg-color);
+	// background-color: var(--fg-color);
 	.btn {
 		box-shadow: none;
 		margin-top: -3px;
