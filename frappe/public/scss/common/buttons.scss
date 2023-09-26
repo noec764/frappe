@@ -24,7 +24,7 @@
 .btn {
 	background-color: var(--neutral-white);
 	border: none;
-	padding: 4px 8px;
+	// padding: 4px 8px; // breaks buttons on the website
 	border-radius: var(--border-radius);
 	box-shadow: var(--btn-shadow);
 	--icon-stroke: currentColor;
