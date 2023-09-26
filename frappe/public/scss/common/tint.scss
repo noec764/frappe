@@ -3,7 +3,7 @@
 	--tinted-2: var(--alert-bg-danger);
 }
 
-[data-tinted~="red"] {
+html body [data-tinted~="red"] { // specificity override
 	--tinted-fg: var(--tinted-1);
 	--tinted-bg: var(--tinted-2);
 
@@ -14,6 +14,7 @@
 
 	--primary: var(--tinted-fg);
 	--primary-color: var(--tinted-fg);
+	--btn-primary: var(--tinted-fg);
 	--text-secondary-color: var(--tinted-fg);
 	--heading-color: var(--tinted-fg);
 
