@@ -11,7 +11,10 @@
 	{%- set item_route = item.route[1:] if item.route[0] == '/' else item.route -%}
 	<a href="{{ item.route }}" class="{{ 'active' if pathname == item_route else '' }}"
 		{% if item.target %}target="{{ item.target }}" {% endif %}>
-		{{ _(item.title or item.label) }}
+		{% if item.icon %}
+		<svg class="icon icon-lg"><use href="#icon-{{ item.icon }}"></use></svg>
+		{% endif %}
+		<span>{{ _(item.title or item.label) }}</span>
 	</a>
 	{% else %}
 	<form action='{{ item.route }}' class="mr-4">

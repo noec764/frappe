@@ -42,6 +42,9 @@ class BaseTemplatePage(BaseRenderer):
 		else:
 			self.context.web_translations = {}
 
+		if self.context.sidebar_items and [item.get("icon") for item in self.context.sidebar_items]:
+			self.context.include_icons = frappe.get_hooks("app_include_icons")
+
 	def set_base_template_if_missing(self):
 		if not self.context.base_template_path:
 			app_base = frappe.get_hooks("base_template")
