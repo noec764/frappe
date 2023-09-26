@@ -13,7 +13,7 @@
 }
 
 .sidebar-item a {
-	display: block;
+	display: flex;
 	padding: 0.25em 0.5em;
 	border-radius: var(--border-radius);
 
@@ -37,6 +37,10 @@
 
 		color: var(--primary);
 		background-color: var(--primary-light);
+	}
+
+	.icon {
+		margin: 0 1rem 0 0;
 	}
 }
 
