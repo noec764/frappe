@@ -38,10 +38,12 @@ body[data-route^="Module"] .main-menu {
 }
 
 .sidebar-menu {
-	.data-pill {
+	li > .btn.data-pill {
 		width: 100%;
 		justify-content: unset;
-
+	}
+	li > .btn {
+		--btn-shadow: none;
 	}
 	&.user-actions {
 		margin-bottom: 15px;
@@ -383,8 +385,11 @@ body[data-route^="Module"] .main-menu {
 
 	.data-pill {
 		justify-content: space-between;
-		background-color: var(--subtle-fg);
+		background-color: var(--fg-color);
+		cursor: default !important; // not interactable
 		box-shadow: none;
+		border-radius: var(--border-radius-full);
+		@include get_textstyle("xs", "medium");
 	}
 }
 
@@ -423,10 +428,8 @@ body[data-route^="Module"] .main-menu {
 	display: block;
 }
 
-.add-review-btn,
-.share-doc-btn,
-.add-assignment-btn {
-	border-radius: 50%;
+.add-review-btn {
+	border-radius: var(--border-radius-full);
 }
 
 .form-reviews {
