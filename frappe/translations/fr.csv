@@ -524,10 +524,10 @@ Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
 <pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
 </pre>",
 "<p>Multiple webforms can be created for a single doctype. Write a condition specific to this webform to display correct record after submission.</p><p>For Example:</p>
-<p>If you create a separate webform every year to capture feedback from employees add a 
+<p>If you create a separate webform every year to capture feedback from employees add a
  field named year in doctype and add a condition <b>doc.year==""2023""</b></p>
 ","<p>Plusieurs formulaires web peuvent être créé pour un type de document donné. Renseignez une condition spécifique à ce formulaire web pour afficher le bon document après validation.</p><p>Par exemple:</p>
-<p>Si vous créez un formulaire web différent chaque année pour récupérer des feedbacks de vos employés, ajoutez un champ 
+<p>Si vous créez un formulaire web différent chaque année pour récupérer des feedbacks de vos employés, ajoutez un champ
  appelé 'year' dans le type de document et ajoutez la condition <b>doc.year==""2023""</b></p>",
 <p>No results found for ',<p>Aucun résultat trouvé pour ',
 "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>","<p>Définissez le contexte de publication du modèle. Exemple:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>",
@@ -576,7 +576,7 @@ some_class_element.textContent = ""Nouveau contenu"";
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions: 
+<p>Allowed functions:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -589,7 +589,7 @@ some_class_element.textContent = ""Nouveau contenu"";
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Les conditions doivent être rédigées en Python simple. Veuillez utiliser des des propriétés disponibles dans le formulaire seulement.</p>
-<p>Fonctions autorisées: 
+<p>Fonctions autorisées:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -5735,7 +5735,7 @@ Save API Secret: ,Enregistrer le secret d'API:,
 Save API Secret: {0},Secret d'API à enregistrer: {0},
 Save Anyway,Enregistrer malgré tout,
 Save As,Enregistrer Sous,
-Save Comment,Enregistrer un commentaire,
+Save Comment,Envoyer,
 Save Customizations,Enregistrer les personnalisations,
 Save Filter,Filtres personnalisés,
 Save Report,Enregistrer le rapport,
@@ -6760,10 +6760,10 @@ eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini i
 myfield
 eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
-eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a une valeur OU si les règles sont vraies (exemples): 
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a une valeur OU si les règles sont vraies (exemples):
 myfield
 eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
@@ -7019,7 +7019,8 @@ Type here. Use markdown to format.,Tapez ici. Utilisez le formatage markdown.,
 Type of Chart,Type de graphique,
 Type something in the search box to search,Tapez quelque chose dans la zone de recherche pour rechercher,
 Type title,Titre du type,
-Type your reply here...,Ecrivez votre réponse ici...,
+Type your reply here...,Écrivez votre réponse ici…,
+Type a reply / comment,Écrivez vos commentaires ici…,
 Type:,Type :,
 Type,Type,
 UI Tour,Tour de l'interface utilisateur,
