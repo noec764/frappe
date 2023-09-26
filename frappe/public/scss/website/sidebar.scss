@@ -10,6 +10,7 @@
 .sidebar-item {
 	font-size: 1rem;
 	margin: 0px 1rem;
+	text-align: center;
 }
 
 .sidebar-item a {
@@ -19,28 +20,23 @@
 
 	text-decoration: none;
 
-	font-weight: 500;
+	font-weight: 600;
 	@include transition();
 
-	color: var(--text-color);
-	background-color: var(--secondary-light);
+	color: var(--light);
 
-	&:hover {
-		color: var(--primary-light);
-		background-color: var(--primary);
-	}
+	&:hover, &.active {
+		color: var(--text-color);
+		background-color: var(--light);
 
-	&.active {
-		// text-decoration: underline;
-		// text-underline-offset: 2px;
-		// text-decoration-color: currentColor;
-
-		color: var(--primary);
-		background-color: var(--primary-light);
+		.icon {
+			--icon-stroke: var(--text-color);
+		}
 	}
 
 	.icon {
 		margin: 0 1rem 0 0;
+		--icon-stroke: var(--light);
 	}
 }
 
