@@ -304,9 +304,9 @@ h2 {
 	font-size: var(--text-xs);
 }
 
-.input-xs {
-	height: 26px;
-	@include get_textstyle("base", "regular");
+:root .input-xs {
+	--input-height: 26px;
+	@include get_textstyle("xs", "regular");
 }
 
 select.input-xs {

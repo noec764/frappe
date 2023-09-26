@@ -59,7 +59,7 @@ select.form-control {
 	display: flex;
 	align-items: center;
 	flex-wrap: wrap;
-	height: auto;
+	height: auto !important;
 	padding: 10px;
 	padding-bottom: 5px;
 	.link-field {
