@@ -203,3 +203,7 @@ table td.dt-cell {
 		background-color: transparent;
 	}
 }
+
+.dt-cell__content:has(input[type="checkbox"]:first-child:last-child) {
+	font-size: 0px;
+}
