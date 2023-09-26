@@ -279,6 +279,8 @@ class Event(WebsiteGenerator):
 			else []
 		)
 
+		context.parents = [{"route": "events", "title": _("Upcoming Events")}]
+
 	def print_format_content(self):
 		frappe.flags.ignore_print_permissions = True
 		return get_html_and_style(self, print_format=self.portal_print_format)
