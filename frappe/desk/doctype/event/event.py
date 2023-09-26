@@ -292,7 +292,7 @@ class Event(WebsiteGenerator):
 def get_list_context(context=None):
 	context.update(
 		{
-			"title": _("Upcoming Events"),
+			"title": _("All Events"),
 			"no_cache": 1,
 			"no_breadcrumbs": True,
 			"show_sidebar": frappe.session.user != "Guest",
@@ -310,7 +310,7 @@ def get_events_list(
 	doctype, txt, filters, limit_start, limit_page_length=20, order_by="starts_on"
 ):
 	return get_prepared_events(
-		nowdate(),
+		"1900-01-01",
 		add_days(nowdate(), 365),
 		limit_start,
 		limit_page_length,
@@ -780,9 +780,11 @@ def get_prepared_events(
 	)
 
 	result = []
-	for event in events:
+	for event in reversed(events):
 		for field in FIELD_MAP:
 			event.update({field: event.get(FIELD_MAP[field])})
+
+		event.event_status = "past" if getdate(event.starts_on) < getdate() else "upcoming"
 
 		if (
 			merge_recurrences
