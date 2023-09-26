@@ -22,7 +22,8 @@
 }
 
 .btn {
-	background-color: var(--neutral-white);
+	background-color: var(--neutral);
+	color: var(--text-color);
 	border: none;
 	// padding: 4px 8px; // breaks buttons on the website
 	border-radius: var(--border-radius);
