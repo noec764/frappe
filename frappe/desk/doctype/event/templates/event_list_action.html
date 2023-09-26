@@ -1,15 +1,25 @@
 <div class="pull-right">
 	<button class="btn btn-default btn-sm view-switcher list-view">
-		{{ _("Calendar view") }}
+		<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 24 24" id="calendar-alt" width="25" height="25">
+			<path fill="#undefined" d="M12,19a1,1,0,1,0-1-1A1,1,0,0,0,12,19Zm5,0a1,1,0,1,0-1-1A1,1,0,0,0,17,19Zm0-4a1,1,0,1,0-1-1A1,1,0,0,0,17,15Zm-5,0a1,1,0,1,0-1-1A1,1,0,0,0,12,15ZM19,3H18V2a1,1,0,0,0-2,0V3H8V2A1,1,0,0,0,6,2V3H5A3,3,0,0,0,2,6V20a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V6A3,3,0,0,0,19,3Zm1,17a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V11H20ZM20,9H4V6A1,1,0,0,1,5,5H6V6A1,1,0,0,0,8,6V5h8V6a1,1,0,0,0,2,0V5h1a1,1,0,0,1,1,1ZM7,15a1,1,0,1,0-1-1A1,1,0,0,0,7,15Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,7,19Z"></path>
+		</svg>
 	</button>
 </div>
 
 <script>
+	const calendar_icon = `<svg xmlns="http://www.w3.org/2000/svg" data-name="Layer 1" viewBox="0 0 24 24" id="calendar-alt" width="25" height="25">
+			<path fill="#undefined" d="M12,19a1,1,0,1,0-1-1A1,1,0,0,0,12,19Zm5,0a1,1,0,1,0-1-1A1,1,0,0,0,17,19Zm0-4a1,1,0,1,0-1-1A1,1,0,0,0,17,15Zm-5,0a1,1,0,1,0-1-1A1,1,0,0,0,12,15ZM19,3H18V2a1,1,0,0,0-2,0V3H8V2A1,1,0,0,0,6,2V3H5A3,3,0,0,0,2,6V20a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V6A3,3,0,0,0,19,3Zm1,17a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V11H20ZM20,9H4V6A1,1,0,0,1,5,5H6V6A1,1,0,0,0,8,6V5h8V6a1,1,0,0,0,2,0V5h1a1,1,0,0,1,1,1ZM7,15a1,1,0,1,0-1-1A1,1,0,0,0,7,15Zm0,4a1,1,0,1,0-1-1A1,1,0,0,0,7,19Z"></path>
+		</svg>`
+
+	const list_icon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" id="list-ul" width="25" height="25">
+		<path fill="#undefined" d="M3.71,16.29a1,1,0,0,0-.33-.21,1,1,0,0,0-.76,0,1,1,0,0,0-.33.21,1,1,0,0,0-.21.33,1,1,0,0,0,.21,1.09,1.15,1.15,0,0,0,.33.21.94.94,0,0,0,.76,0,1.15,1.15,0,0,0,.33-.21,1,1,0,0,0,.21-1.09A1,1,0,0,0,3.71,16.29ZM7,8H21a1,1,0,0,0,0-2H7A1,1,0,0,0,7,8ZM3.71,11.29a1,1,0,0,0-1.09-.21,1.15,1.15,0,0,0-.33.21,1,1,0,0,0-.21.33.94.94,0,0,0,0,.76,1.15,1.15,0,0,0,.21.33,1.15,1.15,0,0,0,.33.21.94.94,0,0,0,.76,0,1.15,1.15,0,0,0,.33-.21,1.15,1.15,0,0,0,.21-.33.94.94,0,0,0,0-.76A1,1,0,0,0,3.71,11.29ZM21,11H7a1,1,0,0,0,0,2H21a1,1,0,0,0,0-2ZM3.71,6.29a1,1,0,0,0-.33-.21,1,1,0,0,0-1.09.21,1.15,1.15,0,0,0-.21.33.94.94,0,0,0,0,.76,1.15,1.15,0,0,0,.21.33,1.15,1.15,0,0,0,.33.21,1,1,0,0,0,1.09-.21,1.15,1.15,0,0,0,.21-.33.94.94,0,0,0,0-.76A1.15,1.15,0,0,0,3.71,6.29ZM21,16H7a1,1,0,0,0,0,2H21a1,1,0,0,0,0-2Z"></path>
+		</svg>`
+
 	frappe.ready(function() {
 		const content = document.getElementsByClassName("page_content")[0]
 		const calendar = content.appendChild(document.createElement('div'))
 		const listview = content.getElementsByClassName("website-list")[0]
-		const header = document.getElementsByClassName("page-header")[0]
+		const header = document.getElementsByClassName("my-account-header")[0]
 		if (listview) {
 			listview.classList.add("d-block");
 			calendar.id = "calendar-section";
@@ -18,7 +28,7 @@
 				e.preventDefault();
 				const switcher = document.getElementsByClassName("view-switcher")[0]
 				if (switcher.classList.contains("list-view")) {
-					switcher.innerHTML = __("List view")
+					switcher.innerHTML = list_icon
 					switcher.classList.replace("list-view", "calendar-view")
 					calendar.classList.replace("d-none", "d-block");
 					listview.classList.replace("d-block", "d-none");
@@ -27,13 +37,13 @@
 					new frappe.events.EventsPortalView({
 						parent: document.getElementById("calendar-section")
 					})
-					header.innerHTML = '<h2>{{ _("All Events") }}</h2>'
+					header.innerText = '{{ _("All Events") }}'
 				} else {
-					switcher.innerHTML = __("Calendar view")
+					switcher.innerHTML = calendar_icon
 					switcher.classList.replace("calendar-view", "list-view")
 					calendar.classList.replace("d-block", "d-none");
 					listview.classList.replace("d-none", "d-block");
-					header.innerHTML = '<h2>{{ _("Upcoming Events") }}</h2>'
+					header.innerText = '{{ _("Upcoming Events") }}'
 				}
 			})
 		} else {
