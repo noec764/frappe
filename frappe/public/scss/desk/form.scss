@@ -207,8 +207,8 @@
 		}
 	}
 
-	.btn-comment {
-		margin-top: var(--margin-md);
+	.btn-comment:is(.disabled, [disabled]) + span {
+		opacity: 0;
 	}
 }
 
