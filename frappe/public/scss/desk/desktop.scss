@@ -1,10 +1,10 @@
 html,
 body {
 	background-color: var(--bg-color);
-	::selection {
-		color: var(--neutral-black);
-		background: var(--gray-300);
-	}
+	// ::selection {
+	// 	color: var(--neutral-black);
+	// 	background: var(--gray-300);
+	// }
 }
 
 .desk-sidebar {
