@@ -544,7 +544,7 @@
     </symbol>
     <symbol id="es-line-sidebar-collapse" fill="none" viewBox="0 0 16 16">
       <g class="es-line-sidebar-collapse">
-        <path fill="var(--icon-stroke)" fill-rule="evenodd" d="M7.646 12.056a.5.5 0 1 0 .707.707l4.41-4.41a.5.5 0 0 0 0-.707l-4.41-4.41a.5.5 0 1 0-.707.708L11.703 8l-4.057 4.056Zm-4.41 0a.5.5 0 0 0 .708.707l4.41-4.41a.5.5 0 0 0 0-.707l-4.41-4.41a.5.5 0 0 0-.707.708L7.293 8l-4.056 4.056Z" class="Union" clip-rule="evenodd"/>
+        <path fill="var(--icon-stroke)" fill-rule="evenodd" d="M8.354 12.056a.5.5 0 1 1-.707.707l-4.41-4.41a.5.5 0 0 1 0-.707l4.41-4.41a.5.5 0 1 1 .707.708L4.298 8l4.056 4.056Zm4.41 0a.5.5 0 0 1-.708.707l-4.41-4.41a.5.5 0 0 1 0-.707l4.41-4.41a.5.5 0 1 1 .707.708L8.707 8l4.056 4.056Z" class="Union" clip-rule="evenodd"/>
       </g>
     </symbol>
     <symbol id="es-line-compact" fill="none" viewBox="0 0 16 16">
@@ -554,7 +554,7 @@
     </symbol>
     <symbol id="es-line-sidebar-expand" fill="none" viewBox="0 0 16 16">
       <g class="es-line-sidebar-expand">
-        <path fill="var(--icon-stroke)" fill-rule="evenodd" d="M8.354 12.056a.5.5 0 1 1-.707.707l-4.41-4.41a.5.5 0 0 1 0-.707l4.41-4.41a.5.5 0 1 1 .707.708L4.298 8l4.056 4.056Zm4.41 0a.5.5 0 0 1-.708.707l-4.41-4.41a.5.5 0 0 1 0-.707l4.41-4.41a.5.5 0 1 1 .707.708L8.707 8l4.056 4.056Z" class="Union" clip-rule="evenodd"/>
+        <path fill="var(--icon-stroke)" fill-rule="evenodd" d="M7.646 12.056a.5.5 0 1 0 .707.707l4.41-4.41a.5.5 0 0 0 0-.707l-4.41-4.41a.5.5 0 1 0-.707.708L11.703 8l-4.057 4.056Zm-4.41 0a.5.5 0 0 0 .708.707l4.41-4.41a.5.5 0 0 0 0-.707l-4.41-4.41a.5.5 0 0 0-.707.708L7.293 8l-4.056 4.056Z" class="Union" clip-rule="evenodd"/>
       </g>
     </symbol>
     <symbol id="es-line-reply-all" fill="none" viewBox="0 0 16 16">
