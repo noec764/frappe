@@ -96,7 +96,8 @@ body[data-route^="Module"] .main-menu {
 
 	.form-sidebar-stats {
 		li:first-child {
-			@include flex(flex, space-between, center, null);
+			@include flex(flex, space-between, flex-start, row);
+			gap: var(--margin-md);
 
 			.form-follow {
 				text-transform: uppercase;
