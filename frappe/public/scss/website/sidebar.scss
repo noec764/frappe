@@ -23,14 +23,14 @@
 	font-weight: 600;
 	@include transition();
 
-	color: var(--light);
+	color: var(--sidebar-fg);
 
 	&:hover, &.active {
-		color: var(--text-color);
-		background-color: var(--light);
+		color: var(--sidebar-bg);
+		background-color: var(--sidebar-fg);
 
 		.icon {
-			--icon-stroke: var(--text-color);
+			--icon-stroke: currentColor;
 		}
 	}
 
