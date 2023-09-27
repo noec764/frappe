@@ -210,7 +210,10 @@ frappe.ui.Page = class Page {
 		let sidebar_wrapper = this.wrapper.find(".layout-side-section");
 		let is_sidebar_visible = $(sidebar_wrapper).is(":visible");
 		sidebar_toggle_icon.html(
-			frappe.utils.icon(is_sidebar_visible ? "sidebar-collapse" : "sidebar-expand", "md")
+			frappe.utils.icon(
+				is_sidebar_visible ? "es-line-sidebar-collapse" : "es-line-sidebar-expand",
+				"md"
+			)
 		);
 	}
 
@@ -224,20 +227,26 @@ frappe.ui.Page = class Page {
 				${frappe.utils.icon(icon)}
 			</button>
 		`);
+		// ideally, we should pass tooltip_label this is just safe gaurd.
+		if (!tooltip_label) {
+			icon = icon.replace(/^es-(line|solid|small)-*/g, "");
+			tooltip_label = frappe.unscrub(icon);
+		}
 
 		button.appendTo(this.icon_group.removeClass("hide"));
 		button.on("click", click);
-		button.attr("aria-label", __(tooltip_label || frappe.unscrub(icon))).tooltip({
-			title: __(tooltip_label || frappe.unscrub(icon)),
-			delay: { show: 600, hide: 100 },
-			trigger: "hover",
-		});
+		button
+			.attr("aria-label", __(tooltip_label))
+			.attr("title", __(tooltip_label))
+			.tooltip({ delay: { show: 600, hide: 100 }, trigger: "hover" });
 
 		return button;
 	}
 
 	clear_indicator() {
-		return this.indicator.removeClass().addClass("indicator-pill whitespace-nowrap hide");
+		return this.indicator
+			.removeClass()
+			.addClass("indicator-pill no-indicator-dot whitespace-nowrap hide");
 	}
 
 	get_icon_label(icon, label) {
@@ -255,14 +264,15 @@ frappe.ui.Page = class Page {
 	set_action(btn, opts) {
 		let me = this;
 		if (opts.icon) {
-			opts.label = this.get_icon_label(opts.icon, opts.label);
+			opts.iconHTML = this.get_icon_label(opts.icon, opts.label);
 		}
 
 		this.clear_action_of(btn);
 
 		btn.removeClass("hide")
 			.prop("disabled", false)
-			.html(opts.label)
+			.html(opts.iconHTML || opts.label)
+			.attr("data-label", opts.label)
 			.on("click", function () {
 				let response = opts.click.apply(this, [btn]);
 				me.btn_disable_enable(btn, response);

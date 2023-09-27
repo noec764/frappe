@@ -9,12 +9,10 @@
 	--sm-width: map-get($grid-breakpoints, 'sm');
 	--xs-width: map-get($grid-breakpoints, 'xs');
 
-	--text-bold: 500;
+	--navbar-height: 48px;
 
-	--navbar-height: 60px;
-
-	--appreciation-color: var(--dark-green-600);
-	--appreciation-bg: var(--dark-green-100);
+	--appreciation-color: var(--green-600);
+	--appreciation-bg: var(--green-100);
 	--criticism-color: var(--red-600);
 	--criticism-bg: var(--red-100);
 
@@ -23,20 +21,27 @@
 	--error-border: var(--orange-400);
 
 	// page
-	--page-head-height: 75px;
+	--page-head-height: 60px;
 	--page-bottom-margin: 60px;
 
 	// checkbox
 	--checkbox-right-margin: var(--margin-xs);
 	--checkbox-size: 14px;
-	--checkbox-focus-shadow: 0 0 0 2px var(--gray-300);
+	--checkbox-focus-shadow: var(--focus-default);
+
+	// date-picker
+	--date-active-text: var(--neutral);
+	--date-active-bg: var(--primary);
+	--date-range-bg: var(--subtle-fg);
 
 	// timeline
-	--timeline-item-icon-size: 34px;
-	--timeline-item-left-margin: var(--margin-xl);
+	--timeline-item-icon-size: 30px;
+	--timeline-item-left-margin: var(--margin-lg);
 	--timeline-item-bottom-margin: var(--margin-sm);
-	--timeline-content-max-width: 700px;
+	--timeline-content-max-width: unset;
 	--timeline-left-padding: calc(var(--padding-xl) + var(--timeline-item-icon-size) / 2);
+	--timeline-badge-color: var(--blue-700);
+	--timeline-badge-bg: var(--neutral);
 
 	// mentions
 	--user-mention-bg-color: var(--fg-color);

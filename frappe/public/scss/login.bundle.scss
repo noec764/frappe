@@ -19,7 +19,6 @@
 			padding: 45px;
 			padding-bottom: 45px;
 			background-color: #fff;
-			box-shadow: var(--shadow-base);
 		}
 	}
 
@@ -51,6 +50,8 @@
 				border-width: 1px;
 				border-color: var(--gray-400);
 				border-style: none none solid;
+				color: var(--text-color);
+				@include get_textstyle("base", "regular");
 				background-color: var(--control-bg);
 				margin-bottom: 1rem;
 			}
@@ -64,7 +65,7 @@
 			}
 
 			.form-label {
-				font-size: var(--text-base);
+				@include get_textstyle("base", "regular");
 			}
 
 			.forgot-password-message {
@@ -73,13 +74,14 @@
 
 				> * {
 					color: var(--text-light);
-					font-size: var(--text-sm);
+					@include get_textstyle("sm", "regular");
 				}
 			}
 
 			.field-icon {
 				left: 9px;
-				top: 8px;
+				top: 50%;
+				transform: translateY(-50%);
 				position: absolute;
 				z-index: 2;
 			}
@@ -90,11 +92,19 @@
 
 				input {
 					padding-left: 35px;
+					// &:autofill, &:-webkit-autofill {
+					// 	-webkit-background-clip: text;
+					// 	-webkit-text-fill-color: var(--text-color);
+					// 	-webkit-box-shadow: 0 0 0 30px var(--gray-200) inset !important;
+					// 	outline: 1px solid var(--gray-400);
+					// 	transition: background-color 5000s ease-in-out 0s;
+					// }
 				}
 
 				.toggle-password {
 					right: 9px;
-					top: 9px;
+					top: 50%;
+					transform: translateY(-50%);
 					position: absolute;
 					z-index: 2;
 					cursor: pointer;
@@ -103,11 +113,8 @@
 			}
 
 			.btn-login-option {
-				font-size: var(--text-md);
-				font-weight: 500;
-				color: var(--text-gray-700);
-				background: var(--gray-100);
-				box-shadow: none;
+				@include get_textstyle("base", "medium");
+				--btn-shadow: none;
 				border: none;
 				display: flex;
 				place-content: center;
@@ -130,7 +137,7 @@
 
 			.social-logins {
 				margin-top: var(--margin-md);
-				font-size: var(--text-md);
+				@include get_textstyle("base", "regular");
 
 				.social-login-buttons {
 					margin-top: var(--margin-md);
@@ -169,7 +176,6 @@
 
 		img {
 			max-height: 42px;
-			margin-bottom: var(--margin-lg, 30px);
 		}
 
 		h4 {
@@ -182,10 +188,8 @@
 	.sign-up-message {
 		margin-top: 2rem;
 		color: var(--text-light);
-		font-size: var(--text-md);
-
+		@include get_textstyle("base", "regular");
 		a {
-			font-size: var(--text-md);
 			color: var(--primary);
 		}
 	}

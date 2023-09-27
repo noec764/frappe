@@ -85,8 +85,12 @@
 
 	.form-control {
 		border: none;
-		font-size: var(--text-md);
+		font-size: var(--text-base);
 	}
+}
+
+.form-control {
+	@include get_textstyle("base", "regular");
 }
 
 .footer-logo-extension {

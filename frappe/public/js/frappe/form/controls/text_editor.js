@@ -174,31 +174,70 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 
 	make_input() {
 		this.has_input = true;
-		this.Quill = Quill;
+		this.Quill = Quill; // for template field selector
 		this.make_quill_editor();
 	}
 
 	make_quill_editor() {
 		if (this.quill) return;
-		const show_template = this.df.options == "Template" ? true : false;
-		this.quill_container = $(
-			frappe.render_template("text_editor", {
-				...this.get_tooltips(),
-				showtemplate: show_template,
-				font_sizes: font_sizes,
-			})
-		).appendTo(this.input_area);
+
+		this.quill_container = $("<div>").appendTo(this.input_area);
 		if (this.df.max_height) {
 			$(this.quill_container).css({ "max-height": this.df.max_height, overflow: "auto" });
 		}
-		this.quill = new Quill(this.quill_container[2], this.get_quill_options());
+
+		const options = this.get_quill_options();
+		if (options.theme === "snow") {
+			options.modules.toolbar = this.make_toolbar_from_template();
+		}
+		this.quill = new Quill(this.quill_container[0], options);
 
 		this.make_template_editor();
 
 		this.bind_events();
 	}
 
+	make_toolbar_from_template() {
+		// @dokos: Need to provide a HTML toolbar because of tooltips + translations.
+		const show_template = this.df?.options == "Template" ? true : false;
+		return $(
+			frappe.render_template("text_editor", {
+				...this.get_tooltips(),
+				showtemplate: show_template,
+				font_sizes: font_sizes,
+			})
+		)
+			.prependTo(this.input_area)
+			.get(0);
+	}
+
+	get_tooltips() {
+		// @dokos
+		return {
+			header: __("Text Size"),
+			size: __("Font Size"),
+			bold: __("Bold"),
+			italic: __("Add italic text <cmd+i>"),
+			underline: __("Underline"),
+			blockquote: __("Quote"),
+			codeblock: __("Code"),
+			link: __("Link"),
+			image: __("Image"),
+			orderedlist: __("Ordered list"),
+			bulletlist: __("Bullet list"),
+			checklist: __("Check list"),
+			align: __("Align"),
+			indent: __("Indent"),
+			table: __("Add a table"),
+			clean: __("Remove formatting"),
+			templateblot: __("Add a variable"),
+			direction: __("Direction"),
+			strike: __("Strike"),
+		};
+	}
+
 	make_template_editor() {
+		// @dokos: insert template blot
 		// race condition exists with rendering the icons in the blots
 		frappe.model.get_doctype_icons?.();
 
@@ -295,7 +334,7 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			modules: {
 				toolbar: Object.keys(this.df).includes("get_toolbar_options")
 					? this.df.get_toolbar_options()
-					: this.quill_container[0], // @dokos
+					: this.get_toolbar_options(),
 				table: true,
 				imageResize: {},
 				magicUrl: true,
@@ -305,30 +344,6 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 			readOnly: this.disabled,
 			bounds: this.quill_container[0],
 			placeholder: this.df.placeholder || "",
-		};
-	}
-
-	get_tooltips() {
-		return {
-			header: __("Text Size"),
-			size: __("Font Size"),
-			bold: __("Bold"),
-			italic: __("Add italic text <cmd+i>"),
-			underline: __("Underline"),
-			blockquote: __("Quote"),
-			codeblock: __("Code"),
-			link: __("Link"),
-			image: __("Image"),
-			orderedlist: __("Ordered list"),
-			bulletlist: __("Bullet list"),
-			checklist: __("Check list"),
-			align: __("Align"),
-			indent: __("Indent"),
-			table: __("Add a table"),
-			clean: __("Remove formatting"),
-			templateblot: __("Add a variable"),
-			direction: __("Direction"),
-			strike: __("Strike"),
 		};
 	}
 
@@ -367,6 +382,36 @@ frappe.ui.form.ControlTextEditor = class ControlTextEditor extends frappe.ui.for
 		return values
 			.filter((val) => involved_users.includes(val.id))
 			.concat(values.filter((val) => !involved_users.includes(val.id)));
+	}
+
+	get_toolbar_options() {
+		return [
+			[{ header: [1, 2, 3, false] }],
+			[{ size: font_sizes }],
+			["bold", "italic", "underline", "strike", "clean"],
+			[{ color: [] }, { background: [] }],
+			["blockquote", "code-block"],
+			// Adding Direction tool to give the user the ability to change text direction.
+			[{ direction: "rtl" }],
+			["link", "image"],
+			[{ list: "ordered" }, { list: "bullet" }, { list: "check" }],
+			[{ align: [] }],
+			[{ indent: "-1" }, { indent: "+1" }],
+			[
+				{
+					table: [
+						"insert-table",
+						"insert-row-above",
+						"insert-row-below",
+						"insert-column-right",
+						"insert-column-left",
+						"delete-row",
+						"delete-column",
+						"delete-table",
+					],
+				},
+			],
+		];
 	}
 
 	parse(value) {

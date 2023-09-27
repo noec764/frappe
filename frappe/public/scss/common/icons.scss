@@ -9,22 +9,37 @@
 	background-position: 50% 50%;
 	fill: var(--icon-fill);
 	stroke: var(--icon-stroke);
+	flex-shrink: 0;
 }
 
-$icon-sizes: (
-	"xs": 12px,
-	"sm": 16px,
-	"base": 20px,
-	"md": 20px,
-	"lg": 24px,
-	"xl": 75px
-);
+.es-icon {
+	@extend .icon;
+	// reverse fill and stroke because of the way es icon is drawn
+	fill: var(--icon-stroke);
+	stroke: var(--icon-fill);
+
+	&.es-line {
+		stroke-width: 0;
+	}
+}
 
 /* like icon */
 use.like-icon {
 	cursor: pointer;
-	--icon-stroke: var(--gray-500);
-	stroke-width: 1.1px;
+	--icon-stroke: transparent;
+	--icon-fill: var(--gray-600);
+	fill: var(--icon-stroke);
+	stroke: var(--icon-fill);
+	transition: all 0.2s ease;
+
+	stroke-width: 1px;
+	stroke-miterlimit: 0;
+	stroke-linejoin: round;
+
+	.liked & {
+		--icon-stroke: var(--red-600);
+		--icon-fill: var(--red-500);
+	}
 }
 
 #icon-file-large {
@@ -35,23 +50,38 @@ use.like-icon {
 	stroke: none;
 }
 
+#icon-close {
+	fill: var(--invert-neutral);
+}
+
+.icon > .close-alt {
+	fill: var(--gray-500);
+}
+
 .liked {
 	use.like-icon {
-		--icon-stroke: none;
-		fill: var(--red-500);
+		--icon-stroke: var(--red-500);
+		stroke: var(--icon-stroke);
+		fill: var(--icon-stroke);
 	}
 }
+
+
+$icon-sizes: (
+	"xs": 12px,
+	"sm": 16px,
+	"base": 20px,
+	"md": 20px,
+	"lg": 24px,
+	"xl": 75px
+);
 
 // .icon-xs, .icon-sm, .icon-base, .icon-md, .icon-lg, .icon-xl
 @each $size, $value in $icon-sizes {
 	.icon-#{$size} {
-		width: $value;
-		height: $value;
+		width: $value !important;
+		height: $value !important;
 	}
-}
-
-.no-stroke {
-	stroke: none;
 }
 
 .fonticon {
@@ -76,4 +106,8 @@ use.like-icon {
 
 i.icon {
 	font-style: normal !important;
+}
+
+.no-stroke {
+	stroke: none;
 }

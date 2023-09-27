@@ -53,7 +53,7 @@
 	border: none;
 	position: absolute;
 	background: var(--fg-color);
-	box-shadow: var(--shadow-md);
+	box-shadow: var(--shadow-2xl);
 
 	.notification-list-header {
 		// margin: 0px 10px;
@@ -77,13 +77,12 @@
 
 			.title {
 				margin-top: var(--margin-lg);
-				font-size: var(--text-base);
-				font-weight: 600;
+				@include get_textstyle("base", "semibold");
 			}
 
 			.subtitle {
 				margin-top: var(--margin-sm);
-				font-size: var(--text-md);
+				@include get_textstyle("base", "regular");
 				color: var(--text-muted);
 			}
 		}
@@ -91,13 +90,14 @@
 
 	.notification-item-tabs {
 		border: none;
+		padding: 0px var(--padding-md);
 
 		.notifications-category {
 			padding: var(--padding-md) 0px;
 			margin-bottom: -1px;
 			margin-right: var(--margin-lg);
 			color: var(--text-light);
-			font-weight: var(--text-bold);
+			font-weight: var(--weight-medium);
 			cursor: pointer;
 
 			&.active {
@@ -118,11 +118,10 @@
 	margin: 4px 0px;
 	border-radius: var(--border-radius-md, 8px);
 	white-space: normal;
-	font-weight: normal;
 	display: flex;
-	font-size: var(--text-md);
+	@include get_textstyle("base", "regular");
 	line-height: 20px;
-	color: var(--text-light);
+	color: var(--text-color);
 	max-width: 464px;
 
 	&:first-child {
@@ -137,7 +136,8 @@
 }
 
 .recent-item.notification-item {
-	padding: 10px 10px 10px 4px;
+	padding: 10px 10px 10px 0px;
+	// margin:  10px 10px 10px 10px;
 	justify-content: space-between;
 	transition: background 0.1s ease;
 
@@ -145,7 +145,7 @@
 		background: linear-gradient(0deg, var(--primary) -10000%, transparent 1000%);
 
 		.message > :first-child {
-			font-weight: bold;
+			font-weight: var(--weight-medium);
 		}
 
 		&:hover {
@@ -184,6 +184,7 @@
 
 	.notification-body {
 		display: flex;
+		gap: var(--margin-sm);
 
 		&::before {
 			// @dokos
@@ -191,7 +192,8 @@
 			align-self: center;
 			@include size(4px, 4px);
 			border-radius: 99px;
-			margin-right: var(--margin-xs);
+			margin-left: var(--margin-xs);
+			flex-shrink: 0;
 		}
 
 		.message {
@@ -199,9 +201,8 @@
 		}
 	}
 
-	b {
-		font-weight: 500;
-		color: var(--text-light)
+	strong {
+		font-weight: var(--weight-semibold);
 	}
 
 	.notification-timestamp {
@@ -229,13 +230,12 @@
 		padding-left: 10px;
 
 		.event-subject {
-			font-size: var(--text-md);
-			color: var(--text-light);
-			font-weight: 500;
+			@include get_textstyle("base", "regular");
 		}
 
 		.event-time {
-			font-size: var(--text-sm);
+			color: var(--text-muted);
+			@include get_textstyle("sm", "regular");
 			margin-right: 10px;
 		}
 
@@ -274,7 +274,7 @@
 
 		.target-title {
 			margin: auto;
-			font-size: var(--text-md);
+			@include get_textstyle("base", "regular");
 			color: var(--text-light);
 		}
 

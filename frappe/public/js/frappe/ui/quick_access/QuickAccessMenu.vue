@@ -274,15 +274,20 @@ export default {
 	margin: 0px;
 	padding: 0px;
 	border: none;
-
-	transition: all 200ms ease;
-	transition-property: opacity, visibility;
 }
 
 .QuickAccessMenu:not([open]) {
-	opacity: 0;
-	pointer-events: none;
-	visibility: hidden;
+	display: none;
+}
+
+.QuickAccessMenu[open] {
+	animation: fade-in 200ms ease;
+}
+
+@keyframes fade-in {
+	from {
+		opacity: 0;
+	}
 }
 
 .QuickAccessMenu--anchor-fixed {
@@ -311,7 +316,6 @@ export default {
 .QAM-modal {
 	overflow: hidden;
 	position: relative;
-	pointer-events: all;
 
 	background: var(--modal-bg, white);
 	color: var(--text-color, black);

@@ -223,8 +223,14 @@ export default class NumberCardWidget extends Widget {
 
 		const symbol = number_parts[1] || "";
 		const formatted_number = $(frappe.format(number_parts[0], df)).text();
+		const insertAtIndex = 1 + (formatted_number.match(/.(\D\S)+$/)?.index ?? Infinity);
 
-		this.formatted_number = formatted_number + " " + __(symbol, null, "Number system");
+		// this.formatted_number = formatted_number + " " + __(symbol, null, "Number system");
+		this.formatted_number =
+			formatted_number.slice(0, insertAtIndex) +
+			" " +
+			__(symbol, null, "Number system") +
+			formatted_number.slice(insertAtIndex);
 	}
 
 	render_number() {
@@ -248,7 +254,7 @@ export default class NumberCardWidget extends Widget {
 				color_class = "grey-stat";
 			} else if (this.percentage_stat > 0) {
 				caret_html = `<span class="indicator-pill-round green">
-						${frappe.utils.icon("arrow-up-right", "xs")}
+						${frappe.utils.icon("es-line-arrow-up-right", "xs")}
 					</span>`;
 				color_class = "green-stat";
 			} else {

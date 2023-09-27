@@ -359,7 +359,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 	setup_selection_buttons() {
 		const actions = [];
 
-		const selection_actions = ["Cancel", "Delete", "Duplicate"];
+		const selection_actions = ["Delete", "Duplicate"];
 		const labels_to_find = selection_actions.map((txt) => __(txt));
 		const style_map = {
 			Cancel: ["close-alt", "btn-text-danger"],
@@ -710,7 +710,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			<input class="level-item list-check-all" type="checkbox"
 				title="${__("Select All")}">
 			<span class="level-item list-liked-by-me hidden-xs">
-				<span title="${__("Likes")}">${frappe.utils.icon("heart", "sm", "like-icon")}</span>
+				<span title="${__("Likes")}">${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}</span>
 			</span>
 			<span class="level-item" data-sort-by="${subject_field.fieldname}"
 				title="${__("Click to sort by {0}", [subject_field.label])}">
@@ -1012,9 +1012,9 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				has_comments ? "" : "zero",
 			].join(" ");
 			comment_count = `<span class="${classes} comment-count" ${comments_tooltip}>
-					${frappe.utils.icon("small-message")}
-					${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
-				</span>`;
+				${frappe.utils.icon("es-line-chat-alt")}
+				${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
+			</span>`;
 		}
 
 		html += `
@@ -1089,7 +1089,7 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		const div = document.createElement("div");
 		div.innerHTML = `
 			<span class="like-action ${heart_class}">
-				${frappe.utils.icon("heart", "sm", "like-icon")}
+				${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}
 			</span>
 			<span class="likes-count">
 				${liked_by.length > 99 ? __("99") + "+" : __(liked_by.length || "")}
@@ -1155,8 +1155,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		];
 		const title = docstatus_description[doc.docstatus || 0];
 		if (indicator) {
-			return `<span class="indicator-pill ${indicator[1]} filterable ellipsis"
-				data-filter='${indicator[2] || ""}' title='${title}'>
+			return `<span
+				class="indicator-pill ${indicator[1]} filterable no-indicator-dot ellipsis"
+				data-filter='${indicator[2] || ""}' title='${title}'
+			>
 				<span class="ellipsis"> ${__(indicator[0])}</span>
 			</span>`;
 		}

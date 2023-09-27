@@ -586,6 +586,7 @@ frappe.ui.form.Toolbar = class Toolbar {
 			let is_doctype_custom = is_doctype_form ? this.frm.doc.custom : false;
 
 			if (doctype != "DocType" && !is_doctype_custom && this.frm.meta.issingle === 0) {
+				$('<li class="dropdown-divider"></li>').appendTo(this.page.menu);
 				this.page.add_menu_item(
 					__("Customize"),
 					() => {

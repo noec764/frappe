@@ -46,7 +46,7 @@
 	.my-account-name,
 	.my-account-item {
 		color: var(--gray-900);
-		font-weight: var(--text-bold);
+		font-weight: var(--weight-medium);
 	}
 
 	.my-account-avatar {
@@ -59,7 +59,7 @@
 
 	.my-account-item-desc {
 		color: var(--gray-700);
-		font-size: var(--text-md);
+		@include get_textstyle("base", "regular");
 
 		button {
 			background: none;
@@ -69,7 +69,7 @@
 	}
 
 	.my-account-item-link {
-		font-size: var(--text-md);
+		@include get_textstyle("base", "regular");
 
 		button {
 			background: none;

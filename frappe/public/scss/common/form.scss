@@ -1,13 +1,21 @@
-// Specificity hack to override bootstrap
-:root .form-control {
+.form-control {
 	border-width: 1px;
 	border-color: var(--gray-400);
 	border-style: none none solid;
-	background-color: var(--control-bg);
-	color: var(--text-color);
+
+	// Specificity hack to override bootstrap
+	:root & {
+		background-color: var(--control-bg);
+		color: var(--text-color);
+	}
 	box-shadow: none;
-	border-radius: $border-radius;
-	font-size: var(--text-md);
+
+	height: var(--input-height);
+	font: inherit;
+	@include get_textstyle("base", "regular");
+	border-radius: var(--border-radius);
+	padding: var(--input-padding);
+
 	position: relative;
 
 	&::placeholder {
@@ -16,26 +24,25 @@
 }
 
 .form-control.bold {
-	font-weight: 500;
+	font-weight: var(--weight-medium);
 }
 
 .like-disabled-input {
 	.for-description {
-		font-weight: normal;
-		font-size: var(--text-sm);
+		@include get_textstyle("sm", "regular");
 	}
 	min-height: var(--input-height);
-	margin-bottom: 7px;
-	border-radius: $border-radius;
-	font-weight: 400;
-	padding: 8px 12px;
+	// margin-bottom: 7px;
 	// color: var(--disabled-text-color);
+	font-weight: var(--weight-regular);
+	border-radius: var(--border-radius-sm);
+	padding: var(--disabled-input-padding);
 	cursor: default;
 	background-color: var(--disabled-control-bg);
 }
 
 .head-title {
-	font-size: var(--text-lg);
+	font-size: var(--text-xl);
 	font-weight: 700;
 	color: var(--heading-color);
 }

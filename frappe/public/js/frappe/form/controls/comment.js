@@ -9,17 +9,18 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 			? $(`
 			<div class="comment-input-wrapper">
 				<div class="comment-input-header">
-					<span>${__("Add a comment")}</span>
+				<span>${__("Comments")}</span>
 				</div>
 				<div class="comment-input-container">
-					<div class="frappe-control"></div>
-					<div class="text-muted small">
-						${__("Ctrl+Enter to add comment")}
-					</div>
+				${frappe.avatar(frappe.session.user, "avatar-medium")}
+					<div class="frappe-control col"></div>
 				</div>
-				<button class="btn btn-default btn-comment btn-xs">
-					${__("Save Comment")}
-				</button>
+				<div class="flex align-center" style="margin-top: var(--margin-md); margin-left: 48px;">
+					<button class="btn disabled btn-comment btn-xs">
+						${__("Save Comment")}
+					</button>
+					<span class="text-muted small ml-4">${__("Ctrl+Enter to add comment")}</span>
+				</div>
 			</div>
 		`)
 			: $('<div class="frappe-control"></div>');
@@ -66,9 +67,9 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 	update_state() {
 		const value = this.get_value();
 		if (strip_html(value).trim() != "" || value.includes("img")) {
-			this.button.removeClass("btn-default").addClass("btn-primary");
+			this.button.removeClass("disabled").addClass("btn-primary");
 		} else {
-			this.button.addClass("btn-default").removeClass("btn-primary");
+			this.button.addClass("disabled").removeClass("btn-primary");
 		}
 	}
 
@@ -77,6 +78,7 @@ frappe.ui.form.ControlComment = class ControlComment extends frappe.ui.form.Cont
 		return Object.assign(options, {
 			theme: "bubble",
 			bounds: this.quill_container[0],
+			placeholder: __("Type a reply / comment"),
 		});
 	}
 

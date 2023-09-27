@@ -122,16 +122,16 @@
 	max-width: 520px;
 	background: var(--card-bg);
 	padding: var(--padding-xl);
-	box-shadow: var(--card-shadow);
+	border: 1px solid var(--gray-400);
 	border-radius: var(--border-radius-md);
 
 	.slide-footer {
 		margin-top: var(--margin-md);
 		// padding: 0 var(--padding-lg);
 
-		.btn {
-			box-shadow: none;
-		}
+		// .btn {
+		// 	box-shadow: none;
+		// }
 	}
 
 	.lead {

@@ -1,7 +1,7 @@
 :root {
 	--avatar-frame-color: var(--blue-500);
-	--avatar-frame-bg: var(--blue-100);
-	--avatar-frame-border: var(--blue-100);
+	--avatar-frame-bg: var(--blue-200);
+	--avatar-frame-border: var(--blue-300);
 
 	--orange-avatar-bg: var(--orange-100);
 	--orange-avatar-color: var(--orange-600);
@@ -12,11 +12,11 @@
 	--blue-avatar-bg: var(--blue-50);
 	--blue-avatar-color: var(--blue-500);
 
-	--green-avatar-bg: var(--green-50);
-	--green-avatar-color: var(--green-500);
+	--green-avatar-bg: var(--green-200);
+	--green-avatar-color: var(--green-800);
 
-	--dark-green-avatar-bg: var(--dark-green-50);
-	--dark-green-avatar-color: var(--dark-green-500);
+	--dark-green-avatar-bg: var(--green-200);
+	--dark-green-avatar-color: var(--green-800);
 
 	--red-avatar-bg: var(--red-50);
 	--red-avatar-color: var(--red-500);
@@ -32,9 +32,9 @@
 }
 
 [data-theme="dark"] {
-	--avatar-frame-color: var(--blue-50);
-	--avatar-frame-bg: var(--blue-400);
-	--avatar-frame-border: var(--blue-400);
+	--avatar-frame-color: var(--gray-600);
+	--avatar-frame-bg: var(--gray-800);
+	--avatar-frame-border: var(--gray-700);
 
 	--orange-avatar-bg: var(--orange-600);
 	--orange-avatar-color: var(--orange-100);
@@ -48,8 +48,8 @@
 	--green-avatar-bg: var(--green-500);
 	--green-avatar-color: var(--green-50);
 
-	--dark-green-avatar-bg: var(--dark-green-500);
-	--dark-green-avatar-color: var(--dark-green-50);
+	--dark-green-avatar-bg: var(--green-500);
+	--dark-green-avatar-color: var(--green-50);
 
 	--red-avatar-bg: var(--red-500);
 	--red-avatar-color: var(--red-50);
@@ -104,11 +104,11 @@
 }
 
 .avatar-medium {
-	width: 36px;
-	height: 36px;
+	width: 32px;
+	height: 32px;
 
 	.standard-image {
-		font-size: var(--text-base);
+		@include get_textstyle("base", "regular");
 	}
 }
 
@@ -117,7 +117,7 @@
 	height: 64px;
 
 	.standard-image {
-		font-size: var(--text-2xl);
+		@include get_textstyle("2xl", "regular");
 	}
 }
 
@@ -126,7 +126,7 @@
 	height: 108px;
 
 	.standard-image {
-		font-size: var(--text-2xl);
+		@include get_textstyle("2xl", "regular");
 	}
 }
 
@@ -194,8 +194,7 @@
 	}
 
 	.avatar-extra-count {
-		font-size: var(--text-sm);
-		font-weight: 500;
+		@include get_textstyle("sm", "medium");
 		color: $white;
 		background-color: var(--blue-500);
 	}

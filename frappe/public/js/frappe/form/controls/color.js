@@ -90,7 +90,7 @@ frappe.ui.form.ControlColor = class ControlColor extends frappe.ui.form.ControlD
 				$(window).off("hashchange.color-popover");
 
 				// Add to most recent colors
-				const color = this.get_color().toUpperCase();
+				const color = this.get_color()?.toUpperCase?.() ?? "";
 				this.most_recent_colors = this.most_recent_colors || [];
 				if (color && !this.most_recent_colors.includes(color)) {
 					this.most_recent_colors.push(color);

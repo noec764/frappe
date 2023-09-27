@@ -73,6 +73,8 @@
 }
 
 .level-item {
+	font-weight: var(--weight-regular);
+	color: var(--text-color);
 	align-items: center;
 	display: flex;
 	flex-basis: auto;

@@ -4,6 +4,23 @@
 	bottom: 0;
 	width: var(--web-sidebar-width);
 	overflow: hidden auto;
+
+	@if (lightness($sidebar-bg) > 50) {
+		--sidebar-fg: #{$sidebar-dark};
+		--sidebar-bg: #{$sidebar-light};
+	} @else {
+		--sidebar-fg: #{$sidebar-light};
+		--sidebar-bg: #{$sidebar-dark};
+	}
+
+	& > a {
+		color: var(--sidebar-fg);
+
+		&:hover, &:focus, &:active {
+			color: var(--sidebar-fg);
+			text-decoration: underline;
+		}
+	}
 }
 .sidebar-column::before {
 	content: "";

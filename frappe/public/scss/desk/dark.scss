@@ -1,5 +1,9 @@
+$check-icon-dark: url("data:image/svg+xml, <svg viewBox='0 0 8 7' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1 4.00001L2.66667 5.80001L7 1.20001' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 [data-theme="dark"] {
-	--gray-50: #{$gray-50};
+	--neutral: var(--neutral-black);
+	--invert-neutral: var(--neutral-white);
+
+	--gray-50: #F9FAFA;
 	--gray-100: #F7FAFC;
 	--gray-200: #EDF2F7;
 	--gray-300: #E2E8F0;
@@ -11,9 +15,9 @@
 	--gray-900: #1A202C;
 
 	// Type Colors
+	--text-dark: var(--gray-900);
 	--text-muted: var(--gray-400);
 	--text-light: var(--gray-300);
-	--text-dark: var(--gray-900);
 	--text-color: var(--gray-50);
 	--heading-color: var(--gray-50);
 	--text-secondary-color: var(--blue-50);
@@ -29,36 +33,39 @@
 	// Layout Colors
 	--bg-color: var(--gray-900);
 	--fg-color: var(--gray-800);
-	--navbar-bg: var(--gray-800);
-	--fg-hover-color: var(--gray-700);
-	--card-bg: var(--gray-800);
+	--subtle-accent: var(--gray-700);
+	--subtle-fg: var(--gray-800);
+	--navbar-bg: var(--gray-900);
+	--fg-hover-color: var(--gray-800);
+	--card-bg: var(--gray-900);
 	--disabled-text-color: var(--gray-400);
-	--disabled-control-bg: var(--gray-700);
-	--control-bg: var(--gray-700);
+	--disabled-control-bg: var(--gray-800);
+	--control-bg: var(--gray-800);
 	--control-bg-on-gray: var(--gray-800);
 	--awesomebar-focus-bg: var(--control-bg);
-	--awesomplete-hover-bg: var(--blue-800);
-	--modal-bg: var(--gray-700);
+	--awesomplete-hover-bg: var(--highlight-color);
+	--modal-bg: var(--gray-900);
 	--toast-bg: var(--modal-bg);
 	--popover-bg: var(--bg-color);
 
 	// Button Colors
-	--btn-default-bg: var(--gray-700);
-	--btn-default-hover-bg: var(--gray-500);
+	--btn-default-bg: var(--gray-800);
+	--btn-default-hover-bg: var(--gray-700);
+	--btn-primary: var(--primary);
 
 	// Background Text Color Pairs
 	--bg-blue: var(--blue-600);
 	--bg-light-blue: var(--blue-600);
 	--bg-dark-blue: var(--blue-900);
-	--bg-green: var(--green-800);
+	--bg-green: var(--green-900);
 	--bg-yellow: var(--yellow-700);
 	--bg-orange: var(--orange-700);
 	--bg-red: var(--red-600);
 	--bg-gray: var(--gray-600);
 	--bg-grey: var(--gray-600);
 	--bg-darkgrey: var(--gray-600);
-	--bg-dark-gray: var(--gray-600);
-	--bg-light-gray: var(--gray-700);
+	--bg-dark-gray: var(--gray-500);
+	--bg-light-gray: var(--gray-800);
 	--bg-purple: var(--purple-700);
 	--bg-pink: var(--pink-700);
 	--bg-cyan: var(--cyan-800);
@@ -66,7 +73,7 @@
 	--text-on-blue: var(--blue-50);
 	--text-on-light-blue: var(--blue-50);
 	--text-on-dark-blue: var(--blue-300);
-	--text-on-green: var(--dark-green-50);
+	--text-on-green: var(--green-100);
 	--text-on-yellow: var(--yellow-50);
 	--text-on-orange: var(--orange-100);
 	--text-on-red: var(--red-50);
@@ -96,10 +103,13 @@
 	--scrollbar-thumb-color: var(--gray-500);
 	--scrollbar-track-color: var(--gray-800);
 
+	--timeline-badge-color: var(--blue-400);
+	--timeline-badge-bg: var(--neutral);
+
 	--shadow-inset: var(--fg-color);
 	--border-color: var(--gray-700);
 	--dark-border-color: var(--gray-600);
-	--table-border-color: var(--gray-600);
+	--table-border-color: var(--border-color);
 	--highlight-color: var(--gray-700);
 	--yellow-highlight-color: var(--yellow-700);
 
@@ -108,6 +118,7 @@
 
 	--highlight-shadow: 1px 1px 10px var(--blue-600), 0px 0px 4px var(--blue-300);
 	--highlight-shadow-row: inset 0px 0px 0px 1px var(--blue-100);
+	--placeholder-color: var(--gray-700);
 
 	--dark-shadow-highlight: hsla(220, 100%, 90%, 0.8);
 	--shadow-xs: 0px 0px 1px 0px var(--dark-shadow-highlight), 0px 2px 4px 0px rgba(0, 0, 0, 0.1);
@@ -121,13 +132,51 @@
 	--diff-added: var(--green-800);
 	--diff-removed: var(--red-800);
 
+	// sidebar toggle
+	.page-title .sidebar-toggle-btn {
+		--icon-stroke: var(--gray-300);
+	}
+
 	// input
 	--input-disabled-bg: none;
 
 	color-scheme: dark;
 
 	// checkbox
-	--checkbox-focus-shadow: 0 0 0 2px var(--gray-600);
+	--checkbox-color: var(--neutral-white);
+	--checkbox-gradient: linear-gradient(180deg, var(--neutral-white) -124.51%, var(--neutral-white) 100%);
+	--checkbox-disabled-gradient: linear-gradient(180deg, var(--gray-600) -124.51%, var(--gray-600) 100%);
+	--checkbox-focus-shadow: var(--focus-default);
+
+	input[type="checkbox"] {
+		&:checked {
+			background-image: $check-icon-dark, var(--checkbox-gradient);
+		}
+		&.disabled-selected, &:disabled:checked {
+			background-image: $check-icon-dark, var(--checkbox-disabled-gradient);
+		}
+		&.disabled-deselected {
+			border: none;
+			background-color: var(--gray-700);
+		}
+	}
+
+	// switch
+	--switch-bg: var(--gray-500);
+
+	// date-picker
+	--date-active-text: var(--gray-100);
+	--date-active-bg: var(--gray-700);
+	--date-range-bg: var(--subtle-fg);
+
+
+	// grid
+	// .grid-body .editable-row {
+	// 	--control-bg: var(--gray-900);
+	// 	--input-disabled-bg: var(--gray-800);
+	// }
+
+	color-scheme: dark;
 
 	.frappe-card {
 		.btn-default {
@@ -141,7 +190,7 @@
 	.modal,
 	.form-in-grid {
 		--control-bg: var(--gray-800);
-		--border-color: var(--gray-600);
+		--border-color: var(--gray-800);
 	}
 
 	.print-format {
@@ -161,15 +210,18 @@
 			}
 		}
 	}
-/* 	--appreciation-color: var(--dark-green-100);
-	--appreciation-bg: var(--dark-green-600);
-	--criticism-color: var(--red-100);
-	--criticism-bg: var(--red-600); */
+	.comment-input-wrapper .ql-editor.ql-blank::before {
+		color: var(--text-muted);
+	}
+	// --appreciation-color: var(--dark-green-100);
+	// --appreciation-bg: var(--dark-green-600);
+	// --criticism-color: var(--red-100);
+	// --criticism-bg: var(--red-600);
 
 	// Frappe Charts Colors
 	.chart-container {
 		--charts-label-color: var(--gray-300);
-		--charts-axis-line-color: var(--gray-500);
+		--charts-axis-line-color: var(--subtle-fg);
 
 		--charts-stroke-width: 5px;
 		--charts-dataset-circle-stroke: #ffffff;
@@ -207,10 +259,10 @@
 	--right-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M1.25 7.5L4.75 4L1.25 0.5' stroke='white' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 	--left-arrow-svg: url("data: image/svg+xml;utf8, <svg width='6' height='8' viewBox='0 0 6 8' fill='none' xmlns='http://www.w3.org/2000/svg'><path d='M7.5 9.5L4 6l3.5-3.5' stroke='white' stroke-linecap='round' stroke-linejoin='round'></path></svg>");
 
-	::selection {
-		color: var(--text-color);
-		background: var(--gray-500);
-	}
+	// ::selection {
+	// 	color: var(--text-color);
+	// 	background: var(--gray-500);
+	// }
 
 	--list-body-bg: var(--card-bg);
 	--list-header-fg: var(--heading-color);

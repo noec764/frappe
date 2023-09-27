@@ -34,6 +34,7 @@ frappe.views.Workspace = class Workspace {
 			private: {},
 		};
 		this.sidebar_categories = ["My Workspaces", "Public"];
+		this.indicator_colors = ["blue"];
 
 		this.prepare_container();
 		this.setup_pages();
@@ -156,16 +157,16 @@ frappe.views.Workspace = class Workspace {
 		);
 
 		let $title = $(`<div class="standard-sidebar-label">
-			<span>${frappe.utils.icon("small-down", "xs")}</span>
+			<span>${frappe.utils.icon("es-line-down", "xs")}</span>
 			<span class="section-title">${__(title)}<span>
 		</div>`).appendTo(sidebar_section);
 		this.prepare_sidebar(root_pages, sidebar_section, this.sidebar);
 
 		$title.on("click", (e) => {
 			let icon =
-				$(e.target).find("span use").attr("href") === "#icon-small-down"
-					? "#icon-right"
-					: "#icon-small-down";
+				$(e.target).find("span use").attr("href") === "#es-line-down"
+					? "#es-line-right-chevron"
+					: "#es-line-down";
 			$(e.target).find("span use").attr("href", icon);
 			$(e.target).parent().find(".sidebar-item-container").toggleClass("hidden");
 		});
@@ -224,7 +225,7 @@ frappe.views.Workspace = class Workspace {
 	}
 
 	add_drop_icon(item, sidebar_control, item_container) {
-		let drop_icon = "small-down";
+		let drop_icon = "es-line-down";
 		if (item_container.find(`[item-name="${this.current_page.name}"]`).length) {
 			drop_icon = "small-up";
 		}
@@ -243,9 +244,9 @@ frappe.views.Workspace = class Workspace {
 		}
 		$drop_icon.on("click", () => {
 			let icon =
-				$drop_icon.find("use").attr("href") === "#icon-small-down"
-					? "#icon-small-up"
-					: "#icon-small-down";
+				$drop_icon.find("use").attr("href") === "#es-line-down"
+					? "#es-line-up"
+					: "#es-line-down";
 			$drop_icon.find("use").attr("href", icon);
 			$child_item_section.toggleClass("hidden");
 		});
@@ -486,19 +487,23 @@ frappe.views.Workspace = class Workspace {
 
 		this.clear_page_actions();
 
-		this.page.set_secondary_action(__("Edit"), async () => {
-			if (!this.editor || !this.editor.readOnly) return;
-			this.is_read_only = false;
-			this.toggle_hidden_workspaces(true);
-			await this.editor.readOnly.toggle();
-			this.editor.isReady.then(() => {
-				this.initialize_editorjs_undo();
-				this.setup_customization_buttons(current_page);
-				this.show_sidebar_actions();
-				this.make_blocks_sortable();
-			});
-		});
-
+		this.page.set_secondary_action(
+			__("Edit"),
+			async () => {
+				if (!this.editor || !this.editor.readOnly) return;
+				this.is_read_only = false;
+				this.toggle_hidden_workspaces(true);
+				await this.editor.readOnly.toggle();
+				this.editor.isReady.then(() => {
+					this.body.addClass("edit-mode");
+					this.initialize_editorjs_undo();
+					this.setup_customization_buttons(current_page);
+					this.show_sidebar_actions();
+					this.make_blocks_sortable();
+				});
+			},
+			"es-line-edit"
+		);
 		this.page.add_inner_button(__("Create Workspace"), () => {
 			this.initialize_new_page();
 		});
@@ -524,6 +529,7 @@ frappe.views.Workspace = class Workspace {
 				__("Save"),
 				() => {
 					this.clear_page_actions();
+					this.body.removeClass("edit-mode");
 					this.save_page(page).then((saved) => {
 						if (!saved) return;
 						this.undo.readOnly = true;
@@ -536,6 +542,7 @@ frappe.views.Workspace = class Workspace {
 			);
 
 		this.page.set_secondary_action(__("Discard"), async () => {
+			this.body.removeClass("edit-mode");
 			this.discard = true;
 			this.clear_page_actions();
 			this.toggle_hidden_workspaces(false);
@@ -594,7 +601,7 @@ frappe.views.Workspace = class Workspace {
 			);
 		} else {
 			frappe.utils.add_custom_button(
-				frappe.utils.icon("drag", "xs"),
+				frappe.utils.icon("es-line-drag", "xs"),
 				null,
 				"drag-handle",
 				__("Drag"),
@@ -671,6 +678,12 @@ frappe.views.Workspace = class Workspace {
 					fieldname: "icon",
 					default: item.icon,
 				},
+				{
+					label: __("Color"),
+					fieldtype: "Color",
+					fieldname: "color",
+					default: item.color,
+				},
 			],
 			primary_action_label: __("Update"),
 			primary_action: async (values) => {
@@ -691,6 +704,7 @@ frappe.views.Workspace = class Workspace {
 						name: old_item.name,
 						title: values.title,
 						icon: values.icon || "",
+						color: values.color || "",
 						parent: values.parent || "",
 						public: values.is_public || 0,
 					},
@@ -731,6 +745,7 @@ frappe.views.Workspace = class Workspace {
 
 		new_updated_item.title = new_item.title;
 		new_updated_item.icon = new_item.icon;
+		new_updated_item.color = new_item.color;
 		new_updated_item.parent_page = new_item.parent || "";
 		new_updated_item.public = new_item.is_public;
 
@@ -852,8 +867,8 @@ frappe.views.Workspace = class Workspace {
 		}
 
 		let $button = $(`
-			<div class="btn btn-secondary btn-xs setting-btn dropdown-btn" title="${__("Setting")}">
-				${frappe.utils.icon("dot-horizontal", "xs")}
+			<div class="btn btn-xs setting-btn dropdown-btn" title="${__("Setting")}">
+				${frappe.utils.icon("es-line-dot-horizontal", "xs")}
 			</div>
 			<div class="dropdown-list hidden"></div>
 		`);
@@ -984,6 +999,12 @@ frappe.views.Workspace = class Workspace {
 					fieldname: "icon",
 					default: new_page.icon,
 				},
+				{
+					label: __("Color"),
+					fieldtype: "Color",
+					fieldname: "color",
+					default: new_page.color,
+				},
 			],
 			primary_action_label: __("Duplicate"),
 			primary_action: (values) => {
@@ -1013,6 +1034,7 @@ frappe.views.Workspace = class Workspace {
 				new_page.name = values.title + (new_page.public ? "" : "-" + frappe.session.user);
 				new_page.label = new_page.name;
 				new_page.icon = values.icon;
+				new_page.color = values.color;
 				new_page.parent_page = values.parent || "";
 				new_page.for_user = new_page.public ? "" : frappe.session.user;
 				new_page.is_editable = !new_page.public;
@@ -1217,6 +1239,11 @@ frappe.views.Workspace = class Workspace {
 					fieldtype: "Icon",
 					fieldname: "icon",
 				},
+				{
+					label: __("Color"),
+					fieldtype: "Color",
+					fieldname: "color",
+				},
 			],
 			primary_action_label: __("Create"),
 			primary_action: (values) => {
@@ -1241,6 +1268,7 @@ frappe.views.Workspace = class Workspace {
 					public: values.is_public || 0,
 					for_user: values.is_public ? "" : frappe.session.user,
 					icon: values.icon,
+					color: values.color,
 					parent_page: values.parent || "",
 					is_editable: true,
 					selected: true,
@@ -1357,7 +1385,7 @@ frappe.views.Workspace = class Workspace {
 			$sidebar_item.appendTo($child_section);
 			$child_section.removeClass("hidden");
 			$item_container.find(".drop-icon.hidden").removeClass("hidden");
-			$item_container.find(".drop-icon use").attr("href", "#icon-small-up");
+			$item_container.find(".drop-icon use").attr("href", "#es-line-up");
 		}
 
 		let section = item.is_public ? "public" : "private";
