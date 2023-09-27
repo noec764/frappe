@@ -121,7 +121,7 @@
 	display: flex;
 	@include get_textstyle("base", "regular");
 	line-height: 20px;
-	color: var(--text-light);
+	color: var(--text-color);
 	max-width: 464px;
 
 	&:first-child {
@@ -137,7 +137,7 @@
 
 .recent-item.notification-item {
 	padding: 10px 10px 10px 0px;
-	margin:  10px 10px 10px 10px;
+	// margin:  10px 10px 10px 10px;
 	justify-content: space-between;
 	transition: background 0.1s ease;
 
@@ -145,7 +145,7 @@
 		background: linear-gradient(0deg, var(--primary) -10000%, transparent 1000%);
 
 		.message > :first-child {
-			font-weight: bold;
+			font-weight: var(--weight-medium);
 		}
 
 		&:hover {
@@ -156,7 +156,7 @@
 		}
 
 		.notification-body::before {
-			background: var(--invert-neutral);
+			background: var(--primary);
 		}
 	}
 
@@ -184,7 +184,7 @@
 
 	.notification-body {
 		display: flex;
-		gap: 10px;
+		gap: var(--margin-sm);
 
 		&::before {
 			// @dokos
@@ -192,7 +192,8 @@
 			align-self: center;
 			@include size(4px, 4px);
 			border-radius: 99px;
-			margin-right: var(--margin-xs);
+			margin-left: var(--margin-xs);
+			flex-shrink: 0;
 		}
 
 		.message {
@@ -200,9 +201,8 @@
 		}
 	}
 
-	b {
-		font-weight: 500;
-		color: var(--text-light)
+	strong {
+		font-weight: var(--weight-semibold);
 	}
 
 	.notification-timestamp {
@@ -230,11 +230,11 @@
 		padding-left: 10px;
 
 		.event-subject {
-			@include get_textstyle("base", "medium");
-			color: var(--text-light);
+			@include get_textstyle("base", "regular");
 		}
 
 		.event-time {
+			color: var(--text-muted);
 			@include get_textstyle("sm", "regular");
 			margin-right: 10px;
 		}
