@@ -165,10 +165,13 @@ frappe.ui.form.ControlFloat = class ControlFloat extends frappe.ui.form.ControlD
 	}
 
 	eval_expression(value) {
+		if (typeof value === "string") {
+			value = value.replace(/[_\s\u066c]/g, ""); // remove thousands separators
+			value = value.replace(/[,\u066b]/g, "."); // replace decimal separators with dots
+		}
 		if (typeof value === "string" && value.match(this.constructor.EXPR_REGEX)) {
 			try {
 				// If it is a string containing operators
-				value = value.replace(/[ _]/g, ""); // remove underscores and spaces
 				return eval(value);
 			} catch (e) {
 				// When the expression is invalid, return null instead of
