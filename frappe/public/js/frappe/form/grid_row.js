@@ -804,6 +804,10 @@ export default class GridRow {
 			>
 		`).appendTo($col);
 
+		if (Object.keys(this.search_columns).length == 0) {
+			$search_input.attr("placeholder", __("Search..."));
+		}
+
 		this.search_columns[df.fieldname] = $col;
 
 		$search_input.on(
