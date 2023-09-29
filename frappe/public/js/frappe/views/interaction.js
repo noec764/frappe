@@ -85,7 +85,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				options: "",
 				hidden: 1,
 			},
-			{ label: __("Public"), fieldtype: "Check", fieldname: "public", default: "1" },
+			{ label: __("Public"), fieldtype: "Check", fieldname: "public", default: "0" },
 			{ fieldtype: "Section Break", fieldname: "participants_section" },
 			{
 				label: __("Participants"),
