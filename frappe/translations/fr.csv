@@ -127,7 +127,7 @@ E.g. 1 USD = 100 centimes",
                 <li><code>.YY.</code> - Année en 2 chiffres</li>
                 <li><code>.MM.</code> - Mois</li>
                 <li><code>.DD.</code> - Jour du mois</li>
-                <li><code>.WW.</code> - Semaine de l'année</li>
+                <li><code>.WW.</code> - Numéro de semaine</li>
                 <li><code>.FY.</code> - Année fiscale</li>
                 <li>
                     <code>.{fieldname}.</code> - nom d'un champ du document ex.
