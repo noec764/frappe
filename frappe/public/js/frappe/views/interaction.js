@@ -86,8 +86,7 @@ frappe.views.InteractionComposer = class InteractionComposer {
 				hidden: 1,
 			},
 			{ label: __("Public"), fieldtype: "Check", fieldname: "public", default: "0" },
-			{ fieldtype: "Column Break" },
-			{ label: __("Date"), fieldtype: "Datetime", fieldname: "due_date" },
+			{ fieldtype: "Section Break", fieldname: "participants_section" },
 			{
 				label: __("Participants"),
 				fieldtype: "Table MultiSelect",
