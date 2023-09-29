@@ -157,12 +157,13 @@ def get_default_address(
 
 
 @frappe.whitelist()
-def get_address_display(address_dict: dict | str | None = None) -> str | None:
+def get_address_display(address_dict: dict | str | None = None, ignore_permissions: bool = False) -> str | None:
 	if not address_dict:
 		return
 
 	if not isinstance(address_dict, dict):
 		address = frappe.get_cached_doc("Address", address_dict)
+		address.flags.ignore_permissions = ignore_permissions
 		address.check_permission()
 		address_dict = address.as_dict()
 
