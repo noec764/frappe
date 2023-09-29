@@ -115,11 +115,11 @@ class DocType(Document):
 		default_print_format: DF.Data | None
 		default_view: DF.Literal
 		description: DF.SmallText | None
-		document_type: DF.Literal["", "Document", "Setup", "System", "Other"]
+		document_type: DF.Literal['', 'Document', 'Setup', 'System', 'Other']
 		documentation: DF.Data | None
 		editable_grid: DF.Check
 		email_append_to: DF.Check
-		engine: DF.Literal["InnoDB", "MyISAM"]
+		engine: DF.Literal['InnoDB', 'MyISAM']
 		fields: DF.Table[DocField]
 		force_re_route_to_default_view: DF.Check
 		has_web_view: DF.Check
@@ -142,17 +142,7 @@ class DocType(Document):
 		migration_hash: DF.Data | None
 		module: DF.Link
 		name_after_submit: DF.Check
-		naming_rule: DF.Literal[
-			"",
-			"Set by user",
-			"Autoincrement",
-			"By fieldname",
-			'By "Naming Series" field',
-			"Expression",
-			"Expression (old style)",
-			"Random",
-			"By script",
-		]
+		naming_rule: DF.Literal['', 'Set by user', 'Autoincrement', 'By fieldname', 'By "Naming Series" field', 'Expression', 'Expression (old style)', 'Random', 'By script']
 		nsm_parent_field: DF.Data | None
 		permissions: DF.Table[DocPerm]
 		queue_in_background: DF.Check
@@ -166,7 +156,7 @@ class DocType(Document):
 		show_preview_popup: DF.Check
 		show_title_field_in_link: DF.Check
 		sort_field: DF.Data | None
-		sort_order: DF.Literal["ASC", "DESC"]
+		sort_order: DF.Literal['ASC', 'DESC']
 		states: DF.Table[DocTypeState]
 		subject_field: DF.Data | None
 		timeline_field: DF.Data | None
