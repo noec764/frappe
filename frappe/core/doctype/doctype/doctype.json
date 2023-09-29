@@ -95,8 +95,7 @@
   "email_append_to",
   "sender_field",
   "subject_field",
-  "connections_tab",
-  "column_break_53"
+  "connections_tab"
  ],
  "fields": [
   {
@@ -454,10 +453,6 @@
    "fieldname": "allow_guest_to_view",
    "fieldtype": "Check",
    "label": "Allow Guest to View"
-  },
-  {
-   "fieldname": "column_break_53",
-   "fieldtype": "Column Break"
   },
   {
    "depends_on": "eval:!doc.istable",
