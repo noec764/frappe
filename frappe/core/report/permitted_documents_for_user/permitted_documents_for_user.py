@@ -61,6 +61,6 @@ def query_doctypes(doctype, txt, searchfield, start, page_len, filters):
 	return [
 		[dt]
 		for dt in can_read
-		if txt.lower().replace("%", "") in dt.lower()
+		if txt.lower().replace("%", "") in _(dt).lower()
 		and (include_single_doctypes or dt not in single_doctypes)
 	]
