@@ -291,7 +291,7 @@ frappe.ui.Dialog = class Dialog extends frappe.ui.FieldGroup {
 	}
 
 	hide_scrollbar(bool) {
-		$("body").css("overflow", bool ? "hidden" : "auto");
+		$("body").css("overflow-y", bool ? "hidden" : "auto");
 	}
 
 	add_custom_action(label, action, css_class = null) {
