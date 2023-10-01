@@ -410,8 +410,8 @@ body[data-route^="Module"] .main-menu {
 }
 
 .show-all-btn {
-	margin-top: var(--margin-md);
-	text-align: center;
+	// @dokos
+	margin-bottom: var(--margin-sm);
 }
 
 .form-assignments, .form-shared {
