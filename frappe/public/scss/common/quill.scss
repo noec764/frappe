@@ -118,6 +118,12 @@
 	padding: 0;
 	padding-top: 4px;
 	padding-bottom: 4px;
+
+	--icon-stroke: var(--text-neutral);
+
+	.ql-picker-label::before {
+		color: var(--text-color);
+	}
 }
 [data-theme="dark"] {
 	.ql-toolbar.ql-snow {
