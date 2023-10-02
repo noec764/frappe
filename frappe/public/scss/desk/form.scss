@@ -343,12 +343,12 @@
 
 @mixin form-message-background($color, $theme: "light") {
 	@if $theme == "light" {
-		border: 1px solid var(--#{$color}-100);
+		border: 1px solid var(--#{$color}-800);
 		color: var(--#{$color}-800);
 		background: var(--#{$color}-100);
 	}
 	@if $theme == "dark" {
-		border: 1px solid var(--#{$color}-700);
+		border: 1px solid var(--#{$color}-100);
 		color: var(--#{$color}-100);
 		background: var(--#{$color}-800);
 	}
