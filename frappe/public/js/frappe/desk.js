@@ -38,6 +38,7 @@ frappe.Application = class Application {
 		this.load_user_permissions();
 		this.make_nav_bar();
 		this.set_favicon();
+		this.set_fullwidth_if_enabled();
 		this.add_browser_class();
 		this.setup_energy_point_listeners();
 		this.setup_copy_doc_listener();
@@ -246,7 +247,6 @@ frappe.Application = class Application {
 		});
 		d.show();
 	}
-
 	load_bootinfo() {
 		if (frappe.boot) {
 			this.setup_workspaces();
@@ -309,7 +309,6 @@ frappe.Application = class Application {
 			.replace("yyyy", "%Y");
 		frappe.boot.user.last_selected_values = {};
 	}
-
 	sync_pages() {
 		// clear cached pages if timestamp is not found
 		if (localStorage["page_info"]) {
@@ -326,7 +325,6 @@ frappe.Application = class Application {
 		}
 		localStorage["page_info"] = JSON.stringify(frappe.boot.page_info);
 	}
-
 	set_as_guest() {
 		frappe.session.user = "Guest";
 		frappe.session.user_email = "";
@@ -336,7 +334,6 @@ frappe.Application = class Application {
 		frappe.user_roles = ["Guest"];
 		frappe.sys_defaults = {};
 	}
-
 	make_page_container() {
 		if ($("#body").length) {
 			$(".splash").remove();
@@ -372,32 +369,19 @@ frappe.Application = class Application {
 			},
 		});
 	}
-
 	handle_session_expired() {
 		frappe.app.redirect_to_login();
 	}
-
 	redirect_to_login() {
 		window.location.href = `/login?redirect-to=${encodeURIComponent(
 			window.location.pathname + window.location.search
 		)}`;
 	}
-
 	set_favicon() {
 		var link = $('link[type="image/x-icon"]').remove().attr("href");
 		$('<link rel="shortcut icon" href="' + link + '" type="image/x-icon">').appendTo("head");
 		$('<link rel="icon" href="' + link + '" type="image/x-icon">').appendTo("head");
 	}
-
-	add_app_logo_url_to_frappe(logo_url) {
-		this.logo_url = (logo_url || []).slice(-1)[0];
-		if (window.cordova) {
-			let host = frappe.request.url;
-			host = host.slice(0, host.length - 1);
-			this.logo_url = host + frappe.app.logo_url;
-		}
-	}
-
 	trigger_primary_action() {
 		// to trigger change event on active input before triggering primary action
 		$(document.activeElement).blur();
@@ -416,7 +400,7 @@ frappe.Application = class Application {
 
 	show_change_log() {
 		var me = this;
-		const change_log = frappe.boot.change_log;
+		let change_log = frappe.boot.change_log;
 
 		// frappe.boot.change_log = [{
 		// 	"change_log": [
@@ -441,8 +425,8 @@ frappe.Application = class Application {
 		var change_log_dialog = frappe.msgprint({
 			message: frappe.render_template("change_log", { change_log: change_log }),
 			title: __("Updated To A New Version 🎉"),
+			wide: true,
 		});
-		$(change_log_dialog.wrapper).addClass("modal-lg");
 		change_log_dialog.keep_open = true;
 		change_log_dialog.custom_onhide = function () {
 			frappe.call({
@@ -462,6 +446,10 @@ frappe.Application = class Application {
 
 	add_browser_class() {
 		$("html").addClass(frappe.utils.get_browser().name.toLowerCase());
+	}
+
+	set_fullwidth_if_enabled() {
+		frappe.ui.toolbar.set_fullwidth_if_enabled();
 	}
 
 	show_notes() {
