@@ -100,13 +100,14 @@
 }
 
 .group-by-button {
+	// @dokos
 	margin: 5px;
 
-	.button-label {
-		display: inline-flex;
-		max-width: 175px;
-		overflow: hidden;
-	}
+	max-width: 300px;
+	overflow: hidden !important;
+	text-overflow: ellipsis;
+
+	// .button-label { display: inline-flex; max-width: 175px; overflow: hidden; }
 }
 
 .comparison-message {

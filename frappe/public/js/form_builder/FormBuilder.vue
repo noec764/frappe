@@ -171,7 +171,7 @@ onMounted(() => store.fetch());
 	}
 
 	:deep(.preview) {
-		--field-placeholder-color: var(--fg-bg-color);
+		--field-placeholder-color: var(--text-muted);
 
 		.tab,
 		.column,

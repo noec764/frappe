@@ -115,7 +115,6 @@ body[data-route^="Module"] .main-menu {
 	.sidebar-image-section {
 		width: min(100%, 170px);
 		cursor: pointer;
-		border: 1px solid var(--border-color);
 		border-radius: var(--border-radius-lg);
 
 		.sidebar-image {
@@ -123,7 +122,6 @@ body[data-route^="Module"] .main-menu {
 			height: auto;
 			max-height: 170px;
 			object-fit: contain;
-			border-radius: var(--border-radius-lg);
 		}
 
 		.standard-image {
@@ -138,6 +136,8 @@ body[data-route^="Module"] .main-menu {
 		.sidebar-image,
 		.sidebar-standard-image {
 			transition: opacity 0.3s;
+			border-radius: var(--border-radius-lg);
+			border: 1px solid var(--border-color);
 		}
 
 		.sidebar-image-wrapper:hover {
@@ -410,8 +410,8 @@ body[data-route^="Module"] .main-menu {
 }
 
 .show-all-btn {
-	margin-top: var(--margin-md);
-	text-align: center;
+	// @dokos
+	margin-bottom: var(--margin-sm);
 }
 
 .form-assignments, .form-shared {

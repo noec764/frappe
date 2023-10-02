@@ -259,14 +259,10 @@ h2 {
 
 .btn-group {
 	.btn {
+		// @dokos
 		box-shadow: 0 0 0 1px var(--btn-group-border-color);
-
-		&:not(:first-child) {
-			margin-left: 1px;
-		}
-
-		&:focus {
-			box-shadow: 0 0 0 2px var(--dark-border-color);
+		&:focus-visible {
+			box-shadow: 0 0 0 2px var(--btn-group-border-color);
 		}
 	}
 }
