@@ -193,7 +193,7 @@ def get_google_calendar_object(g_calendar):
 		"client_id": google_settings.client_id or frappe.conf.google_client_id,
 		"client_secret": google_settings.get_password(fieldname="client_secret", raise_exception=False)
 		or frappe.conf.google_client_secret,
-		"scopes": ["https://www.googleapis.com/auth/calendar/v3"],
+		"scopes": SCOPES,
 	}
 
 	credentials = google.oauth2.credentials.Credentials(**credentials_dict)
