@@ -446,7 +446,10 @@ before_request = [
 before_job = [
 	"frappe.monitor.start",
 ]
-after_job = ["frappe.monitor.stop", "frappe.utils.file_lock.release_document_locks"]
+after_job = [
+	"frappe.monitor.stop",
+	"frappe.utils.file_lock.release_document_locks",
+]
 
 extend_bootinfo = [
 	"frappe.core.doctype.user_permission.user_permission.send_user_permissions",
