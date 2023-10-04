@@ -14,16 +14,14 @@ frappe.ui.Tags = class {
 
 	setup(parent, placeholder) {
 		this.$ul = parent;
-		this.$input = $(`<input class="tags-input form-control"></input>`);
+		this.$input = $(`<input class="tags-input form-control input-xs"></input>`);
+		this.$input.attr("placeholder", __("Add Tags"));
 
 		this.$inputWrapper = this.get_list_element(this.$input);
-		this.$placeholder = this.get_list_element(
-			$(`<button class="tags-btn data-pill btn" id="add_tags">
-			<svg class="es-icon mr-2 icon-sm"><use href="#es-line-tag"></use></svg>
-			<span class="ellipsis">${__(placeholder)}</span>
-		</button>`)
-		);
-		this.$placeholder.appendTo(this.$ul);
+		this.$placeholder = $(`<button class="add-tags-btn btn-reset" id="add_tags">
+				${__(placeholder)}
+			</button>`);
+		this.$placeholder.appendTo(this.$ul.find(".form-sidebar-items"));
 		this.$inputWrapper.appendTo(this.$ul);
 
 		this.deactivate();

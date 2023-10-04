@@ -17,6 +17,7 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 	color: var(--text-color);
 	font-weight: var(--weight-regular);
+	letter-spacing: 0.02em;
 	background-color: var(--bg-color);
 
 	&.full-width {
@@ -449,6 +450,7 @@ kbd {
 	font-family: var(--font-stack);
 	color: var(--text-light);
 	line-height: 1.2em;
+	letter-spacing: 0.02em;
 	height: 20px;
 	padding: 4px 8px;
 }

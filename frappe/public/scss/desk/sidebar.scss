@@ -41,10 +41,24 @@ body[data-route^="Module"] .main-menu {
 	li > .btn.data-pill {
 		width: 100%;
 		justify-content: unset;
+		// .es-icon {
+		// 	margin: 0px 6px;
+		// }
 	}
 	li > .btn {
 		--btn-shadow: none;
+
+		.es-icon {
+			margin: 0px;
+			&:not(:last-child) {
+				margin-right: 6px;
+			}
+			&:not(:first-child) {
+				margin-left: 6px;
+			}
+		}
 	}
+
 	&.user-actions {
 		margin-bottom: 15px;
 		a {
@@ -66,14 +80,43 @@ body[data-route^="Module"] .main-menu {
 // form sidebar
 .form-sidebar {
 	.sidebar-menu {
-		margin-bottom: var(--margin-lg);
+		margin-bottom: var(--margin-sm);
+
+		.form-sidebar-items {
+			display: flex;
+			width: 100%;
+			align-items: center;
+			justify-content: flex-start;
+			flex-wrap: nowrap;
+			padding-bottom: var(--padding-sm);
+			// @dokos
+
+			.sidebar-label {
+				margin-bottom: 0px;
+				margin-right: auto;
+			}
+
+			& > button:last-of-type {
+				--icon-stroke: var(--text-color);
+				margin-left: 4px;
+				margin-right: 0px;
+				position: relative;
+				transition: all 0.1s ease;
+
+				&:hover:not(:active), &:focus-visible {
+					--icon-stroke: var(--text-on-blue);
+					scale: 1.2;
+				}
+			}
+		}
 	}
 
 	.form-tags {
-		.form-tag-row {
-			margin-top: var(--margin-sm);
-			margin-bottom: 0;
+
+		.form-tag-row:not(:last-child) {
+			margin-bottom: var(--margin-sm);
 		}
+
 		.tag-area {
 			margin-top: -3px;
 			margin-left: -4px;
@@ -384,56 +427,84 @@ body[data-route^="Module"] .main-menu {
 }
 
 .attachment-row, .form-tag-row {
-	margin-bottom: var(--margin-sm);
+	margin-bottom: 3px;
 	max-width: 100%;
 
 	.data-pill {
 		justify-content: space-between;
-		background-color: var(--fg-color);
+		background-color: var(--fg-color); // @dokos
 		cursor: default !important; // not interactable
 		box-shadow: none;
 		border-radius: var(--border-radius-full);
 		@include get_textstyle("xs", "medium");
+
+		height: unset;
+		padding: var(--padding-xs) 2px var(--padding-xs) var(--padding-sm);
+	}
+}
+.attachment-row {
+	.data-pill {
+		background-color: unset;
+		box-shadow: none;
+		padding: 0;
+		padding-left: var(--padding-md);
 	}
 }
 
+// .attachment-row {
+// 	.data-pill {
+// 		background-color: unset;
+// 		box-shadow: none;
+// 		padding: 0;
+// 		padding-left: var(--padding-md);
+// 	}
+// }
+
 .form-tag-row {
 	margin-right: var(--margin-xs);
+	// .data-pill {
+	// 	background-color: var(--subtle-fg);
+	// }
 	display: inline-flex;
 }
 
-.attachments-actions {
-	display: flex;
-	gap: 5px;
-	max-width: 100%;
-}
+// .explore-link {
+// 	margin-top: var(--margin-sm);
+// }
 
-.explore-full-btn,
 .attachments-actions {
-	margin-bottom: var(--margin-md);
+	gap: 6px;
 }
 
 .show-all-btn {
 	// @dokos
 	margin-bottom: var(--margin-sm);
+	--icon-stroke: var(--text-light);
+	width: 100%;
+	background-color: var(--bg-color);
+	text-align: start;
+	margin-top: var(--margin-sm);
+	margin-left: var(--margin-md);
+	margin-bottom: var(--margin-sm);
+	color: var(--text-light);
+}
+.form-assignments {
+	margin-top: 12px;
 }
 
 .form-assignments, .form-shared {
 	.assignments, .shares {
-		margin-bottom: var(--margin-xs);
+		margin: var(--margin-xs) 0px;
 	}
 }
 
-.add-assignment-btn,
-.add-attachment-btn,
 .shares,
+.add-tags-btn,
+.share-doc-btn,
 .followed-by {
+	// @dokos
 	max-width: 100%;
 	display: block;
-}
-
-.add-review-btn {
-	border-radius: var(--border-radius-full);
 }
 
 .form-reviews {
@@ -513,7 +584,7 @@ body[data-route^="Module"] .main-menu {
 .tags-input {
 	margin-bottom: var(--margin-sm);
 	font-size: var(--text-xs);
-	background: inherit;
+	background-color: var(--fg-color) !important;
 	border: none;
 	outline: none;
 }
