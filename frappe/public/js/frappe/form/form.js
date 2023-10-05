@@ -1130,7 +1130,7 @@ frappe.ui.form.Form = class FrappeForm {
 				this.dashboard.clear_headline();
 				this.dashboard.set_headline_alert(
 					__("This form has been modified after you have loaded it") +
-						'<button class="btn btn-xs btn-primary pull-right" onclick="cur_frm.reload_doc()">' +
+						'<button class="btn btn-xs btn-primary ml-2" onclick="cur_frm.reload_doc()">' +
 						__("Refresh") +
 						"</button>",
 					"alert-warning"
