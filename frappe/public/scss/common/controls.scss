@@ -68,7 +68,7 @@ select.form-control {
 	}
 
 	.tb-selected-value {
-		display: inline-block;
+		display: flex;
 		margin-right: var(--margin-xs);
 		margin-bottom: var(--margin-xs);
 		box-shadow: none;
