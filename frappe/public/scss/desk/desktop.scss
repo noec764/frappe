@@ -133,7 +133,7 @@ body {
 	}
 
 	.widget-head {
-		@include flex(flex, space-between, center, null);
+		@include flex(flex, flex-start, center, null);
 
 		.widget-label {
 			min-width: 0px;
@@ -347,9 +347,9 @@ body {
 
 	&.onboarding-widget-box {
 		margin-bottom: var(--margin-2xl);
-		padding: var(--padding-lg) !important;
 		background-color: var(--bg-color);
 		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius-lg);
 
 		&.edit-mode:hover {
 			background-color: var(--bg-color);
@@ -373,6 +373,7 @@ body {
 
 		.widget-head {
 			display: flex;
+			justify-content: space-between;
 
 			.widget-label .widget-title {
 				@include get_textstyle("lg", "semibold");
@@ -552,11 +553,13 @@ body {
 
 	&.shortcut-widget-box {
 		cursor: pointer;
+		--icon-stroke: currentColor;
 
 		&:hover {
-			--icon-stroke: var(--gray-600);
+			--icon-stroke: var(--primary);
 			.widget-title {
-				color: var(--gray-600) !important;
+				color: var(--primary) !important;
+				text-decoration: underline;
 			}
 		}
 
@@ -575,11 +578,11 @@ body {
 
 		.widget-head .widget-label .widget-title svg {
 			margin: 2px;
-			margin-right: 12px !important;
+			margin-right: 6px !important;
 		}
 
 		padding: 10px;
-    	border: 1px solid var(--border-color);
+		border: 1px solid var(--border-color);
 
 		.link-item {
 			display: flex;
@@ -592,18 +595,9 @@ body {
 			border-radius: var(--border-radius-md);
 			cursor: pointer;
 
-			.indicator-pill::before {
-				height: 4px;
-				width: 4px;
-				border-radius: var(--border-radius-lg);
-			}
-
 			&:hover {
 				background-color: var(--fg-hover-color);
-
-				.indicator-pill {
-					background-color: var(--fg-hover-color);
-				}
+				text-decoration: underline;
 			}
 
 			&:first-child {
@@ -630,12 +624,6 @@ body {
 				&.top > .arrow {
 					left: 20%;
 				}
-			}
-
-			.indicator-pill {
-				margin-right: var(--margin-sm);
-				height: 20px;
-				padding: 3px 8px;
 			}
 		}
 
@@ -806,7 +794,7 @@ body {
 				cursor: pointer;
 
 				&:hover {
-					background-color: var(--btn-default-bg);
+					background-color: var(--fg-hover-color);
 				}
 
 				.left {
@@ -989,6 +977,7 @@ body {
 			}
 
 			.layout-main-section {
+				border: 1px solid var(--border-color);
 				padding: var(--padding-md);
 				margin-bottom: var(--margin-sm);
 
@@ -1325,6 +1314,10 @@ body {
 					.widget {
 						&.edit-mode {
 							padding: 7px 12px;
+
+							.widget-head {
+								justify-content: space-between;
+							}
 
 							&:hover {
 								box-shadow: var(--shadow-base);
