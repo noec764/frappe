@@ -348,8 +348,8 @@ body {
 	&.onboarding-widget-box {
 		margin-bottom: var(--margin-2xl);
 		background-color: var(--bg-color);
-		border-bottom: 1px solid var(--border-color);
-		border-radius: 0;
+		border: 1px solid var(--border-color);
+		border-radius: var(--border-radius-lg);
 
 		&.edit-mode:hover {
 			background-color: var(--bg-color);
@@ -553,11 +553,13 @@ body {
 
 	&.shortcut-widget-box {
 		cursor: pointer;
+		--icon-stroke: currentColor;
 
 		&:hover {
-			--icon-stroke: var(--gray-600);
+			--icon-stroke: var(--primary);
 			.widget-title {
-				color: var(--gray-600) !important;
+				color: var(--primary) !important;
+				text-decoration: underline;
 			}
 		}
 
@@ -576,10 +578,11 @@ body {
 
 		.widget-head .widget-label .widget-title svg {
 			margin: 2px;
-			margin-right: 12px !important;
+			margin-right: 6px !important;
 		}
 
 		padding: 10px;
+		border: 1px solid var(--border-color);
 
 		.link-item {
 			display: flex;
@@ -592,6 +595,10 @@ body {
 			border-radius: var(--border-radius-md);
 			cursor: pointer;
 
+			&:hover {
+				background-color: var(--fg-hover-color);
+				text-decoration: underline;
+			}
 
 			&:first-child {
 				margin-top: 12px;
@@ -603,9 +610,6 @@ body {
 
 			.link-content {
 				flex: 1;
-				&:hover {
-					color: var(--gray-600);
-				}
 			}
 
 			.disabled-link {
@@ -790,7 +794,7 @@ body {
 				cursor: pointer;
 
 				&:hover {
-					background-color: var(--btn-default-bg);
+					background-color: var(--fg-hover-color);
 				}
 
 				.left {
