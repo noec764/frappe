@@ -21,7 +21,7 @@ frappe.ui.form.Sidebar = class {
 			frm: this.frm,
 		});
 
-		this.sidebar = $('<div class="form-sidebar overlay-sidebar hidden"></div>')
+		this.sidebar = $('<div class="form-sidebar overlay-sidebar"></div>')
 			.html(sidebar_content)
 			.appendTo(this.page.sidebar.empty());
 
