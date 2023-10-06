@@ -47,7 +47,7 @@ from .utils.jinja import (
 )
 from .utils.lazy_loader import lazy_import
 
-__version__ = "3.39.2"
+__version__ = "3.40.0"
 __title__ = "Dodock Framework"
 
 controllers = {}
