@@ -104,7 +104,7 @@ export default class ShortcutWidget extends Widget {
 			`<div class="indicator-pill no-indicator-dot ellipsis ${color}">${label}</div>`
 		).appendTo(this.action_area);
 
-		$(frappe.utils.icon("es-line-arrow-up-right", "xs", "", "", "ml-2")).appendTo(
+		$(frappe.utils.icon("es-line-arrow-up-right", "sm", "", "", "ml-2")).appendTo(
 			this.action_area
 		);
 	}
