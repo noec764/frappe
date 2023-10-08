@@ -116,6 +116,7 @@
 	.level-right {
 		flex: 0 1 150px;
 		overflow: visible;
+		align-items: center;
 	}
 
 	.tag-col {
@@ -142,8 +143,13 @@
 			display: inline-block;
 		}
 
+		// .modified {
+		// 	margin-right: var(--margin-sm);
+		// }
+
 		.comment-count {
 			min-width: 35px;
+			margin-bottom: -2px;
 
 			&.unseen {
 				color: var(--blue-600);
@@ -159,7 +165,6 @@
 			text-align: center;
 			font-size: var(--text-xs);
 			white-space: nowrap;
-			min-width: 30px;
 		}
 	}
 
@@ -251,10 +256,6 @@ $level-margin-right: 8px;
 		color: var(--text-color);
 	}
 
-	.level-item:not(.file-select) {
-		margin-right: $level-margin-right;
-	}
-
 	&.seen {
 		font-weight: normal;
 	}
@@ -295,12 +296,17 @@ $level-margin-right: 8px;
 	display: none;
 }
 
-.list-liked-by-me {
-	margin-bottom: 1px;
+.list-liked-by-me, .list-row-like {
+	// margin-bottom: 1px;
+	padding-right: var(--padding-sm);
+
+	& :is(.icon, .es-icon) {
+		margin-top: -2px;
+	}
 }
 
 input.list-check-all, input.list-row-checkbox {
-	margin-top: 0px;
+	margin-top: 2px;
 	margin-bottom: 0px;
 	--checkbox-right-margin: calc(var(--checkbox-size) / 2 + #{$level-margin-right});
 }
@@ -552,8 +558,4 @@ input.list-check-all {
 .list-selection-buttons {
 	display: flex;
 	gap: 0.5em;
-}
-
-.list-row-like :is(.icon, .es-icon) {
-	margin-top: -2px;
 }
