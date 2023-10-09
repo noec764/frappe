@@ -451,7 +451,7 @@ def serve(
 		log.setLevel(logging.ERROR)
 
 	run_simple(
-		host,
+		"0.0.0.0",
 		int(port),
 		application,
 		exclude_patterns=["test_*"],
