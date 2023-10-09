@@ -18,20 +18,30 @@ frappe.query_reports["Data Integrity"] = {
 		},
 	],
 	formatter: function (value, row, column, data, default_formatter) {
+		const icon_map = {
+			success: "fa-check",
+			warning: "fa-bell",
+			error: "fa-exclamation",
+		};
+		const color_map = {
+			success: "var(--alert-text-success)",
+			warning: "var(--alert-text-warning)",
+			error: "var(--alert-text-danger)",
+		};
+		const class_map = {
+			warning: "alert-warning",
+			error: "alert-danger",
+		};
+		const formatted_value = default_formatter(value, row, column, data);
 		if (column.fieldname == "comments") {
-			const icon =
-				data.icon == "success"
-					? "fa-check"
-					: data.icon == "warning"
-					? "fa-bell"
-					: "fa-exclamation";
-			const color =
-				data.icon == "success" ? "green" : data.icon == "warning" ? "orange" : "red";
-			return `<div class="text-left">
+			const icon = icon_map[data.icon] || "fa-question";
+			const color = color_map[data.icon] || "grey";
+			const c = class_map[data.icon] || "";
+			return `<div class="text-left ${c}">
 						<i class="fa ${icon}" style="color: ${color};"></i>
-						${value}
+						${formatted_value}
 					</div>`;
 		}
-		return value;
+		return formatted_value;
 	},
 };
