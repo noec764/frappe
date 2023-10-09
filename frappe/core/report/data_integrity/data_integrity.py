@@ -18,6 +18,7 @@ def get_data(filters=None):
 	if filters is None:
 		return []
 
+	doctype = filters.get("doctype")
 	archives_list = get_archives(filters)
 	archives = get_archives_dict(archives_list)
 	documents = get_documents(filters)
@@ -124,7 +125,8 @@ def get_columns(filters=None):
 		{
 			"label": _("Document Name"),
 			"fieldname": "document_name",
-			"fieldtype": "Data",
+			"fieldtype": "Link",
+			"options": filters.get("doctype"),
 			"width": 300,
 		},
 		{
@@ -147,7 +149,7 @@ def get_columns(filters=None):
 			"options": "Archived Document",
 			"width": 300,
 		},
-		{"label": _("Comments"), "fieldname": "comments", "fieldtype": "Data", "width": 300},
+		{"label": _("Comments"), "fieldname": "comments", "fieldtype": "Data", "width": 400},
 	]
 	return columns
 
