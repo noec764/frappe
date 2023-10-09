@@ -16,6 +16,7 @@ possible_log_types = (
 	"DocShare",
 	"Document Follow",
 	"Console Log",
+	"Archived Document",  # @dokos
 )
 
 
