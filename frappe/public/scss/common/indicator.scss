@@ -77,3 +77,7 @@ $indicator-colors: green, cyan, blue, orange, yellow, gray, grey, red, pink, dar
 @keyframes blink {
 	50% { opacity: 0.5; }
 }
+
+.indicator-pill:empty {
+	display: none;
+}
