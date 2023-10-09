@@ -97,6 +97,10 @@
 	@include get_textstyle("base", "regular");
 	border-radius: var(--border-radius-md);
 
+	.list-row-col {
+		max-height: 38px; // @dokos: Avoid some overflow issues with long text
+	}
+
 	&:hover:not(.list-row-head) {
 		background-color: var(--highlight-color);
 	}
