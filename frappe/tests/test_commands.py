@@ -736,7 +736,7 @@ class TestAddNewUser(BaseTestCommands):
 		self.assertEqual(self.returncode, 0)
 		user = frappe.get_doc("User", "test@gmail.com")
 		roles = {r.role for r in user.roles}
-		self.assertEqual({"Accounts User", "Translator"}, roles)
+		self.assertEqual({"Translator", "Website Manager"}, roles)
 
 
 class TestBenchBuild(BaseTestCommands):
