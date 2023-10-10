@@ -523,12 +523,7 @@ Dernier commentaire: {{ comments[-1].comment }} by {{ comments[-1].by }}
 </pre>","<p><strong>Exemples de conditions:</strong></p>
 <pre>doc.status==""Open""<br>doc.due_date==nowdate()<br>doc.total &gt; 40000
 </pre>",
-"<p>Multiple webforms can be created for a single doctype. Write a condition specific to this webform to display correct record after submission.</p><p>For Example:</p>
-<p>If you create a separate webform every year to capture feedback from employees add a
- field named year in doctype and add a condition <b>doc.year==""2023""</b></p>
-","<p>Plusieurs formulaires web peuvent être créé pour un type de document donné. Renseignez une condition spécifique à ce formulaire web pour afficher le bon document après validation.</p><p>Par exemple:</p>
-<p>Si vous créez un formulaire web différent chaque année pour récupérer des feedbacks de vos employés, ajoutez un champ
- appelé 'year' dans le type de document et ajoutez la condition <b>doc.year==""2023""</b></p>",
+"<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p><p>If you create a separate webform every year to capture feedback from employees add a field named year in doctype and add a filter <b>year = 2023</b></p>","<p>Plusieurs formulaires web peuvent être créé pour un type de document donné. Renseignez une condition spécifique à ce formulaire web pour afficher le bon document après validation.</p><p>Par exemple:</p><p>Si vous créez un formulaire web différent chaque année pour récupérer des feedbacks de vos employés, ajoutez un champ appelé 'year' dans le type de document et ajoutez la condition <b>year = 2023</b></p>",
 <p>No results found for ',<p>Aucun résultat trouvé pour ',
 "<p>Set context before rendering a template. Example:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>","<p>Définissez le contexte de publication du modèle. Exemple:</p><div><pre><code>context.project = frappe.get_doc(""Project"", frappe.form_dict.name)</code></pre></div>",
 "<p>Set context before rendering a template. Example:</p><p>

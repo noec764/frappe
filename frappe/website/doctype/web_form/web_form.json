@@ -390,7 +390,7 @@
    "fieldname": "condition_description",
    "fieldtype": "HTML",
    "label": "Condition Description",
-   "options": "<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p>\n<p>If you create a separate webform every year to capture feedback from employees add a \n field named year in doctype and add a filter <b>year = 2023</b></p>\n"
+   "options": "<p>Multiple webforms can be created for a single doctype. Add filters specific to this webform to display correct record after submission.</p><p>For Example:</p><p>If you create a separate webform every year to capture feedback from employees add a field named year in doctype and add a filter <b>year = 2023</b></p>"
   },
   {
    "fieldname": "condition_section",
