@@ -40,7 +40,7 @@ class TestPermissions(FrappeTestCase):
 		user.add_roles("Blogger")
 
 		user = frappe.get_doc("User", "test3@example.com")
-		user.add_roles("Sales User")
+		user.add_roles("Translator")
 
 		user = frappe.get_doc("User", "testperm@example.com")
 		user.add_roles("Website Manager")
@@ -76,10 +76,10 @@ class TestPermissions(FrappeTestCase):
 
 	def test_select_permission(self):
 		# grant only select perm to blog post
-		add_permission("Blog Post", "Sales User", 0)
-		update_permission_property("Blog Post", "Sales User", 0, "select", 1)
-		update_permission_property("Blog Post", "Sales User", 0, "read", 0)
-		update_permission_property("Blog Post", "Sales User", 0, "write", 0)
+		add_permission("Blog Post", "Translator", 0)
+		update_permission_property("Blog Post", "Translator", 0, "select", 1)
+		update_permission_property("Blog Post", "Translator", 0, "read", 0)
+		update_permission_property("Blog Post", "Translator", 0, "write", 0)
 
 		frappe.clear_cache(doctype="Blog Post")
 		frappe.set_user("test3@example.com")
