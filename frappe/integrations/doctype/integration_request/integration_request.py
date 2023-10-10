@@ -32,7 +32,7 @@ class IntegrationRequest(Document):
 		service_id: DF.Data | None
 		service_status: DF.Data | None
 		status: DF.Literal["", "Queued", "Authorized", "Completed", "Cancelled", "Failed", "Not Handled"]
-		url: DF.Data | None
+		url: DF.SmallText | None
 	# end: auto-generated types
 
 	def autoname(self):
