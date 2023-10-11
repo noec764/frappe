@@ -141,13 +141,13 @@ def get_stages_hooks(args):
 def get_setup_complete_hooks(args):
 	return [
 		{
-			"status": "Executing method",
-			"fail_msg": "Failed to execute method",
+			"status": _("Executing method"),
+			"fail_msg": _("Failed to execute method"),
 			"tasks": [
 				{
 					"fn": frappe.get_attr(method),
 					"args": args,
-					"fail_msg": "Failed to execute method",
+					"fail_msg": _("Failed to execute method"),
 				}
 			],
 		}
