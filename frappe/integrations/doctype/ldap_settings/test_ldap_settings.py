@@ -613,7 +613,7 @@ class Test_OpenLDAP(LDAP_TestCase, TestCase):
 			"erpnext_role": "System Manager",
 		},
 		{"doctype": "LDAP Group Mapping", "ldap_group": "Users", "erpnext_role": "Blogger"},
-		{"doctype": "LDAP Group Mapping", "ldap_group": "Group3", "erpnext_role": "Accounts User"},
+		{"doctype": "LDAP Group Mapping", "ldap_group": "Group3", "erpnext_role": "Translator"},
 	]
 	LDAP_USERNAME_FIELD = "uid"
 	LDAP_SCHEMA = OFFLINE_SLAPD_2_4
@@ -640,7 +640,7 @@ class Test_ActiveDirectory(LDAP_TestCase, TestCase):
 		{
 			"doctype": "LDAP Group Mapping",
 			"ldap_group": "Enterprise Administrators",
-			"erpnext_role": "Accounts User",
+			"erpnext_role": "Translator",
 		},
 	]
 	LDAP_USERNAME_FIELD = "samaccountname"

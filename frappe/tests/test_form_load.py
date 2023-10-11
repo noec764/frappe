@@ -107,6 +107,8 @@ class TestFormLoad(FrappeTestCase):
 		frappe.delete_doc(blog_post_property_setter.doctype, blog_post_property_setter.name)
 
 	def test_fieldlevel_permissions_in_load_for_child_table(self):
+		set_custom_roles_for_fieldlevel_permissions()
+
 		contact = frappe.new_doc("Contact")
 		contact.first_name = "_Test Contact 1"
 		contact.append("phone_nos", {"phone": "123456"})
@@ -114,14 +116,14 @@ class TestFormLoad(FrappeTestCase):
 
 		user = frappe.get_doc("User", "test@example.com")
 
-		user_roles = frappe.get_roles()
+		user_roles = frappe.get_roles(user.name)
 		user.remove_roles(*user_roles)
-		user.add_roles("Accounts User")
+		user.add_roles("_Test Fieldlevel Role Bis")
 
 		make_property_setter("Contact Phone", "phone", "permlevel", 1, "Int")
 		reset("Contact Phone")
-		add("Contact", "Sales User", 1)
-		update("Contact", "Sales User", 1, "write", 1)
+		add("Contact", "_Test Fieldlevel Role", 1)
+		update("Contact", "_Test Fieldlevel Role", 1, "write", 1)
 
 		frappe.set_user(user.name)
 
@@ -133,7 +135,7 @@ class TestFormLoad(FrappeTestCase):
 		self.assertEqual(contact.phone_nos[0].phone, "123456")
 
 		frappe.set_user("Administrator")
-		user.add_roles("Sales User")
+		user.add_roles("_Test Fieldlevel Role")
 		frappe.set_user(user.name)
 
 		contact.phone_nos[0].phone = "654321"
@@ -145,7 +147,7 @@ class TestFormLoad(FrappeTestCase):
 		frappe.set_user("Administrator")
 
 		# reset user roles
-		user.remove_roles("Accounts User", "Sales User")
+		user.remove_roles("_Test Fieldlevel Role Bis", "_Test Fieldlevel Role")
 		user.add_roles(*user_roles)
 
 		contact.delete()
@@ -200,3 +202,14 @@ def get_blog(blog_name):
 	frappe.response.docs = []
 	getdoc("Blog Post", blog_name)
 	return frappe.response.docs[0]
+
+def set_custom_roles_for_fieldlevel_permissions():
+	frappe.get_doc({"doctype": "Role", "role_name": "_Test Fieldlevel Role"}).insert(ignore_if_duplicate=True)
+	add("Contact", "_Test Fieldlevel Role", 0)
+	update("Contact", "_Test Fieldlevel Role", 0, "create", 1)
+	update("Contact", "_Test Fieldlevel Role", 0, "write", 1)
+
+	frappe.get_doc({"doctype": "Role", "role_name": "_Test Fieldlevel Role Bis"}).insert(ignore_if_duplicate=True)
+	add("Contact", "_Test Fieldlevel Role Bis", 0)
+	update("Contact", "_Test Fieldlevel Role Bis", 0, "create", 1)
+	update("Contact", "_Test Fieldlevel Role Bis", 0, "write", 1)
