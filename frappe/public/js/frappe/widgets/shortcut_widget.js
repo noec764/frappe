@@ -79,7 +79,8 @@ export default class ShortcutWidget extends Widget {
 		$(frappe.utils.icon("arrow-up-right", "sm", "", "", "ml-2")).appendTo(this.action_area);
 
 		this.widget.addClass("shortcut-widget-box");
-		let filters = frappe.utils.get_filter_from_json(this.stats_filter);
+
+		let filters = frappe.utils.process_filter_expression(this.stats_filter);
 		if (this.type == "DocType" && filters) {
 			frappe.db
 				.count(this.link_to, {
