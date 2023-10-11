@@ -397,6 +397,8 @@ class TestPermissions(FrappeTestCase):
 		reset("Salutation")
 		reset("Contact")
 
+		add_permission("Contact", "Translator", 0)
+
 		make_test_records_for_doctype("Contact", force=True)
 
 		add_user_permission("Salutation", "Mr", "test3@example.com")
