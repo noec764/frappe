@@ -225,9 +225,9 @@ def clean_params(data):
 
 def parse_json(data):
 	if isinstance(data.get("filters"), str):
-		data["filters"] = json.loads(data["filters"])
+		data["filters"] = json.loads(data["filters"] or "[]")
 	if isinstance(data.get("or_filters"), str):
-		data["or_filters"] = json.loads(data["or_filters"])
+		data["or_filters"] = json.loads(data["or_filters"] or "[]")
 	if isinstance(data.get("fields"), str):
 		data["fields"] = ["*"] if data["fields"] == "*" else json.loads(data["fields"])
 	if isinstance(data.get("docstatus"), str):
