@@ -103,7 +103,7 @@ frappe.ui.form.on("Website Settings", {
 		let values_field = template_field + "_values";
 		let template = frm.doc[template_field];
 		if (!template) {
-			frappe.show_alert(__("Please select {0}", [frm.get_docfield(template_field).label]));
+			frappe.show_alert(__("Please select {0}", [__(frm.get_docfield(template_field).label)]));
 			return;
 		}
 		let values = JSON.parse(frm.doc[values_field] || "{}");

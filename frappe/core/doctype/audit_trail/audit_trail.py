@@ -29,11 +29,11 @@ class AuditTrail(Document):
 
 	def validate_doctype_name(self):
 		if not self.doctype_name:
-			frappe.throw(_("{} field cannot be empty.").format(frappe.bold("Doctype")))
+			frappe.throw(_("{} field cannot be empty.").format(frappe.bold(_("Doctype"))))
 
 	def validate_document(self):
 		if not self.document:
-			frappe.throw(_("{} field cannot be empty.").format(frappe.bold("Document")))
+			frappe.throw(_("{} field cannot be empty.").format(frappe.bold(_("Document"))))
 
 	@frappe.whitelist()
 	def compare_document(self):

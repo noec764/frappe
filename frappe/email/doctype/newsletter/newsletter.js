@@ -122,7 +122,7 @@ frappe.ui.form.on("Newsletter", {
 					reqd: true,
 				},
 			],
-			primary_action_label: __("Schedule"),
+			primary_action_label: __("Schedule", null, "Newsletter"),
 			primary_action({ date, time }) {
 				frm.set_value("schedule_sending", 1);
 				frm.set_value("schedule_send", `${date} ${time}:00`);
