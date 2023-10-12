@@ -203,7 +203,7 @@ export default class QuickListWidget extends Widget {
 
 			fields.push("modified");
 
-			let quick_list_filter = frappe.utils.process_filter_expression(this.quick_list_filter);
+			let quick_list_filter = frappe.utils.process_filter_expression(this.quick_list_filter) || [];
 
 			let args = {
 				method: "frappe.desk.reportview.get",
