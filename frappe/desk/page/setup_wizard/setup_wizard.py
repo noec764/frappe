@@ -141,7 +141,7 @@ def get_stages_hooks(args):
 def get_setup_complete_hooks(args):
 	return [
 		{
-			"status": _("Executing method"),
+			"status": _("Completing setup"),
 			"fail_msg": _("Failed to execute method"),
 			"tasks": [
 				{
