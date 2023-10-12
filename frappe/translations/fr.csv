@@ -445,6 +445,44 @@ frappe.ui.form.on('Sales Invoice',  {
  {% if télécopieur%} Fax: {{fax}} & lt; br & gt; {% endif -%}
  {% si email_id%} Email: {{email_id}} & lt; br & gt ; {% endif -%}
  </ code> </ pre>",
+"<h4>Email Reply Example</h4>
+
+<pre>Order Overdue
+
+Transaction {{ name }} has exceeded Due Date. Please take necessary action.
+
+Details
+
+- Customer: {{ customer }}
+- Amount: {{ grand_total }}
+</pre>
+
+<h4>How to get fieldnames</h4>
+
+<p>The fieldnames you can use in your email template are the fields in the document from which you are sending the email. You can find out the fields of any documents via Setup &gt; Customize Form View and selecting the document type (e.g. Sales Invoice)</p>
+
+<h4>Templating</h4>
+
+<p>Templates are compiled using the Jinja Templating Language. To learn more about Jinja, <a class=""strong"" href=""http://jinja.pocoo.org/docs/dev/templates/"">read this documentation.</a></p>
+","<h4>Exemple de réponse par email</h4>
+
+<pre>Commande dûe
+
+La transaction {{ name }} a dépassé sa date d'échéance. Veuillez prendre les mesure nécessaires.
+
+Détails
+
+- Client: {{ customer }}
+- Montant: {{ grand_total }}
+</pre>
+
+<h4>Comment obtenir les noms des champs</h4>
+
+<p>Les noms des champs que vous pouvez utiliser dans votre modèle d'email sont les champs du document à partir duquel vous envoyer votre email. Vous pouvez trouver les champs de n'importe quel type de document depuis la page Administration > Paramètres &gt; Personnaliser un formulaire et en sélectionnant le type de document correspondant (ex. Facture de vente)</p>
+
+<h4>Modèles</h4>
+
+<p>Les modèles sont compilés en utilisant le langage Jinja. Pour en savoir plus sur Jinja, <a class=""strong"" href=""http://jinja.pocoo.org/docs/dev/templates/"">lisez cette documentation.</a></p>",
 "<h5 class=""text-muted uppercase"">Or</h5>","<h5 class=""text-muted uppercase"">Ou</h5>",
 "<h5>Message Example</h5>
 
@@ -558,6 +596,33 @@ some_class_element.textContent = ""Nouveau contenu"";
 
 <p>Les conditions doivent être rédigées en Python simple. Veuillez utiliser des des propriétés disponibles dans le formulaire seulement.</p>
 <p>Fonctions autorisées:
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
+"<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
+<p>Allowed functions: 
+</p><ul>
+<li>frappe.db.get_value</li>
+<li>frappe.db.get_list</li>
+<li>frappe.session</li>
+<li>frappe.utils.now_datetime</li>
+<li>frappe.utils.get_datetime</li>
+<li>frappe.utils.add_to_date</li>
+<li>frappe.utils.now</li>
+</ul>
+<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
+
+<p>Les conditions doivent être écrites en Python simple. Veuillez n'utilisez que les propriétés disponibles dans le formulaire.</p>
+<p>Fonctions autorisées: 
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -3361,6 +3426,7 @@ If Owner,Si Responsable,
 If non standard port (e.g. 587),Si le port n'est pas standard (ex. 587),
 "If non-standard port (e.g. POP3: 995/110, IMAP: 993/143)","Si le port n'est pas standard (ex. POP3: 995/110, IMAP: 993/143)",
 "If not set, the currency precision will depend on number format","Si elle n'est pas définie, la précision de la devise dépend du format de nombre",
+"If set, only user with these roles can access this chart. If not set, DocType or Report permissions will be used.","Si défini, seul un utilisateur avec ces rôles peut accéder à ce graphique. Si non défini, le système utilisera les autorisations du type de document ou du rapport de référence.",
 If the box is checked it means that the event takes place all day.,Si le champ est coché l'évenement aura lieu sur toute la journée.,
 If the box is checked then the event will be synchronized to your Google calendar. Note: You will need to have your Google calendar settings set up correctly.,Si la case est cochée l'événement sera synchronisé avec Google Agenda. Note: Vos paramètres Google Agenda devront être correctement paramétrés.,
 "If the box is checked, a pop-up will open asking you to choose the recurrence of the event. Specify the frequency, until when the event should be repeated and the frequency interval.","Si la case est cochée, un pop-up s'ouvrira pour vous permettre de choisir la récurrence de l'événement. Indiquez la fréquence, jusqu'à quand l'événement doit être répété et à quelle fréquence.",
@@ -3379,6 +3445,7 @@ If you are updating/overwriting already created records.,Si vous mettez à jour 
 "If you are uploading new records, leave the ""name"" (ID) column blank.","Si vous chargez de nouveaux enregistrements, laissez la colonne ""nom"" (ID) vide.",
 If you aren't using own publish Google Apps Script webapp you can use the default https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec ,"Si vous n'utiliser pas vos propres webapp Google Apps Script, vous pouvez utiliser l'application par défaut suivante :  https://script.google.com/macros/s/AKfycbxIFOx3301xwtF2IFPJ4pUQGqkNF3hBiBebppWkeKn6fKZRQvk/exec",
 If you don't want to create any new records while updating the older records.,Si vous ne souhaitez pas créer de nouveaux enregistrements lors de la mise à jour des anciens enregistrements.,
+If you have recently restored the site you may need to copy the site config containing the original Encryption Key.,"Si vous avez restauré votre site récemment, vous devez récupérer la clé de chiffrage présente dans le fichier de configuration du site (site_config) original.",
 If you have recently restored the site you may need to copy the site config contaning original Encryption Key.,Si vous avez restauré ce site récemment vous pourriez avoir besoin de copier les variables d'environnement comprenant la clé de cryptage,
 "If you just want to customize for your site, use {0} instead.","Si vous voulez simplement personnaliser pour votre site, utilisez {0} à la place.",
 "If you set this, this Item will come in a drop-down under the selected parent.",Cet élément sera dans un menu déroulant sous le parent sélectionné.,
@@ -4287,6 +4354,11 @@ Names and surnames by themselves are easy to guess.,Les noms et prénoms par eux
 <ol><li><b>field:[fieldname]</b> - By Field</li><li><b>autoincrement</b> - Uses Databases' Auto Increment feature</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage :
 <ol><li><b>field:[fieldname]</b> - Par le champ</li><li><b>auto-incrément</b> - Utilise la fonction d'incrémentation automatique des bases de données</li><li><b>naming_series:</b> - Par masque de numérotation (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
+<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplace tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
+"Naming Options:
+<ol><li><b>field:[fieldname]</b> - By Field</li><li><b>naming_series:</b> - By Naming Series (field called naming_series must be present)</li><li><b>Prompt</b> - Prompt user for a name</li><li><b>[series]</b> - Series by prefix (separated by a dot); for example PRE.#####</li>
+<li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Replace all braced words (fieldnames, date words (DD, MM, YY), series) with their value. Outside braces, any characters can be used.</li></ol>","Options de nommage :
+<ol><li><b>field:[fieldname]</b> - Par le champ</li><b>naming_series:</b> - Par masque de numérotation (le champ appelé naming_series doit être présent)</li><li><b>Prompt</b> - Demander un nom à l'utilisateur</li><li><b>[series]</b> - Série par préfixe (séparé par un point) ; par exemple PRE.#####</li>
 <li><b>format:EXAMPLE-{MM}morewords{fieldname1}-{fieldname2}-{#####}</b> - Remplace tous les mots entre crochets (noms de champs, mots de date (JJ, MM, AA), séries) par leur valeur. En dehors des accolades, n'importe quel caractère peut être utilisé.</li></ol>",
 Naming Rule,Règle de nommage,
 Naming Series mandatory,Masque de numérotation obligatoire,
@@ -5264,6 +5336,7 @@ Property Setter overrides a standard DocType or Field property,L'Initialisateur 
 Property Setter,Propriété personnalisée,
 Property Type,Type de Propriété,
 Property,Propriété,
+"Provide a list of allowed file extensions for file uploads. Each line should contain one allowed file type. If unset, all file extensions are allowed. Example: <br>CSV<br>JPG<br>PNG","Veuillez fournir une liste d'extensions de fichiers pour les téléversements. Chaque ligne doit contenir un seul type de fichier. Si aucun type n'est fourni, tous les extensions sont autorisées. Exemple: <br>CSV<br>JPG<br>PNG",
 Provider Name,Nom du fournisseur,
 Provider,Fournisseur,
 Public Files,Fichiers publics,
@@ -6807,6 +6880,13 @@ eval:doc.myfield=='My Value'
 eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a une valeur OU si les règles sont vraies (exemples):
 myfield
 eval:doc.myfield=='Ma Valeur'
+eval:doc.age&gt;18",
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+myfield
+eval:doc.myfield=='My Value'
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici a une valeur OU si les règles sont vraies (exemples): 
+monchamp
+eval:doc.monchamp=='Ma Valeur'
 eval:doc.age&gt;18",
 This file is public. It can be accessed without authentication.,Le fichier est public. Il est possible d'y accéder sans authentification.,
 This form does not have any input,Ce formulaire n'a aucune entrée,
