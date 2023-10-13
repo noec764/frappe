@@ -96,11 +96,11 @@
 		font-size: var(--text-xs);
 	}
 
-	.avatar-empty::after {
-		opacity: 0.25;
-		content: "\002D";
-		line-height: 28px;
-	}
+	// .avatar-empty::after {
+	// 	opacity: 0.25;
+	// 	content: "\002D";
+	// 	line-height: 28px;
+	// }
 }
 
 .avatar-medium {

@@ -709,9 +709,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		let subject_html = `
 			<input class="level-item list-check-all" type="checkbox"
 				title="${__("Select All")}">
-			<span class="level-item list-liked-by-me hidden-xs">
-				<span title="${__("Likes")}">${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}</span>
-			</span>
 			<span class="level-item" data-sort-by="${subject_field.fieldname}"
 				title="${__("Click to sort by {0}", [__(subject_field.label)])}">
 				${__(subject_field.label)}
@@ -745,7 +742,16 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 			})
 			.join("");
 
-		return this.get_header_html_skeleton($columns, '<span class="list-count"></span>');
+		const right_html = `
+			<span class="list-count"></span>
+			<span class="level-item list-liked-by-me hidden-xs">
+				<span title="${__("Likes")}">
+					${frappe.utils.icon("es-solid-heart", "sm", "like-icon")}
+				</span>
+			</span>
+		`;
+
+		return this.get_header_html_skeleton($columns, right_html);
 	}
 
 	get_header_html_skeleton(left = "", right = "") {
@@ -979,14 +985,11 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 
 		const modified = frappe.datetime.comment_when(doc.modified, true);
 
-		let assigned_to = `<div class="list-assignments">
-			<span class="avatar avatar-small">
-			<span class="avatar-empty"></span>
-		</div>`;
+		let assigned_to = ``;
 
 		let assigned_users = JSON.parse(doc._assign || "[]");
 		if (assigned_users.length) {
-			assigned_to = `<div class="list-assignments">
+			assigned_to = `<div class="list-assignments d-flex align-items-center">
 					${frappe.avatar_group(assigned_users, 3, { filterable: true })[0].outerHTML}
 				</div>`;
 		}
@@ -1011,10 +1014,10 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				unseen_communication.length ? "unseen" : "",
 				has_comments ? "" : "zero",
 			].join(" ");
-			comment_count = `<span class="${classes} comment-count" ${comments_tooltip}>
+			comment_count = `<span class="${classes} comment-count d-flex align-items-center" ${comments_tooltip}>
 				${frappe.utils.icon("es-line-chat-alt")}
 				${doc._comment_count > 99 ? "99+" : doc._comment_count || 0}
-			</span>`;
+			</span>`; // @dokos
 		}
 
 		html += `
@@ -1022,8 +1025,11 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 				<div class="hidden-md">
 					${settings_button || assigned_to}
 				</div>
-				${modified}
+				<span class="modified">${modified}</span>
 				${comment_count}
+				<span class="list-row-like hidden-xs">
+					${this.get_like_html(doc)}
+				</span>
 			</div>
 			<div class="level-item visible-xs text-right">
 				${this.get_indicator_dot(doc)}
@@ -1122,9 +1128,6 @@ frappe.views.ListView = class ListView extends frappe.views.BaseList {
 		div.innerHTML = `
 			<span class="level-item select-like">
 				<input class="list-row-checkbox" type="checkbox">
-				<span class="list-row-like hidden-xs style="margin-bottom: 1px;">
-					${this.get_like_html(doc)}
-				</span>
 			</span>
 			<span class="level-item ${seen} ellipsis">
 				<a class="ellipsis"></a>
