@@ -69,12 +69,12 @@
    "reqd": 1
   },
   {
-    "fieldname": "server_script",
-    "fieldtype": "Link",
-    "label": "Server Script",
-    "options": "Server Script",
-    "read_only": 1,
-    "search_index": 1
+   "fieldname": "server_script",
+   "fieldtype": "Link",
+   "label": "Server Script",
+   "options": "Server Script",
+   "read_only": 1,
+   "search_index": 1
   },
   {
    "fieldname": "next_execution",
