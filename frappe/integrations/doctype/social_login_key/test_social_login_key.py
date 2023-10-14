@@ -8,9 +8,11 @@ from rauth import OAuth2Service
 import frappe
 from frappe.auth import CookieManager, LoginManager
 from frappe.integrations.doctype.social_login_key.social_login_key import BaseUrlNotSetError
-from frappe.tests.utils import FrappeTestCase
+from frappe.tests.utils import FrappeTestCase, change_settings
 from frappe.utils import set_request
 from frappe.utils.oauth import login_via_oauth2
+
+TEST_GITHUB_USER = "githublogin@example.com"
 
 
 class TestSocialLoginKey(FrappeTestCase):
@@ -18,7 +20,14 @@ class TestSocialLoginKey(FrappeTestCase):
 	def tearDownClass(cls):
 		frappe.set_user("Administrator")
 
+	def setUp(self) -> None:
+		frappe.set_user("Administrator")
+		frappe.delete_doc("User", TEST_GITHUB_USER, force=True)
+		super().setUp()
+		frappe.set_user("Guest")
+
 	def test_adding_frappe_social_login_provider(self):
+		frappe.set_user("Administrator")
 		provider_name = "Dodock"
 		social_login_key = make_social_login_key(social_login_provider=provider_name)
 		social_login_key.get_social_login_provider(provider_name, initialize=True)
@@ -45,21 +54,43 @@ class TestSocialLoginKey(FrappeTestCase):
 	def test_normal_signup_and_github_login(self):
 		github_social_login_setup()
 
-		if not frappe.db.exists("User", "githublogin@example.com"):
-			user = frappe.get_doc(
-				{
-					"doctype": "User",
-					"email": "githublogin@example.com",
-					"first_name": "GitHub Login",
-				}
-			)
-			user.save(ignore_permissions=True)
+		if not frappe.db.exists("User", TEST_GITHUB_USER):
+			user = frappe.new_doc("User", email=TEST_GITHUB_USER, first_name="GitHub Login")
+			user.insert(ignore_permissions=True)
 
 		mock_session = MagicMock()
 		mock_session.get.side_effect = github_response_for_login
 
 		with patch.object(OAuth2Service, "get_auth_session", return_value=mock_session):
 			login_via_oauth2("github", "iwriu", {"token": "ewrwerwer"})
+		self.assertEqual(frappe.session.user, TEST_GITHUB_USER)
+
+	def test_force_disabled_signups(self):
+		key = github_social_login_setup()
+		key.sign_ups = "Deny"
+		key.save(ignore_permissions=True)
+
+		mock_session = MagicMock()
+		mock_session.get.side_effect = github_response_for_login
+
+		with patch.object(OAuth2Service, "get_auth_session", return_value=mock_session):
+			login_via_oauth2("github", "iwriu", {"token": "ewrwerwer"})
+		self.assertEqual(frappe.session.user, "Guest")
+
+	@change_settings("Website Settings", disable_signup=1)
+	def test_force_enabled_signups(self):
+		"""Social login key can override website settings for disabled signups."""
+		key = github_social_login_setup()
+		key.sign_ups = "Allow"
+		key.save(ignore_permissions=True)
+
+		mock_session = MagicMock()
+		mock_session.get.side_effect = github_response_for_login
+
+		with patch.object(OAuth2Service, "get_auth_session", return_value=mock_session):
+			login_via_oauth2("github", "iwriu", {"token": "ewrwerwer"})
+
+		self.assertEqual(frappe.session.user, TEST_GITHUB_USER)
 
 
 def make_social_login_key(**kwargs):
@@ -92,7 +123,6 @@ def create_github_social_login_key():
 		social_login_key = make_social_login_key(social_login_provider=provider_name)
 		social_login_key.get_social_login_provider(provider_name, initialize=True)
 
-		# Dummy client_id and client_secret
 		social_login_key.client_id = "h6htd6q"
 		social_login_key.client_secret = "keoererk988ekkhf8w9e8ewrjhhkjer9889"
 		social_login_key.insert(ignore_permissions=True)
@@ -134,7 +164,7 @@ def github_response_for_login(url, *args, **kwargs):
 			"first_name": "Github Login",
 		}
 	else:
-		return_value = [{"email": "githublogin@example.com", "primary": True, "verified": True}]
+		return_value = [{"email": TEST_GITHUB_USER, "primary": True, "verified": True}]
 
 	return MagicMock(status_code=200, json=MagicMock(return_value=return_value))
 
@@ -144,4 +174,4 @@ def github_social_login_setup():
 	frappe.local.cookie_manager = CookieManager()
 	frappe.local.login_manager = LoginManager()
 
-	create_github_social_login_key()
+	return create_github_social_login_key()
