@@ -609,7 +609,7 @@ some_class_element.textContent = ""Nouveau contenu"";
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions: 
+<p>Allowed functions:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -622,7 +622,7 @@ some_class_element.textContent = ""Nouveau contenu"";
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Les conditions doivent être écrites en Python simple. Veuillez n'utilisez que les propriétés disponibles dans le formulaire.</p>
-<p>Fonctions autorisées: 
+<p>Fonctions autorisées:
 </p><ul>
 <li>frappe.db.get_value</li>
 <li>frappe.db.get_list</li>
@@ -2214,7 +2214,7 @@ Disable Change Log Notification,Désactiver la notification du journal des modif
 Disable Comment Count,Désactiver le décompte des commentaires,
 Disable Comments,Désactiver les commentaires,
 Disable Count,Désactiver le compte de documents,
-Disable Customer Signup link in Login page,Ne pas afficher le lien d'inscription dans la page de connexion,
+Disable Customer Signup link in Login page,Ne pas afficher le lien d'inscription sur la page de connexion,
 Disable Document Sharing,Désactiver le partage de documents,
 Disable Feedback,Désactiver les retours d'expérience,
 Disable Likes,Désactiver les 'likes',
@@ -2222,7 +2222,8 @@ Disable Prepared Report,Désactiver les rapports préparés,
 Disable Report,Désactiver le rapport,
 Disable SMTP server authentication,Désactiver l'authentification sur le server SMTP,
 Disable Sidebar Stats,Désactiver les statistiques de la barre latérale,
-Disable Signup for your site,Désactiver l'enregistrement sur votre site,
+Disable Signups on site. New users will have to be manually registered by system managers.,Ne pas autoriser les inscriptions sur le site. Les nouveaux utilisateurs devront être enregistrés manuellement par un responsable système.,
+Disable Signup for your site,Désactiver les inscriptions sur votre site,
 Disable Signup,Désactiver les inscriptions,
 Disable Standard Email Footer,Désactiver le Pied de Page d'Email Standard,
 Disable System Update Notification,Désactiver la notification de mise à jour du système,
@@ -6881,10 +6882,10 @@ eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a un
 myfield
 eval:doc.myfield=='Ma Valeur'
 eval:doc.age&gt;18",
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples): 
+"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
-eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici a une valeur OU si les règles sont vraies (exemples): 
+eval:doc.age&gt;18","Ce champ apparaîtra seulement si le nom de champ défini ici a une valeur OU si les règles sont vraies (exemples):
 monchamp
 eval:doc.monchamp=='Ma Valeur'
 eval:doc.age&gt;18",
