@@ -135,7 +135,7 @@ def send_login_link(email: str):
 	expiry = frappe.get_system_settings("login_with_email_link_expiry") or 10
 	link = _generate_temporary_login_link(email, expiry)
 
-	app_name = frappe.get_website_settings("app_name") or _("Frappe")
+	app_name = frappe.get_website_settings("app_name") or _("Dodock")
 
 	subject = _("Login To {0}").format(app_name)
 
