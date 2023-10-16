@@ -16,6 +16,7 @@ from frappe import _
 from frappe.cache_manager import clear_controller_cache, clear_user_cache
 from frappe.custom.doctype.custom_field.custom_field import create_custom_field
 from frappe.custom.doctype.property_setter.property_setter import make_property_setter
+from frappe.database import savepoint
 from frappe.database.schema import validate_column_length, validate_column_name
 from frappe.desk.notifications import delete_notification_count_for, get_filters_for
 from frappe.desk.utils import validate_route_conflict
@@ -115,11 +116,11 @@ class DocType(Document):
 		default_print_format: DF.Data | None
 		default_view: DF.Literal
 		description: DF.SmallText | None
-		document_type: DF.Literal['', 'Document', 'Setup', 'System', 'Other']
+		document_type: DF.Literal["", "Document", "Setup", "System", "Other"]
 		documentation: DF.Data | None
 		editable_grid: DF.Check
 		email_append_to: DF.Check
-		engine: DF.Literal['InnoDB', 'MyISAM']
+		engine: DF.Literal["InnoDB", "MyISAM"]
 		fields: DF.Table[DocField]
 		force_re_route_to_default_view: DF.Check
 		has_web_view: DF.Check
@@ -142,7 +143,17 @@ class DocType(Document):
 		migration_hash: DF.Data | None
 		module: DF.Link
 		name_after_submit: DF.Check
-		naming_rule: DF.Literal['', 'Set by user', 'Autoincrement', 'By fieldname', 'By "Naming Series" field', 'Expression', 'Expression (old style)', 'Random', 'By script']
+		naming_rule: DF.Literal[
+			"",
+			"Set by user",
+			"Autoincrement",
+			"By fieldname",
+			'By "Naming Series" field',
+			"Expression",
+			"Expression (old style)",
+			"Random",
+			"By script",
+		]
 		nsm_parent_field: DF.Data | None
 		permissions: DF.Table[DocPerm]
 		queue_in_background: DF.Check
@@ -156,7 +167,7 @@ class DocType(Document):
 		show_preview_popup: DF.Check
 		show_title_field_in_link: DF.Check
 		sort_field: DF.Data | None
-		sort_order: DF.Literal['ASC', 'DESC']
+		sort_order: DF.Literal["ASC", "DESC"]
 		states: DF.Table[DocTypeState]
 		subject_field: DF.Data | None
 		timeline_field: DF.Data | None
@@ -520,7 +531,9 @@ class DocType(Document):
 			if self.flags.in_insert:
 				self.run_module_method("after_doctype_insert")
 
+		self.sync_doctype_layouts()
 		delete_notification_count_for(doctype=self.name)
+
 		frappe.clear_cache(doctype=self.name)
 
 		# clear user cache so that on the next reload this doctype is included in boot
@@ -530,6 +543,17 @@ class DocType(Document):
 			self.sync_global_search()
 
 		clear_linked_doctype_cache()
+
+	@savepoint(catch=Exception)
+	def sync_doctype_layouts(self):
+		"""Sync Doctype Layout"""
+		doctype_layouts = frappe.get_all(
+			"DocType Layout", filters={"document_type": self.name}, pluck="name", ignore_ddl=True
+		)
+		for layout in doctype_layouts:
+			layout_doc = frappe.get_doc("DocType Layout", layout)
+			layout_doc.sync_fields()
+			layout_doc.save()
 
 	def setup_autoincrement_and_sequence(self):
 		"""Changes name type and makes sequence on change (if required)"""
