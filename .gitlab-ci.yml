@@ -33,9 +33,11 @@ stages:
   - Unit Tests
   - Docker Dodock
 
-unittests:
-  image: "python:3.10-bullseye"
+variables:
+  DOCLI_IMAGE: "registry.gitlab.com/dokos/docli:ci-develop"
 
+unittests:
+  image: $DOCLI_IMAGE
   stage: Unit Tests
 
   rules:
@@ -63,36 +65,19 @@ unittests:
     MYSQL_ROOT_PASSWORD: "test_dodock"
 
   before_script:
-    - apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-suggests --no-install-recommends mariadb-client xfonts-75dpi xfonts-base
-    - export LANG=C.UTF-8
-    - export LC_ALL=C.UTF-8
-    - export LANGUAGE=en_US.UTF-8
-    - wget -q https://github.com/wkhtmltopdf/packaging/releases/download/0.12.6-1/wkhtmltox_0.12.6-1.buster_amd64.deb
-    - dpkg -i wkhtmltox_0.12.6-1.buster_amd64.deb && rm wkhtmltox_0.12.6-1.buster_amd64.deb
-    - rm -rf /var/lib/apt/lists/*
-    - rm -rf /etc/apt/sources.list.d/*
-    - curl -sL https://deb.nodesource.com/setup_18.x | bash
-    - apt-get install -y nodejs
-    - npm install --global yarn
-    - export PATH=$PATH:/home/dokotest/.local/bin
-    - adduser --disabled-password --gecos "" dokotest
-    - usermod -aG sudo dokotest
-    - echo 'dokotest ALL=(ALL)  NOPASSWD:ALL' >> /etc/sudoers
-    - su -c "pip install dokos-cli" dokotest
-    - su -c "cd /home/dokotest && bench init dokos-bench --no-backups --skip-redis-config-generation --skip-assets --frappe-path /builds/dokos/dodock/" dokotest
-    - su -c "cp -r /home/dokotest/dokos-bench/apps/frappe/test_sites/test_site /home/dokotest/dokos-bench/sites/" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && sed -i 's/^watch:/# watch:/g' Procfile"
-    - su -c "cd /home/dokotest/dokos-bench && sed -i 's/^schedule:/# schedule:/g' Procfile"
-    - su -c "cd /home/dokotest/dokos-bench && sed -i 's/^socketio:/# socketio:/g' Procfile"
-    - su -c "cd /home/dokotest/dokos-bench && sed -i 's/^redis_socketio:/# redis_socketio:/g' Procfile"
-    - su -c "cd /home/dokotest/dokos-bench && cat Procfile"
-    - su -c "cd /home/dokotest/dokos-bench && bench setup requirements --dev" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench start &> bench_start.log &" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site reinstall --yes --mariadb-root-password test_dodock" dokotest
-    - su -c "cd /home/dokotest/dokos-bench && bench build --app frappe" dokotest
+    - bench init . --ignore-exist --no-backups --skip-redis-config-generation --skip-assets --frappe-path /builds/dokos/dodock/
+    - /ci-utils/setup-redis.sh v1
+    - /ci-utils/patch-procfile.sh v1
+    - cp -r apps/frappe/test_sites/test_site sites/
+    - bench setup requirements --dev
+    - bench start &> bench_start.log &
+    - bench build --app frappe &
+    - build_pid=$!
+    - bench --site test_site reinstall --yes --mariadb-root-password test_dodock
+    - wait $build_pid
 
   script:
-    - su -c "cd /home/dokotest/dokos-bench && bench --site test_site run-parallel-tests --app frappe" dokotest
+    - bench --site test_site run-parallel-tests --app frappe
 
 build_docker:
   stage: Docker Dodock
