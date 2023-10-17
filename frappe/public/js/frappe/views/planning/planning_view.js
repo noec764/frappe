@@ -475,8 +475,8 @@ frappe.views.Planning = class frappePlanning {
 			slotMaxTime: defaults.slots_end_time || "22:00:00",
 			expandRows: true,
 			refetchResourcesOnNavigate: true,
-			resourceAreaWidth: "30%",
-			slotMinWidth: 50,
+			resourceAreaWidth: "20%",
+			slotMinWidth: 100,
 		};
 
 		if (this.options) {
