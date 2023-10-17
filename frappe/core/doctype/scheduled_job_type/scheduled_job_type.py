@@ -106,9 +106,9 @@ class ScheduledJobType(Document):
 		if not self.cron_format:
 			self.cron_format = CRON_MAP[self.frequency]
 
-		return croniter(
-			self.cron_format, get_datetime(self.last_execution) if self.last_execution else now_datetime()
-		).get_next(datetime)
+		return croniter(self.cron_format, get_datetime(self.last_execution or now_datetime())).get_next(
+			datetime
+		)
 
 	def execute(self):
 		self.scheduler_log = None
