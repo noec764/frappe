@@ -423,7 +423,7 @@ frappe.ui.GroupBy = class {
 	}
 
 	get_group_by_field_label() {
-		let field = this.group_by_fields[this.group_by_doctype].find(
+		let field = this.group_by_fields[this.group_by_doctype]?.find(
 			(field) => field.fieldname == this.group_by_field
 		);
 		return field.label ? __(field.label, null, this.group_by_doctype) : field?.fieldname;
