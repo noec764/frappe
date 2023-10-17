@@ -1,11 +1,9 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import re
 from functools import partial
 
 import frappe
-from frappe import _
 from frappe.app import make_form_dict
 from frappe.desk.search import get_names_for_mentions, search_link, search_widget
 from frappe.tests.utils import FrappeTestCase
@@ -142,8 +140,7 @@ class TestSearch(FrappeTestCase):
 
 		# DocType can be passed as None which should be accepted
 		self.assertListEqual(
-			get_data(None, "Random", "email", "2", "10", dict()),
-			[None, "Random", "email", 2, 10, {}],
+			get_data(None, "Random", "email", "2", "10", dict()), [None, "Random", "email", 2, 10, {}]
 		)
 
 		# return empty string if passed doctype is invalid
@@ -270,4 +267,4 @@ class TestWebsiteSearch(FrappeTestCase):
 
 		response = self.get("/search?q=b")
 		self.assertEqual(response.status_code, 200)
-		self.assertIn(_("Search results for"), response.get_data(as_text=True))
+		self.assertIn(frappe._("Search results for"), response.get_data(as_text=True))
