@@ -5752,7 +5752,7 @@ Role 'All' will be given to all System Users.,Le rôle 'Tous' sera attribué à 
 Role 'All' will be given to all system + website users.,Le rôle 'Tous' sera donné à tous les utilisateurs système + site web.,
 Role 'Desk User' will be given to all system users.,Le rôle 'Utilisateur du bureau' sera donné à tous les utilisateurs système.,
 Role Name,Nom du Rôle,
-Role Permission for Page and Report,Rôles autorisés pour les pages et les rapport,
+Role Permission for Page and Report,Rôles autorisés pour les pages et les rapports,
 Role Permissions Manager,Gestionnaire des rôles,Button in list view menu
 Role Permissions Manager,Gestionnaire des rôles et autorisation,
 Role Permissions,Autorisations du Rôle,
