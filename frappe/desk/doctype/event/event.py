@@ -608,9 +608,9 @@ def insert_event_in_google_calendar(doc, method=None):
 	Insert Events in Google Calendar if sync_with_google_calendar is checked.
 	"""
 	if (
-		not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
+		not doc.sync_with_google_calendar
 		or doc.flags.pulled_from_google_calendar
-		or not doc.sync_with_google_calendar
+		or not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
 	):
 		return
 
@@ -663,10 +663,10 @@ def update_event_in_google_calendar(doc, method=None):
 	# Workaround to avoid triggering updation when Event is being inserted since
 	# creation and modified are same when inserting doc
 	if (
-		not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
+		not doc.sync_with_google_calendar
 		or doc.modified == doc.creation
-		or not doc.sync_with_google_calendar
 		or doc.flags.pulled_from_google_calendar
+		or not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
 	):
 		return
 
@@ -724,9 +724,9 @@ def delete_event_in_google_calendar(doc, method=None):
 	"""
 
 	if (
-		not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
+		not doc.google_calendar_event_id
 		or doc.flags.pulled_from_google_calendar
-		or not doc.google_calendar_event_id
+		or not frappe.db.exists("Google Calendar", {"name": doc.google_calendar})
 	):
 		return
 
