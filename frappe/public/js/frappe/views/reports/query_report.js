@@ -387,12 +387,12 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 					__(doctype),
 					name,
 					dashboard_route_html,
-				]);
+				], doctype);
 			} else {
-				message = __("New {0} {1} created", [doctype, name]);
+				message = __("New {0} {1} created", [doctype, name], doctype);
 			}
 
-			frappe.msgprint(message, __("New {0} Created", [doctype]));
+			frappe.msgprint(message, __("New {0} Created", [doctype], doctype));
 		});
 	}
 

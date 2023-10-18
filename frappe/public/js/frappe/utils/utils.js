@@ -952,7 +952,7 @@ Object.assign(frappe.utils, {
 				case "Dashboard":
 					return __("{0} Dashboard", [__(route[1])]);
 				case "New":
-					return __("New {0}", [__(route[1])]);
+					return __("New {0}", [__(route[1])], route[1]);
 				case "Calendar":
 					return __("{0} Calendar", [__(route[1])]);
 				case "Map":

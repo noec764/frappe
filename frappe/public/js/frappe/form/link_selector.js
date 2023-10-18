@@ -141,7 +141,7 @@ frappe.ui.form.LinkSelector = class LinkSelector {
 							"</span>" +
 							(frappe.model.can_create(me.doctype)
 								? '<br><br><a class="new-doc btn btn-default btn-sm">' +
-								  __("Create a new {0}", [__(me.doctype)]) +
+								  __("Create a new {0}", [__(me.doctype)], me.doctype) +
 								  "</a>"
 								: "") +
 							"</p>"

@@ -226,7 +226,7 @@ export default class WebFormList {
 			<a
 				class="btn btn-primary btn-sm btn-new-doc hidden-xs"
 				href="${location.pathname.replace("/list", "")}/new">
-				${__("Create a new {0}", [__(this.doctype)])}
+				${__("Create a new {0}", [__(this.doctype)], this.doctype)}
 			</a>
 		`;
 
