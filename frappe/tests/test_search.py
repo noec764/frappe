@@ -1,11 +1,9 @@
 # Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import re
 from functools import partial
 
 import frappe
-from frappe import _
 from frappe.app import make_form_dict
 from frappe.desk.search import get_names_for_mentions, search_link, search_widget
 from frappe.tests.utils import FrappeTestCase
@@ -20,10 +18,10 @@ class TestSearch(FrappeTestCase):
 			self.addCleanup(teardown_test_link_field_order, self)
 
 	def test_search_field_sanitizer(self):
-		# pass
-		search_link("DocType", "User", query=None, filters=None, page_length=20, searchfield="name")
-		result = frappe.response["results"][0]
-		self.assertTrue("User" in result["value"])
+		results = search_link(
+			"DocType", "User", query=None, filters=None, page_length=20, searchfield="name"
+		)
+		self.assertTrue("User" in results[0]["value"])
 
 		# raise exception on injection
 		for searchfield in (
@@ -68,7 +66,7 @@ class TestSearch(FrappeTestCase):
 
 	def test_link_field_order(self):
 		# Making a request to the search_link with the tree doctype
-		search_link(
+		results = search_link(
 			doctype=self.tree_doctype_name,
 			txt="all",
 			query=None,
@@ -76,20 +74,18 @@ class TestSearch(FrappeTestCase):
 			page_length=20,
 			searchfield=None,
 		)
-		result = frappe.response["results"]
 
 		# Check whether the result is sorted or not
-		self.assertEqual(self.parent_doctype_name, result[0]["value"])
+		self.assertEqual(self.parent_doctype_name, results[0]["value"])
 
 		# Check whether searching for parent also list out children
-		self.assertEqual(len(result), len(self.child_doctypes_names) + 1)
+		self.assertEqual(len(results), len(self.child_doctypes_names) + 1)
 
 	# Search for the word "pay", part of the word "pays" (country) in french.
 	def test_link_search_in_foreign_language(self):
 		try:
 			frappe.local.lang = "fr"
-			search_widget(doctype="DocType", txt="pay", page_length=20)
-			output = frappe.response["values"]
+			output = search_widget(doctype="DocType", txt="pay", page_length=20)
 
 			result = [["found" for x in y if x == "Country"] for y in output]
 			self.assertTrue(["found"] in result)
@@ -98,7 +94,7 @@ class TestSearch(FrappeTestCase):
 
 	def test_doctype_search_in_foreign_language(self):
 		def do_search(txt: str):
-			search_link(
+			return search_link(
 				doctype="DocType",
 				txt=txt,
 				query="frappe.core.report.permitted_documents_for_user.permitted_documents_for_user.query_doctypes",
@@ -106,7 +102,6 @@ class TestSearch(FrappeTestCase):
 				page_length=20,
 				searchfield=None,
 			)
-			return frappe.response["results"]
 
 		try:
 			frappe.local.lang = "en"
@@ -144,8 +139,7 @@ class TestSearch(FrappeTestCase):
 
 		# DocType can be passed as None which should be accepted
 		self.assertListEqual(
-			get_data(None, "Random", "email", "2", "10", dict()),
-			[None, "Random", "email", 2, 10, {}],
+			get_data(None, "Random", "email", "2", "10", dict()), [None, "Random", "email", 2, 10, {}]
 		)
 
 		# return empty string if passed doctype is invalid
@@ -157,12 +151,12 @@ class TestSearch(FrappeTestCase):
 		self.assertListEqual(frappe.call("frappe.tests.test_search.get_data", *args, **kwargs), [])
 
 		# should not fail if query has @ symbol in it
-		search_link("User", "user@random", searchfield="name")
-		self.assertListEqual(frappe.response["results"], [])
+		results = search_link("User", "user@random", searchfield="name")
+		self.assertListEqual(results, [])
 
 	def test_reference_doctype(self):
 		"""search query methods should get reference_doctype if they want"""
-		results = test_search(
+		results = search_link(
 			doctype="User",
 			txt="",
 			filters=None,
@@ -173,7 +167,7 @@ class TestSearch(FrappeTestCase):
 		self.assertListEqual(results, [])
 
 	def test_search_relevance(self):
-		search = partial(test_search, doctype="Language", filters=None, page_length=10)
+		search = partial(search_link, doctype="Language", filters=None, page_length=10)
 		for row in search(txt="e"):
 			self.assertTrue(row["value"].startswith("e"))
 
@@ -183,11 +177,6 @@ class TestSearch(FrappeTestCase):
 		# Assume that "es" is used at least 10 times, it should now be first
 		frappe.db.set_value("Language", "es", "idx", 10)
 		self.assertEqual("es", search(txt="es")[0]["value"])
-
-
-def test_search(*args, **kwargs):
-	search_link(*args, **kwargs)
-	return frappe.response["results"]
 
 
 @frappe.validate_and_sanitize_search_inputs
@@ -277,4 +266,4 @@ class TestWebsiteSearch(FrappeTestCase):
 
 		response = self.get("/search?q=b")
 		self.assertEqual(response.status_code, 200)
-		self.assertIn(_("Search results for"), response.get_data(as_text=True))
+		self.assertIn(frappe._("Search results for"), response.get_data(as_text=True))
