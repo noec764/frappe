@@ -387,7 +387,7 @@ def get_user_translations(lang):
 			key = t.source_text
 			value = t.translated_text
 			if t.context:
-				key += ":" + t.context
+				key += ":::" + t.context
 			user_translations[key] = value
 		return user_translations
 
