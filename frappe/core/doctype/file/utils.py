@@ -339,7 +339,7 @@ def attach_files_to_document(doc: "Document", event) -> None:
 					"attached_to_name": doc.name,
 					"attached_to_doctype": doc.doctype,
 					"attached_to_field": df.fieldname,
-					"is_private": value.startswith("/private"),
+					"is_private": cint(value.startswith("/private")),
 				},
 			)
 			continue
