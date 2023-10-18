@@ -41,7 +41,6 @@ class FrappeClient:
 			"Accept": "application/json",
 			"content-type": "application/x-www-form-urlencoded",
 		}
-		self.headers = dict(Accept="application/json")
 		self.verify = verify
 		self.session = requests.session()
 		self.url = url
@@ -70,7 +69,7 @@ class FrappeClient:
 			headers=self.headers,
 		)
 
-		if r.status_code == 200 and r.json().get("message") == "Logged In":
+		if r.status_code == 200 and r.json().get("message") in ("Logged In", "No App"):
 			return r.json()
 		elif r.status_code == 502:
 			raise SiteUnreachableError
@@ -122,12 +121,9 @@ class FrappeClient:
 			params["limit_start"] = limit_start
 			params["limit_page_length"] = limit_page_length
 		res = self.session.get(
-			self.url + "/api/resource/" + doctype,
-			params=params,
-			verify=self.verify,
-			headers=self.headers,
+			self.url + "/api/resource/" + doctype, params=params, verify=self.verify, headers=self.headers
 		)
-		return frappe._dict(self.post_process(res))
+		return self.post_process(res)
 
 	def insert(self, doc):
 		"""Insert a document to the remote server
@@ -155,7 +151,7 @@ class FrappeClient:
 		res = self.session.put(
 			url, data={"data": frappe.as_json(doc)}, verify=self.verify, headers=self.headers
 		)
-		return self.post_process(res)
+		return frappe._dict(self.post_process(res))
 
 	def bulk_update(self, docs):
 		"""Bulk update documents remotely
@@ -335,10 +331,7 @@ class FrappeClient:
 		if params is None:
 			params = {}
 		res = self.session.get(
-			f"{self.url}/api/method/{method}",
-			params=params,
-			verify=self.verify,
-			headers=self.headers,
+			f"{self.url}/api/method/{method}", params=params, verify=self.verify, headers=self.headers
 		)
 		return self.post_process(res)
 
@@ -346,10 +339,7 @@ class FrappeClient:
 		if params is None:
 			params = {}
 		res = self.session.post(
-			f"{self.url}/api/method/{method}",
-			params=params,
-			verify=self.verify,
-			headers=self.headers,
+			f"{self.url}/api/method/{method}", params=params, verify=self.verify, headers=self.headers
 		)
 		return self.post_process(res)
 
