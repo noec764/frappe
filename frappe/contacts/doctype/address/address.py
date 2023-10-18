@@ -1,9 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
-import json
-from typing import Optional
 
-import googlemaps
 from jinja2 import TemplateSyntaxError
 
 import frappe
@@ -210,10 +207,10 @@ def render_address(address: dict | str | None, check_permissions=True) -> str | 
 			address.check_permission()
 		address = address.as_dict()
 
-	name, template = get_address_templates(address_dict)
+	name, template = get_address_templates(address)
 
 	try:
-		return frappe.render_template(template, address_dict)
+		return frappe.render_template(template, address)
 	except TemplateSyntaxError:
 		frappe.throw(_("There is an error in your Address Template {0}").format(name))
 
