@@ -1,9 +1,6 @@
 # Copyright (c) 2021, Frappe Technologies and contributors
 # License: MIT. See LICENSE
-import json
-from typing import Optional
 
-import googlemaps
 from jinja2 import TemplateSyntaxError
 
 import frappe
@@ -28,7 +25,20 @@ class Address(Document):
 		address_line1: DF.Data
 		address_line2: DF.Data | None
 		address_title: DF.Data | None
-		address_type: DF.Literal["Billing", "Shipping", "Office", "Personal", "Plant", "Postal", "Shop", "Subsidiary", "Warehouse", "Current", "Permanent", "Other"]
+		address_type: DF.Literal[
+			"Billing",
+			"Shipping",
+			"Office",
+			"Personal",
+			"Plant",
+			"Postal",
+			"Shop",
+			"Subsidiary",
+			"Warehouse",
+			"Current",
+			"Permanent",
+			"Other",
+		]
 		city: DF.Data
 		country: DF.Link
 		county: DF.Data | None
@@ -183,20 +193,24 @@ def get_default_address(
 
 
 @frappe.whitelist()
-def get_address_display(address_dict: dict | str | None = None, ignore_permissions: bool | None = False) -> str | None:
-	if not address_dict:
+def get_address_display(address_dict: dict | str | None, ignore_permissions: bool | None = False) -> str | None:
+	return render_address(address_dict, ignore_permissions=ignore_permissions)
+
+
+def render_address(address: dict | str | None, ignore_permissions=False) -> str | None:
+	if not address:
 		return
 
-	if not isinstance(address_dict, dict):
-		address = frappe.get_cached_doc("Address", address_dict)
-		address.flags.ignore_permissions = ignore_permissions
-		address.check_permission()
-		address_dict = address.as_dict()
+	if not isinstance(address, dict):
+		address = frappe.get_cached_doc("Address", address)
+		if not ignore_permissions:
+			address.check_permission()
+		address = address.as_dict()
 
-	name, template = get_address_templates(address_dict)
+	name, template = get_address_templates(address)
 
 	try:
-		return frappe.render_template(template, address_dict)
+		return frappe.render_template(template, address)
 	except TemplateSyntaxError:
 		frappe.throw(_("There is an error in your Address Template {0}").format(name))
 
@@ -283,7 +297,7 @@ def get_company_address(company):
 
 	if company:
 		ret.company_address = get_default_address("Company", company)
-		ret.company_address_display = get_address_display(ret.company_address)
+		ret.company_address_display = render_address(ret.company_address, ignore_permissions=True)
 
 	return ret
 
