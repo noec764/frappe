@@ -580,6 +580,10 @@ class User(Document):
 		# delete user permissions
 		frappe.db.delete("User Permission", {"user": self.name})
 
+		# Delete OAuth data
+		frappe.db.delete("OAuth Authorization Code", {"user": self.name})
+		frappe.db.delete("Token Cache", {"user": self.name})
+
 	def before_rename(self, old_name, new_name, merge=False):
 		frappe.clear_cache(user=old_name)
 		self.validate_rename(old_name, new_name)
@@ -832,7 +836,7 @@ def get_timezones():
 
 
 @frappe.whitelist()
-def get_all_roles(arg=None):
+def get_all_roles():
 	"""return all roles"""
 	active_domains = frappe.get_active_domains()
 
@@ -846,7 +850,7 @@ def get_all_roles(arg=None):
 		order_by="name",
 	)
 
-	return [role.name for role in roles]
+	return sorted([role.get("name") for role in roles])
 
 
 @frappe.whitelist()

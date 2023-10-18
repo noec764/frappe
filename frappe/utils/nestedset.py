@@ -10,7 +10,7 @@
 # 3. call update_nsm(doc_obj) in the on_upate method
 
 # ------------------------------------------
-from typing import Iterator
+from collections.abc import Iterator
 
 import frappe
 from frappe import _
@@ -290,7 +290,7 @@ class NestedSet(Document):
 			update_nsm(self)
 		except frappe.DoesNotExistError:
 			if self.flags.on_rollback:
-				frappe.message_log.pop()
+				frappe.clear_last_message()
 			else:
 				raise
 

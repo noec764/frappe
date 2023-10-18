@@ -249,9 +249,7 @@ def get(uuid=None, *args, **kwargs):
 	return result
 
 
-frappe.whitelist()
-
-
+@frappe.whitelist()
 @do_not_record
 @administrator_only
 def export_data(*args, **kwargs):

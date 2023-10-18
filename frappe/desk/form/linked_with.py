@@ -432,8 +432,7 @@ def get_linked_docs(doctype: str, name: str, linkinfo: dict | None = None) -> di
 			link_meta_bundle = frappe.desk.form.load.get_meta_bundle(dt)
 		except Exception as e:
 			if isinstance(e, frappe.DoesNotExistError):
-				if frappe.local.message_log:
-					frappe.local.message_log.pop()
+				frappe.clear_last_message()
 			continue
 		linkmeta = link_meta_bundle[0]
 
@@ -507,8 +506,7 @@ def get_linked_docs(doctype: str, name: str, linkinfo: dict | None = None) -> di
 						ret = None
 
 			except frappe.PermissionError:
-				if frappe.local.message_log:
-					frappe.local.message_log.pop()
+				frappe.clear_last_message()
 
 				continue
 
