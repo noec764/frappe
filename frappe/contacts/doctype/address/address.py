@@ -193,8 +193,8 @@ def get_default_address(
 
 
 @frappe.whitelist()
-def get_address_display(address_dict: dict | str | None) -> str | None:
-	return render_address(address_dict)
+def get_address_display(address_dict: dict | str | None, ignore_permissions: bool | None = False) -> str | None:
+	return render_address(address_dict, ignore_permissions=ignore_permissions)
 
 
 def render_address(address: dict | str | None, ignore_permissions=False) -> str | None:
