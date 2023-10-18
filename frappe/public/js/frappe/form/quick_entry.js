@@ -121,7 +121,7 @@ frappe.ui.form.QuickEntryForm = class QuickEntryForm {
 	render_dialog() {
 		var me = this;
 		this.dialog = new frappe.ui.Dialog({
-			title: __("New {0}", [__(this.doctype)]),
+			title: __("New {0}", [__(this.doctype)], this.doctype),
 			fields: this.mandatory,
 			doc: this.doc,
 		});

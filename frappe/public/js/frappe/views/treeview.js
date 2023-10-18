@@ -346,7 +346,7 @@ frappe.views.TreeView = class TreeView {
 
 		// the dialog
 		var d = new frappe.ui.Dialog({
-			title: __("New {0}", [__(me.doctype)]),
+			title: __("New {0}", [__(me.doctype)], me.doctype),
 			fields: me.fields,
 		});
 
