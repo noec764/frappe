@@ -214,6 +214,7 @@ select.form-control {
 			transition: all 300ms ease;
 			transition-property: color, transform, opacity;
 			transform: none;
+			color: var(--text-light);
 		}
 
 		&:hover:not(:active) > .icon {
