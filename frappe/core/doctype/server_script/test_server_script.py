@@ -1,7 +1,5 @@
 # Copyright (c) 2019, Frappe Technologies and Contributors
 # License: MIT. See LICENSE
-import unittest
-
 import requests
 
 import frappe
@@ -123,7 +121,6 @@ class TestServerScript(FrappeTestCase):
 			frappe.ValidationError, frappe.get_doc(dict(doctype="ToDo", description="validate me")).insert
 		)
 
-	@unittest.skip("Skip in CI")
 	def test_api(self):
 		response = requests.post(get_site_url(frappe.local.site) + "/api/method/test_server_script")
 		self.assertEqual(response.status_code, 200)
@@ -218,7 +215,6 @@ frappe.qb.from_(todo).select(todo.name).where(todo.name == "{todo.name}").run()
 		script.save()
 		script.execute_method()
 
-	@unittest.skip("Skipped in CI")
 	def test_server_script_rate_limiting(self):
 		# why not
 		script1 = frappe.get_doc(

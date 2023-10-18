@@ -17,7 +17,6 @@ query. This test can be written like this.
 
 """
 import time
-import unittest
 from unittest.mock import patch
 
 from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_fixed
@@ -118,7 +117,6 @@ class TestPerformance(FrappeTestCase):
 		with self.assertQueryCount(0):
 			doc.get_invalid_links()
 
-	@unittest.skip("Skipped in CI")
 	@retry(
 		retry=retry_if_exception_type(AssertionError),
 		stop=stop_after_attempt(3),

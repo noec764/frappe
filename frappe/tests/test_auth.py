@@ -2,7 +2,6 @@
 # License: MIT. See LICENSE
 
 import time
-import unittest
 from unittest.mock import patch
 
 import requests
@@ -34,7 +33,6 @@ def add_user(email, password, username=None, mobile_no=None):
 	frappe.db.commit()
 
 
-@unittest.skip("Skipped in CI")
 class TestAuth(FrappeTestCase):
 	@classmethod
 	def setUpClass(cls):
