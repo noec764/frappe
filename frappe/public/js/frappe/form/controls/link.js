@@ -32,10 +32,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 			}
 		});
 		this.$input_area.on("focusout", function () {
-			// if user focuses it again, then do not hide
-			if (!me.input_area.matches(":focus-within")) {
-				me.update_arrow(false);
-			}
+			me.update_arrow();
 		});
 		this.$input.attr("data-target", this.df.options);
 		this.input = this.$input.get(0);
@@ -73,16 +70,13 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 		this.setup_icon(); // refresh icon for dynamic link
 	}
 
-	update_arrow(forced = null) {
+	update_arrow() {
 		if (!this.$link?.length) {
 			return;
 		}
-		const should_show =
-			forced ?? (this.input_area.matches(":focus-within") && this.input?.value);
-
-		if (should_show) {
+		const name = this.get_input_value();
+		if (name) {
 			const doctype = this.get_options();
-			const name = this.get_input_value();
 			this.$link.toggle(true);
 			this.$link.removeAttr("disabled");
 			this.$link_open.attr("href", frappe.utils.get_form_link(doctype, name));
@@ -396,7 +390,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 			if (!me.get_label_value()) {
 				// hide link arrow to doctype if none is set
-				this.update_arrow(false);
+				this.update_arrow();
 			}
 		});
 
@@ -405,7 +399,7 @@ frappe.ui.form.ControlLink = class ControlLink extends frappe.ui.form.ControlDat
 
 			if (!me.get_label_value()) {
 				// hide link arrow to doctype if none is set
-				this.update_arrow(false);
+				this.update_arrow();
 			}
 		});
 
