@@ -171,8 +171,8 @@ function parse_option(v, doctype) {
 		is_selected = Boolean(v.selected);
 
 		if (is_value_null && is_label_null && typeof v !== "object") {
-			value = v;
-			label = __(v);
+			value = v.hasOwnProperty("value") ? v.value : v;
+			label = __(v.hasOwnProperty("label") ? v.label : v, null, doctype);
 		} else {
 			value = is_value_null ? "" : v.value;
 			label = is_label_null ? __(value, null, doctype) : __(v.label, null, doctype);
