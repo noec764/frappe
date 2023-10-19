@@ -74,9 +74,6 @@
 		margin: 0;
 		margin-bottom: var(--margin-sm);
 		cursor: pointer;
-		&:first-child {
-			margin-top: var(--margin-sm);
-		}
 
 		.collapse-indicator {
 			color: var(--text-muted);
