@@ -109,6 +109,7 @@ class TestFrappeClient(FrappeTestCase):
 			server.get_value("Website Settings", "title_prefix").get("title_prefix"), "test-prefix"
 		)
 		frappe.db.set_single_value("Website Settings", "title_prefix", "")
+		frappe.db.commit()
 
 	def test_update_doc(self):
 		server = FrappeClient(get_url(), "Administrator", self.PASSWORD, verify=False)
