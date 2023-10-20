@@ -5,8 +5,7 @@
 
 @media (max-width: map-get($grid-breakpoints, "lg")) {
 	.navbar {
-		padding-left: 1rem;
-		padding-right: 1rem;
+		padding: 0 1rem;
 	}
 }
 
