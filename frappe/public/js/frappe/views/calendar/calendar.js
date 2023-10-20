@@ -141,7 +141,9 @@ frappe.views.CalendarView = class CalendarView extends frappe.views.ListView {
 		});
 	}
 
-	get required_libs() {}
+	get required_libs() {
+		return false;
+	}
 };
 
 frappe.views.Calendar = class frappeCalendar {

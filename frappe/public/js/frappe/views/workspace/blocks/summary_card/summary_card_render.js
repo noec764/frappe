@@ -90,27 +90,21 @@ export default class SummaryCardRenderer {
 		return this.data.primary_button?.view || "List";
 	}
 
-	set_route({ filters = null, name = this.data.dt, view = this.get_view(), ...extra } = {}) {
-		const route = frappe.utils.generate_route({
-			name: name,
-			type: "doctype",
-			doc_view: view,
-			...extra,
-		});
-
-		if (filters) {
-			filters = frappe.utils.get_filter_from_json(filters);
-			if (filters) {
-				frappe.route_options = filters;
-			}
-		}
-
-		if (e.ctrlKey || e.metaKey) {
-			frappe.open_in_new_tab = true;
-		}
-
-		frappe.set_route(route);
-	}
+	// set_route({ filters = null, name = this.data.dt, view = this.get_view(), ...extra } = {}) {
+	// 	const route = frappe.utils.generate_route({
+	// 		name: name,
+	// 		type: "doctype",
+	// 		doc_view: view,
+	// 		...extra,
+	// 	});
+	// 	if (filters) {
+	// 		filters = frappe.utils.get_filter_from_json(filters);
+	// 		if (filters) {
+	// 			frappe.route_options = filters;
+	// 		}
+	// 	}
+	// 	frappe.set_route(route);
+	// }
 
 	get_route({ filters = null, name = this.data.dt, view = this.get_view(), ...extra } = {}) {
 		const route = frappe.utils.generate_route({
@@ -128,7 +122,7 @@ export default class SummaryCardRenderer {
 				if (filt.length === 4) {
 					const [dt, fieldname, op, value] = filt;
 					if (dt !== name) {
-						console.log("dt !== name");
+						console.log("dt !== name"); // eslint-disable-line no-console
 					}
 					url.searchParams.append(fieldname, JSON.stringify([op, value]));
 				} else if (filt.length === 3) {
@@ -196,7 +190,7 @@ export default class SummaryCardRenderer {
 		const msg = [__("Summary Card"), __("Error")].join(" &middot; ");
 		this.$header.html(msg);
 
-		console.error(error);
+		console.error(error); // eslint-disable-line no-console
 		try {
 			error = JSON.parse(error);
 		} catch (e) {

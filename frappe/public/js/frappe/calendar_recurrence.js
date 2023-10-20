@@ -9,9 +9,13 @@ frappe.CalendarRecurrence = class {
 		this.start_day = moment(
 			this.start_field ? this.frm.doc[this.start_field] : this.frm.doc.starts_on
 		);
+		this.RRULE_STRINGS = {};
+		this.RRULE_DATES = ENGLISH;
 
 		if (availableLanguages.includes(frappe.boot.lang)) {
 			frappe.require(`/assets/frappe/js/lib/rrule/locales/${frappe.boot.lang}.js`, () => {
+				if (typeof RRULE_STRINGS !== "undefined") this.RRULE_STRINGS = RRULE_STRINGS; // eslint-disable-line no-undef
+				if (typeof RRULE_DATES !== "undefined") this.RRULE_DATES = RRULE_DATES; // eslint-disable-line no-undef
 				this.recurrence_process();
 			});
 		} else {
@@ -41,13 +45,7 @@ frappe.CalendarRecurrence = class {
 	}
 
 	gettext(id) {
-		if (
-			availableLanguages.includes(frappe.boot.lang) &&
-			typeof RRULE_STRINGS !== "undefined"
-		) {
-			return RRULE_STRINGS[id] || id;
-		}
-		return id;
+		return this.RRULE_STRINGS?.[id] || id;
 	}
 
 	frequency_map() {
@@ -252,12 +250,9 @@ frappe.CalendarRecurrence = class {
 
 	get_repeat_text(rule) {
 		const me = this;
-		return rule.toText(
-			(id) => {
-				return me.gettext(id);
-			},
-			typeof RRULE_DATES === "undefined" ? ENGLISH : RRULE_DATES
-		);
+		return rule.toText((id) => {
+			return me.gettext(id);
+		}, this.RRULE_DATES);
 	}
 
 	init_dialog() {

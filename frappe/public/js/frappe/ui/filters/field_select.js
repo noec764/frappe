@@ -102,7 +102,7 @@ frappe.ui.FieldSelect = class FieldSelect {
 				{
 					fieldname: "parent",
 					fieldtype: "Data",
-					label: _("Parent"),
+					label: __("Parent"),
 					parent: me.doctype,
 				},
 			]);
