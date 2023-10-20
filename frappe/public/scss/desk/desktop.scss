@@ -485,7 +485,6 @@ body {
 
 					&.step-complete {
 						display: none;
-						background-color: var(--primary);
 						.icon use {
 							stroke: var(--fg-color);
 						}
