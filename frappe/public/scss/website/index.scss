@@ -90,6 +90,7 @@
 
 .dropdown-item {
 	border-radius: $dropdown-border-radius;
+	padding: var(--dropdown-padding);
 }
 
 .dropdown-item:active {
