@@ -859,6 +859,12 @@ class TestAppParser(MockedRequestTestCase):
 	def test_app_name_parser(self):
 		self.responses.add(
 			"HEAD",
+			"https://gitlab.com/dokos/healthcare",
+			status=404,
+			json={},
+		)
+		self.responses.add(
+			"HEAD",
 			"https://api.github.com/repos/frappe/healthcare",
 			status=200,
 			json={},
