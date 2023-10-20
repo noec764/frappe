@@ -64,7 +64,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 				},
 			})
 			.then((res) => {
-				const resources = this.calendar_settings.excluded_resources
+				const resources = Array.isArray(this.calendar_settings.excluded_resources)
 					? res.message.filter(
 							(r) => !this.calendar_settings.excluded_resources.includes(r.id)
 					  )
