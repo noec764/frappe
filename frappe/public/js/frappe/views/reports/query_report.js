@@ -383,11 +383,11 @@ frappe.views.QueryReport = class QueryReport extends frappe.views.BaseList {
 			let message;
 			if (dashboard_name) {
 				let dashboard_route_html = `<a href="/app/dashboard-view/${dashboard_name}">${dashboard_name}</a>`;
-				message = __(
-					"New {0} {1} added to Dashboard {2}",
-					[__(doctype), name, dashboard_route_html],
-					doctype
-				);
+				message = __("New {0} {1} added to Dashboard {2}", [
+					__(doctype),
+					name,
+					dashboard_route_html,
+				]);
 			} else {
 				message = __("New {0} {1} created", [doctype, name], doctype);
 			}
