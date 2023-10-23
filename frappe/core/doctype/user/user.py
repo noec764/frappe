@@ -145,13 +145,13 @@ class User(Document):
 	def before_insert(self):
 		self.flags.in_insert = True
 		throttle_user_creation()
+		self.add_default_roles()
+		self.hide_modules()
 
 	def after_insert(self):
 		create_notification_settings(self.name)
 		frappe.cache.delete_key("users_for_mentions")
 		frappe.cache.delete_key("enabled_users")
-		self.add_default_roles()
-		self.hide_modules()
 
 	def validate(self):
 		# clear new password
@@ -216,6 +216,7 @@ class User(Document):
 		frappe.clear_cache(user=self.name)
 
 		now = frappe.flags.in_test or frappe.flags.in_install
+		print(f"self.send_password_notification('{self.__new_password}')")
 		self.send_password_notification(self.__new_password)
 		if self.flags.create_contact_immediately:
 			create_contact(user=self, ignore_mandatory=True, ignore_links=True)
@@ -755,12 +756,14 @@ class User(Document):
 		return get_restricted_ip_list(self)
 
 	def add_default_roles(self):
+		# @dokos
 		# set default signup role as per Portal Settings
 		default_role = frappe.db.get_single_value("Portal Settings", "default_role")
 		if default_role:
-			self.add_roles(default_role)
+			self.append_roles(default_role)
 
 	def hide_modules(self):
+		# @dokos
 		active_domains = frappe.get_active_domains()
 		hidden_modules = []
 		for domain in active_domains:
@@ -770,7 +773,6 @@ class User(Document):
 		for module in hidden_modules:
 			if module:
 				self.add_blocked_module(module)
-		self.save()
 
 	@classmethod
 	def find_by_credentials(cls, user_name: str, password: str, validate_password: bool = True):
