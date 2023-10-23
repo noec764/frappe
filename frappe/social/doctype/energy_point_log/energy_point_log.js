@@ -27,6 +27,7 @@ frappe.ui.form.on("Energy Point Log", {
 						reason: values.reason,
 					})
 					.then((res) => {
+						let revert_log = res.message;
 						revert_dialog.hide();
 						revert_dialog.clear();
 						frappe.model.docinfo[frm.doc.reference_doctype][

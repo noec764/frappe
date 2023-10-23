@@ -114,7 +114,8 @@ export default class Header extends Block {
 			// Translate text by first retrieving the text from the html
 			const node = document.createElement("div");
 			node.innerHTML = html;
-			node.textContent = node.textContent; // To remove html tags
+			// To remove html tags
+			node.textContent = node.textContent; // eslint-disable-line no-self-assign
 			const text = node.innerHTML; // To get the source text (with &amp;)
 			// Replacing the text won't work if some parts of the text are bold, italic, etc.
 			html = html.replace(text, __(text));

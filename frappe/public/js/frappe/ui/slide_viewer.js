@@ -106,8 +106,8 @@ frappe.ui.SlideViewer = class SlideViewer {
 		}
 	}
 
-	showDevWarning(warn, ctx) {
-		console.error(ctx ? `[Slide Viewer: ${ctx}]` : "[Slide Viewer]", msg);
+	showDevWarning(msg, ctx) {
+		console.error(ctx ? `[Slide Viewer: ${ctx}]` : "[Slide Viewer]", msg); // eslint-disable-line no-console
 	}
 
 	throwDevError(error, ctx) {
@@ -364,7 +364,7 @@ frappe.ui.SlideViewer = class SlideViewer {
 							// $(document).trigger("save", [doc]);
 						},
 						error: (r) => {
-							console.error(r);
+							console.error(r); // eslint-disable-line no-console
 						},
 						btn: this.$complete_btn,
 						freeze_message: __("Loading"),

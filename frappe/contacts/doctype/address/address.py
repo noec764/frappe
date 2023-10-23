@@ -120,6 +120,10 @@ class Address(Document):
 		if frappe.db.get_single_value("Google Settings", "enable") and frappe.db.get_single_value(
 			"Google Settings", "api_key"
 		):
+			import json
+
+			import googlemaps
+
 			address = get_condensed_address_for_gelocalisation(self)
 
 			gmaps = googlemaps.Client(key=frappe.db.get_single_value("Google Settings", "api_key"))

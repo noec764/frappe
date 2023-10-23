@@ -152,7 +152,7 @@ export class BlockEditorTool {
 
 		this.subeditors[fieldname] = {
 			get modal() {
-				return modal;
+				return dialog;
 			},
 			get readOnlyEditor() {
 				return readOnlyEditor;
@@ -236,6 +236,7 @@ export class BlockEditorTool {
 	/** @param {HTMLElement} el */
 	_makeShadow(el) {
 		return el;
+		/*
 		const shadow = el.attachShadow({ mode: "open" });
 
 		// grab the styles from the main document
@@ -273,6 +274,7 @@ export class BlockEditorTool {
 		});
 
 		return shadow;
+		*/
 	}
 
 	/**
@@ -281,6 +283,7 @@ export class BlockEditorTool {
 	 */
 	_makeSubEditor(fieldname, _wrapper = null) {
 		return this._makeNestedSubeditor(fieldname, _wrapper || this.elements[fieldname]);
+		/*
 		const field = this.fields[fieldname];
 
 		const shadowHost = _wrapper || this.elements[fieldname];
@@ -300,6 +303,7 @@ export class BlockEditorTool {
 			fieldname,
 			readOnly: true,
 		}));
+		*/
 	}
 
 	_makeEditorJs({ holder, placeholder, fieldname, readOnly, narrow, onChange }) {
@@ -379,7 +383,7 @@ export class BlockEditorTool {
 			let wrapper = this.elements[fieldname];
 
 			if (!wrapper) {
-				console.warn(`No wrapper for field ${fieldname}`);
+				console.warn(`No wrapper for field ${fieldname}`); // eslint-disable-line no-console
 				wrapper = document.createElement("div");
 				root.appendChild(wrapper);
 			}
@@ -405,7 +409,7 @@ export class BlockEditorTool {
 			this.hydrate(root);
 			return root;
 		} catch (e) {
-			console.error(e);
+			console.error(e); // eslint-disable-line no-console
 			return document.createElement("div");
 		}
 	}

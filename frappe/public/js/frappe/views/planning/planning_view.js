@@ -64,7 +64,7 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 				},
 			})
 			.then((res) => {
-				const resources = this.calendar_settings.hasOwnProperty("excluded_resources")
+				const resources = Array.isArray(this.calendar_settings.excluded_resources)
 					? res.message.filter(
 							(r) => !this.calendar_settings.excluded_resources.includes(r.id)
 					  )
@@ -175,7 +175,9 @@ frappe.views.PlanningView = class PlanningView extends frappe.views.ListView {
 		});
 	}
 
-	get required_libs() {}
+	get required_libs() {
+		return false;
+	}
 
 	setup_dropdown_for_resources(resources) {
 		if (!this.list_sidebar || this.resource_section) return;
