@@ -1,9 +1,12 @@
 @import '../common/css_variables.scss';
+@import "../espresso/colors";
+@import "../espresso/spacing";
+@import "../espresso/typography";
+@import "../espresso/shadows";
+@import "../espresso/borders";
 
+// Deprecated but remove after all use is removed as well.
 :root {
-	--primary: #{$primary};
-	--primary-color: #{$primary};
-	--primary-light: #{$primary-light};
 	--light: #{$light};
 
 	--font-size-xs: #{$font-size-xs};

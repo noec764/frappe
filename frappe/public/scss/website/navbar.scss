@@ -1,14 +1,11 @@
 .navbar {
-	background: white;
-	box-shadow: inset 0px -1px 0px $shadow-inset;
-	padding-left: 0;
-	padding-right: 0;
+	padding: 0;
+	box-shadow: var(--shadow-inset);
 }
 
 @media (max-width: map-get($grid-breakpoints, "lg")) {
 	.navbar {
-		padding-left: 1rem;
-		padding-right: 1rem;
+		padding: 0 1rem;
 	}
 }
 

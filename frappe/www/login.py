@@ -53,7 +53,7 @@ def get_context(context):
 	if path:
 		context["signup_form_template"] = frappe.get_template(path).render()
 
-	context["custom_signup"] = False
+	context["custom_signup"] = ""
 	custom_signup_page = frappe.db.get_single_value("Website Settings", "custom_signup")
 	if custom_signup_page:
 		context["custom_signup"] = frappe.db.get_value("Web Form", custom_signup_page, "route")

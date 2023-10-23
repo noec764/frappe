@@ -1,7 +1,6 @@
 // login.js
 // don't remove this line (used in test)
 
-window.custom_signup = "{{ custom_signup }}";
 window.disable_signup = {{ disable_signup and "true" or "false" }};
 
 window.login = {};
@@ -161,8 +160,14 @@ login.login_with_email_link = function () {
 }
 
 login.signup = function () {
+	const custom_signup = {{ custom_signup |json }};
+	if (custom_signup) {
+		$(".for-login").toggle(false);
+		window.location.replace(`${custom_signup}?new=True`);
+		return;
+	}
+
 	login.reset_sections();
-	window.custom_signup === "False" ? $(".for-signup").toggle(true) : window.location = `${custom_signup}?new=True`;
 	$(".for-signup").toggle(true);
 	$("#signup_fullname").focus();
 }
