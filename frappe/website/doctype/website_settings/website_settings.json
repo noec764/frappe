@@ -480,8 +480,7 @@
    "fieldtype": "Link",
    "label": "Custom signup form",
    "options": "Web Form",
-   "read_only": 1,
-   "description": "Deprecated: This option will be removed in version 4. Use the 'signup_form_template' hook instead."
+   "description": "Must be a Web Form for DocType User containing all the required fields."
   }
  ],
  "icon": "fa fa-cog",

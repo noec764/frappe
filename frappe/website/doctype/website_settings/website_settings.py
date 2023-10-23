@@ -72,6 +72,37 @@ class WebsiteSettings(Document):
 		self.validate_home_page()
 		self.validate_google_settings()
 		self.validate_redirects()
+		self.validate_custom_signup()
+
+	def validate_custom_signup(self):
+		if not self.custom_signup:
+			return
+
+		webform = frappe.get_doc("Web Form", self.custom_signup)
+		if webform.doc_type != "User":
+			frappe.throw(
+				_("{0}: {1}").format(
+					_("Custom signup form"),
+					_("Must be a Web Form for DocType User containing all the required fields."),
+				)
+			)
+
+		# Check that the webform contains all the required fields from the User doctype
+		required_fields = frappe.get_meta("User").get("fields", {"reqd": 1})
+		required_fieldnames = [df.fieldname for df in required_fields]
+		webform_fieldnames = [df.fieldname for df in webform.web_form_fields]
+
+		missing_fields = set(required_fieldnames) - set(webform_fieldnames)
+		if missing_fields:
+			frappe.throw(
+				_("Custom signup form is missing the following required fields: {0}").format(
+					", ".join(missing_fields)
+				)
+			)
+
+		if bool(webform.published) == bool(self.disable_signup):
+			webform.set("published", not self.disable_signup)
+			webform.save()
 
 	def validate_home_page(self):
 		if frappe.flags.in_install:
