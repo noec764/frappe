@@ -123,17 +123,17 @@ frappe.search.utils = {
 			var parts = keywords.split(` ${__("in")} `);
 			frappe.boot.user.can_read.forEach(function (item) {
 				if (frappe.boot.user.can_search.includes(item)) {
-					var level = me.fuzzy_search(parts[1], item);
-					if (level) {
+					const search_result = me.fuzzy_search(parts[1], item, true);
+					if (search_result.score) {
 						out.push({
 							type: "In List",
 							label: __("Find {0} in {1}", [
 								__(parts[0]),
-								me.bolden_match_part(__(item), parts[1]),
+								search_result.marked_string,
 							]),
 							value: __("Find {0} in {1}", [__(parts[0]), __(item)]),
 							route_options: { name: ["like", "%" + parts[0] + "%"] },
-							index: 1 + level,
+							index: 1 + search_result.score,
 							route: ["List", item],
 						});
 					}
@@ -154,11 +154,12 @@ frappe.search.utils = {
 		if (validKeywords.includes(firstKeyword)) {
 			frappe.boot.user.can_create.forEach(function (item) {
 				const search = keywords.substring(firstKeyword.length).trim();
-				const level = me.fuzzy_search(search, item);
+				const search_result = me.fuzzy_search(search, item, true);
+				const level = search_result.score;
 				if (level) {
 					out.push({
 						type: "New",
-						label: __("New {0}", [me.bolden_match_part(__(item), search)]),
+						label: __("New {0}", [search_result.marked_string || __(item)]),
 						value: __("New {0}", [__(item)]),
 						index: 1 + level,
 						match: item,
@@ -172,17 +173,18 @@ frappe.search.utils = {
 		return out;
 	},
 
-	make_option(keywords, opts = {}) {
-		const missing = "type,route,match".split(",").filter((k) => !(k in opts));
+	make_option(opts = {}) {
+		const missing = "type,route,search_result,item".split(",").filter((k) => !(k in opts));
 		if (missing.length) {
 			throw new Error(`Missing required fields: ${missing.join(", ")}`);
 		}
 
-		const { type, route, match, level = 0, order = 0 } = opts;
+		const { type, route, item, search_result, order = 0 } = opts;
+		const { score, marked_string } = search_result ?? {};
 
 		// check to skip extra list in the text
 		// eg. Price List List should be only Price List
-		const skip_list = type === "List" && match.endsWith("List");
+		const skip_list = type === "List" && item.endsWith("List");
 
 		const add_type = opts.add_type ?? !skip_list;
 		let label_format = "{0} <span class='text-muted'>&middot; {1}</span>";
@@ -192,7 +194,7 @@ frappe.search.utils = {
 			label_format = "";
 		}
 
-		let label = this.bolden_match_part(__(match), keywords);
+		let label = marked_string || __(item);
 		if (add_type && type && label_format) {
 			label = __(label_format, [label, __(type)]);
 		}
@@ -200,9 +202,9 @@ frappe.search.utils = {
 		return {
 			type: type,
 			label: label,
-			value: match,
-			index: level + order,
-			match: match,
+			value: item,
+			index: score + order,
+			match: item,
 			route: route,
 		};
 	},
@@ -211,59 +213,70 @@ frappe.search.utils = {
 		const me = this;
 		const out = [];
 
-		let level, target;
-		const option = (type, route, order, opts = {}) => {
-			return me.make_option(keywords, {
-				type: type,
-				route: route,
-				match: target,
-				level: level,
-				order: order,
-				...opts,
-			});
-		};
-
 		frappe.boot.user.can_read.forEach(function (item) {
-			level = me.fuzzy_search(keywords, item);
-			if (level) {
-				target = item;
+			const search_result = me.fuzzy_search(keywords, item, true);
+			if (search_result.score) {
 				if (in_list(frappe.boot.single_types, item)) {
-					out.push(option("", ["Form", item, item], 0.05));
+					out.push(
+						me.make_option({
+							search_result,
+							item,
+							type: "",
+							route: ["Form", item, item],
+							order: 0.05,
+						})
+					);
 				} else if (frappe.boot.user.can_search.includes(item)) {
 					const expanded_results = !!frappe.boot.user.expanded_desk_search;
 
 					const default_view = frappe.boot.default_doctype_views?.[item] ?? "List";
 					if (default_view !== "List") {
 						out.push(
-							option(default_view, ["List", item, default_view], 0.05, {
+							me.make_option({
+								search_result,
+								item,
+								type: default_view,
+								route: ["List", item, default_view],
+								order: 0.05,
 								add_type: true,
 							})
 						);
 					} else {
 						out.push(
-							option("List", ["List", item], 0.05, { add_type: expanded_results })
+							me.make_option({
+								search_result,
+								item,
+								type: "List",
+								route: ["List", item],
+								order: 0.05,
+								add_type: expanded_results,
+							})
 						);
 					}
 
 					if (expanded_results) {
 						// include 'making new' option
 						if (in_list(frappe.boot.user.can_create, item)) {
-							const match = item;
 							out.push({
 								type: "New",
-								label: __("New {0}", [me.bolden_match_part(__(item), keywords)]),
+								label: __("New {0}", [search_result.marked_string || __(item)]),
 								value: __("New {0}", [__(item)]),
-								index: level + 0.015,
+								index: search_result.score + 0.015,
 								match: item,
 								onclick: function () {
-									frappe.new_doc(match, true);
+									frappe.new_doc(item, true);
 								},
 							});
 						}
 
 						if (frappe.model.can_get_report(item)) {
 							out.push(
-								option("Report", ["List", item, "Report"], 0.04, {
+								me.make_option({
+									search_result,
+									item,
+									type: "Report",
+									route: ["List", item, "Report"],
+									order: 0.04,
 									add_type: true,
 								})
 							);
@@ -280,19 +293,20 @@ frappe.search.utils = {
 		var out = [];
 		var route;
 		Object.keys(frappe.boot.user.all_reports).forEach(function (item) {
-			var level = me.fuzzy_search(keywords, item);
+			const search_result = me.fuzzy_search(keywords, item, true);
+			var level = search_result.score;
 			if (level > 0) {
 				var report = frappe.boot.user.all_reports[item];
 				if (report.report_type == "Report Builder")
 					route = ["List", report.ref_doctype, "Report", item];
 				else route = ["query-report", item];
 				out.push(
-					me.make_option(keywords, {
+					me.make_option({
+						search_result,
+						item,
 						type: "Report",
-						level: level,
 						route: route,
-						match: item,
-						format: !__(item).includes(__("Report")),
+						label_format: !__(item).includes(__("Report")),
 					})
 				);
 			}
@@ -309,12 +323,13 @@ frappe.search.utils = {
 			p.name = name;
 		});
 		Object.keys(this.pages).forEach(function (item) {
-			var level = me.fuzzy_search(keywords, item);
+			const search_result = me.fuzzy_search(keywords, item, true);
+			var level = search_result.score;
 			if (level) {
 				var page = me.pages[item];
 				out.push({
 					type: "Page",
-					label: __("Open {0}", [me.bolden_match_part(__(item), keywords)]),
+					label: __("Open {0}", [search_result.marked_string || __(item)]),
 					value: __("Open {0}", [__(item)]),
 					match: item,
 					index: level,
@@ -323,29 +338,32 @@ frappe.search.utils = {
 			}
 		});
 
-		var target = "Calendar";
-		if (keywords && me.fuzzy_search(keywords, __(target))) {
+		const cal = "Calendar"; // __("Calendar")
+		const search_result_calendar = keywords ? me.fuzzy_search(keywords, __(cal)) : null;
+		if (search_result_calendar?.score > 0) {
 			out.push({
-				type: "Calendar",
-				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
-				value: __("Open {0}", [__(target)]),
-				index: me.fuzzy_search(keywords, target),
-				match: target,
-				route: ["List", "Event", target],
+				type: cal,
+				label: __("Open {0}", [search_result_calendar.marked_string || __(cal)]),
+				value: __("Open {0}", [__(cal)]),
+				index: search_result_calendar.score,
+				match: cal,
+				route: ["List", "Event", cal],
 			});
 		}
 
-		target = "Email Inbox";
-		if (keywords && me.fuzzy_search(keywords, __(target))) {
+		const inb = "Email Inbox"; // __("Calendar")
+		const search_result_inbox = keywords ? me.fuzzy_search(keywords, __(inb)) : null;
+		if (search_result_inbox?.score > 0) {
 			out.push({
 				type: "Inbox",
-				label: __("Open {0}", [me.bolden_match_part(__(target), keywords)]),
-				value: __("Open {0}", [__(target)]),
-				index: me.fuzzy_search(keywords, target),
-				match: target,
+				label: __("Open {0}", [search_result_calendar.marked_string || __(cal)]),
+				value: __("Open {0}", [__(inb)]),
+				index: me.fuzzy_search(keywords, inb),
+				match: inb,
 				route: ["List", "Communication", "Inbox"],
 			});
 		}
+
 		return out;
 	},
 
@@ -353,11 +371,12 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.allowed_workspaces.forEach(function (item) {
-			var level = me.fuzzy_search(keywords, item.name);
+			const search_result = me.fuzzy_search(keywords, item.name, true);
+			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Workspace",
-					label: __("Open {0}", [me.bolden_match_part(__(item.name), keywords)]),
+					label: __("Open {0}", [search_result.marked_string || __(item.name)]),
 					value: __("Open {0}", [__(item.name)]),
 					index: level,
 					route: [frappe.router.slug(item.name)],
@@ -372,11 +391,12 @@ frappe.search.utils = {
 		var me = this;
 		var out = [];
 		frappe.boot.dashboards.forEach(function (item) {
-			var level = me.fuzzy_search(keywords, item.name);
+			const search_result = me.fuzzy_search(keywords, item.name, true);
+			var level = search_result.score;
 			if (level > 0) {
 				var ret = {
 					type: "Dashboard",
-					label: __("{0} Dashboard", [me.bolden_match_part(__(item.name), keywords)]),
+					label: __("{0} Dashboard", [search_result.marked_string || __(item.name)]),
 					value: __("{0} Dashboard", [__(item.name)]),
 					index: level,
 					route: ["dashboard-view", item.name],
@@ -439,13 +459,15 @@ frappe.search.utils = {
 						// Find remaining result_length and add field length to result_current_length
 						var remaining_length = result_max_length - result_current_length;
 						result_current_length += field_name.length + field_value.length + 2;
+						const search_result_name = me.fuzzy_search(keywords, field_name, true);
+						const search_result_value = me.fuzzy_search(keywords, field_value, true);
 						if (result_current_length < result_max_length) {
 							// We have room, push the entire field
 							field_text =
 								'<span class="field-name text-muted">' +
-								__(me.bolden_match_part(__(field_name), keywords)) +
+								search_result_name.marked_string +
 								": </span> " +
-								me.bolden_match_part(field_value, keywords);
+								search_result_value.marked_string;
 							if (fields.indexOf(field_text) === -1 && doc_name !== field_value) {
 								fields.push(field_text);
 							}
@@ -456,12 +478,12 @@ frappe.search.utils = {
 								remaining_length -= field_name.length;
 								field_text =
 									'<span class="field-name text-muted">' +
-									__(me.bolden_match_part(__(field_name)), keywords) +
+									search_result_name.marked_string +
 									": </span> ";
 								field_value = field_value.slice(0, remaining_length);
 								field_value =
 									field_value.slice(0, field_value.lastIndexOf(" ")) + " ...";
-								field_text += me.bolden_match_part(field_value, keywords);
+								field_text += search_result_value.marked_string;
 								fields.push(field_text);
 							} else {
 								// No room for even the field name, skip
@@ -614,11 +636,44 @@ frappe.search.utils = {
 		];
 	},
 
-	fuzzy_search: function (keywords, _item) {
-		keywords = keywords || "";
-		var item = __(_item || "");
-		var match = fuzzy_match(keywords, item);
-		return match[1];
+	fuzzy_search: function (keywords = "", _item = "", return_marked_string = false) {
+		const item = __(_item);
+
+		const [, score, matches] = fuzzy_match(keywords, item, return_marked_string);
+
+		if (!return_marked_string) {
+			return score;
+		}
+		if (score == 0) {
+			return { score, item };
+		}
+
+		// Create Boolean mask to mark matching indices in the item string
+		const matchArray = Array(item.length).fill(0);
+		matches.forEach((index) => (matchArray[index] = 1));
+
+		let marked_string = "";
+		let buffer = "";
+
+		// Clear the buffer and return marked matches.
+		const flushBuffer = () => {
+			if (!buffer) return "";
+			const temp = `<mark>${buffer}</mark>`;
+			buffer = "";
+			return temp;
+		};
+
+		matchArray.forEach((isMatch, index) => {
+			if (isMatch) {
+				buffer += item[index];
+			} else {
+				marked_string += flushBuffer();
+				marked_string += item[index];
+			}
+		});
+		marked_string += flushBuffer();
+
+		return { score, marked_string };
 	},
 
 	bolden_match_part(str, subseq) {
@@ -661,10 +716,11 @@ frappe.search.utils = {
 			const target = item.label.toLowerCase();
 			const txt = keywords.toLowerCase();
 			if (txt === target || target.indexOf(txt) === 0) {
+				const search_result = this.fuzzy_search(txt, target, true);
 				results.push({
 					type: "Executable",
-					value: this.bolden_match_part(__(item.label), txt),
-					index: this.fuzzy_search(txt, target),
+					value: search_result.marked_string,
+					index: search_result.score,
 					match: item.label,
 					onclick: () => item.action.apply(this, item.args),
 				});
@@ -683,6 +739,27 @@ frappe.search.utils = {
 			args: args,
 		});
 	},
-
+	get_marketplace_apps: function (keywords) {
+		var me = this;
+		var out = [];
+		/*
+		frappe.boot.marketplace_apps.forEach(function (item) {
+			const search_result = me.fuzzy_search(keywords, item.title, true);
+			if (search_result.score > 0) {
+				var ret = {
+					label: __("Install {0} from Marketplace", [search_result.marked_string]),
+					value: __("Install {0} from Marketplace", [__(item.title)]),
+					index: search_result.score * 0.8,
+					route: [
+						`https://frappecloud.com/${item.route}?utm_source=awesomebar`,
+						item.name,
+					],
+				};
+				out.push(ret);
+			}
+		});
+		*/
+		return out;
+	},
 	searchable_functions: [],
 };
