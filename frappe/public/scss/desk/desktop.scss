@@ -609,6 +609,9 @@ body {
 
 			.link-content {
 				flex: 1;
+				&:hover {
+					color: var(--invert-neutral);
+				}
 			}
 
 			.disabled-link {
