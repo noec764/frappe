@@ -14,7 +14,7 @@
 
 .grid-heading-row {
 	border-bottom: 1px solid var(--table-border-color);
-	color: var(--text-color);
+	color: var(--text-muted);
 	background-color: var(--subtle-fg);
 	@include get_textstyle("sm", "regular");
 	// height: 32px;
