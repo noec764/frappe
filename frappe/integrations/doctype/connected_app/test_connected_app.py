@@ -1,7 +1,5 @@
-# Copyright (c) 2021, Frappe Technologies and contributors
+# Copyright (c) 2019, Frappe Technologies and contributors
 # License: MIT. See LICENSE
-
-import unittest
 from urllib.parse import urljoin
 
 import requests
@@ -29,7 +27,7 @@ def get_user(usr, pwd):
 def get_connected_app():
 	doctype = "Connected App"
 	connected_app = frappe.new_doc(doctype)
-	connected_app.provider_name = "dodock"
+	connected_app.provider_name = "Dodock"
 	connected_app.scopes = []
 	connected_app.append("scopes", {"scope": "all"})
 	connected_app.insert()
@@ -50,7 +48,6 @@ def get_oauth_client():
 	return oauth_client
 
 
-@unittest.skip("Skipped in CI")
 class TestConnectedApp(FrappeTestCase):
 	def setUp(self):
 		"""Set up a Connected App that connects to our own oAuth provider.

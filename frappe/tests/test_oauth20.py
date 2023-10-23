@@ -1,7 +1,6 @@
 # Copyright (c) 2022, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 
-import unittest
 from typing import TYPE_CHECKING
 from urllib.parse import parse_qs, urljoin, urlparse
 
@@ -52,7 +51,6 @@ class FrappeRequestTestCase(FrappeTestCase):
 		return make_request(target=self.TEST_CLIENT.delete, args=(path,), kwargs=kwargs, site=self.site)
 
 
-@unittest.skip("Skipped in CI")
 class TestOAuth20(FrappeRequestTestCase):
 	site = frappe.local.site
 

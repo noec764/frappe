@@ -70,10 +70,11 @@ unittests:
     - /ci-utils/patch-procfile.sh v1
     - cp -r apps/frappe/test_sites/test_site sites/
     - bench setup requirements --dev
-    - bench start &> bench_start.log &
+    - bench start > bench_start.log &
     - bench build --app frappe &
     - build_pid=$!
     - bench --site test_site reinstall --yes --mariadb-root-password test_dodock
+    - bench --site test_site add-to-hosts
     - wait $build_pid
 
   script:
