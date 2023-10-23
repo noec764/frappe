@@ -246,12 +246,11 @@ Object.assign(frappe.utils, {
 			">": "&gt;",
 			'"': "&quot;",
 			"'": "&#39;",
-			"/": "&#x2F;",
 			"`": "&#x60;",
 			"=": "&#x3D;",
 		};
 
-		return String(txt).replace(/[&<>"'`=/]/g, (char) => escape_html_mapping[char] || char);
+		return String(txt).replace(/[&<>"'`=]/g, (char) => escape_html_mapping[char] || char);
 	},
 
 	unescape_html: function (txt) {
@@ -261,13 +260,12 @@ Object.assign(frappe.utils, {
 			"&gt;": ">",
 			"&quot;": '"',
 			"&#39;": "'",
-			"&#x2F;": "/",
 			"&#x60;": "`",
 			"&#x3D;": "=",
 		};
 
 		return String(txt).replace(
-			/&amp;|&lt;|&gt;|&quot;|&#39;|&#x2F;|&#x60;|&#x3D;/g,
+			/&amp;|&lt;|&gt;|&quot;|&#39;|&#x60;|&#x3D;/g,
 			(char) => unescape_html_mapping[char] || char
 		);
 	},
