@@ -438,6 +438,7 @@ ignore_links_on_delete = [
 	"Integration Request",
 	"Unhandled Email",
 	"Webhook Request Log",
+	"Workspace",
 ]
 
 # Request Hooks
