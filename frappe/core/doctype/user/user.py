@@ -216,7 +216,6 @@ class User(Document):
 		frappe.clear_cache(user=self.name)
 
 		now = frappe.flags.in_test or frappe.flags.in_install
-		print(f"self.send_password_notification('{self.__new_password}')")
 		self.send_password_notification(self.__new_password)
 		if self.flags.create_contact_immediately:
 			create_contact(user=self, ignore_mandatory=True, ignore_links=True)
