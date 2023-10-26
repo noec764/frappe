@@ -48,7 +48,7 @@ id="page-{{ name or route | e }}" data-path="{{ pathname | e }}"
 	{% if frappe.session.user != 'Guest' %}
 	<div class="dropdown logged-in sidebar-login-container" style="display: none">
 		{% set full_name = frappe.db.get_value("User", frappe.session.user, "full_name") %}
-		<button class="btn btn-default sidebar-user-pill" data-toggle="dropdown">
+		<button class="btn btn-lg btn-default sidebar-user-pill" data-toggle="dropdown">
 			<span class="user-image-wrapper"><!-- JS --></span>
 			<span class="sidebar-user-pill__fullname ellipsis">
 				{{ full_name }}
