@@ -1053,7 +1053,7 @@ Failed while amending subscription,رکنیت میں ترمیم کے دوران 
 FavIcon,ویب شبیہ,
 Feedback Request,آپ کی رائے گذارش,
 Fetch From,سے لے لو,
-Fetch If Empty,اگر خالی ہو تو بازیافت کریں۔,
+Fetch on Save if Empty,اگر خالی ہو تو بازیافت کریں۔,
 Fetch Images,تصاویر لاؤ,
 Fetch attached images from document,دستاویز سے منسلک تصاویر لے لو,
 "Field ""route"" is mandatory for Web Views",ویب مناظر کے لئے فیلڈ &quot;راستہ&quot; لازمی ہے,
@@ -1246,7 +1246,7 @@ If Checked workflow status will not override status in list view,چیک کئے �
 If Owner,مالک تو,
 "If a Role does not have access at Level 0, then higher levels are meaningless.",ایک کردار لیول 0 سے تک رسائی حاصل نہیں ہے، تو اعلی سطح معنی ہیں.,
 "If checked, all other workflows become inactive.",جانچ پڑتال تو، دیگر تمام workflows کے غیر فعال ہو.,
-"If checked, this field will be not overwritten based on Fetch From if a value already exists.",اگر جانچ پڑتال کی گئی ہے تو ، اس فیلڈ کو بازیافت منجانب کی بنیاد پر اوور رائٹ نہیں کیا جائے گا اگر کوئی قدر پہلے سے موجود ہے۔,
+"If unchecked, the value will always be re-fetched on save.",اگر جانچ پڑتال کی گئی ہے تو ، اس فیلڈ کو بازیافت منجانب کی بنیاد پر اوور رائٹ نہیں کیا جائے گا اگر کوئی قدر پہلے سے موجود ہے۔,
 "If checked, users will not see the Confirm Access dialog.",جانچ پڑتال کی تو صارفین تصدیق رسائی ڈائلاگ نہیں دیکھ سکیں گے.,
 "If disabled, this role will be removed from all users.",غیر فعال، اس کردار کے تمام صارفین کی طرف سے ہٹا دیا جائے گا.,
 "If enabled,  user can login from any IP Address using Two Factor Auth, this can also be set for all users in System Settings",اگر فعال ہے تو ، صارف دو فیکٹر اوتھ کو استعمال کرتے ہوئے کسی بھی IP ایڈریس سے لاگ ان ہوسکتا ہے ، یہ سسٹم سیٹنگ میں موجود تمام صارفین کے لئے بھی مرتب کیا جاسکتا ہے۔,
