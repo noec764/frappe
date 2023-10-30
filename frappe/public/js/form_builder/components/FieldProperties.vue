@@ -96,12 +96,15 @@ let docfield_df = computed(() => {
 				/>
 			</div>
 		</div>
+		<div class="empty-state" v-else>
+			<div>Select a field to edit its properties.</div>
+		</div>
 	</div>
 </template>
 
 <style lang="scss" scoped>
 .control-data {
-	height: calc(100vh - 250px);
+	height: calc(100vh - 205px);
 	overflow-y: auto;
 	padding: 8px;
 
@@ -115,6 +118,15 @@ let docfield_df = computed(() => {
 			background-color: var(--disabled-control-bg);
 			cursor: default;
 		}
+	}
+
+	.empty-state {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		text-align: center;
+		color: var(--disabled-text-color);
 	}
 }
 </style>
