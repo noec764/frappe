@@ -594,33 +594,6 @@ some_class_element.textContent = ""Nouveau contenu"";
 </ul>
 <p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
 
-<p>Les conditions doivent être rédigées en Python simple. Veuillez utiliser des des propriétés disponibles dans le formulaire seulement.</p>
-<p>Fonctions autorisées:
-</p><ul>
-<li>frappe.db.get_value</li>
-<li>frappe.db.get_list</li>
-<li>frappe.session</li>
-<li>frappe.utils.now_datetime</li>
-<li>frappe.utils.get_datetime</li>
-<li>frappe.utils.add_to_date</li>
-<li>frappe.utils.now</li>
-</ul>
-<p>Exemple: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>",
-"<pre><code>doc.grand_total &gt; 0</code></pre>
-
-<p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
-<p>Allowed functions:
-</p><ul>
-<li>frappe.db.get_value</li>
-<li>frappe.db.get_list</li>
-<li>frappe.session</li>
-<li>frappe.utils.now_datetime</li>
-<li>frappe.utils.get_datetime</li>
-<li>frappe.utils.add_to_date</li>
-<li>frappe.utils.now</li>
-</ul>
-<p>Example: </p><pre><code>doc.creation &gt; frappe.utils.add_to_date(frappe.utils.now_datetime(), days=-5, as_string=True, as_datetime=True) </code></pre><p></p>","<pre><code>doc.grand_total &gt; 0</code></pre>
-
 <p>Les conditions doivent être écrites en Python simple. Veuillez n'utilisez que les propriétés disponibles dans le formulaire.</p>
 <p>Fonctions autorisées:
 </p><ul>
@@ -1446,10 +1419,13 @@ Cannot change user details in demo. Please signup for a new account at https://d
 Cannot change user details in demo. Please signup for a new account at https://erpnext.com,Vous ne pouvez pas changer les détails utilisateur dans la démo. Veuillez créer un nouveau compte sur https://erpnext.com,
 Cannot connect: {0},Impossible de se connecter : {0},
 Cannot create a {0} against a child document: {1},Création impossible d'un {0} pour un document enfant: {1},
+Cannot create private workspace of other users,Vous ne pouvez pas créer des espaces de travail privés pour d'autres utilisateurs,
 Cannot create standard Web Template,Création du modèle de bloc web impossible,
 Cannot delete Home and Attachments folders,Impossible de supprimer les dossiers d'accueil et les pièces jointes,
 Cannot delete file as it belongs to {0} {1} for which you do not have permissions,Impossible de supprimer le fichier parce qu'il appartient à {0} {1} pour lequel vous n'avez pas d'autorisations,
 Cannot delete or cancel because {0} {1} is linked with {2} {3} {4},"Impossible de supprimer ou d'annuler, car {0} {1} est associé à {2} {3} {4}",
+Cannot delete private workspace of other users,Vous ne pouvez pas supprimer des espaces de travail privés appartenant à d'autres utilisateurs,
+Cannot delete public workspace without Workspace Manager role,Impossible de supprimer un espace de travail public sans le rôle de Gestionnaire d'espace de travail,
 Cannot delete standard action. You can hide it if you want,Vous ne pouvez pas supprimer une action standard. Vous pouvez la cacher si vous le souhaitez.,
 Cannot delete standard document state.,Impossible de supprimer l'état de document standard.,
 Cannot delete standard field <strong>{0}</strong>. You can hide it instead.,Il n'est pas possible de supprimer le champ standard <strong>{0}</strong>. Vous pouvez le cacher à la place.,
@@ -1820,6 +1796,7 @@ Context Script,Script de contexte,
 Context,Contexte,
 Continue,Continuer,
 Controller method get_razorpay_order missing,La méthode de contrôleur get_razorpay_order est manquante,
+"Controls whether new users can sign up using this Social Login Key. If unset, Website Settings is respected. ","Contôle si les nouveaux utilisateurs peuvent s'inscrire via cette clé de connexion sociale. Si non cochée, les paramètres de site web seront respectés.",
 Conversation Tones,Tonalités de conversation,
 Convert to,Convertir en,
 Copied to clipboard.,Copié dans le presse-papier,
@@ -1974,6 +1951,7 @@ Custom Tags,Étiquettes personnalisées,
 Custom Theme URL,URL du thème personnalisé,
 Custom Theme,Thème personnalisé,
 Custom Translations,Traductions Personnalisées,
+Custom signup form is missing the following required fields: {0},Le formulaire d'inscription personnalisé doit obligatoirement contenir les champs suivants: {O},
 Custom signup form,Formulaire d'inscription personnalisé,
 Custom signup webform,Formulaire web d'inscription personnalisé,
 Custom,Personnaliser,Verb
@@ -2223,9 +2201,9 @@ Disable Prepared Report,Désactiver les rapports préparés,
 Disable Report,Désactiver le rapport,
 Disable SMTP server authentication,Désactiver l'authentification sur le server SMTP,
 Disable Sidebar Stats,Désactiver les statistiques de la barre latérale,
-Disable Signups on site. New users will have to be manually registered by system managers.,Ne pas autoriser les inscriptions sur le site. Les nouveaux utilisateurs devront être enregistrés manuellement par un responsable système.,
 Disable Signup for your site,Désactiver les inscriptions sur votre site,
 Disable Signup,Désactiver les inscriptions,
+Disable Signups on site. New users will have to be manually registered by system managers.,Ne pas autoriser les inscriptions sur le site. Les nouveaux utilisateurs devront être enregistrés manuellement par un responsable système.,
 Disable Standard Email Footer,Désactiver le Pied de Page d'Email Standard,
 Disable System Update Notification,Désactiver la notification de mise à jour du système,
 Disable User Customization,Désactiver les personnalisations des utilisateurs,
@@ -2821,9 +2799,11 @@ Failed to export python type hints,Erreur lors de l'export des types Python,
 Failed to generate names from the series,Erreur lors de la génération des nom avec ce préfixe,
 Failed to generate preview of series,Erreur lors de la génération de la prévisualisation de la série,
 Failed to get method for command {0} with {1},Échec de l'obtention de la méthode pour la commande {0} avec {1},
+Failed to get method {0} with {1},L'éxecution de la méthode {0} a déclenché l'erreur suivante: {1},
 Failed to import dashboard fixtures for module {module},Echec de l'import des tableaux de bord pré-configurés pour le module {module},
 "Failed to import virtual doctype {}, is controller file present?",Erreur lors de l'import du type de document virtuel {}. Est-ce qu'un fichier de contrôleur est présent ?,
 Failed to send Notification,Échec de l'envoi de la notification,
+Failed to send email with subject:,Erreur lors de l'envoi du mail avec le sujet:,
 Failed to send newsletter,Echec de l'envoi de la newsletter,
 Failed to send notification email,Échec de l'envoi de l'email de notification,
 Failed to send {0} Auto Email Report,Erreur lors de l'envoi de l'email de rapport automatique {0},
@@ -2853,9 +2833,9 @@ Feedback,Retour d'expérience,
 Fees,Frais,
 Female,Féminin,
 Fetch From,Récupérer depuis le champ,
-Fetch on Save if Empty,Récupérer uniquement si vide,
 Fetch Images,Chercher des images,
 Fetch attached images from document,Récupère les images jointes du document,
+Fetch on Save if Empty,Récupérer uniquement si vide,
 Fetch only if value is not set,Récupérer uniquement si la valeur n'est pas définie,
 Fetching default Global Search documents.,Récupération des documents par défaut de la recherche globale.,
 Fetching posts...,Récupération des publications...,
@@ -3409,7 +3389,6 @@ If Owner,Si Responsable,
 "If a Role does not have access at Level 0, then higher levels are meaningless.","Si un Rôle n'a pas accès au niveau 0, les niveaux plus élevés n'ont pas de sens.",
 "If checked, all other workflows become inactive.","Si coché, tous les autres flux de production deviennent inactifs.",
 "If checked, negative numeric values of Currency, Quantity or Count would be shown as positive","Si coché, les valeurs numériques négatives de devise, quantité ou décompte seront affichées comme positives",
-"If unchecked, the value will always be re-fetched on save.","Si non cochée, la valeur sera mise à jour à chaque sauvegarde du document.",
 "If checked, users will not see the Confirm Access dialog.","Si coché, les utilisateurs ne verront pas la boîte de dialogue de confirmation d'accès.",
 "If disabled, this role will be removed from all users.","Si désactivé, ce rôle sera retiré de tous les utilisateurs.",
 "If enabled,  user can login from any IP Address using Two Factor Auth, this can also be set for all users in System Settings",Si activé l'utilisateur peut se connecter depuis n'importe quelle adresse IP en utilisant l'authentification à double facteur. Cette option peut être activée pour tous les utilisateurs depuis les paramètres système.,
@@ -3440,6 +3419,7 @@ If the document has different field names on the Producer and Consumer's end che
 "If these instructions where not helpful, please add in your suggestions on GitHub Issues.","Si ces instructions n'étaient pas utiles, veuillez ajouter vos suggestions dans les Questions GitHub.",
 If this is checked the documents will have the same name as they have on the Event Producer's site,"Si cette case est cochée, les documents auront le même nom que sur le site du producteur d'événements.",
 "If this is checked, rows with valid data will be imported and invalid rows will be dumped into a new file for you to import later.","Si cette case est cochée, les lignes contenant des données valides seront importées et les lignes non valides seront enregistrées dans un nouveau fichier que vous pourrez importer ultérieurement.",
+"If unchecked, the value will always be re-fetched on save.","Si non cochée, la valeur sera mise à jour à chaque sauvegarde du document.",
 If user is the owner,Si l'utilisateur est le créateur,
 "If you are updating, please select ""Overwrite"" else existing rows will not be deleted.","Si vous mettez à jour, veuillez sélectionner ""Écraser"" sinon les lignes déjà existantes ne seront pas supprimées.",
 If you are updating/overwriting already created records.,Si vous mettez à jour / écrasez des enregistrements déjà créés.,
@@ -3589,6 +3569,7 @@ Insert Style,Insérer du style,
 Insert new records,Insérer de nouveaux enregistrements,
 Insert,Insérer,
 Install Applications.,Installer des applications.,
+Install {0} from Marketplace,Installez {0} depuis la Marketplace,
 Installed Application,Application installée,
 Installed Applications,Applications installées,
 Installed Apps,Applications installées,
@@ -4326,8 +4307,8 @@ Ms,Mme,s
 Ms,Me,
 Multiple root nodes not allowed.,Plusieurs nœuds racines non autorisés.,
 Multiplier Field,Champ multiplicateur,
-Must be a publicly accessible Google Sheets URL,Doit être une adresse URL Google Sheets accessible publiquement,
 Must be a Web Form for DocType User containing all the required fields.,Doit être un Formulaire Web pour le type de document Utilisateur contenant tous les champs requis.,
+Must be a publicly accessible Google Sheets URL,Doit être une adresse URL Google Sheets accessible publiquement,
 "Must be enclosed in '()' and include '{0}', which is a placeholder for the user/login name. i.e. (&(objectclass=user)(uid={0}))","Doit être entouré de '()' et inclure '{0}', qui est un espace réservé pour le nom d'utilisateur/login, c'est-à-dire (&(objectclass=user)(uid={0})))",
 "Must be of type ""Attach Image""","Doit être de type ""Joindre une image""",
 Must have report permission to access this report.,Doit avoir l'autorisation d'accéder aux rapport dont celui-ci.,
@@ -4380,6 +4361,7 @@ Navigate list up,Naviguer vers le haut de la liste,Description of a list view sh
 Navigate list up,Naviguer vers le haut de la liste,
 Navigation Settings,Paramètres de navigation,
 Need Help?,Besoin d'aide ?,
+Need Workspace Manager role to edit private workspace of other users,Vous devez avoir le rôle de Gestionnaire d'espace de travail pour modifier les espaces de travail privés appartenant à d'autres utilisateurs,
 Need Workspace Manager role to hide/unhide public workspaces,Vous devez avoir le rôle de Gestionnaire d'espace de travail pour cacher/afficher des espaces de travail publics,
 Negative Value,Valeur négative,
 Nested set error. Please contact the Administrator.,Erreur d'ensemble imbriqué. Veuillez contacter l'Administrateur.,
@@ -6352,6 +6334,7 @@ Sidebar,Barre latérale,
 Sign Up is disabled,L'inscription est désactivée,
 Sign Up,S'inscrire,
 Sign up,S'inscrire,
+Sign ups,Inscriptions,
 Signature,Signature,
 Signup Disabled,Inscription désactivée,
 Signup,Inscription,
@@ -6877,13 +6860,6 @@ This event is not publicly available,Cet événement n'est pas public,
 				Please contact your system manager to enable this by installing pycups!","Cette option ne peut pas être utilisée car certaines dépendances ne sont pas installées.
 				Veuillez contacter votre responsable système pour installer pycups!",
 This feature is brand new and still experimental,Cette fonctionnalité est toute nouvelle et encore expérimentale,
-"This field will appear only if the fieldname defined here has value OR the rules are true (examples):
-myfield
-eval:doc.myfield=='My Value'
-eval:doc.age&gt;18","Ce champ apparaîtra seulement si le champ défini ici a une valeur OU si les règles sont vraies (exemples):
-myfield
-eval:doc.myfield=='Ma Valeur'
-eval:doc.age&gt;18",
 "This field will appear only if the fieldname defined here has value OR the rules are true (examples):
 myfield
 eval:doc.myfield=='My Value'
