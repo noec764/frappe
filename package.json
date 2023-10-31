@@ -1,5 +1,5 @@
 {
- "name": "dodock",
+ "name": "frappe-framework",
  "scripts": {
   "build": "node esbuild",
   "production": "node esbuild --production",
@@ -8,40 +8,22 @@
  },
  "repository": {
   "type": "git",
-  "url": "git+https://gitlab.com/dokos/dodock.git"
+  "url": "git+https://github.com/frappe/frappe.git"
  },
- "author": "Dokos SAS",
+ "author": "Frappe Technologies Pvt. Ltd.",
  "license": "MIT",
  "bugs": {
-  "url": "https://gitlab.com/dokos/dokos/issues"
+  "url": "https://github.com/frappe/frappe/issues"
  },
  "engines": {
   "node": ">=18"
  },
- "homepage": "https://dokos.io",
+ "homepage": "https://frappeframework.com",
  "dependencies": {
-  "@editorjs/delimiter": "^1.3.0",
   "@editorjs/editorjs": "^2.26.3",
-  "@editorjs/header": "^2.7.0",
-  "@editorjs/image": "^2.8.1",
-  "@editorjs/inline-code": "^1.4.0",
-  "@editorjs/list": "^1.8.0",
-  "@editorjs/marker": "^1.3.0",
-  "@editorjs/paragraph": "^2.9.0",
-  "@editorjs/raw": "^2.4.0",
-  "@editorjs/table": "^2.2.1",
-  "@editorjs/underline": "^1.1.0",
   "@frappe/esbuild-plugin-postcss2": "^0.1.3",
-  "@fullcalendar/adaptive": "^6.1.5",
-  "@fullcalendar/core": "^6.1.5",
-  "@fullcalendar/daygrid": "^6.1.5",
-  "@fullcalendar/interaction": "^6.1.5",
-  "@fullcalendar/list": "^6.1.5",
-  "@fullcalendar/resource": "^6.1.5",
-  "@fullcalendar/resource-timegrid": "^6.1.5",
-  "@fullcalendar/resource-timeline": "^6.1.5",
-  "@fullcalendar/timegrid": "^6.1.5",
-  "@popperjs/core": "^2.11.8",
+  "@headlessui/vue": "^1.7.16",
+  "@popperjs/core": "^2.11.2",
   "@redis/client": "^1.5.8",
   "@vue-flow/background": "^1.1.0",
   "@vue-flow/core": "^1.16.2",
@@ -66,7 +48,6 @@
   "frappe-charts": "2.0.0-rc22",
   "frappe-datatable": "^1.17.2",
   "frappe-gantt": "^0.6.0",
-  "hex-to-rgba": "^2.0.1",
   "highlight.js": "^10.4.1",
   "html5-qrcode": "^2.3.8",
   "jquery": "3.7.0",
@@ -88,12 +69,10 @@
   "rtlcss": "^4.0.0",
   "sass": "^1.63.0",
   "showdown": "^2.1.0",
-  "smoothscroll-polyfill": "^0.4.4",
   "socket.io": "^4.7.1",
   "socket.io-client": "^4.7.1",
   "sortablejs": "^1.15.0",
   "superagent": "^8.0.0",
-  "tabulator-tables": "^5.5.1",
   "touch": "^3.1.0",
   "vue": "^3.3.0",
   "vue-router": "^4.1.5",
