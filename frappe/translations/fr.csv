@@ -579,6 +579,34 @@ let some_class_element = root_element.querySelector('.some-class');
 some_class_element.textContent = ""Nouveau contenu"";
 </code></pre>",
 "<p>Your OTP secret on {0} has been reset. If you did not perform this reset and did not request it, please contact your System Administrator immediately.</p>","<p>Votre secret OTP sur {0} a été réinitialisé. Si vous n'avez pas effectué cette réinitialisation et que vous ne l'avez pas demandée, veuillez contacter immédiatement votre administrateur système.</p>",
+"<pre>*  *  *  *  *
+┬  ┬  ┬  ┬  ┬
+│  │  │  │  │
+│  │  │  │  └ day of week (0 - 6) (0 is Sunday)
+│  │  │  └───── month (1 - 12)
+│  │  └────────── day of month (1 - 31)
+│  └─────────────── hour (0 - 23)
+└──────────────────── minute (0 - 59)
+
+---
+
+* - Any value
+/ - Step values
+</pre>
+","<pre>*  *  *  *  *
+┬  ┬  ┬  ┬  ┬
+│  │  │  │  │
+│  │  │  │  └ jour de la semaine (0 - 6) (0 est dimanche)
+│  │  │  └───── mois (1 - 12)
+│  │  └────────── jour du mois (1 - 31)
+│  └─────────────── heure (0 - 23)
+└──────────────────── minute (0 - 59)
+
+---
+
+* - Toutes les valeurs
+/ - Valeur de pas
+</pre>",
 "<pre><code>doc.grand_total &gt; 0</code></pre>
 
 <p>Conditions should be written in simple Python. Please use properties available in the form only.</p>
@@ -4323,6 +4351,7 @@ My Settings,Mes paramètres,
 My Workspaces,Mes espaces de travail,
 MyISAM,MyISAM,
 NOTE: Avoid making changes to the states & transitions. It will not be reflected in the Workflow Builder.,NOTE: Veuillez éviter de modifier les états & transitions. Les changements ne seront pas reflétés dans l'éditeur de flux de travail.,
+"NOTE: If you add states or transitions in the table, it will be reflected in the Workflow Builder but you will have to position them manually. Also Workflow Builder is currently in <b>BETA</b>.","NOTE: Si vous ajoutez des états ou des transitions dans le tableau, ils s'afficheront dans l'éditeur de flux de travail mais vous devrez les positionner manuellement. L'éditeur de flux de travail est actuellement en <b>BETA</b>.",
 NOTE: This box is due for depreciation. Please re-setup LDAP to work with the newer settings,NOTE : Cette boîte va être dépréciée. Veuillez reconfigurer LDAP pour qu'il fonctionne avec les nouveaux paramètres.,
 Name (Doc Name),Nom (Nom du document),
 Name Case,Casse du nom,
