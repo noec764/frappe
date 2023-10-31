@@ -6,7 +6,7 @@ import frappe
 from frappe import _
 from frappe.core.doctype.access_log.access_log import make_access_log
 from frappe.translate import print_language
-from frappe.utils import scrub_urls
+from frappe.utils.deprecations import deprecated
 from frappe.utils.pdf import get_pdf
 
 no_cache = 1
@@ -113,15 +113,11 @@ def download_multi_pdf(
 	frappe.local.response.type = "pdf"
 
 
-def read_multi_pdf(output):
-	# Get the content of the merged pdf files
-	fname = os.path.join("/tmp", f"frappe-pdf-{frappe.generate_hash()}.pdf")
-	output.write(open(fname, "wb"))
-
-	with open(fname, "rb") as fileobj:
-		filedata = fileobj.read()
-
-	return filedata
+@deprecated
+def read_multi_pdf(output: PdfWriter) -> bytes:
+	with BytesIO() as merged_pdf:
+		output.write(merged_pdf)
+		return merged_pdf.getvalue()
 
 
 @frappe.whitelist(allow_guest=True)
