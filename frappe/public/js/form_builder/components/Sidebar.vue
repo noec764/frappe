@@ -127,7 +127,7 @@ function resize(e) {
 .default-state {
 	display: flex;
 	flex-direction: column;
-	height: calc(100vh - 166px);
+	height: calc(100vh - 163px);
 
 	.actions {
 		padding: 5px;
