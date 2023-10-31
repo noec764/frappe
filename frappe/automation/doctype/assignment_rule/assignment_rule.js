@@ -24,6 +24,7 @@ frappe.ui.form.on("Assignment Rule", {
 	},
 
 	setup_assignment_days_buttons: function (frm) {
+		// Keep for translations: __("Weekends") __("Weekdays") __("All Days")
 		const labels = ["Weekends", "Weekdays", "All Days"];
 		let get_days = (label) => {
 			const weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -35,15 +36,12 @@ frappe.ui.form.on("Assignment Rule", {
 			}[label];
 		};
 
-		let set_days = (e) => {
-			frm.clear_table("assignment_days");
-			const label = $(e.currentTarget).text();
-			get_days(label).forEach((day) => frm.add_child("assignment_days", { day: day }));
-			frm.refresh_field("assignment_days");
-		};
-
 		labels.forEach((label) =>
-			frm.fields_dict["assignment_days"].grid.add_custom_button(label, set_days, "top")
+			frm.fields_dict["assignment_days"].grid.add_custom_button(__(label), (label) => {
+				frm.clear_table("assignment_days");
+				get_days(label).forEach((day) => frm.add_child("assignment_days", { day: day }));
+				frm.refresh_field("assignment_days");
+			}, "top")
 		);
 	},
 
