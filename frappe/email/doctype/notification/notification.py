@@ -352,7 +352,7 @@ def get_context(context):
 	def send_sms(self, doc, context):
 		send_sms(
 			receiver_list=self.get_receiver_list(doc, context),
-			msg=self.render(context),
+			msg=frappe.utils.strip_html_tags(frappe.render_template(self.message, context)),
 		)
 
 	def get_list_of_recipients(self, doc, context):
