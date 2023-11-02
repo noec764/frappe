@@ -143,9 +143,10 @@
 			display: inline-block;
 		}
 
-		// .modified {
-		// 	margin-right: var(--margin-sm);
-		// }
+		.modified {
+			margin-right: var(--margin-sm);
+			min-width: 1.5rem;
+		}
 
 		.comment-count {
 			min-width: 35px;
