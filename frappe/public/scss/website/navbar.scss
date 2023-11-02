@@ -1,6 +1,23 @@
 .navbar {
 	padding: 0;
 	box-shadow: var(--shadow-inset);
+	.navbar-nav {
+		align-items: center;
+		.nav-item {
+			height: var(--navbar-height);
+			display: flex;
+			align-items: center;
+
+			&.active {
+				border-bottom: 1px solid var(--primary);
+			}
+
+			.nav-link {
+				vertical-align: middle;
+				line-height: 1;
+			}
+		}
+	}
 }
 
 @media (max-width: map-get($grid-breakpoints, "lg")) {
@@ -63,7 +80,7 @@
 	img {
 		display: inline-block;
 		max-width: 150px;
-		max-height: 45px;
+		max-height: 32px;
 	}
 }
 
@@ -115,6 +132,19 @@
 	}
 }
 
-.navbar-nav {
-	align-items: center;
+.nav-link.nav-avatar {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+.logged-in {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	.nav-link {
+		max-width: 200px;
+		@extend .ellipsis;
+		max-width: 100%;
+		vertical-align: middle;
+	}
 }
