@@ -13,6 +13,15 @@ $sidebar-dark: change-color(adjust-color($primary, $hue: -10, $saturation: -20%)
 @import "../espresso/spacing";
 @import "../espresso/borders";
 
+
+$body-color: $gray-700 !default;
+$text-muted: $gray-600 !default;
+$border-color: $gray-300 !default;
+$headings-color: $gray-900 !default;
+$breadcrumb-bg: transparent !default;
+$navbar-bg: white !default;
+$navbar-height: 48px;
+
 $container-max-widths: (
 	sm: 540px,
 	md: 840px,
