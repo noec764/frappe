@@ -431,33 +431,31 @@ body[data-route^="Module"] .main-menu {
 	max-width: 100%;
 
 	.data-pill {
+		@include get_textstyle("sm", "regular");
 		justify-content: space-between;
-		background-color: var(--fg-color); // @dokos
 		cursor: default !important; // not interactable
 		box-shadow: none;
-		border-radius: var(--border-radius-full);
-		@include get_textstyle("xs", "medium");
-
+		line-height: 1;
 		height: unset;
-		padding: var(--padding-xs) 2px var(--padding-xs) var(--padding-sm);
 	}
 }
+
+.form-tag-row {
+	.data-pill {
+		background-color: var(--fg-color); // @dokos
+		border-radius: var(--border-radius-full); // @dokos
+		padding: var(--padding-xs) 2px var(--padding-xs) var(--padding-sm);
+		border: 1px solid var(--border-color);
+	}
+}
+
 .attachment-row {
 	.data-pill {
 		background-color: unset;
 		box-shadow: none;
-		padding: 0 var(--padding-xs) 0 var(--padding-md);
+		padding: var(--padding-xs) 0px var(--padding-xs) var(--padding-sm) !important;
 	}
 }
-
-// .attachment-row {
-// 	.data-pill {
-// 		background-color: unset;
-// 		box-shadow: none;
-// 		padding: 0;
-// 		padding-left: var(--padding-md);
-// 	}
-// }
 
 .form-tag-row {
 	margin-right: var(--margin-xs);
