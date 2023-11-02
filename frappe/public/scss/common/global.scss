@@ -4,6 +4,7 @@
 
 html, body {
 	min-height: 100%;
+	font-family: var(--font-stack);
 	font-variation-settings: "opsz" 24;
 	font-feature-settings: "cv02", "cv03", "cv04", "cv05", "cv07", "cv10";
 	// font-variant-numeric: tabular-nums;
