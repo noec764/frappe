@@ -41,6 +41,7 @@
   "@fullcalendar/resource-timegrid": "^6.1.5",
   "@fullcalendar/resource-timeline": "^6.1.5",
   "@fullcalendar/timegrid": "^6.1.5",
+  "@headlessui/vue": "^1.7.16",
   "@popperjs/core": "^2.11.8",
   "@redis/client": "^1.5.8",
   "@vue-flow/background": "^1.1.0",
