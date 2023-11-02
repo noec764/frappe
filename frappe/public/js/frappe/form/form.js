@@ -2073,6 +2073,14 @@ frappe.ui.form.Form = class FrappeForm {
 		}
 		this.active_tab_map[this.docname] = tab;
 
+		// @dokos
+		const new_hash = (tab.df?.fieldname ?? "").replace("__details", "");
+		const url = new URL(window.location.href);
+		url.hash = new_hash;
+		if (url.href !== window.location.href) {
+			history.replaceState(null, null, url);
+		}
+
 		this.script_manager.trigger("on_tab_change");
 	}
 
