@@ -1,5 +1,6 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
+
 import os
 import shutil
 
@@ -32,7 +33,6 @@ class Page(Document):
 		system_page: DF.Check
 		title: DF.Data | None
 	# end: auto-generated types
-
 	def autoname(self):
 		"""
 		Creates a url friendly name for this page.
@@ -104,8 +104,18 @@ class Page(Document):
 		return d
 
 	def on_trash(self):
+		if not frappe.conf.developer_mode:
+			frappe.throw(_("Deletion of this document is only permitted in developer mode."))
+
 		delete_custom_role("page", self.name)
-		delete_folder_with_contents(self)
+		frappe.db.after_commit(self.delete_folder_with_contents)
+
+	def delete_folder_with_contents(self):
+		module_path = get_module_path(self.module)
+		dir_path = os.path.join(module_path, "page", frappe.scrub(self.name))
+
+		if os.path.exists(dir_path):
+			shutil.rmtree(dir_path, ignore_errors=True)
 
 	def is_permitted(self):
 		"""Returns true if Has Role is not set or the user is allowed."""
@@ -160,9 +170,7 @@ class Page(Document):
 						try:
 							out = frappe.get_attr(
 								"{app}.{module}.page.{page}.{page}.get_context".format(
-									app=frappe.local.module_app[scrub(self.module)],
-									module=scrub(self.module),
-									page=page_name,
+									app=frappe.local.module_app[scrub(self.module)], module=scrub(self.module), page=page_name
 								)
 							)(context)
 
@@ -192,14 +200,3 @@ def delete_custom_role(field, docname):
 	name = frappe.db.get_value("Custom Role", {field: docname}, "name")
 	if name:
 		frappe.delete_doc("Custom Role", name)
-
-
-def delete_folder_with_contents(self):
-	if frappe.conf.developer_mode:
-		module_path = get_module_path(self.module)
-		dir_path = os.path.join(module_path, "page", frappe.scrub(self.name))
-
-		if os.path.exists(dir_path):
-			shutil.rmtree(dir_path, ignore_errors=True)
-	else:
-		frappe.throw(_("Deletion of this document is only permitted in developer mode."))
