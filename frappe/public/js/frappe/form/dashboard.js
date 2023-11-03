@@ -498,6 +498,8 @@ frappe.ui.form.Dashboard = class FormDashboard {
 				"data-name": docname,
 				"data-doctype": doctype,
 			});
+		} else {
+			$link.find("a").removeAttr("href data-name data-doctype");
 		}
 	}
 
