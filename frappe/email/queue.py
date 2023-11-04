@@ -14,10 +14,6 @@ EMAIL_QUEUE_BATCH_FAILURE_THRESHOLD_PERCENT = 0.33
 EMAIL_QUEUE_BATCH_FAILURE_THRESHOLD_COUNT = 10
 
 
-class EmailLimitCrossedError(frappe.ValidationError):
-	pass
-
-
 def get_emails_sent_this_month(email_account=None):
 	"""Get count of emails sent from a specific email account.
 	:param email_account: name of the email account used to send mail
