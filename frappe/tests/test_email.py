@@ -55,7 +55,7 @@ class TestEmail(FrappeTestCase):
 		self.test_email_queue(send_after=1)
 		from frappe.email.queue import flush
 
-		flush(from_test=True)
+		flush()
 		email_queue = frappe.db.sql(
 			"""select name from `tabEmail Queue` where status='Sent'""", as_dict=1
 		)
@@ -66,7 +66,7 @@ class TestEmail(FrappeTestCase):
 		self.test_email_queue()
 		from frappe.email.queue import flush
 
-		flush(from_test=True)
+		flush()
 		email_queue = frappe.db.sql(
 			"""select name from `tabEmail Queue` where status='Sent'""", as_dict=1
 		)
