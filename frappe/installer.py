@@ -903,6 +903,6 @@ def make_check_frappe_version(name):
 
 		frappe_version = Version(__version__)
 		if (frappe_version.major or 0) < 4:
-			raise SystemExit(f'{name} requires Dodock version 4 or above')
+			raise SystemExit(f'{frappe.unscrub(name)} requires Dodock version 4 or above')
 
 	return _check_frappe_version()
