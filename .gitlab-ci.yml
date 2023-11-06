@@ -59,6 +59,8 @@ unittests:
       alias: redis_cache
     - name: redis
       alias: redis_socketio
+    - name: rnwood/smtp4dev
+      alias: smtp4dev
 
   variables:
     MYSQL_DATABASE: "test_dodock"
