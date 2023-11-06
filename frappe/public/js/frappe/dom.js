@@ -32,54 +32,49 @@ frappe.dom = {
 		// execute the script globally
 		document.getElementsByTagName("head")[0].appendChild(el);
 	},
+
 	/**
 	 * Remove script and style tags from HTML
 	 * @param {string} txt Unsafe HTML
 	 * @returns {string} Still unsafe HTML
 	 */
-	remove_script_and_style(txt, opts) {
-		if (!txt || !txt.includes("<")) {
-			// no evil tags found, skip the DOM method entirely!
+	remove_script_and_style: function (txt) {
+		const evil_tags = ["script", "style", "noscript", "title", "meta", "base", "head"];
+		const unsafe_tags = ["link"];
+
+		if (!this.unsafe_tags_regex) {
+			const evil_and_unsafe_tags = evil_tags.concat(unsafe_tags);
+			const regex_str = evil_and_unsafe_tags.map((t) => `<([\\s]*)${t}`).join("|");
+			this.unsafe_tags_regex = new RegExp(regex_str, "im");
+		}
+
+		// if no unsafe tags are present return as is to prevent unncessary expensive parsing
+		if (!txt || !this.unsafe_tags_regex.test(txt)) {
 			return txt;
 		}
 
-		const div = document.createElement("div");
-		div.innerHTML = txt;
+		const parser = new DOMParser();
+		const doc = parser.parseFromString(txt, "text/html");
+		const body = doc.body;
+		let found = !!doc.head.innerHTML;
 
-		let found = false;
-
-		// remove script and style tags
-		const evil_tags = ["script", "style", "noscript", "title", "meta", "base", "head"];
-		const elements = div.querySelectorAll(evil_tags.join(","));
-		for (const element of elements) {
-			element.remove();
-			found = true;
-		}
-
-		// We would like to remove all attributes such as onclick but it's not possible because of DocField.link_onclick
-		const allElements = div.getElementsByTagName("*");
-		for (const element of allElements) {
-			for (const attribute of element.attributes) {
-				if (attribute.name.startsWith("on")) {
-					if (element.tagName === "A" && attribute.name === "onclick") {
-						// keep onclick on links
-						continue;
-					}
-					element.removeAttribute(attribute.name);
-					found = true;
-				}
+		for (const tag of evil_tags) {
+			for (const element of body.getElementsByTagName(tag)) {
+				found = true;
+				element.parentNode.removeChild(element);
 			}
 		}
 
-		// remove links with rel="stylesheet"
-		const matches = div.querySelectorAll("link[rel=stylesheet],link[rel^=pre]");
-		for (const element of matches) {
-			element.remove();
-			found = true;
+		for (const element of body.getElementsByTagName("link")) {
+			const relation = element.getAttribute("rel");
+			if (relation && relation.toLowerCase().trim() === "stylesheet") {
+				found = true;
+				element.parentNode.removeChild(element);
+			}
 		}
 
 		if (found) {
-			return div.innerHTML;
+			return body.innerHTML;
 		} else {
 			// don't disturb
 			return txt;
