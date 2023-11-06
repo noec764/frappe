@@ -895,11 +895,11 @@ def monkey_patch_before_install_version_check(name):
 		module = frappe.get_module(name + ".install")
 		module.check_frappe_version = _check_frappe_version
 
-def _check_frappe_version():
+def _check_frappe_version(name):
 	# @dokos
 	from semantic_version import Version
 	from frappe import __version__
 
 	frappe_version = Version(__version__)
 	if (frappe_version.major or 0) < 4:
-		raise SystemExit('Gameplan requires Dodock version 4 or above')
+		raise SystemExit(f'{name} requires Dodock version 4 or above')
