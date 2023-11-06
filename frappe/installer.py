@@ -893,13 +893,16 @@ def monkey_patch_before_install_version_check(name):
 	"""
 	if name in ["print_designer", "gameplan"]:
 		module = frappe.get_module(name + ".install")
-		module.check_frappe_version = _check_frappe_version
+		module.check_frappe_version = make_check_frappe_version(name)
 
-def _check_frappe_version(name):
+def make_check_frappe_version(name):
 	# @dokos
-	from semantic_version import Version
-	from frappe import __version__
+	def _check_frappe_version():
+		from semantic_version import Version
+		from frappe import __version__
 
-	frappe_version = Version(__version__)
-	if (frappe_version.major or 0) < 4:
-		raise SystemExit(f'{name} requires Dodock version 4 or above')
+		frappe_version = Version(__version__)
+		if (frappe_version.major or 0) < 4:
+			raise SystemExit(f'{name} requires Dodock version 4 or above')
+
+	return _check_frappe_version()
