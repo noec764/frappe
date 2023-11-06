@@ -277,3 +277,4 @@ execute:frappe.delete_doc_if_exists("Workspace", "build", force=1)
 execute:frappe.delete_doc_if_exists("DocType", "Error Snapshot")
 frappe.patches.v15_0.move_event_cancelled_to_status
 frappe.patches.v15_0.set_file_type
+frappe.core.doctype.data_import.patches.remove_stale_docfields_from_legacy_version
