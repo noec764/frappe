@@ -1,5 +1,5 @@
 <div class="timeline-message-box" data-communication-type="{{ doc.communication_type }}">
-	<span class="flex justify-between m-1">
+	<span class="flex justify-between m-1 mb-3">
 		<span class="text-color flex">
 			{% if (doc.communication_type && doc.communication_type == "Automated Message") { %}
 				<span>
@@ -64,12 +64,12 @@
 			{% } %}
 			<div class="custom-actions"></div>
 			<div class="more-actions">
-				<a type="button" class="action-btn"
+				<button class="btn btn-link action-btn"
 					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<svg class="icon icon-md">
-						<use href="#icon-dot-horizontal"></use>
+					<svg class="es-icon es-line icon-md">
+						<use href="#es-line-dot-horizontal"></use>
 					</svg>
-				</a>
+				</button>
 				<ul class="dropdown-menu small">
 					<li>
 						<a class="dropdown-item" data-action="copy_link">{{ __("Copy Link") }}</a>

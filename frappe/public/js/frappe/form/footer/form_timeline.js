@@ -637,11 +637,12 @@ class FormTimeline extends BaseTimeline {
 		let edit_button = $();
 		let current_user = frappe.session.user;
 		if (["Administrator", doc.owner].includes(current_user)) {
-			edit_button = $(`<button class="btn btn-link action-btn">${__("Edit")}</a>`).click(
-				() => {
+			edit_button = $(`<button class="btn btn-link action-btn"></button>`)
+				.attr("title", __("Edit"))
+				.html(frappe.utils.icon("es-line-edit-alt", "md"))
+				.on("click", () => {
 					edit_button.edit_mode ? edit_box.submit() : edit_button.toggle_edit_mode();
-				}
-			);
+				});
 		}
 
 		edit_button.toggle_edit_mode = () => {
