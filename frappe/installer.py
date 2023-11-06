@@ -284,6 +284,8 @@ def install_app(name, verbose=False, set_as_patched=True, force=False):
 	if name != "frappe":
 		frappe.only_for("System Manager")
 
+	monkey_patch_before_install_version_check(name)
+
 	for before_install in app_hooks.before_install or []:
 		out = frappe.get_attr(before_install)()
 		if out is False:
@@ -882,3 +884,22 @@ def validate_database_sql(path, _raise=True):
 
 	if _raise and (missing_table or empty_file):
 		raise frappe.InvalidDatabaseFile
+
+def monkey_patch_before_install_version_check(name):
+	# @dokos
+	"""
+	Some Frappeverse applications check the version of the framework.
+	Since Dodock version is lower than Frappe version, we skip this verification
+	"""
+	if name in ["print_designer", "gameplan"]:
+		module = frappe.get_module(name + ".install")
+		module.check_frappe_version = _check_frappe_version
+
+def _check_frappe_version():
+	# @dokos
+	from semantic_version import Version
+	from frappe import __version__
+
+	frappe_version = Version(__version__)
+	if (frappe_version.major or 0) < 4:
+		raise SystemExit('Gameplan requires Dodock version 4 or above')
