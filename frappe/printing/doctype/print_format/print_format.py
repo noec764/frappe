@@ -72,7 +72,7 @@ class PrintFormat(Document):
 				or (getattr(self, "_doc_before_save") and self._doc_before_save.standard == "Yes")
 			)
 			and not frappe.local.conf.get("developer_mode")
-			and not (frappe.flags.in_import or frappe.flags.in_test)
+			and not (frappe.flags.in_migrate or frappe.flags.in_test)
 		):
 
 			if self._doc_before_save.disabled != self.disabled:
