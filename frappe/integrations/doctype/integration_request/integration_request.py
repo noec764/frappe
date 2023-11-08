@@ -3,7 +3,7 @@
 import json
 
 import frappe
-from frappe.integrations.utils import json_handler
+from frappe.integrations.utils import get_json, json_handler
 from frappe.model.document import Document
 from frappe.utils.data import add_months, getdate
 
@@ -50,7 +50,7 @@ class IntegrationRequest(Document):
 		data = frappe.parse_json(self.data)
 		data.update(params)
 
-		self.data = json.dumps(data, indent=4)
+		self.data = get_json(data)
 		self.status = status
 		self.save(ignore_permissions=True)
 		frappe.db.commit()
