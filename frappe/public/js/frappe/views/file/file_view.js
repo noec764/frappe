@@ -61,19 +61,19 @@ frappe.views.FileView = class FileView extends frappe.views.ListView {
 		const last_folder = route[route.length - 1];
 		if (last_folder === "File") return;
 
-		const home_index = route.indexOf("Home");
+		const home_index = route.indexOf(frappe.boot.home_folder);
 		const new_route = home_index ? route.slice(home_index + 1) : [];
 		if (last_folder !== "File" && new_route.length) {
 			frappe.breadcrumbs.add({
 				type: "Custom",
 				label: __(last_folder),
-				route: `/app/file/view/Home/${new_route.join("/")}`,
+				route: `/app/file/view/${frappe.boot.home_folder}/${new_route.join("/")}`,
 			});
 		} else {
 			frappe.breadcrumbs.add({
 				type: "Custom",
 				label: __("Home"),
-				route: "/app/file/view/Home",
+				route: $`/app/file/view/${frappe.boot.home_folder}`,
 			});
 		}
 	}
