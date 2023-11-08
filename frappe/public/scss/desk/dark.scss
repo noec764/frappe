@@ -52,7 +52,11 @@ $check-icon-dark: url("data:image/svg+xml, <svg viewBox='0 0 8 7' fill='none' xm
 	// Button Colors
 	--btn-default-bg: var(--gray-800);
 	--btn-default-hover-bg: var(--gray-700);
-	--btn-primary: var(--primary);
+	--btn-primary: var(--gray-300);
+
+	// Border Colors
+	--border-primary: var(--gray-200);
+
 
 	// Background Text Color Pairs
 	--bg-blue: var(--blue-600);
