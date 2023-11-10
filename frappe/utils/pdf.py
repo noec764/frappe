@@ -1,4 +1,4 @@
-# Copyright (c) 2021, Frappe Technologies Pvt. Ltd. and Contributors
+# Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: MIT. See LICENSE
 import contextlib
 import io
@@ -76,9 +76,10 @@ def pdf_footer_html(soup, head, content, styles, html_id, css):
 	)
 
 
-def get_pdf(html, options=None, output: PdfWriter | None = None, cover=None):
+def get_pdf(html, options=None, output: PdfWriter | None = None, cover: "CoverPages.Spec" = None):
 	html = scrub_urls(html)
 	html, options = prepare_options(html, options)
+	cover_pages = CoverPages(cover)
 
 	options.update({"disable-javascript": "", "disable-local-file-access": ""})
 
@@ -97,15 +98,6 @@ def get_pdf(html, options=None, output: PdfWriter | None = None, cover=None):
 
 		# create in-memory binary streams from filedata and create a PdfReader object
 		reader = PdfReader(io.BytesIO(filedata))
-
-		cover_reader = ""
-		if cover:
-			cover_page = frappe.db.get_value("Cover Page", cover, "cover_page")
-			if frappe.db.exists("File", dict(file_url=cover_page)):
-				file_doc = frappe.get_doc("File", dict(file_url=cover_page))
-				with open(file_doc.get_full_path(), "rb") as f:
-					cover_reader = PdfReader(io.BytesIO(f.read()))
-
 	except OSError as e:
 		if any([error in str(e) for error in PDF_CONTENT_ERRORS]):
 			if not filedata:
@@ -113,12 +105,8 @@ def get_pdf(html, options=None, output: PdfWriter | None = None, cover=None):
 
 			# allow pdfs with missing images if file got created
 			if output:
-				if cover_reader:
-					output.append_pages_from_reader(cover_reader)
-				output.append_pages_from_reader(reader)
-
-			else:
-				frappe.throw(_("PDF generation failed because of broken image links"))
+				with cover_pages.apply_to(output):
+					output.append_pages_from_reader(reader)
 		else:
 			raise
 	finally:
@@ -128,15 +116,13 @@ def get_pdf(html, options=None, output: PdfWriter | None = None, cover=None):
 		password = options["password"]
 
 	if output:
-		if cover_reader:
-			output.append_pages_from_reader(cover_reader)
-		output.append_pages_from_reader(reader)
+		with cover_pages.apply_to(output):
+			output.append_pages_from_reader(reader)
 		return output
 
 	writer = PdfWriter()
-	if cover_reader:
-		writer.append_pages_from_reader(cover_reader)
-	writer.append_pages_from_reader(reader)
+	with cover_pages.apply_to(writer):
+		writer.append_pages_from_reader(reader)
 
 	if "password" in options:
 		writer.encrypt(password)
@@ -327,3 +313,48 @@ def get_wkhtmltopdf_version():
 			pass
 
 	return wkhtmltopdf_version or "0"
+
+
+class CoverPages:
+	from contextlib import contextmanager
+
+	Spec = str | dict[str, list[str | None]] | None
+
+	def __init__(self, cover: Spec) -> None:
+		self.front: list[str] = []
+		self.back: list[str] = []
+
+		if isinstance(cover, str):
+			self.front.append(cover)
+		elif isinstance(list, str):
+			self.front.extend(cover)
+		elif isinstance(cover, dict):
+			self.front.extend(cover.get("front", []))
+			self.back.extend(cover.get("back", []))
+
+	def append_all(self, output: PdfWriter, names: list[str]):
+		for cover_page_name in names:
+			if cover_page := self.read(cover_page_name):
+				output.append_pages_from_reader(cover_page)
+
+	def read(self, cover_page_name: str):
+		from contextlib import suppress
+
+		if not cover_page_name or not isinstance(cover_page_name, str):
+			return
+
+		file_url = frappe.db.get_value("Cover Page", cover_page_name, "cover_page")
+		file_name = frappe.db.exists("File", dict(file_url=file_url))
+		if not file_name:
+			return
+
+		with suppress(frappe.DoesNotExistError):
+			file_doc = frappe.get_doc("File", file_name)
+			with open(file_doc.get_full_path(), "rb") as f:
+				return PdfReader(f)
+
+	@contextmanager
+	def apply_to(self, output: PdfWriter):
+		self.append_all(output, self.front)
+		yield  # yield to allow caller to append pages in between the cover pages
+		self.append_all(output, self.back)
