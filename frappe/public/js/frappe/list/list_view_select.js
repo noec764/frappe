@@ -36,6 +36,10 @@ frappe.views.ListViewSelect = class ListViewSelect {
 				this.email_account = route[3];
 			}
 		}
+
+		if (route.length > 2 && frappe.views.custom_views[view_name]) {
+			this.current_view = view_name;
+		}
 	}
 
 	set_route(view, calendar_name) {
@@ -139,13 +143,21 @@ frappe.views.ListViewSelect = class ListViewSelect {
 			},
 		};
 
-		frappe.views.view_modes.forEach((view) => {
-			if (this.current_view !== view && views[view].condition) {
-				this.add_view_to_menu(view, views[view].action);
+		const view_modes = [...frappe.views.view_modes];
+
+		for (const [view, registerView] of Object.entries(frappe.views.custom_views || {})) {
+			views[view] = registerView(this);
+			view_modes.push(view);
+		}
+
+		view_modes.forEach((view) => {
+			const view_object = views[view];
+			if (this.current_view !== view && view_object.condition) {
+				this.add_view_to_menu(view_object.label || view, view_object.action);
 			}
 
 			if (this.current_view == view) {
-				views[view].current_view_handler && views[view].current_view_handler();
+				view_object.current_view_handler?.();
 			}
 		});
 	}
@@ -359,3 +371,22 @@ frappe.views.ListViewSelect = class ListViewSelect {
 		return frappe.router.slug(frappe.router.doctype_layout || this.doctype);
 	}
 };
+
+frappe.views.registerCustomListView = registerCustomListView;
+function registerCustomListView(label, route, icon, viewClass, register = null) {
+	const key = frappe.utils.to_title_case(route);
+	frappe.provide("frappe.views.custom_views");
+	frappe.router.list_views_route[route] = route;
+	frappe.views.BaseList.icon_map[label] = icon;
+	frappe.views.custom_views[key] =
+		register ??
+		((select) => {
+			return {
+				label: label,
+				condition: true,
+				action: () => select.set_route(route),
+				current_view_handler: () => {},
+			};
+		});
+	frappe.views[key + "View"] = viewClass;
+}
