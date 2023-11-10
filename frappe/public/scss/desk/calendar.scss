@@ -1,6 +1,6 @@
 @import "../calendar-base";
 
-.fc {
+.fc:not(.fc--unstyled) {
 	.fc-toolbar.fc-header-toolbar {
 		margin: 1em 0px;
 		padding: 0 1.5em;
