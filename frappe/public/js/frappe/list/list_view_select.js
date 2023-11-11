@@ -37,7 +37,7 @@ frappe.views.ListViewSelect = class ListViewSelect {
 			}
 		}
 
-		if (route.length > 2 && frappe.views.custom_views[view_name]) {
+		if (route.length > 2 && frappe.views.custom_views?.[view_name]) {
 			this.current_view = view_name;
 		}
 	}
