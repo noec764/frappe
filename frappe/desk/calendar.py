@@ -210,13 +210,23 @@ def get_week_number(dt):
 
 
 @frappe.whitelist()
-def get_resource_ids(doctype, resource):
-	if not resource:
+def get_resource_ids(doctype: str, resource: str):
+	if not doctype or not resource:
 		return []
 
-	source_meta = frappe.get_meta(doctype)
-	field = source_meta.get_field(resource)
-	title_field = None
+	# Parse the given resource string to find the field and optional child_field.
+	# e.g. "name", "employee", "assigned_to.employee"
+	splits = resource.split(".")
+	if len(splits) == 1:
+		fieldname, child_field = resource, resource
+	elif len(splits) == 2:
+		fieldname, child_field = splits
+	else:
+		raise ValueError("resource")
+
+	field = frappe.get_meta(doctype).get_field(fieldname)
+	base_doctype = doctype
+	rsrc_doctype = doctype
 
 	if field.fieldtype == "Select":
 		return [
@@ -224,28 +234,24 @@ def get_resource_ids(doctype, resource):
 		]
 
 	if field.fieldtype == "Link":
-		title_field = frappe.get_meta(field.options).get_title_field()
+		rsrc_doctype = field.options
 
-	resources = frappe.get_all(doctype, fields=[resource], distinct=True, pluck=resource)
+	if field.fieldtype == "Table" or field.fieldtype == "Table MultiSelect":
+		dt_table = frappe.get_meta(field.options)
+		base_doctype = field.options
+		rsrc_doctype = dt_table.get_field(child_field).options
 
-	dt = frappe.qb.DocType(doctype)
-	query = frappe.qb.from_(dt).select(dt[resource].as_("resource")).distinct()
-	if title_field:
-		link_dt = frappe.qb.DocType(field.options)
-		query = (
-			query.from_(link_dt)
-			.select(link_dt[title_field].as_("title"))
-			.where(link_dt.name == dt[resource])
-		)
+	B = frappe.qb.DocType(base_doctype)
+	qb_id = B[child_field].as_("id")
+	query = frappe.qb.from_(B).select(qb_id).distinct()
+
+	if rsrc_doctype:
+		title_field = frappe.get_meta(rsrc_doctype).get_title_field()
+		R = frappe.qb.DocType(rsrc_doctype)
+		query = query.from_(R).select(R[title_field].as_("title")).where(R.name == qb_id).distinct()
 
 	resources = query.run(as_dict=True)
-	output = []
-
-	for res in resources:
-		label = res.get("title") or res.resource
-		output.append({"id": res.resource, "title": label or _("No value")})
-
-	return output
+	return resources
 
 
 @frappe.whitelist()
