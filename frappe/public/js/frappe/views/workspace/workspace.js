@@ -350,7 +350,7 @@ frappe.views.Workspace = class Workspace {
 		) {
 			default_page = {
 				name: localStorage.current_page,
-				public: localStorage.is_current_page_public == "true",
+				public: localStorage.is_current_page_public != "false",
 			};
 		} else if (Object.keys(this.all_pages).length !== 0) {
 			default_page = { name: this.all_pages[0].name, public: true };
