@@ -24,6 +24,7 @@ class PrintFormat(Document):
 		absolute_value: DF.Check
 		align_labels_right: DF.Check
 		cover_page: DF.Link | None
+		cover_page_back: DF.Link | None
 		css: DF.Code | None
 		custom_format: DF.Check
 		default_print_language: DF.Link | None

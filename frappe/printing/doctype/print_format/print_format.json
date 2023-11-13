@@ -12,6 +12,7 @@
   "column_break_3",
   "standard",
   "cover_page",
+  "cover_page_back",
   "custom_format",
   "disabled",
   "section_break_6",
@@ -216,6 +217,12 @@
    "fieldname": "cover_page",
    "fieldtype": "Link",
    "label": "Cover Page",
+   "options": "Cover Page"
+  },
+  {
+   "fieldname": "cover_page_back",
+   "fieldtype": "Link",
+   "label": "Back Cover Page",
    "options": "Cover Page"
   },
   {

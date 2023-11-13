@@ -2112,7 +2112,10 @@ def get_print(
 			html,
 			output=output,
 			options=pdf_options,
-			cover=db.get_value("Print Format", print_format, "cover_page"),
+			cover=dict(
+				front=[db.get_value("Print Format", print_format, "cover_page")],
+				back=[db.get_value("Print Format", print_format, "cover_page_back")],
+			),
 		)
 	else:
 		return html
